@@ -3,7 +3,7 @@ error_reporting(1);
 @ini_set('display_errors', true);
 define('RD', dirname (__FILE__));
 date_default_timezone_set("Europe/Kiev");
-require_once (RD."/lib/mysql_class.php");$db=new db;$dbt=new dbt;
+require_once (RD."/lib/mysql_class.php");$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();
 
 if(!empty($_FILES)){
 

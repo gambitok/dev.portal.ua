@@ -2,7 +2,7 @@
 
 class storage_reports {
 	
-	function exportStorageReports($storages) { $db=new dbt; $list=[]; $storages_array=[]; 
+	function exportStorageReports($storages) { $db=DbSingleton::getTokoDb(); $list=[]; $storages_array=[]; 
 
 		if($storages=="" || $storages==0) $storages_list=$this->getStoragesIds(); else $storages_list=$storages;
 															  
@@ -40,20 +40,20 @@ class storage_reports {
 		return $list;
 	}
 	
-	function getBrandName($id){$db=new dbt;
+	function getBrandName($id){$db=DbSingleton::getTokoDb();
 		$r=$db->query("select BRAND_NAME from T2_BRANDS where BRAND_ID='$id' limit 1;");
 		$name=$db->result($r,0,"BRAND_NAME");	
 		return $name;	
 	}
 	
-	function getStorageName($storage_id){$db=new dbt; $slave=new slave;
+	function getStorageName($storage_id){$db=DbSingleton::getTokoDb(); $slave=new slave;
 		$r=$db->query("select name from STORAGE where id='$storage_id' and status=1 limit 1");
 	  	$name=$db->result($r,0,"name");
 		$name=$slave->translit($name);
 	  	return $name;
 	}
 	
-	function getStorages() {$db=new dbt; $list="";
+	function getStorages() {$db=DbSingleton::getTokoDb(); $list="";
 		$r=$db->query("select * from STORAGE where status=1;"); $n=$db->num_rows($r); 					
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
@@ -64,7 +64,7 @@ class storage_reports {
 		return $list;
 	}
 	
-	function getStoragesIds() {$db=new dbt; $storages=[];
+	function getStoragesIds() {$db=DbSingleton::getTokoDb(); $storages=[];
 		$r=$db->query("select * from STORAGE where status=1;"); $n=$db->num_rows($r); 					
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");

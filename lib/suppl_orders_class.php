@@ -1,14 +1,14 @@
 <?php
 class suppl_orders{
 
-protected $prefix_new = 'ДП';
+protected $prefix_new = 'пїЅпїЅ';
 
-function getMediaUserName($user_id){$db=new db;$name="";
+function getMediaUserName($user_id){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select name from media_users where id='$user_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"name");}
 	return $name;
 }
-function show_suppl_orders_list(){$db=new db;$slave=new slave;$gmanual=new gmanual;$dp=new dp; $where="";$limit ="limit 0,300"; if ($where!=""){$limit="";}
+function show_suppl_orders_list(){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;$dp=new dp; $where="";$limit ="limit 0,300"; if ($where!=""){$limit="";}
 	$r=$db->query("select j.*, CASH.name as cash_name, (jd.prefix +' '+ jd.doc_nom) as dp_name,tp.name as tpoint_name, c.name as suppl_name, cs.name as suppl_storage_name, mu.name as user_name
 	from J_DP_SUPPL_ORDER j
 	left outer join J_DP jd on jd.id=j.dp_id
@@ -71,7 +71,7 @@ function show_suppl_orders_list(){$db=new db;$slave=new slave;$gmanual=new gmanu
 	return $list;
 }
 
-function getKoursData($data){$db=new db;$slave=new slave;$usd_to_uah=0;$eur_to_uah=0;$where="data='$data'";if ($data==""){$data=date("Y-m-d");$where="";}
+function getKoursData($data){$db=DbSingleton::getDb();$slave=new slave;$usd_to_uah=0;$eur_to_uah=0;$where="data='$data'";if ($data==""){$data=date("Y-m-d");$where="";}
 	$r=$db->query("select kours_value from J_KOURS where cash_id='2' and in_use='1' order by id desc limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$usd_to_uah=$slave->to_money(round($db->result($r,0,"kours_value"),2));}
 	$r=$db->query("select kours_value from J_KOURS where cash_id='3' and in_use='1' order by id desc limit 0,1;");$n=$db->num_rows($r);
@@ -80,11 +80,11 @@ function getKoursData($data){$db=new db;$slave=new slave;$usd_to_uah=0;$eur_to_u
 }
 
 
-function showSupplOrder($so_id){$db=new db;$cat=new catalogue;$slave=new slave;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $storsel=new storsel; $gmanual=new gmanual; 
+function showSupplOrder($so_id){$db=DbSingleton::getDb();$cat=new catalogue;$slave=new slave;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $storsel=new storsel; $gmanual=new gmanual; 
 	$form_htm=RD."/tpl/suppl_orders_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$disabled="disabled"; 
 								
-	$r=$db->query("select j.*, CASH.name as cash_name, CONCAT(jd.prefix ,'-', jd.doc_nom,' від ', jd.time_stamp) as dp_name, tp.name as tpoint_name, c.name as suppl_name, cs.name as suppl_storage_name, mu.name as user_name, si.info as suppl_info, cl.name as client_name
+	$r=$db->query("select j.*, CASH.name as cash_name, CONCAT(jd.prefix ,'-', jd.doc_nom,' пїЅпїЅ ', jd.time_stamp) as dp_name, tp.name as tpoint_name, c.name as suppl_name, cs.name as suppl_storage_name, mu.name as user_name, si.info as suppl_info, cl.name as client_name
 	from J_DP_SUPPL_ORDER j
 	left outer join J_DP jd on jd.id=j.dp_id
 	left outer join CASH on CASH.id=j.cash_id
@@ -159,13 +159,13 @@ function showSupplOrder($so_id){$db=new db;$cat=new catalogue;$slave=new slave;$
 	
 	return $form;
 }
-function getClientName($id){$db=new db;$slave=new slave;$name=""; 
+function getClientName($id){$db=DbSingleton::getDb();$slave=new slave;$name=""; 
 	$r=$db->query("select name from A_CLIENTS where id='$id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$name=$db->result($r,0,"name");	}
 	return $name;	
 }
 
-function showCashListSelect($sel_id,$ns){$db=new db;$list="";if ($ns==""){$ns=1;}
+function showCashListSelect($sel_id,$ns){$db=DbSingleton::getDb();$list="";if ($ns==""){$ns=1;}
 	$r=$db->query("select * from CASH order by name asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -177,19 +177,19 @@ function showCashListSelect($sel_id,$ns){$db=new db;$list="";if ($ns==""){$ns=1;
 	return $list;	
 }
 
-function getCashAbr($cash_id){$db=new db;$name="";
+function getCashAbr($cash_id){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select abr from CASH where id ='$cash_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"abr");}
 	return $name;
 }
 
-function getCashName($cash_id){$db=new db;$name="";
+function getCashName($cash_id){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select name from CASH where id ='$cash_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"name");}
 	return $name;
 }
 
-function saveSupplOrder($so_id,$amount_order,$delivery_data_finish,$delivery_time_finish,$delivery_type_id,$suppl_order_status_id,$suppl_order_doc){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveSupplOrder($so_id,$amount_order,$delivery_data_finish,$delivery_time_finish,$delivery_type_id,$suppl_order_status_id,$suppl_order_doc){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$so_id=$slave->qq($so_id);
 	if ($so_id>0){
 		$amount_order=$slave->qq($amount_order);$delivery_data_finish=$slave->qq($delivery_data_finish);$delivery_time_finish=$slave->qq($delivery_time_finish);$delivery_type_id=$slave->qq($delivery_type_id);$suppl_order_status_id=$slave->qq($suppl_order_status_id);$suppl_order_doc=$slave->qq($suppl_order_doc);

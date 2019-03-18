@@ -2,7 +2,7 @@
 
 class HistoryMovingClass {
 	
-	function loadHistoryList() { $db=new db; $gmanual=new gmanual; $income=new income; $list="";
+	function loadHistoryList() { $db=DbSingleton::getDb(); $gmanual=new gmanual; $income=new income; $list="";
 		$r=$db->query("
 		
 		select j.*, js.* from J_MOVING_STR js 
@@ -14,7 +14,7 @@ class HistoryMovingClass {
 		"); $n=$db->num_rows($r);
 								
 		for ($i=1;$i<=$n;$i++){
-			$type_name="Приходная накладная";
+			$type_name="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 			
 			$id=$db->result($r,$i-1,"id");
 			$data=$db->result($r,$i-1,"data");
@@ -48,7 +48,7 @@ class HistoryMovingClass {
 		return $list;
 	}
 	
-	function getStorageName($storage_id) { $db=new db;
+	function getStorageName($storage_id) { $db=DbSingleton::getDb();
 		$r=$db->query("select name from STORAGE where id='$storage_id' limit 1;");
 	  	$name=$db->result($r,0,"name");
 		return $name;

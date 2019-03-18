@@ -5,16 +5,16 @@ class catalogue{
 	
 	var $kol_price_rating=12;
 	
-function getManualCap($id) {$db=new db;
+function getManualCap($id) {$db=DbSingleton::getDb();
 	$r=$db->query("select mcaption from manual where id='$id';");
 	$cap=$db->result($r,0,"mcaption");
 	return $cap;
 }
 	
-function getArticleJDocsData($doc_type,$doc_id,$art_id) {$db=new db;		
+function getArticleJDocsData($doc_type,$doc_id,$art_id) {$db=DbSingleton::getDb();		
 	$amount=$prixod=$rasxod=$dvigen=""; 
 														 
-	if ($doc_type==1) {//приход
+	if ($doc_type==1) {//пїЅпїЅпїЅпїЅпїЅпїЅ
 		$r=$db->query("select j.storage_id, j.storage_cells_id, j.client_id, j.client_seller, j.prefix, j.doc_nom, js.amount from J_INCOME j 
 		left outer join J_INCOME_STR js on js.income_id=j.id
 		where j.id='$doc_id' and js.art_id='$art_id';"); 
@@ -27,11 +27,11 @@ function getArticleJDocsData($doc_type,$doc_id,$art_id) {$db=new db;
 		$doc_nom=$db->result($r,0,"doc_nom");
 		$prefix=$db->result($r,0,"prefix")."-$doc_nom";
 		$prixod=$amount;
-		$name="Прихідна накладна";
+		$name="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 		$color="lightblue";
 	}	
 														 
-	if ($doc_type==2) {//переміщення
+	if ($doc_type==2) {//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		$r=$db->query("select j.storage_id_to, j.cell_id_to, j.type_id, j.prefix, j.doc_nom, js.storage_id_from, js.cell_id_from as cell_from, js.cell_id_to as cell_to, js.amount, js.select_id from J_MOVING j
 		left outer join J_MOVING_STR js on js.jmoving_id=j.id
 		where j.id='$doc_id' and js.art_id='$art_id';"); 
@@ -45,7 +45,7 @@ function getArticleJDocsData($doc_type,$doc_id,$art_id) {$db=new db;
 			$amount=$db->result($r2,$i-1,"amount");
 			$cell_id_from=$db->result($r2,$i-1,"cell_id_from"); $cell_id_from=$this->getStorageCellName($cell_id_from);
 			if ($n==1) $cell4.="$cell_id_from";
-			else $cell4.=" $cell_id_from = $amount шт.;";
+			else $cell4.=" $cell_id_from = $amount пїЅпїЅ.;";
 		}
 		
 		$cell1=$db->result($r,0,"cell_from"); $cell1=$this->getStorageCellName($cell1); 
@@ -53,7 +53,7 @@ function getArticleJDocsData($doc_type,$doc_id,$art_id) {$db=new db;
 		$cell3=$db->result($r,0,"cell_id_to"); $cell3=$this->getStorageCellName($cell3); 
 		
 		if ($type) {$cell_to=$cell3; $cell_from=$cell4;} else {$cell_to=$cell1; $cell_from=$cell2;}
-		if ($type) $type="між складами"; else $type="внутрішнє";
+		if ($type) $type="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"; else $type="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 		
 		$storage_to=$db->result($r,0,"storage_id_to"); $storage_to=$this->getStorageName($storage_to)." ($cell_to)"; 	
 		$storage_from=$db->result($r,0,"storage_id_from"); $storage_from=$this->getStorageName($storage_from)." ($cell_from)";
@@ -62,11 +62,11 @@ function getArticleJDocsData($doc_type,$doc_id,$art_id) {$db=new db;
 		$doc_nom=$db->result($r,0,"doc_nom");
 		$prefix=$db->result($r,0,"prefix")."-$doc_nom";
 		$dvigen=$amount;
-		$name="Переміщення ($type)";
+		$name="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ($type)";
 		$color="";
 	}	
 														 
-	if ($doc_type==3) {//видаток
+	if ($doc_type==3) {//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		$r=$db->query("select j.doc_type_id, j.dp_id, j.client_id, j.prefix, j.doc_nom, js.amount, js.storage_id_from, js.cell_id_from from J_SALE_INVOICE j
 		left outer join J_SALE_INVOICE_STR js on js.invoice_id=j.id
 		where j.id='$doc_id' and js.art_id='$art_id';"); 
@@ -79,11 +79,11 @@ function getArticleJDocsData($doc_type,$doc_id,$art_id) {$db=new db;
 		$doc_nom=$db->result($r,0,"doc_nom");
 		$prefix=$db->result($r,0,"prefix")."-$doc_nom";
 		$rasxod=$amount;
-		$name="Видаткова накладна ($type)";
+		$name="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ($type)";
 		$color="lightgreen";
 	}
 														 
-	if ($doc_type==4) {//повернення
+	if ($doc_type==4) {//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		$r=$db->query("select j.storage_id, j.client_id, j.prefix, j.doc_nom, js.amount, j.cell_id from J_BACK_CLIENTS j
 		left outer join J_BACK_CLIENTS_STR js on js.back_id=j.id
 		where j.id='$doc_id' and js.art_id='$art_id';"); 
@@ -95,14 +95,14 @@ function getArticleJDocsData($doc_type,$doc_id,$art_id) {$db=new db;
 		$doc_nom=$db->result($r,0,"doc_nom");
 		$prefix=$db->result($r,0,"prefix")."-$doc_nom";
 		$prixod=$amount;
-		$name="Повернення від клієнта";
+		$name="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅлієпїЅпїЅпїЅ";
 		$color="pink";
 	}
 												 
 	return array($name,$prefix,$color,$prixod,$rasxod,$dvigen,$storage_from,$storage_to);
 }
 	
-function showArticleJDocs($art_id) {$db=new db;						
+function showArticleJDocs($art_id) {$db=DbSingleton::getDb();						
 	if ($art_id>0){
 		$form_htm=RD."/tpl/catalogue_history_moving.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$r=$db->query("select * from J_ART_DOCS where art_id='$art_id' order by data desc;"); $n=$db->num_rows($r);$list="";
@@ -130,18 +130,18 @@ function showArticleJDocs($art_id) {$db=new db;
 		list($article_nr_displ,$brand_id,$brand_name)=$this->getArticleNrDisplBrand($art_id);
 		$form=str_replace("{article_nr_displ}",$article_nr_displ." ".$brand_name,$form);
 	}
-	return array($form,"Історія переміщення");
+	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 }
 	
-function showCatNewArticle(){$db=new db;$slave=new slave;
+function showCatNewArticle(){$db=DbSingleton::getDb();$slave=new slave;
 	$form_htm=RD."/tpl/catalogue_new_article_form.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$form=str_replace("{brand_list}",$this->showBrandLetterListSelect(""),$form);
 	$form=str_replace("{goods_list}",$this->showGoodsGroupLetterListSelect(""),$form);
 	$form=str_replace("{manuf_list}",$this->showManufListSelect(""),$form);
 	
-	return array($form,"Генерування нового артиклу номенклатури");
+	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 }
-function findNewArtNextNum($brand,$group,$sub_group,$manuf){$db=new dbt;$slave=new slave;$num="";
+function findNewArtNextNum($brand,$group,$sub_group,$manuf){$db=DbSingleton::getTokoDb();$slave=new slave;$num="";
 	$brand=explode("-",$brand);$brand_key=$brand[1];
 	$group=explode("-",$group);$group_key=$group[1];
 	$sub_group=explode("-",$sub_group);$sub_group_key=$sub_group[1];
@@ -152,22 +152,22 @@ function findNewArtNextNum($brand,$group,$sub_group,$manuf){$db=new dbt;$slave=n
 	$num=intval(substr($ar[$n],4,3)); $num+=1; if (strlen($num)==1){$num="00".$num;}if (strlen($num)==2){$num="0".$num;}
 	return $num;
 }
-function findNewArtID($brand){$db=new dbt;$slave=new slave; $adp_from=1000;$adp_to=10000000;
+function findNewArtID($brand){$db=DbSingleton::getTokoDb();$slave=new slave; $adp_from=1000;$adp_to=10000000;
 	$brand=explode("-",$brand);$brand_key=$brand[1];
 	if ($brand_key=="T"){$adp_from=100000000;$adp_to=1000000000;}
 	$r=$db->query("select max(ART_ID) as mid from T2_ARTICLES where ART_ID>='$adp_from' and ART_ID<='$adp_to';");$mid=$db->result($r,0,"mid");
 	$mid+=1;
 	return $mid;
 }
-function checkCatalogueNewArt($num,$art_id){$db=new dbt;$slave=new slave;$answer=0;$err="Помилка обробки данних!";
+function checkCatalogueNewArt($num,$art_id){$db=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
 	$r=$db->query("select COUNT(ART_ID) as kol from T2_ARTICLES where ART_ID='$art_id'");$art_ex=$db->result($r,0,"kol")+0;
 	$r=$db->query("select COUNT(ARTICLE_NR_SEARCH) as kol from T2_ARTICLES where ARTICLE_NR_SEARCH='$num'");$num_ex=$db->result($r,0,"kol")+0;
 	if ($num_ex==0 && $art_ex==0){$answer=1;$err="";}
-	if ($num_ex>0){$answer=0;$err="Індекс існує у базі";}
-	if ($art_ex>0){$answer=0;$err="ART_ID існує у базі";}
+	if ($num_ex>0){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ";}
+	if ($art_ex>0){$answer=0;$err="ART_ID пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ";}
 	return array($answer,$err);
 }
-function saveCatalogueNewArt($num,$art_id,$brand,$group,$sub_group,$manuf){$db=new dbt;$slave=new slave;$new_art_id="";$answer=0;$err="Помилка обробки данних!";
+function saveCatalogueNewArt($num,$art_id,$brand,$group,$sub_group,$manuf){$db=DbSingleton::getTokoDb();$slave=new slave;$new_art_id="";$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
 	$brand=explode("-",$brand);$brand_key=$brand[1];$brand_id=$brand[0];
 	$group=explode("-",$group);$group_key=$group[1];$group_id=$group[0];
 	$sub_group=explode("-",$sub_group);$sub_group_key=$sub_group[1];$sub_group_id=$sub_group[0];
@@ -175,8 +175,8 @@ function saveCatalogueNewArt($num,$art_id,$brand,$group,$sub_group,$manuf){$db=n
 	if ($art_id!="" && $num!="" && $brand>0 && $sub_group_id>0){
 		$r=$db->query("select COUNT(ART_ID) as kol from T2_ARTICLES where ART_ID='$art_id'");$art_ex=$db->result($r,0,"kol")+0;
 		$r=$db->query("select COUNT(ARTICLE_NR_SEARCH) as kol from T2_ARTICLES where ARTICLE_NR_SEARCH='$num'");$num_ex=$db->result($r,0,"kol")+0;
-		if ($num_ex>0){$answer=0;$err="Індекс існує у базі";}
-		if ($art_ex>0){$answer=0;$err="ART_ID існує у базі";}
+		if ($num_ex>0){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ";}
+		if ($art_ex>0){$answer=0;$err="ART_ID пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ";}
 		if ($num_ex==0 && $art_ex==0){
 			$num_up=strtoupper($num);
 			$db->query("insert into T2_ARTICLES (`ART_ID`,`ARTICLE_NR_DISPL`,`ARTICLE_NR_SEARCH`,`BRAND_ID`) values ('$art_id','$num_up','$num_up','$brand_id');");
@@ -196,7 +196,7 @@ function saveCatalogueNewArt($num,$art_id,$brand,$group,$sub_group,$manuf){$db=n
 	}
 	return array($answer,$err,$new_art_id);
 }
-function show_catalogue_range($art){$db=new db;$slave=new slave;
+function show_catalogue_range($art){$db=DbSingleton::getDb();$slave=new slave;
 	$form_htm=RD."/tpl/catalogue.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$art=str_replace("--","/",$art);
 	list($header_list,$range_list,$list_brand_select)=$this->showArticlesSearchList($art,"",0);
@@ -215,7 +215,7 @@ function show_catalogue_range($art){$db=new db;$slave=new slave;
 	$form=str_replace("{fil2StrText}","",$form);
 	return $form;
 }
-function showCatFieldsViewForm(){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$table_key="catalogue";
+function showCatFieldsViewForm(){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$table_key="catalogue";
 	$form_htm=RD."/tpl/catalogue_fields_view_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from CFN_TABLE_FIELDS where table_key='$table_key' order by id asc;");$n=$db->num_rows($r);$list="";$lst=array();
 	for ($i=1;$i<=$n;$i++){
@@ -244,10 +244,10 @@ function showCatFieldsViewForm(){$db=new db;$slave=new slave;session_start();$us
 	$form=str_replace("{fields_list}",$list,$form);
 	$form=str_replace("{kol_fields}",$n,$form);
 	$form=str_replace("{table_key}",$table_key,$form);
-	return array($form,"Налаштування відображення таблиці Номенклатура");
+	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 }
 
-function showCatFieldsViewDocForm(){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$table_key="catalogue_doc";
+function showCatFieldsViewDocForm(){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$table_key="catalogue_doc";
 	$form_htm=RD."/tpl/catalogue_fields_view_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from CFN_TABLE_FIELDS where table_key='$table_key' order by id asc;");$n=$db->num_rows($r);$list="";$lst=array();
 	for ($i=1;$i<=$n;$i++){
@@ -276,11 +276,11 @@ function showCatFieldsViewDocForm(){$db=new db;$slave=new slave;session_start();
 	$form=str_replace("{fields_list}",$list,$form);
 	$form=str_replace("{kol_fields}",$n,$form);
 	$form=str_replace("{table_key}",$table_key,$form);
-	return array($form,"Налаштування відображення таблиці Номенклатура");
+	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 }
 
 
-function checkCatalogueFieldsUserCheck($user_id,$table_key,$field_key){$db=new db;$slave=new slave;$ch="checked";$field_pos=0;
+function checkCatalogueFieldsUserCheck($user_id,$table_key,$field_key){$db=DbSingleton::getDb();$slave=new slave;$ch="checked";$field_pos=0;
 	$r=$db->query("select field_active,field_pos from CFN_USERS_TABLE_CONFIG where table_key='$table_key' and user_id='$user_id' and field_key='$field_key' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$field_active=$db->result($r,0,"field_active");if ($field_active==0){$ch="";}
@@ -289,7 +289,7 @@ function checkCatalogueFieldsUserCheck($user_id,$table_key,$field_key){$db=new d
 	return array($ch,$field_pos);
 }
 
-function saveCatalogueFieldsViewForm($kol_fields,$fl_id,$fl_ch,$table_key){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";if ($table_key==""){$table_key="catalogue";}
+function saveCatalogueFieldsViewForm($kol_fields,$fl_id,$fl_ch,$table_key){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";if ($table_key==""){$table_key="catalogue";}
 	$kol_fields=$slave->qq($kol_fields);$fl_id=$slave->qq($fl_id);$fl_ch=$slave->qq($fl_ch);
 	if ($kol_fields>0){
 		$db->query("delete from CFN_USERS_TABLE_CONFIG where user_id='$user_id' and table_key='$table_key';");
@@ -304,7 +304,7 @@ function saveCatalogueFieldsViewForm($kol_fields,$fl_id,$fl_ch,$table_key){$db=n
 	return array($answer,$err);
 }
 
-function getFieldInfo($table_key,$field_id){$db=new db;$slave=new slave;$name="";$key="";
+function getFieldInfo($table_key,$field_id){$db=DbSingleton::getDb();$slave=new slave;$name="";$key="";
 	$r=$db->query("select * from CFN_TABLE_FIELDS where table_key='$table_key' and id='$field_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$name=$db->result($r,0,"field_name");
@@ -314,7 +314,7 @@ function getFieldInfo($table_key,$field_id){$db=new db;$slave=new slave;$name=""
 }
 
 
-function getCatalogueClientViewFieldsData($user_id,$table_key){$db=new db;$slave=new slave;if ($table_key==""){$table_key="catalogue";}$lst=array();
+function getCatalogueClientViewFieldsData($user_id,$table_key){$db=DbSingleton::getDb();$slave=new slave;if ($table_key==""){$table_key="catalogue";}$lst=array();
 	$r=$db->query("select * from CFN_USERS_TABLE_CONFIG where table_key='$table_key' and user_id='$user_id' and field_active='1' order by field_pos,id asc;");$n=$db->num_rows($r);
 	if ($n==0){
 		$r=$db->query("select * from CFN_TABLE_FIELDS where table_key='$table_key' order by id asc;");$n=$db->num_rows($r);
@@ -332,7 +332,7 @@ function getCatalogueClientViewFieldsData($user_id,$table_key){$db=new db;$slave
 }
 
 
-function showCatalogueBrandSelectList($r,$code_search){session_start(); $db=new db; $slave=new slave; $list="";
+function showCatalogueBrandSelectList($r,$code_search){session_start(); $db=DbSingleton::getDb(); $slave=new slave; $list="";
 	$n=$db->num_rows($r);$res_ar=array(); $tkey=time();
 	$db->query("CREATE TEMPORARY TABLE IF NOT EXISTS `NBRAND_RESULT_$tkey` (`art_id` INT NOT NULL ,`display_nr` VARCHAR( 100 ) NOT NULL ,`name` VARCHAR( 255 ) NOT NULL ,`brand_id` INT NOT NULL ,`brand_name` VARCHAR( 100 ) NOT NULL ,`kol_res` TINYINT NOT NULL) ENGINE = MYISAM ;");
 //		$slave->print_debug($query."n=$n<br>");
@@ -381,7 +381,7 @@ function showCatalogueBrandSelectList($r,$code_search){session_start(); $db=new 
 
 
 
-function showArticlesSearchList($art,$query_2,$search_type){$db=new dbt;$dbp=new dbp;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showArticlesSearchList($art,$query_2,$search_type){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	if ($query_2=="" && $search_type==0){$art_search=$art;$link=gnLink;if (substr($link,-1)=="/"){$link=substr($link,0,strlen($link)-1);} $links=explode("/", $link);$w=$links[0];
 		$art=$this->clearArticle($art);$brand_id=$links[2];
 		
@@ -488,12 +488,12 @@ function showArticlesSearchList($art,$query_2,$search_type){$db=new dbt;$dbp=new
 	}
 	if ($query_2!=""){$query=$query_2;}
 	$r=$db->query($query);$n=$db->num_rows($r);$list="";$header_list="";
-	if ($query_2!="" || $list2==""){  // сработал внешний фильр или основной поиск с выбором бренда
+	if ($query_2!="" || $list2==""){  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 		list($fldcnf,$kol_f)=$this->getCatalogueClientViewFieldsData($user_id,"catalogue");
 		for ($i=1;$i<=$kol_f;$i++){
 			$header_list.="<th>".$fldcnf[$i]["field_name"]."</th>";
 			$range_list.="<td onClick='showCatalogueCard(\"{art_id}\")'>{".$fldcnf[$i]["field_key"]."}</td>";
-		}$header_list="<tr align='center'><th data-sortable=\"false\">Фото</th><th data-sortable=\"false\">Тип артикула</th>".$header_list."</tr>";
+		}$header_list="<tr align='center'><th data-sortable=\"false\">пїЅпїЅпїЅпїЅ</th><th data-sortable=\"false\">пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</th>".$header_list."</tr>";
 	
 		$lst=array();
 		for ($i=1;$i<=$n;$i++){
@@ -516,11 +516,11 @@ function showArticlesSearchList($art,$query_2,$search_type){$db=new dbt;$dbp=new
 			$lst[$i]["relation"]=$relation;
 			/*
 			$kind_name="";
-			if ($kind_id==0 && $relation==0){ $kind_name="запитаний артикул"; }
-			if ($kind_id>0 && $relation==0){ $kind_name="аналог"; }
-			if (($kind_id==3 || $kind_id==4) && $relation==1){ $kind_name="артикул присутні в"; }
-			if (($kind_id==3 || $kind_id==4) && $relation==2){ $kind_name="артикул включає в себе"; }
-			if ($kind_id=="" || $relation==""){$kind_name="інше";}
+			if ($kind_id==0 && $relation==0){ $kind_name="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"; }
+			if ($kind_id>0 && $relation==0){ $kind_name="пїЅпїЅпїЅпїЅпїЅпїЅ"; }
+			if (($kind_id==3 || $kind_id==4) && $relation==1){ $kind_name="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ"; }
+			if (($kind_id==3 || $kind_id==4) && $relation==2){ $kind_name="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ"; }
+			if ($kind_id=="" || $relation==""){$kind_name="пїЅпїЅпїЅпїЅ";}
 			*/
 			$check_photo=0;
 			$check_photo=$this->checkPhotoEmpty($art_id,$article_nr_displ);
@@ -560,11 +560,11 @@ function showArticlesSearchList($art,$query_2,$search_type){$db=new dbt;$dbp=new
 			if ($kind=="" || $relation==""){$lst_kr[5].=$lst[$i]["data"];}
 
 		}$kol_f+=1;
-		if ($lst_kr[1]!=""){$lst_kr[1]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"запитаний артикул\" class=\"fa fa-key\"></i>",$lst_kr[1]);$list.=$lst_kr[1];}
-		if ($lst_kr[2]!=""){$lst_kr[2]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"аналог\" class=\"fa fa-link\"></i>",$lst_kr[2]);$list.=$lst_kr[2];}
-		if ($lst_kr[3]!=""){$lst_kr[3]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"артикул присутні в \" class=\"fa fa-level-down\"></i>",$lst_kr[3]);$list.=$lst_kr[3];}
-		if ($lst_kr[4]!=""){$lst_kr[4]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"артикул включає в себе\" class=\"fa fa-level-up\"></i>",$lst_kr[4]);$list.=$lst_kr[4];}
-		if ($lst_kr[5]!=""){$lst_kr[5]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"інше\" class=\"fa fa-ellipsis-h\"></i>",$lst_kr[5]);$list.=$lst_kr[5];}
+		if ($lst_kr[1]!=""){$lst_kr[1]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ\" class=\"fa fa-key\"></i>",$lst_kr[1]);$list.=$lst_kr[1];}
+		if ($lst_kr[2]!=""){$lst_kr[2]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"пїЅпїЅпїЅпїЅпїЅпїЅ\" class=\"fa fa-link\"></i>",$lst_kr[2]);$list.=$lst_kr[2];}
+		if ($lst_kr[3]!=""){$lst_kr[3]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ \" class=\"fa fa-level-down\"></i>",$lst_kr[3]);$list.=$lst_kr[3];}
+		if ($lst_kr[4]!=""){$lst_kr[4]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ\" class=\"fa fa-level-up\"></i>",$lst_kr[4]);$list.=$lst_kr[4];}
+		if ($lst_kr[5]!=""){$lst_kr[5]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"пїЅпїЅпїЅпїЅ\" class=\"fa fa-ellipsis-h\"></i>",$lst_kr[5]);$list.=$lst_kr[5];}
 
 		/*if ($lst_kr[1]!=""){$list.="".$lst_kr[1];}
 		if ($lst_kr[2]!=""){$list.="".$lst_kr[2];}
@@ -576,14 +576,14 @@ function showArticlesSearchList($art,$query_2,$search_type){$db=new dbt;$dbp=new
 }
 
 
-function getGoodsGroupName($gg_id){$db=new dbt; $name="";
+function getGoodsGroupName($gg_id){$db=DbSingleton::getTokoDb(); $name="";
 	$r=$db->query ("select NAME from GOODS_GROUP where ID='$gg_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"NAME");}
 	return $name;
 }
 
 
-function listSubGoodsGroup($gg_id){$db=new dbt; $list="";
+function listSubGoodsGroup($gg_id){$db=DbSingleton::getTokoDb(); $list="";
 	$r=$db->query ("select ID from GOODS_GROUP where PARRENT_ID='$gg_id' order by `KEY`,`ID` asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"ID");
@@ -592,7 +592,7 @@ function listSubGoodsGroup($gg_id){$db=new dbt; $list="";
 	return $list;
 }
 
-function showArticlesFil4SearchList($suppl_id,$brand_id,$goods_group_id,$top,$stok_to,$stok_from){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showArticlesFil4SearchList($suppl_id,$brand_id,$goods_group_id,$top,$stok_to,$stok_from){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$where_brand="";
 	if ($brand_id!=""){
 		foreach($brand_id as $brnd_id){
@@ -630,7 +630,7 @@ function showArticlesFil4SearchList($suppl_id,$brand_id,$goods_group_id,$top,$st
 	return array($header_list,$list,$list_brand_select);
 }
 
-function showArticlesFil2SearchList($mfa_id,$mod_id,$typ_id,$str_id,$art_ids){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showArticlesFil2SearchList($mfa_id,$mod_id,$typ_id,$str_id,$art_ids){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$where_artds="";
 	if ($art_ids!=""){
 		$where_artds=" and t2a.ART_ID in (".$art_ids.") ";
@@ -658,13 +658,13 @@ function showArticlesFil2SearchList($mfa_id,$mod_id,$typ_id,$str_id,$art_ids){$d
 }
 
 	
-function getArticleOperPriceGeneralStock($art_id){$db=new dbt;$oper_price=0;$general_stock=0;
+function getArticleOperPriceGeneralStock($art_id){$db=DbSingleton::getTokoDb();$oper_price=0;$general_stock=0;
 	$r=$db->query("select * from T2_ARTICLES_PRICE_STOCK where ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){ $oper_price=$db->result($r,0,"OPER_PRICE"); $general_stock=$db->result($r,0,"GENERAL_STOCK"); }
 //	print "get for $art_id: $oper_price,$general_stock\n";
 	return array($oper_price,$general_stock);
 }
-function setArticleOperPriceGeneralStock($art_id,$new_oper_price,$new_general_stock){$db=new dbt;
+function setArticleOperPriceGeneralStock($art_id,$new_oper_price,$new_general_stock){$db=DbSingleton::getTokoDb();
 	$r=$db->query("select * from T2_ARTICLES_PRICE_STOCK where ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){ $db->query("update T2_ARTICLES_PRICE_STOCK set `OPER_PRICE`='$new_oper_price', `GENERAL_STOCK`='$new_general_stock' where ART_ID='$art_id';"); }
 	if ($n==0){ $db->query("insert into T2_ARTICLES_PRICE_STOCK (`ART_ID`,`OPER_PRICE`,`GENERAL_STOCK`) values ('$art_id','$new_oper_price','$new_general_stock');"); }
@@ -672,7 +672,7 @@ function setArticleOperPriceGeneralStock($art_id,$new_oper_price,$new_general_st
 	return;
 }
 
-function getArticleNrDisplBrand($art_id){$db=new dbt;$article_nr_displ="";$brand_id=0;$brand_name="";
+function getArticleNrDisplBrand($art_id){$db=DbSingleton::getTokoDb();$article_nr_displ="";$brand_id=0;$brand_name="";
 	
 	$r=$db->query("select t2a.ART_ID,t2a.BRAND_ID,t2a.ARTICLE_NR_DISPL,t2a.ARTICLE_NR_SEARCH, t2b.BRAND_NAME from T2_ARTICLES t2a  left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID  where t2a.ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -684,13 +684,13 @@ function getArticleNrDisplBrand($art_id){$db=new dbt;$article_nr_displ="";$brand
 	}
 	return array($article_nr_displ,$brand_id,$brand_name,$article_nr_search);
 }
-function getArticleName($art_id){$db=new dbt;$name="";
+function getArticleName($art_id){$db=DbSingleton::getTokoDb();$name="";
 	$r=$db->query("select NAME from T2_NAMES where ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){ $name=$db->result($r,0,"NAME"); }
 	return $name;
 }
 	
-function getArticleNameLang($art_id){$db=new dbt;$name="";
+function getArticleNameLang($art_id){$db=DbSingleton::getTokoDb();$name="";
 	$r=$db->query("select NAME from T2_NAMES where ART_ID='$art_id' and LANG_ID='41' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){ $name=$db->result($r,0,"NAME"); } else 
 		$r=$db->query("select NAME from T2_NAMES where ART_ID='$art_id' and LANG_ID='16' limit 0,1;");$n=$db->num_rows($r);
@@ -698,19 +698,19 @@ function getArticleNameLang($art_id){$db=new dbt;$name="";
 	return $name;
 }
 	
-function getArtNameUkr($art_id) {$db=new dbt;
+function getArtNameUkr($art_id) {$db=DbSingleton::getTokoDb();
 	$r=$db->query("select NAME from T2_NAMES where ART_ID='$art_id' and LANG_ID='41' limit 1;");$n=$db->num_rows($r);
 	if ($n==1){ $name=$db->result($r,0,"NAME");}
 	return $name;
 }
 	
-function getUniqueNumber($art_id) { $db=new dbt; $number=0;
+function getUniqueNumber($art_id) { $db=DbSingleton::getTokoDb(); $number=0;
 	$r=$db->query("select UNIV_NUMBER from T2_ARTICLES_UNIV_NUMBER where ART_ID='$art_id' limit 1;");
     $number=$db->result($r,0,"UNIV_NUMBER");
 	return $number;
 }
 
-function showCatalogueCard($art_id){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showCatalogueCard($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/catalogue_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	$r=$db->query("select t2a.ART_ID,t2a.BRAND_ID,t2a.ARTICLE_NR_DISPL, t2n.NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as INNER_CROSS, t2gg.GOODS_GROUP_ID, gg.NAME as GOODS_GROUP_NAME, IFNULL(t2ps.OPER_PRICE,0) as OPER_PRICE, IFNULL(t2ps.GENERAL_STOCK,0) as GENERAL_STOCK
@@ -765,7 +765,7 @@ function showCatalogueCard($art_id){$db=new dbt;$slave=new slave;session_start()
 	return array($form,$article_nr_displ);
 }
 	
-function showArticleCross($art_id) {$db=new dbt;
+function showArticleCross($art_id) {$db=DbSingleton::getTokoDb();
 	$r=$db->query("select `CROSS` from `T2_INNER_CROSS` where `ART_ID`='$art_id' limit 1;"); 
 	$cross=$db->result($r,0,"CROSS");
 									
@@ -789,8 +789,8 @@ function showArticleCross($art_id) {$db=new dbt;
 	return $form;
 }
 	
-function saveArticleCross($cross,$new_cross) {$db=new dbt;
-	$answer=0;$err="Помилка збереження даних!";
+function saveArticleCross($cross,$new_cross) {$db=DbSingleton::getTokoDb();
+	$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	if ($cross!="") {
 		$db->query("update `T2_INNER_CROSS` set `CROSS`='$new_cross' where `CROSS`='$cross';");
 		$answer=1;$err="";
@@ -798,7 +798,7 @@ function saveArticleCross($cross,$new_cross) {$db=new dbt;
 	return array($answer,$err);
 }
 	
-function getArticlesStorage($art_id) {$db=new dbt; $full_amount=$full_reserv_amount=0;
+function getArticlesStorage($art_id) {$db=DbSingleton::getTokoDb(); $full_amount=$full_reserv_amount=0;
 	$r=$db->query("select * from `T2_ARTICLES_STRORAGE` where `ART_ID`='$art_id';"); $n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$AMOUNT=$db->result($r,$i-1,"AMOUNT");
@@ -809,7 +809,7 @@ function getArticlesStorage($art_id) {$db=new dbt; $full_amount=$full_reserv_amo
 	return array($full_amount, $full_reserv_amount);
 }
 
-function saveCatalogueGeneralInfo($art_id,$article_nr_displ,$barcode,$inner_cross,$brand_id,$goods_group_id,$article_name,$article_info,$article_name_ukr,$unique_number){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveCatalogueGeneralInfo($art_id,$article_nr_displ,$barcode,$inner_cross,$brand_id,$goods_group_id,$article_name,$article_info,$article_name_ukr,$unique_number){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$art_id=$slave->qq($art_id);$article_nr_displ=$slave->qq($article_nr_displ);$barcode=$slave->qq($barcode);$inner_cross=$slave->qq($inner_cross);$brand_id=$slave->qq($brand_id);$goods_group_id=$slave->qq($goods_group_id);$article_name=$slave->qq($article_name);$article_info=$slave->qq($article_info);
 	if ($art_id>0){
 		
@@ -909,7 +909,7 @@ function saveCatalogueGeneralInfo($art_id,$article_nr_displ,$barcode,$inner_cros
 	return array($answer,$err);
 }
 	
-function showArticleLogs($art_id) {$db=new dbt; $list="";
+function showArticleLogs($art_id) {$db=DbSingleton::getTokoDb(); $list="";
 	$form_htm=RD."/tpl/catalogue_article_logs.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T2_ARTICLES_LOGS where art_id='$art_id';"); $n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
@@ -953,11 +953,11 @@ function showArticleLogs($art_id) {$db=new dbt; $list="";
 }
 
 function clearArticle($art){
-	$art=str_replace(" ","",$art);$art=str_replace("_","",$art);$art=str_replace("-","",$art);$art=str_replace(".","",$art);$art=str_replace("+","",$art);$art=str_replace("'","",$art);$art=str_replace("/","",$art);$art=str_replace('"',"",$art);$art=preg_replace ("/[^a-zA-ZА-Яа-я0-9\s]/","",$art);$art=strtolower($art);
+	$art=str_replace(" ","",$art);$art=str_replace("_","",$art);$art=str_replace("-","",$art);$art=str_replace(".","",$art);$art=str_replace("+","",$art);$art=str_replace("'","",$art);$art=str_replace("/","",$art);$art=str_replace('"',"",$art);$art=preg_replace ("/[^a-zA-ZпїЅ-пїЅпїЅ-пїЅ0-9\s]/","",$art);$art=strtolower($art);
 	return $art;
 }
 
-function loadArticleCommets($art_id){$db=new dbt;$slave=new slave; 
+function loadArticleCommets($art_id){$db=DbSingleton::getTokoDb();$slave=new slave; 
 	$form_htm=RD."/tpl/catalogue_comment_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select t2ac.* from T2_ARTICLES_COMMENTS t2ac where t2ac.ART_ID='$art_id' order by id desc;");$n=$db->num_rows($r);$list="";
 		for ($i=1;$i<=$n;$i++){
@@ -978,10 +978,10 @@ function loadArticleCommets($art_id){$db=new dbt;$slave=new slave;
 			$list.=$block;
 			
 		}
-		if ($n==0){$list="<h3 class='text-center'>Коментарі відсутні</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
 		return $list;
 }
-function saveArticleComment($art_id,$comment){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveArticleComment($art_id,$comment){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	
 	$art_id=$slave->qq($art_id);$comment=$slave->qq($comment);
 	if ($art_id>0 && $comment!=""){
@@ -990,7 +990,7 @@ function saveArticleComment($art_id,$comment){$db=new dbt;$slave=new slave;sessi
 	}
 	return array($answer,$err);
 }
-function dropArticleComment($art_id,$comment_id){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення запису!";
+function dropArticleComment($art_id,$comment_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
 	$art_id=$slave->qq($art_id);$comment_id=$slave->qq($comment_id);
 	if ($art_id>0 && $comment_id>0){
 		$r=$db->query("select * from T2_ARTICLES_COMMENTS where ART_ID='$art_id' and ID='$comment_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1002,13 +1002,13 @@ function dropArticleComment($art_id,$comment_id){$db=new dbt;$slave=new slave;se
 	return array($answer,$err);
 }
 
-function getMediaUserName($user_id){$db=new db;$name="";
+function getMediaUserName($user_id){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select name from media_users where id='$user_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"name");}
 	return $name;
 }
 
-function loadArticleCDN($art_id){$db=new dbt;$slave=new slave;
+function loadArticleCDN($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;
 	$form_htm=RD."/tpl/catalogue_cdn_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select t2ac.* from T2_ARTICLES_CDN t2ac 	where t2ac.ART_ID='$art_id' and t2ac.STATUS='1' order by t2ac.FILE_NAME asc;");$n=$db->num_rows($r);$list="";
 		for ($i=1;$i<=$n;$i++){
@@ -1043,11 +1043,11 @@ function loadArticleCDN($art_id){$db=new dbt;$slave=new slave;
 			$list.=$block;
 			
 		}
-		if ($n==0){$list="<h3 class='text-center'>Файли відсутні</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
 		return $list;
 }
 
-function articlesCDNDropFile($art_id,$file_id){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення файлу!";
+function articlesCDNDropFile($art_id,$file_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	
 	$art_id=$slave->qq($art_id);$file_id=$slave->qq($file_id);
 	if ($art_id>0 && $file_id>0){
@@ -1062,7 +1062,7 @@ function articlesCDNDropFile($art_id,$file_id){$db=new dbt;$slave=new slave;sess
 	return array($answer,$err);
 }
 
-function showArtilceGallery($art_id,$disp_nomber){$db=new dbt;$slave=new slave;
+function showArtilceGallery($art_id,$disp_nomber){$db=DbSingleton::getTokoDb();$slave=new slave;
 	$form_htm=RD."/tpl/catalogue_article_gallery.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select t2af.* from T2_PHOTOS t2af where t2af.ART_ID='$art_id' and t2af.ACTIVE=1 order by t2af.PHOTO_NAME asc;");$n=$db->num_rows($r);$list="";$slide_list="";
 		for ($i=1;$i<=$n;$i++){
@@ -1082,14 +1082,14 @@ function showArtilceGallery($art_id,$disp_nomber){$db=new dbt;$slave=new slave;
 			</div>";
 			$slide_list.="<li data-slide-to=\"".($i-1)."\" data-target=\"#carouselArticleModal\" $main_c></li>";
 		}
-		if ($n==0){$list="<h3 class='text-center'>Фото відсутні</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
 		$form=str_replace("{items_list}",$list,$form);
 		$form=str_replace("{slide_list}",$slide_list,$form);
-		return array($form,"Фотогалерея артикула: $disp_nomber");
+		return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $disp_nomber");
 }
 
 
-function loadArticleFoto($art_id){$db=new dbt;$slave=new slave;
+function loadArticleFoto($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;
 	$form_htm=RD."/tpl/catalogue_foto_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select t2af.* from T2_PHOTOS t2af where t2af.ART_ID='$art_id' and t2af.ACTIVE=1 order by t2af.PHOTO_NAME asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -1099,8 +1099,8 @@ function loadArticleFoto($art_id){$db=new dbt;$slave=new slave;
 		$data=$db->result($r,$i-1,"DATA");
 		$user_name=$this->getMediaUserName($user_id);
 		$main=$db->result($r,$i-1,"MAIN");
-		$main_v="<a class=\"btn btn-xs btn-white\" onClick=\"setArticlesFotoMain('$art_id','$file_id')\"><i class=\"fa fa-check\"></i> Основне фото</a>";
-		if ($main==1){$main_v=" <span class=\"btn btn-xs label-primary\"><i class=\"fa fa-check\"></i> Основне фото</span>";}	
+		$main_v="<a class=\"btn btn-xs btn-white\" onClick=\"setArticlesFotoMain('$art_id','$file_id')\"><i class=\"fa fa-check\"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ</a>";
+		if ($main==1){$main_v=" <span class=\"btn btn-xs label-primary\"><i class=\"fa fa-check\"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ</span>";}	
 		$link="https://toko.ua/uploads/images/catalogue/$file_name";
 		$block=$form;
 		$block=str_replace("{file_id}",$file_id,$block);
@@ -1113,10 +1113,10 @@ function loadArticleFoto($art_id){$db=new dbt;$slave=new slave;
 		$block=str_replace("{main}",$main_v,$block);
 		$list.=$block;
 	}
-	if ($n==0){$list="<h3 class='text-center'>Фото відсутні</h3>";}
+	if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
 	return $list;
 }
-function setArticlesFotoMain($art_id,$file_id){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка обробки запиту!";
+function setArticlesFotoMain($art_id,$file_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
 	$art_id=$slave->qq($art_id);$file_id=$slave->qq($file_id);
 	if ($art_id>0 && $file_id>0){
 		$db->query("update T2_PHOTOS set MAIN='0' where ART_ID='$art_id' and MAIN='1';");
@@ -1125,7 +1125,7 @@ function setArticlesFotoMain($art_id,$file_id){$db=new dbt;$slave=new slave;sess
 	}
 	return array($answer,$err);
 }
-function articlesFotoDropFile($art_id,$file_id){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення файлу!";
+function articlesFotoDropFile($art_id,$file_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$art_id=$slave->qq($art_id);$file_id=$slave->qq($file_id);
 	if ($art_id>0 && $file_id>0){
 		$r=$db->query("select PHOTO_NAME from T2_PHOTOS where ART_ID='$art_id' and ID='$file_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1141,7 +1141,7 @@ function articlesFotoDropFile($art_id,$file_id){$db=new dbt;$slave=new slave;ses
 
 
 
-function loadArticleScheme($template_id,$op){$db=new dbt;$slave=new slave;
+function loadArticleScheme($template_id,$op){$db=DbSingleton::getTokoDb();$slave=new slave;
 	$form_htm=RD."/tpl/catalogue_scheme_block.htm";if ($op==1){$form_htm=RD."/tpl/catalogue_scheme_view_block.htm";}if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T2_ARTICLES_SCHEME where TEMPLATE_ID='$template_id' order by FILE_NAME asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -1169,11 +1169,11 @@ function loadArticleScheme($template_id,$op){$db=new dbt;$slave=new slave;
 		$list.=$block;
 		
 	}
-	if ($n==0){$list="<h3 class='text-center'>Схеми відсутні</h3>";}
+	if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
 	return $list;
 }
 
-function articlesSchemeDropFile($file_id){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення файлу!";
+function articlesSchemeDropFile($file_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$file_id=$slave->qq($file_id);
 	if ($file_id>0){
 		$r=$db->query("select TEMPLATE_ID,FILE_NAME from T2_ARTICLES_SCHEME where ID='$file_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1190,7 +1190,7 @@ function articlesSchemeDropFile($file_id){$db=new dbt;$slave=new slave;session_s
 }
 
 
-function showSupplListSelect($sel_id){$db=new db;$list="";
+function showSupplListSelect($sel_id){$db=DbSingleton::getDb();$list="";
 	$r=$db->query("select c.*,ot.name as org_type_name from A_CLIENTS c inner join A_CLIENTS_CATEGORY cc on cc.client_id=c.id left outer join A_ORG_TYPE ot on ot.id=c.org_type where c.status='1' and cc.category_id='2' order by name,full_name,id asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -1204,7 +1204,7 @@ function showSupplListSelect($sel_id){$db=new db;$list="";
 }
 
 
-function showManufactureListSelect($sel_id){$db=new dbt;$list="";
+function showManufactureListSelect($sel_id){$db=DbSingleton::getTokoDb();$list="";
 	$r=$db->query("select * from T_manufacturers order by MFA_BRAND asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"MFA_ID");
@@ -1214,7 +1214,7 @@ function showManufactureListSelect($sel_id){$db=new dbt;$list="";
 	}
 	return $list;	
 }
-function showModelSelectList($mfa_id,$sel_id){$db=new dbt;$list="";
+function showModelSelectList($mfa_id,$sel_id){$db=DbSingleton::getTokoDb();$list="";
 	$r=$db->query("select * from T_models where MOD_MFA_ID='$mfa_id' order by Model asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"MOD_ID");
@@ -1232,7 +1232,7 @@ function showModelSelectList($mfa_id,$sel_id){$db=new dbt;$list="";
 	}
 	return $list;	
 }
-function showFilterModificationSelectList($mod_id,$sel_id){$db=new dbt;$list="";
+function showFilterModificationSelectList($mod_id,$sel_id){$db=DbSingleton::getTokoDb();$list="";
 	$r=$db->query("select * from T_types where TYP_MOD_ID='$mod_id' order by TYP_SORT,TYP_TEXT asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"TYP_ID"); 	
@@ -1246,7 +1246,7 @@ function showFilterModificationSelectList($mod_id,$sel_id){$db=new dbt;$list="";
 		}else{$name.="&infin;) | ";}
 		$name.=$db->result($r,$i-1,"TYP_HP_FROM")."HP/";
 		$name.=$db->result($r,$i-1,"TYP_KW_FROM")."kW | ";
-		$name.=$db->result($r,$i-1,"TYP_CCM")."см<sup>3</sup> | ";
+		$name.=$db->result($r,$i-1,"TYP_CCM")."пїЅпїЅ<sup>3</sup> | ";
 		$name.=$db->result($r,$i-1,"ENG_Cod");
 		
 		$sel="";if ($sel_id==$id){$sel="selected='selected'";}
@@ -1255,8 +1255,8 @@ function showFilterModificationSelectList($mod_id,$sel_id){$db=new dbt;$list="";
 	return $list;	
 }
 
-function getTecGroupTreeChilds($str_id){$db = new dbt; $kol=0; $r=$db->query("SELECT count(STR_ID) as kol FROM `T2_GROUP_TREE` where `STR_ID_PARENT`='$str_id';");$kol=0+$db->result($r,0,"kol"); return $kol; }
-function createTDtree($mfa_id, $mod_id, $typ_id, $level, $parent_id, $tree) {$db = new dbt; $dbp=new dbp;  $slave = new slave; 
+function getTecGroupTreeChilds($str_id){$db = DbSingleton::getTokoDb(); $kol=0; $r=$db->query("SELECT count(STR_ID) as kol FROM `T2_GROUP_TREE` where `STR_ID_PARENT`='$str_id';");$kol=0+$db->result($r,0,"kol"); return $kol; }
+function createTDtree($mfa_id, $mod_id, $typ_id, $level, $parent_id, $tree) {$db = DbSingleton::getTokoDb(); $dbp=DbSingleton::getTokoDb();  $slave = new slave; 
 	$query="SELECT ART_ID,LA_ID FROM T2_LINKS where TYP_ID ='$typ_id' GROUP BY ART_ID;";
 	$r=$dbp->query($query);$n=$dbp->num_rows($r);$art_id_str="0";
 	for ($i=1;$i<=$n;$i++){
@@ -1316,7 +1316,7 @@ function createTDtree($mfa_id, $mod_id, $typ_id, $level, $parent_id, $tree) {$db
 	return $tree;
 }
 
-function createTDtree_universal($art_id,$level, $parent_id, $tree) {$db = new dbt; $dbp=new dbp;  $slave = new slave; 
+function createTDtree_universal($art_id,$level, $parent_id, $tree) {$db = DbSingleton::getTokoDb(); $dbp=DbSingleton::getTokoDb();  $slave = new slave; 
 	$query="SELECT * FROM T2_TREE where `ART_ID` in ($art_id);";
 	$r=$dbp->query($query);$n=$dbp->num_rows($r);$str_id_str="0";$str_id_a=array();
 	for ($i=1;$i<=$n;$i++){
@@ -1370,7 +1370,7 @@ function createTDtree_universal($art_id,$level, $parent_id, $tree) {$db = new db
 function loadFilterGroupTreeList($mfa_id, $mod_id, $typ_id,$sel_id){
 	$form_htm=RD."/tpl/catalogue_tecdoc_group_tree.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$form = str_replace("{menu}", $this->createTDtree($mfa_id, $mod_id, $typ_id, $level, $parent_id, ""), $form);
-	return array($form,"Оберіть групу запчастин");
+	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 }
 
 
@@ -1388,24 +1388,24 @@ function loadFilterGroupTreeListSide($mfa_id, $mod_id, $typ_id,$sel_id){
 }
 
 
-function getBrandId($art_id){$db=new dbt;$brand_id=0;
+function getBrandId($art_id){$db=DbSingleton::getTokoDb();$brand_id=0;
 	$r=$db->query("select BRAND_ID from T2_ARTICLES where ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$brand_id=$db->result($r,0,"BRAND_ID");}
 	return $brand_id;
 }
-function getBrandKind($sel_id){$db=new dbt;$kind=4;
+function getBrandKind($sel_id){$db=DbSingleton::getTokoDb();$kind=4;
 	$r=$db->query("select KIND from T2_BRANDS where BRAND_ID='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$kind=$db->result($r,0,"KIND");}
 	return $kind;
 }
-function getBrandName($sel_id){$db=new dbt;$brand_name="";
+function getBrandName($sel_id){$db=DbSingleton::getTokoDb();$brand_name="";
 	$r=$db->query("select BRAND_NAME from T2_BRANDS where BRAND_ID='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$brand_name=$db->result($r,0,"BRAND_NAME");}
 	return $brand_name;
 }
 
 
-function showManufListSelect($sel_id){$db=new dbt;$list="";
+function showManufListSelect($sel_id){$db=DbSingleton::getTokoDb();$list="";
 	$r=$db->query("select * from T2_MANUF order by NAME asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"ID");
@@ -1416,7 +1416,7 @@ function showManufListSelect($sel_id){$db=new dbt;$list="";
 	}
 	return $list;	
 }
-function showBrandLetterListSelect($sel_id){$db=new dbt;$list="";
+function showBrandLetterListSelect($sel_id){$db=DbSingleton::getTokoDb();$list="";
 	$r=$db->query("select * from T2_BRANDS where LETTER_CODE!='' order by BRAND_NAME asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"BRAND_ID");
@@ -1427,7 +1427,7 @@ function showBrandLetterListSelect($sel_id){$db=new dbt;$list="";
 	}
 	return $list;	
 }
-function showBrandListSelect($sel_id){$db=new dbt;$list="";
+function showBrandListSelect($sel_id){$db=DbSingleton::getTokoDb();$list="";
 	$r=$db->query("select * from T2_BRANDS order by BRAND_NAME asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
 	for ($i=1;$i<=$n;$i++){
 		$brand_id=$db->result($r,$i-1,"BRAND_ID");
@@ -1437,7 +1437,7 @@ function showBrandListSelect($sel_id){$db=new dbt;$list="";
 	}
 	return $list;	
 }
-function showUnitsListSelect($sel_id,$ns){$db=new dbt;$list="";if ($ns==""){$ns=1;}
+function showUnitsListSelect($sel_id,$ns){$db=DbSingleton::getTokoDb();$list="";if ($ns==""){$ns=1;}
 	$r=$db->query("select * from units order by name asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -1450,7 +1450,7 @@ function showUnitsListSelect($sel_id,$ns){$db=new dbt;$list="";if ($ns==""){$ns=
 }
 
 
-function loadRefinementListSelect($group_id){$db=new dbt;$list="";
+function loadRefinementListSelect($group_id){$db=DbSingleton::getTokoDb();$list="";
 	$r=$db->query("select * from T2_REFINEMENT where GROUP_ID='$group_id' order by `NAME`,`ID` asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"ID");
@@ -1461,7 +1461,7 @@ function loadRefinementListSelect($group_id){$db=new dbt;$list="";
 	}
 	return $list;	
 }
-function showGoodsGroupLetterListSelect($prnt_id){$db=new dbt;$list="";
+function showGoodsGroupLetterListSelect($prnt_id){$db=DbSingleton::getTokoDb();$list="";
 	$r=$db->query("select * from GOODS_GROUP where PARRENT_ID='$prnt_id' order by `KEY`,`ID` asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"ID");
@@ -1472,7 +1472,7 @@ function showGoodsGroupLetterListSelect($prnt_id){$db=new dbt;$list="";
 	}
 	return $list;	
 }
-function showGoodsGroupListSelect($sel_id){$db=new dbt;$list="";
+function showGoodsGroupListSelect($sel_id){$db=DbSingleton::getTokoDb();$list="";
 	$r=$db->query("select * from GOODS_GROUP where PARRENT_ID='0' order by `KEY`,`ID` asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"ID");
@@ -1482,7 +1482,7 @@ function showGoodsGroupListSelect($sel_id){$db=new dbt;$list="";
 	}
 	return $list;	
 }
-function showGoodsGroupSubListSelect($parrent_id,$sel_id,$prn_i){$db=new dbt;$list="";
+function showGoodsGroupSubListSelect($parrent_id,$sel_id,$prn_i){$db=DbSingleton::getTokoDb();$list="";
 	$r=$db->query("select * from GOODS_GROUP where PARRENT_ID='$parrent_id'  order by `KEY`,`ID` asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"ID");
@@ -1493,7 +1493,7 @@ function showGoodsGroupSubListSelect($parrent_id,$sel_id,$prn_i){$db=new dbt;$li
 	return $list;	
 }
 
-function unlinkCatalogueGoodGroup($art_id,$group_id){$db=new dbt; $answer=0;$err="Помилка обробки даних";
+function unlinkCatalogueGoodGroup($art_id,$group_id){$db=DbSingleton::getTokoDb(); $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ";
 	$r=$db->query("select * from T2_GOODS_GROUP where ART_ID='$art_id' and `GOODS_GROUP_ID`='$group_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$db->query("delete from T2_GOODS_GROUP where ART_ID='$art_id' and `GOODS_GROUP_ID`='$group_id';");
@@ -1502,7 +1502,7 @@ function unlinkCatalogueGoodGroup($art_id,$group_id){$db=new dbt; $answer=0;$err
 	return array($answer,$err);
 }
 
-function showGoodGroupTree($art_id,$sel_id){$db=new dbt;$tree="";
+function showGoodGroupTree($art_id,$sel_id){$db=DbSingleton::getTokoDb();$tree="";
 	$form_htm=RD."/tpl/catalogue_goods_group_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from GOODS_GROUP where PARRENT_ID='0'  order by `KEY`,`ID` asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -1516,7 +1516,7 @@ function showGoodGroupTree($art_id,$sel_id){$db=new dbt;$tree="";
 	return $form;	
 }
 
-function showGoodGroupSubLevel($parrent_id,$sel_id){$db=new dbt;$tree="";
+function showGoodGroupSubLevel($parrent_id,$sel_id){$db=DbSingleton::getTokoDb();$tree="";
 	$r=$db->query("select * from GOODS_GROUP where PARRENT_ID='$parrent_id' order by `KEY`,`ID` asc;");$n=$db->num_rows($r);
 	if ($n>0){$tree.="<ul>";
 		for ($i=1;$i<=$n;$i++){
@@ -1530,36 +1530,36 @@ function showGoodGroupSubLevel($parrent_id,$sel_id){$db=new dbt;$tree="";
 	return $tree;
 }
 
-function getArticleGoodsGroup($art_id){$db=new dbt;$slave=new slave;$id=0;$caption="";
+function getArticleGoodsGroup($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;$id=0;$caption="";
 	$r=$db->query("select gg.* from GOODS_GROUP gg inner join T2_GOODS_GROUP t2gg on t2gg.GOODS_GROUP_ID=gg.ID where t2gg.ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$id=$db->result($r,0,"ID");$caption=$db->result($r,0,"NAME");}
 	return array($id,$caption);
 }
-function getArticleGoodsGroupTemplateId($art_id,$goods_group_id){$db=new dbt;$slave=new slave;$id=0;
+function getArticleGoodsGroupTemplateId($art_id,$goods_group_id){$db=DbSingleton::getTokoDb();$slave=new slave;$id=0;
 	$r=$db->query("select TEMPLATE_ID from T2_GOODS_GROUP_TEMPLATES where ART_ID='$art_id' and GOODS_GROUP_ID='$goods_group_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$id=$db->result($r,0,"TEMPLATE_ID");}
 	return $id;
 }
-function getArticleGoodsGroupTemplateCaption($id){$db=new dbt;$slave=new slave;$name="";
+function getArticleGoodsGroupTemplateCaption($id){$db=DbSingleton::getTokoDb();$slave=new slave;$name="";
 	$r=$db->query("select NAME from GOODS_GROUP_TEMPLATE where ID='$id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"NAME");}
 	return $name;
 }
 
-function getArticleGoodsGroupTemplateText($id){$db=new dbt;$slave=new slave;$name="";
+function getArticleGoodsGroupTemplateText($id){$db=DbSingleton::getTokoDb();$slave=new slave;$name="";
 	$r=$db->query("select TEXT from GOODS_GROUP_TEMPLATE where ID='$id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"TEXT");}
 	return $name;
 }
 	
-function getArticleGoodsGroupTemplateDescr($id){$db=new dbt;$slave=new slave;$name="";
+function getArticleGoodsGroupTemplateDescr($id){$db=DbSingleton::getTokoDb();$slave=new slave;$name="";
 	$r=$db->query("select DESCR from GOODS_GROUP_TEMPLATE where ID='$id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"DESCR");}
 	return $name;
 }
 
 
-function showGoodsGroupTemplateListSelect($goods_group_id,$sel_id){$db=new dbt;$list="";
+function showGoodsGroupTemplateListSelect($goods_group_id,$sel_id){$db=DbSingleton::getTokoDb();$list="";
 	$r=$db->query("select * from GOODS_GROUP_TEMPLATE where GOODS_GROUP_ID='$goods_group_id' order by name,id asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"ID");
@@ -1570,13 +1570,13 @@ function showGoodsGroupTemplateListSelect($goods_group_id,$sel_id){$db=new dbt;$
 	return $list;	
 }
 
-function getGoodsGroupParamValue($art_id,$param_id){$db=new dbt;$slave=new slave;$value="";
+function getGoodsGroupParamValue($art_id,$param_id){$db=DbSingleton::getTokoDb();$slave=new slave;$value="";
 	$r=$db->query("select PARAM_VALUE from T2_GOODS_GROUP_PARAMS_VALUE where ART_ID='$art_id' and PARAM_ID='$param_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$value=$db->result($r,0,"PARAM_VALUE");}
 	return $value;
 }
 
-function getGoodsGroupParamsValueDataList($param_id,$template_id){$db=new dbt;$list="<datalist id='datalist_".$param_id."'>";
+function getGoodsGroupParamsValueDataList($param_id,$template_id){$db=DbSingleton::getTokoDb();$list="<datalist id='datalist_".$param_id."'>";
 	$r=$db->query("select PARAM_VALUE from T2_GOODS_GROUP_PARAMS_VALUE where PARAM_ID='$param_id' and TEMPLATE_ID='$template_id' group by PARAM_VALUE order by PARAM_VALUE asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$param_value=$db->result($r,$i-1,"PARAM_VALUE");
@@ -1585,7 +1585,7 @@ function getGoodsGroupParamsValueDataList($param_id,$template_id){$db=new dbt;$l
 	return $list;
 }
 
-function showGoodsGroupParamsList($art_id,$template_id){$db=new dbt;$slave=new slave;$manual=new manual;
+function showGoodsGroupParamsList($art_id,$template_id){$db=DbSingleton::getTokoDb();$slave=new slave;$manual=new manual;
 	$r=$db->query("select * from GOODS_GROUP_TEMPLATE_PARAMS where TEMPLATE_ID='$template_id' order by PARAM_ID asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
 		$param_name=$db->result($r,$i-1,"NAME");
@@ -1609,7 +1609,7 @@ function showGoodsGroupParamsList($art_id,$template_id){$db=new dbt;$slave=new s
 	return $list;
 }
 
-function showGoodsGroupParamsNameList($art_id,$template_id){$db=new dbt;$slave=new slave;$manual=new manual;
+function showGoodsGroupParamsNameList($art_id,$template_id){$db=DbSingleton::getTokoDb();$slave=new slave;$manual=new manual;
 	$r=$db->query("select * from GOODS_GROUP_TEMPLATE_PARAMS where TEMPLATE_ID='$template_id' order by PARAM_ID asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n+15;$i++){ $param_name=""; $param_id=0;$field_type="";
 		if ($i<=$n){
@@ -1646,7 +1646,7 @@ function showCatalogueGoodGroupTemplateForm($art_id,$template_id){$slave=new sla
 	$form=str_replace("{scheme_list}",$this->loadArticleScheme($template_id,0),$form);
 	
 
-	return array($form,"Редагування шаблону");
+	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 }
 
 function loadArticleParams($art_id){$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
@@ -1662,7 +1662,7 @@ function loadArticleParams($art_id){$slave=new slave;session_start();$user_id=$_
 	return $form;
 }
 	
-function loadArticleInfo($art_id) {$db=new dbt; $list="";
+function loadArticleInfo($art_id) {$db=DbSingleton::getTokoDb(); $list="";
 	$form_htm=RD."/tpl/catalogue_article_info.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T2_INFO where ART_ID='$art_id' order by `SORT` asc;"); $n=$db->num_rows($r);
     for ($i=1;$i<=$n;$i++){
@@ -1677,20 +1677,20 @@ function loadArticleInfo($art_id) {$db=new dbt; $list="";
 			<div class='col-lg-2'><input id='info_sort-$i' type='text' value='$SORT' class='form-control'></div>
 			<div class='col-lg-2'>$lang_select</div>
 			<div class='col-lg-2'>
-				<button class='btn btn-primary' onClick=\"saveArticleInfo('$art_id','$LANG_ID','$SORT','$i');\"><i class='fa fa-save'></i> Зберегти</button>
-				<button class='btn btn-danger' onClick=\"dropArticleInfo('$art_id','$LANG_ID','$SORT');\"><i class='fa fa-save'></i> Видалити</button>
+				<button class='btn btn-primary' onClick=\"saveArticleInfo('$art_id','$LANG_ID','$SORT','$i');\"><i class='fa fa-save'></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</button>
+				<button class='btn btn-danger' onClick=\"dropArticleInfo('$art_id','$LANG_ID','$SORT');\"><i class='fa fa-save'></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</button>
 			</div>
 		</div>";
 	}
-	if ($n==0) $list="Пусто";
+	if ($n==0) $list="пїЅпїЅпїЅпїЅпїЅ";
 	$form=str_replace("{article_info}",$list,$form);
 	$form=str_replace("{add_info}","addArticleInfo($art_id);",$form);
 	$form=str_replace("{lang_info}",$this->getLangList(),$form);
 	return $form;
 }
 	
-function saveArticleInfo($art_id,$lang_id,$text,$value,$sort,$new_sort) { $db=new dbt;
-	$answer=0;$err="Помилка збереження даних!";
+function saveArticleInfo($art_id,$lang_id,$text,$value,$sort,$new_sort) { $db=DbSingleton::getTokoDb();
+	$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	if ($art_id>0) {
 		$db->query("update T2_INFO set TEXT='$text', VALUE='$value', SORT='$new_sort' where ART_ID='$art_id' and LANG_ID='$lang_id' and SORT='$sort';");
 		$answer=1;$err="";
@@ -1698,8 +1698,8 @@ function saveArticleInfo($art_id,$lang_id,$text,$value,$sort,$new_sort) { $db=ne
 	return array($answer,$err);
 }
 	
-function dropArticleInfo($art_id,$lang_id,$sort) { $db=new dbt;
-	$answer=0;$err="Помилка збереження даних!";
+function dropArticleInfo($art_id,$lang_id,$sort) { $db=DbSingleton::getTokoDb();
+	$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	if ($art_id>0) {
 		$db->query("delete from T2_INFO where ART_ID='$art_id' and LANG_ID='$lang_id' and SORT='$sort';"); 
 		$answer=1;$err="";
@@ -1707,19 +1707,19 @@ function dropArticleInfo($art_id,$lang_id,$sort) { $db=new dbt;
 	return array($answer,$err);
 }
 	
-function addArticleInfo($art_id,$lang_id,$text,$value,$sort) { $db=new dbt;
-	$answer=0; $err="Помилка збереження даних!";
+function addArticleInfo($art_id,$lang_id,$text,$value,$sort) { $db=DbSingleton::getTokoDb();
+	$answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
   	if ($art_id>0) {
 		$r=$db->query("select * from T2_INFO where ART_ID='$art_id' and LANG_ID='$lang_id' and SORT='$sort';");	$n=$db->num_rows($r);	
 		if ($n==0) {		  
 			$db->query("insert into T2_INFO (ART_ID,LANG_ID,TEXT,VALUE,SORT) values ('$art_id','$lang_id','$text','$value','$sort');");
 			$answer=1;$err="";
-		} else $err="Параметр з таким порядковим номером уже існує!";		
+		} else $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ!";		
 	}
 	return array($answer,$err);
 }
 	
-function loadArticleShortInfo($art_id) {$db=new dbt; $list="";
+function loadArticleShortInfo($art_id) {$db=DbSingleton::getTokoDb(); $list="";
 	$form_htm=RD."/tpl/catalogue_article_info.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T2_SHORT_INFO where ART_ID='$art_id' order by `SORT` asc;"); $n=$db->num_rows($r);
     for ($i=1;$i<=$n;$i++){
@@ -1734,20 +1734,20 @@ function loadArticleShortInfo($art_id) {$db=new dbt; $list="";
 			<div class='col-lg-2'><input id='info_sort-$i' type='text' value='$SORT' class='form-control'></div>
 			<div class='col-lg-2'>$lang_select</div>
 			<div class='col-lg-2'>
-				<button class='btn btn-primary' onClick=\"saveArticleShortInfo('$art_id','$LANG_ID','$SORT','$i');\"><i class='fa fa-save'></i> Зберегти</button>
-				<button class='btn btn-danger' onClick=\"dropArticleShortInfo('$art_id','$LANG_ID','$SORT');\"><i class='fa fa-save'></i> Видалити</button>
+				<button class='btn btn-primary' onClick=\"saveArticleShortInfo('$art_id','$LANG_ID','$SORT','$i');\"><i class='fa fa-save'></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</button>
+				<button class='btn btn-danger' onClick=\"dropArticleShortInfo('$art_id','$LANG_ID','$SORT');\"><i class='fa fa-save'></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</button>
 			</div>
 		</div>";
 	}
-	if ($n==0) $list="Пусто";
+	if ($n==0) $list="пїЅпїЅпїЅпїЅпїЅ";
 	$form=str_replace("{article_info}",$list,$form);
 	$form=str_replace("{add_info}","addArticleShortInfo($art_id);",$form);
 	$form=str_replace("{lang_info}",$this->getLangList(),$form);
 	return $form;
 }
 	
-function saveArticleShortInfo($art_id,$lang_id,$text,$value,$sort,$new_sort) { $db=new dbt;
-	$answer=0;$err="Помилка збереження даних!";
+function saveArticleShortInfo($art_id,$lang_id,$text,$value,$sort,$new_sort) { $db=DbSingleton::getTokoDb();
+	$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	if ($art_id>0) {
 		$db->query("update T2_SHORT_INFO set TEXT='$text', VALUE='$value', SORT='$new_sort' where ART_ID='$art_id' and LANG_ID='$lang_id' and SORT='$sort';");
 		$answer=1;$err="";
@@ -1755,8 +1755,8 @@ function saveArticleShortInfo($art_id,$lang_id,$text,$value,$sort,$new_sort) { $
 	return array($answer,$err);
 }
 	
-function dropArticleShortInfo($art_id,$lang_id,$sort) { $db=new dbt;
-	$answer=0;$err="Помилка збереження даних!";
+function dropArticleShortInfo($art_id,$lang_id,$sort) { $db=DbSingleton::getTokoDb();
+	$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	if ($art_id>0) {
 		$db->query("delete from T2_SHORT_INFO where ART_ID='$art_id' and LANG_ID='$lang_id' and SORT='$sort';"); 
 		$answer=1;$err="";
@@ -1764,19 +1764,19 @@ function dropArticleShortInfo($art_id,$lang_id,$sort) { $db=new dbt;
 	return array($answer,$err);
 }
 	
-function addArticleShortInfo($art_id,$lang_id,$text,$value,$sort) { $db=new dbt;
-	$answer=0; $err="Помилка збереження даних!";
+function addArticleShortInfo($art_id,$lang_id,$text,$value,$sort) { $db=DbSingleton::getTokoDb();
+	$answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
   	if ($art_id>0) {
 		$r=$db->query("select * from T2_SHORT_INFO where ART_ID='$art_id' and LANG_ID='$lang_id' and SORT='$sort';");	$n=$db->num_rows($r);	
 		if ($n==0) {		  
 			$db->query("insert into T2_SHORT_INFO (ART_ID,LANG_ID,TEXT,VALUE,SORT) values ('$art_id','$lang_id','$text','$value','$sort');");
 			$answer=1;$err="";
-		} else $err="Параметр з таким порядковим номером уже існує!";		
+		} else $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ!";		
 	}
 	return array($answer,$err);
 }
 	
-function getLangList($lang_id) {$db=new dbt; 
+function getLangList($lang_id) {$db=DbSingleton::getTokoDb(); 
 	$r=$db->query("select * from lang where `on`=1;"); $n=$db->num_rows($r);
     for ($i=1;$i<=$n;$i++){
 		$caption=$db->result($r,$i-1,"caption");
@@ -1792,7 +1792,7 @@ function loadCatalogueGoodGroupTemplateParams($art_id,$template_id){
 	return array($this->showGoodsGroupParamsList($art_id,$template_id),$this->loadArticleScheme($template_id,1));
 }
 
-function saveCatalogueParams($art_id,$goods_group_id,$template_id,$fields_type,$params_value){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveCatalogueParams($art_id,$goods_group_id,$template_id,$fields_type,$params_value){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$art_id=$slave->qq($art_id);$goods_group_id=$slave->qq($goods_group_id);$template_id=$slave->qq($template_id);$fields_type=$slave->qq($fields_type);$params_value=$slave->qq($params_value);
 	if ($art_id>0){
 		
@@ -1828,7 +1828,7 @@ function saveCatalogueParams($art_id,$goods_group_id,$template_id,$fields_type,$
 	return array($answer,$err);
 }
 
-function saveCatalogueParamsTemplate($art_id,$goods_group_id,$template_id,$template_name,$template_caption,$template_descr,$cn,$params_id,$fields_type,$params_name,$params_type){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveCatalogueParamsTemplate($art_id,$goods_group_id,$template_id,$template_name,$template_caption,$template_descr,$cn,$params_id,$fields_type,$params_name,$params_type){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$art_id=$slave->qq($art_id);$goods_group_id=$slave->qq($goods_group_id);$template_id=$slave->qq($template_id);$template_name=$slave->qq($template_name);$cn=$slave->qq($cn);$fields_type=$slave->qq($fields_type);$params_name=$slave->qq($params_name); $params_type=$slave->qq($params_type);
 	if ($art_id>0){
 		
@@ -1859,10 +1859,10 @@ function saveCatalogueParamsTemplate($art_id,$goods_group_id,$template_id,$templ
 
 function showCatalogueAnalogIndexSearch(){session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/catalogue_analog_search.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-	return array($form,"Пошук аналогу по індексу");
+	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 }
 
-function findCatalogueAnalogIndexSearch($index){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function findCatalogueAnalogIndexSearch($index){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$index=$slave->qq($index);
 	if ($index!=""){
 		$query="select t2a.ART_ID,t2a.BRAND_ID,t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME
@@ -1889,10 +1889,10 @@ function findCatalogueAnalogIndexSearch($index){$db=new dbt;$slave=new slave;ses
 	return $list;
 }
 
-function showCatalogueAnalogForm($art_id,$kind,$relation,$search_number){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showCatalogueAnalogForm($art_id,$kind,$relation,$search_number){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/catalogue_analog_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$form=str_replace("{art_id}",$art_id,$form);
-	$form=str_replace("{kind}",$kind,$form); $kind_name=" ОЕ номер";if ($kind==4){$kind_name=" інший номер";}
+	$form=str_replace("{kind}",$kind,$form); $kind_name=" пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ";if ($kind==4){$kind_name=" пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ";}
 	$form=str_replace("{relation}",$relation,$form);
 	$form=str_replace("{search_number}",$search_number,$form);
 	
@@ -1903,9 +1903,9 @@ function showCatalogueAnalogForm($art_id,$kind,$relation,$search_number){$db=new
 	}
 	$form=str_replace("{display_nr}",$display_nr,$form);
 	$form=str_replace("{brand_list}",$this->showBrandListSelect($brand_id),$form);
-	return array($form,"Редагування аналогу".$kind_name);
+	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ".$kind_name);
 }
-function saveCatalogueAnalogForm($art_id,$kind,$relation,$search_number,$display_nr,$brand_id,$art_id2,$index2){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveCatalogueAnalogForm($art_id,$kind,$relation,$search_number,$display_nr,$brand_id,$art_id2,$index2){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$art_id=$slave->qq($art_id);$kind=$slave->qq($kind);$relation=$slave->qq($relation);$search_number=$slave->qq($search_number);$display_nr=$slave->qq($display_nr);$brand_id=$slave->qq($brand_id);
 	$art_id2=$slave->qq($art_id2);$index2=$slave->qq($index2);
 	if ($art_id>0 && $kind>0 && $relation>=0 && $display_nr!="" && $brand_id>0){
@@ -1932,7 +1932,7 @@ function saveCatalogueAnalogForm($art_id,$kind,$relation,$search_number,$display
 	}
 	return array($answer,$err);
 }
-function dropCatalogueAnalog($art_id,$kind,$relation,$search_number,$brand_id){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function dropCatalogueAnalog($art_id,$kind,$relation,$search_number,$brand_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$art_id=$slave->qq($art_id);$kind=$slave->qq($kind);$relation=$slave->qq($relation);$search_number=$slave->qq($search_number);$brand_id=$slave->qq($brand_id);
 	if ($art_id>0 && $kind>0 && $relation>=0 && $search_number!="" && $brand_id>0){
 		$db->query("delete from T2_CROSS where `ART_ID`='$art_id' and `SEARCH_NUMBER`='$search_number' and `KIND`='$kind' and `BRAND_ID`='$brand_id' and `RELATION`='$relation' limit 1;");
@@ -1941,7 +1941,7 @@ function dropCatalogueAnalog($art_id,$kind,$relation,$search_number,$brand_id){$
 	return array($answer,$err);
 }
 
-function clearCatalogueAnalogArticle($art_id,$kind,$relation){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function clearCatalogueAnalogArticle($art_id,$kind,$relation){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$art_id=$slave->qq($art_id);$kind=$slave->qq($kind);$relation=$slave->qq($relation);
 	if ($art_id>0 && $kind>0 && $relation>=0){
 		$db->query("delete from T2_CROSS where `ART_ID`='$art_id' and `KIND`='$kind' and `RELATION`='$relation';");
@@ -1951,7 +1951,7 @@ function clearCatalogueAnalogArticle($art_id,$kind,$relation){$db=new dbt;$slave
 }
 
 
-function loadArticleAnalogs($art_id){$db=new dbt;$slave=new slave;
+function loadArticleAnalogs($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;
 	$form_htm=RD."/tpl/catalogue_analog_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select t2c.*,t2b.BRAND_NAME from T2_CROSS t2c left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2c.BRAND_ID  where t2c.ART_ID='$art_id' and t2c.KIND in (3,4) order by t2c.KIND asc;");$n=$db->num_rows($r);$ak3="";$ak4="";
 	for ($i=1;$i<=$n;$i++){
@@ -1987,7 +1987,7 @@ function loadArticleAnalogs($art_id){$db=new dbt;$slave=new slave;
 	return $form;
 }
 
-function loadArticleAplicability($art_id){$db=new dbt;$dbp=new dbp;$slave=new slave;
+function loadArticleAplicability($art_id){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;
 	$form_htm=RD."/tpl/catalogue_aplicability_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	$r=$dbp->query("select TYP_ID from T2_LINKS where ART_ID='$art_id';");$n=$dbp->num_rows($r);$typ_id_str="";for ($i=1;$i<=$n;$i++){$typ_id=$dbp->result($r,$i-1,"TYP_ID");$typ_id_str.="$typ_id";if ($i<$n){$typ_id_str.=",";}}
@@ -2003,7 +2003,7 @@ function loadArticleAplicability($art_id){$db=new dbt;$dbp=new dbp;$slave=new sl
 				</div>
 			</div>\n";
 		}
-	}else {$cont_list="<h3 class='text-center'>Привязка до авто відсутня</h3>";}
+	}else {$cont_list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
 	$tab_list.="<a href=\"#aplic_new\" class='btn btn-primary pull-right' onClick=\"loadArticleAplicabilityNew('$art_id');\"><i class=\"fa fa-plus\"></i></a>";
 	$form=str_replace("{manuf_tab_list}",$tab_list,$form);
 	$form=str_replace("{manuf_cont_list}",$cont_list,$form);
@@ -2011,7 +2011,7 @@ function loadArticleAplicability($art_id){$db=new dbt;$dbp=new dbp;$slave=new sl
 	return $form;
 }
 
-function getLaIdComment($la_id){$db=new dbt;$comment="";
+function getLaIdComment($la_id){$db=DbSingleton::getTokoDb();$comment="";
 	$r=$db->query("select TEXT from link_notes where LA_ID='$la_id' and `LANG_ID`='16' and `DISPLAY`=1;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$comment.=$db->result($r,$i-1,"TEXT")."\n";
@@ -2019,7 +2019,7 @@ function getLaIdComment($la_id){$db=new dbt;$comment="";
 	return $comment;
 }
 
-function loadArticleAplicabilityModels($art_id,$mfa_id){$db=new dbt;$dbp=new dbp;$slave=new slave;
+function loadArticleAplicabilityModels($art_id,$mfa_id){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;
 	$form_htm=RD."/tpl/catalogue_aplicability_model_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$form=str_replace("{mfa_id}",$mfa_id,$form);
 	$form=str_replace("{art_id}",$art_id,$form);
@@ -2064,7 +2064,7 @@ function loadArticleAplicabilityModels($art_id,$mfa_id){$db=new dbt;$dbp=new dbp
 				<td>$typ_ccm</td>
 				<td>$eng_cod</td>
 				<td>$la_id_comment <buttom class='btn btn-xs btn-warning' onclick=\"showLaIdCommentForm('$art_id','$typ_id');\"><i class='fa fa-edit'></i></td>
-				<td align='center'><button class='btn btn-xs btn-danger btn-bitbucket' title='Відвязати авто' onclick='unlinkArticleAplicabilityModel(\"$mfa_id\",\"$art_id\",\"$typ_id\",\"".$slave->qq($typ_text)."\");'><i class='fa fa-times'></i></button></td>
+				<td align='center'><button class='btn btn-xs btn-danger btn-bitbucket' title='ВіпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ' onclick='unlinkArticleAplicabilityModel(\"$mfa_id\",\"$art_id\",\"$typ_id\",\"".$slave->qq($typ_text)."\");'><i class='fa fa-times'></i></button></td>
 			</tr>";
 				
 	}
@@ -2074,7 +2074,7 @@ function loadArticleAplicabilityModels($art_id,$mfa_id){$db=new dbt;$dbp=new dbp
 	return $form;
 }
 
-function unlinkArticleAplicabilityModel($art_id,$typ_id){$db=new dbt;$dbp=new dbp;$slave=new slave; $answer="Помилка обробки даних";
+function unlinkArticleAplicabilityModel($art_id,$typ_id){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave; $answer="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ";
 	if ($art_id>0 && $typ_id>0){
 		$query="delete from T2_LINKS where ART_ID='$art_id' and `TYP_ID`='$typ_id';";
 		$dbp->query($query);$db->query($query); $answer=1;
@@ -2082,7 +2082,7 @@ function unlinkArticleAplicabilityModel($art_id,$typ_id){$db=new dbt;$dbp=new db
 	return $answer;
 }
 
-function clearActicleAplicabilityManuf($art_id,$mfa_id){$db=new dbt;$dbp=new dbp;$slave=new slave; $answer="Помилка обробки даних";
+function clearActicleAplicabilityManuf($art_id,$mfa_id){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave; $answer="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ";
 	if ($art_id>0 && $mfa_id>0){
 		$r=$db->query("select tt.TYP_ID from T_types tt left outer join T_models tm on tm.MOD_ID=tt.TYP_MOD_ID where tm.MOD_MFA_ID='$mfa_id';");$n=$db->num_rows($r);
 		if ($n>0){
@@ -2097,7 +2097,7 @@ function clearActicleAplicabilityManuf($art_id,$mfa_id){$db=new dbt;$dbp=new dbp
 	return $answer;
 }
 
-function loadArticleAplicabilityNew($art_id,$index){$db=new db;$dbp=new dbp;$slave=new slave;
+function loadArticleAplicabilityNew($art_id,$index){$db=DbSingleton::getDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;
 	if ($art_id>0){
 		$form_htm=RD."/tpl/catalogue_aplicability_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$form=str_replace("{art_id}",$art_id,$form);
@@ -2107,10 +2107,10 @@ function loadArticleAplicabilityNew($art_id,$index){$db=new db;$dbp=new dbp;$sla
 		$form = str_replace("{menu}", $menu, $form);
 		$form=str_replace("{kol_elem}",$menu_kol_elem,$form);
 	}
-	return array($form,"Привязка до авто");
+	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ");
 }
 
-function saveCatalogueAplicabilityForm($art_id,$display_number,$comment,$typ_array,$str_array){$db=new dbt;$dbp=new dbp;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveCatalogueAplicabilityForm($art_id,$display_number,$comment,$typ_array,$str_array){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$art_id=$slave->qq($art_id);$display_number=$slave->qq($display_number);$comment=$slave->qq($comment);$typ_array=$slave->qq($typ_array);
 	//print "$art_id,$display_number,comment=$comment;typ_array=$typ_array;str_array=$str_array\n";
 	if ($art_id>0){
@@ -2141,7 +2141,7 @@ function saveCatalogueAplicabilityForm($art_id,$display_number,$comment,$typ_arr
 	return array($answer,$err);
 }
 
-function showLaIdCommentForm($art_id,$type_id){$db=new dbt;$dbp=new dbp;$slave=new slave;
+function showLaIdCommentForm($art_id,$type_id){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;
 	if ($art_id>0 && $type_id>0){
 		$form_htm=RD."/tpl/catalogue_laid_comment_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$form=str_replace("{art_id}",$art_id,$form);
@@ -2165,13 +2165,13 @@ function showLaIdCommentForm($art_id,$type_id){$db=new dbt;$dbp=new dbp;$slave=n
 			$list.="
 			<div class='form-group'>
 				<input type='hidden' id='la_id_$i' value='$la_id'>
-		        <label class='col-sm-1 control-label'>Позиція</label>
+		        <label class='col-sm-1 control-label'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</label>
         		<div class='col-sm-1'><input class='form-control' type='text' id='sort_$i' value='$sort'></div>
-				<label class='col-sm-1 control-label'>Тип</label>
+				<label class='col-sm-1 control-label'>пїЅпїЅпїЅ</label>
         		<div class='col-sm-1'><input class='form-control' type='text' placeholder='K' id='type_$i' value='$type'></div>
-				<label class='col-sm-1 control-label'>Параметр</label>
+				<label class='col-sm-1 control-label'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</label>
         		<div class='col-sm-2'><input class='form-control' type='text' id='text_name_$i' value='$text_name'></div>
-				<label class='col-sm-1 control-label'>Значення</label>
+				<label class='col-sm-1 control-label'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</label>
         		<div class='col-sm-3'><input class='form-control' type='text' id='text_$i' value='$text'></div>
 				<div class='col-sm-1'>$button</div>
 		    </div>";
@@ -2179,9 +2179,9 @@ function showLaIdCommentForm($art_id,$type_id){$db=new dbt;$dbp=new dbp;$slave=n
 		$form=str_replace("{list_la_comment}",$list,$form);
 		$form=str_replace("{kol_elem}",($n+1),$form);
 	}
-	return array($form,"Коментарі LA_ID");
+	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ LA_ID");
 }
-function saveLaIdCommentForm($art_id,$type_id,$kol,$la_ids,$sorts,$types,$text_names,$texts){$db=new dbt;$dbp=new dbp;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveLaIdCommentForm($art_id,$type_id,$kol,$la_ids,$sorts,$types,$text_names,$texts){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$art_id=$slave->qq($art_id);$type_id=$slave->qq($type_id);$kol=$slave->qq($kol);$la_ids=$slave->qq($la_ids);$sorts=$slave->qq($sorts);$types=$slave->qq($types);$text_names=$slave->qq($text_names);$texts=$slave->qq($texts);
 	if ($art_id>0 && $type_id>0){
 		for ($i=1;$i<=$kol;$i++){
@@ -2205,7 +2205,7 @@ function saveLaIdCommentForm($art_id,$type_id,$kol,$la_ids,$sorts,$types,$text_n
 	}
 	return array($answer,$err);
 }
-function dropLaIdComment($art_id,$type_id,$la_id,$sort,$type){$db=new dbt;$dbp=new dbp;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function dropLaIdComment($art_id,$type_id,$la_id,$sort,$type){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$art_id=$slave->qq($art_id);$type_id=$slave->qq($type_id);$la_id=$slave->qq($la_id);$sort=$slave->qq($sort);$type=$slave->qq($type);
 	if ($art_id>0 && $type_id>0 && $la_id>0){
 		
@@ -2218,7 +2218,7 @@ function dropLaIdComment($art_id,$type_id,$la_id,$sort,$type){$db=new dbt;$dbp=n
 }
 
 
-function loadManufList($sel_id){$db=new dbt;$dbp=new dbp;$slave=new slave;$list="";
+function loadManufList($sel_id){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;$list="";
 	$r=$db->query("select MFA_ID, MFA_BRAND from T_manufacturers order by MFA_BRAND asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$mfa_id=$db->result($r,$i-1,"MFA_ID");
@@ -2228,7 +2228,7 @@ function loadManufList($sel_id){$db=new dbt;$dbp=new dbp;$slave=new slave;$list=
 	return $list;
 }
 
-function loadAplicabilityModelList($mfa_id,$sel_id){$db=new dbt;$dbp=new dbp;$slave=new slave;$list="";
+function loadAplicabilityModelList($mfa_id,$sel_id){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;$list="";
 	$r=$db->query("select MOD_ID, TEX_TEXT from T_models where MOD_MFA_ID='$mfa_id' order by TEX_TEXT asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$mod_id=$db->result($r,$i-1,"MOD_ID");
@@ -2237,7 +2237,7 @@ function loadAplicabilityModelList($mfa_id,$sel_id){$db=new dbt;$dbp=new dbp;$sl
 	}
 	return $list;
 }
-function loadAplicabilityModificationList($mfa_id,$mod_id,$sel_id){$db=new dbt;$dbp=new dbp;$slave=new slave;$list="";
+function loadAplicabilityModificationList($mfa_id,$mod_id,$sel_id){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;$list="";
 	$r=$db->query("select * from T_types where TYP_MOD_ID='$mod_id' order by TYP_MMT_TEXT asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$typ_id=$db->result($r,$i-1,"TYP_ID");
@@ -2251,14 +2251,14 @@ function loadAplicabilityModificationList($mfa_id,$mod_id,$sel_id){$db=new dbt;$
 		}else{$name.="&infin;) | ";}
 		$name.=$db->result($r,$i-1,"TYP_HP_FROM")."HP/";
 		$name.=$db->result($r,$i-1,"TYP_KW_FROM")."kW | ";
-		$name.=$db->result($r,$i-1,"TYP_CCM")."см<sup>3</sup> | ";
+		$name.=$db->result($r,$i-1,"TYP_CCM")."пїЅпїЅ<sup>3</sup> | ";
 		$name.=$db->result($r,$i-1,"ENG_Cod");
 		$list.="<li><input type='checkbox' id='modif$i' value='$typ_id'> $name</li>";
-	}if ($n>0){$list="<li><input id='modif0' value='0' onclick=\"checkModifAll(this)\" type=\"checkbox\"> - Відмітити все</li>".$list."<input type='hidden' id='modif_kol' value='$n'>";}
+	}if ($n>0){$list="<li><input id='modif0' value='0' onclick=\"checkModifAll(this)\" type=\"checkbox\"> - ВіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ</li>".$list."<input type='hidden' id='modif_kol' value='$n'>";}
 	return $list;
 }
 
-function loadArticleLogistic($art_id){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function loadArticleLogistic($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/catalogue_logistic.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	$r=$db->query("select * from T2_PACKAGING where ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
@@ -2293,7 +2293,7 @@ function loadArticleLogistic($art_id){$db=new dbt;$slave=new slave;session_start
 	return $form;
 }
 
-function showWorkPairForm($art_id){$db=new dbt;$list="";
+function showWorkPairForm($art_id){$db=DbSingleton::getTokoDb();$list="";
 	$r=$db->query("select PAIR_INDEX from T2_WORK_PAIR where ART_ID='$art_id';");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n+3;$i++){
 		$pair_index="";
@@ -2302,7 +2302,7 @@ function showWorkPairForm($art_id){$db=new dbt;$list="";
 	}$list.="<input type='hidden' id='work_pair_n' value='".($n+3)."'>";
 	return $list;
 }
-function saveCatalogueLogistic($art_id,$index_pack,$height,$length,$width,$volume,$weight_netto,$weight_brutto,$necessary_amount_car,$units_id,$multiplicity_package,$shoulder_delivery,$general_quant,$work_pair){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveCatalogueLogistic($art_id,$index_pack,$height,$length,$width,$volume,$weight_netto,$weight_brutto,$necessary_amount_car,$units_id,$multiplicity_package,$shoulder_delivery,$general_quant,$work_pair){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$art_id=$slave->qq($art_id);$index_pack=$slave->qq($index_pack);$height=$slave->qq($slave->point_valid($height));$length=$slave->qq($slave->point_valid($length));$width=$slave->qq($slave->point_valid($width));$volume=$slave->qq($slave->point_valid($volume));$weight_netto=$slave->qq($slave->point_valid($weight_netto));$weight_brutto=$slave->qq($slave->point_valid($weight_brutto));$necessary_amount_car=$slave->qq($necessary_amount_car);$units_id=$slave->qq($units_id);
 	$multiplicity_package=$slave->qq($multiplicity_package);$shoulder_delivery=$slave->qq($shoulder_delivery);$general_quant=$slave->qq($general_quant);
 	if ($art_id>0){
@@ -2328,18 +2328,18 @@ function saveCatalogueLogistic($art_id,$index_pack,$height,$length,$width,$volum
 	return array($answer,$err);
 }
 
-function getCountryName($sel_id){$db=new dbt;$name="";
+function getCountryName($sel_id){$db=DbSingleton::getTokoDb();$name="";
 	$r=$db->query("select COUNTRY_NAME from T2_COUNTRIES where COUNTRY_ID='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){ $name=$db->result($r,0,"COUNTRY_NAME");}
 	return $name;
 }
-function getCountryAbr($sel_id){$db=new dbt;$abr="";
+function getCountryAbr($sel_id){$db=DbSingleton::getTokoDb();$abr="";
 	$r=$db->query("select ALFA2 from T2_COUNTRIES where COUNTRY_ID='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){ $abr=$db->result($r,0,"ALFA2");}
 	return $abr;
 }
 
-function showCountryManual($sel_id){$db=new dbt;$manual=new manual;$list="";
+function showCountryManual($sel_id){$db=DbSingleton::getTokoDb();$manual=new manual;$list="";
 	$form_htm=RD."/tpl/catalogue_country_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T2_COUNTRIES order by COUNTRY_NAME asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -2367,7 +2367,7 @@ function showCountryManual($sel_id){$db=new dbt;$manual=new manual;$list="";
 	return $form;	
 }
 
-function showCountryForm($id){$db=new dbt;$manual=new manual;$list="";
+function showCountryForm($id){$db=DbSingleton::getTokoDb();$manual=new manual;$list="";
 	$form_htm=RD."/tpl/catalogue_country_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T2_COUNTRIES where COUNTRY_ID='$id' limit 0,1;");$n=$db->num_rows($r);$list="";
 	if ($n==1){
@@ -2386,9 +2386,9 @@ function showCountryForm($id){$db=new dbt;$manual=new manual;$list="";
 	$form=str_replace("{risk}",$risk,$form);
 	$form=str_replace("{risk_caption}",$manual->getManualMCaption("RISK",$risk),$form);
 	
-	return array($form,"Форма Країни походження");	
+	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");	
 }
-function saveCatalogueCountryForm($id,$name,$alfa2,$alfa3,$duty,$risk){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveCatalogueCountryForm($id,$name,$alfa2,$alfa3,$duty,$risk){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$id=$slave->qq($id);$name=$slave->qq($name);$alfa2=$slave->qq($alfa2);$alfa3=$slave->qq($alfa3);$duty=$slave->qq($duty);$risk=$slave->qq($risk);
 	if ($id>0){
 		$r=$db->query("select * from `T2_COUNTRIES` where `COUNTRY_ID`='$id' limit 0,1;");$n=$db->num_rows($r);
@@ -2406,7 +2406,7 @@ function saveCatalogueCountryForm($id,$name,$alfa2,$alfa3,$duty,$risk){$db=new d
 	return array($answer,$err);
 }
 
-function dropCountry($id){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення запису!";
+function dropCountry($id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
 	$id=$slave->qq($id);
 	if ($id>0){
 		$r=$db->query("select * from T2_COUNTRIES where COUNTRY_ID='$id' limit 0,1;");$n=$db->num_rows($r);
@@ -2419,7 +2419,7 @@ function dropCountry($id){$db=new dbt;$slave=new slave;session_start();$user_id=
 	
 }
 
-function showDocumentCountryManual($sel_id,$pos){$db=new dbt;$manual=new manual;$list="";
+function showDocumentCountryManual($sel_id,$pos){$db=DbSingleton::getTokoDb();$manual=new manual;$list="";
 	$form_htm=RD."/tpl/documents_country_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T2_COUNTRIES order by COUNTRY_NAME asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -2444,13 +2444,13 @@ function showDocumentCountryManual($sel_id,$pos){$db=new dbt;$manual=new manual;
 	return $form;	
 }
 
-function getCostumsCode($sel_id){$db=new dbt;$code="";
+function getCostumsCode($sel_id){$db=DbSingleton::getTokoDb();$code="";
 	$r=$db->query("select COSTUMS_CODE from T2_COSTUMS where COSTUMS_ID='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){ $code=$db->result($r,0,"COSTUMS_CODE");}
 	return $code;
 }
 
-function showCostumsManual($sel_id){$db=new dbt;$manual=new manual;$list="";
+function showCostumsManual($sel_id){$db=DbSingleton::getTokoDb();$manual=new manual;$list="";
 	$form_htm=RD."/tpl/catalogue_costums_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T2_COSTUMS order by COSTUMS_NAME asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -2481,7 +2481,7 @@ function showCostumsManual($sel_id){$db=new dbt;$manual=new manual;$list="";
 	$form=str_replace("{list}",$list,$form);
 	return $form;	
 }
-function showCostumsForm($id){$db=new dbt;$manual=new manual;$list="";
+function showCostumsForm($id){$db=DbSingleton::getTokoDb();$manual=new manual;$list="";
 	$form_htm=RD."/tpl/catalogue_costums_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T2_COSTUMS where COSTUMS_ID='$id' limit 0,1;");$n=$db->num_rows($r);$list="";
 	if ($n==1){
@@ -2505,10 +2505,10 @@ function showCostumsForm($id){$db=new dbt;$manual=new manual;$list="";
 	$form=str_replace("{type_declaration}",$type_declaration,$form);
 	$form=str_replace("{type_declaration_caption}",$manual->getManualMCaption("costums_type_declaration",$type_declaration),$form);
 	
-	return array($form,"Форма митного коду УКТЕЗД");	
+	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");	
 }
 
-function saveCatalogueCostumsForm($id,$code,$name,$preferential_rate,$full_rate,$type_declaration,$sertification,$gos_standart){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveCatalogueCostumsForm($id,$code,$name,$preferential_rate,$full_rate,$type_declaration,$sertification,$gos_standart){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$id=$slave->qq($id);$code=$slave->qq($code);$name=$slave->qq($name);$preferential_rate=$slave->qq($slave->point_valid($preferential_rate));$full_rate=$slave->qq($slave->point_valid($full_rate));$type_declaration=$slave->qq($type_declaration);$sertification=$slave->qq($sertification);$gos_standart=$slave->qq($gos_standart);
 	if ($id>0){
 		$r=$db->query("select * from `T2_COSTUMS` where `COSTUMS_ID`='$id' limit 0,1;");$n=$db->num_rows($r);
@@ -2526,7 +2526,7 @@ function saveCatalogueCostumsForm($id,$code,$name,$preferential_rate,$full_rate,
 	return array($answer,$err);
 }
 
-function dropCostums($id){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення запису!";
+function dropCostums($id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
 	$id=$slave->qq($id);
 	if ($id>0){
 		$r=$db->query("select * from T2_COSTUMS where COSTUMS_ID='$id' limit 0,1;");$n=$db->num_rows($r);
@@ -2539,7 +2539,7 @@ function dropCostums($id){$db=new dbt;$slave=new slave;session_start();$user_id=
 	
 }
 
-function showDocumentCostumsManual($sel_id,$pos){$db=new dbt;$manual=new manual;$list="";
+function showDocumentCostumsManual($sel_id,$pos){$db=DbSingleton::getTokoDb();$manual=new manual;$list="";
 	$form_htm=RD."/tpl/documents_costums_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T2_COSTUMS order by COSTUMS_NAME asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -2568,7 +2568,7 @@ function showDocumentCostumsManual($sel_id,$pos){$db=new dbt;$manual=new manual;
 	return $form;	
 }
 
-function getPriceRatingArray(){$db=new dbt;$rating_ar=array();
+function getPriceRatingArray(){$db=DbSingleton::getTokoDb();$rating_ar=array();
 	$r=$db->query("select * from T2_PRICE_RATING order by abr,id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -2581,11 +2581,11 @@ function getPriceRatingArray(){$db=new dbt;$rating_ar=array();
 	return $rating_ar;
 }
 
-function loadArticlePricing($art_id){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function loadArticlePricing($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/catalogue_pricing.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);} $list_price_rating="";$articles_list="";
 	$form=str_replace("{art_id}",$art_id,$form);
 	$rating_ar=array();$rating_ar=$this->getPriceRatingArray();$kol_rating=0;
-	foreach ($rating_ar as $rar){$kol_rating+=1; $list_price_rating.="<th class='text-center' title='".$rar["name"]."'>Прайс<br>".$rar["abr"]."</th>"; }
+	foreach ($rating_ar as $rar){$kol_rating+=1; $list_price_rating.="<th class='text-center' title='".$rar["name"]."'>пїЅпїЅпїЅпїЅпїЅ<br>".$rar["abr"]."</th>"; }
 	$form=str_replace("{list_price_rating}",$list_price_rating,$form); 
 		
 	list($article_nr_displ,$brand_id,$brand_name,$article_nr_search)=$this->getArticleNrDisplBrand($art_id);	
@@ -2617,7 +2617,7 @@ function loadArticlePricing($art_id){$db=new dbt;$slave=new slave;session_start(
 		
 		list($article_oper_price,$article_storage_amount)=$this->getArticleOperPriceGeneralStock($analog_art_id);
 		if ($article_oper_price>0){
-			$article_sales="Відсутня інформація";
+			$article_sales="ВіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 			$article_income_amount=0;
 			$minMarkUp=0;
 
@@ -2641,7 +2641,7 @@ function loadArticlePricing($art_id){$db=new dbt;$slave=new slave;session_start(
 				$row2.="<td><input type='text' class='form-control input-xs price_numbers nrCell' id='artRatingPersent_".$analog_art_id."_$k' value='$rating_persent' onKeyup='recalcPRArt(\"$analog_art_id\",\"$k\",\"0\")'></td>";
 			}
 			$row2="<tr>
-				<td colspan=3 align='right'>Шаблон націнки: $template_price_rating_select %</td>".$row2."
+				<td colspan=3 align='right'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $template_price_rating_select %</td>".$row2."
 				<td id='artDataUpdate_".$analog_art_id."'>$data_use</td>
 			</tr>";
 			$sales=$this->getLineArticleSales($analog_art_id);
@@ -2663,7 +2663,7 @@ function loadArticlePricing($art_id){$db=new dbt;$slave=new slave;session_start(
 	return $form;
 }
 
-function saveArticlePriceRating($art_id,$kol_elm,$template_id,$minMarkup,$prc,$prs){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";$info="";
+function saveArticlePriceRating($art_id,$kol_elm,$template_id,$minMarkup,$prc,$prs){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";$info="";
 	$art_id=$slave->qq($art_id);$kol_elm=$slave->qq($kol_elm);$template_id=$slave->qq($template_id);$minMarkup=$slave->qq($minMarkup);$prc=$slave->qq($prc);$prs=$slave->qq($prs);
 	if ($art_id>0){
 		$r=$db->query("select * from T2_ARTICLES_PRICE_RATING where art_id='$art_id' and in_use='1' limit 0,1;");$n=$db->num_rows($r);
@@ -2683,7 +2683,7 @@ function saveArticlePriceRating($art_id,$kol_elm,$template_id,$minMarkup,$prc,$p
 	return array($answer,$err,$this->getMediaUserName($user_id),date("Y-m-d"));
 }
 
-function getArticlePriceRating($art_id){$db=new dbt;$template_id=0;$user_id=0;$data="";$prAr=array();$kol_elm=$this->kol_price_rating;
+function getArticlePriceRating($art_id){$db=DbSingleton::getTokoDb();$template_id=0;$user_id=0;$data="";$prAr=array();$kol_elm=$this->kol_price_rating;
 	$r=$db->query("select * from T2_ARTICLES_PRICE_RATING where art_id='$art_id' and in_use='1' limit 0,1");$n=$db->num_rows($r);
 	if ($n==1){
 		$user_id=$db->result($r,0,"user_id");
@@ -2697,7 +2697,7 @@ function getArticlePriceRating($art_id){$db=new dbt;$template_id=0;$user_id=0;$d
 	}
 	return array($template_id,$data_update,$user_id,$minMarkup,$prAr);
 }
-function showPriceRatingTemplateSelect($art_id,$sel_id){$db=new dbt;$form="<select id='priceRatingTemplate_".$art_id."' onChange='loadPriceRatingTemplate(\"$art_id\")' class='input-xs' style='width:100px;'><option value=0>-- -- --</option>{list}</select>";
+function showPriceRatingTemplateSelect($art_id,$sel_id){$db=DbSingleton::getTokoDb();$form="<select id='priceRatingTemplate_".$art_id."' onChange='loadPriceRatingTemplate(\"$art_id\")' class='input-xs' style='width:100px;'><option value=0>-- -- --</option>{list}</select>";
 	$r=$db->query("select * from price_rating_template where status='1' order by id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -2709,7 +2709,7 @@ function showPriceRatingTemplateSelect($art_id,$sel_id){$db=new dbt;$form="<sele
 	return $form;
 }
 
-function loadPriceRatingTemplateStr($art_id,$sel_id){$db=new dbt;$params=array();$min_markup=0;$kol_val=$this->kol_price_rating;$answer=0;$err="Помилка!";
+function loadPriceRatingTemplateStr($art_id,$sel_id){$db=DbSingleton::getTokoDb();$params=array();$min_markup=0;$kol_val=$this->kol_price_rating;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";
 	$r=$db->query("select * from price_rating_template_str where template_id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$min_markup=$db->result($r,0,"min_markup");
@@ -2722,7 +2722,7 @@ function loadPriceRatingTemplateStr($art_id,$sel_id){$db=new dbt;$params=array()
 }
 
 
-function showArticlePriceRatingHistory($art_id){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка індексу";
+function showArticlePriceRatingHistory($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 	$form_htm=RD."/tpl/catalogue_pricing_history.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	if ($art_id!=""){
 		$r=$db->query("select * from T2_ARTICLES_PRICE_RATING where art_id='$art_id' order by data_update desc, id desc;");$n=$db->num_rows($r);$list="";
@@ -2749,17 +2749,17 @@ function showArticlePriceRatingHistory($art_id){$db=new dbt;$slave=new slave;ses
 		$form=str_replace("{kol_elm}",$this->kol_price_rating,$form); 
 		$answer=1;$err="";
 	}
-	return array($answer,$err,$form,"Історія ціноутворення");
+	return array($answer,$err,$form,"пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 }
 
-function getTpointName($tpoint_id){$db=new db; $name="";
+function getTpointName($tpoint_id){$db=DbSingleton::getDb(); $name="";
 	$r=$db->query("select * from T_POINT where id='$tpoint_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"full_name");}
 	return $name;
 }
 
 
-function getLineArticleSales($art_id){$db=new dbt;$slave=new slave;$list="";
+function getLineArticleSales($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;$list="";
 	if ($art_id!=""){ 
 		for ($m=1;$m<=24;$m++){
 			$month=date("Y-m-00",strtotime("-$m month"));
@@ -2775,7 +2775,7 @@ function getLineArticleSales($art_id){$db=new dbt;$slave=new slave;$list="";
 }
 
 
-function showArticleSales($art_id){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка індексу";
+function showArticleSales($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 	$block_htm=RD."/tpl/catalogue_article_sales.htm";if (file_exists("$block_htm")){ $block = file_get_contents($block_htm);}
 	
 	if ($art_id!=""){ list($article_displ_nomber,$brand_id)=$this->getArticleNrDisplBrand($art_id);
@@ -2809,10 +2809,10 @@ function showArticleSales($art_id){$db=new dbt;$slave=new slave;session_start();
 		$list=str_replace("{kol_elm}",$m,$list);
 		$answer=1;$err="";
 	}
-	return array($answer,$err,$list,"Інформація про продажі артикулу: $article_displ_nomber");
+	return array($answer,$err,$list,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $article_displ_nomber");
 }
 
-function getArticleZED($art_id){$db=new dbt;$slave=new slave;$zed=0;
+function getArticleZED($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;$zed=0;
 	$r=$db->query("select t2s.COSTUMS_CODE from T2_ZED t2z 
 	left outer join T2_COSTUMS t2s on t2s.COSTUMS_ID=t2z.COSTUMS_ID
 	where t2z.ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
@@ -2822,7 +2822,7 @@ function getArticleZED($art_id){$db=new dbt;$slave=new slave;$zed=0;
 	return $zed;
 }
 
-function loadArticleZED($art_id){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function loadArticleZED($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/catalogue_zed.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	$r=$db->query("select t2z.*,t2c.COUNTRY_NAME, t2s.COSTUMS_CODE from T2_ZED t2z 
@@ -2844,7 +2844,7 @@ function loadArticleZED($art_id){$db=new dbt;$slave=new slave;session_start();$u
 	
 	return $form;
 }
-function saveCatalogueZED($art_id,$country_id,$costums_id){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveCatalogueZED($art_id,$country_id,$costums_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$art_id=$slave->qq($art_id);$country_id=$slave->qq($country_id);$costums_id=$slave->qq($slave->point_valid($costums_id));
 	if ($art_id>0){
 		//T2_ZED UPDATE
@@ -2861,7 +2861,7 @@ function saveCatalogueZED($art_id,$country_id,$costums_id){$db=new dbt;$slave=ne
 }
 
 
-function showCatalogueBrandSelectDocumentList($r,$code_search){session_start(); $db=new dbt; $slave=new slave; $list="";
+function showCatalogueBrandSelectDocumentList($r,$code_search){session_start(); $db=DbSingleton::getTokoDb(); $slave=new slave; $list="";
 	$n=$db->num_rows($r);$res_ar=array(); $tkey=time();
 	$db->query("CREATE TEMPORARY TABLE IF NOT EXISTS `NBRAND_RESULT_$tkey` (`art_id` INT NOT NULL ,`display_nr` VARCHAR( 100 ) NOT NULL ,`name` VARCHAR( 255 ) NOT NULL ,`brand_id` INT NOT NULL ,`brand_name` VARCHAR( 100 ) NOT NULL ,`kol_res` TINYINT NOT NULL) ENGINE = MYISAM ;");
 //		$slave->print_debug($query."n=$n<br>");
@@ -2902,7 +2902,7 @@ function showCatalogueBrandSelectDocumentList($r,$code_search){session_start(); 
 	return $form;
 }
 
-function showArticlesSearchDocumentList($art,$brand_id,$search_type){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showArticlesSearchDocumentList($art,$brand_id,$search_type){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	if ($search_type==0){$art_search=$art;
 		$art=$this->clearArticle($art);//$brand_id=$links[2];
 		
@@ -2991,7 +2991,7 @@ function showArticlesSearchDocumentList($art,$brand_id,$search_type){$db=new dbt
 	}
 	//print $query;
 	$r=$db->query($query);$n=$db->num_rows($r);$list="";$header_list="";
-	if ($list2==""){  // сработал внешний фильр или основной поиск с выбором бренда
+	if ($list2==""){  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 		$lst=array();
 		for ($i=1;$i<=$n;$i++){
 			$art_id=$db->result($r,$i-1,"ART_ID");
@@ -3027,7 +3027,7 @@ function showArticlesSearchDocumentList($art,$brand_id,$search_type){$db=new dbt
 	}
 	return array($header_list,$list,$list2);
 }
-function showArticleStorageCellsRestForm($art_id){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showArticleStorageCellsRestForm($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	if ($art_id>0){
 		$form_htm=RD."/tpl/catalogue_storage_rest_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$r=$db->query("select t2s.*, s.name as storage_name from T2_ARTICLES_STRORAGE t2s
@@ -3043,8 +3043,8 @@ function showArticleStorageCellsRestForm($art_id){$db=new dbt;$slave=new slave;s
 				<td>$storage_name</td>
 				<td>$amount</td>
 				<td>$reserv_amount</td>
-				<td><button class='btn btn-xs btn-default' title='Переглянути' onClick='viewArticleReservDocs(\"$art_id\",\"$storage_id\");'><i class='fa fa-eye'></i></button></td>
-				<td><button class='btn btn-xs btn-default' title='Переглянути' onClick='viewArticleCellsRest(\"$art_id\",\"$storage_id\");'><i class='fa fa-eye'></i></button></td>
+				<td><button class='btn btn-xs btn-default' title='пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ' onClick='viewArticleReservDocs(\"$art_id\",\"$storage_id\");'><i class='fa fa-eye'></i></button></td>
+				<td><button class='btn btn-xs btn-default' title='пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ' onClick='viewArticleCellsRest(\"$art_id\",\"$storage_id\");'><i class='fa fa-eye'></i></button></td>
 			</tr>";
 		}
 		$form=str_replace("{list}",$list,$form);
@@ -3052,9 +3052,9 @@ function showArticleStorageCellsRestForm($art_id){$db=new dbt;$slave=new slave;s
 		$form=str_replace("{article_nr_displ}",$article_nr_displ." ".$brand_name,$form);
 		
 	}
-	return array($form,"Наявність на складах");
+	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 }
-function showArticlePartitionsRestForm($art_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showArticlePartitionsRestForm($art_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	if ($art_id>0){
 		$form_htm=RD."/tpl/catalogue_partitions_rest_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$r=$db->query("select t2p.* from T2_ARTICLES_PARTITIONS t2p where t2p.ART_ID='$art_id' and t2p.rest>0 order by id desc limit 0,1000;");$n=$db->num_rows($r);$list="";
@@ -3086,23 +3086,23 @@ function showArticlePartitionsRestForm($art_id){$db=new db;$slave=new slave;sess
 				<td>$price_man_uah</td>
 			</tr>";
 		}
-		if ($n==0){$list="<tr><td colspan='8' align='center'>Записи відсутні</td></tr>";}
+		if ($n==0){$list="<tr><td colspan='8' align='center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>";}
 		$form=str_replace("{list}",$list,$form);
 		list($article_nr_displ,$brand_id,$brand_name)=$this->getArticleNrDisplBrand($art_id);
 		$form=str_replace("{article_nr_displ}",$article_nr_displ." ".$brand_name,$form);
 		
 	}
-	return array($form,"Наявність по партіям");
+	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");
 }
 
 
-function getClientName($id){$db=new db; $name="";
+function getClientName($id){$db=DbSingleton::getDb(); $name="";
 	$r=$db->query("select name from A_CLIENTS where id='$id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"name");}
 	return $name;
 }
 
-function viewArticleReservDocs($art_id,$storage_id){ $db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка";
+function viewArticleReservDocs($art_id,$storage_id){ $db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 	if ($art_id>0){
 		$form_htm=RD."/tpl/catalogue_storage_reserv_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		
@@ -3152,7 +3152,7 @@ function viewArticleReservDocs($art_id,$storage_id){ $db=new db;$slave=new slave
 				<td>$user_name</td>
 			</tr>";
 		}
-		$r=$db->queryP("select dp.id,dp.prefix,dp.doc_nom,dp.data,SUM(dps.amount) as amount,SUM(dps.amount_collect) as amount_collect,dp.user_id,dp.client_id from J_DP_STR dps left outer join J_DP dp on (dp.id=dps.dp_id) where dps.art_id='$art_id' and dps.status_dps in (94,95,96) and dp.status='1' and dps.amount>0 and dps.location_storage_id='$storage_id' and (dp.oper_status='30' or dp.oper_status='31') group by dp.id;");$n=$db->num_rows($r);// ищем в удаленном отборе склад
+		$r=$db->queryP("select dp.id,dp.prefix,dp.doc_nom,dp.data,SUM(dps.amount) as amount,SUM(dps.amount_collect) as amount_collect,dp.user_id,dp.client_id from J_DP_STR dps left outer join J_DP dp on (dp.id=dps.dp_id) where dps.art_id='$art_id' and dps.status_dps in (94,95,96) and dp.status='1' and dps.amount>0 and dps.location_storage_id='$storage_id' and (dp.oper_status='30' or dp.oper_status='31') group by dp.id;");$n=$db->num_rows($r);// пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 		for ($i=1;$i<=$n;$i++){
 			$dp_id=$db->result($r,$i-1,"id"); $dp_id_str.=",$dp_id";
 			$prefix=$db->result($r,$i-1,"prefix");
@@ -3178,7 +3178,7 @@ function viewArticleReservDocs($art_id,$storage_id){ $db=new db;$slave=new slave
 					from J_DP_STR dps 
 					left outer join J_DP dp on (dp.id=dps.dp_id) 
 					left outer join J_MOVING jm on (jm.parrent_type_id='1' and jm.parrent_doc_id =dp.id)
-					left outer join J_SELECT s on (s.parrent_doc_type_id='1' and s.parrent_doc_id=jm.id) where dps.art_id='$art_id' and dps.status_dps=95 and dp.status='1' and dps.amount>0 and dps.storage_id_from='$storage_id' and (dp.oper_status='30' or dp.oper_status='31') group by dp.id;");$n=$db->num_rows($r);// ищем в локальном отборе склад
+					left outer join J_SELECT s on (s.parrent_doc_type_id='1' and s.parrent_doc_id=jm.id) where dps.art_id='$art_id' and dps.status_dps=95 and dp.status='1' and dps.amount>0 and dps.storage_id_from='$storage_id' and (dp.oper_status='30' or dp.oper_status='31') group by dp.id;");$n=$db->num_rows($r);// пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 		for ($i=1;$i<=$n;$i++){
 			$dp_id=$db->result($r,$i-1,"id"); $dp_id_str.=",$dp_id";
 			$prefix=$db->result($r,$i-1,"prefix");
@@ -3200,7 +3200,7 @@ function viewArticleReservDocs($art_id,$storage_id){ $db=new db;$slave=new slave
 				<td>$user_name</td>
 			</tr>";
 		}
-		/*$r=$db->query("select dp.id,dp.prefix,dp.doc_nom,dp.data,SUM(dps.amount) as amount,SUM(dps.amount_collect) as amount_collect,dp.user_id,dp.client_id from J_DP_STR dps left outer join J_DP dp on (dp.id=dps.dp_id) left outer join J_SELECT s on (s.parrent_doc_type_id='2' and s.parrent_doc_id=dp.id) where dps.art_id='$art_id' and dps.status_dps='94' and dp.status='1' and dps.amount>0 and dps.storage_id_from='$storage_id' and (dp.oper_status='30' or dp.oper_status='31') and s.status_select<85 and s.storage_id=dps.storage_id_from group by dp.id;");$n=$db->num_rows($r);// ищем в локальном отборе склад
+		/*$r=$db->query("select dp.id,dp.prefix,dp.doc_nom,dp.data,SUM(dps.amount) as amount,SUM(dps.amount_collect) as amount_collect,dp.user_id,dp.client_id from J_DP_STR dps left outer join J_DP dp on (dp.id=dps.dp_id) left outer join J_SELECT s on (s.parrent_doc_type_id='2' and s.parrent_doc_id=dp.id) where dps.art_id='$art_id' and dps.status_dps='94' and dp.status='1' and dps.amount>0 and dps.storage_id_from='$storage_id' and (dp.oper_status='30' or dp.oper_status='31') and s.status_select<85 and s.storage_id=dps.storage_id_from group by dp.id;");$n=$db->num_rows($r);// пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 		for ($i=1;$i<=$n;$i++){
 			$dp_id=$db->result($r,$i-1,"id"); $dp_id_str.=",$dp_id";
 			$prefix=$db->result($r,$i-1,"prefix");
@@ -3232,20 +3232,20 @@ function viewArticleReservDocs($art_id,$storage_id){ $db=new db;$slave=new slave
 			$sel_user_id=$db->result($r,$i-1,"user_id");
 			$user_name=$this->getMediaUserName($sel_user_id);
 			$list.="<tr>
-				<td>й$i</td>
-				<td>СКв-$sel_id</td>
+				<td>пїЅ$i</td>
+				<td>пїЅпїЅпїЅ-$sel_id</td>
 				<td>$data</td>
 				<td>$amount_dis</td>
-				<td>ДП-$parrent_doc_id</td>
+				<td>пїЅпїЅ-$parrent_doc_id</td>
 				<td>$user_name</td>
 			</tr>";
 		}*/
 		$form=str_replace("{list}",$list,$form);
 		$answer=1;$err=""; 
 	}
-	return array($answer,$err,$form,"Наявність в документах переміщення");
+	return array($answer,$err,$form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 }
-function viewArticleCellsRest($art_id,$storage_id){ $db=new db;$dbt=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка";
+function viewArticleCellsRest($art_id,$storage_id){ $db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 	if ($art_id>0){
 		$form_htm=RD."/tpl/catalogue_storage_cells_rest_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		
@@ -3271,36 +3271,36 @@ function viewArticleCellsRest($art_id,$storage_id){ $db=new db;$dbt=new dbt;$sla
 		
 		$answer=1;$err=""; 
 	}
-	return array($answer,$err,$form,"Наявність у комірках складу");
+	return array($answer,$err,$form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");
 }
 	
 
-function getStorageName($sel_id){$db=new dbt;$name="";
+function getStorageName($sel_id){$db=DbSingleton::getTokoDb();$name="";
 	$r=$db->query("select name from `STORAGE` where status='1' and id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"name");}
 	return $name;	
 }
 	
-function getStorageCellName($sel_id){$db=new dbt;$name="";
+function getStorageCellName($sel_id){$db=DbSingleton::getTokoDb();$name="";
 	$r=$db->query("select cell_value from `STORAGE_CELLS` where status='1' and id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"cell_value");}
 	return $name;	
 }
 
-function showCatalogueDonorForm($art_id){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showCatalogueDonorForm($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/catalogue_donor_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$form=str_replace("{art_id}",$art_id,$form);
 	list($search_number,$d,$d)=$this->getArticleNrDisplBrand($art_id);
 	$form=str_replace("{search_number}",$search_number,$form);
 	$form=str_replace("{display_nr}","",$form);
-	return array($form,"Імпорт інформації від донора".$kind_name);
+	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ".$kind_name);
 }
 function showCatalogueDonorIndexSearch(){session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/catalogue_donor_search.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-	return array($form,"Пошук аналогу по індексу");
+	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 }
 
-function findCatalogueDonorIndexSearch($index){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function findCatalogueDonorIndexSearch($index){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$index=$slave->qq($index);
 	if ($index!=""){
 		$query="select t2a.ART_ID,t2a.BRAND_ID,t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME
@@ -3327,7 +3327,7 @@ function findCatalogueDonorIndexSearch($index){$db=new dbt;$slave=new slave;sess
 	return $list;
 }
 
-function saveCatalogueDonorForm($art_id,$search_number,$display_nr,$art_id2,$ch){$db=new dbt;$dbp=new dbp;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveCatalogueDonorForm($art_id,$search_number,$display_nr,$art_id2,$ch){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$art_id=$slave->qq($art_id);$search_number_q=$slave->qq($search_number_q);$display_nr_q=$slave->qq($display_nr_q);$art_id2=$slave->qq($art_id2);$ch=$slave->qq($ch);
 	if ($art_id>0 && $display_nr!="" && $art_id2>0){
 		if ($ch[1]==1){
@@ -3457,7 +3457,7 @@ function saveCatalogueDonorForm($art_id,$search_number,$display_nr,$art_id2,$ch)
 
 //showArticleSearchDocumentForm---------------------------------------------
 
-function showArticleSearchDocumentForm($art_id,$brand_id,$article_nr_display,$doc_type,$doc_id){$db=new db;$slave=new slave;
+function showArticleSearchDocumentForm($art_id,$brand_id,$article_nr_display,$doc_type,$doc_id){$db=DbSingleton::getDb();$slave=new slave;
 	$form_htm=RD."/tpl/catalogue_document.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$form=str_replace("{art}",$article_nr_display,$form);
 	$form=str_replace("{brand_id}",$brand_id,$form);
@@ -3484,7 +3484,7 @@ function showArticleSearchDocumentForm($art_id,$brand_id,$article_nr_display,$do
 	return $form;
 }
 
-function getTpointStorageList($tpoint_id){$db=new db; $list=0; $week_day=date("N");$cur_time=date("H:i:s");
+function getTpointStorageList($tpoint_id){$db=DbSingleton::getDb(); $list=0; $week_day=date("N");$cur_time=date("H:i:s");
 	$query="select ps.storage_id from T_POINT_STORAGE ps left outer join T_POINT_DELIVERY_TIME pdt on pdt.storage_id=ps.storage_id where ps.tpoint_id='$tpoint_id' and pdt.tpoint_id='$tpoint_id' and ps.status=1 and pdt.week_day='$week_day' and pdt.time_from<='$cur_time' and pdt.time_to>='$cur_time' order by pdt.delivery_days asc;";
 	$r=$db->query($query);$n=$db->num_rows($r);
 	//select delivery_days, giveout_time from T_POINT_DELIVERY_TIME where status='1' and tpoint_id='$tpoint_id' and storage_id='$storage_id' and week_day='$week_day' and time_from<='$cur_time' and time_to>='$cur_time' limit 0,1;
@@ -3493,7 +3493,7 @@ function getTpointStorageList($tpoint_id){$db=new db; $list=0; $week_day=date("N
 	return $list;
 }
 
-function showArticlesSearchListDoc($art,$brand_id,$query_2,$search_type,$doc_type,$doc_id){$db=new dbt;$dbp=new dbp;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showArticlesSearchListDoc($art,$brand_id,$query_2,$search_type,$doc_type,$doc_id){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$art_search=$art; $art=$this->clearArticle($art); if ($brand_id==0){$brand_id="";}
 	$doc_type=$slave->qq($doc_type);$doc_id=$slave->qq($doc_id);$tpoint_storage_list="0";$price_lvl=1;
 	if ($doc_type=="dp"){$dp_id=$doc_id;
@@ -3566,12 +3566,12 @@ function showArticlesSearchListDoc($art,$brand_id,$query_2,$search_type,$doc_typ
 	$r=$db->query($query);$n=$db->num_rows($r);
 	
 	
-	if ($query_2!="" || $list2==""){  // сработал внешний фильр или основной поиск с выбором бренда
+	if ($query_2!="" || $list2==""){  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 		list($fldcnf,$kol_f)=$this->getCatalogueClientViewFieldsData($user_id,"catalogue_doc");
 		for ($i=1;$i<=$kol_f;$i++){
 			$header_list.="<th>".$fldcnf[$i]["field_name"]."</th>";
 			$range_list.="<td onClick=\"{function_select_article}\">{".$fldcnf[$i]["field_key"]."}</td>";
-		}$header_list="<tr align='center'><th data-sortable=\"false\">Фото</th><th data-sortable=\"false\">Тип артикула</th>".$header_list."</tr>";
+		}$header_list="<tr align='center'><th data-sortable=\"false\">пїЅпїЅпїЅпїЅ</th><th data-sortable=\"false\">пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</th>".$header_list."</tr>";
 		
 		$sch_table="search_cat_$user_id";
 		$sch_table_result="search_cat_$user_id"."_result";
@@ -3773,26 +3773,26 @@ function showArticlesSearchListDoc($art,$brand_id,$query_2,$search_type,$doc_typ
 			if ($kind=="" || $relation==""){$lst_kr[5].=$lst[$i]["data"];}
 
 		}$kol_f+=1;
-		if ($lst_kr[1]!=""){$lst_kr[1]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"запитаний артикул\" class=\"fa fa-key\"></i>",$lst_kr[1]);$list.=$lst_kr[1];}
-		if ($lst_kr[2]!=""){$lst_kr[2]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"аналог\" class=\"fa fa-link\"></i>",$lst_kr[2]);$list.=$lst_kr[2];}
-		if ($lst_kr[3]!=""){$lst_kr[3]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"артикул присутні в\" class=\"fa fa-level-down\"></i>",$lst_kr[3]);$list.=$lst_kr[3];}
-		if ($lst_kr[4]!=""){$lst_kr[4]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"артикул включає в себе\" class=\"fa fa-level-up\"></i>",$lst_kr[4]);$list.=$lst_kr[4];}
-		if ($lst_kr[5]!=""){$lst_kr[5]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"інше\" class=\"fa fa-ellipsis-h\"></i>",$lst_kr[5]);$list.=$lst_kr[5];}
+		if ($lst_kr[1]!=""){$lst_kr[1]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ\" class=\"fa fa-key\"></i>",$lst_kr[1]);$list.=$lst_kr[1];}
+		if ($lst_kr[2]!=""){$lst_kr[2]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"пїЅпїЅпїЅпїЅпїЅпїЅ\" class=\"fa fa-link\"></i>",$lst_kr[2]);$list.=$lst_kr[2];}
+		if ($lst_kr[3]!=""){$lst_kr[3]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ\" class=\"fa fa-level-down\"></i>",$lst_kr[3]);$list.=$lst_kr[3];}
+		if ($lst_kr[4]!=""){$lst_kr[4]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ\" class=\"fa fa-level-up\"></i>",$lst_kr[4]);$list.=$lst_kr[4];}
+		if ($lst_kr[5]!=""){$lst_kr[5]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"пїЅпїЅпїЅпїЅ\" class=\"fa fa-ellipsis-h\"></i>",$lst_kr[5]);$list.=$lst_kr[5];}
 	}
 
 	return array($header_list,$list,$list2);
 }
 
-function checkSupplStorageAllow($suppl_id,$storage_id){$db=new db; $allow=0;
+function checkSupplStorageAllow($suppl_id,$storage_id){$db=DbSingleton::getDb(); $allow=0;
 	$r=$db->query("select count(id) as kol from `A_CLIENTS_STORAGE` where visible='1' and id='$storage_id' and client_id='$suppl_id' limit 0,1;");$allow=$db->result($r,0,"kol")+0;
 	return $allow;
 }
-function checkSupplStorageTpointAllow($tpoint_id,$suppl_id,$storage_id){$db=new db; $allow=0;
+function checkSupplStorageTpointAllow($tpoint_id,$suppl_id,$storage_id){$db=DbSingleton::getDb(); $allow=0;
 	$r=$db->query("select count(id) as kol from `T_POINT_SUPPL_STORAGE` where tpoint_id='$tpoint_id' and storage_id='$storage_id' and suppl_id='$suppl_id' limit 0,1;");$allow=$db->result($r,0,"kol")+0;
 	return $allow;
 }
 
-function showSupplStorageSelectWindow($art_id,$article_nr_displ,$brand_id,$doc_type,$doc_id){session_start(); $db=new db; $slave=new slave; $list="";$form="";
+function showSupplStorageSelectWindow($art_id,$article_nr_displ,$brand_id,$doc_type,$doc_id){session_start(); $db=DbSingleton::getDb(); $slave=new slave; $list="";$form="";
 	$form_htm=RD."/tpl/catalogue_select_suppl_storage_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$list=$this->showArticleSupplStorageRestList($art_id,$article_nr_displ,$brand_id,$doc_type,$doc_id);
 	$form=str_replace("{list}",$list,$form);
@@ -3803,7 +3803,7 @@ function showSupplStorageSelectWindow($art_id,$article_nr_displ,$brand_id,$doc_t
 
 
 
-function showArticleSupplStorageRestList($art_id,$article_nr_displ,$brand_id,$doc_type,$doc_id){$db=new dbt;$dbp=new dbp;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showArticleSupplStorageRestList($art_id,$article_nr_displ,$brand_id,$doc_type,$doc_id){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$doc_type=$slave->qq($doc_type);$doc_id=$slave->qq($doc_id);
 	if ($doc_type=="dp"){$dp_id=$doc_id;
 		require_once RD.'/lib/dp_class.php';$dp=new dp;
@@ -3938,13 +3938,13 @@ function showArticleSupplStorageRestList($art_id,$article_nr_displ,$brand_id,$do
 
 
 
-function getSupplStorageName($suppl_storage_id){ $db=new db; $name="";
+function getSupplStorageName($suppl_storage_id){ $db=DbSingleton::getDb(); $name="";
 	$r=$db->query("select name from A_CLIENTS_STORAGE where id='$suppl_storage_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$name=$db->result($r,0,"name");}
 	return $name;
 }
 
-function showCatalogueBrandSelectListDoc($r,$code_search){session_start(); $db=new db; $slave=new slave; $list="";
+function showCatalogueBrandSelectListDoc($r,$code_search){session_start(); $db=DbSingleton::getDb(); $slave=new slave; $list="";
 	$n=$db->num_rows($r);$res_ar=array(); $tkey=time();
 	$db->query("CREATE TEMPORARY TABLE IF NOT EXISTS `NBRAND_RESULT_$tkey` (`art_id` INT NOT NULL ,`display_nr` VARCHAR( 100 ) NOT NULL ,`name` VARCHAR( 255 ) NOT NULL ,`brand_id` INT NOT NULL ,`brand_name` VARCHAR( 100 ) NOT NULL ,`kol_res` TINYINT NOT NULL) ENGINE = MYISAM ;");
 //		$slave->print_debug($query."n=$n<br>");
@@ -3984,12 +3984,12 @@ function showCatalogueBrandSelectListDoc($r,$code_search){session_start(); $db=n
 	return $form;
 }
 	
-function checkPhotoEmpty($art_id,$disp_nomber){ $db=new dbt; 
+function checkPhotoEmpty($art_id,$disp_nomber){ $db=DbSingleton::getTokoDb(); 
 	$r=$db->query("select count(t2af.ID) as kol from T2_PHOTOS t2af where t2af.ART_ID='$art_id';"); $n=$db->result($r,0,"kol")+0; 
 	return $n; 
 }
 	
-function showIndexAddForm() {$db=new dbt;
+function showIndexAddForm() {$db=DbSingleton::getTokoDb();
 	$form_htm=RD."/tpl/catalogue_index_add_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$art_id=$this->getMaxIndex();
 	$form=str_replace("{art_id}",$art_id,$form);
@@ -3997,19 +3997,19 @@ function showIndexAddForm() {$db=new dbt;
 	return $form;
 }
 			
-function getMaxIndex() {$db=new dbt;
+function getMaxIndex() {$db=DbSingleton::getTokoDb();
 	$r=$db->query("SELECT max(`ART_ID`) as max_art FROM `T2_ARTICLES` where `ART_ID`>100000000 and `ART_ID` <110000000");
 	$art_id=intval($db->result($r,0,"max_art"))+1;
 	return $art_id;
 } 
 	
-function getMaxSupplIndex() {$db=new dbt;
+function getMaxSupplIndex() {$db=DbSingleton::getTokoDb();
 	$r=$db->query("SELECT max(`ART_ID`) as max_art FROM `T2_ARTICLES` where `ART_ID`>10000000");
 	$art_id=intval($db->result($r,0,"max_art"))+1;
 	return $art_id;
 }
 	
-function showBrandsSelect() { $db=new dbt;
+function showBrandsSelect() { $db=DbSingleton::getTokoDb();
 	$r=$db->query("select b.* from T2_BRANDS b order by b.BRAND_NAME asc");
 	$n=$db->num_rows($r); $list="";
 	for ($i=1;$i<=$n;$i++){
@@ -4020,7 +4020,7 @@ function showBrandsSelect() { $db=new dbt;
 	return $list;
 }
 	
-function saveIndexArticle($art_id,$suppl_status,$article_nr_displ,$brand_id,$article_name,$article_name_ukr,$article_info) { $db=new dbt;
+function saveIndexArticle($art_id,$suppl_status,$article_nr_displ,$brand_id,$article_name,$article_name_ukr,$article_info) { $db=DbSingleton::getTokoDb();
 	$r=$db->query("select ART_ID from T2_ARTICLES where ART_ID=$art_id;"); $n=$db->num_rows($r);
 	$article_nr_search=str_replace(str_split('\\/:*?"<>|+-()[]., '), '', $article_nr_displ);
 	if ($art_id>0 && $art_id!="" && $n==0) {

@@ -1,7 +1,7 @@
 <?php
 class manual {
 	
-	function loadManualData($key,$manValue,$manText){$db=new db;$slave=new slave;$list="";$k=0;
+	function loadManualData($key,$manValue,$manText){$db=DbSingleton::getDb();$slave=new slave;$list="";$k=0;
 		$form_htm=RD."/tpl/manual_list.htm";$form="";if (file_exists("$form_htm")){$form = file_get_contents($form_htm);}
 		$r=$db->query("SELECT *	FROM manual where `key`='$key' order by mcaption,id asc;"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){$k+=1;
@@ -22,16 +22,16 @@ class manual {
 		$form=str_replace("{key}",$key,$form);
 		return $form;
 	}
-	function new_man_id(){$db=new db; $r=$db->query("select max(id) as mid from manual;");$mid=0+$db->result($r,0,"mid")+1;$db->query("insert into manual (id) values('$mid');");return $mid;}
-	function get_manMid_id($key){$db=new db; $r=$db->query("select max(mid) as mid from manual where `key`='$key';");$mid=0+$db->result($r,0,"mid")+1;return $mid;}
+	function new_man_id(){$db=DbSingleton::getDb(); $r=$db->query("select max(id) as mid from manual;");$mid=0+$db->result($r,0,"mid")+1;$db->query("insert into manual (id) values('$mid');");return $mid;}
+	function get_manMid_id($key){$db=DbSingleton::getDb(); $r=$db->query("select max(mid) as mid from manual where `key`='$key';");$mid=0+$db->result($r,0,"mid")+1;return $mid;}
 	
-	function AddManualValue($key,$manText){$db=new db;$slave=new slave;
+	function AddManualValue($key,$manText){$db=DbSingleton::getDb();$slave=new slave;
 		$mid=$this->new_man_id();$manValue=$this->get_manMid_id($key);$manText=$slave->qq($manText);
 		$db->query("update manual set mcaption='$manText', mid='$manValue',`key`='$key' where id='$mid';");
 		return array($manValue,$manText);
 	}
 	
-	function addNewCity($region_id,$name){$db=new db;$slave=new slave;$id=0;
+	function addNewCity($region_id,$name){$db=DbSingleton::getDb();$slave=new slave;$id=0;
 		$region_id=$slave->qq($region_id);$name=$slave->qq($name);
 		$r=$db->query("select max(`CITY_ID`) as mid from T2_CITY;");$id=0+$db->result($r,0,"mid")+1;
 		$db->query("insert into T2_CITY (`CITY_ID`,`CITY_NAME`,`REGION_ID`,`ALFA2`,`ALFA3`) value ('$id','$name','$region_id','".strtoupper(substr($name,0,2))."','".strtoupper(substr($name,0,3))."');");
@@ -39,7 +39,7 @@ class manual {
 	}
 	
 	
-	function getManualMCaption($key,$mid){$db=new db;$caption="";
+	function getManualMCaption($key,$mid){$db=DbSingleton::getDb();$caption="";
 		$r=$db->query("select mcaption from manual where `key`='$key' and `mid`='$mid' limit 0,1;");$n=$db->num_rows($r);
 		if ($n==1) {$caption=$db->result($r,0,"mcaption");}
 		if ($table_type==0){
@@ -48,13 +48,13 @@ class manual {
 		}
 		return $caption;
 	}
-	function showManualSelectList($gkey,$selId){$db=new db;$form="";
+	function showManualSelectList($gkey,$selId){$db=DbSingleton::getDb();$form="";
 		$r=$db->query("select `mid`,`mcaption` from `manual` where `key`='$gkey' order by mid,id asc;");$n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++) {$mid=$db->result($r,$i-1,"mid");
 			$form.="<option value='".$mid."' ";if ($selId==$mid){$form.=" selected='selected'";} $form.=">".$db->result($r,$i-1,"mcaption")."</option>";}
 		return $form;
 	}
-	function showTableForm($tableName,$selId,$tableField){$db=new db;$form="";
+	function showTableForm($tableName,$selId,$tableField){$db=DbSingleton::getDb();$form="";
 		$r=$db->query("select `id`,`$tableField` from `$tableName` order by id asc;");$n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++) {$id=$db->result($r,$i-1,"id");
 			$form.="<option value='".$id."' ";if ($selId==$id){$form.=" selected='selected'";} $form.=">".$db->result($r,$i-1,"$tableField")."</option>";}
@@ -62,7 +62,7 @@ class manual {
 	}
 }
 class manualD { 
-	function loadManualDData($key,$manValue,$manText){$db=new db;$slave=new slave;$list="";$k=0;
+	function loadManualDData($key,$manValue,$manText){$db=DbSingleton::getDb();$slave=new slave;$list="";$k=0;
 		$form_htm=RD."/tpl/manualD_list.htm";$form="";if (file_exists("$form_htm")){$form = file_get_contents($form_htm);}
 		$r=$db->query("SELECT *	FROM manual_desc where `key`='$key' order by mcaption,id asc limit 0,100;"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){$k+=1;
@@ -83,7 +83,7 @@ class manualD {
 		$form=str_replace("{key}",$key,$form);
 		return $form;
 	}
-	function showManualDList($key,$SCaption){$db=new db;$slave=new slave; $where="";$form="<table width='100%' border='0'>{list}</table>";
+	function showManualDList($key,$SCaption){$db=DbSingleton::getDb();$slave=new slave; $where="";$form="<table width='100%' border='0'>{list}</table>";
 		if ($SCaption!=""){$where=" and mcaption LIKE '%$SCaption%'";}
 		$r=$db->query("SELECT *	FROM manual_desc where `key`='$key' $where order by mcaption,id $asc limit 0,100;");	$n=$db->num_rows($r);$list="";$k=0;
 		for ($i=1;$i<=$n;$i++){$k+=1;
@@ -103,32 +103,32 @@ class manualD {
 		$form=str_replace("{list}",$list,$form);
 		return $form;
 	}
-	function new_man_id(){$db=new db; $r=$db->query("select max(id) as mid from manual_desc;");$mid=0+$db->result($r,0,"mid")+1;$db->query("insert into manual_desc (id) values('$mid');");return $mid;}
-	function get_manMid_id($key){$db=new db; $r=$db->query("select max(mid) as mid from manual_desc where `key`='$key';");$mid=0+$db->result($r,0,"mid")+1;return $mid;}
+	function new_man_id(){$db=DbSingleton::getDb(); $r=$db->query("select max(id) as mid from manual_desc;");$mid=0+$db->result($r,0,"mid")+1;$db->query("insert into manual_desc (id) values('$mid');");return $mid;}
+	function get_manMid_id($key){$db=DbSingleton::getDb(); $r=$db->query("select max(mid) as mid from manual_desc where `key`='$key';");$mid=0+$db->result($r,0,"mid")+1;return $mid;}
 	
-	function AddManualD($key,$caption,$desc){$db=new db;$slave=new slave;
+	function AddManualD($key,$caption,$desc){$db=DbSingleton::getDb();$slave=new slave;
 		$mid=$this->new_man_id();$manValue=$this->get_manMid_id($key);$caption=$slave->qq($caption);$desc=$slave->qq($desc);
 		$db->query("update manual_desc set mcaption='$caption', mdesc='$desc', mid='$manValue',`key`='$key' where id='$mid';");
 		return "ok";
 	}
-	function saveManualD($id,$key,$caption,$desc){$db=new db;$slave=new slave;
+	function saveManualD($id,$key,$caption,$desc){$db=DbSingleton::getDb();$slave=new slave;
 		$caption=$slave->qq($caption);$desc=$slave->qq($desc);
 		$db->query("update manual_desc set mcaption='$caption', mdesc='$desc' where id='$id';");
 		return "ok";
 	}
-	function setValueD($id){$db=new db;$caption="";$desc="";
+	function setValueD($id){$db=DbSingleton::getDb();$caption="";$desc="";
 		$r=$db->query("select mcaption,mdesc from manual_desc where `id`='$id' limit 0,1;");$n=$db->num_rows($r);
 		if ($n==1) {$caption=$db->result($r,0,"mcaption");$desc=$db->result($r,0,"mdesc");}
 		return array($caption,$desc);
 	}
-	function getManualDMCaption($key,$id){$db=new db;$caption="";
+	function getManualDMCaption($key,$id){$db=DbSingleton::getDb();$caption="";
 		$r=$db->query("select mcaption from manual_desc where `key`='$key' and `id`='$id' limit 0,1;");$n=$db->num_rows($r);
 		if ($n==1) {$caption=$db->result($r,0,"mcaption");}
 		return $caption;
 	}
 }
 class manualK { 
-	function loadManualKData($key,$manValue,$text,$filter){$db=new db;$slave=new slave;$list="";$k=0;
+	function loadManualKData($key,$manValue,$text,$filter){$db=DbSingleton::getDb();$slave=new slave;$list="";$k=0;
 		$form_htm=RD."/tpl/manualK_list.htm";$form="";if (file_exists("$form_htm")){$form = file_get_contents($form_htm);}
 		$where="";if ($filter!=""){$where=" and znos_from<='$filter' and znos_to>='$filter'";}
 		$r=$db->query("SELECT *	FROM manual_constructiv where `key`='$key' $where order by mid,mcaption,id asc limit 0,100;"); $n=$db->num_rows($r);
@@ -155,24 +155,24 @@ class manualK {
 		$form=str_replace("{kolKonstr}",$n,$form);
 		return $form;
 	}
-	function setValueD($id){$db=new db;$caption="";$desc="";
+	function setValueD($id){$db=DbSingleton::getDb();$caption="";$desc="";
 		$r=$db->query("select mcaption,mdesc from manual_constructiv where `id`='$id' limit 0,1;");$n=$db->num_rows($r);
 		if ($n==1) {$caption=$db->result($r,0,"mcaption");$desc=$db->result($r,0,"mdesc");}
 		return array($caption,$desc);
 	}
-	function getManualKMCaption($key,$id){$db=new db;$caption="";if ($id==""){$id=0;}$id=str_replace(";",",",$id);if (substr($id,-1)==","){$id=substr($id,0,-1);}
+	function getManualKMCaption($key,$id){$db=DbSingleton::getDb();$caption="";if ($id==""){$id=0;}$id=str_replace(";",",",$id);if (substr($id,-1)==","){$id=substr($id,0,-1);}
 		$r=$db->query("select mcaption from manual_constructiv where `key`='$key' and `id` IN ($id);");$n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++) {$caption.=$db->result($r,$i-1,"mcaption").";";}
 		return $caption;
 	}
-	function getManualKMDesc($key,$id){$db=new db;$desc="";if ($id==""){$id=0;}$id=str_replace(";",",",$id);if (substr($id,-1)==","){$id=substr($id,0,-1);}
+	function getManualKMDesc($key,$id){$db=DbSingleton::getDb();$desc="";if ($id==""){$id=0;}$id=str_replace(";",",",$id);if (substr($id,-1)==","){$id=substr($id,0,-1);}
 		$r=$db->query("select mdesc from manual_constructiv where `key`='$key' and `id` IN ($id);");$n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++) {$desc.=$db->result($r,$i-1,"mdesc").";";}
 		return $desc;
 	}
 }
 class manualP {
-	function loadManualPData($key,$manValue,$manText,$parrKey,$parrKeyId){$db=new db;$slave=new slave;$list="";$k=0;if ($parrKeyId==""){$parrKeyId=0;}
+	function loadManualPData($key,$manValue,$manText,$parrKey,$parrKeyId){$db=DbSingleton::getDb();$slave=new slave;$list="";$k=0;if ($parrKeyId==""){$parrKeyId=0;}
 		$form_htm=RD."/tpl/manualP_list.htm";$form="";if (file_exists("$form_htm")){$form = file_get_contents($form_htm);}
 		$r=$db->query("SELECT *	FROM manual where `key`='$key' and parrentKey='$parrKey' and parrentKeyId='$parrKeyId' order by mcaption,id asc limit 0,100;"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){$k+=1;
@@ -196,7 +196,7 @@ class manualP {
 		$form=str_replace("{parrKey}",$parrKey,$form);
 		return $form;
 	}
-	function showManualPList($key,$SCaption,$parrKey,$parrKeyId){$db=new db;$slave=new slave; $where="";$form="<table width='100%' border='0'>{list}</table>";
+	function showManualPList($key,$SCaption,$parrKey,$parrKeyId){$db=DbSingleton::getDb();$slave=new slave; $where="";$form="<table width='100%' border='0'>{list}</table>";
 		if ($SCaption!=""){$where=" and mcaption LIKE '%$SCaption%'";}if ($parrKeyId==""){$parrKeyId=0;}
 		$r=$db->query("SELECT *	FROM manual where `key`='$key' and parrentKey='$parrKey' and parrentKeyId='$parrKeyId' $where order by mcaption,id $asc limit 0,100;");	$n=$db->num_rows($r);$list="";$k=0;
 		for ($i=1;$i<=$n;$i++){$k+=1;
@@ -217,21 +217,21 @@ class manualP {
 		$form=str_replace("{list}",$list,$form);
 		return $form;
 	}
-	function new_man_id(){$db=new db; $r=$db->query("select max(id) as mid from manual;");$mid=0+$db->result($r,0,"mid")+1;$db->query("insert into manual (id) values('$mid');");return $mid;}
-	function get_manMid_id($key){$db=new db; $r=$db->query("select max(mid) as mid from manual where `key`='$key';");$mid=0+$db->result($r,0,"mid")+1;return $mid;}
-	function AddManualPValue($key,$manText,$parrKey,$parrKeyId){$db=new db;$slave=new slave;
+	function new_man_id(){$db=DbSingleton::getDb(); $r=$db->query("select max(id) as mid from manual;");$mid=0+$db->result($r,0,"mid")+1;$db->query("insert into manual (id) values('$mid');");return $mid;}
+	function get_manMid_id($key){$db=DbSingleton::getDb(); $r=$db->query("select max(mid) as mid from manual where `key`='$key';");$mid=0+$db->result($r,0,"mid")+1;return $mid;}
+	function AddManualPValue($key,$manText,$parrKey,$parrKeyId){$db=DbSingleton::getDb();$slave=new slave;
 		$mid=$this->new_man_id();$manValue=$this->get_manMid_id($key);$manText=$slave->qq($manText);
 		$db->query("update manual set mcaption='$manText', mid='$manValue',`key`='$key', parrentKey='$parrKey', parrentKeyId='$parrKeyId' where id='$mid';");
 		return array($manValue,$manText);
 	}
-	function getManualMCaption($key,$mid){$db=new db;$caption="";
+	function getManualMCaption($key,$mid){$db=DbSingleton::getDb();$caption="";
 		$r=$db->query("select mcaption from manual where `key`='$key' and `mid`='$mid' limit 0,1;");$n=$db->num_rows($r);
 		if ($n==1) {$caption=$db->result($r,0,"mcaption");}
 		return $caption;
 	}
 }
 class manualManager {
-	function loadManualManagerData($manValue,$manText,$bankOc){$db=new db;$slave=new slave;$list="";$k=0;if ($bankOc==""){$bankOc=0;}
+	function loadManualManagerData($manValue,$manText,$bankOc){$db=DbSingleton::getDb();$slave=new slave;$list="";$k=0;if ($bankOc==""){$bankOc=0;}
 		$form_htm=RD."/tpl/manualManager_list.htm";$form="";if (file_exists("$form_htm")){$form = file_get_contents($form_htm);}
 		$r=$db->query("SELECT *	FROM bid_manager where `bankOc`='$bankOc' order by name,id asc limit 0,100;"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){$k+=1;
@@ -256,7 +256,7 @@ class manualManager {
 		$form=str_replace("{list}",$list,$form);
 		return $form;
 	}
-	function showManualManagerList($SCaption,$bankOc){$db=new db;$slave=new slave; $where="";$form="<table width='100%' border='0'>{list}</table>";
+	function showManualManagerList($SCaption,$bankOc){$db=DbSingleton::getDb();$slave=new slave; $where="";$form="<table width='100%' border='0'>{list}</table>";
 		if ($SCaption!=""){$where=" and name LIKE '%$SCaption%'";}
 		$r=$db->query("SELECT *	FROM bid_manager where `bankOc`='$bankOc' $where order by name,id asc limit 0,100;");	$n=$db->num_rows($r);$list="";$k=0;
 		for ($i=1;$i<=$n;$i++){$k+=1;
@@ -281,13 +281,13 @@ class manualManager {
 		$form=str_replace("{list}",$list,$form);
 		return $form;
 	}
-	function new_man_id(){$db=new db; $r=$db->query("select max(id) as mid from bid_manager;");$mid=0+$db->result($r,0,"mid")+1;$db->query("insert into bid_manager (id) values('$mid');");return $mid;}
-	function AddManualManagerValue($name,$city,$phone,$email,$persent,$bankOc){$db=new db;$slave=new slave;
+	function new_man_id(){$db=DbSingleton::getDb(); $r=$db->query("select max(id) as mid from bid_manager;");$mid=0+$db->result($r,0,"mid")+1;$db->query("insert into bid_manager (id) values('$mid');");return $mid;}
+	function AddManualManagerValue($name,$city,$phone,$email,$persent,$bankOc){$db=DbSingleton::getDb();$slave=new slave;
 		$mid=$this->new_man_id();$name=$slave->qq($name);$city=$slave->qq($city);
 		$db->query("update bid_manager set name='$name', city='$city', phone='$phone', email='$email', persent='$persent', `bankOc`='$bankOc' where id='$mid';");
 		return array($mid,$name);
 	}
-	function getManualManagerCaption($id){$db=new db;$name="";
+	function getManualManagerCaption($id){$db=DbSingleton::getDb();$name="";
 		$r=$db->query("select name from bid_manager where `id`='$id' limit 0,1;");$n=$db->num_rows($r);
 		if ($n==1) {$name=$db->result($r,0,"name");}
 		return $name;

@@ -1,38 +1,38 @@
 <?php
 class jmoving{
-protected $prefix_new = 'ДФ';
+protected $prefix_new = 'пїЅпїЅ';
 
-function getMediaUserName($user_id){$db=new db;$name="";
+function getMediaUserName($user_id){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select name from media_users where id='$user_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"name");}
 	return $name;
 }
-function get_doc_prefix($client_id,$prefix_id){ $db=new db;$prefix="Дф-";
+function get_doc_prefix($client_id,$prefix_id){ $db=DbSingleton::getDb();$prefix="пїЅпїЅ-";
 	$r=$db->query("select prefix from A_CLIENTS_DOCUMENT_PREFIX where client_id='$client_id' and id='$prefix_id' and status='1' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$prefix=$db->result($r,0,"prefix");}
 	return $prefix; 
 }
-function get_jmoving_prefix($jmoving_id){ $db=new db;$prefix="ПР";
+function get_jmoving_prefix($jmoving_id){ $db=DbSingleton::getDb();$prefix="пїЅпїЅ";
 	$r=$db->query("select type_id from J_MOVING where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
-	if ($n==1){$type_id=$db->result($r,0,"type_id"); if ($type_id==0){$prefix="В-ПР";}}
+	if ($n==1){$type_id=$db->result($r,0,"type_id"); if ($type_id==0){$prefix="пїЅ-пїЅпїЅ";}}
 	return $prefix; 
 }
-function get_doc_client_prefix($client_id){ $db=new db;$prefix_id=0;$doc_type_id=40;
+function get_doc_client_prefix($client_id){ $db=DbSingleton::getDb();$prefix_id=0;$doc_type_id=40;
 	$r=$db->query("select id from A_CLIENTS_DOCUMENT_PREFIX where client_id='$client_id' and doc_type_id='$doc_type_id' and status='1' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$prefix_id=$db->result($r,0,"id");}
 	return $prefix_id; 
 }
-function get_df_doc_nom_new(){ $db=new db;$doc_nom=0;
+function get_df_doc_nom_new(){ $db=DbSingleton::getDb();$doc_nom=0;
 	$r=$db->query("select max(doc_nom) as doc_nom from J_MOVING where oper_status='30' limit 0,1;");$doc_nom=0+$db->result($r,0,"doc_nom")+1;
 	return $doc_nom;
 }
-function newJmovingCard($type_id){$db=new db;$slave=new slave;$manual=new manual; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $jmoving_id=0;
+function newJmovingCard($type_id){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $jmoving_id=0;
 	$r=$db->query("select max(id) as mid from J_MOVING;");$jmoving_id=0+$db->result($r,0,"mid")+1;
 	$doc_nom=$this->get_df_doc_nom_new();
 	$db->query("insert into J_MOVING (`id`,`type_id`,`prefix`,`doc_nom`,`user_id`,`data`) values ('$jmoving_id','$type_id','$this->prefix_new','$doc_nom','$user_id',CURDATE());");
 	return $jmoving_id;
 }
-function getJmovingName($jmoving_id){$db=new db;
+function getJmovingName($jmoving_id){$db=DbSingleton::getDb();
 	$r=$db->query("select * from J_MOVING where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$prefix=$db->result($r,0,"prefix");
@@ -40,40 +40,40 @@ function getJmovingName($jmoving_id){$db=new db;
 	}
 	return $prefix."-".$doc_nom;
 }
-function getJmovingStatusId($jmoving_id){$db=new db;$status_jmoving=0;
+function getJmovingStatusId($jmoving_id){$db=DbSingleton::getDb();$status_jmoving=0;
 	$r=$db->query("select status_jmoving from J_MOVING where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$status_jmoving=$db->result($r,0,"status_jmoving");}
 	return $status_jmoving;
 }
 	
-function checkJmovingStructure($jmoving_id) {$db = new db;
+function checkJmovingStructure($jmoving_id) {$db = DbSingleton::getDb();
 	$r=$db->query("select * from J_MOVING_STR where jmoving_id='$jmoving_id';"); $n=$db->num_rows($r);				  
 	$n>0 ? $result=true : $result=false;
 	return $result;
 }
 
-function statusStorage($user_id,$storage_id,$status_jmoving,$jmoving_id) {$db=new db; 
+function statusStorage($user_id,$storage_id,$status_jmoving,$jmoving_id) {$db=DbSingleton::getDb(); 
 	require_once RD.'/lib/users_class.php'; $users=new users; $super_user=$users->getSuperUser($user_id); $status=false;
-	//склад призначення																											  
+	//пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ																											  
 	$r=$db->query("select * from media_users_storage where user_id='$user_id' and storage_id='$storage_id';"); $n=$db->num_rows($r);
 	if ($n>0) $status=true; else $status=false;
-	//склад відбору
+	//пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
   	if (!$status) {
 		$r=$db->query("select storage_id_from from J_MOVING_STR where jmoving_id=$jmoving_id limit 1;"); 									
 		$storage_id_from=$db->result($r,0,"storage_id_from");
 		$r2=$db->query("select * from media_users_storage where user_id='$user_id' and storage_id='$storage_id_from';"); $n=$db->num_rows($r2);
 		if ($n>0) $status=true; else $status=false;
 	}
-	//автор																	  
+	//пїЅпїЅпїЅпїЅпїЅ																	  
     $rj=$db->query("select user_id from J_MOVING where id=$jmoving_id limit 1;"); 	
 	$j_user=$db->result($rj,0,"user_id"); 
     if ($j_user==$user_id) $status=true;	
-	//адміністратор
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     if ($super_user) $status=true;
 	return $status;
 }
 	
-function show_jmoving_list($press){$db=new db;$slave=new slave;$gmanual=new gmanual;$income=new income; session_start(); $time=date("h:i:sa");								   
+function show_jmoving_list($press){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;$income=new income; session_start(); $time=date("h:i:sa");								   
 	$ses_tpoint_id=$_SESSION["media_tpoint_id"];$media_user_id=$_SESSION["media_user_id"]; 
 	//$where=" where (t.tpoint_id='$ses_tpoint_id' or j.user_id=$media_user_id) "; 								   
 	require_once RD.'/lib/users_class.php'; $users=new users; $super_user=$users->getSuperUser($media_user_id);	
@@ -89,8 +89,8 @@ function show_jmoving_list($press){$db=new db;$slave=new slave;$gmanual=new gman
 
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
-		$type_id=$db->result($r,$i-1,"type_id");$type_name="<i class='fa fa-inbox'></i> Внутрішнє переміщення";
-		if ($type_id==1){$type_name="<i class='fa fa-truck'></i> Між складами";}
+		$type_id=$db->result($r,$i-1,"type_id");$type_name="<i class='fa fa-inbox'></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+		if ($type_id==1){$type_name="<i class='fa fa-truck'></i> МіпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";}
 		$prefix=$db->result($r,$i-1,"prefix");
 		
 		$man_id=$db->result($r,$i-1,"man_id");
@@ -135,7 +135,7 @@ function show_jmoving_list($press){$db=new db;$slave=new slave;$gmanual=new gman
 	return $list;
 }
 	
-function filterJmovingList($name,$data_from,$data_to,$status_jmoving){$db=new db;$slave=new slave;$gmanual=new gmanual;$income=new income; session_start(); $ses_tpoint_id=$_SESSION["media_tpoint_id"];$media_user_id=$_SESSION["media_user_id"]; $where=" and (t.tpoint_id='$ses_tpoint_id' or j.user_id=$media_user_id) "; if ($media_user_id==1 || $media_user_id==7){$where="";} $time=date("h:i:sa");
+function filterJmovingList($name,$data_from,$data_to,$status_jmoving){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;$income=new income; session_start(); $ses_tpoint_id=$_SESSION["media_tpoint_id"];$media_user_id=$_SESSION["media_user_id"]; $where=" and (t.tpoint_id='$ses_tpoint_id' or j.user_id=$media_user_id) "; if ($media_user_id==1 || $media_user_id==7){$where="";} $time=date("h:i:sa");
 
 	if ($name>0 && $name!=""){$where_filter.=" and j.id='$name'";}
 	if ($data_from>0 && $data_from!=""){$where_filter.=" and j.data>=$data_from ";}
@@ -151,7 +151,7 @@ function filterJmovingList($name,$data_from,$data_to,$status_jmoving){$db=new db
 	//
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
-		$type_id=$db->result($r,$i-1,"type_id");$type_name="<i class='fa fa-inbox'></i> Внутрішнє переміщення";if ($type_id==1){$type_name="<i class='fa fa-truck'></i> Між складами";}
+		$type_id=$db->result($r,$i-1,"type_id");$type_name="<i class='fa fa-inbox'></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";if ($type_id==1){$type_name="<i class='fa fa-truck'></i> МіпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";}
 		$prefix=$db->result($r,$i-1,"prefix");
 		
 		$doc_nom=$db->result($r,$i-1,"doc_nom");
@@ -195,19 +195,19 @@ function preNewJmovingCard(){
 	return $form;
 }
 	
-function getKoursUSD() {$db=new db; 
+function getKoursUSD() {$db=DbSingleton::getDb(); 
 	$r=$db->query("select kours_value from J_KOURS where cash_id=2 and in_use=1 limit 0,1;");
 	$usd=number_format($db->result($r,0,"kours_value"), 2, '.', '');
 	return $usd;
 }
 	
-function getPriceArt($art_id) {$db=new dbt; 
+function getPriceArt($art_id) {$db=DbSingleton::getTokoDb(); 
 	$r=$db->query("select price_1 from T2_ARTICLES_PRICE_RATING where art_id='$art_id' limit 0,1;");
 	$price=$db->result($r,0,"price_1");
 	return $price;
 }
 	
-function getJMovingFullPrice($jmoving_id) {$db=new db; $summ=0;
+function getJMovingFullPrice($jmoving_id) {$db=DbSingleton::getDb(); $summ=0;
 	$r=$db->query("select * from J_MOVING_STR where jmoving_id='$jmoving_id';"); $n=$db->num_rows($r);						   		
 	for ($i=1;$i<=$n;$i++){
 		$art_id=$db->result($r,$i-1,"art_id");	
@@ -220,14 +220,14 @@ function getJMovingFullPrice($jmoving_id) {$db=new db; $summ=0;
 	return $summ;
 }	
 	
-function showJmovingCard($jmoving_id){$db=new db;$slave=new slave;$manual=new manual; $income=new income; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showJmovingCard($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual; $income=new income; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/jmoving_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	$r=$db->query("select * from J_MOVING j where j.id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==0){$form_htm=RD."/tpl/access_deny.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);} }
 	if ($n==1){
 		$id=$db->result($r,0,"id");
-		$type_id=$db->result($r,0,"type_id");if ($type_id==1){$type_name="Між складами";}
+		$type_id=$db->result($r,0,"type_id");if ($type_id==1){$type_name="МіпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";}
 		$prefix=$db->result($r,0,"prefix");
 		$doc_nom=$db->result($r,0,"doc_nom");
 		$user_use=$db->result($r,0,"user_use");
@@ -238,8 +238,8 @@ function showJmovingCard($jmoving_id){$db=new db;$slave=new slave;$manual=new ma
 		$user_data_accepting=$db->result($r,0,"user_data_accepting");
 		$user_data_accepted=$db->result($r,0,"user_data_accepted");
 		
-		if ($user_accepting!="") $data_accepting="Приймається: $user_accepting, $user_data_accepting";
-		if ($user_accepted!="") $data_accepted="Прийнято: $user_accepted, $user_data_accepted";
+		if ($user_accepting!="") $data_accepting="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $user_accepting, $user_data_accepting";
+		if ($user_accepted!="") $data_accepted="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $user_accepted, $user_data_accepted";
 		
 		
 		if ($user_id!=$user_use && $user_use>0){
@@ -303,7 +303,7 @@ function showJmovingCard($jmoving_id){$db=new db;$slave=new slave;$manual=new ma
 			$form=str_replace("{labelArticlesUnKnownStorageCount}",$storage_count,$form);
 			
 			if ($status_jmoving==48 || $status_jmoving==57) $print_allow=""; else $print_allow="not-active";
-			//status В дорозі
+			//status пїЅ пїЅпїЅпїЅпїЅпїЅ
 			$disabled48="disabled"; if ($this->checkStorselAllStatus($jmoving_id)==1 and ($status_jmoving<48 || $status_jmoving==107)){$disabled48="";}
 //			if ($this->checkStorselAllStatus($jmoving_id)==1 and $status_jmoving) $disabled48="";
 			$form=str_replace("{disabled48}",$disabled48,$form);
@@ -320,7 +320,7 @@ function showJmovingCard($jmoving_id){$db=new db;$slave=new slave;$manual=new ma
 			$disabled100=""; if ($status_jmoving==44 || $status_jmoving>=48){$disabled100="disabled style='display:none'";}
 			$form=str_replace("{disabled100}",$disabled100,$form);
 			
-			$form=str_replace("{jmoving_fullprice}",number_format($this->getJMovingFullPrice($jmoving_id), 2, '.', '')." грн",$form);
+			$form=str_replace("{jmoving_fullprice}",number_format($this->getJMovingFullPrice($jmoving_id), 2, '.', '')." пїЅпїЅпїЅ",$form);
 			
 			$this->setJmovingCardUserAccess($jmoving_id,$user_id);
 		}
@@ -328,13 +328,13 @@ function showJmovingCard($jmoving_id){$db=new db;$slave=new slave;$manual=new ma
 	return array($form,$prefix."-".$doc_nom);
 }
 	
-function getJmovingAccess($user_id,$storage_id) {$db=new db; 
+function getJmovingAccess($user_id,$storage_id) {$db=DbSingleton::getDb(); 
 	$users=new users; $super_user=$users->getSuperUser($user_id); 
 	$r=$db->query("select * from media_users_storage where user_id='$user_id' and storage_id='$storage_id';");$n=$db->num_rows($r);
 	if ($n>0 || $super_user) return true; else return false;
 }
 
-function cancelJmoving($jmoving_id) {$db=new db; $dbt=new dbt; $answer=0; $err="Помилка збереження даних!";
+function cancelJmoving($jmoving_id) {$db=DbSingleton::getDb(); $dbt=DbSingleton::getTokoDb(); $answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 									 
 	$r=$db->query("select * from J_MOVING j where j.id='$jmoving_id' limit 0,1;"); $n=$db->num_rows($r);
 									 
@@ -392,14 +392,14 @@ function cancelJmoving($jmoving_id) {$db=new db; $dbt=new dbt; $answer=0; $err="
 	return array($answer,$err);
 }
 
-function showJmovingCardLocal($jmoving_id){$db=new db;$slave=new slave;$manual=new manual; $income=new income; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showJmovingCardLocal($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual; $income=new income; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/jmoving_card_local.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	$r=$db->query("select * from J_MOVING j where j.id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==0){$form_htm=RD."/tpl/access_deny.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);} }
 	if ($n==1){
 		$id=$db->result($r,0,"id");
-		$type_id=$db->result($r,0,"type_id");$type_name="Внутрішнє переміщення";
+		$type_id=$db->result($r,0,"type_id");$type_name="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 		$prefix=$db->result($r,0,"prefix");
 		$doc_nom=$db->result($r,0,"doc_nom");
 		$user_use=$db->result($r,0,"user_use");
@@ -464,20 +464,20 @@ function closeJmovingCard($jmoving_id){session_start();$user_id=$_SESSION["media
 	$answer=1;
 	return $answer;
 }
-function setJmovingCardUserAccess($jmoving_id,$user_id){$db=new db;
+function setJmovingCardUserAccess($jmoving_id,$user_id){$db=DbSingleton::getDb();
 	if($jmoving_id>0 && $user_id>0){
 		$db->query("update J_MOVING set user_use='$user_id' where id='$jmoving_id';");
 	}
 	return;
 }
-function unsetJmovingCardUserAccess($jmoving_id,$user_id){$db=new db;
+function unsetJmovingCardUserAccess($jmoving_id,$user_id){$db=DbSingleton::getDb();
 	if($jmoving_id>0 && $user_id>0){
 		$db->query("update J_MOVING set user_use='0' where id='$jmoving_id';");
 	}
 	return;
 }
 
-function checkStorselAllStatus($jmoving_id){$db=new db;$ex=1;
+function checkStorselAllStatus($jmoving_id){$db=DbSingleton::getDb();$ex=1;
 	$r=$db->query("select id,status_select from J_SELECT where parrent_doc_type_id='1' and parrent_doc_id='$jmoving_id' and status='1';");$n=$db->num_rows($r);
 	if ($n==0){$ex=0;}
 	for ($i=1;$i<=$n;$i++){
@@ -487,7 +487,7 @@ function checkStorselAllStatus($jmoving_id){$db=new db;$ex=1;
 	return $ex;
 }
 
-function checkJmovingSelectAllStatus($jmoving_id,$statusJmoving){$db=new db;$ex=1;
+function checkJmovingSelectAllStatus($jmoving_id,$statusJmoving){$db=DbSingleton::getDb();$ex=1;
 	$r=$db->query("select id,status_jmoving from J_MOVING_SELECT where jmoving_id='$jmoving_id' and status='1';");$n=$db->num_rows($r);
 	if ($n==0){$ex=0;}
 	for ($i=1;$i<=$n;$i++){
@@ -503,7 +503,7 @@ function checkJmovingSelectAllStatus($jmoving_id,$statusJmoving){$db=new db;$ex=
 	return $ex;
 }
 
-function showJmovingStrList($jmoving_id,$oper_status,$storage_id_to){$db=new db;$slave=new slave;$cat=new catalogue;$manual=new manual;$gmanual=new gmanual;$income=new income;$list="";if ($oper_status==""){$oper_status=30;}
+function showJmovingStrList($jmoving_id,$oper_status,$storage_id_to){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$manual=new manual;$gmanual=new gmanual;$income=new income;$list="";if ($oper_status==""){$oper_status=30;}
 	$r=$db->query("select * from J_MOVING_STR  where jmoving_id='$jmoving_id' order by id asc;");$n=$db->num_rows($r);$kl_rw=$n;if ($op==0){$kl_rw+=0;}$sum_weight=0;$sum_volume=0;
 	for ($i=1;$i<=$kl_rw;$i++){
 		$id="";$art_id="";$article_nr_displ="";$brand_id="";$brand_name="";$amount="";$storage_id_from="";$storage_name_from="";$cell_id_from="";$cell_name_from="";$amountRest="-";$max_stok="";$status_jmoving=0;
@@ -522,7 +522,7 @@ function showJmovingStrList($jmoving_id,$oper_status,$storage_id_to){$db=new db;
 			$cell_name_from=$this->getStorageCellName($cell_id_from);
 			//list($stokRest,$reservRest)=$this->getArticleRestStorageCell($art_id,$storage_id_from,$cell_id_from);
 			list($stokRest,$reservRest)=$this->getArticleRestStorage($art_id,$storage_id_from);
-			$amountRest="сток: $stokRest | резерв: $reservRest";
+			$amountRest="пїЅпїЅпїЅпїЅ: $stokRest | пїЅпїЅпїЅпїЅпїЅпїЅ: $reservRest";
 			$status_jmoving=$db->result($r,$i-1,"status_jmoving");
 		}
 		if ($oper_status==30){
@@ -535,12 +535,12 @@ function showJmovingStrList($jmoving_id,$oper_status,$storage_id_to){$db=new db;
 				<td>$i<input type='hidden' id='idStr_$i' value='$id'></td>
 				<td style='min-width:140px;'><input type='hidden' id='artIdStr_$i' value='$art_id'>
 					<div class='input-group'>
-						<input class='form-control input-xs' type='text' readonly id='article_nr_displStr_$i' value='$article_nr_displ' placeholder='Індекс товару'>
+						<input class='form-control input-xs' type='text' readonly id='article_nr_displStr_$i' value='$article_nr_displ' placeholder='пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ'>
 						<span class='input-group-btn'><button type='button' class='btn btn-xs btn-primary $disabled' $disabled onClick=\"showJmovingArticleSearchForm('$i','$art_id','$brand_id','$article_nr_displ','$jmoving_id','$storage_id_to');\"><i class=\"fa fa-bars\"></i></button> </span>
 					</div>
 				</td>
 				<td style='min-width:120px;'><input type='hidden' id='brandIdStr_$i' value='$brand_id'>
-					<input class='form-control input-xs' type='text' readonly id='brandNameStr_$i' value='$brand_name' placeholder='Бренд'>
+					<input class='form-control input-xs' type='text' readonly id='brandNameStr_$i' value='$brand_name' placeholder='пїЅпїЅпїЅпїЅпїЅ'>
 				</td>
 				<td style='min-width:120px;'>
 					<input type='hidden' id='storageIdFrom_$i' value='$storage_id_from' >
@@ -580,12 +580,12 @@ function showJmovingStrList($jmoving_id,$oper_status,$storage_id_to){$db=new db;
 				<td>nom_i<input type='hidden' id='idStr_0' value=''></td>
 				<td style='min-width:140px;'><input type='hidden' id='artIdStr_0' value=''>
 					<div class='input-group'>
-						<input class='form-control input-xs' type='text' readonly id='article_nr_displStr_0' value='' placeholder='Індекс товару'>
+						<input class='form-control input-xs' type='text' readonly id='article_nr_displStr_0' value='' placeholder='пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ'>
 						<span class='input-group-btn'> <button type='button' class='btn btn-xs btn-primary' onClick=\"showJmovingArticleSearchForm('i_0','0','0','','$jmoving_id','$storage_id_to');\"><i class=\"fa fa-bars\"></i></button> </span>
 					</div>
 				</td>
 				<td style='min-width:120px;'><input type='hidden' id='brandIdStr_0' value=''>
-					<input class='form-control input-xs' type='text' readonly id='brandNameStr_0' value='' placeholder='Бренд'>
+					<input class='form-control input-xs' type='text' readonly id='brandNameStr_0' value='' placeholder='пїЅпїЅпїЅпїЅпїЅ'>
 				</td>
 				<td style='min-width:120px;'>
 					<input type='hidden' id='storageIdFrom_0' value='' >
@@ -606,7 +606,7 @@ function showJmovingStrList($jmoving_id,$oper_status,$storage_id_to){$db=new db;
 	return array($list,$n);
 }
 
-function saveJmovingCard($jmoving_id,$jmoving_op_id,$data,$storage_id_to,$cell_id_to,$comment,$kol_row,$idStr,$artIdStr,$article_nr_displStr,$brandIdStr,$storageIdFromStr,$cellIdFromStr,$amountStr){$db=new db;$dbt=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveJmovingCard($jmoving_id,$jmoving_op_id,$data,$storage_id_to,$cell_id_to,$comment,$kol_row,$idStr,$artIdStr,$article_nr_displStr,$brandIdStr,$storageIdFromStr,$cellIdFromStr,$amountStr){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$jmoving_id=$slave->qq($jmoving_id);$jmoving_op_id=$slave->qq($jmoving_op_id);$data=$slave->qq($data);$storage_id_to=$slave->qq($storage_id_to);$cell_id_to=$slave->qq($cell_id_to);$kol_row=$slave->qq($kol_row);
 	$comment=$slave->qq($comment);
 	if ($jmoving_id==0 || $jmoving_id==""){
@@ -619,7 +619,7 @@ function saveJmovingCard($jmoving_id,$jmoving_op_id,$data,$storage_id_to,$cell_i
 	}
 	return array($answer,$err);
 }
-function saveJmovingCardLocal($jmoving_id,$jmoving_op_id,$data,$storage_id_to,$comment,$kol_row,$idStr,$artIdStr,$cellIdToStr){$db=new db;$dbt=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveJmovingCardLocal($jmoving_id,$jmoving_op_id,$data,$storage_id_to,$comment,$kol_row,$idStr,$artIdStr,$cellIdToStr){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$jmoving_id=$slave->qq($jmoving_id);$jmoving_op_id=$slave->qq($jmoving_op_id);$data=$slave->qq($data);$storage_id_to=$slave->qq($storage_id_to);$comment=$slave->qq($comment);$kol_row=$slave->qq($kol_row);
 	if ($jmoving_id==0 || $jmoving_id==""){
 		$r=$db->query("select max(id) as mid from J_MOVING;");$jmoving_id=0+$db->result($r,0,"mid")+1;
@@ -643,7 +643,7 @@ function saveJmovingCardLocal($jmoving_id,$jmoving_op_id,$data,$storage_id_to,$c
 }
 
 
-function showJmovingStrLocalList($jmoving_id,$oper_status){$db=new db;$slave=new slave;$cat=new catalogue;$manual=new manual;$gmanual=new gmanual;$income=new income;$list="";if ($oper_status==""){$oper_status=30;}
+function showJmovingStrLocalList($jmoving_id,$oper_status){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$manual=new manual;$gmanual=new gmanual;$income=new income;$list="";if ($oper_status==""){$oper_status=30;}
 	$r=$db->query("select * from J_MOVING_STR  where jmoving_id='$jmoving_id' order by id asc;");$n=$db->num_rows($r);$kl_rw=$n;if ($op==0){$kl_rw+=0;}$sum_weight=0;$sum_volume=0;
 	for ($i=1;$i<=$kl_rw;$i++){
 		$id="";$art_id="";$article_nr_displ="";$brand_id="";$brand_name="";$amount="";$cell_id_from="";$cell_name_from="";$storage_name_to="";$cell_id_to="";$cell_name_to="";$amountRest="-";$max_stok="";$status_jmoving=0;$cell_to_select_list="";
@@ -669,12 +669,12 @@ function showJmovingStrLocalList($jmoving_id,$oper_status){$db=new db;$slave=new
 				<td>$i<input type='hidden' id='idStr_$i' value='$id'></td>
 				<td style='min-width:140px;'><input type='hidden' id='artIdStr_$i' value='$art_id'>
 					<!--<div class='input-group'>-->
-						<input class='form-control input-xs' type='text' readonly id='article_nr_displStr_$i' value='$article_nr_displ' placeholder='Індекс товару'>
+						<input class='form-control input-xs' type='text' readonly id='article_nr_displStr_$i' value='$article_nr_displ' placeholder='пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ'>
 						<!--<span class='input-group-btn'> <button type='button' class='btn btn-xs btn-primary $disabled' $disabled onClick=\"showJmovingArticleLocalSearchForm('$i','$art_id','$brand_id','$article_nr_displ','$jmoving_id','$storage_id_from');\"><i class=\"fa fa-bars\"></i></button> </span>
 					</div>-->
 				</td>
 				<td style='min-width:120px;'><input type='hidden' id='brandIdStr_$i' value='$brand_id'>
-					<input class='form-control input-xs' type='text' readonly id='brandNameStr_$i' value='$brand_name' placeholder='Бренд'>
+					<input class='form-control input-xs' type='text' readonly id='brandNameStr_$i' value='$brand_name' placeholder='пїЅпїЅпїЅпїЅпїЅ'>
 				</td>
 				<td style='min-width:120px;'>
 					<input type='hidden' id='storageIdFrom_$i' value='$storage_id_from' >
@@ -715,12 +715,12 @@ function showJmovingStrLocalList($jmoving_id,$oper_status){$db=new db;$slave=new
 				<td>nom_i<input type='hidden' id='idStr_0' value=''></td>
 				<td style='min-width:140px;'><input type='hidden' id='artIdStr_0' value=''>
 					<div class='input-group'>
-						<input class='form-control input-xs' type='text' readonly id='article_nr_displStr_0' value='' placeholder='Індекс товару'>
+						<input class='form-control input-xs' type='text' readonly id='article_nr_displStr_0' value='' placeholder='пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ'>
 						<span class='input-group-btn'> <button type='button' class='btn btn-xs btn-primary' onClick=\"showJmovingArticleLocalSearchForm('i_0','0','0','','$jmoving_id','$storage_id_from');\"><i class=\"fa fa-bars\"></i></button> </span>
 					</div>
 				</td>
 				<td style='min-width:120px;'><input type='hidden' id='brandIdStr_0' value=''>
-					<input class='form-control input-xs' type='text' readonly id='brandNameStr_0' value='' placeholder='Бренд'>
+					<input class='form-control input-xs' type='text' readonly id='brandNameStr_0' value='' placeholder='пїЅпїЅпїЅпїЅпїЅ'>
 				</td>
 				<td style='min-width:120px;'>
 					<input type='hidden' id='storageIdFrom_0' value='' >
@@ -745,14 +745,14 @@ function showJmovingStrLocalList($jmoving_id,$oper_status){$db=new db;$slave=new
 	}
 	return array($list,$n);
 }
-function setArticleToJmoving($jmoving_id,$idStr,$artIdStr,$article_nr_displStr,$brandIdStr,$storageIdFromStr,$cellIdFromStr,$amountStr){$db=new db;$dbt=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Змінилася кількість. Закрийте вікно введення даних і повторіть ще раз!";
+function setArticleToJmoving($jmoving_id,$idStr,$artIdStr,$article_nr_displStr,$brandIdStr,$storageIdFromStr,$cellIdFromStr,$amountStr){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ!";
 	$jmoving_id=$slave->qq($jmoving_id);
 	if ($jmoving_id>0){
 		$idS=$slave->qq($idStr);$artIdS=$slave->qq($artIdStr);$article_nr_displS=$slave->qq($article_nr_displStr);$brandIdS=$slave->qq($brandIdStr);$amountS=$slave->qq($amountStr);$storageIdFromS=$slave->qq($storageIdFromStr);$cellIdFromS=$slave->qq($cellIdFromStr);
 		
 		list($info,$max_moving,$rest_amount)=$this->showArticleRestStorageSelectText($artIdS,$jmoving_id,$amountS,$storageIdFromS);
-		if ($amountS<=$max_moving && $rest_amount==0){$answer=0;$err="Змінилася кількість. Закрийте вікно введення даних і повторіть ще раз!";}
-		if ($amountS>$max_moving && $rest_amount<=0){$answer=0;$err="Змінилася кількість. Закрийте вікно введення даних і повторіть ще раз!";}
+		if ($amountS<=$max_moving && $rest_amount==0){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ!";}
+		if ($amountS>$max_moving && $rest_amount<=0){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ!";}
 		if ($amountS<=$max_moving && $rest_amount>0){
 			$amountEx=0;
 			$r=$db->query("select id,amount from J_MOVING_STR where jmoving_id='$jmoving_id' and art_id='$artIdS' and `storage_id_from`='$storageIdFromS' and status_jmoving='44' limit 0,1;");$n=$db->num_rows($r);
@@ -786,17 +786,17 @@ function setArticleToJmoving($jmoving_id,$idStr,$artIdStr,$article_nr_displStr,$
 			$answer=1;$err="";
 		}
 	}
-	return array($answer,$err,$idS,"сток: $rr_amount | резерв: $rr_reserv",$weight,$volume,$empty_kol,$label_empty);
+	return array($answer,$err,$idS,"пїЅпїЅпїЅпїЅ: $rr_amount | пїЅпїЅпїЅпїЅпїЅпїЅ: $rr_reserv",$weight,$volume,$empty_kol,$label_empty);
 }
-function setArticleToJmovingLocal($jmoving_id,$idStr,$artIdStr,$article_nr_displStr,$brandIdStr,$storageId,$cell_from_move,$cell_to_move,$amountStr){$db=new db;$dbt=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Змінилася кількість. Закрийте вікно введення даних і повторіть ще раз!";
+function setArticleToJmovingLocal($jmoving_id,$idStr,$artIdStr,$article_nr_displStr,$brandIdStr,$storageId,$cell_from_move,$cell_to_move,$amountStr){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ!";
 	$jmoving_id=$slave->qq($jmoving_id);
 	if ($jmoving_id>0){
 		$idS=$slave->qq($idStr);$artIdS=$slave->qq($artIdStr);$article_nr_displS=$slave->qq($article_nr_displStr);$brandIdS=$slave->qq($brandIdStr);$amountS=$slave->qq($amountStr);$storageIdS=$slave->qq($storageId);$cell_from_moveS=$slave->qq($cell_from_move);$cell_to_moveS=$slave->qq($cell_to_move);
 		
 		
 		list($info,$max_moving,$rest_amount)=$this->showArticleRestStorageCellSelectText($artIdS,$jmoving_id,$amountS,$cell_from_moveS,$storageIdS);
-		if ($amountS<=$max_moving && $rest_amount==0){$answer=0;$err="Змінилася кількість. Закрийте вікно введення даних і повторіть ще раз!";}
-		if ($amountS>$max_moving && $rest_amount<=0){$answer=0;$err="Змінилася кількість. Закрийте вікно введення даних і повторіть ще раз!";}
+		if ($amountS<=$max_moving && $rest_amount==0){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ!";}
+		if ($amountS>$max_moving && $rest_amount<=0){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ!";}
 		if ($amountS<=$max_moving && $rest_amount>0){
 				
 			$amountEx=0;
@@ -842,11 +842,11 @@ function setArticleToJmovingLocal($jmoving_id,$idStr,$artIdStr,$article_nr_displ
 			$answer=1;$err="";
 		}
 	}
-	return array($answer,$err,$idS,"сток: $rr_amount | резерв: $rr_reserv",$weight,$volume,$empty_kol,$label_empty);
+	return array($answer,$err,$idS,"пїЅпїЅпїЅпїЅ: $rr_amount | пїЅпїЅпїЅпїЅпїЅпїЅ: $rr_reserv",$weight,$volume,$empty_kol,$label_empty);
 }
 
 
-function changeArticleToJmoving($jmoving_id,$jmoving_str_id,$amount_change){$db=new db;$dbt=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function changeArticleToJmoving($jmoving_id,$jmoving_str_id,$amount_change){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$jmoving_id=$slave->qq($jmoving_id);
 	if ($jmoving_id>0){
 		$jmoving_str_id=$slave->qq($jmoving_str_id);$amount_change=$slave->qq($amount_change);
@@ -864,8 +864,8 @@ function changeArticleToJmoving($jmoving_id,$jmoving_str_id,$amount_change){$db=
 		
 			list($info,$max_moving,$rest_amount)=$this->showArticleRestStorageSelectText($art_id,$jmoving_id,$amountS);
 			//print "amountS=$amountS<=$max_moving=max_moving && rest_amount$rest_amount";
-			if ($amountS<=$max_moving && $rest_amount==0){$answer=0;$err="Кількість для переміщення вже більша за залишок!";}
-			if ($amountS>$max_moving && $rest_amount<=0){$answer=0;$err="Кількість для переміщення вже більша за залишок!";}
+			if ($amountS<=$max_moving && $rest_amount==0){$answer=0;$err="КіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";}
+			if ($amountS>$max_moving && $rest_amount<=0){$answer=0;$err="КіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";}
 			if ($amountS<=($max_moving+$amountEx)){
 					
 				$db->query("update J_MOVING_STR set `amount`='$amount_change' where id='$jmoving_str_id' and jmoving_id='$jmoving_id' limit 1;");
@@ -889,7 +889,7 @@ function changeArticleToJmoving($jmoving_id,$jmoving_str_id,$amount_change){$db=
 	return array($answer,$err,$weight,$volume);
 }
 
-function changeArticleToJmovingLocal($jmoving_id,$jmoving_str_id,$amount_change){$db=new db;$dbt=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function changeArticleToJmovingLocal($jmoving_id,$jmoving_str_id,$amount_change){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$jmoving_id=$slave->qq($jmoving_id);
 	if ($jmoving_id>0){
 		$jmoving_str_id=$slave->qq($jmoving_str_id);$amount_change=$slave->qq($amount_change);
@@ -906,8 +906,8 @@ function changeArticleToJmovingLocal($jmoving_id,$jmoving_str_id,$amount_change)
 			list($info,$max_moving,$rest_amount)=$this->showArticleRestStorageCellSelectText($art_id,$jmoving_id,$amount_change,$cell_id_from,$storage_id_from);
 //			print "$info,$max_moving\n";
 			
-			if ($amount_change<=$max_moving && $rest_amount<0){$answer=0;$err="Змінилася кількість. Закрийте вікно введення даних і повторіть ще раз!";}
-			if ($amount_change>$max_moving && $rest_amount<=0){$answer=0;$err="Змінилася кількість. Закрийте вікно введення даних і повторіть ще раз!";}
+			if ($amount_change<=$max_moving && $rest_amount<0){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ!";}
+			if ($amount_change>$max_moving && $rest_amount<=0){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ!";}
 			if ($amount_change<=$max_moving && $rest_amount>=0){
 		
 				$db->query("update J_MOVING_STR set `amount`='$amount_change' where id='$jmoving_str_id' and jmoving_id='$jmoving_id' limit 1;");
@@ -938,7 +938,7 @@ function changeArticleToJmovingLocal($jmoving_id,$jmoving_str_id,$amount_change)
 }
 
 
-function dropJmovingStr($jmoving_id,$jmoving_str_id){$db=new db;$dbt=new dbt;$slave=new slave;$answer=0;$err="Помилка індексу";
+function dropJmovingStr($jmoving_id,$jmoving_str_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 	$jmoving_id=$slave->qq($jmoving_id);
 	$r=$db->query("select oper_status,status_jmoving from J_MOVING where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -964,13 +964,13 @@ function dropJmovingStr($jmoving_id,$jmoving_str_id){$db=new db;$dbt=new dbt;$sl
 						$this->updateJmovingWeightVolume($jmoving_id);
 						$answer=1;$err="";
 					}
-				}else {$answer=0;$err="Видалення заблоковано. Відбір передано в роботу.";}
+				}else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. ВіпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";}
 			}
-		}else {$answer=0;$err="Видалення заблоковано. Переміщення передано в роботу.";}
+		}else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";}
 	}
 	return array($answer,$err);
 }
-function dropJmovingLocalStr($jmoving_id,$jmoving_str_id){$db=new db;$dbt=new dbt;$slave=new slave;$answer=0;$err="Помилка індексу";
+function dropJmovingLocalStr($jmoving_id,$jmoving_str_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 	$jmoving_id=$slave->qq($jmoving_id);
 	$r=$db->query("select oper_status,status_jmoving from J_MOVING where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -1007,15 +1007,15 @@ function dropJmovingLocalStr($jmoving_id,$jmoving_str_id){$db=new db;$dbt=new db
 					$this->updateJmovingWeightVolume($jmoving_id);
 					$answer=1;$err="";
 
-				}else {$answer=0;$err="Видалення заблоковано. Відбір передано в роботу.";}
+				}else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. ВіпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";}
 			}
-		}else {$answer=0;$err="Видалення заблоковано. Переміщення передано в роботу.";}
+		}else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";}
 	}
 	return array($answer,$err);
 }
 
 
-function updateJmovingWeightVolume($jmoving_id){$db=new db;$slave=new slave;$sum_weight=0;$sum_volume=0;$empty_kol=0;$art_ar=array();
+function updateJmovingWeightVolume($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;$sum_weight=0;$sum_volume=0;$empty_kol=0;$art_ar=array();
 	$r=$db->query("select art_id, amount from J_MOVING_STR where jmoving_id='$jmoving_id';");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$art_id=$db->result($r,$i-1,"art_id");
@@ -1037,14 +1037,14 @@ function updateJmovingWeightVolume($jmoving_id){$db=new db;$slave=new slave;$sum
 	return array($sum_weight,$sum_volume,$empty_kol);
 }
 
-function makeJmovingCardFinish($jmoving_id){$db=new db;$slave=new slave;$cat=new catalogue;$answer=0;$err="";
+function makeJmovingCardFinish($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$answer=0;$err="";
 	$jmoving_id=$slave->qq($jmoving_id);
 	/*$r=$db->query("select oper_status,storage_id,storage_cells_id from J_INCOME where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$oper_status=$db->result($r,0,"oper_status");
 		$storage_id=$db->result($r,0,"storage_id");
 		$storage_cells_id=$db->result($r,0,"storage_cells_id");
-		if ($storage_id==0 || $storage_cells_id==0){$answer=0;$err="Не вказано \"Склад зберігання\" або \"Комірка зберігання\". Накладну не проведено!";}
+		if ($storage_id==0 || $storage_cells_id==0){$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ \"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ\" пїЅпїЅпїЅ \"пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ\". пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";}
 		if ($storage_id>0 && $storage_cells_id>0){
 			if ($oper_status==30) {
 				$db->query("update J_INCOME set oper_status='31' where id='$jmoving_id';");
@@ -1067,13 +1067,13 @@ function makeJmovingCardFinish($jmoving_id){$db=new db;$slave=new slave;$cat=new
 				
 				/* 				end calculation jmoving  */
 	/*			$answer=1;$err="";
-			} else {$answer=0;$err="Накладну заблоковано. Зміни вносити заборонено.";}
+			} else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
 		}
 	}*/
 	return array($answer,$err);
 }
 
-function showJmovingLocalAutoCellForm($jmoving_id,$storage_id_to){$db=new db;$slave=new slave;
+function showJmovingLocalAutoCellForm($jmoving_id,$storage_id_to){$db=DbSingleton::getDb();$slave=new slave;
 	$form_htm=RD."/tpl/jmoving_local_auto_cell_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$form=str_replace("{jmoving_id}",$jmoving_id,$form);
 	list($cells_list,$cs)=$this->showStorageCellsSelectList($storage_id_to,0);
@@ -1084,7 +1084,7 @@ function showJmovingLocalAutoCellForm($jmoving_id,$storage_id_to){$db=new db;$sl
 	return $form;
 }
 
-function saveJmovingLocalAutoCell($jmoving_id,$storage_id_to,$cell_id_from){$db=new db;$dbt=new dbt;$slave=new slave;$catalogue=new catalogue;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";$kol_row=0;
+function saveJmovingLocalAutoCell($jmoving_id,$storage_id_to,$cell_id_from){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$catalogue=new catalogue;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";$kol_row=0;
 	$jmoving_id=$slave->qq($jmoving_id);$storage_id_to=$slave->qq($storage_id_to);$cell_id_from=$slave->qq($cell_id_from);
 	if ($jmoving_id>0 && $storage_id_to>0 && $cell_id_from>0){
 		$db->query("update J_MOVING set storage_id_to='$storage_id_to' where id='$jmoving_id';");
@@ -1137,7 +1137,7 @@ function saveJmovingLocalAutoCell($jmoving_id,$storage_id_to,$cell_id_from){$db=
 }
 
 
-function clearJmovingLocalAutoCellForm($jmoving_id){$db=new db;$dbt=new dbt;$slave=new slave;$answer=0;$err="Помилка індексу";
+function clearJmovingLocalAutoCellForm($jmoving_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 	$jmoving_id=$slave->qq($jmoving_id);
 	$r=$db->query("select oper_status,status_jmoving from J_MOVING where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -1175,15 +1175,15 @@ function clearJmovingLocalAutoCellForm($jmoving_id){$db=new db;$dbt=new dbt;$sla
 					$this->updateJmovingWeightVolume($jmoving_id);
 					$answer=1;$err="";
 
-				}else {$answer=0;$err="Видалення заблоковано. Відбір передано в роботу.";}
+				}else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. ВіпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";}
 			}
-		}else {$answer=0;$err="Видалення заблоковано. Переміщення передано в роботу.";}
+		}else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";}
 	}
 	return array($answer,$err);
 }
 
 
-function showJmovingArticleSearchForm($art_id,$brand_id,$article_nr_display,$jmoving_id,$storage_id_to){$db=new db;$slave=new slave;
+function showJmovingArticleSearchForm($art_id,$brand_id,$article_nr_display,$jmoving_id,$storage_id_to){$db=DbSingleton::getDb();$slave=new slave;
 	$form_htm=RD."/tpl/jmoving_artilce_search_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	list($range_list,$list_brand_select)=$this->showArticlesSearchDocumentList($article_nr_display,$brand_id,0,$jmoving_id,$storage_id_to);
 	$form=str_replace("{article_nr_display}",$article_nr_display,$form);
@@ -1192,7 +1192,7 @@ function showJmovingArticleSearchForm($art_id,$brand_id,$article_nr_display,$jmo
 	return $form;
 }
 
-function showJmovingArticleLocalSearchForm($art_id,$brand_id,$article_nr_display,$jmoving_id,$storage_id_from){$db=new db;$slave=new slave;
+function showJmovingArticleLocalSearchForm($art_id,$brand_id,$article_nr_display,$jmoving_id,$storage_id_from){$db=DbSingleton::getDb();$slave=new slave;
 	$form_htm=RD."/tpl/jmoving_artilce_local_search_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	list($range_list,$list_brand_select)=$this->showArticlesLocalSearchDocumentList($article_nr_display,$brand_id,0,$jmoving_id,$storage_id_from);
 	$form=str_replace("{article_nr_display}",$article_nr_display,$form);
@@ -1202,7 +1202,7 @@ function showJmovingArticleLocalSearchForm($art_id,$brand_id,$article_nr_display
 }
 
 
-function showArticlesSearchDocumentList($art,$brand_id,$search_type,$jmoving_id,$storage_id_to){$db=new dbt;$slave=new slave;$cat=new catalogue; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showArticlesSearchDocumentList($art,$brand_id,$search_type,$jmoving_id,$storage_id_to){$db=DbSingleton::getTokoDb();$slave=new slave;$cat=new catalogue; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	if ($search_type==""){$search_type=1;}
 	if ($search_type==0){$art_search=$art;
 		$art=$cat->clearArticle($art);//$brand_id=$links[2];
@@ -1277,7 +1277,7 @@ function showArticlesSearchDocumentList($art,$brand_id,$search_type,$jmoving_id,
 	}
 //	print $query;
 	$r=$db->query($query);$n=$db->num_rows($r);$list="";$header_list="";
-	if ($list2==""){  // сработал внешний фильр или основной поиск с выбором бренда
+	if ($list2==""){  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 		$lst=array();
 		for ($i=1;$i<=$n;$i++){
 			$art_id=$db->result($r,$i-1,"ART_ID");
@@ -1297,7 +1297,7 @@ function showArticlesSearchDocumentList($art,$brand_id,$search_type,$jmoving_id,
 			$stock=$db->result($r,$i-1,"stock");
 			$reserv=$db->result($r,$i-1,"reserv");
 			$jmoving_amount=$this->getArticleInJmoving($art_id,$jmoving_id);
-			$amountRest="сток: $stock | резерв: $reserv | у поточному відборі: $jmoving_amount";
+			$amountRest="пїЅпїЅпїЅпїЅ: $stock | пїЅпїЅпїЅпїЅпїЅпїЅ: $reserv | пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ: $jmoving_amount";
 			
 			$list.="<tr style='cursor:pointer'>
 				<td class='text-center'><button class='btn btn-sm btn-default' onclick='setArticleToSelectAmountJmoving(\"$art_id\",\"$article_nr_displ\",\"$brand_id\",\"$brand_name\",\"$storage_id\",\"$storage_name\",\"$cell_id\",\"$cell_name\",\"$stock\",\"$amountRest\")'><i class='fa fa-plus'></i></button></td>
@@ -1316,7 +1316,7 @@ function showArticlesSearchDocumentList($art,$brand_id,$search_type,$jmoving_id,
 	return array($list,$list2);
 }
 
-function showArticlesLocalSearchDocumentList($art,$brand_id,$search_type,$jmoving_id,$storage_id_from){$db=new dbt;$slave=new slave;$cat=new catalogue; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showArticlesLocalSearchDocumentList($art,$brand_id,$search_type,$jmoving_id,$storage_id_from){$db=DbSingleton::getTokoDb();$slave=new slave;$cat=new catalogue; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	if ($search_type==""){$search_type=1;}
 	if ($search_type==0){$art_search=$art;
 		$art=$cat->clearArticle($art);
@@ -1390,7 +1390,7 @@ function showArticlesLocalSearchDocumentList($art,$brand_id,$search_type,$jmovin
 	}
 //	print $query;
 	$r=$db->query($query);$n=$db->num_rows($r);$list="";$header_list="";
-	if ($list2==""){  // сработал внешний фильр или основной поиск с выбором бренда
+	if ($list2==""){  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 		$lst=array();
 		for ($i=1;$i<=$n;$i++){
 			$art_id=$db->result($r,$i-1,"ART_ID");
@@ -1410,7 +1410,7 @@ function showArticlesLocalSearchDocumentList($art,$brand_id,$search_type,$jmovin
 			$stock=$db->result($r,$i-1,"stock");
 			$reserv=$db->result($r,$i-1,"reserv");
 			$jmoving_amount=$this->getArticleInJmoving($art_id,$jmoving_id);
-			$amountRest="сток на складі: $stock | резерв: $reserv | у поточному відборі: $jmoving_amount";
+			$amountRest="пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ: $stock | пїЅпїЅпїЅпїЅпїЅпїЅ: $reserv | пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ: $jmoving_amount";
 			
 			$list.="<tr style='cursor:pointer'>
 				<td class='text-center'><button class='btn btn-sm btn-default' onclick='setArticleToSelectAmountJmovingLocal(\"$art_id\",\"$article_nr_displ\",\"$brand_id\",\"$brand_name\",\"$storage_id\",\"$storage_name\",\"$cell_id\",\"$cell_name\",\"$stock\",\"$amountRest\")'><i class='fa fa-plus'></i></button></td>
@@ -1429,7 +1429,7 @@ function showArticlesLocalSearchDocumentList($art,$brand_id,$search_type,$jmovin
 	return array($list,$list2);
 }
 
-function getArticleInJmoving($art_id,$jmoving_id){$db=new db;$amount=0;
+function getArticleInJmoving($art_id,$jmoving_id){$db=DbSingleton::getDb();$amount=0;
 	$r=$db->query("select sum(amount) as amount from J_MOVING_STR where art_id='$art_id' and jmoving_id='$jmoving_id';");$amount=0+$db->result($r,0,"amount");
 	return $amount;
 }
@@ -1447,7 +1447,7 @@ function setArticleToSelectAmountJmovingLocal($art_id,$storage_id){
 }
 
 
-function showJmovingArticleAmountChange($art_id,$jmoving_str_id,$amount){$db=new db;$dbt=new dbt;
+function showJmovingArticleAmountChange($art_id,$jmoving_str_id,$amount){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();
 	$form_htm=RD."/tpl/jmoving_select_amount_article_change_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from J_MOVING_STR where id='$jmoving_str_id' and status_jmoving='44' limit 0,1");$n=$db->num_rows($r);
 	if ($n==1){
@@ -1467,7 +1467,7 @@ function showJmovingArticleAmountChange($art_id,$jmoving_str_id,$amount){$db=new
 	return array($form,$article_nr_displ,$brand_name);
 }
 
-function showJmovingArticleAmountLocalChange($art_id,$jmoving_str_id,$amount){$db=new db;$dbt=new dbt;
+function showJmovingArticleAmountLocalChange($art_id,$jmoving_str_id,$amount){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();
 	$form_htm=RD."/tpl/jmoving_local_select_amount_article_change_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from J_MOVING_STR where id='$jmoving_str_id' and status_jmoving='44' limit 0,1");$n=$db->num_rows($r);
 	if ($n==1){
@@ -1491,7 +1491,7 @@ function showJmovingArticleAmountLocalChange($art_id,$jmoving_str_id,$amount){$d
 	return array($form,$article_nr_displ,$brand_name);
 }
 
-function showArticleRestStorageSelectText($art_id,$jmoving_id,$cur_amount,$storage_id){$db=new dbt;$info="";
+function showArticleRestStorageSelectText($art_id,$jmoving_id,$cur_amount,$storage_id){$db=DbSingleton::getTokoDb();$info="";
 	if ($storage_id=="" || $storage_id==0) $where_storage=""; else $where_storage=" and t2as.STORAGE_ID='$storage_id' ";
 	$r=$db->query("select s.id,s.name,t2as.AMOUNT,t2as.RESERV_AMOUNT from STORAGE s inner join T2_ARTICLES_STRORAGE t2as on t2as.STORAGE_ID=s.id where s.status='1' and t2as.ART_ID='$art_id' $where_storage order by s.name asc,s.id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
@@ -1501,12 +1501,12 @@ function showArticleRestStorageSelectText($art_id,$jmoving_id,$cur_amount,$stora
 		$reserv_amount+=$db->result($r,$i-1,"RESERV_AMOUNT");
 		$max_moving=$amount+$cur_amount;
 		$max_moving=$amount;
-		$info="Залишок: $amount | Резерв: $reserv_amount<br>У поточному записі: $cur_amount";
+		$info="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $amount | пїЅпїЅпїЅпїЅпїЅпїЅ: $reserv_amount<br>пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ: $cur_amount";
 //		print "$info; max_moving=$max_moving";
 	}
 	return array($info,$max_moving,$amount);
 }
-function showArticleRestStorageCellSelectText($art_id,$jmoving_id,$cur_amount,$cell_id,$storage_id_from){$db=new dbt;$info="";
+function showArticleRestStorageCellSelectText($art_id,$jmoving_id,$cur_amount,$cell_id,$storage_id_from){$db=DbSingleton::getTokoDb();$info="";
 	$query="select sc.id,sc.cell_value,t2asc.AMOUNT,t2asc.RESERV_AMOUNT,t2as.AMOUNT as AMOUNT_STORAGE,t2as.RESERV_AMOUNT as RESERV_AMOUNT_STORAGE  from STORAGE_CELLS sc inner join T2_ARTICLES_STRORAGE_CELLS t2asc on t2asc.STORAGE_CELLS_ID=sc.id left outer join T2_ARTICLES_STRORAGE t2as on t2as.STORAGE_ID=sc.storage_id where sc.status='1' and t2asc.ART_ID='$art_id' and t2as.ART_ID='$art_id' and t2asc.STORAGE_CELLS_ID='$cell_id' order by sc.cell_value asc,sc.id asc;";
 	$r=$db->query($query);$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
@@ -1519,12 +1519,12 @@ function showArticleRestStorageCellSelectText($art_id,$jmoving_id,$cur_amount,$c
 		if ($amount>$amount_storage){$amount=$amount_storage; $reserv_amount=$reserv_amount_storage;}
 		//$max_moving=$amount+$cur_amount;
 		$max_moving=$amount+$cur_amount;
-		$info="Залишок: $amount | Резерв: $reserv_amount<br>У поточному записі: $cur_amount";
+		$info="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $amount | пїЅпїЅпїЅпїЅпїЅпїЅ: $reserv_amount<br>пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ: $cur_amount";
 	}
 	return array($info,$max_moving,$amount);
 }
 
-function showArticleRestStorageSelectList($art_id,$storage_id,$storage_id_to){$db=new dbt;$list="<option value='0'>-- Оберіть зі списку --</option>";
+function showArticleRestStorageSelectList($art_id,$storage_id,$storage_id_to){$db=DbSingleton::getTokoDb();$list="<option value='0'>-- пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ --</option>";
 	//print "$art_id,$storage_id,$storage_id_to\n";
 	$where="";//if($storage_id>0){$where=" and t2as.STORAGE_ID!='$storage_id'";}
 	//if ($storage_id_to>0){$where=" and t2as.STORAGE_ID!='$storage_id'";} 
@@ -1538,14 +1538,14 @@ function showArticleRestStorageSelectList($art_id,$storage_id,$storage_id_to){$d
 		$reserv_amount=$db->result($r,$i-1,"RESERV_AMOUNT");
 		$max_moving=$amount;
 		$sel="";if ($id==$sel_id){$sel=" selected='selected'";}$t='';
-		if ($id==$storage_id){$sel.=" disabled"; $t="Сам себя..? ";}
+		if ($id==$storage_id){$sel.=" disabled"; $t="пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ..? ";}
 		if($amount!=0 || $reserv_amount!=0) {
-			$list.="<option value='$id' data-max-mov='$max_moving' data-cellId-mov='0' $sel>$name $t | Залишок: $amount; Резерв: $reserv_amount; </option>";
+			$list.="<option value='$id' data-max-mov='$max_moving' data-cellId-mov='0' $sel>$name $t | пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $amount; пїЅпїЅпїЅпїЅпїЅпїЅ: $reserv_amount; </option>";
 		}
 	}
 	return $list;
 }
-function showArticleRestStorageCellsList($art_id,$storage_id){$db=new dbt;$list="<option value='0'>-- Оберіть зі списку --</option>";
+function showArticleRestStorageCellsList($art_id,$storage_id){$db=DbSingleton::getTokoDb();$list="<option value='0'>-- пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ --</option>";
 	$query="SELECT sc.id, sc.cell_value, t2asc.AMOUNT, t2asc.RESERV_AMOUNT,t2as.AMOUNT as AMOUNT_STORAGE, t2as.RESERV_AMOUNT as RESERV_AMOUNT_STORAGE
 			FROM STORAGE_CELLS sc
 			LEFT OUTER JOIN T2_ARTICLES_STRORAGE_CELLS t2asc ON ( t2asc.STORAGE_CELLS_ID = sc.id )
@@ -1566,13 +1566,13 @@ function showArticleRestStorageCellsList($art_id,$storage_id){$db=new dbt;$list=
 		
 		$max_moving=$amount;
 		if ($reserv_amount!=0 || $amount!=0){
-			$list.="<option value='$id' data-max-mov='$max_moving' data-cellId-mov='0'>$name | Залишок: $amount; Резерв: $reserv_amount; </option>";
+			$list.="<option value='$id' data-max-mov='$max_moving' data-cellId-mov='0'>$name | пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $amount; пїЅпїЅпїЅпїЅпїЅпїЅ: $reserv_amount; </option>";
 		}
 	}
 	return $list;
 }
 
-function showStorageCellsList($storage_id,$exclude_id){$db=new dbt;$list="<option value='0'>-- Оберіть зі списку --</option>";
+function showStorageCellsList($storage_id,$exclude_id){$db=DbSingleton::getTokoDb();$list="<option value='0'>-- пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ --</option>";
 	$query=" SELECT id, cell_value FROM STORAGE_CELLS WHERE status = '1' AND storage_id='$storage_id' AND id<>'$exclude_id'  ORDER BY cell_value ASC , id ASC;";
 	$r=$db->query($query);$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
@@ -1584,7 +1584,7 @@ function showStorageCellsList($storage_id,$exclude_id){$db=new dbt;$list="<optio
 }
 
 
-function getArticleName($art_id){$db=new dbt;$slave=new slave; $name="";
+function getArticleName($art_id){$db=DbSingleton::getTokoDb();$slave=new slave; $name="";
 	$r=$db->query("select * from T2_NAMES where ART_ID='$art_id' and `LANG_ID`='16' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$name=$db->result($r,0,"NAME");
@@ -1592,7 +1592,7 @@ function getArticleName($art_id){$db=new dbt;$slave=new slave; $name="";
 	return $name;
 }
 
-function getArticleWightVolume($art_id){$db=new dbt;$slave=new slave; $weight=0;$volume=0;$weight2=0;
+function getArticleWightVolume($art_id){$db=DbSingleton::getTokoDb();$slave=new slave; $weight=0;$volume=0;$weight2=0;
 	$r=$db->query("select VOLUME,WEIGHT_BRUTTO,WEIGHT_NETTO from T2_PACKAGING where ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$weight=$db->result($r,0,"WEIGHT_BRUTTO");
@@ -1602,7 +1602,7 @@ function getArticleWightVolume($art_id){$db=new dbt;$slave=new slave; $weight=0;
 	return array($weight,$volume,$weight2);
 }
 
-function getArticleRestStorage($art_id,$storage_id){$db=new dbt;$slave=new slave; $stock=0;$reserv=0;if ($storage_id==""){$storage_id=0;}if ($cell_id==""){$cell_id=0;}
+function getArticleRestStorage($art_id,$storage_id){$db=DbSingleton::getTokoDb();$slave=new slave; $stock=0;$reserv=0;if ($storage_id==""){$storage_id=0;}if ($cell_id==""){$cell_id=0;}
 	$r=$db->query("select SUM(`AMOUNT`) as stock, SUM(`RESERV_AMOUNT`) as reserv from T2_ARTICLES_STRORAGE where ART_ID='$art_id' and `STORAGE_ID`='$storage_id';");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$stock+=$db->result($r,$i-1,"stock");
@@ -1610,7 +1610,7 @@ function getArticleRestStorage($art_id,$storage_id){$db=new dbt;$slave=new slave
 	}
 	return array($stock,$reserv);
 }
-function getArticleRestStorageCell($art_id,$storage_id,$cell_id){$db=new dbt;$slave=new slave; $stock=0;$reserv=0;if ($storage_id==""){$storage_id=0;}if ($cell_id==""){$cell_id=0;}
+function getArticleRestStorageCell($art_id,$storage_id,$cell_id){$db=DbSingleton::getTokoDb();$slave=new slave; $stock=0;$reserv=0;if ($storage_id==""){$storage_id=0;}if ($cell_id==""){$cell_id=0;}
 	$r=$db->query("select `AMOUNT` as stock, `RESERV_AMOUNT` as reserv from T2_ARTICLES_STRORAGE_CELLS where ART_ID='$art_id' and `STORAGE_ID`='$storage_id' and `STORAGE_CELLS_ID`='$cell_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$stock=$db->result($r,0,"stock");
@@ -1620,7 +1620,7 @@ function getArticleRestStorageCell($art_id,$storage_id,$cell_id){$db=new dbt;$sl
 }
 
 
-function loadJmovingStorage($jmoving_id){$db=new db;$slave=new slave;$gmanual=new gmanual;$income=new income;$list="";
+function loadJmovingStorage($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;$income=new income;$list="";
 	$form_htm=RD."/tpl/jmoving_storage_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	$r=$db->query("select storage_id,storage_cells_id from J_INCOME where `id`='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1635,13 +1635,13 @@ function loadJmovingStorage($jmoving_id){$db=new db;$slave=new slave;$gmanual=ne
 }
 
 
-function getStorageName($sel_id){$db=new dbt;$name="";
+function getStorageName($sel_id){$db=DbSingleton::getTokoDb();$name="";
 	$r=$db->query("select name from `STORAGE` where status='1' and id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"name");}
 	return $name;	
 }
 
-function showStorageSelectList($sel_id,$cells_only=0){$db=new dbt;$list="<option value=0>Оберіть зі списку</option>";
+function showStorageSelectList($sel_id,$cells_only=0){$db=DbSingleton::getTokoDb();$list="<option value=0>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</option>";
 	$query="select * from `STORAGE` where status='1' order by name,id asc;";
 	if ($cells_only==1){
 		$query="select s.* from `STORAGE` s inner join STORAGE_STR ss on ss.storage_id=s.id where s.status='1' group by ss.storage_id order by s.name,s.id asc;";
@@ -1655,12 +1655,12 @@ function showStorageSelectList($sel_id,$cells_only=0){$db=new dbt;$list="<option
 	}
 	return $list;	
 }
-function getStorageCellName($sel_id){$db=new dbt;$name="";
+function getStorageCellName($sel_id){$db=DbSingleton::getTokoDb();$name="";
 	$r=$db->query("select cell_value from `STORAGE_CELLS` where status='1' and id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"cell_value");}
 	return $name;	
 }
-function showStorageCellsSelectList($storage_id,$sel_id){$db=new dbt;$list="<option value=0>Оберіть зі списку</option>";$cells_show=1;
+function showStorageCellsSelectList($storage_id,$sel_id){$db=DbSingleton::getTokoDb();$list="<option value=0>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</option>";$cells_show=1;
 	$r=$db->query("select * from `STORAGE_CELLS` where status='1' and storage_id='$storage_id' order by cell_value,id asc;");$n=$db->num_rows($r);
 	if ($n==0){$cells_show=0;}
 	for ($i=1;$i<=$n;$i++){
@@ -1674,7 +1674,7 @@ function showStorageCellsSelectList($storage_id,$sel_id){$db=new dbt;$list="<opt
 }
 
 
-function saveJmovingStorage($jmoving_id,$storage_id,$storage_cells_id){$db=new db;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveJmovingStorage($jmoving_id,$storage_id,$storage_cells_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$jmoving_id=$slave->qq($jmoving_id);$storage_id=$slave->qq($storage_id);$storage_cells_id=$slave->qq($storage_cells_id);
 	if ($jmoving_id>0 && $storage_id>0 && $storage_cells_id>0){
 		$db->query("update J_INCOME set storage_id='$storage_id', `storage_cells_id`='$storage_cells_id' where id='$jmoving_id';");
@@ -1683,7 +1683,7 @@ function saveJmovingStorage($jmoving_id,$storage_id,$storage_cells_id){$db=new d
 	return array($answer,$err);
 }
 
-function getRateTypeDeclarationdocumentPos($costums_id,$country_id){$db=new db;$slave=new slave;$manual=new manual;$rate=0;$type_declaration="";$type_declaration_id=0;
+function getRateTypeDeclarationdocumentPos($costums_id,$country_id){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual;$rate=0;$type_declaration="";$type_declaration_id=0;
 	$r=$db->query("select DUTY from T2_COUNTRIES where country_id='$country_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$duty=$db->result($r,0,"DUTY");
@@ -1700,7 +1700,7 @@ function getRateTypeDeclarationdocumentPos($costums_id,$country_id){$db=new db;$
 	return array($rate,$type_declaration,$type_declaration_id);
 }
 
-function loadJmovingCommets($jmoving_id){$db=new db;$slave=new slave;
+function loadJmovingCommets($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;
 	$form_htm=RD."/tpl/jmoving_comment_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select cc.*,u.name from J_MOVING_COMMENTS cc 
 		left outer join media_users u on u.id=cc.USER_ID 
@@ -1723,10 +1723,10 @@ function loadJmovingCommets($jmoving_id){$db=new db;$slave=new slave;
 			$list.=$block;
 			
 		}
-		if ($n==0){$list="<h3 class='text-center'>Коментарі відсутні</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
 		return $list;
 }
-function saveJmovingComment($jmoving_id,$comment){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveJmovingComment($jmoving_id,$comment){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	
 	$jmoving_id=$slave->qq($jmoving_id);$comment=$slave->qq($comment);
 	if ($jmoving_id>0 && $comment!=""){
@@ -1735,7 +1735,7 @@ function saveJmovingComment($jmoving_id,$comment){$db=new db;$slave=new slave;se
 	}
 	return array($answer,$err);
 }
-function dropJmovingComment($jmoving_id,$comment_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення запису!";
+function dropJmovingComment($jmoving_id,$comment_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
 	$jmoving_id=$slave->qq($jmoving_id);$comment_id=$slave->qq($comment_id);
 	if ($jmoving_id>0 && $comment_id>0){
 		$r=$db->query("select * from J_MOVING_COMMENTS where jmoving_id='$jmoving_id' and id='$comment_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1747,7 +1747,7 @@ function dropJmovingComment($jmoving_id,$comment_id){$db=new db;$slave=new slave
 	return array($answer,$err);
 }
 
-function loadJmovingCDN($jmoving_id){$db=new db;$slave=new slave;
+function loadJmovingCDN($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;
 	$form_htm=RD."/tpl/jmoving_cdn_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select cc.*,u.name as user_name from J_MOVING_CDN cc 
 		left outer join media_users u on u.id=cc.USER_ID 
@@ -1784,11 +1784,11 @@ function loadJmovingCDN($jmoving_id){$db=new db;$slave=new slave;
 			$list.=$block;
 			
 		}
-		if ($n==0){$list="<h3 class='text-center'>Файли відсутні</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
 		return $list;
 }
 
-function jmovingCDNDropFile($jmoving_id,$file_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення файлу!";
+function jmovingCDNDropFile($jmoving_id,$file_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	
 	$jmoving_id=$slave->qq($jmoving_id);$file_id=$slave->qq($file_id);
 	if ($jmoving_id>0 && $file_id>0){
@@ -1803,12 +1803,12 @@ function jmovingCDNDropFile($jmoving_id,$file_id){$db=new db;$slave=new slave;se
 	return array($answer,$err);
 }
 
-function getJmovingNameById($sel_id, $field="name"){$db=new db;$name="";
+function getJmovingNameById($sel_id, $field="name"){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select `$field` from A_CLIENTS where id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"$field");}
 	return $name;
 }
-function loadStateSelectList($country_id,$sel_id){$db=new db;$slave=new slave;
+function loadStateSelectList($country_id,$sel_id){$db=DbSingleton::getDb();$slave=new slave;
 	$list=$slave->showSelectSubList("T2_STATE","COUNTRY_ID","$country_id","STATE_ID","STATE_NAME",$sel_id);
 //		$form=str_replace("{region_list}",$slave->showSelectSubList("T2_REGION","STATE_ID","$state","REGION_ID","REGION_NAME",$city),$form);
 //		$form=str_replace("{city_list}",$slave->showSelectSubList("T2_CITY","REGION_ID","$region","CITY_ID","CITY_NAME",$city),$form);
@@ -1821,7 +1821,7 @@ function loadStateSelectList($country_id,$sel_id){$db=new db;$slave=new slave;
 	}*/
 	return $list;	
 }
-function loadRegionSelectList($state_id,$sel_id){$db=new db;$slave=new slave;
+function loadRegionSelectList($state_id,$sel_id){$db=DbSingleton::getDb();$slave=new slave;
 	/*
 	$r=$db->query("select * from T2_REGION where STATE_ID='$state_id' order by REGION_NAME asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -1832,7 +1832,7 @@ function loadRegionSelectList($state_id,$sel_id){$db=new db;$slave=new slave;
 	}*/
 	return $slave->showSelectSubList("T2_REGION","STATE_ID","$state_id","REGION_ID","REGION_NAME",$sel_id);
 }
-function loadCitySelectList($region_id,$sel_id){$db=new db;$slave=new slave;//$list="";
+function loadCitySelectList($region_id,$sel_id){$db=DbSingleton::getDb();$slave=new slave;//$list="";
 /*	$r=$db->query("select * from T2_CITY where REGION_ID='$region_id' order by CITY_NAME asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"CITY_ID");
@@ -1841,9 +1841,9 @@ function loadCitySelectList($region_id,$sel_id){$db=new db;$slave=new slave;//$l
 		$list.="<option value='$id' $sel>$name</option>";
 	}
 	*/
-	return "<option value='NEW'>Добавити населений пункт</option>".$slave->showSelectSubList("T2_CITY","REGION_ID","$region_id","CITY_ID","CITY_NAME",$sel_id);
+	return "<option value='NEW'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ</option>".$slave->showSelectSubList("T2_CITY","REGION_ID","$region_id","CITY_ID","CITY_NAME",$sel_id);
 }
-function showCategoryCheckList($jmoving_id){$db=new db;$list="";
+function showCategoryCheckList($jmoving_id){$db=DbSingleton::getDb();$list="";
 	$r=$db->query("select  * from A_CATEGORY where parrent_id=0 order by id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -1854,14 +1854,14 @@ function showCategoryCheckList($jmoving_id){$db=new db;$list="";
 	}$list.="<input type='hidden' id='c_category_kol' value='$n'>";
 	return $list;	
 }
-function checkJmovingCategorySelect($jmoving_id,$category_id){$db=new db;$ch=0;
+function checkJmovingCategorySelect($jmoving_id,$category_id){$db=DbSingleton::getDb();$ch=0;
 	$r=$db->query("select category_id from A_CLIENTS_CATEGORY where jmoving_id='$jmoving_id' and category_id='$category_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$ch=1;}
 	return $ch;	
 }
 
 
-function showMovingOpListSelect($sel_id){$db=new db;$list="";
+function showMovingOpListSelect($sel_id){$db=DbSingleton::getDb();$list="";
 	$r=$db->query("select * from J_MOVING_OP where in_show='1' order by id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -1872,7 +1872,7 @@ function showMovingOpListSelect($sel_id){$db=new db;$list="";
 	return $list;	
 }
 
-function showJmovingDocumentList($jmoving_id,$jmoving_op_id,$document_id){$db=new db;$slave=new slave;$income=new income;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showJmovingDocumentList($jmoving_id,$jmoving_op_id,$document_id){$db=DbSingleton::getDb();$slave=new slave;$income=new income;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	if ($jmoving_op_id==1){
 		$form_htm=RD."/tpl/jmoving_documents_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$document_list=$income->search_documents_income_list("");
@@ -1882,47 +1882,47 @@ function showJmovingDocumentList($jmoving_id,$jmoving_op_id,$document_id){$db=ne
 	$form=str_replace("{jmoving_id}",$jmoving_id,$form);
 	$form=str_replace("{jmoving_op_id}",$jmoving_op_id,$form);
 	
-	return array($form,"Реєстр документів основи");
+	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");
 }
-function findJmovingDocumentsSearch($jmoving_id,$jmoving_op_id,$s_nom){$db=new db;$slave=new slave;$income=new income;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function findJmovingDocumentsSearch($jmoving_id,$jmoving_op_id,$s_nom){$db=DbSingleton::getDb();$slave=new slave;$income=new income;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	if ($jmoving_op_id==1){$document_list=$income->search_documents_income_list($s_nom);}
 
 	return $document_list;
 }
 
 
-function getArtIdByBarcode($barcode){$db=new dbt;$art_id=0; 
+function getArtIdByBarcode($barcode){$db=DbSingleton::getTokoDb();$art_id=0; 
 	$r=$db->query("select ART_ID from T2_BARCODES where BARCODE='$barcode' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$art_id=$db->result($r,0,"ART_ID");	}
 	return $art_id;	
 }
-function getArtId($code,$brand_id){$db=new dbt;$slave=new slave;$cat=new catalogue;$id=0; $code=$slave->qq($code); $code=$cat->clearArticle($code);
+function getArtId($code,$brand_id){$db=DbSingleton::getTokoDb();$slave=new slave;$cat=new catalogue;$id=0; $code=$slave->qq($code); $code=$cat->clearArticle($code);
 	$r=$db->query("select ART_ID from T2_ARTICLES where ARTICLE_NR_SEARCH='$code' and BRAND_ID='$brand_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$id=$db->result($r,0,"ART_ID");	}
 	return $id;	
 }
-function getCostumsId($code){$db=new dbt;$slave=new slave;$id=0; $code=$slave->qq($code);
+function getCostumsId($code){$db=DbSingleton::getTokoDb();$slave=new slave;$id=0; $code=$slave->qq($code);
 	$r=$db->query("select COSTUMS_ID from T2_COSTUMS where COSTUMS_CODE='$code' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$id=$db->result($r,0,"COSTUMS_ID");	}
 	return $id;	
 }
-function getCountryId($code){$db=new dbt;$slave=new slave;$id=0; $code=$slave->qq($code);
+function getCountryId($code){$db=DbSingleton::getTokoDb();$slave=new slave;$id=0; $code=$slave->qq($code);
 	$r=$db->query("select COUNTRY_ID from T2_COUNTRIES where COUNTRY_NAME='$code' or `ALFA2`='$code' or `ALFA3`='$code' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$id=$db->result($r,0,"COUNTRY_ID");	}
 	return $id;	
 }
-function getBrandId($code){$db=new dbt;$slave=new slave;$id=0; $code=$slave->qq($code);
+function getBrandId($code){$db=DbSingleton::getTokoDb();$slave=new slave;$id=0; $code=$slave->qq($code);
 	$r=$db->query("select BRAND_ID from T2_BRANDS where BRAND_NAME='$code' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$id=$db->result($r,0,"BRAND_ID");	}
 	return $id;	
 }
-function getBrandName($id){$db=new dbt;$slave=new slave;$name=""; 
+function getBrandName($id){$db=DbSingleton::getTokoDb();$slave=new slave;$name=""; 
 	$r=$db->query("select BRAND_NAME from T2_BRANDS where BRAND_ID='$id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$name=$db->result($r,0,"BRAND_NAME");	}
 	return $name;	
 }
 
-function showWorkPairForm($jmoving_id){$db=new db;$list="";
+function showWorkPairForm($jmoving_id){$db=DbSingleton::getDb();$list="";
 	$r=$db->query("select PAIR_INDEX from T2_WORK_PAIR where ART_ID='$jmoving_id';");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n+3;$i++){
 		$pair_index="";
@@ -1931,7 +1931,7 @@ function showWorkPairForm($jmoving_id){$db=new db;$list="";
 	}$list.="<input type='hidden' id='work_pair_n' value='".($n+3)."'>";
 	return $list;
 }
-function labelArtEmptyCount($jmoving_id,$kol){$db=new db;$slave=new slave;$label="";
+function labelArtEmptyCount($jmoving_id,$kol){$db=DbSingleton::getDb();$slave=new slave;$label="";
 	if ($kol==0 || $kol==""){ 
 		list($weight,$volume,$kol)=$this->updateJmovingWeightVolume($jmoving_id);
 	}
@@ -1939,13 +1939,13 @@ function labelArtEmptyCount($jmoving_id,$kol){$db=new db;$slave=new slave;$label
 	return array($kol,$label);
 }
 
-function labelCommentsCount($jmoving_id){$db=new db;$slave=new slave;$kol=0;$label="";
+function labelCommentsCount($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;$kol=0;$label="";
 	$r=$db->query("select count(id) as kol from J_MOVING_COMMENTS where jmoving_id='$jmoving_id';");$kol=0+$db->result($r,0,"kol");
 	if ($kol>0){$label="<span class='label label-tab label-info'>$kol</span>";}
 	return array($kol,$label);
 }
 
-function loadJmovingUnknownArticles($jmoving_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function loadJmovingUnknownArticles($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/jmoving_unknown_articles_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	$r=$db->query("select * from J_MOVING j where j.id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1958,11 +1958,11 @@ function loadJmovingUnknownArticles($jmoving_id){$db=new db;$slave=new slave;ses
 	}
 	return $form;
 }
-function showJmovingUnknownStrList($jmoving_id){$db=new db;$slave=new slave;$cat=new catalogue;$manual=new manual;$gmanual=new gmanual;$list="";
+function showJmovingUnknownStrList($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$manual=new manual;$gmanual=new gmanual;$list="";
 	$r=$db->query("select * from J_MOVING_STR where jmoving_id='$jmoving_id' group by art_id order by id asc;");$n=$db->num_rows($r);$empty_kol=0;
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
-		$art_id=$db->result($r,$i-1,"art_id");$art_id_comment="";if ($art_id==0){$art_id_comment="Не визначено ART_ID! Артикул відсутній у базі";}
+		$art_id=$db->result($r,$i-1,"art_id");$art_id_comment="";if ($art_id==0){$art_id_comment="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ART_ID! пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ";}
 		$article_nr_displ=$db->result($r,$i-1,"article_nr_displ");
 		$brand_id=$db->result($r,$i-1,"brand_id");$brand_name=$cat->getBrandName($brand_id);
 		
@@ -1984,7 +1984,7 @@ function showJmovingUnknownStrList($jmoving_id){$db=new db;$slave=new slave;$cat
 	return array($list,$empty_kol);
 }
 
-function checkJmovingUnStr($jmoving_id,$art_id,$volume,$weight,$weight2){$db=new db;$dbt=new dbt;$slave=new slave;$answer=0;$err="";
+function checkJmovingUnStr($jmoving_id,$art_id,$volume,$weight,$weight2){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="";
 	$jmoving_id=$slave->qq($jmoving_id);$art_id=$slave->qq($art_id);
 	$r=$db->query("select oper_status from J_MOVING where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -1996,39 +1996,39 @@ function checkJmovingUnStr($jmoving_id,$art_id,$volume,$weight,$weight2){$db=new
 				if ($ns==1){ $dbt->query("update `T2_PACKAGING` set `VOLUME`='$volume', `WEIGHT_NETTO`='$weight', `WEIGHT_BRUTTO`='$weight2' where ART_ID='$art_id' limit 1;");	}
 				else{ $dbt->query("insert into `T2_PACKAGING` (`ART_ID`,`VOLUME`,`WEIGHT_NETTO`,`WEIGHT_BRUTTO`) values ('$art_id','$volume','$weight','$weight2');"); }
 				$answer=1;$err="";
-			}else {$answer=0;$err="Не заповнені всі поля для артикулу";}
-		} else {$answer=0;$err="Переміщення заблоковано. Зміни вносити заборонено.";}
+			}else {$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";}
+		} else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
 	}
 	return array($answer,$err);
 }
 	
-function newJmoving($type_id,$art_id,$storage_id_to,$status_jmoving,$oper_status,$jmov) {$db=new db; 
+function newJmoving($type_id,$art_id,$storage_id_to,$status_jmoving,$oper_status,$jmov) {$db=DbSingleton::getDb(); 
 	session_start(); $user_id=$_SESSION["media_user_id"]; $jmoving_id=0;
 	$r=$db->query("select max(id) as mid from J_MOVING;");$jmoving_id=0+$db->result($r,0,"mid")+1;
 	$doc_nom=$this->get_df_doc_nom_new();
 	$db->query("insert into J_MOVING (`id`,`type_id`,`prefix`,`doc_nom`,`user_id`,`data`,`storage_id_to`,`status_jmoving`,`oper_status`) values ('$jmoving_id','$type_id','$this->prefix_new','$doc_nom','$user_id',CURDATE(),'$storage_id_to','$status_jmoving','$oper_status');");	
-	//var_dump("створив JM#$jmoving_id");
-	$db->query("update J_MOVING_STR set jmoving_id='$jmoving_id' where jmoving_id='$jmov' and art_id='$art_id';");													//				var_dump("оновив JSTR#$jmoving_id ($jmov, $art_id)");				 
+	//var_dump("пїЅпїЅпїЅпїЅпїЅпїЅпїЅ JM#$jmoving_id");
+	$db->query("update J_MOVING_STR set jmoving_id='$jmoving_id' where jmoving_id='$jmov' and art_id='$art_id';");													//				var_dump("пїЅпїЅпїЅпїЅпїЅпїЅ JSTR#$jmoving_id ($jmov, $art_id)");				 
 		
 	return $jmoving_id;
 }
 
-function startJmovingStorageSelect($jmoving_id){$db=new db;$slave=new slave;$cat=new catalogue;$answer=0;$err="";
+function startJmovingStorageSelect($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$answer=0;$err="";
 	$jmoving_id=$slave->qq($jmoving_id);
 	$r=$db->query("select oper_status,status_jmoving,storage_id_to from J_MOVING where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$oper_status=$db->result($r,0,"oper_status");
 		$status_jmoving=$db->result($r,0,"status_jmoving");
 		$storage_id_to=$db->result($r,0,"storage_id_to");
-		if ($storage_id_to==0){$answer=0;$err="Не зазначено склад переміщення.";}
-		if ($status_jmoving>47 || $oper_status>30){$answer=0;$err="Переміщення заблоковано. Зміни вносити заборонено.";}
+		if ($storage_id_to==0){$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+		if ($status_jmoving>47 || $oper_status>30){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
 		if ($oper_status==30 && $status_jmoving>=44 && $status_jmoving<=47 && $storage_id_to>0) {
 			//*****$db->query("update J_MOVING set status_jmoving='45' where id='$jmoving_id';");
 
 			/* 				make calculation jmoving  */
 			$ms_ar=array();
 			$r1=$db->query("select storage_id_from from J_MOVING_STR where jmoving_id='$jmoving_id' and status_jmoving='44' group by storage_id_from,cell_id_from order by storage_id_from asc;");$n1=$db->num_rows($r1);
-			if ($n1==0){ $answer=0;$err="Відсутній товар для створення відбору";}
+			if ($n1==0){ $answer=0;$err="ВіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ";}
 			if($n1>0){
 				for ($i=1;$i<=$n1;$i++){
 					$storage_id_from=$db->result($r1,$i-1,"storage_id_from");
@@ -2069,21 +2069,21 @@ function startJmovingStorageSelect($jmoving_id){$db=new db;$slave=new slave;$cat
 	return array($answer,$err);
 }
 
-function startJmovingStorageSelectLocal($jmoving_id){$db=new db;$slave=new slave;$cat=new catalogue;$answer=0;$err="";
+function startJmovingStorageSelectLocal($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$answer=0;$err="";
 	$jmoving_id=$slave->qq($jmoving_id);
 	$r=$db->query("select oper_status,status_jmoving,storage_id_to from J_MOVING where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$oper_status=$db->result($r,0,"oper_status");
 		$status_jmoving=$db->result($r,0,"status_jmoving");
 		$storage_id_to=$db->result($r,0,"storage_id_to");
-		if ($storage_id_to==0){$answer=0;$err="Не зазначено склад переміщення.";}
-		if ($status_jmoving>47 || $oper_status>30){$answer=0;$err="Переміщення заблоковано. Зміни вносити заборонено.";}
+		if ($storage_id_to==0){$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+		if ($status_jmoving>47 || $oper_status>30){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
 		if ($oper_status==30 && $status_jmoving>=44 && $status_jmoving<=47 && $storage_id_to>0) {
 
 			/* 				make calculation jmoving  */
 			$ms_ar=array();
 			$r1=$db->query("select storage_id_from,cell_id_from from J_MOVING_STR where jmoving_id='$jmoving_id' and status_jmoving='44' group by cell_id_from order by cell_id_from asc;");$n1=$db->num_rows($r1);
-			if ($n1==0){ $answer=0;$err="Відсутній товар для створення відбору";}
+			if ($n1==0){ $answer=0;$err="ВіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ";}
 			if($n1>0){
 				for ($i=1;$i<=$n1;$i++){
 					$storage_id_from=$db->result($r1,$i-1,"storage_id_from");
@@ -2119,7 +2119,7 @@ function startJmovingStorageSelectLocal($jmoving_id){$db=new db;$slave=new slave
 }
 
 
-function makesJmovingStorageSelect($jmoving_id){$db=new db;$dbt=new dbt;$slave=new slave;$cat=new catalogue;
+function makesJmovingStorageSelect($jmoving_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$cat=new catalogue;
 	$answer=0;$err="";session_start();$user_id=$_SESSION["media_user_id"]; $jmoving_id=$slave->qq($jmoving_id); 
 					
 	$r=$db->query("select oper_status,status_jmoving,storage_id_to from J_MOVING where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
@@ -2127,8 +2127,8 @@ function makesJmovingStorageSelect($jmoving_id){$db=new db;$dbt=new dbt;$slave=n
 		$oper_status=$db->result($r,0,"oper_status");
 		$status_jmoving=$db->result($r,0,"status_jmoving");
 		$storage_id_to=$db->result($r,0,"storage_id_to");
-		if ($storage_id_to==0){$answer=0;$err="Не зазначено склад переміщення.";}
-		if ($status_jmoving>47 || $oper_status>30){$answer=0;$err="Переміщення заблоковано. Зміни вносити заборонено.";}
+		if ($storage_id_to==0){$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+		if ($status_jmoving>47 || $oper_status>30){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
 		if ($oper_status==30 && $status_jmoving>=44 && $status_jmoving<=47 && $storage_id_to>0) {
 			$db->query("update J_MOVING set status_jmoving='45' where id='$jmoving_id';");
 			
@@ -2209,15 +2209,15 @@ function makesJmovingStorageSelect($jmoving_id){$db=new db;$dbt=new dbt;$slave=n
 }
 
 
-/*function makesJmovingStorageSelect($jmoving_id){$db=new db;$dbt=new dbt;$slave=new slave;$cat=new catalogue;$answer=0;$err="";session_start();$user_id=$_SESSION["media_user_id"];
+/*function makesJmovingStorageSelect($jmoving_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$cat=new catalogue;$answer=0;$err="";session_start();$user_id=$_SESSION["media_user_id"];
 	$jmoving_id=$slave->qq($jmoving_id);
 	$r=$db->query("select oper_status,status_jmoving,storage_id_to from J_MOVING where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$oper_status=$db->result($r,0,"oper_status");
 		$status_jmoving=$db->result($r,0,"status_jmoving");
 		$storage_id_to=$db->result($r,0,"storage_id_to");
-		if ($storage_id_to==0){$answer=0;$err="Не зазначено склад переміщення.";}
-		if ($status_jmoving>47 || $oper_status>30){$answer=0;$err="Переміщення заблоковано. Зміни вносити заборонено.";}
+		if ($storage_id_to==0){$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+		if ($status_jmoving>47 || $oper_status>30){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
 		if ($oper_status==30 && $status_jmoving>=44 && $status_jmoving<=47 && $storage_id_to>0) {
 			$db->query("update J_MOVING set status_jmoving='45' where id='$jmoving_id';");
 			
@@ -2295,15 +2295,15 @@ function makesJmovingStorageSelect($jmoving_id){$db=new db;$dbt=new dbt;$slave=n
 	}
 	return array($answer,$err);
 }*/
-function makesJmovingStorageSelectLocal($jmoving_id){$db=new db;$dbt=new dbt;$slave=new slave;$cat=new catalogue;$answer=0;$err="";session_start();$user_id=$_SESSION["media_user_id"];
+function makesJmovingStorageSelectLocal($jmoving_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$cat=new catalogue;$answer=0;$err="";session_start();$user_id=$_SESSION["media_user_id"];
 	$jmoving_id=$slave->qq($jmoving_id);
 	$r=$db->query("select oper_status,status_jmoving,storage_id_to from J_MOVING where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$oper_status=$db->result($r,0,"oper_status");
 		$status_jmoving=$db->result($r,0,"status_jmoving");
 		$storage_id_to=$db->result($r,0,"storage_id_to");
-		if ($storage_id_to==0){$answer=0;$err="Не зазначено склад переміщення.";}
-		if ($status_jmoving>47 || $oper_status>30){$answer=0;$err="Переміщення заблоковано. Зміни вносити заборонено.";}
+		if ($storage_id_to==0){$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+		if ($status_jmoving>47 || $oper_status>30){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
 		if ($oper_status==30 && $status_jmoving>=44 && $status_jmoving<=47 && $storage_id_to>0) {
 			$db->query("update J_MOVING set status_jmoving='45' where id='$jmoving_id';");
 			
@@ -2372,15 +2372,15 @@ function makesJmovingStorageSelectLocal($jmoving_id){$db=new db;$dbt=new dbt;$sl
 	return array($answer,$err);
 }
 
-function clearJmovingStorageSelect($jmoving_id){$db=new db;$slave=new slave;$cat=new catalogue;$answer=0;$err="";
+function clearJmovingStorageSelect($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$answer=0;$err="";
 	$jmoving_id=$slave->qq($jmoving_id);
 	$r=$db->query("select oper_status,status_jmoving,storage_id_to from J_MOVING where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$oper_status=$db->result($r,0,"oper_status");
 		$status_jmoving=$db->result($r,0,"status_jmoving");
 		$storage_id_to=$db->result($r,0,"storage_id_to");
-		if ($storage_id_to==0){$answer=0;$err="Не зазначено склад переміщення.";}
-		if ($status_jmoving>47 || $oper_status>30){$answer=0;$err="Переміщення заблоковано. Зміни вносити заборонено.";}
+		if ($storage_id_to==0){$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+		if ($status_jmoving>47 || $oper_status>30){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
 		if ($oper_status==30 && $status_jmoving>=44 && $status_jmoving<=47 && $storage_id_to>0) {
 			$db->query("delete from J_MOVING_SELECT_TEMP where jmoving_id='$jmoving_id' and status_jmoving='44';");
 			$db->query("delete from J_MOVING_SELECT_STR_TEMP  where jmoving_id='$jmoving_id';");
@@ -2389,15 +2389,15 @@ function clearJmovingStorageSelect($jmoving_id){$db=new db;$slave=new slave;$cat
 	}
 	return array($answer,$err);
 }
-function clearJmovingStorageSelectLocal($jmoving_id){$db=new db;$slave=new slave;$cat=new catalogue;$answer=0;$err="";
+function clearJmovingStorageSelectLocal($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$answer=0;$err="";
 	$jmoving_id=$slave->qq($jmoving_id);
 	$r=$db->query("select oper_status,status_jmoving,storage_id_to from J_MOVING where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$oper_status=$db->result($r,0,"oper_status");
 		$status_jmoving=$db->result($r,0,"status_jmoving");
 		$storage_id_to=$db->result($r,0,"storage_id_to");
-		if ($storage_id_to==0){$answer=0;$err="Не зазначено склад переміщення.";}
-		if ($status_jmoving>47 || $oper_status>30){$answer=0;$err="Переміщення заблоковано. Зміни вносити заборонено.";}
+		if ($storage_id_to==0){$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+		if ($status_jmoving>47 || $oper_status>30){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
 		if ($oper_status==30 && $status_jmoving>=44 && $status_jmoving<=47 && $storage_id_to>0) {
 			$db->query("delete from J_MOVING_LOCAL_SELECT_TEMP where jmoving_id='$jmoving_id' and status_jmoving='44';");
 			$db->query("delete from J_MOVING_LOCAL_SELECT_STR_TEMP  where jmoving_id='$jmoving_id';");
@@ -2407,7 +2407,7 @@ function clearJmovingStorageSelectLocal($jmoving_id){$db=new db;$slave=new slave
 	return array($answer,$err);
 }
 
-function loadJmovingStorageSelect($jmoving_id,$jmoving_status){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function loadJmovingStorageSelect($jmoving_id,$jmoving_status){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/jmoving_storage_select_list.htm";if ($jmoving_status==45){$form_htm=RD."/tpl/jmoving_storage_select_list_finish.htm";}
 	if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
@@ -2426,7 +2426,7 @@ function loadJmovingStorageSelect($jmoving_id,$jmoving_status){$db=new db;$slave
 	return $form;
 }
 /*
-function showJmovingSkladStorageSelectList($jmoving_id,$jmoving_status){$db=new db;$slave=new slave;$cat=new catalogue;$manual=new manual;$gmanual=new gmanual;$list="";
+function showJmovingSkladStorageSelectList($jmoving_id,$jmoving_status){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$manual=new manual;$gmanual=new gmanual;$list="";
 	$tmp="";$where_status="and ms.status_jmoving='$jmoving_status'"; if ($jmoving_status==44){$tmp="_TEMP";} if ($jmoving_status>44){ $where_status="and ms.status_jmoving in (45,46,47,48)"; }
 	$r=$db->query("select ms.*, p.name as tpoint_name, s.name as storage_name, ml.mcaption as loc_type_name, mt.mcaption as status_jmoving_name from J_MOVING_SELECT$tmp ms 
 					left outer join T_POINT p on p.id=ms.tpoint_id
@@ -2453,7 +2453,7 @@ function showJmovingSkladStorageSelectList($jmoving_id,$jmoving_status){$db=new 
 		$list.="<tr id='strStsRow_$i'>
 			<td>$i</td>";
 			if ($jmoving_status>44){
-				$list.="<td style='min-width:140px;'>СкВ-$id</td>";	
+				$list.="<td style='min-width:140px;'>пїЅпїЅпїЅ-$id</td>";	
 			}
 		$list.="<td style='min-width:140px;'>$tpoint_name</td>
 			<td style='min-width:120px;'>$storage_name</td>
@@ -2479,7 +2479,7 @@ function showJmovingSkladStorageSelectList($jmoving_id,$jmoving_status){$db=new 
 	return array($list,$n);
 }*/
 	
-function loadJmovingStorageCount($jmoving_id) {$db=new db;
+function loadJmovingStorageCount($jmoving_id) {$db=DbSingleton::getDb();
 	$r=$db->query("select sel.*, s.name as storage_name, t.name as tpoint_name from J_SELECT sel
 			left outer join T_POINT t on t.id=sel.tpoint_id
 			left outer join STORAGE s on s.id=sel.storage_id
@@ -2499,7 +2499,7 @@ function loadJmovingStorageCount($jmoving_id) {$db=new db;
 	return $n;
 }
 
-function showJmovingSkladStorageSelectList($jmoving_id,$jmoving_status){$db=new db;$slave=new slave;$cat=new catalogue;$manual=new manual;$gmanual=new gmanual;$list="";
+function showJmovingSkladStorageSelectList($jmoving_id,$jmoving_status){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$manual=new manual;$gmanual=new gmanual;$list="";
 	if ($jmoving_status==44){
 		$r=$db->query("select ms.*, p.name as tpoint_name, s.name as storage_name, ml.mcaption as loc_type_name, mt.mcaption as status_jmoving_name from J_MOVING_SELECT_TEMP ms 
 						left outer join T_POINT p on p.id=ms.tpoint_id
@@ -2564,7 +2564,7 @@ function showJmovingSkladStorageSelectList($jmoving_id,$jmoving_status){$db=new 
 			
 			$list.="<tr id='strStsRow_$i'>
 				<td><span class='select_id' id='$id'>$i</span></td>
-				<td style='min-width:140px;'>СкВ-$id</td>
+				<td style='min-width:140px;'>пїЅпїЅпїЅ-$id</td>
 				<td style='min-width:140px;'>$tpoint_name</td>
 				<td style='min-width:120px;'>$storage_name</td>
 				<td style='min-width:80px;'>$loc_type_name</td>
@@ -2583,7 +2583,7 @@ function showJmovingSkladStorageSelectList($jmoving_id,$jmoving_status){$db=new 
 	return array($list,$n);
 }
 
-function loadJmovingStorageSelectLocal($jmoving_id,$jmoving_status){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function loadJmovingStorageSelectLocal($jmoving_id,$jmoving_status){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/jmoving_local_storage_select_list.htm";if ($jmoving_status==45){$form_htm=RD."/tpl/jmoving_local_storage_select_list_finish.htm";}
 	if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
@@ -2602,7 +2602,7 @@ function loadJmovingStorageSelectLocal($jmoving_id,$jmoving_status){$db=new db;$
 	return $form;
 }
 	
-function showJmovingSkladStorageSelectListLocal($jmoving_id,$jmoving_status){$db=new db;$slave=new slave;$cat=new catalogue;$manual=new manual;$gmanual=new gmanual;$list="";
+function showJmovingSkladStorageSelectListLocal($jmoving_id,$jmoving_status){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$manual=new manual;$gmanual=new gmanual;$list="";
 	$tmp="J_MOVING_SELECT";$where_status="and ms.status_jmoving='$jmoving_status'"; if ($jmoving_status==44){$tmp="J_MOVING_LOCAL_SELECT_TEMP";} if ($jmoving_status>44){ $where_status="and ms.status_jmoving in (45,46,47,48)"; }
 	$query="select ms.*, p.name as tpoint_name, s.name as storage_name, mt.mcaption as status_jmoving_name from $tmp ms 
 					left outer join T_POINT p on p.id=ms.tpoint_id
@@ -2629,7 +2629,7 @@ function showJmovingSkladStorageSelectListLocal($jmoving_id,$jmoving_status){$db
 		$list.="<tr id='strStsRow_$i'>
 			<td>$i</td>";
 			if ($jmoving_status>44){
-				$list.="<td style='min-width:140px;'>СкВн-$id</td>";	
+				$list.="<td style='min-width:140px;'>пїЅпїЅпїЅпїЅ-$id</td>";	
 			}
 		$list.="<td style='min-width:140px;'>$tpoint_name</td>
 			<td style='min-width:120px;'>$storage_name</td>
@@ -2649,13 +2649,13 @@ function showJmovingSkladStorageSelectListLocal($jmoving_id,$jmoving_status){$db
 	}
 	return array($list,$n);
 }
-function getTpointDataByStorage($storage_id){$db=new db; $tpoint_id=0;$loc_type_id=0;
+function getTpointDataByStorage($storage_id){$db=DbSingleton::getDb(); $tpoint_id=0;$loc_type_id=0;
 	$r=$db->query("select `tpoint_id`,`local` from T_POINT_STORAGE where storage_id='$storage_id' order by id asc limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$tpoint_id=$db->result($r,0,"tpoint_id"); $loc_type_id=$db->result($r,0,"local");}
 	return array($tpoint_id,$loc_type_id);
 }
 
-function viewJmovingStorageSelect($jmoving_id,$select_id,$jmoving_status){$db=new db;$cat=new catalogue;$slave=new slave;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$gmanual=new gmanual;
+function viewJmovingStorageSelect($jmoving_id,$select_id,$jmoving_status){$db=DbSingleton::getDb();$cat=new catalogue;$slave=new slave;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$gmanual=new gmanual;
 	if ($jmoving_status==44){
 		$form_htm=RD."/tpl/jmoving_storage_select_view.htm"; $tmp="";$tmp="_TEMP";
 		$disabled46=" disabled";$disabled47=" disabled";$disabled48=" disabled";
@@ -2753,9 +2753,9 @@ function viewJmovingStorageSelect($jmoving_id,$select_id,$jmoving_status){$db=ne
 		$form=str_replace("{ArticlesList}",$list,$form);
 		
 	}
-	return array($form,"Структура складського відбору № СкВ-$select_id; Статус відбору: ".$gmanual->get_gmanual_caption($select_status));
+	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ-$select_id; пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ: ".$gmanual->get_gmanual_caption($select_status));
 }
-function viewJmovingStorageSelectLocal($jmoving_id,$select_id,$jmoving_status){$db=new db;$cat=new catalogue;$slave=new slave;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function viewJmovingStorageSelectLocal($jmoving_id,$select_id,$jmoving_status){$db=DbSingleton::getDb();$cat=new catalogue;$slave=new slave;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/jmoving_local_storage_select_view.htm";
 	$tmp="J_MOVING_SELECT_STR";if ($jmoving_status==44){$tmp="J_MOVING_LOCAL_SELECT_STR_TEMP";}
 	$disabled46=" disabled";$disabled47=" disabled";$disabled48=" disabled";
@@ -2821,10 +2821,10 @@ function viewJmovingStorageSelectLocal($jmoving_id,$select_id,$jmoving_status){$
 	$form=str_replace("{data_48}",$data_records[48],$form);
 	
 	
-	return array($form,"Структура складського відбору № СкВн-$select_id");
+	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ-$select_id");
 }
 
-function dropJmovingStorageSelect($jmoving_id,$select_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення запису!";
+function dropJmovingStorageSelect($jmoving_id,$select_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
 	$jmoving_id=$slave->qq($jmoving_id);$select_id=$slave->qq($select_id);
 	if ($jmoving_id>0 && $select_id>0){
 		$r=$db->query("select count(id) as kol from J_MOVING_SELECT_STR_TEMP where jmoving_id='$jmoving_id' and select_id='$select_id';");$kol=$db->result($r,0,"kol");
@@ -2837,7 +2837,7 @@ function dropJmovingStorageSelect($jmoving_id,$select_id){$db=new db;$slave=new 
 	}
 	return array($answer,$err);
 }
-function dropJmovingStorageSelectLocal($jmoving_id,$select_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення запису!";
+function dropJmovingStorageSelectLocal($jmoving_id,$select_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
 	$jmoving_id=$slave->qq($jmoving_id);$select_id=$slave->qq($select_id);
 	if ($jmoving_id>0 && $select_id>0){
 		$r=$db->query("select count(id) as kol from J_MOVING_LOCAL_SELECT_STR_TEMP where jmoving_id='$jmoving_id' and select_id='$select_id';");$kol=$db->result($r,0,"kol");
@@ -2850,7 +2850,7 @@ function dropJmovingStorageSelectLocal($jmoving_id,$select_id){$db=new db;$slave
 	}
 	return array($answer,$err);
 }
-function collectJmovingStorageSelect($jmoving_id,$select_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка обробки запису!";
+function collectJmovingStorageSelect($jmoving_id,$select_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
 	$jmoving_id=$slave->qq($jmoving_id);$select_id=$slave->qq($select_id);
 	if ($jmoving_id>0 && $select_id>0){
 		$r=$db->query("select status_jmoving from J_MOVING_SELECT where jmoving_id='$jmoving_id' and id='$select_id' limit 0,1;");$n=$db->num_rows($r);
@@ -2865,7 +2865,7 @@ function collectJmovingStorageSelect($jmoving_id,$select_id){$db=new db;$slave=n
 	}
 	return array($answer,$err);
 }
-function collectJmovingStorageSelectLocal($jmoving_id,$select_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка обробки запису!";
+function collectJmovingStorageSelectLocal($jmoving_id,$select_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
 	$jmoving_id=$slave->qq($jmoving_id);$select_id=$slave->qq($select_id);
 	if ($jmoving_id>0 && $select_id>0){
 		$r=$db->query("select status_jmoving from J_MOVING_SELECT where jmoving_id='$jmoving_id' and id='$select_id' limit 0,1;");$n=$db->num_rows($r);
@@ -2881,8 +2881,8 @@ function collectJmovingStorageSelectLocal($jmoving_id,$select_id){$db=new db;$sl
 	return array($answer,$err);
 }
 	
-function cutJmovingStorageAll($jmoving_id,$select,$comment){ $db=new db; $slave=new slave; $ids=[]; $comment_sent="Передано в ID: ";
-	session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка обробки даних!";
+function cutJmovingStorageAll($jmoving_id,$select,$comment){ $db=DbSingleton::getDb(); $slave=new slave; $ids=[]; $comment_sent="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ ID: ";
+	session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$jmoving_id=$slave->qq($jmoving_id);$select_id=$slave->qq($select_id);
 
 	foreach ($select as $select_id){
@@ -2933,7 +2933,7 @@ function cutJmovingStorageAll($jmoving_id,$select,$comment){ $db=new db; $slave=
 	return array($answer,$err,$ids);
 }
 
-function cutJmovingStorage($jmoving_id,$select_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка обробки даних!";
+function cutJmovingStorage($jmoving_id,$select_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$jmoving_id=$slave->qq($jmoving_id);$select_id=$slave->qq($select_id);
 	if ($jmoving_id>0 && $select_id>0){
 		$r=$db->query("select count(id) as kol from J_MOVING_SELECT_STR_TEMP where jmoving_id='$jmoving_id' and select_id='$select_id';");$kol=$db->result($r,0,"kol");
@@ -2975,7 +2975,7 @@ function cutJmovingStorage($jmoving_id,$select_id){$db=new db;$slave=new slave;s
 	}
 	return array($answer,$err);
 }
-function getJmovingInfo($jmoving_id){$db=new db;$slave=new slave;$cat=new catalogue;$manual=new manual;$gmanual=new gmanual;
+function getJmovingInfo($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$manual=new manual;$gmanual=new gmanual;
 	$r=$db->query("select * from J_MOVING where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$prefix=$db->result($r,0,"prefix");
@@ -2988,7 +2988,7 @@ function getJmovingInfo($jmoving_id){$db=new db;$slave=new slave;$cat=new catalo
 	}
 	return array($prefix,$doc_nom,$data,$storage_id_to,$storage_name_to,$comment,$parrent_type_id,$parrent_doc_id);
 }
-function getJmovingSkladStorageSelectInfo($jmoving_id,$select_id){$db=new db;$slave=new slave;$cat=new catalogue;$manual=new manual;$gmanual=new gmanual;
+function getJmovingSkladStorageSelectInfo($jmoving_id,$select_id){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$manual=new manual;$gmanual=new gmanual;
 	$r=$db->query("select ms.*, p.name as tpoint_name, s.name as storage_name, ml.mcaption as loc_type_name, mt.mcaption as status_jmoving_name, j.storage_id_to, j.comment from J_MOVING_SELECT ms 
 					left outer join J_MOVING j on j.id=ms.jmoving_id
 					left outer join T_POINT p on p.id=ms.tpoint_id
@@ -3014,9 +3014,9 @@ function getJmovingSkladStorageSelectInfo($jmoving_id,$select_id){$db=new db;$sl
 		$weight_brutto=$db->result($r,0,"weight_brutto");
 		$comment=$db->result($r,0,"comment");
 	}
-	return array("СКВ-$select_id/$storage_name",$data,$storage_id,$storage_name,$storage_name_to,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$comment,$datatime);
+	return array("пїЅпїЅпїЅ-$select_id/$storage_name",$data,$storage_id,$storage_name,$storage_name_to,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$comment,$datatime);
 }
-function getJmovingSkladStorageSelectInfoLocal($jmoving_id,$select_id){$db=new db;$slave=new slave;$cat=new catalogue;$manual=new manual;$gmanual=new gmanual;
+function getJmovingSkladStorageSelectInfoLocal($jmoving_id,$select_id){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$manual=new manual;$gmanual=new gmanual;
 	$r=$db->query("select ms.*, p.name as tpoint_name, s.name as storage_name, mt.mcaption as status_jmoving_name, j.storage_id_to, j.comment from J_MOVING_SELECT ms 
 					left outer join J_MOVING j on j.id=ms.jmoving_id
 					left outer join T_POINT p on p.id=ms.tpoint_id
@@ -3038,10 +3038,10 @@ function getJmovingSkladStorageSelectInfoLocal($jmoving_id,$select_id){$db=new d
 		$weight_brutto=$db->result($r,0,"weight_brutto");
 		$comment=$db->result($r,0,"comment");
 	}
-	return array("СкВн-$select_id/$storage_name",$data,$storage_id,$storage_name,$storage_name_to,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$comment,$datatime);
+	return array("пїЅпїЅпїЅпїЅ-$select_id/$storage_name",$data,$storage_id,$storage_name,$storage_name_to,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$comment,$datatime);
 }
 
-function printJmovingStorageSelect($jmoving_id,$select_id){$db=new db;$cat=new catalogue;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function printJmovingStorageSelect($jmoving_id,$select_id){$db=DbSingleton::getDb();$cat=new catalogue;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/jmoving_storage_select_print.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from J_MOVING_SELECT_STR  where jmoving_id='$jmoving_id' and select_id='$select_id' order by id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
@@ -3090,12 +3090,12 @@ function printJmovingStorageSelect($jmoving_id,$select_id){$db=new db;$cat=new c
 	
 	$this->addJuornalRecord($jmoving_id,$select_id,52);
 	
-	//"Структура складського відбору"
+	//"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ"
 	$mp=new media_print;
 	$mp->print_document($form,array(210,280));
 	return $form;
 }
-function printJmovingStorageSelectLocal($jmoving_id,$select_id){$db=new db;$cat=new catalogue;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function printJmovingStorageSelectLocal($jmoving_id,$select_id){$db=DbSingleton::getDb();$cat=new catalogue;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/jmoving_local_storage_select_print.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from J_MOVING_SELECT_STR  where jmoving_id='$jmoving_id' and select_id='$select_id' order by id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
@@ -3145,16 +3145,16 @@ function printJmovingStorageSelectLocal($jmoving_id,$select_id){$db=new db;$cat=
 	
 	$this->addJuornalRecord($jmoving_id,$select_id,52);
 	
-	//"Структура складського відбору"
+	//"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ"
 	$mp=new media_print;
 	$mp->print_document($form,array(210,280));
 	return $form;
 }
 
-function addJuornalRecord($jmoving_id,$select_id,$status_jmoving){$db=new db;session_start();$user_id=$_SESSION["media_user_id"];
+function addJuornalRecord($jmoving_id,$select_id,$status_jmoving){$db=DbSingleton::getDb();session_start();$user_id=$_SESSION["media_user_id"];
 	$db->query("insert into J_MOVING_SELECT_JOURNAL (`jmoving_id`,`select_id`,`user_id`,`status_jmoving`) values ('$jmoving_id','$select_id','$user_id','$jmoving_id');"); return;
 }
-function getJmovingSelectJournalRecords($jmoving_id,$select_id){$db=new db;$data=array();
+function getJmovingSelectJournalRecords($jmoving_id,$select_id){$db=DbSingleton::getDb();$data=array();
 	$r=$db->query("select * from J_MOVING_SELECT_JOURNAL where `jmoving_id`='$jmoving_id' and `select_id`='$select_id' order by id asc;"); $n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$status_jmoving=$db->result($r,$i-1,"status_jmoving");
@@ -3165,7 +3165,7 @@ function getJmovingSelectJournalRecords($jmoving_id,$select_id){$db=new db;$data
 	return $data;
 }
 
-function showJmovingStorageSelectBarcodeForm($jmoving_id,$select_id){$db=new db;$cat=new catalogue;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка індексу";
+function showJmovingStorageSelectBarcodeForm($jmoving_id,$select_id){$db=DbSingleton::getDb();$cat=new catalogue;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 	$form_htm=RD."/tpl/jmoving_storage_select_barcode_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from J_MOVING_SELECT_STR  where jmoving_id='$jmoving_id' and select_id='$select_id' order by id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
@@ -3191,8 +3191,8 @@ function showJmovingStorageSelectBarcodeForm($jmoving_id,$select_id){$db=new db;
 			<td align='center' id='amr_$id'>$amount_barcodes</td>
 			<td align='center' id='amrd_$id'>$dif_amount_barcodes</td>
 			<td align='center' id='amrns_$id'>$amount_barcodes_noscan</td>
-			<td align='center'><button class='btn btn-xs btn-default' onclick='showJmovingStorageSelectNoscanForm(\"$jmoving_id\",\"$select_id\",\"$art_id\",\"$id\");' title='Фіксація без сканування' alt='Фіксація без сканування'><i class='fa fa-cube'></i></button></td>
-			<td align='center'><button class='btn btn-xs btn-danger' onclick='showJmovingStorageSelectBugForm(\"$jmoving_id\",\"$select_id\",\"$id\");' title='відхилення/брак/недостача' alt='відхилення/брак/недостача'><i class='fa fa-bug'></i></button></td>
+			<td align='center'><button class='btn btn-xs btn-default' onclick='showJmovingStorageSelectNoscanForm(\"$jmoving_id\",\"$select_id\",\"$art_id\",\"$id\");' title='ФіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ' alt='ФіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ'><i class='fa fa-cube'></i></button></td>
+			<td align='center'><button class='btn btn-xs btn-danger' onclick='showJmovingStorageSelectBugForm(\"$jmoving_id\",\"$select_id\",\"$id\");' title='пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ' alt='пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ'><i class='fa fa-bug'></i></button></td>
 			<td align='center' id='ambg_$id'>$amount_bug</td>
 			<td id='ssbug_$id'>$storage_select_list</td>
 		</tr>";
@@ -3211,10 +3211,10 @@ function showJmovingStorageSelectBarcodeForm($jmoving_id,$select_id){$db=new db;
 	
 	//$this->addJuornalRecord($jmoving_id,$select_id,47);
 	$answer=1;$err="";
-	return array($answer,$err,$form,"Пакування товару по штрих-кодам");	
+	return array($answer,$err,$form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅ");	
 }
 
-function saveJmovingStorageSelectBarcodeForm($jmoving_id,$select_id,$barcode){$db=new db;$slave=new slave;$cat=new catalogue;$answer=0;$err="Помилка індексу!!";
+function saveJmovingStorageSelectBarcodeForm($jmoving_id,$select_id,$barcode){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!";
 	$jmoving_id=$slave->qq($jmoving_id);$select_id=$slave->qq($select_id);$barcode=$slave->qq($barcode);
 	if ($jmoving_id>0 && $select_id>0 && $barcode!=""){
 		$art_id=$this->getArtIdByBarcode($barcode);
@@ -3232,15 +3232,15 @@ function saveJmovingStorageSelectBarcodeForm($jmoving_id,$select_id,$barcode){$d
 				$answer=1;$err="";
 			}
 		}
-	}else{ $answer=0;$err="Помилка штрих-коду";}
+	}else{ $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅ";}
 	return array($answer,$err,$id,$amount_barcodes,$dif_amount_barcodes);
 }
-function finishJmovingStorageSelectBarcodeForm($jmoving_id,$select_id){$db=new db;$slave=new slave;$cat=new catalogue;$answer=0;$err="Помилка індексу!!";
+function finishJmovingStorageSelectBarcodeForm($jmoving_id,$select_id){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!";
 	$jmoving_id=$slave->qq($jmoving_id);$select_id=$slave->qq($select_id);
 	if ($jmoving_id>0 && $select_id>0){
 		$r=$db->query("select * from J_MOVING_SELECT_STR where jmoving_id='$jmoving_id' and select_id='$select_id' and amount>(amount_barcodes+amount_barcodes_noscan+amount_bug);");$n=$db->num_rows($r);
 		if ($n>0){
-			$answer=0;$err="Не завершено перевірку по штрих-кодам";
+			$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅ";
 		}
 		if ($n==0){
 			$r=$db->query("select (SUM(amount_barcodes)+SUM(amount_barcodes_noscan)) as new_amount from J_MOVING_SELECT_STR where jmoving_id='$jmoving_id' and select_id='$select_id';");$n=$db->num_rows($r);
@@ -3258,24 +3258,24 @@ function finishJmovingStorageSelectBarcodeForm($jmoving_id,$select_id){$db=new d
 			$this->addJuornalRecord($jmoving_id,$select_id,47);
 			$answer=1;$err="";
 		}
-	}else{ $answer=0;$err="Помилка штрих-коду";}
+	}else{ $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅ";}
 	return array($answer,$err,$id,47);
 }
-function finishJmovingLocalStorageSelect($jmoving_id,$select_id){$db=new db;$slave=new slave;$cat=new catalogue;$answer=0;$err="Помилка індексу!!";
+function finishJmovingLocalStorageSelect($jmoving_id,$select_id){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!";
 	$jmoving_id=$slave->qq($jmoving_id);$select_id=$slave->qq($select_id);
 	if ($jmoving_id>0 && $select_id>0){
 		$db->query("update J_MOVING_SELECT set status_jmoving='47', amount='$new_amount' where jmoving_id='$jmoving_id' and id='$select_id' limit 1;");
 		$this->addJuornalRecord($jmoving_id,$select_id,47);
 		$answer=1;$err="";
-	}else{ $answer=0;$err="Помилка документу";}
+	}else{ $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";}
 	return array($answer,$err,$id,47);
 }
-function checkJmovingAmountToTruck($jmoving_id){$db=new db;$slave=new slave;$cat=new catalogue;$amount=0;
+function checkJmovingAmountToTruck($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$amount=0;
 	$r=$db->query("select SUM(amount) as sum_amount from J_MOVING_STR where jmoving_id='$jmoving_id' and status_jmoving='45';");$amount=$db->result($r,0,"sum_amount");
 	return $amount;
 }
 /*
-function setJmovingStorageSelectSendTruck($jmoving_id){$db=new db;$slave=new slave;$cat=new catalogue;$answer=0;$err="Помилка індексу!!";
+function setJmovingStorageSelectSendTruck($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!";
 	$jmoving_id=$slave->qq($jmoving_id);
 	if ($jmoving_id>0){
 		$jmoving_amount=$this->checkJmovingAmountToTruck($jmoving_id);
@@ -3287,12 +3287,12 @@ function setJmovingStorageSelectSendTruck($jmoving_id){$db=new db;$slave=new sla
 			$this->addJuornalRecord($jmoving_id,0,48);
 			$answer=1;$err="";
 		}
-		if ($jmoving_amount<=0){$answer=0;$err="У переміщенні немає товару.\n Переміщення без товару не відправляється";}
+		if ($jmoving_amount<=0){$answer=0;$err="пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.\n пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";}
 	}
 	return array($answer,$err,$id,$amount_barcodes,$dif_amount_barcodes);
 }
 */
-function setJmovingSendTruck($jmoving_id){$db=new db;$slave=new slave;$cat=new catalogue;$answer=0;$err="Помилка індексу!!"; 
+function setJmovingSendTruck($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!"; 
 	$jmoving_id=$slave->qq($jmoving_id); 
 	if ($jmoving_id>0){
 		$jmoving_amount=$this->checkJmovingAmountToTruck($jmoving_id);
@@ -3311,13 +3311,13 @@ function setJmovingSendTruck($jmoving_id){$db=new db;$slave=new slave;$cat=new c
 			
 			$answer=1;$err="";
 		}
-		if ($jmoving_amount<=0){$answer=0;$err="У переміщенні немає товару.\n Переміщення без товару не відправляється";}
+		if ($jmoving_amount<=0){$answer=0;$err="пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.\n пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";}
 	}
 	return array($answer,$err,$id,$amount_barcodes,$dif_amount_barcodes);
 }
 
 
-function printJmovingTruckList($jmoving_id){$db=new db;$cat=new catalogue;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $storsels=[];
+function printJmovingTruckList($jmoving_id){$db=DbSingleton::getDb();$cat=new catalogue;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $storsels=[];
 	$form_htm=RD."/tpl/jmoving_truck_print.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from J_MOVING_STR where jmoving_id='$jmoving_id' order by id asc;");$n=$db->num_rows($r);$select_ar=array(); $storsel=new storsel;$storsel_prefix=$storsel->storsel_prefix; $storsel_list=""; $dp=new dp;
 	for ($i=1;$i<=$n;$i++){
@@ -3358,7 +3358,7 @@ function printJmovingTruckList($jmoving_id){$db=new db;$cat=new catalogue;$slave
 	
 	
 	list($prefix,$doc_nom,$data,$storage_id_to,$storage_name_to,$comment,$parrent_type_id,$parrent_doc_id)=$this->getJmovingInfo($jmoving_id);
-	$dp_info="Без замовлення";
+	$dp_info="пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 											
 	if ($parrent_type_id==1){
 		list($dp_prefix,$dp_doc_nom,$dp_data,$s,$s,$s)=$dp->getdpInfo($parrent_doc_id);
@@ -3393,13 +3393,13 @@ function printJmovingTruckList($jmoving_id){$db=new db;$cat=new catalogue;$slave
 	$form=str_replace("{pData}",$slave->data_word($pData),$form);
 	$form=str_replace("{qrImage}","<img src='/phpqrcode/qrimage2.php?url=http://portal.myparts.pro/Jmoving/printJmSTP/$jmoving_id/$select_id/".time()."'>",$form);
 	
-	//"Структура складського відбору"
+	//"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ"
 	$mp=new media_print;
 	$mp->print_document($form,array(210,280));
 	return $form;
 }
 	
-function getTpointName($storage_id) {$db=new db;
+function getTpointName($storage_id) {$db=DbSingleton::getDb();
 	$r=$db->query("select tpoint_id from T_POINT_STORAGE where storage_id='$storage_id';");
 	$tpoint_id=$db->result($r,0,"tpoint_id");
 	$r=$db->query("select name from T_POINT where id='$tpoint_id';");
@@ -3408,7 +3408,7 @@ function getTpointName($storage_id) {$db=new db;
 }	
 	
 	
-function printJmovingStorageSelectTruckList($jmoving_id,$select_id){$db=new db;$cat=new catalogue;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function printJmovingStorageSelectTruckList($jmoving_id,$select_id){$db=DbSingleton::getDb();$cat=new catalogue;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/jmoving_storage_select_truck_print.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from J_MOVING_SELECT_STR  where jmoving_id='$jmoving_id' and select_id='$select_id' order by id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
@@ -3454,13 +3454,13 @@ function printJmovingStorageSelectTruckList($jmoving_id,$select_id){$db=new db;$
 	$form=str_replace("{pData}",$slave->data_word($pData),$form);
 	$form=str_replace("{qrImage}","<img src='/phpqrcode/qrimage2.php?url=http://portal.myparts.pro/Jmoving/printJmSTP/$jmoving_id/$select_id/".time()."'>",$form);
 	
-	//"Структура складського відбору"
+	//"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ"
 	$mp=new media_print;
 	$mp->print_document($form,array(210,280));
 	return $form;
 }
 
-function showJmovingStorageSelectBugForm($jmoving_id,$select_id,$str_id){$db=new db;$cat=new catalogue;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка індексу";
+function showJmovingStorageSelectBugForm($jmoving_id,$select_id,$str_id){$db=DbSingleton::getDb();$cat=new catalogue;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 	$form_htm=RD."/tpl/jmoving_storage_select_bug_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from J_MOVING_SELECT_STR where jmoving_id='$jmoving_id' and select_id='$select_id' and id='$str_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -3485,7 +3485,7 @@ function showJmovingStorageSelectBugForm($jmoving_id,$select_id,$str_id){$db=new
 	return array($answer,$err,$form,"");	
 }
 
-function saveJmovingStorageSelectBugForm($jmoving_id,$select_id,$str_id,$storage_select_bug,$amount_bug){$db=new db;$slave=new slave;$manual=new manual;$cat=new catalogue;$answer=0;$err="Помилка індексу!!";
+function saveJmovingStorageSelectBugForm($jmoving_id,$select_id,$str_id,$storage_select_bug,$amount_bug){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual;$cat=new catalogue;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!";
 	$jmoving_id=$slave->qq($jmoving_id);$select_id=$slave->qq($select_id);$str_id=$slave->qq($str_id);$storage_select_bug=$slave->qq($storage_select_bug);$amount_bug=$slave->qq($amount_bug);
 	if ($jmoving_id>0 && $select_id>0 && $str_id>0 && $storage_select_bug>0 && $amount_bug>0){
 		$r=$db->query("select * from J_MOVING_SELECT_STR where jmoving_id='$jmoving_id' and select_id='$select_id' and id='$str_id' limit 0,1;");$n=$db->num_rows($r);
@@ -3504,7 +3504,7 @@ function saveJmovingStorageSelectBugForm($jmoving_id,$select_id,$str_id,$storage
 			 	
 			$ex_dif_amount=$amount-$amount_bug;
 			if ($ex_dif_amount<($amount_bug_ex)){
-				$answer=0;$err="Кількість відхилення не відповідає обліковій кількості";
+				$answer=0;$err="КіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 			}
 			
 			if ($ex_dif_amount>=$amount_bug_ex){
@@ -3536,7 +3536,7 @@ function saveJmovingStorageSelectBugForm($jmoving_id,$select_id,$str_id,$storage
 				$db->query("insert into J_MOVING_SELECT_STR_BUG (`jmoving_id`,`select_id`,`art_id`,`str_id`,`article_nr_displ`,`storage_select_bug`,`amount_bug`) values ('$jmoving_id','$select_id','$art_id','$str_id','$article_nr_displ','$storage_select_bug','$amount_bug');");
 				
 				/*
-					ОБНОВИТЬ РЕЗЕРВЫ ПОСЛЕ ФИКСАЦИИ ОТКЛОНЕНИЯ
+					пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 				*/
 				$this->updateStockStorageBug($art_id,$storage_id_from,$cell_id_from,$cell_use,$amount_bug);
 				
@@ -3544,12 +3544,12 @@ function saveJmovingStorageSelectBugForm($jmoving_id,$select_id,$str_id,$storage
 				$answer=1;$err="";
 			}
 		}
-	}else{ $answer=0;$err="Помилка штрих-коду";}
+	}else{ $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅ";}
 	//print "return data: $dif_amount_barcodes,$new_amount_bug,$amount_barcodes,$amount_barcodes_noscan";
 	return array($answer,$err,$id,$storage_select_bug_list,$dif_amount_barcodes,$new_amount_bug,$amount_barcodes,$amount_barcodes_noscan);
 }
 
-function getStorageSelectBugList($jmoving_id,$select_id,$art_id,$str_id){$db=new db;$manual=new manual;$list="";
+function getStorageSelectBugList($jmoving_id,$select_id,$art_id,$str_id){$db=DbSingleton::getDb();$manual=new manual;$list="";
 	$r=$db->query("select * from J_MOVING_SELECT_STR_BUG where jmoving_id='$jmoving_id' and select_id='$select_id' and art_id='$art_id' and str_id='$str_id' order by id asc;");$n=$db->num_rows($r);
 	if ($n==0){
 		//$r=$db->query("select * from J_MOVING_SELECT_STR_BUG where jmoving_id='$jmoving_id' and select_id='$select_id' and art_id='$art_id' order by id asc;");$n=$db->num_rows($r);
@@ -3559,49 +3559,49 @@ function getStorageSelectBugList($jmoving_id,$select_id,$art_id,$str_id){$db=new
 		$amount_bug=$db->result($r,$i-1,"amount_bug");
 		
 		$storage_select_bug_name=$manual->getManualMCaption("storage_select_bug",$storage_select_bug);
-		$list.="$amount_bug"."шт. - $storage_select_bug_name";if ($i<$n){$list.="<br>";}
+		$list.="$amount_bug"."пїЅпїЅ. - $storage_select_bug_name";if ($i<$n){$list.="<br>";}
 	}
 	return $list;
 }
-function getJmovingBugList($jmoving_id,$art_id){$db=new db;$manual=new manual;$list="";
+function getJmovingBugList($jmoving_id,$art_id){$db=DbSingleton::getDb();$manual=new manual;$list="";
 	$r=$db->query("select * from J_MOVING_STR_BUG where jmoving_id='$jmoving_id' and art_id='$art_id' order by id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$storage_select_bug=$db->result($r,$i-1,"storage_select_bug");
 		$amount_bug=$db->result($r,$i-1,"amount_bug");
 		
 		$storage_select_bug_name=$manual->getManualMCaption("storage_select_bug",$storage_select_bug);
-		$list.="$amount_bug"."шт. - $storage_select_bug_name";if ($i<$n){$list.="<br>";}
+		$list.="$amount_bug"."пїЅпїЅ. - $storage_select_bug_name";if ($i<$n){$list.="<br>";}
 	}
 	return $list;
 }
 	
-function getJmovingBugListTrue($jmoving_str){$db=new db;$manual=new manual;$list="";
+function getJmovingBugListTrue($jmoving_str){$db=DbSingleton::getDb();$manual=new manual;$list="";
 	$r=$db->query("select * from J_MOVING_STR_BUG where str_id='$jmoving_str' order by id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$storage_select_bug=$db->result($r,$i-1,"storage_select_bug");
 		$amount_bug=$db->result($r,$i-1,"amount_bug");
 		
 		$storage_select_bug_name=$manual->getManualMCaption("storage_select_bug",$storage_select_bug);
-		$list.="$amount_bug"."шт. - $storage_select_bug_name";if ($i<$n){$list.="<br>";}
+		$list.="$amount_bug"."пїЅпїЅ. - $storage_select_bug_name";if ($i<$n){$list.="<br>";}
 	}
 	return $list;
 }
 	
-function addStatusJmoving($jmoving_id,$status) {$db=new db; $user_id=$_SESSION["media_user_id"]; $data=date("Y-m-d H:i:sa");
+function addStatusJmoving($jmoving_id,$status) {$db=DbSingleton::getDb(); $user_id=$_SESSION["media_user_id"]; $data=date("Y-m-d H:i:sa");
 	if ($jmoving_id>0) {
 	
 		$r=$db->query("select * from J_MOVING where id='$jmoving_id' limit 0,1;"); $n=$db->num_rows($r);
 		$user_accepting=$db->result($r,0,"user_accepting");
 		$user_accepted=$db->result($r,0,"user_accepted");
 		
-		if ($status==1 && $user_accepting==0) //приймається
+		if ($status==1 && $user_accepting==0) //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 			$db->query("update J_MOVING set user_accepting='$user_id', user_data_accepting='$data' where id='$jmoving_id';");
-		if ($status==2 && $user_accepted==0) //прийнято
+		if ($status==2 && $user_accepted==0) //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 			$db->query("update J_MOVING set user_accepted='$user_id', user_data_accepted='$data' where id='$jmoving_id';");
 	}
 }
 
-function showJmovingStorageAcceptForm($jmoving_id){$db=new db;$cat=new catalogue;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка індексу";
+function showJmovingStorageAcceptForm($jmoving_id){$db=DbSingleton::getDb();$cat=new catalogue;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 	$form_htm=RD."/tpl/jmoving_accept_barcode_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$this->setJmovingStorageAcceptStart($jmoving_id);
 	$r=$db->query("select * from J_MOVING_STR where jmoving_id='$jmoving_id' order by id asc;");$n=$db->num_rows($r);
@@ -3630,8 +3630,8 @@ function showJmovingStorageAcceptForm($jmoving_id){$db=new db;$cat=new catalogue
 			<td align='center' id='amr_$id'>$amount_barcodes</td>
 			<td align='center' id='amrd_$id'>$dif_amount_barcodes</td>
 			<td align='center' id='amrns_$id'>$amount_barcodes_noscan</td>
-			<td id='amrd_$id' align='center'><button class='btn btn-xs btn-default' onclick='showJmovingAcceptNoscanForm(\"$jmoving_id\",\"$art_id\",\"$id\");' title='Фіксація без сканування' alt='Фіксація без сканування'><i class='fa fa-cube'></i></button></td>
-			<td id='amrd_$id' align='center'><button class='btn btn-xs btn-danger' onclick='showJmovingAcceptBugForm(\"$jmoving_id\",\"$id\");' title='відхилення/брак/недостача' alt='відхилення/брак/недостача'><i class='fa fa-bug'></i></button></td>
+			<td id='amrd_$id' align='center'><button class='btn btn-xs btn-default' onclick='showJmovingAcceptNoscanForm(\"$jmoving_id\",\"$art_id\",\"$id\");' title='ФіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ' alt='ФіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ'><i class='fa fa-cube'></i></button></td>
+			<td id='amrd_$id' align='center'><button class='btn btn-xs btn-danger' onclick='showJmovingAcceptBugForm(\"$jmoving_id\",\"$id\");' title='пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ' alt='пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ'><i class='fa fa-bug'></i></button></td>
 			<td align='center' id='ambg_$id'>$amount_bug</td>
 			<td id='ssbug_$id'>$bug_list</td>
 		</tr>";
@@ -3649,11 +3649,11 @@ function showJmovingStorageAcceptForm($jmoving_id){$db=new db;$cat=new catalogue
 	
 	//$this->addJuornalRecord($jmoving_id,$select_id,47);
 	$answer=1;$err="";
-	return array($answer,$err,$form,"Отримання товару по штрих-кодам");	
+	return array($answer,$err,$form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅ");	
 }
 
 
-function setJmovingStorageAcceptStart($jmoving_id){$db=new db;$slave=new slave;$cat=new catalogue;$answer=0;$err="Помилка індексу!!";
+function setJmovingStorageAcceptStart($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!";
 	$jmoving_id=$slave->qq($jmoving_id);
 	if ($jmoving_id>0){
 		$r=$db->query("select status_jmoving from J_MOVING where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
@@ -3666,7 +3666,7 @@ function setJmovingStorageAcceptStart($jmoving_id){$db=new db;$slave=new slave;$
 	}
 	return;
 }
-function saveJmovingAcceptBarcodeForm($jmoving_id,$barcode){$db=new db;$slave=new slave;$cat=new catalogue;$answer=0;$err="Помилка індексу!!";
+function saveJmovingAcceptBarcodeForm($jmoving_id,$barcode){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!";
 	$jmoving_id=$slave->qq($jmoving_id);$barcode=$slave->qq($barcode);
 	if ($jmoving_id>0 && $barcode!=""){
 		$art_id=$this->getArtIdByBarcode($barcode);
@@ -3684,11 +3684,11 @@ function saveJmovingAcceptBarcodeForm($jmoving_id,$barcode){$db=new db;$slave=ne
 				$answer=1;$err="";
 			}
 		}
-	}else{ $answer=0;$err="Помилка штрих-коду";}
+	}else{ $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅ";}
 	return array($answer,$err,$id,$amount_barcodes,$dif_amount_barcodes);
 }
 
-function showJmovingStorageSelectNoscanForm($jmoving_id,$select_id,$art_id,$str_id){$db=new db;$cat=new catalogue;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка індексу";
+function showJmovingStorageSelectNoscanForm($jmoving_id,$select_id,$art_id,$str_id){$db=DbSingleton::getDb();$cat=new catalogue;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 	$form_htm=RD."/tpl/jmoving_storage_select_noscan_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from J_MOVING_SELECT_STR where jmoving_id='$jmoving_id' and select_id='$select_id' and id='$str_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -3715,7 +3715,7 @@ function showJmovingStorageSelectNoscanForm($jmoving_id,$select_id,$art_id,$str_
 	}
 	return array($answer,$err,$form,"");	
 }
-function saveJmovingStorageSelectNoscanForm($jmoving_id,$select_id,$art_id,$str_id,$amount_barcode_noscan){$db=new db;$slave=new slave;$manual=new manual;$cat=new catalogue;$answer=0;$err="Помилка індексу!!";
+function saveJmovingStorageSelectNoscanForm($jmoving_id,$select_id,$art_id,$str_id,$amount_barcode_noscan){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual;$cat=new catalogue;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!";
 	$jmoving_id=$slave->qq($jmoving_id);$select_id=$slave->qq($select_id);$art_id=$slave->qq($art_id);$str_id=$slave->qq($str_id);$amount_barcode_noscan=$slave->qq($amount_barcode_noscan);
 	if ($jmoving_id>0 && $select_id>0 && $art_id>0 && $str_id>0 && $amount_barcode_noscan>0){
 		$r=$db->query("select * from J_MOVING_SELECT_STR where jmoving_id='$jmoving_id' and art_id='$art_id' and id='$str_id' limit 0,1;");$n=$db->num_rows($r);
@@ -3728,7 +3728,7 @@ function saveJmovingStorageSelectNoscanForm($jmoving_id,$select_id,$art_id,$str_
 			
 			$ex_dif_amount=($amount-$amountBarcodes-$amountBarcodesNoscan-$amountBug);
 			if ($ex_dif_amount<$amount_barcode_noscan){
-				$answer=0;$err="Кількість не відповідає обліковій кількості $ex_dif_amount";
+				$answer=0;$err="КіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ $ex_dif_amount";
 			}
 			if ($ex_dif_amount>=$amount_barcode_noscan){
 				$new_amount_barcode_noscan=$amount_barcode_noscan+$amountBarcodesNoscan;
@@ -3737,11 +3737,11 @@ function saveJmovingStorageSelectNoscanForm($jmoving_id,$select_id,$art_id,$str_
 				$answer=1;$err="";
 			}
 		}
-	}else{ $answer=0;$err="Помилка штрих-коду";}
+	}else{ $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅ";}
 	return array($answer,$err,$id,$dif_amount_barcodes,$new_amount_barcode_noscan);
 }
 
-function showJmovingAcceptNoscanForm($jmoving_id,$art_id,$str_id){$db=new db;$cat=new catalogue;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка індексу";
+function showJmovingAcceptNoscanForm($jmoving_id,$art_id,$str_id){$db=DbSingleton::getDb();$cat=new catalogue;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 	$form_htm=RD."/tpl/jmoving_accept_noscan_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from J_MOVING_STR where jmoving_id='$jmoving_id' and id='$str_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -3769,7 +3769,7 @@ function showJmovingAcceptNoscanForm($jmoving_id,$art_id,$str_id){$db=new db;$ca
 }
 
 
-function saveJmovingAcceptNoscanForm($jmoving_id,$art_id,$str_id,$amount_barcode_noscan){$db=new db;$slave=new slave;$manual=new manual;$cat=new catalogue;$answer=0;$err="Помилка індексу!!";
+function saveJmovingAcceptNoscanForm($jmoving_id,$art_id,$str_id,$amount_barcode_noscan){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual;$cat=new catalogue;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!";
 	$jmoving_id=$slave->qq($jmoving_id);$art_id=$slave->qq($art_id);$str_id=$slave->qq($str_id);$amount_barcode_noscan=$slave->qq($amount_barcode_noscan);
 	if ($jmoving_id>0 && $art_id>0 && $str_id>0 && $amount_barcode_noscan>0){
 		$r=$db->query("select * from J_MOVING_STR where jmoving_id='$jmoving_id' and art_id='$art_id' and id='$str_id' limit 0,1;");$n=$db->num_rows($r);
@@ -3781,7 +3781,7 @@ function saveJmovingAcceptNoscanForm($jmoving_id,$art_id,$str_id,$amount_barcode
 			
 			$ex_dif_amount=$amount-$amountBarcodes-$amountBarcodesNoscan;
 			if ($ex_dif_amount<$amount_barcode_noscan){
-				$answer=0;$err="Кількість не відповідає обліковій кількості $ex_dif_amount";
+				$answer=0;$err="КіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ $ex_dif_amount";
 			}
 			if ($ex_dif_amount>=$amount_barcode_noscan){
 				$new_amount_barcode_noscan=$amountBarcodesNoscan+$amount_barcode_noscan;
@@ -3790,11 +3790,11 @@ function saveJmovingAcceptNoscanForm($jmoving_id,$art_id,$str_id,$amount_barcode
 				$answer=1;$err="";
 			}
 		}
-	}else{ $answer=0;$err="Помилка штрих-коду";}
+	}else{ $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅ";}
 	return array($answer,$err,$id,$dif_amount_barcodes,$new_amount_barcode_noscan);
 }
 
-function showJmovingAcceptBugForm($jmoving_id,$str_id){$db=new db;$cat=new catalogue;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка індексу";
+function showJmovingAcceptBugForm($jmoving_id,$str_id){$db=DbSingleton::getDb();$cat=new catalogue;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 	$form_htm=RD."/tpl/jmoving_accept_bug_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from J_MOVING_STR where jmoving_id='$jmoving_id' and id='$str_id' limit 0,1;");$n=$db->num_rows($r);
 	//print "n=$n";
@@ -3819,7 +3819,7 @@ function showJmovingAcceptBugForm($jmoving_id,$str_id){$db=new db;$cat=new catal
 	return array($answer,$err,$form,"");	
 }
 	
-function checkJmovingBugs($jmoving_id) {$db=new db; $kol=0; $result=false;
+function checkJmovingBugs($jmoving_id) {$db=DbSingleton::getDb(); $kol=0; $result=false;
 	$r=$db->query("select * from J_MOVING_STR where jmoving_id='$jmoving_id';"); $n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$amount_bug=$db->result($r,$i-1,"amount_bug");
@@ -3830,7 +3830,7 @@ function checkJmovingBugs($jmoving_id) {$db=new db; $kol=0; $result=false;
 }
 
 
-function saveJmovingAcceptBugForm($jmoving_id,$str_id,$storage_select_bug,$amount_bug){$db=new db;$slave=new slave;$manual=new manual;$cat=new catalogue;$answer=0;$err="Помилка індексу!!";
+function saveJmovingAcceptBugForm($jmoving_id,$str_id,$storage_select_bug,$amount_bug){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual;$cat=new catalogue;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!";
 	$jmoving_id=$slave->qq($jmoving_id);$str_id=$slave->qq($str_id);$storage_select_bug=$slave->qq($storage_select_bug);$amount_bug=$slave->qq($amount_bug);
 	if ($jmoving_id>0 && $str_id>0 && $storage_select_bug>0 && $amount_bug>0){
 		$r=$db->query("select * from J_MOVING_STR where jmoving_id='$jmoving_id' and id='$str_id' limit 0,1;");$n=$db->num_rows($r);
@@ -3843,7 +3843,7 @@ function saveJmovingAcceptBugForm($jmoving_id,$str_id,$storage_select_bug,$amoun
 			
 			$ex_dif_amount=$amount-$amount_barcodes;
 			if ($ex_dif_amount!=$amount_bug){
-				$answer=0;$err="Кількість відхилення не відповідає обліковій кількості $ex_dif_amount";
+				$answer=0;$err="КіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ $ex_dif_amount";
 			}
 			if ($ex_dif_amount>=($amount_bug+$amount_bug_ex)){
 				$dif_amount_barcodes=$amount-$amount_barcodes-$amount_barcodes_noscan-$amount_bug-$amount_bug_ex;
@@ -3858,16 +3858,16 @@ function saveJmovingAcceptBugForm($jmoving_id,$str_id,$storage_select_bug,$amoun
 				$answer=1;$err="";
 			}
 		}
-	}else{ $answer=0;$err="Помилка відхилення";}
+	}else{ $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";}
 	return array($answer,$err,$id,$bug_list,$dif_amount_barcodes,$new_amount_bug);
 }
 
-function finishJmovingAcceptForm($jmoving_id){$db=new db;$dbt=new dbt;$slave=new slave;$cat=new catalogue;$answer=0;$err="Помилка індексу!!";
+function finishJmovingAcceptForm($jmoving_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$cat=new catalogue;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!";
 	$jmoving_id=$slave->qq($jmoving_id);
 	if ($jmoving_id>0){
 		$rc=$db->query("select * from J_MOVING_STR where jmoving_id='$jmoving_id' and amount>(amount_barcodes+amount_barcodes_noscan);");$nc=$db->num_rows($rc);
 		if ($nc>0){
-			$answer=0;$err="Не завершено перевірку по штрих-кодам";
+			$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅ";
 		}
 		if ($nc==0){
 			$this->addStatusJmoving($jmoving_id,2);
@@ -3903,7 +3903,7 @@ function finishJmovingAcceptForm($jmoving_id){$db=new db;$dbt=new dbt;$slave=new
 					if ($er_from==0){
 						$er_to=$this->updateStockToStorage($art_id,$storage_id_to,$cell_id_to,$cell_use_to,$amount);
 					}
-					if ($er_to==1 || $er_from==1){$is+=1;$answer=0;$err="Помилка оновлення залишків на складі";}
+					if ($er_to==1 || $er_from==1){$is+=1;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ";}
 				}
 			}
 			if ($er_to==0 && $er_from==0){
@@ -3964,10 +3964,10 @@ function finishJmovingAcceptForm($jmoving_id){$db=new db;$dbt=new dbt;$slave=new
 				}
 			}
 		}
-	}else{ $answer=0;$err="Помилка штрих-коду";}
+	}else{ $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅ";}
 	return array($answer,$err,$id);
 }
-function finishJmovingLocalAcceptForm($jmoving_id){$db=new db;$slave=new slave;$cat=new catalogue;$answer=0;$err="Помилка індексу!!";
+function finishJmovingLocalAcceptForm($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!";
 	$jmoving_id=$slave->qq($jmoving_id);
 	if ($jmoving_id>0){
 		$r=$db->query("select * from J_MOVING where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
@@ -3999,16 +3999,16 @@ function finishJmovingLocalAcceptForm($jmoving_id){$db=new db;$slave=new slave;$
 		if ($er_from==0){
 			$prefix=$this->get_jmoving_prefix($jmoving_id);$doc_nom=0;
 			$db->query("update J_MOVING set status_jmoving='57',`oper_status` = '31' where id='$jmoving_id' limit 1;");
-			$r=$db->query("select max(doc_nom) as doc_nom from J_MOVING where oper_status='31' and status='1' and type_id='0' and prefix='В-ПР' and status_jmoving='57' limit 0,1;");$doc_nom=0+$db->result($r,0,"doc_nom")+1;
+			$r=$db->query("select max(doc_nom) as doc_nom from J_MOVING where oper_status='31' and status='1' and type_id='0' and prefix='пїЅ-пїЅпїЅ' and status_jmoving='57' limit 0,1;");$doc_nom=0+$db->result($r,0,"doc_nom")+1;
 			$db->query("update J_MOVING set prefix='$prefix', `doc_nom`='$doc_nom', `data`=CURDATE() where id='$jmoving_id' limit 1;");
 			$this->addJuornalRecord($jmoving_id,$select_id,57);
 			$answer=1;$err="";
 		}
-	}else{ $answer=0;$err="Помилка штрих-коду";}
+	}else{ $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅ";}
 	return array($answer,$err,$id);
 }
 
-function updateStockStorageBug($art_id,$storage_id_from,$cell_id_from,$cell_use,$amount){$dbt=new dbt; $er=1;
+function updateStockStorageBug($art_id,$storage_id_from,$cell_id_from,$cell_use,$amount){$dbt=DbSingleton::getTokoDb(); $er=1;
 	$r=$dbt->query("select `AMOUNT`,`RESERV_AMOUNT` from T2_ARTICLES_STRORAGE where `ART_ID`='$art_id' and `STORAGE_ID`='$storage_id_from' limit 0,1;");$n=$dbt->num_rows($r);
 	if ($n==1){
 		$t2s_reserv_amount=$dbt->result($r,0,"RESERV_AMOUNT");
@@ -4036,7 +4036,7 @@ function updateStockStorageBug($art_id,$storage_id_from,$cell_id_from,$cell_use,
 }
 
 
-/*function updateStockFromStorage($art_id,$storage_id_from,$cell_id_from,$cell_use,$amount){$dbt=new dbt; $er=1;
+/*function updateStockFromStorage($art_id,$storage_id_from,$cell_id_from,$cell_use,$amount){$dbt=DbSingleton::getTokoDb(); $er=1;
 	$r=$dbt->query("select `RESERV_AMOUNT` from T2_ARTICLES_STRORAGE where `ART_ID`='$art_id' and `STORAGE_ID`='$storage_id_from' limit 0,1;");$n=$dbt->num_rows($r);
 	if ($n==1){
 		$t2s_reserv_amount=$dbt->result($r,0,"RESERV_AMOUNT");
@@ -4060,7 +4060,7 @@ function updateStockStorageBug($art_id,$storage_id_from,$cell_id_from,$cell_use,
 }*/
 
 
-function updateStockFromStorage($art_id,$storage_id_from,$cell_id_from,$cell_use,$amount){$dbt=new dbt; $er=1;
+function updateStockFromStorage($art_id,$storage_id_from,$cell_id_from,$cell_use,$amount){$dbt=DbSingleton::getTokoDb(); $er=1;
 	$dbt->query("update T2_ARTICLES_STRORAGE set `RESERV_AMOUNT`= `RESERV_AMOUNT` - $amount where `ART_ID`='$art_id' and `STORAGE_ID`='$storage_id_from' limit 1;");
 	if ($cell_use==1){
 		$dbt->query("update T2_ARTICLES_STRORAGE_CELLS set `RESERV_AMOUNT`=`RESERV_AMOUNT` - $amount where `ART_ID`='$art_id' and `STORAGE_ID`='$storage_id_from' and `STORAGE_CELLS_ID`='$cell_id_from' limit 1;");
@@ -4071,7 +4071,7 @@ function updateStockFromStorage($art_id,$storage_id_from,$cell_id_from,$cell_use
 
 
 
-/*function updateStockToStorage($art_id,$storage_id_to,$cell_id_to,$cell_use,$amount){$dbt=new dbt; $er=1;
+/*function updateStockToStorage($art_id,$storage_id_to,$cell_id_to,$cell_use,$amount){$dbt=DbSingleton::getTokoDb(); $er=1;
 	$r=$dbt->query("select `AMOUNT` from T2_ARTICLES_STRORAGE where `ART_ID`='$art_id' and `STORAGE_ID`='$storage_id_to' limit 0,1;");$n=$dbt->num_rows($r);
 	if ($n==0){
 		$dbt->query("insert into T2_ARTICLES_STRORAGE (`ART_ID`,`AMOUNT`,`RESERV_AMOUNT`,`STORAGE_ID`) values ('$art_id','$amount','0','$storage_id_to');");
@@ -4103,7 +4103,7 @@ function updateStockFromStorage($art_id,$storage_id_from,$cell_id_from,$cell_use
 	return $er;
 }*/
 
-function updateStockToStorage($art_id,$storage_id_to,$cell_id_to,$cell_use,$amount){$dbt=new dbt; $er=1;
+function updateStockToStorage($art_id,$storage_id_to,$cell_id_to,$cell_use,$amount){$dbt=DbSingleton::getTokoDb(); $er=1;
 	$r=$dbt->query("select `AMOUNT` from T2_ARTICLES_STRORAGE where `ART_ID`='$art_id' and `STORAGE_ID`='$storage_id_to' limit 0,1;");$n=$dbt->num_rows($r);
 	if ($n==0){
 		$dbt->query("insert into T2_ARTICLES_STRORAGE (`ART_ID`,`AMOUNT`,`RESERV_AMOUNT`,`STORAGE_ID`) values ('$art_id','$amount','0','$storage_id_to');");
@@ -4129,7 +4129,7 @@ function updateStockToStorage($art_id,$storage_id_to,$cell_id_to,$cell_use,$amou
 }
 
 
-function updateStockFromStorageLocal($art_id,$storage_id_from,$cell_id_from,$cell_id_to,$amount){$dbt=new dbt; $er=1;
+function updateStockFromStorageLocal($art_id,$storage_id_from,$cell_id_from,$cell_id_to,$amount){$dbt=DbSingleton::getTokoDb(); $er=1;
 	$r=$dbt->query("select `AMOUNT`,`RESERV_AMOUNT` from T2_ARTICLES_STRORAGE where `ART_ID`='$art_id' and `STORAGE_ID`='$storage_id_from' limit 0,1;");$n=$dbt->num_rows($r);
 	if ($n==1){
 		$t2s_amount=$dbt->result($r,0,"AMOUNT");
@@ -4165,7 +4165,7 @@ function updateStockFromStorageLocal($art_id,$storage_id_from,$cell_id_from,$cel
 	return $er;
 }
 	
-function showSelectStatusList() {$db=new db; $list="";
+function showSelectStatusList() {$db=DbSingleton::getDb(); $list="";
 	$r=$db->query("select * from `manual` where `key`='status_jmoving' order by `mid` asc;"); $n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -4175,7 +4175,7 @@ function showSelectStatusList() {$db=new db; $list="";
 	return $list;
 }
 	
-function getJmovingData($jmoving_id) {$db=new db;
+function getJmovingData($jmoving_id) {$db=DbSingleton::getDb();
 	$r=$db->query("select * from J_MOVING where id='$jmoving_id' limit 1;"); $n=$db->num_rows($r);
 	$prefix=$db->result($r,0,"prefix");
 	$doc_nom=$db->result($r,0,"doc_nom");
@@ -4186,7 +4186,7 @@ function getJmovingData($jmoving_id) {$db=new db;
 	return array($type_id,$prefix,$doc_nom,$storage_id_to,$cell_id_to,);
 }
 	
-function separateJmovingByDefect($jmoving_id) {$db=new db; $bugs=[]; $bug1=0; $bug2=0; $bug3=0; $bug4=0; $jarr=[];
+function separateJmovingByDefect($jmoving_id) {$db=DbSingleton::getDb(); $bugs=[]; $bug1=0; $bug2=0; $bug3=0; $bug4=0; $jarr=[];
 											  
 	list($type_id,$prefix,$doc_nom,$storage_id_to,$cell_id_to) = $this->getJmovingData($jmoving_id);
 											  	
@@ -4212,10 +4212,10 @@ function separateJmovingByDefect($jmoving_id) {$db=new db; $bugs=[]; $bug1=0; $b
 			$this->cellsJmovingDefect($art_id,$storage_id_to,$storage_id_from,$cell_id_to,$cell_id_from,$amount_bug);
 		}
 
-		if ($bug1>0) {$comment="`Брак` згідно переміщення $prefix-$doc_nom"; $jmoving1=$this->insertIntoJmoving($type_id,$storage_id_from,$cell_id_to,$comment);}
-		if ($bug2>0) {$comment="`Недостача` згідно переміщення $prefix-$doc_nom"; $jmoving2=$this->insertIntoJmoving($type_id,$storage_id_from,$cell_id_to,$comment);}
-		if ($bug3>0) {$comment="`Пересорт` згідно переміщення $prefix-$doc_nom"; $jmoving3=$this->insertIntoJmoving($type_id,$storage_id_from,$cell_id_to,$comment);}
-		if ($bug4>0) {$comment="`Відмова клієнта` згідно переміщення $prefix-$doc_nom"; $jmoving4=$this->insertIntoJmoving($type_id,$storage_id_from,$cell_id_to,$comment);}
+		if ($bug1>0) {$comment="`пїЅпїЅпїЅпїЅ` пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ $prefix-$doc_nom"; $jmoving1=$this->insertIntoJmoving($type_id,$storage_id_from,$cell_id_to,$comment);}
+		if ($bug2>0) {$comment="`пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ` пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ $prefix-$doc_nom"; $jmoving2=$this->insertIntoJmoving($type_id,$storage_id_from,$cell_id_to,$comment);}
+		if ($bug3>0) {$comment="`пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ` пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ $prefix-$doc_nom"; $jmoving3=$this->insertIntoJmoving($type_id,$storage_id_from,$cell_id_to,$comment);}
+		if ($bug4>0) {$comment="`ВіпїЅпїЅпїЅпїЅпїЅ пїЅлієпїЅпїЅпїЅ` пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ $prefix-$doc_nom"; $jmoving4=$this->insertIntoJmoving($type_id,$storage_id_from,$cell_id_to,$comment);}
 
 		for($i=1; $i<=$n; $i++) {
 			if ($bugs[$i]["storage_select_bug"]==1) {$jstr=$this->insertIntoJmovingStr($jmoving1,$bugs[$i]["art_id"],$bugs[$i]["article_nr_displ"],$bugs[$i]["brand_id"],0,$bugs[$i]["storage_id_to"],$bugs[$i]["cell_id_to"],$bugs[$i]["amount_bug"]);}
@@ -4228,18 +4228,18 @@ function separateJmovingByDefect($jmoving_id) {$db=new db; $bugs=[]; $bug1=0; $b
 		$answer=1; $err="";
 	} 
 											  
-	else {$answer=0;$err="Помилка розділення по відхиленням!";}	
+	else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";}	
 											  
 	return array($answer,$err);
 }
 	
-function insertIntoJmoving($type_id,$storage_id_from,$cell_id_to,$comment) { $db=new db; session_start(); $user_id=$_SESSION["media_user_id"];
+function insertIntoJmoving($type_id,$storage_id_from,$cell_id_to,$comment) { $db=DbSingleton::getDb(); session_start(); $user_id=$_SESSION["media_user_id"];
 	$r=$db->query("select max(id) as mid from J_MOVING;"); $jmoving_id=0+$db->result($r,0,"mid")+1; $doc_nom=$this->get_df_doc_nom_new(); $prefix=$this->prefix_new;
 	$db->query("insert into J_MOVING (`id`,`type_id`,`prefix`,`doc_nom`,`user_id`,`data`,`storage_id_to`,`cell_id_to`,`status_jmoving`,`oper_status`,`comment`) values ('$jmoving_id','$type_id','$prefix','$doc_nom','$user_id',CURDATE(),'$storage_id_from','$cell_id_to','44','30','$comment');");	
 	return $jmoving_id;
 }
 	
-function insertIntoJmovingStr($jmoving_id,$art_id,$article_nr_displ,$brand_id,$amount,$storage_id_to,$cell_id_from,$amount_bug) { $db=new db; session_start(); 
+function insertIntoJmovingStr($jmoving_id,$art_id,$article_nr_displ,$brand_id,$amount,$storage_id_to,$cell_id_from,$amount_bug) { $db=DbSingleton::getDb(); session_start(); 
 	$user_id=$_SESSION["media_user_id"];
 																																   
 	$rstr=$db->query("select * from J_MOVING_STR where jmoving_id='$jmoving_id' and art_id='$art_id';"); $nstr=$db->num_rows($rstr); $old_amount_bug=$db->result($rstr,0,"amount_bug");
@@ -4256,7 +4256,7 @@ function insertIntoJmovingStr($jmoving_id,$art_id,$article_nr_displ,$brand_id,$a
 	return $id;
 }	
 	
-function storageJmovingDefect($art_id,$storage_to_id,$storage_from_id,$reserv) { $dbt=new dbt;
+function storageJmovingDefect($art_id,$storage_to_id,$storage_from_id,$reserv) { $dbt=DbSingleton::getTokoDb();
 	$r1=$dbt->query("select * from T2_ARTICLES_STRORAGE where ART_ID='$art_id' and STORAGE_ID='$storage_from_id' limit 1;");
 	$amount1=floatval($dbt->result($r1,0,"AMOUNT"));	
 	$reserv_amount1=floatval($dbt->result($r1,0,"RESERV_AMOUNT")); 
@@ -4281,7 +4281,7 @@ function storageJmovingDefect($art_id,$storage_to_id,$storage_from_id,$reserv) {
 	}
 }
 	
-function cellsJmovingDefect($art_id,$storage_to_id,$storage_from_id,$cell_to_id,$cell_from_id,$reserv) { $dbt=new dbt;
+function cellsJmovingDefect($art_id,$storage_to_id,$storage_from_id,$cell_to_id,$cell_from_id,$reserv) { $dbt=DbSingleton::getTokoDb();
 																										
 	$r1=$dbt->query("select * from T2_ARTICLES_STRORAGE_CELLS where ART_ID='$art_id' and STORAGE_ID='$storage_from_id' and STORAGE_CELLS_ID='$cell_from_id' limit 1;");
 	$amount1=floatval($dbt->result($r1,0,"AMOUNT"));	

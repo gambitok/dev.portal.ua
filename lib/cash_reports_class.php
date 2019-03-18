@@ -9,7 +9,7 @@ class cash_reports {
 		return $form;
 	}
 	
-	function showPayBoxSelect() { $db=new db; $list="";
+	function showPayBoxSelect() { $db=DbSingleton::getDb(); $list="";
 		$r=$db->query("select * from PAY_BOX where status=1 and in_use=1;"); $n=$db->num_rows($r); 
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
@@ -19,14 +19,14 @@ class cash_reports {
 		return $list;
 	}
 	
-	function getPayBoxName($id) { $db=new db;
+	function getPayBoxName($id) { $db=DbSingleton::getDb();
 		$r=$db->query("select name from PAY_BOX where id='$id';");
 		$name=$db->result($r,0,"name");
 		return $name;
 	}
 	
-	function showCashReportsList($date_start,$date_end,$payboxes,$cash_id) { $db=new db; $list=""; $summ_kasa=0;													   
-		// КАСА														   
+	function showCashReportsList($date_start,$date_end,$payboxes,$cash_id) { $db=DbSingleton::getDb(); $list=""; $summ_kasa=0;													   
+		// пїЅпїЅпїЅпїЅ														   
 		$r=$db->query("select id,paybox_id,pay_type_id from J_PAY 
 		where paybox_id in ($payboxes) 
 		and pay_type_id in (89,90,91,98)
@@ -56,7 +56,7 @@ class cash_reports {
 		}
 																   
 		$list.="<tr style='background:lightgreen;'>
-			<td><b>Каси</b></td>
+			<td><b>пїЅпїЅпїЅпїЅ</b></td>
 			<td></td>
 			<td></td>
 			<td>$summ_kasa</td>
@@ -103,7 +103,7 @@ class cash_reports {
 		}
 																   
 		$list.="<tr style='background:pink;'>
-			<td><b>Видатки</b></td>
+			<td><b>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</b></td>
 			<td></td>
 			<td></td>
 			<td>$summ_vidatki</td>
@@ -136,7 +136,7 @@ class cash_reports {
 		return $form;
 	}	
 	
-	function getSpendTypes() { $db=new db; $array=[];
+	function getSpendTypes() { $db=DbSingleton::getDb(); $array=[];
 		$r=$db->query("select id from manual where `key`='spend_type_id';"); $n=$db->num_rows($r);  
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id"); 
@@ -145,13 +145,13 @@ class cash_reports {
 		return $array;
 	}
 	
-	function getSpendTypesCaption($id) { $db=new db;
+	function getSpendTypesCaption($id) { $db=DbSingleton::getDb();
 		$r=$db->query("select * from manual where `id`='$id';");
 		$caption=$db->result($r,0,"mcaption"); 
 		return $caption;
 	}
 	
-	function getSummPayBox($date_start,$date_end,$paybox_id,$pay_type_id,$cash_id) { $db=new db; $list=""; $summ=0;	 												   
+	function getSummPayBox($date_start,$date_end,$paybox_id,$pay_type_id,$cash_id) { $db=DbSingleton::getDb(); $list=""; $summ=0;	 												   
 		$r=$db->query("select sum(summ) as pay_summ from J_PAY 
 		where paybox_id=$paybox_id 
 		and pay_type_id=$pay_type_id
@@ -162,7 +162,7 @@ class cash_reports {
 		return $summ;
 	}
 	
-	function getSummMoneySpend($date_start,$date_end,$paybox_id,$cash_id) { $db=new db; $list=""; $summ=0;	 												   
+	function getSummMoneySpend($date_start,$date_end,$paybox_id,$cash_id) { $db=DbSingleton::getDb(); $list=""; $summ=0;	 												   
 		$r=$db->query("select id,paybox_id_from,sum(summ) as summa from J_MONEY_SPEND 
 		where paybox_id_from=$paybox_id
 		and data>='$date_start 00:00:00' and data<='$date_end 23:59:59'
@@ -172,7 +172,7 @@ class cash_reports {
 		return $summ;
 	}
 	
-	function getSummMoneySpendType($date_start,$date_end,$paybox_id,$spend_type_id,$cash_id) { $db=new db; $list=""; $summ=0;
+	function getSummMoneySpendType($date_start,$date_end,$paybox_id,$spend_type_id,$cash_id) { $db=DbSingleton::getDb(); $list=""; $summ=0;
 		$r=$db->query("select id,paybox_id_from,sum(summ) as summa from J_MONEY_SPEND 
 		where paybox_id_from=$paybox_id
 		and data>='$date_start 00:00:00' and data<='$date_end 23:59:59'

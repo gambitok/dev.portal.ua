@@ -1,10 +1,10 @@
 <?php
-error_reporting(0);@ini_set('display_errors', false);
+//error_reporting(0);@ini_set('display_errors', false);
 if ($_SERVER['REMOTE_ADDR']=="78.152.169.139" || $_SERVER['REMOTE_ADDR']=="93.77.29.10"){error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_WARNING);@ini_set('display_errors', true);}
 define('RD', dirname (__FILE__));
 date_default_timezone_set("Europe/Kiev");
 $content=null;
-require_once (RD."/lib/mysql_class.php");
+require_once (RD."/lib/DbSingleton.php");
 require_once (RD."/lib/slave_class.php");
 require_once (RD."/lib/manual_class.php");
 require_once (RD."/lib/gmanual_class.php");

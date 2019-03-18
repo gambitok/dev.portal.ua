@@ -2,7 +2,7 @@
 
 class Claim {
 	
-function showClaimList() { $db=new db;
+function showClaimList() { $db=DbSingleton::getDb();
 						  
 	$r=$db->query("select * from clients_claim;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -29,7 +29,7 @@ function showClaimList() { $db=new db;
 }
 	
 function getClaimState($id) {
-	$id ? $cap="Устанавливался" : $cap="Не устанавливался";
+	$id ? $cap="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ" : $cap="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 	return $cap;
 }
 			
@@ -39,7 +39,7 @@ function saveClaimCard($claim_id,$art,$brand,$count,$date,$supplier,$manufacture
 	return true;
 }
 	
-function showClaimCard($claim_id){ $db=new db;								  
+function showClaimCard($claim_id){ $db=DbSingleton::getDb();								  
 	$form_htm=RD."/tpl/claim_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from clients_claim where id='$claim_id';");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -75,7 +75,7 @@ function showClaimCard($claim_id){ $db=new db;
 	return ($form);
 }
 	
-function loadClaimAct($claim_id){ $db=new db;
+function loadClaimAct($claim_id){ $db=DbSingleton::getDb();
 								 
 	$form_htm=RD."/tpl/claim_card_act.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from clients_claim where id='$claim_id';");$n=$db->num_rows($r);$list="";

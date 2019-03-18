@@ -2,19 +2,19 @@
 
 class group_tree {
 	
-	function addStrHeader($str_id,$head_id) {$db=new dbt;
+	function addStrHeader($str_id,$head_id) {$db=DbSingleton::getTokoDb();
 		$db->query("insert into T2_GROUP_TREE_CROSS (STR_ID, HEAD_ID)
 		values ('$str_id', '$head_id');");
 		return $true;	
 	}
 	
-	function dropStrHeader($str_id,$head_id) {$db=new dbt;
+	function dropStrHeader($str_id,$head_id) {$db=DbSingleton::getTokoDb();
 		$db->query("delete from T2_GROUP_TREE_CROSS 
 		where STR_ID='$str_id' and HEAD_ID='$head_id';");
 		return $true;	
 	}
 	
-	function getStrHeaders($str_id) {$db=new dbt; $list="<ul>";
+	function getStrHeaders($str_id) {$db=DbSingleton::getTokoDb(); $list="<ul>";
 		$r=$db->query("select * from T2_GROUP_TREE_CROSS where STR_ID='$str_id';"); $n=$db->num_rows($r); 
         for ($i=1;$i<=$n;$i++){
             $HEAD_ID=$db->result($r,$i-1,"HEAD_ID");
@@ -23,11 +23,11 @@ class group_tree {
 			$list.="<li><a onclick='dropStrHeader($HEAD_ID);'>$HEAD_ID. $TEX_TEXT <i class='fa fa-times'></i></a></li>";
 		}
 		$list.="</ul>";
-		if ($n==0) $list="Ничего не найдено";
+		if ($n==0) $list="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 		return $list;
 	}
 	
-	function getStrHeadersList($str_id) {$db=new dbt; $list="<option value='0'>-Не выбрано-</option>"; $headers=[];
+	function getStrHeadersList($str_id) {$db=DbSingleton::getTokoDb(); $list="<option value='0'>-пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ-</option>"; $headers=[];
 		$r=$db->query("select * from T2_GROUP_TREE_CROSS where STR_ID='$str_id'"); $n=$db->num_rows($r); 
 		for ($i=1;$i<=$n;$i++){
 			$HEAD_ID=$db->result($r,$i-1,"HEAD_ID");
@@ -42,11 +42,11 @@ class group_tree {
             $TEX_TEXT=$db->result($r,$i-1,"TEX_TEXT");
 			$list.="<option value='$HEAD_ID'>$HEAD_ID - $TEX_TEXT</option>";
 		}
-		if ($n==0) $list="Ничего не найдено";
+		if ($n==0) $list="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 		return $list;
 	}
 	
-	function showGroupTreeHeaders() {$db=new dbt;
+	function showGroupTreeHeaders() {$db=DbSingleton::getTokoDb();
 		$r=$db->query("select * from T2_GROUP_TREE_HEAD where LNG_ID=16;"); $n=$db->num_rows($r); 
 		$list="<ul style='list-style:none; padding:0;'>";
         for ($i=1;$i<=$n;$i++){
@@ -62,7 +62,7 @@ class group_tree {
 		return $list;
 	}
 	
-	function getGroupTreeStr($HEAD_ID) {$db=new dbt;
+	function getGroupTreeStr($HEAD_ID) {$db=DbSingleton::getTokoDb();
 		$r=$db->query("select cs.STR_ID, tr.DISP_TEXT from T2_GROUP_TREE_CROSS cs 
 		left outer join T2_GROUP_TREE tr on tr.STR_ID=cs.STR_ID and tr.LNG_ID=16
 		where cs.HEAD_ID='$HEAD_ID';"); $n=$db->num_rows($r); 
@@ -73,11 +73,11 @@ class group_tree {
 			$list.="<li>$DISP_TEXT</li>";
 		}
 		$list.="</ul>";
-		if ($n==0) $list="Пусто";
+		if ($n==0) $list="пїЅпїЅпїЅпїЅпїЅ";
 		return $list;
 	}
 	
-	function showGroupTreeHead($head_id) {$db=new dbt;								  
+	function showGroupTreeHead($head_id) {$db=DbSingleton::getTokoDb();								  
 		if ($head_id==0 || $head_id=='0') {
 			$r1=$db->query("select max(HEAD_ID) as max_head from T2_GROUP_TREE_HEAD;");
 			$head_id=0+$db->result($r1,0,"max_head")+1;
@@ -99,8 +99,8 @@ class group_tree {
 		return $form;
 	}
 	
-	function saveGroupTreeHead($head_id, $disp_text_ru, $disp_text_ua, $disp_text_en) {$db=new dbt;
-		$answer=0; $err="Помилка збереження даних!"; 
+	function saveGroupTreeHead($head_id, $disp_text_ru, $disp_text_ua, $disp_text_en) {$db=DbSingleton::getTokoDb();
+		$answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!"; 
 		if ($head_id>0){
 			$r1=$db->query("select * from T2_GROUP_TREE_HEAD where `HEAD_ID`='$head_id' and `LNG_ID`=16;"); $n1=$db->num_rows($r1);
 			if ($n1>0) { $db->query("update T2_GROUP_TREE_HEAD set `TEX_TEXT`='$disp_text_ru' where `HEAD_ID`='$head_id' and `LNG_ID`=16;"); } 
@@ -119,8 +119,8 @@ class group_tree {
 		return array($answer,$err);
 	}
 	
-	function dropGroupTreeHead($head_id) {$db=new dbt;
-		$answer=0; $err="Помилка збереження даних!"; 
+	function dropGroupTreeHead($head_id) {$db=DbSingleton::getTokoDb();
+		$answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!"; 
 		if ($head_id>0) {
 			$db->query("delete from T2_GROUP_TREE_HEAD where HEAD_ID='$head_id';");
 			$answer=1;$err="";
@@ -128,13 +128,13 @@ class group_tree {
 	  	return array($answer,$err);
 	}
 	
-	function showGroupTree() {$db=new dbt;
+	function showGroupTree() {$db=DbSingleton::getTokoDb();
 	  	$menu_det=$tree="";	
 		$form_htm=RD."/tpl/group_tree.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$r=$db->query("select * from T2_GROUP_TREE where LNG_ID=16;"); $n=$db->num_rows($r); 
 							  				  
 		$menu_det.="<div class=\"input-group border0\">
-		<input type=\"search\" id=\"my-search\" class=\"my-search\" placeholder=\"Поиск по категориям\">
+		<input type=\"search\" id=\"my-search\" class=\"my-search\" placeholder=\"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ\">
 		</div><ul id=\"my-tree\" class=\"tf-tree\">";
 
         for ($i=1;$i<=$n;$i++){
@@ -189,7 +189,7 @@ class group_tree {
 		return $form;
 	}
 	
-	function showGroupTreeCard($str_id) {$db=new dbt;
+	function showGroupTreeCard($str_id) {$db=DbSingleton::getTokoDb();
 		$form_htm=RD."/tpl/group_tree_card.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$r=$db->query("select * from T2_GROUP_TREE where STR_ID='$str_id';"); $n=$db->num_rows($r); 
 		for ($i=1;$i<=$n;$i++){
@@ -216,8 +216,8 @@ class group_tree {
 		return $form;
 	}
 	
-	function saveGroupTreeCard($str_id, $position, $disp_text_ru, $disp_text_ua, $disp_text_en) {$db=new dbt;
-		$answer=0; $err="Помилка збереження даних!"; $position=intval($position);
+	function saveGroupTreeCard($str_id, $position, $disp_text_ru, $disp_text_ua, $disp_text_en) {$db=DbSingleton::getTokoDb();
+		$answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!"; $position=intval($position);
 		if ($str_id>0){
 			$db->query("update T2_GROUP_TREE set `POSITION`='$position' where `STR_ID`='$str_id';");
 			$db->query("update T2_GROUP_TREE set `DISP_TEXT`='$disp_text_ru' where `STR_ID`='$str_id' and `LNG_ID`=16;");
@@ -228,7 +228,7 @@ class group_tree {
 		return array($answer,$err);
 	}
 	
-	function showParrentPositions($str_id,$parent_id) {$db=new dbt; $list="";
+	function showParrentPositions($str_id,$parent_id) {$db=DbSingleton::getTokoDb(); $list="";
 		$r=$db->query("select count(STR_ID) as kol from T2_GROUP_TREE where `STR_ID_PARENT`='$parent_id' and LNG_ID=16");
 		$r2=$db->query("select `POSITION` from T2_GROUP_TREE where `STR_ID`='$str_id' and LNG_ID=16"); $position=$db->result($r2,0,"POSITION");
 		$kol=intval($db->result($r,0,"kol"));
@@ -239,7 +239,7 @@ class group_tree {
 		return $list;
 	}
 	
-	function getTecGroupTreeChilds($str_id) {$db=new dbt;
+	function getTecGroupTreeChilds($str_id) {$db=DbSingleton::getTokoDb();
         $r=$db->query("SELECT count(STR_ID) as kol FROM `T2_GROUP_TREE` where `STR_ID_PARENT`='$str_id';");
         $kol=intval($db->result($r,0,"kol"));
         return $kol;

@@ -2,7 +2,7 @@
 
 class unknown_numbers {
 	
-	function showSupplList() { $db=new db;
+	function showSupplList() { $db=DbSingleton::getDb();
 		$r=$db->query("select cl.* from A_CLIENTS cl
 		left outer join A_CLIENTS_CATEGORY cc on cc.client_id=cl.id
 		left outer join A_CLIENTS_STORAGE cs on cs.client_id=cl.id
@@ -18,13 +18,13 @@ class unknown_numbers {
 		return $list;
 	}
 	
-	function getCashName($cash_id){$db=new db;$name="";
+	function getCashName($cash_id){$db=DbSingleton::getDb();$name="";
 		$r=$db->query("select name from CASH where id ='$cash_id' limit 1;");$n=$db->num_rows($r);
 		if ($n==1){$name=$db->result($r,0,"name");}
 		return $name;
 	}
 	
-	function showNumbersList($suppl_id) { $db=new dbt;					
+	function showNumbersList($suppl_id) { $db=DbSingleton::getTokoDb();					
 		$r=$db->query("select * from T2_SUPPL_IMPORT where status=1 and art_id=0 and suppl_id=$suppl_id group by suppl_index, brand;"); $n=$db->num_rows($r);
 							
 		for ($i=1;$i<=$n;$i++){

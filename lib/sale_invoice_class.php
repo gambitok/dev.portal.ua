@@ -1,13 +1,13 @@
 <?php
 class sale_invoice{
 
-function getMediaUserName($user_id){$db=new db;$name="";
+function getMediaUserName($user_id){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select name from media_users where id='$user_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"name");}
 	return $name;
 }
 
-function show_sale_invoice_list(){$db=new db;$slave=new slave;$gmanual=new gmanual; session_start(); $ses_tpoint_id=$_SESSION["media_tpoint_id"]; $media_user_id=$_SESSION["media_user_id"]; $media_role_id=$_SESSION["media_role_id"];
+function show_sale_invoice_list(){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual; session_start(); $ses_tpoint_id=$_SESSION["media_tpoint_id"]; $media_user_id=$_SESSION["media_user_id"]; $media_role_id=$_SESSION["media_role_id"];
 	$where_tpoint=" and (sv.tpoint_id='$ses_tpoint_id' or sv.user_id='$media_user_id')"; if ($media_role_id==1 || $media_role_id==7){$where_tpoint="";}
 	$form_htm=RD."/tpl/sale_invoice_range.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 									  
@@ -67,14 +67,14 @@ function show_sale_invoice_list(){$db=new db;$slave=new slave;$gmanual=new gmanu
 			<td align='center'>$status</td>
 		</tr>";
 	}
-//	if ($n==0){$list="<tr><td colspan=11 align='center'>Накладні відсутні</td></tr>";}
-//	$list.="<tr><td colspan=13 align='center'>Сума - $summ_price $cash_abr</td></tr>";
+//	if ($n==0){$list="<tr><td colspan=11 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>";}
+//	$list.="<tr><td colspan=13 align='center'>пїЅпїЅпїЅпїЅ - $summ_price $cash_abr</td></tr>";
 	$form=str_replace("{sale_invoice_range}",$list,$form);
 	$form=str_replace("{sale_invoice_summ}","$summ_uah UAH / $summ_usd USD / $summ_eur EUR",$form);
 	return $form;
 }
 	
-function show_sale_invoice_list_filter($data_start,$data_end){$db=new db;$slave=new slave;$gmanual=new gmanual; session_start(); $ses_tpoint_id=$_SESSION["media_tpoint_id"];  $media_user_id=$_SESSION["media_user_id"]; $media_role_id=$_SESSION["media_role_id"];
+function show_sale_invoice_list_filter($data_start,$data_end){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual; session_start(); $ses_tpoint_id=$_SESSION["media_tpoint_id"];  $media_user_id=$_SESSION["media_user_id"]; $media_role_id=$_SESSION["media_role_id"];
 															  
 	$where_tpoint=" and (sv.tpoint_id='$ses_tpoint_id' or sv.user_id='$media_user_id')"; if ($media_role_id==1 || $media_role_id==7){$where_tpoint="";}
 										 
@@ -134,13 +134,13 @@ function show_sale_invoice_list_filter($data_start,$data_end){$db=new db;$slave=
 			<td align='center'>$status</td>
 		</tr>";
 	}
-//	if ($n==0){$list="<tr><td colspan=11 align='center'>Накладні відсутні</td></tr>";}
-//    $list.="<tr><td colspan=13 align='center'>Сума - $summ_price $cash_abr</td></tr>";
+//	if ($n==0){$list="<tr><td colspan=11 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>";}
+//    $list.="<tr><td colspan=13 align='center'>пїЅпїЅпїЅпїЅ - $summ_price $cash_abr</td></tr>";
 	$summ_price="$summ_uah UAH / $summ_usd USD / $summ_eur EUR";
 	return array($list,$summ_price);
 }
 
-function getKoursData($data){$db=new db;$slave=new slave;$usd_to_uah=0;$eur_to_uah=0;$where="data='$data'";if ($data==""){$data=date("Y-m-d");$where="";}
+function getKoursData($data){$db=DbSingleton::getDb();$slave=new slave;$usd_to_uah=0;$eur_to_uah=0;$where="data='$data'";if ($data==""){$data=date("Y-m-d");$where="";}
 	$r=$db->query("select kours_value from J_KOURS where cash_id='2' and in_use='1' order by id desc limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$usd_to_uah=$slave->to_money(round($db->result($r,0,"kours_value"),2));}
 	$r=$db->query("select kours_value from J_KOURS where cash_id='3' and in_use='1' order by id desc limit 0,1;");$n=$db->num_rows($r);
@@ -148,25 +148,25 @@ function getKoursData($data){$db=new db;$slave=new slave;$usd_to_uah=0;$eur_to_u
 	return array($usd_to_uah,$eur_to_uah);
 }
 
-function getSaleInvoiceName($id){$db=new db;$name="";
+function getSaleInvoiceName($id){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select * from J_SALE_INVOICE where status=1 and id='$id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){ $name=$db->result($r,0,"prefix")."-".$db->result($r,0,"doc_nom"); }
 	return $name;
 }
 
-function getJPayName($id){$db=new db;$name="";$pay_type_id=0;
+function getJPayName($id){$db=DbSingleton::getDb();$name="";$pay_type_id=0;
 	$r=$db->query("select p.*, m.mcaption as pay_type_name from J_PAY p left outer join manual m on (m.id=p.pay_type_id and m.`key`='pay_type_id') where p.status=1 and p.id='$id' limit 0,1;");$n=$db->num_rows($r);
-	if ($n==1){ $pay_type_id=$db->result($r,0,"pay_type_id"); $name=$db->result($r,0,"pay_type_name")." №".$db->result($r,0,"doc_nom"); }
+	if ($n==1){ $pay_type_id=$db->result($r,0,"pay_type_id"); $name=$db->result($r,0,"pay_type_name")." пїЅ".$db->result($r,0,"doc_nom"); }
 	return array($pay_type_id,$name);
 }
 
-function checkTaxExist($invoice_id){$db=new db;$tax_id=0;
+function checkTaxExist($invoice_id){$db=DbSingleton::getDb();$tax_id=0;
 	$r=$db->query("select id from J_TAX_INVOICE where sale_invoice_id='$invoice_id' and status=1 limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){ $tax_id=$db->result($r,0,"id"); }
 	return $tax_id;
 }	
 
-function createTaxInvoice($invoice_id){$db=new db;$slave=new slave;$manual=new manual; $gmanual=new gmanual;$cat=new catalogue; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $tax_id=0;$answer=0;$err="Помилка!";
+function createTaxInvoice($invoice_id){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual; $gmanual=new gmanual;$cat=new catalogue; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $tax_id=0;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";
 	$r=$db->query("select * from J_SALE_INVOICE where id='$invoice_id' limit 0,1"); $n=$db->num_rows($r);
 	if ($n==1){
 		$seller_id=$db->result($r,0,"seller_id");
@@ -197,13 +197,13 @@ function createTaxInvoice($invoice_id){$db=new db;$slave=new slave;$manual=new m
 	return array($answer,$err,$tax_id);
 }
 	
-function getDpNote($dp_id) { $db=new db; 			
+function getDpNote($dp_id) { $db=DbSingleton::getDb(); 			
 	$r=$db->query("select * from J_DP_NOTE where dp_id='$dp_id' limit 0,1;"); $n=$db->num_rows($r);			
 	if ($n>0) $text=$db->result($r,0,"text"); else $text="";
 	return $text;
 }
 
-function showSaleInvoiceCard($invoice_id){$db=new db;$slave=new slave;$manual=new manual; $gmanual=new gmanual;$cat=new catalogue; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showSaleInvoiceCard($invoice_id){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual; $gmanual=new gmanual;$cat=new catalogue; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/sale_invoice_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	$r=$db->query("select sv.*, t.name as tpoint_name, sl.name as seller_name, cl.name as client_name, dt.mcaption as doc_type_name, dt.mvalue as doc_type_abr,ch.abr2 as cash_abr from J_SALE_INVOICE sv
@@ -302,7 +302,7 @@ function showSaleInvoiceCard($invoice_id){$db=new db;$slave=new slave;$manual=ne
 	return array($form,"$prefix-$doc_nom");
 }
 
-function getClientCashConditions($client_id){$db=new db;$cash_id=0;$credit_cash_id=0;
+function getClientCashConditions($client_id){$db=DbSingleton::getDb();$cash_id=0;$credit_cash_id=0;
 	$r=$db->query("select cash_id,credit_cash_id from A_CLIENTS_CONDITIONS where client_id ='$client_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$cash_id=$db->result($r,0,"cash_id");
@@ -311,13 +311,13 @@ function getClientCashConditions($client_id){$db=new db;$cash_id=0;$credit_cash_
 	return array($cash_id,$credit_cash_id);
 }
 
-function getClientOrgType($client_id){$db=new db;$org_type=0;
+function getClientOrgType($client_id){$db=DbSingleton::getDb();$org_type=0;
 	$r=$db->query("select org_type from A_CLIENTS where id ='$client_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$org_type=$db->result($r,0,"org_type");}
 	return $org_type;
 }
 
-function showCategoryCheckList($dp_id){$db=new db;$list="";
+function showCategoryCheckList($dp_id){$db=DbSingleton::getDb();$list="";
 	$r=$db->query("select  * from A_CATEGORY where parrent_id=0 order by id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -329,13 +329,13 @@ function showCategoryCheckList($dp_id){$db=new db;$list="";
 	return $list;	
 }
 	
-function checkdpCategorySelect($dp_id,$category_id){$db=new db;$ch=0;
+function checkdpCategorySelect($dp_id,$category_id){$db=DbSingleton::getDb();$ch=0;
 	$r=$db->query("select category_id from A_CLIENTS_CATEGORY where dp_id='$dp_id' and category_id='$category_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$ch=1;}
 	return $ch;	
 }
 
-function showMovingOpListSelect($sel_id){$db=new db;$list="";
+function showMovingOpListSelect($sel_id){$db=DbSingleton::getDb();$list="";
 	$r=$db->query("select * from J_DP_OP where in_show='1' order by id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -346,7 +346,7 @@ function showMovingOpListSelect($sel_id){$db=new db;$list="";
 	return $list;	
 }
 
-function showdpDocumentList($dp_id,$dp_op_id,$document_id){$db=new db;
+function showdpDocumentList($dp_id,$dp_op_id,$document_id){$db=DbSingleton::getDb();
 	$slave=new slave;$income=new income;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	if ($dp_op_id==1){
 		$form_htm=RD."/tpl/dp_documents_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
@@ -355,70 +355,70 @@ function showdpDocumentList($dp_id,$dp_op_id,$document_id){$db=new db;
 	$form=str_replace("{documents_list}",$document_list,$form);
 	$form=str_replace("{dp_id}",$dp_id,$form);
 	$form=str_replace("{dp_op_id}",$dp_op_id,$form);
-	return array($form,"Реєстр документів основи");
+	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");
 }
 	
-function finddpDocumentsSearch($dp_id,$dp_op_id,$s_nom){$db=new db;
+function finddpDocumentsSearch($dp_id,$dp_op_id,$s_nom){$db=DbSingleton::getDb();
 	$slave=new slave;$income=new income;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	if ($dp_op_id==1){$document_list=$income->search_documents_income_list($s_nom);}
 	return $document_list;
 }
 
-function getArtIdByBarcode($barcode){$db=new dbt;$art_id=0; 
+function getArtIdByBarcode($barcode){$db=DbSingleton::getTokoDb();$art_id=0; 
 	$r=$db->query("select ART_ID from T2_BARCODES where BARCODE='$barcode' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$art_id=$db->result($r,0,"ART_ID");	}
 	return $art_id;	
 }
 	
-function getArtId($code,$brand_id){$db=new dbt;$slave=new slave;$cat=new catalogue;$id=0; $code=$slave->qq($code); $code=$cat->clearArticle($code);
+function getArtId($code,$brand_id){$db=DbSingleton::getTokoDb();$slave=new slave;$cat=new catalogue;$id=0; $code=$slave->qq($code); $code=$cat->clearArticle($code);
 	$r=$db->query("select ART_ID from T2_ARTICLES where ARTICLE_NR_SEARCH='$code' and BRAND_ID='$brand_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$id=$db->result($r,0,"ART_ID");	}
 	return $id;	
 }
 	
-function getCostumsId($code){$db=new dbt;$slave=new slave;$id=0; $code=$slave->qq($code);
+function getCostumsId($code){$db=DbSingleton::getTokoDb();$slave=new slave;$id=0; $code=$slave->qq($code);
 	$r=$db->query("select COSTUMS_ID from T2_COSTUMS where COSTUMS_CODE='$code' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$id=$db->result($r,0,"COSTUMS_ID");	}
 	return $id;	
 }
 	
-function getCountryId($code){$db=new dbt;$slave=new slave;$id=0; $code=$slave->qq($code);
+function getCountryId($code){$db=DbSingleton::getTokoDb();$slave=new slave;$id=0; $code=$slave->qq($code);
 	$r=$db->query("select COUNTRY_ID from T2_COUNTRIES where COUNTRY_NAME='$code' or `ALFA2`='$code' or `ALFA3`='$code' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$id=$db->result($r,0,"COUNTRY_ID");	}
 	return $id;	
 }
 	
-function getBrandId($code){$db=new dbt;$slave=new slave;$id=0; $code=$slave->qq($code);
+function getBrandId($code){$db=DbSingleton::getTokoDb();$slave=new slave;$id=0; $code=$slave->qq($code);
 	$r=$db->query("select BRAND_ID from T2_BRANDS where BRAND_NAME='$code' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$id=$db->result($r,0,"BRAND_ID");	}
 	return $id;	
 }
 	
-function getBrandName($id){$db=new dbt;$slave=new slave;$name=""; 
+function getBrandName($id){$db=DbSingleton::getTokoDb();$slave=new slave;$name=""; 
 	$r=$db->query("select BRAND_NAME from T2_BRANDS where BRAND_ID='$id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$name=$db->result($r,0,"BRAND_NAME");	}
 	return $name;	
 }
 	
-function getTpointName($id){$db=new db;$slave=new slave;$name=""; 
+function getTpointName($id){$db=DbSingleton::getDb();$slave=new slave;$name=""; 
 	$r=$db->query("select name from T_POINT where id='$id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$name=$db->result($r,0,"name");	}
 	return $name;	
 }
 	
-function getTpointFullName($id){$db=new db;$slave=new slave;$name=""; 
+function getTpointFullName($id){$db=DbSingleton::getDb();$slave=new slave;$name=""; 
 	$r=$db->query("select full_name from T_POINT where id='$id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$name=$db->result($r,0,"full_name");	}
 	return $name;	
 }
 	
-function getClientName($id){$db=new db;$slave=new slave;$name=""; 
+function getClientName($id){$db=DbSingleton::getDb();$slave=new slave;$name=""; 
 	$r=$db->query("select name from A_CLIENTS where id='$id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$name=$db->result($r,0,"name");	}
 	return $name;	
 }
 
-function showWorkPairForm($dp_id){$db=new db;$list="";
+function showWorkPairForm($dp_id){$db=DbSingleton::getDb();$list="";
 	$r=$db->query("select PAIR_INDEX from T2_WORK_PAIR where ART_ID='$dp_id';");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n+3;$i++){
 		$pair_index="";
@@ -429,7 +429,7 @@ function showWorkPairForm($dp_id){$db=new db;$list="";
 	return $list;
 }
 	
-function labelArtEmptyCount($dp_id,$kol){$db=new db;$slave=new slave;$label="";
+function labelArtEmptyCount($dp_id,$kol){$db=DbSingleton::getDb();$slave=new slave;$label="";
 	if ($kol==0 || $kol==""){ 
 		list($weight,$volume,$kol)=$this->updateDpWeightVolume($dp_id);
 	}
@@ -437,13 +437,13 @@ function labelArtEmptyCount($dp_id,$kol){$db=new db;$slave=new slave;$label="";
 	return array($kol,$label);
 }
 
-function labelCommentsCount($dp_id){$db=new db;$slave=new slave;$kol=0;$label="";
+function labelCommentsCount($dp_id){$db=DbSingleton::getDb();$slave=new slave;$kol=0;$label="";
 	$r=$db->query("select count(id) as kol from J_DP_COMMENTS where dp_id='$dp_id';");$kol=0+$db->result($r,0,"kol");
 	if ($kol>0){$label="<span class='label label-tab label-info'>$kol</span>";}
 	return array($kol,$label);
 }
 
-function loaddpUnknownArticles($dp_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function loaddpUnknownArticles($dp_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/dp_unknown_articles_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from J_DP j where j.id='$dp_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==0){$form_htm=RD."/tpl/access_deny.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);} }
@@ -458,7 +458,7 @@ function loaddpUnknownArticles($dp_id){$db=new db;$slave=new slave;session_start
 	
 //======================================================================================
 
-function getSellerId($tpoint_id,$doc_type_id){$db=new db;$seller_id=0;
+function getSellerId($tpoint_id,$doc_type_id){$db=DbSingleton::getDb();$seller_id=0;
 	$sale_type=array(61=>86, 62=>87, 63=>87, 64=>88);
 	//print "tpoint_id=$tpoint_id; doc_type_id=".$doc_type_id."; \n sale_type=".$sale_type[$doc_type_id];
 	$r=$db->queryP("select `client_id` from T_POINT_CLIENTS where tpoint_id='$tpoint_id' and sale_type='$doc_type_id' and in_use='1' and status='1' order by id asc limit 0,1;");$n=$db->num_rows($r);
@@ -466,7 +466,7 @@ function getSellerId($tpoint_id,$doc_type_id){$db=new db;$seller_id=0;
 	return $seller_id;
 }
 
-function getSellerPrefixDocNom($seller_id,$doc_type_id){$db=new db;$doc_nom=0;$prefix="";
+function getSellerPrefixDocNom($seller_id,$doc_type_id){$db=DbSingleton::getDb();$doc_nom=0;$prefix="";
 	$sale_type=array(61=>86, 62=>87, 63=>87, 64=>88);$sale_type_id=$sale_type[$doc_type_id];
 	$r=$db->queryP("select `prefix` from A_CLIENTS_DOCUMENT_PREFIX where client_id='$seller_id' and doc_type_id='$sale_type_id' and status='1' order by id asc limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$prefix=$db->result($r,0,"prefix");}
@@ -479,7 +479,7 @@ function getSellerPrefixDocNom($seller_id,$doc_type_id){$db=new db;$doc_nom=0;$p
 	return array($prefix,$doc_nom);
 }
 
-function updateClientBalans($client_conto_id,$cash_id,$summ){$db=new db;
+function updateClientBalans($client_conto_id,$cash_id,$summ){$db=DbSingleton::getDb();
 	$r=$db->query("select * from B_CLIENT_BALANS where client_id='$client_conto_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==0){
 		$db->query("insert into B_CLIENT_BALANS (`client_id`,`cash_id`) values ('$client_conto_id','$cash_id');");$n=1;
@@ -492,7 +492,7 @@ function updateClientBalans($client_conto_id,$cash_id,$summ){$db=new db;
 
 //===============			PARTIOTIONS 	==================================
 	
-//function setPartitionsInvoice() {$db=new db;
+//function setPartitionsInvoice() {$db=DbSingleton::getDb();
 //	$r=$db->query("select * from J_SALE_INVOICE_PARTITION_STR where invoice_amount=0"); $n=$db->num_rows($r); $ids="0";
 //	for ($i=1;$i<=$n;$i++){
 //		$art_id=$db->result($r,$i-1,"art_id");
@@ -515,7 +515,7 @@ function updateClientBalans($client_conto_id,$cash_id,$summ){$db=new db;
 //	return $ids;
 //}
 	
-//function setPartitionsInvoice() {$db=new db;
+//function setPartitionsInvoice() {$db=DbSingleton::getDb();
 //	$r=$db->query("select * from J_SALE_INVOICE where id in (533,954,1814);"); $n=$db->num_rows($r); $ids="0";
 //	for ($i=1;$i<=$n;$i++){
 //		$prefix=$db->result($r,$i-1,"prefix");
@@ -525,7 +525,7 @@ function updateClientBalans($client_conto_id,$cash_id,$summ){$db=new db;
 //	return $ids;
 //}
 	
-//function setPartitionsInvoice() {$db=new db;
+//function setPartitionsInvoice() {$db=DbSingleton::getDb();
 //	$r=$db->query("select * from J_SALE_INVOICE_PARTITION_STR"); $n=$db->num_rows($r);
 //	for ($i=1;$i<=$n;$i++){
 //		$art_id=$db->result($r,$i-1,"art_id");
@@ -541,14 +541,14 @@ function updateClientBalans($client_conto_id,$cash_id,$summ){$db=new db;
 //	return $ids;
 //}
 
-function savePartitionsInvoiceAmount($partition_id,$invoice_amount) { $db=new db;
+function savePartitionsInvoiceAmount($partition_id,$invoice_amount) { $db=DbSingleton::getDb();
 	if ($partition_id>0) {
 		$db->query("update J_SALE_INVOICE_PARTITION_STR set invoice_amount=$invoice_amount where id=$partition_id;");
 	}
 	return true;
 }
 	
-function getPartitionsInvoiceAmount($partition_id) { $db=new db; $invoice_amount="";
+function getPartitionsInvoiceAmount($partition_id) { $db=DbSingleton::getDb(); $invoice_amount="";
 	if ($partition_id>0) {
 		$r=$db->query("select * from J_SALE_INVOICE_PARTITION_STR where id=$partition_id limit 1;");
 		$invoice_amount=$db->result($r,0,"invoice_amount");
@@ -557,7 +557,7 @@ function getPartitionsInvoiceAmount($partition_id) { $db=new db; $invoice_amount
 	return array($partition_id,$invoice_amount,$invoice_id);
 }
 
-function loadSaleInvoicePartitions($invoice_id){$db=new db;$slave=new slave;$gmanual=new gmanual;$income=new income;$cat=new catalogue;
+function loadSaleInvoicePartitions($invoice_id){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;$income=new income;$cat=new catalogue;
 	$form_htm=RD."/tpl/sale_invoice_partitions_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select ps.*, ap.parrent_type_id, ap.parrent_doc_id from J_SALE_INVOICE_PARTITION_STR ps
 		left outer join T2_ARTICLES_PARTITIONS ap on (ap.id=ps.partition_id)
@@ -598,7 +598,7 @@ function loadSaleInvoicePartitions($invoice_id){$db=new db;$slave=new slave;$gma
 			<td align='right'>$price_invoice</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td colspan=8 align='center'>Записи відсутні</td></tr>";}
+	if ($n==0){$list="<tr><td colspan=8 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>";}
 	$form=str_replace("{partitions_list}",$list,$form);
 	$form=str_replace("{invoice_id}",$invoice_id,$form);
 	return $form;
@@ -606,7 +606,7 @@ function loadSaleInvoicePartitions($invoice_id){$db=new db;$slave=new slave;$gma
 
 //===============			MONEY PAY 		==================================
 
-function loadSaleInvoiceMoneyPay($invoice_id){$db=new db;$slave=new slave;$gmanual=new gmanual;
+function loadSaleInvoiceMoneyPay($invoice_id){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/sale_invoice_money_pay_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select pay.*, pt.mcaption as pay_type_caption, pb.name as paybox_name, c.abr from J_PAY pay
 		left outer join J_PAY_STR pst on pst.pay_id=pay.id
@@ -635,13 +635,13 @@ function loadSaleInvoiceMoneyPay($invoice_id){$db=new db;$slave=new slave;$gmanu
 			<td>$user_name</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td colspan=7 align='center'>Документи оплати відсутні</td></tr>";}
+	if ($n==0){$list="<tr><td colspan=7 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>";}
 	$form=str_replace("{money_pay_list}",$list,$form);
 	$form=str_replace("{invoice_id}",$invoice_id,$form);
 	return $form;
 }
 
-function showSaleInvoceMoneyPayForm($invoice_id,$pay_id){$db=new db;$cat=new catalogue;$slave=new slave;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $storsel=new storsel; $gmanual=new gmanual; 
+function showSaleInvoceMoneyPayForm($invoice_id,$pay_id){$db=DbSingleton::getDb();$cat=new catalogue;$slave=new slave;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $storsel=new storsel; $gmanual=new gmanual; 
 	$form_htm=RD."/tpl/sale_invoice_money_pay_form.htm";	if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	$r=$db->query("select * from J_SALE_INVOICE where id='$invoice_id' limit 0,1;");$n=$db->num_rows($r);
@@ -671,19 +671,19 @@ function showSaleInvoceMoneyPayForm($invoice_id,$pay_id){$db=new db;$cat=new cat
 	return $form;
 }
 	
-function getCashAbr($cash_id){$db=new db;$name="";
+function getCashAbr($cash_id){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select abr from CASH where id ='$cash_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"abr");}
 	return $name;
 }
 	
-function getCashName($cash_id){$db=new db;$name="";
+function getCashName($cash_id){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select name from CASH where id ='$cash_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"name");}
 	return $name;
 }
 
-function showCashListSelect($sel_id,$ns){$db=new db;$list="";if ($ns==""){$ns=1;}
+function showCashListSelect($sel_id,$ns){$db=DbSingleton::getDb();$list="";if ($ns==""){$ns=1;}
 	$r=$db->query("select * from CASH order by name asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -695,23 +695,23 @@ function showCashListSelect($sel_id,$ns){$db=new db;$list="";if ($ns==""){$ns=1;
 	return $list;	
 }
 
-function unlockSaleInvoiceMoneyPayKours($invoice_id,$pay_id){$db=new db;
-	$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function unlockSaleInvoiceMoneyPayKours($invoice_id,$pay_id){$db=DbSingleton::getDb();
+	$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	if ($invoice_id==0 || $invoice_id==""){
-		$err="Не вказано номер накладної для оплати";$answer=0;
+		$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ";$answer=0;
 	}
 	if ($invoice_id>0 && $pay_id==0){
 		if ($user_id==1){
 			$err="";$answer=1;
-		}else{$err="Нашу гріх на душу брати! ";$answer=0;}
+		}else{$err="пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ! ";$answer=0;}
 	}
 	if ($invoice_id>0 && $pay_id>0){
-		$err="Оплату проведено. Зміну курсу заблоковано";$answer=0;
+		$err="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";$answer=0;
 	}
 	return array($answer,$err);
 }
 
-function showTpointPayBoxSelectList($client_id,$tpoint_id){$db=new db; $list="";
+function showTpointPayBoxSelectList($client_id,$tpoint_id){$db=DbSingleton::getDb(); $list="";
 	$r=$db->query("select * from T_POINT_PAY_BOX where client_id='$client_id' and tpoint_id='$tpoint_id' order by name asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -721,9 +721,9 @@ function showTpointPayBoxSelectList($client_id,$tpoint_id){$db=new db; $list="";
 	return $list;
 }
 
-function getCashKoursSaleInvoiceMoneyPay($doc_cash_id,$cash_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка!";
+function getCashKoursSaleInvoiceMoneyPay($doc_cash_id,$cash_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";
 	$cash_id=$slave->qq($cash_id);$kours_value=1;
-	if ($cash_id==0 || $cash_id==""){ $err="Не вказано валюту";$answer=0; }
+	if ($cash_id==0 || $cash_id==""){ $err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ";$answer=0; }
 	if ($cash_id>0){
 		if ($doc_cash_id==$cash_id){ $kours_value=1; $answer=1;$err="";}
 		if ($doc_cash_id!=$cash_id){
@@ -753,10 +753,10 @@ function getCashKoursSaleInvoiceMoneyPay($doc_cash_id,$cash_id){$db=new db;$slav
 	return array($answer,$err,$kours_value);
 }
 
-function saveSaleInvoiceMoneyPay($invoice_id,$pay_id,$kredit,$pay_type_id,$paybox_id,$doc_cash_id,$cash_id,$cash_kours){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveSaleInvoiceMoneyPay($invoice_id,$pay_id,$kredit,$pay_type_id,$paybox_id,$doc_cash_id,$cash_id,$cash_kours){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$invoice_id=$slave->qq($invoice_id);
 	if ($invoice_id==0 || $invoice_id==""){
-		$err="Не вказано номер накладної для оплати";$answer=0;
+		$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ";$answer=0;
 	}
 	if ($invoice_id>0 && $pay_id==0){
 		$pay_id=$slave->qq($pay_id);$kredit=$slave->qq($kredit);$pay_type_id=$slave->qq($pay_type_id);$paybox_id=$slave->qq($paybox_id);
@@ -849,7 +849,7 @@ function saveSaleInvoiceMoneyPay($invoice_id,$pay_id,$kredit,$pay_type_id,$paybo
 	return array($answer,$err,$pay_id);
 }
 
-function getClientGeneralSaldo($sel_id){$db=new db;$saldo="0";$cash_id=1;
+function getClientGeneralSaldo($sel_id){$db=DbSingleton::getDb();$saldo="0";$cash_id=1;
 	$r=$db->query("select `saldo`,cash_id from B_CLIENT_BALANS where client_id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$saldo=$db->result($r,0,"saldo");
@@ -860,7 +860,7 @@ function getClientGeneralSaldo($sel_id){$db=new db;$saldo="0";$cash_id=1;
 
 //===============			MONEY PAY 		==================================
 
-function printSaleInvoice($invoice_id){$db=new db;$cat=new catalogue;$slave=new slave;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $gmanual=new gmanual; $money=new toMoney;$invoice_summ=0;
+function printSaleInvoice($invoice_id){$db=DbSingleton::getDb();$cat=new catalogue;$slave=new slave;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $gmanual=new gmanual; $money=new toMoney;$invoice_summ=0;
 	$r=$db->query("select sv.*, t.name as tpoint_name, sl.full_name as seller_name, sld.vytjag, sld.edrpou, sld.account, sld.bank, sld.mfo, ot.name as org_type_abr, cl.name as client_name, dt.mcaption as doc_type_name, dp.prefix, ss.select_id, sv.dp_id, dt.mvalue as doc_type_abr,ch.abr2 as cash_abr,dp.delivery_address from J_SALE_INVOICE sv
 		left outer join CASH ch on ch.id=sv.cash_id
 		left outer join T_POINT t on t.id=sv.tpoint_id
@@ -898,7 +898,7 @@ function printSaleInvoice($invoice_id){$db=new db;$cat=new catalogue;$slave=new 
 		$doc_type_abr=$db->result($r,0,"doc_type_abr");
 		$select_id=$db->result($r,0,"select_id");
 		
-		$dp_name="ДП-$dp_id"; 
+		$dp_name="пїЅпїЅ-$dp_id"; 
 		$sel_ar[$select_id]=$select_id;
 		
 		$summ=$db->result($r,0,"summ");
@@ -917,7 +917,7 @@ function printSaleInvoice($invoice_id){$db=new db;$cat=new catalogue;$slave=new 
 			$article_nr_displ=$db->result($r,$i-1,"article_nr_displ");
 			$brand_id=$db->result($r,$i-1,"brand_id");$brand_name=$cat->getBrandName($brand_id);
 			$amount=$db->result($r,$i-1,"amount");
-			$unit=$this->getUnitArticle($art_id); //if ($unit=="") $unit="шт.";
+			$unit=$this->getUnitArticle($art_id); //if ($unit=="") $unit="пїЅпїЅ.";
 			$price=$db->result($r,$i-1,"price");
 			$price_summ=$price*$amount;
 			$price_end=$db->result($r,$i-1,"price_end");
@@ -947,7 +947,7 @@ function printSaleInvoice($invoice_id){$db=new db;$cat=new catalogue;$slave=new 
 		
 		$vat_summ=$invoice_summ/6;
 		
-		$storsel_list="СКВ-";
+		$storsel_list="пїЅпїЅпїЅ-";
 		foreach($sel_ar as $slr){
 			$storsel_list.="$slr ";
 		}
@@ -972,7 +972,7 @@ function printSaleInvoice($invoice_id){$db=new db;$cat=new catalogue;$slave=new 
 		if ($mandate_data!=0) $mandate_data = date("d.m.Y", strtotime($mandate_data)); else $mandate_data="";
 		$basis_date = date("d.m.Y", strtotime($basis_date));
 		
-		if($basis_nomber!="") $basis_data="№$basis_nomber, від $basis_date"; else $basis_data="б/н";
+		if($basis_nomber!="") $basis_data="пїЅ$basis_nomber, пїЅпїЅ $basis_date"; else $basis_data="пїЅ/пїЅ";
 	
 		$form=str_replace("{curtime}",date("d.m.Y H:i:s"),$form);
 		$form=str_replace("{invoice_id}",$invoice_id,$form);
@@ -1009,7 +1009,7 @@ function printSaleInvoice($invoice_id){$db=new db;$cat=new catalogue;$slave=new 
 		$form=str_replace("{sale_invoice_str_list}",$list,$form);
 		$form=str_replace("{ses_tpoint_name}",$ses_tpoint_name,$form);
 
-		//"Формування друкованої форми"
+		//"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ"
 		$mp=new media_print;
 		if ($doc_type_id==63){$mp->print_document($form,"A4-L");}
 		
@@ -1023,7 +1023,7 @@ function printSaleInvoice($invoice_id){$db=new db;$cat=new catalogue;$slave=new 
 	return $form;
 }
 	
-function getUnitArticle($art_id) {$db=new dbt; $abr="";
+function getUnitArticle($art_id) {$db=DbSingleton::getTokoDb(); $abr="";
 	$r=$db->query("select t2u.abr from T2_PACKAGING t2p 
 	left outer join units t2u on t2u.id=t2p.UNITS_ID
 	where t2p.ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1033,7 +1033,7 @@ function getUnitArticle($art_id) {$db=new dbt; $abr="";
 	return $abr;
 }
 	
-function getZedArticle($art_id){$db=new dbt; $costums_code="";
+function getZedArticle($art_id){$db=DbSingleton::getTokoDb(); $costums_code="";
 	$r=$db->query("select t2s.COSTUMS_CODE from T2_ZED t2z 
 	left outer join T2_COSTUMS t2s on t2s.COSTUMS_ID=t2z.COSTUMS_ID
 	where t2z.ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1043,7 +1043,7 @@ function getZedArticle($art_id){$db=new dbt; $costums_code="";
 	return $costums_code;
 }
 	
-function getMandateData($client_id,$data) { $db=new db;
+function getMandateData($client_id,$data) { $db=DbSingleton::getDb();
 	$r=$db->query("select * from `A_CLIENTS_MANDATE` where status='1' and client_id='$client_id' and data_from<='$data' and data_to>='$data' limit 0,1;");
 	$n=$db->num_rows($r);
 	if ($n==1){
@@ -1052,11 +1052,11 @@ function getMandateData($client_id,$data) { $db=new db;
 		$data_from=$db->result($r,0,"data_from");
 		$seria=$db->result($r,0,"seria");
 	}
-	if ($seria!="") $seria="Серія: $seria,";
+	if ($seria!="") $seria="пїЅпїЅпїЅпїЅ: $seria,";
 	return array($number,$receiver,$data_from,$seria);
 }
 	
-function getBasisData($client_id,$data) { $db=new db;
+function getBasisData($client_id,$data) { $db=DbSingleton::getDb();
 	$r=$db->query("select * from `A_CLIENTS_BASIS` where status='1' and client_id='$client_id' and data_from<='$data' and data_to>='$data' limit 0,1;");
 	$n=$db->num_rows($r);
 	if ($n==1){
@@ -1066,13 +1066,13 @@ function getBasisData($client_id,$data) { $db=new db;
 	return array($number,$data_from);
 }
 
-function getStorageName($sel_id){$db=new dbt;$name="";
+function getStorageName($sel_id){$db=DbSingleton::getTokoDb();$name="";
 	$r=$db->query("select name from `STORAGE` where status='1' and id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"name");}
 	return $name;	
 }
 	
-function printSaleInvoiceBuh($invoice_id){$db=new db;$cat=new catalogue;$slave=new slave; $manual=new manual; 	
+function printSaleInvoiceBuh($invoice_id){$db=DbSingleton::getDb();$cat=new catalogue;$slave=new slave; $manual=new manual; 	
 	session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $gmanual=new gmanual; $money=new toMoney;$invoice_summ=0;
 	$r=$db->query("select sv.*, t.name as tpoint_name, sl.name as seller_name, sld.edrpou, ot.name as org_type_abr, cl.name as client_name, dt.mcaption as doc_type_name, dt.mvalue as doc_type_abr,ch.abr2 as cash_abr,dp.delivery_address from J_SALE_INVOICE sv
 		left outer join CASH ch on ch.id=sv.cash_id
@@ -1167,7 +1167,7 @@ function printSaleInvoiceBuh($invoice_id){$db=new db;$cat=new catalogue;$slave=n
 	return $form;
 }
 	
-function exportSaleInvoiceExcel($invoice_id){$db=new db;$cat=new catalogue;$slave=new slave;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $gmanual=new gmanual; $invoice_summ=0;
+function exportSaleInvoiceExcel($invoice_id){$db=DbSingleton::getDb();$cat=new catalogue;$slave=new slave;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $gmanual=new gmanual; $invoice_summ=0;
 											 
 	$r=$db->query("select sv.*, t.name as tpoint_name, sl.name as seller_name, sld.edrpou, ot.name as org_type_abr, cl.name as client_name, dt.mcaption as doc_type_name, dt.mvalue as doc_type_abr,ch.abr2 as cash_abr,dp.delivery_address from J_SALE_INVOICE sv
 		left outer join CASH ch on ch.id=sv.cash_id
@@ -1227,19 +1227,19 @@ function exportSaleInvoiceExcel($invoice_id){$db=new db;$cat=new catalogue;$slav
 		$filename=str_replace("/","_",$filename);
 		$filename=str_replace("'","",$filename);
 		$filename=str_replace('"',"",$filename);
-		$filename=str_replace("«","",$filename);
-		$filename=str_replace("»","",$filename);
+		$filename=str_replace("пїЅ","",$filename);
+		$filename=str_replace("пїЅ","",$filename);
 		$filename=str_replace('"',"",$filename);
 		$filename=str_replace("'","",$filename);
 		
-		$header = "№п/п;Індекс;Бренд;Найменування;К-сть;Ціна;Сума\n";
+		$header = "пїЅпїЅ/пїЅ;пїЅпїЅпїЅпїЅпїЅпїЅ;пїЅпїЅпїЅпїЅпїЅ;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ;пїЅ-пїЅпїЅпїЅ;ЦіпїЅпїЅ;пїЅпїЅпїЅпїЅ\n";
 		
 		header('Content-Type: text/csv; charset=utf-8');
 		header("Content-Disposition: attachment; filename=$filename.csv");
-		$output = fopen('php://output', 'w'); $nakladna="Видакова накладна №$prefix-$doc_nom-$client_name від $data_create\n";
+		$output = fopen('php://output', 'w'); $nakladna="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ$prefix-$doc_nom-$client_name пїЅпїЅ $data_create\n";
 		fputs($output, $nakladna);
-		fputs($output, "Продавець: $seller_name\n");
-		fputs($output, "Покупець: $client_name\n");
+		fputs($output, "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $seller_name\n");
+		fputs($output, "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $client_name\n");
 		fputs($output, $header);
 		foreach ($list as $row) {
 			fwrite($output, $row);

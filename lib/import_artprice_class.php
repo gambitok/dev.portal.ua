@@ -1,14 +1,14 @@
 <?php
 class import_artprice{
 
-function getNBUKours($data,$val){$db=new db;$kours="";
+function getNBUKours($data,$val){$db=DbSingleton::getDb();$kours="";
 	if ($val==1){$val="usd";} if ($val==2){$val="usd";} if ($val==3){$val="euro";}
 	$r=$db->query("select `$val` from kours where data='$data' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$kours=$db->result($r,0,"$val"); }
 	return $kours;
 }
 
-function getKourForDate($cash_id_to,$cash_id_from,$data){$db=new db; $kours=1; if ($data=="0000-00-00"){$data=date("Y-m-d");}
+function getKourForDate($cash_id_to,$cash_id_from,$data){$db=DbSingleton::getDb(); $kours=1; if ($data=="0000-00-00"){$data=date("Y-m-d");}
 	if ($cash_id_from!=$cash_id_to){
 		$r=$db->query("select `kours_value` from `J_KOURS` where `cash_id`='$cash_id_from' and `data_from`<='$data' and (`data_to`='0000-00-00' or `data_to`>='$data') and in_use in (0,1) order by id desc limit 0,1;");$n=$db->num_rows($r);if ($n==1){$kours=$db->result($r,0,"kours_value");}
 	}
@@ -20,19 +20,19 @@ function loadIncomeKours($cash_id,$data){$usd_to_uah=1;$eur_to_uah=1;
 	return array($usd_to_uah,$eur_to_uah);
 }
 
-function show_import_artprice_form(){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function show_import_artprice_form(){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/import_artprice_str_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	list($csv_exist,$csv_file_name,$pre_table)=$this->showCsvPreview();
-	$form=str_replace("{records_list}","<tr><td colspan=10 align='center'>Записи не завантажено</td></tr>",$form);
-	$form=str_replace("{import_file_name}","Оберіть файл",$form);
+	$form=str_replace("{records_list}","<tr><td colspan=10 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>",$form);
+	$form=str_replace("{import_file_name}","пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ",$form);
 	$form=str_replace("{csv_str_file}",$pre_table,$form);
 	
 	return $form;
 }
 
 
-function showCsvPreview(){$db=new db;$slave=new slave; $csv_exist=0;$csv_file_name="Оберіть файл";$pre_table="<h3 align='center'>Записи не завантажено</h3>"; session_start();$user_id=$_SESSION["media_user_id"];
+function showCsvPreview(){$db=DbSingleton::getDb();$slave=new slave; $csv_exist=0;$csv_file_name="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ";$pre_table="<h3 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</h3>"; session_start();$user_id=$_SESSION["media_user_id"];
 	$r=$db->query("select * from J_IMPORT_ARTPRICE_CSV where user_id='$user_id' order by id desc limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$file_name=$db->result($r,0,"file_name");
@@ -54,11 +54,11 @@ function showCsvPreview(){$db=new db;$slave=new slave; $csv_exist=0;$csv_file_na
 						for ($i=1;$i<=$kol_cols;$i++){
 							if ($i==1){$row="<td>$fn</td>";}
 							$row.="<td>".trim($buf[$i-1])."</td>";
-							if ($ex_cols==1){$cols_list.="<th><select id=\"clm-$i\" size='1'><option value='0'>-</option><option value='1'>ART_ID</option><option value='2'>ОС, $</option><option value='3'>Min, %</option>
-							<option value='4'>0 Прайс</option><option value='5'>1 Прайс</option><option value='6'>2 Прайс</option>
-							<option value='7'>3 Прайс</option><option value='8'>4 Прайс</option><option value='9'>5 Прайс</option>
-							<option value='10'>6 Прайс </option><option value='11'>7 Прайс</option><option value='12'>8 Прайс</option>
-							<option value='13'>9 Прайс</option><option value='14'>10 Прайс</option><option value='15'>11 Прайс</option>
+							if ($ex_cols==1){$cols_list.="<th><select id=\"clm-$i\" size='1'><option value='0'>-</option><option value='1'>ART_ID</option><option value='2'>пїЅпїЅ, $</option><option value='3'>Min, %</option>
+							<option value='4'>0 пїЅпїЅпїЅпїЅпїЅ</option><option value='5'>1 пїЅпїЅпїЅпїЅпїЅ</option><option value='6'>2 пїЅпїЅпїЅпїЅпїЅ</option>
+							<option value='7'>3 пїЅпїЅпїЅпїЅпїЅ</option><option value='8'>4 пїЅпїЅпїЅпїЅпїЅ</option><option value='9'>5 пїЅпїЅпїЅпїЅпїЅ</option>
+							<option value='10'>6 пїЅпїЅпїЅпїЅпїЅ </option><option value='11'>7 пїЅпїЅпїЅпїЅпїЅ</option><option value='12'>8 пїЅпїЅпїЅпїЅпїЅ</option>
+							<option value='13'>9 пїЅпїЅпїЅпїЅпїЅ</option><option value='14'>10 пїЅпїЅпїЅпїЅпїЅ</option><option value='15'>11 пїЅпїЅпїЅпїЅпїЅ</option>
 							<option value='16'>0 %</option><option value='17'>1 %</option><option value='18'>2 %</option>
 							<option value='19'>3 %</option><option value='20'>4 %</option><option value='21'>5 %</option>
 							<option value='22'>6 %</option><option value='23'>7 %</option><option value='24'>8 %</option>
@@ -82,7 +82,7 @@ function showCsvPreview(){$db=new db;$slave=new slave; $csv_exist=0;$csv_file_na
 	return array($csv_exist,$csv_file_name,$pre_table);
 }
 
-function finishArtpriceCsvImport($start_row,$kol_cols,$cols){$db=new db;$dbt=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function finishArtpriceCsvImport($start_row,$kol_cols,$cols){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$start_row=$slave->qq($start_row);$kol_cols=$slave->qq($kol_cols);$cols=$slave->qq($cols);
 	$r=$db->query("select * from J_IMPORT_ARTPRICE_CSV where user_id='$user_id' order by id desc limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){

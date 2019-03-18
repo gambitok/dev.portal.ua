@@ -1,7 +1,7 @@
 <?php
 function ImportCross($impfile) 
 {
-	$db=new db;
+	$db=DbSingleton::getDb();
 	$file = fopen($file, 'r');
 	while ($row=fgetcsv($file)) {
 		$value = "'".implode("','", $row)."'";

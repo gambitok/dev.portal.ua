@@ -1,5 +1,5 @@
 <?php 
-$db = new db;$dbp = new dbp;$slave = new slave;
+$db = DbSingleton::getDb();$dbp = DbSingleton::getTokoDb();$slave = new slave;
 require_once RD.'/lib/manual_class.php';$manual=new manual;$manualD=new manualD;$manualK=new manualK;$manualP=new manualP;$manualManager=new manualManager;
 require_once RD.'/lib/gmanual_class.php';$gmanual=new gmanual;
 require_once RD.'/lib/access_class.php';$access=new access;
@@ -473,7 +473,7 @@ if ($_REQUEST["w"]=="showUsersCard"){ $GLOBALS['_RESULT'] = array("content"=>$us
 if ($_REQUEST["w"]=="saveUsersGeneralInfo"){ list($answer,$err)=$users->saveUsersGeneralInfo($_REQUEST["users_id"],$_REQUEST["name"],$_REQUEST["post"],$_REQUEST["tpoint_id"],$_REQUEST["role_id"],$_REQUEST["phone2"],$_REQUEST["login"],$_REQUEST["pass"],$_REQUEST["status"],$_REQUEST["email"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 if ($_REQUEST["w"]=="loadUsersAccess"){ $GLOBALS['_RESULT'] = array("content"=>$users->loadUsersAccess($_REQUEST["users_id"]));}
 if ($_REQUEST["w"]=="loadUsersAccessCredit"){ $GLOBALS['_RESULT'] = array("content"=>$users->loadUsersAccessCredit($_REQUEST["users_id"]));}
-if ($_REQUEST["w"]=="clearUsersAcñess"){ list($answer,$err)=$users->clearUsersAcñess($_REQUEST["users_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+if ($_REQUEST["w"]=="clearUsersAcï¿½ess"){ list($answer,$err)=$users->clearUsersAcï¿½ess($_REQUEST["users_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 if ($_REQUEST["w"]=="showUsersAccessItemForm"){ $GLOBALS['_RESULT'] = array("content"=>$users->showUsersAccessItemForm($_REQUEST["users_id"],$_REQUEST["mf_id"]));}
 if ($_REQUEST["w"]=="saveUsersAccessItemForm"){ list($answer,$err)=$users->saveUsersAccessItemForm($_REQUEST["users_id"],$_REQUEST["mf_id"],$_REQUEST["lvl_id"],$_REQUEST["file_access"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 	

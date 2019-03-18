@@ -1,7 +1,7 @@
 <?php
 class undistribcells{
 	
-function show_undistribcells_list(){$db=new db;$slave=new slave;$gmanual=new gmanual;$where="";
+function show_undistribcells_list(){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;$where="";
 	$r=$db->query("select t2asc.*, i.prefix, i.doc_nom, i.data, s.name as storage_name, sc.cell_value  from T2_ARTICLES_STRORAGE_CELLS t2asc
 
 	left outer join J_INCOME i on i.id=t2asc.INCOME_ID
@@ -30,7 +30,7 @@ function show_undistribcells_list(){$db=new db;$slave=new slave;$gmanual=new gma
 		return $list;
 }
 
-function countUndistribCellsArticles($storage_cells_id,$income_id){$db=new db;$amount=0;
+function countUndistribCellsArticles($storage_cells_id,$income_id){$db=DbSingleton::getDb();$amount=0;
 	$r=$db->query("select SUM(amount) as cellAmount from T2_ARTICLES_STRORAGE_CELLS t2asc
 	left outer join J_INCOME i on i.id=t2asc.INCOME_ID
 	left outer join STORAGE s on s.id=t2asc.STORAGE_ID
@@ -41,7 +41,7 @@ function countUndistribCellsArticles($storage_cells_id,$income_id){$db=new db;$a
 	return $amount;
 }
 
-function showUndistribCellsCard($storage_cells_id,$income_id){$db=new db;$slave=new slave;$cat=new catalogue; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showUndistribCellsCard($storage_cells_id,$income_id){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/undistribcells_list_articles.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$query="select t2asc.*,ist.article_nr_displ,ist.brand_id, i.prefix, i.doc_nom, i.data, s.name as storage_name, sc.cell_value  from T2_ARTICLES_STRORAGE_CELLS t2asc
 	left outer join J_INCOME i on i.id=t2asc.INCOME_ID
@@ -70,7 +70,7 @@ function showUndistribCellsCard($storage_cells_id,$income_id){$db=new db;$slave=
 			<td>$article_nr_displ</td>
 			<td>$brand_name</td>
 			<td align='right'>$amount</td>
-			<td><button class='btn btn-sm btn-warning' onclick='showStorageCellSelectForm(\"$art_id\",\"$storage_id\",\"$income_id\",\"$amount\");'><i class='fa fa-delicious' title='Переміщення у комірку'></i></button></td>
+			<td><button class='btn btn-sm btn-warning' onclick='showStorageCellSelectForm(\"$art_id\",\"$storage_id\",\"$income_id\",\"$amount\");'><i class='fa fa-delicious' title='пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ'></i></button></td>
 		</tr>";
 	}
 	$form=str_replace("{art_list}",$list,$form);
@@ -83,7 +83,7 @@ function showUndistribCellsCard($storage_cells_id,$income_id){$db=new db;$slave=
 }
 
 
-function showStorageCellSelectForm($art_id,$income_id,$storage_id,$amount){$db=new db;$slave=new slave;$cat=new catalogue;
+function showStorageCellSelectForm($art_id,$income_id,$storage_id,$amount){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;
 	$form_htm=RD."/tpl/undistribcells_storage_cells_select_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	list($article_nr_displ,$brand_id,$brand_name)=$cat->getArticleNrDisplBrand($art_id);
@@ -98,7 +98,7 @@ function showStorageCellSelectForm($art_id,$income_id,$storage_id,$amount){$db=n
 }
 
 
-function showStorageSelectList($sel_id){$db=new db;$list="";
+function showStorageSelectList($sel_id){$db=DbSingleton::getDb();$list="";
 	$r=$db->query("select * from `STORAGE` where status='1' order by name,id asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -109,7 +109,7 @@ function showStorageSelectList($sel_id){$db=new db;$list="";
 	return $list;	
 }
 
-function showStorageCellsSelectList($storage_id,$sel_id){$db=new db;$list="";
+function showStorageCellsSelectList($storage_id,$sel_id){$db=DbSingleton::getDb();$list="";
 	$r=$db->query("select * from `STORAGE_CELLS` where status='1' and storage_id='$storage_id' order by cell_value,id asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -119,7 +119,7 @@ function showStorageCellsSelectList($storage_id,$sel_id){$db=new db;$list="";
 	}
 	return $list;	
 }
-function saveUndistribCellsStorageCellForm($art_id,$income_id,$storage_id,$storage_cells_id,$amount){$db=new db;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveUndistribCellsStorageCellForm($art_id,$income_id,$storage_id,$storage_cells_id,$amount){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$art_id=$slave->qq($art_id);$income_id=$slave->qq($income_id);$storage_id=$slave->qq($storage_id);$storage_cells_id=$slave->qq($storage_cells_id);$amount=$slave->qq($amount);
 	if ($art_id>0 && $income_id>0 && $storage_id>0 && $storage_cells_id>0 && $amount>0){
 		
@@ -135,13 +135,13 @@ function saveUndistribCellsStorageCellForm($art_id,$income_id,$storage_id,$stora
 				if ($new_amount==0){
 					$db->query("delete from T2_ARTICLES_STRORAGE_CELLS where  `ART_ID`='$art_id' and `INCOME_ID`='$income_id' and `STORAGE_ID`='$storage_id' and `STORAGE_CELLS_ID`='$doc_storage_cells_id';");$op=1;
 				}
-				if ($new_amount<0){ $answer=0;$err="Кількість переміщеного товару перевищує фактичну наявну!";}
+				if ($new_amount<0){ $answer=0;$err="КіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";}
 				if ($op==1){
 					$db->query("insert into T2_ARTICLES_STRORAGE_CELLS (`ART_ID`,`AMOUNT`,`INCOME_ID`,`STORAGE_ID`,`STORAGE_CELLS_ID`) values ('$art_id','$amount','$income_id','$storage_id','$storage_cells_id');");
 				}
 			}
 			if ($doc_storage_cells_id==$storage_cells_id){
-				 $answer=0;$err="Оберіть комірку для переміщення товару відмінну від поточної!";
+				 $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";
 			}
 		}
 		$answer=1;$err="";
@@ -149,7 +149,7 @@ function saveUndistribCellsStorageCellForm($art_id,$income_id,$storage_id,$stora
 	return array($answer,$err);
 }
 
-function showCountryForm($id){$db=new db;$manual=new manual;$list="";
+function showCountryForm($id){$db=DbSingleton::getDb();$manual=new manual;$list="";
 	$form_htm=RD."/tpl/undistribcells_country_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T2_COUNTRIES where COUNTRY_ID='$id' limit 0,1;");$n=$db->num_rows($r);$list="";
 	if ($n==1){
@@ -168,9 +168,9 @@ function showCountryForm($id){$db=new db;$manual=new manual;$list="";
 	$form=str_replace("{risk}",$risk,$form);
 	$form=str_replace("{risk_caption}",$manual->getManualMCaption("RISK",$risk),$form);
 	
-	return array($form,"Форма Країни походження");	
+	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");	
 }
-function saveundistribcellsCountryForm($id,$name,$alfa2,$alfa3,$duty,$risk){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveundistribcellsCountryForm($id,$name,$alfa2,$alfa3,$duty,$risk){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$id=$slave->qq($id);$name=$slave->qq($name);$alfa2=$slave->qq($alfa2);$alfa3=$slave->qq($alfa3);$duty=$slave->qq($duty);$risk=$slave->qq($risk);
 	if ($id>0){
 		$r=$db->query("select * from `T2_COUNTRIES` where `COUNTRY_ID`='$id' limit 0,1;");$n=$db->num_rows($r);
@@ -187,7 +187,7 @@ function saveundistribcellsCountryForm($id,$name,$alfa2,$alfa3,$duty,$risk){$db=
 	}
 	return array($answer,$err);
 }
-function showCostumsManual($sel_id){$db=new db;$manual=new manual;$list="";
+function showCostumsManual($sel_id){$db=DbSingleton::getDb();$manual=new manual;$list="";
 	$form_htm=RD."/tpl/undistribcells_costums_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T2_COSTUMS order by COSTUMS_NAME asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -217,7 +217,7 @@ function showCostumsManual($sel_id){$db=new db;$manual=new manual;$list="";
 	$form=str_replace("{list}",$list,$form);
 	return $form;	
 }
-function showCostumsForm($id){$db=new db;$manual=new manual;$list="";
+function showCostumsForm($id){$db=DbSingleton::getDb();$manual=new manual;$list="";
 	$form_htm=RD."/tpl/undistribcells_costums_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T2_COSTUMS where COSTUMS_ID='$id' limit 0,1;");$n=$db->num_rows($r);$list="";
 	if ($n==1){
@@ -238,10 +238,10 @@ function showCostumsForm($id){$db=new db;$manual=new manual;$list="";
 	$form=str_replace("{type_declaration}",$type_declaration,$form);
 	$form=str_replace("{type_declaration_caption}",$manual->getManualMCaption("costums_type_declaration",$type_declaration),$form);
 	
-	return array($form,"Форма митного коду УКТЕЗД");	
+	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");	
 }
 
-function saveundistribcellsCostumsForm($id,$name,$preferential_rate,$full_rate,$type_declaration,$sertification,$gos_standart){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveundistribcellsCostumsForm($id,$name,$preferential_rate,$full_rate,$type_declaration,$sertification,$gos_standart){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$id=$slave->qq($id);$name=$slave->qq($name);$preferential_rate=$slave->qq($slave->point_valid($preferential_rate));$full_rate=$slave->qq($slave->point_valid($full_rate));$type_declaration=$slave->qq($type_declaration);$sertification=$slave->qq($sertification);$gos_standart=$slave->qq($gos_standart);
 	if ($id>0){
 		$r=$db->query("select * from `T2_COSTUMS` where `COSTUMS_ID`='$id' limit 0,1;");$n=$db->num_rows($r);
@@ -259,7 +259,7 @@ function saveundistribcellsCostumsForm($id,$name,$preferential_rate,$full_rate,$
 	return array($answer,$err);
 }
 
-function loadArticleZED($undistribcells_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function loadArticleZED($undistribcells_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/undistribcells_zed.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	$r=$db->query("select t2z.*,t2c.COUNTRY_NAME, t2s.COSTUMS_NAME from T2_ZED t2z 
@@ -281,7 +281,7 @@ function loadArticleZED($undistribcells_id){$db=new db;$slave=new slave;session_
 	
 	return $form;
 }
-function saveundistribcellsZED($undistribcells_id,$country_id,$costums_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveundistribcellsZED($undistribcells_id,$country_id,$costums_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$undistribcells_id=$slave->qq($undistribcells_id);$country_id=$slave->qq($country_id);$costums_id=$slave->qq($slave->point_valid($costums_id));
 	if ($undistribcells_id>0){
 		//T2_ZED UPDATE

@@ -2,7 +2,7 @@
 class brands{
 //show brands list
 function show_brands_list(){
-	$db=new dbt; $slave=new slave; $where="";$manual=new manual;
+	$db=DbSingleton::getTokoDb(); $slave=new slave; $where="";$manual=new manual;
 	$r=$db->query("select b.*, t2cn.COUNTRY_NAME, t2k.CAPTION
 	from T2_BRANDS b
 	left outer join T2_COUNTRIES t2cn on t2cn.COUNTRY_ID=b.COUNTRY_ID
@@ -29,7 +29,7 @@ function show_brands_list(){
 } 
 //new Brand card	
 function newBrandsCard(){
-	$db=new db; $dbt=new dbt; $slave=new slave; $manual=new manual; session_start(); 
+	$db=DbSingleton::getDb(); $dbt=DbSingleton::getTokoDb(); $slave=new slave; $manual=new manual; session_start(); 
 	$user_id=$_SESSION["media_user_id"]; $user_name=$_SESSION["user_name"]; $brands_id=0;
 	
 	$r=$dbt->query("select max(BRAND_ID) as mid from T2_BRANDS;");
@@ -41,7 +41,7 @@ function newBrandsCard(){
 }	
 //show card 	
 function showBrandsCard($brands_id){
-	$db=new db; $dbt=new dbt; $slave=new slave; session_start(); ;
+	$db=DbSingleton::getDb(); $dbt=DbSingleton::getTokoDb(); $slave=new slave; session_start(); ;
 	$user_id=$_SESSION["media_user_id"]; $user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/brands_card.htm"; if (file_exists("$form_htm")){$form = file_get_contents($form_htm);}
 	
@@ -74,9 +74,9 @@ function showBrandsCard($brands_id){
 }
 //update data	
 function saveBrandsGeneralInfo($brands_id, $brands_name, $brands_type, $brands_kind, $brands_country, $brands_visible) {
-	$db=new db; $dbt=new dbt; $slave=new slave; session_start();
+	$db=DbSingleton::getDb(); $dbt=DbSingleton::getTokoDb(); $slave=new slave; session_start();
 	$user_id=$_SESSION["media_user_id"]; $user_name=$_SESSION["user_name"];
-	$answer=0; $err="Помилка збереження даних!";
+	$answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	
     $brands_id=$slave->qq($brands_id);
 	$brands_name=$slave->qq($brands_name);
@@ -95,9 +95,9 @@ function saveBrandsGeneralInfo($brands_id, $brands_name, $brands_type, $brands_k
 	
 
 function saveBrandsDetails($brands_id, $descr, $link){ 
-	$db=new db;$dbt=new dbt;$slave=new slave;session_start();
+	$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();
 	$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];
-	$answer=0;$err="Помилка збереження даних!";
+	$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	
 	$brands_id=$slave->qq($brands_id);
 	$descr=$slave->qq($descr);
@@ -120,7 +120,7 @@ function saveBrandsDetails($brands_id, $descr, $link){
 	
 //details - tab2
 function loadBrandsDetails($brands_id){
-	$db=new dbt;$slave=new slave;$gmanual=new gmanual;
+	$db=DbSingleton::getTokoDb();$slave=new slave;$gmanual=new gmanual;
 	
 	$form_htm=RD."/tpl/brands_details.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
@@ -138,7 +138,7 @@ function loadBrandsDetails($brands_id){
 }
 
 function loadBrandsPhoto($brands_id){
-	$db=new dbt;$slave=new slave;
+	$db=DbSingleton::getTokoDb();$slave=new slave;
 	$form_htm=RD."/tpl/brands_photo_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select t2bl.* from T2_BRAND_LINK t2bl where t2bl.brand_id='$brands_id' order by t2bl.name asc;");
 	$n=$db->num_rows($r);$list="";
@@ -154,14 +154,14 @@ function loadBrandsPhoto($brands_id){
 		$list.=$block;
 	}
 	
-	if ($n==0){$list="<h3 class='text-center'>Логотип відсутній</h3>";}
+	if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
 	return $list;
 }
 	
 function deleteBrandsLogo($brands_id) {
-	$db=new dbt; $slave=new slave; session_start();
+	$db=DbSingleton::getTokoDb(); $slave=new slave; session_start();
 	//$user_id=$_SESSION["media_user_id"]; $user_name=$_SESSION["user_name"];
-	$answer=0; $err="Помилка видалення даних!";
+	$answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	
 	if ($brands_id>0){
 		$db->query("update T2_BRAND_LINK set logo_name='' where brand_id='$brands_id';");
@@ -174,7 +174,7 @@ function deleteBrandsLogo($brands_id) {
 
 //Brands EXPORT
 function ExportBrands() {
-	$db=new db;
+	$db=DbSingleton::getDb();
 	$r=$db->query("select * from T2_BRANDS;");
 	$n=$db->num_rows($r); 
 	$list=array();
@@ -192,19 +192,19 @@ function ExportBrands() {
 }
 //Brands IMPORT
 function ImportBrands() {
-	$db=new dbt;$slave=new slave;$gmanual=new gmanual;
+	$db=DbSingleton::getTokoDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/brands_import.htm"; if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	list($csv_exist,$csv_file_name,$pre_table)=showCsvPreviewIndex();
 	
-	$form=str_replace("{records_list}","<tr><td colspan=10 align='center'>Записи не завантажено</td></tr>",$form);
-	$form=str_replace("{import_file_name}","Оберіть файл",$form);
+	$form=str_replace("{records_list}","<tr><td colspan=10 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>",$form);
+	$form=str_replace("{import_file_name}","пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ",$form);
 	$form=str_replace("{csv_str_file}",$pre_table,$form);
 	
 	return $form;
 }
 
 function showCsvPreviewIndex(){
-	$db=new db; $slave=new slave; $csv_exist=0; $csv_file_name="Оберіть файл"; $pre_table="<h3 align='center'>Записи відсутні</h3>";
+	$db=DbSingleton::getDb(); $slave=new slave; $csv_exist=0; $csv_file_name="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ"; $pre_table="<h3 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";
 	$r=$db->query("select * from T2_BRANDS_CSV limit 0,1;");
 	$n=$db->num_rows($r);
 
@@ -253,8 +253,8 @@ function showCsvPreviewIndex(){
 }
 	
 function finishBrandsIndexImport($start_row,$kol_cols,$cols){
-	$db=new db;$dbt=new dbt;$slave=new slave;session_start();
-	$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";$err2 = "Файл з дуплікатами індексів!";
+	$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();
+	$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";$err2 = "пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";
 	$start_row=$slave->qq($start_row);$kol_cols=$slave->qq($kol_cols);$cols=$slave->qq($cols);
 	
 		$r=$db->query("select * from T2_BRANDS_CSV limit 0,1;");
@@ -354,7 +354,7 @@ function isUnique($array)
 
 	
 function showSelectListBrands($table,$field_id,$field,$sel_id){
-	$db=new dbt;$list="<option value='0'></option>";
+	$db=DbSingleton::getTokoDb();$list="<option value='0'></option>";
 	$r=$db->query("select `$field_id`,`$field` from `$table` order by `$field` asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"$field_id");

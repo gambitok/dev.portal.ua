@@ -2,7 +2,7 @@
 class country{
 //show country list
 function show_country_list(){
-	$db=new db; $slave=new slave; $where="";$manual=new manual;
+	$db=DbSingleton::getDb(); $slave=new slave; $where="";$manual=new manual;
 	$r=$db->query("select t2cnt.* from T2_COUNTRIES t2cnt;");
 	$n=$db->num_rows($r); $list="";
 	for ($i=1;$i<=$n;$i++){
@@ -32,7 +32,7 @@ function show_country_list(){
 } 
 //new country card	
 function newCountryCard(){
-	$db=new db; $dbt=new dbt; $slave=new slave; $manual=new manual; session_start(); 
+	$db=DbSingleton::getDb(); $dbt=DbSingleton::getTokoDb(); $slave=new slave; $manual=new manual; session_start(); 
 	$user_id=$_SESSION["media_user_id"]; $user_name=$_SESSION["user_name"]; $country_id=0;
 	
 	$r=$db->query("select max(COUNTRY_ID) as mid from T2_COUNTRIES;");
@@ -44,7 +44,7 @@ function newCountryCard(){
 }	
 //show card 	
 function showCountryCard($country_id){
-	$db=new db; $slave=new slave; session_start();$manual=new manual;
+	$db=DbSingleton::getDb(); $slave=new slave; session_start();$manual=new manual;
 	$user_id=$_SESSION["media_user_id"]; $user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/country_card.htm"; if (file_exists("$form_htm")){$form = file_get_contents($form_htm);}
 	
@@ -74,9 +74,9 @@ function showCountryCard($country_id){
 }
 //update data	
 function saveCountryGeneralInfo($country_id, $country_name, $country_alfa2, $country_alfa3, $country_duty, $country_risk) {
-	$db=new db; $dbt=new dbt; $slave=new slave; session_start();
+	$db=DbSingleton::getDb(); $dbt=DbSingleton::getTokoDb(); $slave=new slave; session_start();
 	$user_id=$_SESSION["media_user_id"]; $user_name=$_SESSION["user_name"];
-	$answer=0; $err="Помилка збереження даних!";
+	$answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	
     $country_id=$slave->qq($country_id);
 	$country_name=$slave->qq($country_name);
@@ -94,9 +94,9 @@ function saveCountryGeneralInfo($country_id, $country_name, $country_alfa2, $cou
 }
 //delete data	
 function DeleteCountry($country_id) {
-	$db=new db; $dbt=new dbt; $slave=new slave; session_start();
+	$db=DbSingleton::getDb(); $dbt=DbSingleton::getTokoDb(); $slave=new slave; session_start();
 	$user_id=$_SESSION["media_user_id"]; $user_name=$_SESSION["user_name"];
-	$answer=0; $err="Помилка видалення даних!";
+	$answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	
     $country_id=$slave->qq($country_id);
 	

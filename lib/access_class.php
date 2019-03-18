@@ -1,7 +1,7 @@
 <?php
 class access {
 	
-	function check_user_access($file){$db=new db; 
+	function check_user_access($file){$db=DbSingleton::getDb(); 
 		$slave=new slave; session_start(); $media_user_id=$_SESSION["media_user_id"]; $media_role_id=$_SESSION["media_role_id"]; 
 
 			if ($media_user_id!=1){	
@@ -16,18 +16,18 @@ class access {
 		return array($access,$acc_lvl);
 	}
 	
-	function show_access_deny($file){$db=new db; $slave=new slave;$slave=new slave;$mdl=new module;$url=$mdl->get_file_url($file);
+	function show_access_deny($file){$db=DbSingleton::getDb(); $slave=new slave;$slave=new slave;$mdl=new module;$url=$mdl->get_file_url($file);
 		$form_htm=RD."/tpl/access_deny.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-		$message="Доступ заборонено. <br><br><small>За додатковою інформацією зверніться до Адміністрації</small>";
-		$form=str_replace("{ModuleCaption}","Доступ обмежено",$form);
+		$message="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. <br><br><small>пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</small>";
+		$form=str_replace("{ModuleCaption}","пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ",$form);
 		$form=str_replace("{OperationCaption}","",$form);
 		$form=str_replace("{message}",$message,$form);
-		$form=str_replace("{back_caption}","Назад",$form);
+		$form=str_replace("{back_caption}","пїЅпїЅпїЅпїЅпїЅ",$form);
 		$form=str_replace("{back_url}","/",$form);
 		return $form;
 	}
 	
-	function checkTrustedIp($media_user_id) {$db=new db;
+	function checkTrustedIp($media_user_id) {$db=DbSingleton::getDb();
 	  	$ip_address=$_SERVER['REMOTE_ADDR'];
 		$r=$db->query("select * from trusted_ip where ip='$ip_address' and status=1 limit 1;"); $n=$db->num_rows($r);
 		$n>0 ? $result=true : $result=false;
@@ -35,7 +35,7 @@ class access {
 		return $result;
 	}
 	
-	function checkAccessTime($media_user_id) {$db=new db; 
+	function checkAccessTime($media_user_id) {$db=DbSingleton::getDb(); 
 		$result=false; $cur_time=date("h:i:s");					
 		$r=$db->query("select * from media_users_time where id='$media_user_id' limit 1;"); $n=$db->num_rows($r);
 		if ($n>0) {
@@ -67,7 +67,7 @@ class access {
 		return $result;
 	}
 	
-	function getMediaUserRole() {$db=new db; 
+	function getMediaUserRole() {$db=DbSingleton::getDb(); 
 		$media_user_id=$_SESSION["media_user_id"];
 		$r=$db->query("select role_id from media_users where id='$media_user_id' limit 1;");
 		$role_id=$db->result($r,0,"role_id");

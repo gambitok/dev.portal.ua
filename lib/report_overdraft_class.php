@@ -2,14 +2,14 @@
 
 class report_overdraft {
 	
-	function getTpointbyUser() { $db=new db; $tpoint=1;
+	function getTpointbyUser() { $db=DbSingleton::getDb(); $tpoint=1;
 		$user_id=$_SESSION["media_user_id"];
 		$r=$db->query("select tpoint_id from media_users where id='$user_id';"); $n=$db->num_rows($r);
 		if ($n>0) $tpoint=$db->result($r,0,"tpoint_id");
 		return $tpoint;
 	}
 	
-	function getClientOverdraftList($date_cur,$tpoint_id) { $db=new db; $clients=[]; $list="<option value='0'>Всі клієнти</option>";
+	function getClientOverdraftList($date_cur,$tpoint_id) { $db=DbSingleton::getDb(); $clients=[]; $list="<option value='0'>пїЅпїЅ пїЅлієпїЅпїЅпїЅ</option>";
 		$where=" and sv.data_pay<'$date_cur'";
 		if ($tpoint_id!="0" && $tpoint_id!=NULL) $where_tpoint=" and cc.tpoint_id=$tpoint_id "; else $where_tpoint="";
 		$r=$db->query("select cc.client_id from J_SALE_INVOICE sv 
@@ -29,7 +29,7 @@ class report_overdraft {
 		return $list;
 	}
 	
-	function getTpointList() { $db=new db; $list=""; $tpoint=$this->getTpointbyUser(); $list="<option value='0'>Всі торгові точки</option>";
+	function getTpointList() { $db=DbSingleton::getDb(); $list=""; $tpoint=$this->getTpointbyUser(); $list="<option value='0'>пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ</option>";
 		$r=$db->query("select * from T_POINT where status=1 order by id asc;"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
@@ -41,7 +41,7 @@ class report_overdraft {
 		return $list;	
 	}
 	
-	function getClientList() { $db=new db; $list="";
+	function getClientList() { $db=DbSingleton::getDb(); $list="";
 		$r=$db->query("select c.id, c.full_name from A_CLIENTS c order by c.id asc;"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
@@ -51,13 +51,13 @@ class report_overdraft {
 		return $list;
 	}
 	
-	function getMediaUserName($user_id){$db=new db;$name="";
+	function getMediaUserName($user_id){$db=DbSingleton::getDb();$name="";
 		$r=$db->query("select name from media_users where id='$user_id' limit 0,1;");$n=$db->num_rows($r);
 		if ($n==1){$name=$db->result($r,0,"name");}
 		return $name;
 	}
 	
-	function showReportOverdraftList($date_cur,$client_id,$tpoint_id) { $db=new db; $list=""; $clients=[]; $summ_uah=$summ_usd=$summ_eur=0;
+	function showReportOverdraftList($date_cur,$client_id,$tpoint_id) { $db=DbSingleton::getDb(); $list=""; $clients=[]; $summ_uah=$summ_usd=$summ_eur=0;
 		$form_htm=RD."/tpl/report_overdraft_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}	
 		if ($tpoint_id!="0" && $tpoint_id!=NULL) $where_tpoint=" and sv.tpoint_id='$tpoint_id' "; else $where_tpoint="";
 		if ($client_id!="0" && $client_id!=NULL) $where=" and sv.data_pay<'$date_cur' and sv.client_id=$client_id"; else $where=" and sv.data_pay<'$date_cur'";
@@ -93,7 +93,7 @@ class report_overdraft {
 			$cash=$client["cash"]; $cash=array_unique($cash); $cash=implode(",",$cash);
 			$data_pay=$client["data_pay"]; $data_pay=min($data_pay);
 			$list.="<tr style='cursor:pointer;background:#ddd;' align='center'>
-				<td align='left'><button class='btn btn-xs' title='Взаєморозрахунки з контрагентом' onclick='showClientGeneralSaldoForm($c_id);'><i class='fa fa-th-list'></i></button> $title</td>
+				<td align='left'><button class='btn btn-xs' title='пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ' onclick='showClientGeneralSaldoForm($c_id);'><i class='fa fa-th-list'></i></button> $title</td>
 				<td align='center' style='min-width:80px;'>$summ</td>
 				<td align='center' style='min-width:80px;'>$cash</td>
 				<td align='right'>$data_pay</td>
@@ -107,24 +107,24 @@ class report_overdraft {
 										
 		$form=str_replace("{report_overdraft_range}",$list,$form);
 		$transform_date=date("d.m.Y", strtotime($date_cur));
-		$summ_all="СУМА за $transform_date: $summ_uah UAH / $summ_usd USD / $summ_eur EUR";
+		$summ_all="пїЅпїЅпїЅпїЅ пїЅпїЅ $transform_date: $summ_uah UAH / $summ_usd USD / $summ_eur EUR";
 		$form=str_replace("{report_overdraft_summ}", $summ_all,$form);
 		return array($form,$summ_all);
 	}
 	
-	function getProlognationData($invoice_id,$client_id) { $db=new db; 
+	function getProlognationData($invoice_id,$client_id) { $db=DbSingleton::getDb(); 
 		$r=$db->query("select min(date_pay_start) as min_date from J_SALE_INVOICE_PROLONGATION where invoice_id='$invoice_id' and client_id='$client_id';");
 		$min_date=$db->result($r,0,"min_date");
 		return $min_date;
 	}
 	
-	function getProlognationCount($invoice_id,$client_id) { $db=new db; 
+	function getProlognationCount($invoice_id,$client_id) { $db=DbSingleton::getDb(); 
 		$r=$db->query("select count(date_pay_start) as amount_date from J_SALE_INVOICE_PROLONGATION where invoice_id='$invoice_id' and client_id='$client_id';");
 		$amount_date=$db->result($r,0,"amount_date");
 		return $amount_date;
 	}
 	
-	function getClientReportOverdraftList($client_id,$date_cur,$tpoint_id) { $db=new db; $list=""; $docs=[]; $js="";
+	function getClientReportOverdraftList($client_id,$date_cur,$tpoint_id) { $db=DbSingleton::getDb(); $list=""; $docs=[]; $js="";
 		$where=" and sv.data_pay<'$date_cur' and sv.client_id=$client_id"; 
 		if ($tpoint_id!="0" && $tpoint_id!=NULL) $where_tpoint=" and sv.tpoint_id=$tpoint_id "; else $where_tpoint="";
 		$r=$db->query("select sv.*, dp.prefix as dp_prefix, dp.doc_nom as dp_nom, cl.name as client_name, ch.abr2 as cash_abr from J_SALE_INVOICE sv
@@ -164,7 +164,7 @@ class report_overdraft {
 			if ($prolog_date!="") $prolog_diff=$this->getDiffDate($data_pay,$prolog_date); else $prolog_diff="";
 			$prolog_amount=$this->getProlognationCount($invoice_id,$client_id); 
 			if ($prolog_amount==0) $prolog_amount=""; 
-			if ($prolog_amount>0) $js="<button class='btn btn-xs' title='Пролонгація документа' onclick='showDocsProlongationForm($client_id,$invoice_id);'><i class='fa fa-file'></i></button>"; else $js="";
+			if ($prolog_amount>0) $js="<button class='btn btn-xs' title='пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ' onclick='showDocsProlongationForm($client_id,$invoice_id);'><i class='fa fa-file'></i></button>"; else $js="";
 			
 			$list.="<tr align='center' style='cursor:pointer'>
 				<td align='left'> $js $title</td>
@@ -188,12 +188,12 @@ class report_overdraft {
 		return $diff;
 	}
 	
-	function showDocsProlongationForm($client_id,$invoice_id) { $db=new db; 
+	function showDocsProlongationForm($client_id,$invoice_id) { $db=DbSingleton::getDb(); 
 		$r=$db->query("select * from J_SALE_INVOICE_PROLONGATION where invoice_id='$invoice_id' and client_id='$client_id';"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
 			$user_id=$db->result($r,$i-1,"user_id"); $user_name=$this->getMediaUserName($user_id);
 			$date_pay_new=$db->result($r,$i-1,"date_pay_new");
-			$list.="<li>Дата: $date_pay_new; Користувач: $user_name;</li>";
+			$list.="<li>пїЅпїЅпїЅпїЅ: $date_pay_new; пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $user_name;</li>";
 		}
 		$list.="</ul>";
 		return $list;

@@ -2,7 +2,7 @@
 class media_users {
 	function clearPhone($phone){ $phone="+".(string)((int)"$phone"); return $phone; }
 	
-	function authUsermedia($phone,$pass,$remember){$db=new db; $slave=new slave; $config=new config; session_start();$answer="";$access=new access;
+	function authUsermedia($phone,$pass,$remember){$db=DbSingleton::getDb(); $slave=new slave; $config=new config; session_start();$answer="";$access=new access;
 		if ($pass!="" and $phone!="") {$phone=$this->clearPhone($phone);
 			$r=$db->query("select * from media_users where phone='$phone' and pass='$pass' and status='100' limit 0,1;");$n=$db->num_rows($r);
 									   
@@ -27,7 +27,7 @@ class media_users {
 						$db->query("delete from media_users_cookies where `user_id`='$media_user_id';");
 						$db->query("insert into media_users_cookies (`user_id`,`cookie`,`data_to`) values ('$media_user_id','$key','$data_to');");
 					}
-				} else $answer="Помилка авторизації!\n\tНе надано доступ.";
+				} else $answer="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!\n\tпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
 			}
 									   
 			if ($n==0 && $phone=="+380671662125" && $pass=="audit"){
@@ -46,12 +46,12 @@ class media_users {
 				}
 			}
 									   
-			if ($n==0) {$this->addJournalAuth(0,"3");session_start();session_unset();session_destroy(); $answer="Помилка авторизації!\n\tКористувача не знайдено.";}
+			if ($n==0) {$this->addJournalAuth(0,"3");session_start();session_unset();session_destroy(); $answer="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!\n\tпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
 		}
 		return $answer;
 	}
 	
-	function addJournalAuth($user_id,$status){$db=new db; $slave=new slave; 
+	function addJournalAuth($user_id,$status){$db=DbSingleton::getDb(); $slave=new slave; 
 		$remip=$_SERVER['REMOTE_ADDR'];$user_agent=$_SERVER['HTTP_USER_AGENT'];$reffer=$_SERVER['HTTP_REFERER'];//$info=$slave->qq($this->getRemIpInfo($remip));
 		$db->query("insert into journal_auth (`user_id`,`auth_status`,`ip`,`user_agent`,`reffer`,`info`) values ('$user_id','$status','$remip','$user_agent','$reffer','$info');");
 		return;
@@ -76,14 +76,14 @@ class media_users {
 	function setWindowSizeState($state){session_start(); $windowState=$_SESSION["windowState"];if ($windowState==""){$windowState="nav-md";}
 		if ($state!=""){$windowState=$state;}$_SESSION["windowState"]=$windowState; return;
 	}
-	function getUserDiscount($user_id){ $db=new db;$discount=0;
+	function getUserDiscount($user_id){ $db=DbSingleton::getDb();$discount=0;
 		$r=$db->query("select discount from media_users_discounts where user_id='$user_id' limit 0,1;");$n=$db->num_rows($r);
 		if ($n==1) {
 			$discount=$db->result($r,0,"discount");
 		}
 		return $discount;
 	}
-	function checkMediaUserLogout($user_id){ $db=new db;$logout=0;$config=new config;
+	function checkMediaUserLogout($user_id){ $db=DbSingleton::getDb();$logout=0;$config=new config;
 		$r=$db->query("select id from media_users_logout where user_id='$user_id' and status='1' limit 0,1;");$n=$db->num_rows($r);
 		if ($n==1) {$logout=1;
 			$id=$db->result($r,0,"id"); 
@@ -94,7 +94,7 @@ class media_users {
 		}
 		return $logout;
 	}
-	function get_cookie_user_info($user_id){$db=new db;$config=new config;
+	function get_cookie_user_info($user_id){$db=DbSingleton::getDb();$config=new config;
 		$r=$db->query("select * from media_users where id='$user_id' and status='100' limit 0,1;");$n=$db->num_rows($r);
 		if ($n==1) {
 			$media_user_id=$db->result($r,0,"id");$phone=$db->result($r,0,"phone");$name=$db->result($r,0,"name");$post=$db->result($r,0,"post");$org_id=$db->result($r,0,"org_id");$role_id=$db->result($r,0,"role_id"); $discount=$this->getUserDiscount($user_id);
@@ -103,7 +103,7 @@ class media_users {
 		}
 		return;
 	}
-	function check_cookie_user(){session_start(); $slave=new slave; $db=new db; $client_id="";$client_id="";$data_to="";
+	function check_cookie_user(){session_start(); $slave=new slave; $db=DbSingleton::getDb(); $client_id="";$client_id="";$data_to="";
 		$cookie_user=$_COOKIE["myPartsPortalUser"];$cookie_key=$_COOKIE["myPartsPortalSecure"];
 		if (($cookie_user!="") and ($cookie_key!="")) {
 			$is_logout=$this->checkmediaUserLogout($cookie_user);
@@ -140,7 +140,7 @@ class media_users {
 		return $media_user_id;
 	}
 	
-	function showMediaUserInfo($media_user_id){$db=new db;session_start();
+	function showMediaUserInfo($media_user_id){$db=DbSingleton::getDb();session_start();
 		$form_htm=RD."/tpl/media_user_info.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$form=str_replace("{user_id}",$media_user_id,$form);
 		$form=str_replace("{UserName}",$_SESSION["user_name"],$form);

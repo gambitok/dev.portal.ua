@@ -1,14 +1,14 @@
 <?php
 class clients{
 	
-function newClientCard(){$db=new db;
+function newClientCard(){$db=DbSingleton::getDb();
 	$slave=new slave;$manual=new manual; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $client_id=0;
 //	$r=$db->query("select max(id) as mid from A_CLIENTS;");$client_id=0+$db->result($r,0,"mid")+1;
 //	$db->query("insert into A_CLIENTS (`id`,`user_id`) values ('$client_id','$user_id');");
 	return $client_id;
 }
 	
-function checkEmptyClients() {$db=new db; $list="";
+function checkEmptyClients() {$db=DbSingleton::getDb(); $list="";
 	$r=$db->query("select * from A_CLIENTS where name='' and full_name='';"); $n=$db->num_rows($r);
     if ($n>0) {
 		$list="<ul>";
@@ -18,7 +18,7 @@ function checkEmptyClients() {$db=new db; $list="";
 			$full_name=$db->result($r,$i-1,"full_name");
 			$list.="
 				<li><a style='cursor:pointer; font-size:20px;' onClick='showClientCard(\"$id\")'>
-					Котрагент з ID: $id 
+					пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ ID: $id 
 					<i class='fa fa-external-link'></i>
 				</a></li>
 			";
@@ -28,7 +28,7 @@ function checkEmptyClients() {$db=new db; $list="";
 	return $list;	
 }
 	
-function show_clients_list($client_id,$client_name,$phone,$email,$state_id){$db=new db;$slave=new slave;$where="";
+function show_clients_list($client_id,$client_name,$phone,$email,$state_id){$db=DbSingleton::getDb();$slave=new slave;$where="";
 	if ($client_name!=""){$where=" and c.name LIKE '%$client_name%'";}
 	if ($phone!=""){$where=" and c.phone like '%$phone%'";}
 	if ($email!=""){$where=" and c.email like '%$email%'";}
@@ -70,7 +70,7 @@ function show_clients_list($client_id,$client_name,$phone,$email,$state_id){$db=
 }
 
 	
-//function SaveCheckedStorage($client_id,$client_vis) {$db=new db;$answer=0;$err="Помилка збереження даних!";	
+//function SaveCheckedStorage($client_id,$client_vis) {$db=DbSingleton::getDb();$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";	
 //	if ($client_id>0) {
 //		$r=$db->query("update A_CLIENTS_STORAGE set visible='$client_vis' where id in ($clien_st);");
 //		$answer=1;$err="";
@@ -78,7 +78,7 @@ function show_clients_list($client_id,$client_name,$phone,$email,$state_id){$db=
 //	return array($answer,$err);
 //}
 
-function showClientsParrentTree($sel_id,$prnt_id){$db=new db;$slave=new slave;
+function showClientsParrentTree($sel_id,$prnt_id){$db=DbSingleton::getDb();$slave=new slave;
 	$form_htm=RD."/tpl/clients_parrent_tree.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select c.*,ot.name as org_type_name, t2cn.COUNTRY_NAME, t2st.STATE_NAME, t2rg.REGION_NAME, t2ct.CITY_NAME  from A_CLIENTS c 
 		left outer join A_ORG_TYPE ot on ot.id=c.org_type 
@@ -117,7 +117,7 @@ function showClientsParrentTree($sel_id,$prnt_id){$db=new db;$slave=new slave;
 		return $form;
 }
 	
-function moveClientsRetail($user_retail_id,$client_retail_id){$db=new db; $answer=0;$err="Помилка збереження даних!";
+function moveClientsRetail($user_retail_id,$client_retail_id){$db=DbSingleton::getDb(); $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 									 
 	if ($user_retail_id>0) {
 		
@@ -142,7 +142,7 @@ function moveClientsRetail($user_retail_id,$client_retail_id){$db=new db; $answe
 			
 			$this->moveClientsConditionsRetail($client_retail_id,$client_id);
 			
-			//галочка 'Клієнт'
+			//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ 'пїЅлієпїЅпїЅ'
 			$db->query("insert into A_CLIENTS_CATEGORY (`client_id`,`category_id`) values ('$client_id','1');");
 
 			$db->query("update A_CLIENTS_USERS_RETAIL set `status`=147, `user_id_created`='$user_id', `client_id_created`='$client_id' where `id`='$user_retail_id';");
@@ -152,7 +152,7 @@ function moveClientsRetail($user_retail_id,$client_retail_id){$db=new db; $answe
 	return array($answer,$err);
 }
 	
-function moveClientsConditionsRetail($client_retail_id,$client_id) {$db=new db;
+function moveClientsConditionsRetail($client_retail_id,$client_id) {$db=DbSingleton::getDb();
 	$r=$db->query("select * from A_CLIENTS_CONDITIONS where client_id='$client_retail_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$cash_id=$db->result($r,0,"cash_id");
@@ -174,7 +174,7 @@ function moveClientsConditionsRetail($client_retail_id,$client_id) {$db=new db;
 	return;
 }
 
-function unlinkClientsParrent($client_id){$db=new db;$slave=new slave;$answer=0;$err="Помилка збереження даних!";
+function unlinkClientsParrent($client_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$client_id=$slave->qq($client_id);
 	if ($client_id>0){
 		$db->query("update A_CLIENTS set `parrent_id`='0' where `id`='$client_id';");
@@ -182,7 +182,7 @@ function unlinkClientsParrent($client_id){$db=new db;$slave=new slave;$answer=0;
 	}
 	return array($answer,$err);
 }
-function unlinkClientsSubclient($client_id,$subclient_id){$db=new db;$slave=new slave;$answer=0;$err="Помилка збереження даних!";
+function unlinkClientsSubclient($client_id,$subclient_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$client_id=$slave->qq($client_id);$subclient_id=$slave->qq($subclient_id);
 	if ($client_id>0 && $subclient_id>0){
 		$db->query("update A_CLIENTS set `parrent_id`='0' where `id`='$subclient_id';");
@@ -192,7 +192,7 @@ function unlinkClientsSubclient($client_id,$subclient_id){$db=new db;$slave=new 
 }
 
 
-function showCategoryTree($client_id,$sel_id){$db=new db;$tree="";
+function showCategoryTree($client_id,$sel_id){$db=DbSingleton::getDb();$tree="";
 	$form_htm=RD."/tpl/clients_category_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from A_CATEGORY where parrent_id='0' order by id asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -206,7 +206,7 @@ function showCategoryTree($client_id,$sel_id){$db=new db;$tree="";
 	return $tree;	
 }
 
-function showCategoryTreeSubLevel($parrent_id,$sel_id){$db=new db;$tree="";
+function showCategoryTreeSubLevel($parrent_id,$sel_id){$db=DbSingleton::getDb();$tree="";
 	$r=$db->query("select * from A_CATEGORY where parrent_id='$parrent_id' order by id asc;");$n=$db->num_rows($r);
 	if ($n>0){$tree.="<ul>";
 		for ($i=1;$i<=$n;$i++){
@@ -221,7 +221,7 @@ function showCategoryTreeSubLevel($parrent_id,$sel_id){$db=new db;$tree="";
 }
 
 
-function checkClientSubclients($sel_id){$db=new db;$ar=array();$kol_childs=0;$list="";
+function checkClientSubclients($sel_id){$db=DbSingleton::getDb();$ar=array();$kol_childs=0;$list="";
 	$r=$db->query("select c.*,ot.name as org_type_name from A_CLIENTS c 
 		left outer join A_ORG_TYPE ot on ot.id=c.org_type where c.parrent_id='$sel_id' and c.status='1' order by c.id asc;");$n=$db->num_rows($r);
 	if ($n>0){$kol_childs=$n;
@@ -249,7 +249,7 @@ function checkClientSubclients($sel_id){$db=new db;$ar=array();$kol_childs=0;$li
 	return array($kol_childs,$ar,$list);
 }
 
-function showClientCard($client_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showClientCard($client_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/clients_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	$r=$db->query("select c.*, ot.full_name as ot_full_name from A_CLIENTS c  
@@ -305,7 +305,7 @@ function showClientCard($client_id){$db=new db;$slave=new slave;session_start();
 	return $form;
 }
 		
-function show_clients_retail_list($press){ $db=new db;$slave=new slave;
+function show_clients_retail_list($press){ $db=DbSingleton::getDb();$slave=new slave;
 	$r=$db->query("select * from A_CLIENTS_USERS_RETAIL order by client_category desc, data desc, name asc;");$n=$db->num_rows($r);$list="";
 									
 		for ($i=1;$i<=$n;$i++){
@@ -363,7 +363,7 @@ function show_clients_retail_list($press){ $db=new db;$slave=new slave;
 		return $list;
 }
 	
-function showClientRetailCard($user_id){$db=new db; $slave=new slave;
+function showClientRetailCard($user_id){$db=DbSingleton::getDb(); $slave=new slave;
 	$form_htm=RD."/tpl/clients_retail_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	$r=$db->query("select * from A_CLIENTS_USERS_RETAIL where id='$user_id' limit 0,1;"); $n=$db->num_rows($r);
@@ -386,7 +386,7 @@ function showClientRetailCard($user_id){$db=new db; $slave=new slave;
 		$client_id_created=$db->result($r,0,"client_id_created"); $client_id_created_name=$this->getClientNameById($client_id_created);
 		
 		if ($status==147) $move_client_retail="<div class='hr-line-dashed'></div>
-		Контрагент: $client_id_created_name (ID:$client_id_created), пользователь: $user_id_created_name (ID:$user_id_created)";
+		пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $client_id_created_name (ID:$client_id_created), пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $user_id_created_name (ID:$user_id_created)";
 		
 		$form=str_replace("{move_client_retail}",$move_client_retail,$form);
 
@@ -420,13 +420,13 @@ function showClientRetailCard($user_id){$db=new db; $slave=new slave;
 	return $form;
 }
 	
-function newClientRetailCard(){$db=new db; $client_id=10;
+function newClientRetailCard(){$db=DbSingleton::getDb(); $client_id=10;
 	$r=$db->query("select max(id) as mid from A_CLIENTS_USERS_RETAIL;");$user_id=0+$db->result($r,0,"mid")+1;
 	$db->query("insert into A_CLIENTS_USERS_RETAIL (`id`,`client_id`) values ('$user_id','$client_id');");
 	return $user_id;
 }
 	
-function saveClientRetailGeneralInfo($user_id,$user_name,$client_id,$country_id,$state_id,$region_id,$city_id,$user_category,$user_phone,$user_email,$user_pass,$user_status,$user_data){$db=new db; $answer=0;$err="Помилка збереження даних!";
+function saveClientRetailGeneralInfo($user_id,$user_name,$client_id,$country_id,$state_id,$region_id,$city_id,$user_category,$user_phone,$user_email,$user_pass,$user_status,$user_data){$db=DbSingleton::getDb(); $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	if ($user_id>0){
 		$db->query("update A_CLIENTS_USERS_RETAIL set `name`='$user_name',`country_id`='$country_id',`state_id`='$state_id',`region_id`='$region_id',`city_id`='$city_id',`client_category`='$user_category',`phone`='$user_phone',`email`='$user_email',`status`='$user_status' where `id`='$user_id';");
 		$answer=1;$err="";
@@ -434,7 +434,7 @@ function saveClientRetailGeneralInfo($user_id,$user_name,$client_id,$country_id,
 	return array($answer,$err);
 }
 	
-function showUserStatusSelectList($sel_id){$db=new db;$list="";
+function showUserStatusSelectList($sel_id){$db=DbSingleton::getDb();$list="";
 	$r=$db->query("select * from manual where `key`='user_retail_status' and ison=1 order by mcaption,id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -445,7 +445,7 @@ function showUserStatusSelectList($sel_id){$db=new db;$list="";
 	return $list;
 }
 	
-function showUserCategorySelectList($sel_id){$db=new db;$list="";;
+function showUserCategorySelectList($sel_id){$db=DbSingleton::getDb();$list="";;
 	$r=$db->query("select * from manual where `key`='customers_categories' and ison=1 order by id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -456,13 +456,13 @@ function showUserCategorySelectList($sel_id){$db=new db;$list="";;
 	return $list;
 }
 	
-function getT2City($id) {$db=new db;
+function getT2City($id) {$db=DbSingleton::getDb();
 	$r=$db->query("select CITY_NAME from T2_CITY where CITY_ID='$id';");
 	$city_name=$db->result($r,0,"CITY_NAME");
 	return $city_name;
 }
 	
-function loadCityOptions($city_id){$db=new db;$slave=new slave;
+function loadCityOptions($city_id){$db=DbSingleton::getDb();$slave=new slave;
 	$r=$db->query("select * from T2_CITY order by CITY_NAME asc limit 10;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"CITY_ID");
@@ -473,13 +473,13 @@ function loadCityOptions($city_id){$db=new db;$slave=new slave;
 	return $list;
 }
 
-function getManualName($key) {$db=new db;
+function getManualName($key) {$db=DbSingleton::getDb();
 	$r=$db->query("select `mcaption` from manual where `id`='$key';");
 	$caption=$db->result($r,0,"mcaption");
 	return $caption;
 }
 
-function saveClientGeneralInfo($client_id,$org_type,$name,$full_name,$phone,$email,$parrent_id,$country_id,$state_id,$region_id,$city_id,$c_category_kol,$c_category,$user_category){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveClientGeneralInfo($client_id,$org_type,$name,$full_name,$phone,$email,$parrent_id,$country_id,$state_id,$region_id,$city_id,$c_category_kol,$c_category,$user_category){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 
 	$client_id=$slave->qq($client_id);$org_type=$slave->qq($org_type);$name=$slave->qq($name);$full_name=$slave->qq($full_name);$phone=$slave->qq($phone);$email=$slave->qq($email);
 	$parrent_id=$slave->qq($parrent_id);$country_id=$slave->qq($country_id);$state_id=$slave->qq($state_id);$city_id=$slave->qq($city_id);$region_id=$slave->qq($region_id);$c_category_kol=$slave->qq($c_category_kol);
@@ -509,12 +509,12 @@ function saveClientGeneralInfo($client_id,$org_type,$name,$full_name,$phone,$ema
 			$answer=1;$err="";$return_client=$client_id;
 		}
 	}
-	else $err="Спершу введіть назву клієнта!";
+	else $err="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅлієпїЅпїЅпїЅ!";
 	
 	return array($answer,$err,$return_client);
 }
 
-function loadClientDocumentPrefix($client_id){$db=new db;$slave=new slave;$gmanual=new gmanual;
+function loadClientDocumentPrefix($client_id){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/clients_document_prefix_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from A_CLIENTS_DOCUMENT_PREFIX where client_id='$client_id' and status='1' order by doc_type_id asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -533,13 +533,13 @@ function loadClientDocumentPrefix($client_id){$db=new db;$slave=new slave;$gmanu
 			<td>$prefix</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td align='center' colspan=6><h3 class='text-center'>Записи відсутні</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan=6><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
 	$form=str_replace("{list_prefix}",$list,$form);
 	$form=str_replace("{client_id}",$client_id,$form);
 	return $form;
 }
 
-function showClientDocumentPrefixForm($client_id,$prefix_id){$db=new db;$slave=new slave;$gmanual=new gmanual;
+function showClientDocumentPrefixForm($client_id,$prefix_id){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/clients_document_prefix_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from A_CLIENTS_DOCUMENT_PREFIX where id='$prefix_id' and client_id='$client_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -556,13 +556,13 @@ function showClientDocumentPrefixForm($client_id,$prefix_id){$db=new db;$slave=n
 }
 
 
-function saveClientDocumentPrefixForm($client_id,$prefix_id,$doc_type_id,$prefix){$db=new db;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveClientDocumentPrefixForm($client_id,$prefix_id,$doc_type_id,$prefix){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$client_id=$slave->qq($client_id);$prefix_id=$slave->qq($prefix_id);$doc_type_id=$slave->qq($doc_type_id);$prefix=$slave->qq($prefix);
 	if ($client_id>0 && $doc_type_id>0 && $prefix!=""){
 		
 		$r=$db->query("select count(id) as kol from A_CLIENTS_DOCUMENT_PREFIX where doc_type_id='$doc_type_id' and client_id='$client_id' and id<>'$prefix_id' and status='1';");$doc_type_ex=$db->result($r,0,"kol");
 		if ($doc_type_ex>0){
-			$answer=0;$err="Обраний Вами тип документу вже має префікс! Відредагуйте існуючий префікс за потреби";
+			$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ! ВіпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 		}
 		if ($doc_type_ex==0 ){
 			if ($prefix_id==0 || $prefix_id==""){
@@ -572,10 +572,10 @@ function saveClientDocumentPrefixForm($client_id,$prefix_id,$doc_type_id,$prefix
 			$db->query("update A_CLIENTS_DOCUMENT_PREFIX set prefix='$prefix', `doc_type_id`='$doc_type_id' where id='$prefix_id' and client_id='$client_id';");
 			$answer=1;$err="";
 		}
-	}else{$answer=0;$err="Не заповнені усі поля!";}
+	}else{$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ!";}
 	return array($answer,$err);
 }
-function dropClientDocumentPrefix($client_id,$prefix_id){$db=new db;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function dropClientDocumentPrefix($client_id,$prefix_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$client_id=$slave->qq($client_id);$prefix_id=$slave->qq($prefix_id);
 	if ($client_id>0 && $prefix_id>0){
 		$db->query("update A_CLIENTS_DOCUMENT_PREFIX set status='0' where id='$prefix_id' and client_id='$client_id';");
@@ -583,7 +583,7 @@ function dropClientDocumentPrefix($client_id,$prefix_id){$db=new db;$slave=new s
 	}
 	return array($answer,$err);
 }
-function loadClientUsers($client_id){$db=new db;$slave=new slave;
+function loadClientUsers($client_id){$db=DbSingleton::getDb();$slave=new slave;
 	$form_htm=RD."/tpl/clients_users_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select cc.* from A_CLIENTS_USERS cc where cc.client_id='$client_id' and cc.status='1' order by name asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -605,12 +605,12 @@ function loadClientUsers($client_id){$db=new db;$slave=new slave;
 			<td>$pass</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td align='center' colspan=6><h3 class='text-center'>Користувачі відсутні</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan=6><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
 	$form=str_replace("{list_users}",$list,$form);
 	$form=str_replace("{client_id}",$client_id,$form);
 	return $form;
 }
-function showClientUserForm($client_id,$user_id){$db=new db;$slave=new slave;
+function showClientUserForm($client_id,$user_id){$db=DbSingleton::getDb();$slave=new slave;
 	$form_htm=RD."/tpl/clients_user_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from A_CLIENTS_USERS where id='$user_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -636,17 +636,17 @@ function showClientUserForm($client_id,$user_id){$db=new db;$slave=new slave;
 	return $form;
 }
 
-function saveClientUserForm($client_id,$user_id,$name,$email,$phone,$pass,$main,$price,$export){$db=new db;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveClientUserForm($client_id,$user_id,$name,$email,$phone,$pass,$main,$price,$export){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$client_id=$slave->qq($client_id);$user_id=$slave->qq($user_id);$name=$slave->qq($name);$email=$slave->qq($email);$phone=$slave->qq($phone);$pass=$slave->qq($pass);$main=$slave->qq($main);$price=$slave->qq($price); $export=$slave->qq($export);
 	if ($client_id>0){
 		
 		$r=$db->query("select count(id) as kol from A_CLIENTS_USERS where phone='$phone' and id!='$user_id' and status='1';");$phone_ex=$db->result($r,0,"kol");
 		$r=$db->query("select count(id) as kol from A_CLIENTS_USERS where email='$email' and id!='$user_id' and status='1';");$email_ex=$db->result($r,0,"kol");
 		if ($email_ex>0){
-			$answer=0;$err="Вказаний Вами Email належить іншому користувачу";
+			$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ Email пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 		}
 		if ($phone_ex>0){
-			$answer=0;$err="Вказаний Вами телефон належить іншому користувачу";
+			$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 		}
 		if ($email_ex==0 && $phone_ex==0){
 			if ($user_id==0 || $user_id==""){
@@ -660,7 +660,7 @@ function saveClientUserForm($client_id,$user_id,$name,$email,$phone,$pass,$main,
 	}
 	return array($answer,$err);
 }
-function dropClientUser($client_id,$user_id){$db=new db;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function dropClientUser($client_id,$user_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$client_id=$slave->qq($client_id);$user_id=$slave->qq($user_id);
 	if ($client_id>0 && $user_id>0){
 		$db->query("update A_CLIENTS_USERS set status='0' where id='$user_id' and client_id='$client_id';");
@@ -669,7 +669,7 @@ function dropClientUser($client_id,$user_id){$db=new db;$slave=new slave;session
 	return array($answer,$err);
 }
 
-function loadClientContacts($client_id){$db=new db;$slave=new slave;
+function loadClientContacts($client_id){$db=DbSingleton::getDb();$slave=new slave;
 	$form_htm=RD."/tpl/clients_contacts_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select cc.* from A_CLIENTS_CONTACTS cc where cc.client_id='$client_id' order by name asc;");$n=$db->num_rows($r);$list="";
 		for ($i=1;$i<=$n;$i++){
@@ -688,12 +688,12 @@ function loadClientContacts($client_id){$db=new db;$slave=new slave;
                 <td>$con</td>
             </tr>";
 		}
-		if ($n==0){$list="<tr><td align='center'><h3 class='text-center'>Контакти відсутні</h3></td></tr>";}
+		if ($n==0){$list="<tr><td align='center'><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
 		$form=str_replace("{list_contacts}",$list,$form);
 		$form=str_replace("{client_id}",$client_id,$form);
 		return $form;
 }
-function getContactCon($contact_id){$db=new db;$slave=new slave;$manual=new manual;
+function getContactCon($contact_id){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual;
 	$r=$db->query("select cc.* from A_CLIENTS_CONTACTS_CON cc where cc.contact_id='$contact_id' order by id asc;");$n=$db->num_rows($r);$list="<ul>";
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
@@ -703,7 +703,7 @@ function getContactCon($contact_id){$db=new db;$slave=new slave;$manual=new manu
 		}$list.="</ul>";
 		return $list;
 }
-function getContactConForm($contact_id){$db=new db;$slave=new slave;$manual=new manual;
+function getContactConForm($contact_id){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual;
 	$r=$db->query("select cc.* from A_CLIENTS_CONTACTS_CON cc where cc.contact_id='$contact_id' order by id asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -725,7 +725,7 @@ function getContactConForm($contact_id){$db=new db;$slave=new slave;$manual=new 
 	$list.="<input type='hidden' id='contact_con_kol' value='".($n+3)."'>";
 	return $list;
 }
-function showClientContactForm($client_id,$contact_id){$db=new db;$slave=new slave;
+function showClientContactForm($client_id,$contact_id){$db=DbSingleton::getDb();$slave=new slave;
 	$form_htm=RD."/tpl/clients_contacts_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from A_CLIENTS_CONTACTS where id='$contact_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -742,7 +742,7 @@ function showClientContactForm($client_id,$contact_id){$db=new db;$slave=new sla
 	return $form;
 }
 
-function saveClientContactForm($client_id,$contact_id,$contact_name,$contact_post,$contact_con_kol,$con_id,$sotc_cont,$contact_value){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveClientContactForm($client_id,$contact_id,$contact_name,$contact_post,$contact_con_kol,$con_id,$sotc_cont,$contact_value){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$client_id=$slave->qq($client_id);$contact_id=$slave->qq($contact_id);$contact_name=$slave->qq($contact_name);$contact_post=$slave->qq($contact_post);$contact_con_kol=$slave->qq($contact_con_kol);
 	if ($client_id>0){
 		
@@ -765,7 +765,7 @@ function saveClientContactForm($client_id,$contact_id,$contact_name,$contact_pos
 	}
 	return array($answer,$err);
 }
-function dropClientContact($client_id,$contact_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function dropClientContact($client_id,$contact_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$client_id=$slave->qq($client_id);$contact_id=$slave->qq($contact_id);
 	if ($client_id>0 && $contact_id>0){
 		$db->query("delete from A_CLIENTS_CONTACTS where id='$contact_id' and client_id='$client_id';");
@@ -776,7 +776,7 @@ function dropClientContact($client_id,$contact_id){$db=new db;$slave=new slave;s
 }
 
 
-function loadClientCommets($client_id){$db=new db;$slave=new slave;
+function loadClientCommets($client_id){$db=DbSingleton::getDb();$slave=new slave;
 	$form_htm=RD."/tpl/clients_comment_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select cc.*,u.name from A_CLIENTS_COMMENTS cc 
 		left outer join media_users u on u.id=cc.USER_ID 
@@ -799,10 +799,10 @@ function loadClientCommets($client_id){$db=new db;$slave=new slave;
 			$list.=$block;
 			
 		}
-		if ($n==0){$list="<h3 class='text-center'>Коментарі відсутні</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
 		return $list;
 }
-function saveClientComment($client_id,$comment){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveClientComment($client_id,$comment){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	
 	$client_id=$slave->qq($client_id);$comment=$slave->qq($comment);
 	if ($client_id>0 && $comment!=""){
@@ -811,7 +811,7 @@ function saveClientComment($client_id,$comment){$db=new db;$slave=new slave;sess
 	}
 	return array($answer,$err);
 }
-function dropClientComment($client_id,$comment_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення запису!";
+function dropClientComment($client_id,$comment_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
 	$client_id=$slave->qq($client_id);$comment_id=$slave->qq($comment_id);
 	if ($client_id>0 && $comment_id>0){
 		$r=$db->query("select * from A_CLIENTS_COMMENTS where CLIENT_ID='$client_id' and ID='$comment_id' limit 0,1;");$n=$db->num_rows($r);
@@ -823,7 +823,7 @@ function dropClientComment($client_id,$comment_id){$db=new db;$slave=new slave;s
 	return array($answer,$err);
 }
 
-function loadClientsDetailsFile($client_id,$file_type){$db=new db;$slave=new slave;
+function loadClientsDetailsFile($client_id,$file_type){$db=DbSingleton::getDb();$slave=new slave;
 	$form_htm=RD."/tpl/clients_details_file.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select cd.*,u.name as user_name from A_CLIENTS_DTLS `cd` 
 		left outer join media_users u on u.id=`cd`.USER_ID 
@@ -859,11 +859,11 @@ function loadClientsDetailsFile($client_id,$file_type){$db=new db;$slave=new sla
 			$list.=$block;
 			
 		}
-		if ($n==0){$list="<h3 class='text-center'>Файли відсутні</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
 		return $list;
 }
 
-function clientsDetailsDropFile($client_id,$file_type,$file_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення файлу!";
+function clientsDetailsDropFile($client_id,$file_type,$file_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	
 	$client_id=$slave->qq($client_id);$file_id=$slave->qq($file_id);
 	if ($client_id>0 && $file_id>0 && $file_type!=""){
@@ -878,7 +878,7 @@ function clientsDetailsDropFile($client_id,$file_type,$file_id){$db=new db;$slav
 	return array($answer,$err);
 }
 
-function loadClientCDN($client_id){$db=new db;$slave=new slave;
+function loadClientCDN($client_id){$db=DbSingleton::getDb();$slave=new slave;
 	$form_htm=RD."/tpl/clients_cdn_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select cc.*,u.name as user_name from A_CLIENTS_CDN cc 
 		left outer join media_users u on u.id=cc.USER_ID 
@@ -915,11 +915,11 @@ function loadClientCDN($client_id){$db=new db;$slave=new slave;
 			$list.=$block;
 			
 		}
-		if ($n==0){$list="<h3 class='text-center'>Файли відсутні</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
 		return $list;
 }
 
-function clientsCDNDropFile($client_id,$file_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення файлу!";
+function clientsCDNDropFile($client_id,$file_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	
 	$client_id=$slave->qq($client_id);$file_id=$slave->qq($file_id);
 	if ($client_id>0 && $file_id>0){
@@ -934,7 +934,7 @@ function clientsCDNDropFile($client_id,$file_id){$db=new db;$slave=new slave;ses
 	return array($answer,$err);
 }
 
-function loadArticleFoto($client_id){$db=new db;$slave=new slave;
+function loadArticleFoto($client_id){$db=DbSingleton::getDb();$slave=new slave;
 	$form_htm=RD."/tpl/clients_foto_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select t2af.*,u.name as user_name from T2_PHOTOS t2af
 		left outer join media_users u on u.id=t2af.USER_ID 
@@ -946,8 +946,8 @@ function loadArticleFoto($client_id){$db=new db;$slave=new slave;
 			$data=$db->result($r,$i-1,"DATA");
 			$user_name=$db->result($r,$i-1,"user_name");
 			$main=$db->result($r,$i-1,"MAIN");
-			$main_v="<a class=\"btn btn-xs btn-white\" onClick=\"setArticlesFotoMain('$client_id','$file_id')\"><i class=\"fa fa-check\"></i> Основне фото</a>";
-			if ($main==1){$main_v=" <span class=\"btn btn-xs label-primary\"><i class=\"fa fa-check\"></i> Основне фото</span>";}
+			$main_v="<a class=\"btn btn-xs btn-white\" onClick=\"setArticlesFotoMain('$client_id','$file_id')\"><i class=\"fa fa-check\"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ</a>";
+			if ($main==1){$main_v=" <span class=\"btn btn-xs label-primary\"><i class=\"fa fa-check\"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ</span>";}
 			
 			$link="https://portal.myparts.pro/cdn/artfoto/$file_name";
 			
@@ -967,10 +967,10 @@ function loadArticleFoto($client_id){$db=new db;$slave=new slave;
 			$list.=$block;
 			
 		}
-		if ($n==0){$list="<h3 class='text-center'>Фото відсутні</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
 		return $list;
 }
-function setArticlesFotoMain($client_id,$file_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка обробки запиту!";
+function setArticlesFotoMain($client_id,$file_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
 	$client_id=$slave->qq($client_id);$file_id=$slave->qq($file_id);
 	if ($client_id>0 && $file_id>0){
 		$db->query("update T2_PHOTOS set MAIN='0' where ART_ID='$client_id' and MAIN='1';");
@@ -979,7 +979,7 @@ function setArticlesFotoMain($client_id,$file_id){$db=new db;$slave=new slave;se
 	}
 	return array($answer,$err);
 }
-function articlesFotoDropFile($client_id,$file_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення файлу!";
+function articlesFotoDropFile($client_id,$file_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$client_id=$slave->qq($client_id);$file_id=$slave->qq($file_id);
 	if ($client_id>0 && $file_id>0){
 		$r=$db->query("select PHOTO_NAME from T2_PHOTOS where ART_ID='$client_id' and ID='$file_id' limit 0,1;");$n=$db->num_rows($r);
@@ -994,7 +994,7 @@ function articlesFotoDropFile($client_id,$file_id){$db=new db;$slave=new slave;s
 }
 
 
-function getClientGeneralSaldo($sel_id){$db=new db;$saldo="0 грн";
+function getClientGeneralSaldo($sel_id){$db=DbSingleton::getDb();$saldo="0 пїЅпїЅпїЅ";
 	$r=$db->query("select `saldo`,cash_id from B_CLIENT_BALANS where client_id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$saldo=$db->result($r,0,"saldo");
@@ -1005,26 +1005,26 @@ function getClientGeneralSaldo($sel_id){$db=new db;$saldo="0 грн";
 	return $saldo;
 }
 
-function getCashAbr($sel_id){$db=new db;$name="грн";
+function getCashAbr($sel_id){$db=DbSingleton::getDb();$name="пїЅпїЅпїЅ";
 	$r=$db->query("select abr from CASH where id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"abr");}
 	return $name;	
 }
 
 
-function getClientNameById($sel_id, $field="name"){$db=new db;$name="";
+function getClientNameById($sel_id, $field="name"){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select `$field` from A_CLIENTS where id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"$field");}
 	return $name;
 }
 	
-function getUserNameById($sel_id, $field="name"){$db=new db;$name="";
+function getUserNameById($sel_id, $field="name"){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select `$field` from A_CLIENTS_USERS where id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"$field");}
 	return $name;
 }
 	
-function loadStateSelectList($country_id,$sel_id){$db=new db;$slave=new slave;
+function loadStateSelectList($country_id,$sel_id){$db=DbSingleton::getDb();$slave=new slave;
 	$list=$slave->showSelectSubList("T2_STATE","COUNTRY_ID","$country_id","STATE_ID","STATE_NAME",$sel_id);
 //		$form=str_replace("{region_list}",$slave->showSelectSubList("T2_REGION","STATE_ID","$state","REGION_ID","REGION_NAME",$city),$form);
 //		$form=str_replace("{city_list}",$slave->showSelectSubList("T2_CITY","REGION_ID","$region","CITY_ID","CITY_NAME",$city),$form);
@@ -1037,7 +1037,7 @@ function loadStateSelectList($country_id,$sel_id){$db=new db;$slave=new slave;
 	}*/
 	return $list;	
 }
-function loadRegionSelectList($state_id,$sel_id){$db=new db;$slave=new slave;
+function loadRegionSelectList($state_id,$sel_id){$db=DbSingleton::getDb();$slave=new slave;
 	/*
 	$r=$db->query("select * from T2_REGION where STATE_ID='$state_id' order by REGION_NAME asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -1048,7 +1048,7 @@ function loadRegionSelectList($state_id,$sel_id){$db=new db;$slave=new slave;
 	}*/
 	return $slave->showSelectSubList("T2_REGION","STATE_ID","$state_id","REGION_ID","REGION_NAME",$sel_id);
 }
-function loadCitySelectList($region_id,$sel_id){$db=new db;$slave=new slave;//$list="";
+function loadCitySelectList($region_id,$sel_id){$db=DbSingleton::getDb();$slave=new slave;//$list="";
 	$r=$db->query("select * from T2_CITY where REGION_ID='$region_id' order by CITY_NAME asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"CITY_ID");
@@ -1058,9 +1058,9 @@ function loadCitySelectList($region_id,$sel_id){$db=new db;$slave=new slave;//$l
 	}
 	
 	return $slave->showSelectSubListDBM("T2_CITY","REGION_ID","$region_id","CITY_ID","CITY_NAME",$sel_id);
-//	return "<option value='NEW'>Добавити населений пункт</option>".$slave->showSelectSubListDBM("T2_CITY","REGION_ID","$region_id","CITY_ID","CITY_NAME",$sel_id);
+//	return "<option value='NEW'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ</option>".$slave->showSelectSubListDBM("T2_CITY","REGION_ID","$region_id","CITY_ID","CITY_NAME",$sel_id);
 }
-function showCategoryCheckList($client_id){$db=new db;$list="";
+function showCategoryCheckList($client_id){$db=DbSingleton::getDb();$list="";
 	$r=$db->query("select  * from A_CATEGORY where parrent_id=0 order by id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){ $client_disabled="";
 		$id=$db->result($r,$i-1,"id");
@@ -1073,13 +1073,13 @@ function showCategoryCheckList($client_id){$db=new db;$list="";
 	}$list.="<input type='hidden' id='c_category_kol' value='$n'>";
 	return $list;	
 }
-function checkClientCategorySelect($client_id,$category_id){$db=new db;$ch=0;
+function checkClientCategorySelect($client_id,$category_id){$db=DbSingleton::getDb();$ch=0;
 	$r=$db->query("select category_id from A_CLIENTS_CATEGORY where client_id='$client_id' and category_id='$category_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$ch=1;}
 	return $ch;	
 }
 
-function showTpointListSelect($sel_id){$db=new db;$list="<option value='0'>-- Оберіть зі списку --</option>";
+function showTpointListSelect($sel_id){$db=DbSingleton::getDb();$list="<option value='0'>-- пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ --</option>";
 	$r=$db->query("select * from T_POINT order by name asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -1091,7 +1091,7 @@ function showTpointListSelect($sel_id){$db=new db;$list="<option value='0'>-- Об
 }
 
 
-function showPriceLvlListSelect($sel_id){$db=new db;$list="";
+function showPriceLvlListSelect($sel_id){$db=DbSingleton::getDb();$list="";
 	for ($i=0;$i<=200;$i++){
 		$sel="";if ($sel_id==$i){$sel="selected='selected'";}
 		$list.="<option value='$i' $sel>$i</option>";
@@ -1099,7 +1099,7 @@ function showPriceLvlListSelect($sel_id){$db=new db;$list="";
 	return $list;	
 }
 
-function showCashListSelect($sel_id,$ns){$db=new db;$list="";if ($ns==""){$ns=1;}
+function showCashListSelect($sel_id,$ns){$db=DbSingleton::getDb();$list="";if ($ns==""){$ns=1;}
 	$r=$db->query("select * from CASH order by name asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -1110,7 +1110,7 @@ function showCashListSelect($sel_id,$ns){$db=new db;$list="";if ($ns==""){$ns=1;
 	}
 	return $list;	
 }
-function getCashDataArray(){$db=new db;$dat=array();
+function getCashDataArray(){$db=DbSingleton::getDb();$dat=array();
 	$r=$db->query("select * from CASH order by name asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");$dat[$i]["id"]=$id;
@@ -1121,7 +1121,7 @@ function getCashDataArray(){$db=new db;$dat=array();
 	return $dat;
 }
 
-function showGoodGroupTree($client_id,$sel_id){$db=new db;$tree="";
+function showGoodGroupTree($client_id,$sel_id){$db=DbSingleton::getDb();$tree="";
 	$form_htm=RD."/tpl/clients_goods_group_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from GOODS_GROUP where PARRENT_ID='0' order by NAME asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -1135,7 +1135,7 @@ function showGoodGroupTree($client_id,$sel_id){$db=new db;$tree="";
 	return $form;	
 }
 
-function showGoodGroupSubLevel($parrent_id,$sel_id){$db=new db;$tree="";
+function showGoodGroupSubLevel($parrent_id,$sel_id){$db=DbSingleton::getDb();$tree="";
 	$r=$db->query("select * from GOODS_GROUP where PARRENT_ID='$parrent_id' order by NAME asc;");$n=$db->num_rows($r);
 	if ($n>0){$tree.="<ul>";
 		for ($i=1;$i<=$n;$i++){
@@ -1148,7 +1148,7 @@ function showGoodGroupSubLevel($parrent_id,$sel_id){$db=new db;$tree="";
 	}
 	return $tree;
 }
-function loadClientSupplConditions($client_id){$db=new db;$slave=new slave;$gmanual=new gmanual;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function loadClientSupplConditions($client_id){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/clients_suppl_conditions.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	$r=$db->query("select * from A_CLIENTS_SUPPL_CONDITIONS where client_id='$client_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1170,7 +1170,7 @@ function loadClientSupplConditions($client_id){$db=new db;$slave=new slave;$gman
 	return $form;
 }
 
-function saveClientSupplConditions($client_id,$prepayment,$prepay_all,$prepay_summ,$prepay_type,$prepay_persent){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveClientSupplConditions($client_id,$prepayment,$prepay_all,$prepay_summ,$prepay_type,$prepay_persent){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	
 	$client_id=$slave->qq($client_id);$prepayment=$slave->qq($prepayment);$prepay_all=$slave->qq($prepay_all);$prepay_summ=$slave->qq($prepay_summ);$prepay_type=$slave->qq($prepay_type);$prepay_persent=$slave->qq($prepay_persent);
 	if ($client_id>0){
@@ -1186,7 +1186,7 @@ function saveClientSupplConditions($client_id,$prepayment,$prepay_all,$prepay_su
 	return array($answer,$err);
 }
 
-function getDocTypeSelectList($sel_id){$db=new db;$list="<option value=0>Оберіть зі списку</option>";
+function getDocTypeSelectList($sel_id){$db=DbSingleton::getDb();$list="<option value=0>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</option>";
 	$r=$db->query("select id,mcaption from `manual` where ison='1' and `key`='client_sale_type' order by mid,id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -1197,7 +1197,7 @@ function getDocTypeSelectList($sel_id){$db=new db;$list="<option value=0>Оберіть
 	return $list;	
 }
 
-function loadClientConditions($client_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function loadClientConditions($client_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/clients_conditions.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	$r=$db->query("select * from A_CLIENTS_CONDITIONS where client_id='$client_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1237,7 +1237,7 @@ function loadClientConditions($client_id){$db=new db;$slave=new slave;session_st
 }
 
 
-function saveClientConditions($client_id,$cash_id,$country_cash_id,$price_lvl,$margin_price_lvl,$price_suppl_lvl,$margin_price_suppl_lvl,$tpoint_id,$client_vat,$payment_delay,$payment_delay,$credit_limit,$credit_cash_id,$credit_return,$doc_type_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveClientConditions($client_id,$cash_id,$country_cash_id,$price_lvl,$margin_price_lvl,$price_suppl_lvl,$margin_price_suppl_lvl,$tpoint_id,$client_vat,$payment_delay,$payment_delay,$credit_limit,$credit_cash_id,$credit_return,$doc_type_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 
 	$client_id=$slave->qq($client_id);$cash_id=$slave->qq($cash_id);$country_cash_id=$slave->qq($country_cash_id);$price_lvl=$slave->qq($price_lvl);$margin_price_lvl=$slave->qq($margin_price_lvl);$price_suppl_lvl=$slave->qq($price_suppl_lvl);$margin_price_suppl_lvl=$slave->qq($margin_price_suppl_lvl);$tpoint_id=$slave->qq($tpoint_id);$client_vat=$slave->qq($client_vat);$payment_delay=$slave->qq($payment_delay);$credit_limit=$slave->qq($slave->point_valid($credit_limit));$credit_cash_id=$slave->qq($credit_cash_id);$credit_return=$slave->qq($credit_return);$doc_type_id=$slave->qq($doc_type_id);
 	if ($client_id>0){
@@ -1256,7 +1256,7 @@ function saveClientConditions($client_id,$cash_id,$country_cash_id,$price_lvl,$m
 	return array($answer,$err);
 }
 	
-function showClientConditionsHistory($client_id) {$db=new db; $list="";
+function showClientConditionsHistory($client_id) {$db=DbSingleton::getDb(); $list="";
 												  
 	$r=$db->query("select * from A_CLIENTS_CONDITIONS where client_id='$client_id';");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
@@ -1337,31 +1337,31 @@ function showClientConditionsHistory($client_id) {$db=new db; $list="";
 	return $form;
 }
 	
-function getDocTypeName($doc_type){$db=new db;
+function getDocTypeName($doc_type){$db=DbSingleton::getDb();
 	$r=$db->query("select mcaption from manual where id='$doc_type' limit 1;");
 	$mcaption=$db->result($r,0,"mcaption");
 	return $mcaption;	
 }
 
-function getTpointName($tpoint_id){$db=new db;
+function getTpointName($tpoint_id){$db=DbSingleton::getDb();
 	$r=$db->query("select name from T_POINT where id='$tpoint_id' limit 1;");
 	$name=$db->result($r,0,"name");
 	return $name;	
 }
 	
-function getCashName($cash_id){$db=new db;
+function getCashName($cash_id){$db=DbSingleton::getDb();
 	$r=$db->query("select abr from CASH where id='$cash_id' limit 1;");
 	$name=$db->result($r,0,"abr");
 	return $name;	
 }
 	
-function getMediaUserName($user_id){$db=new db;$name="";
+function getMediaUserName($user_id){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select name from media_users where id='$user_id' limit 1;");
 	$name=$db->result($r,0,"name");
 	return $name;
 }
 
-function loadClientDetails($client_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function loadClientDetails($client_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/clients_details.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	$r=$db->query("select * from A_CLIENT_DETAILS where client_id='$client_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1398,7 +1398,7 @@ function loadClientDetails($client_id){$db=new db;$slave=new slave;session_start
 	return $form;
 }
 
-function saveClientDetails($client_id,$address_jur,$address_fakt,$edrpou,$svidotctvo,$vytjag,$vat,$mfo,$bank,$account,$not_resident,$nr_details,$buh_name,$buh_edrpou){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveClientDetails($client_id,$address_jur,$address_fakt,$edrpou,$svidotctvo,$vytjag,$vat,$mfo,$bank,$account,$not_resident,$nr_details,$buh_name,$buh_edrpou){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 
 	$client_id=$slave->qq($client_id);$address_jur=$slave->qq($address_jur);$address_fakt=$slave->qq($address_fakt);$edrpou=$slave->qq($edrpou);$svidotctvo=$slave->qq($svidotctvo);$vytjag=$slave->qq($vytjag);$vat=$slave->qq($vat);$mfo=$slave->qq($mfo);$bank=$slave->qq($bank);$account=$slave->qq($account);$not_resident=$slave->qq($not_resident);$nr_details=$slave->qq($nr_details);
 	$buh_name=$slave->qq($buh_name);$buh_edrpou=$slave->qq($buh_edrpou);
@@ -1419,7 +1419,7 @@ function saveClientDetails($client_id,$address_jur,$address_fakt,$edrpou,$svidot
 	return array($answer,$err);
 }
 
-function showWorkPairForm($client_id){$db=new db;$list="";
+function showWorkPairForm($client_id){$db=DbSingleton::getDb();$list="";
 	$r=$db->query("select PAIR_INDEX from T2_WORK_PAIR where ART_ID='$client_id';");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n+3;$i++){
 		$pair_index="";
@@ -1428,7 +1428,7 @@ function showWorkPairForm($client_id){$db=new db;$list="";
 	}$list.="<input type='hidden' id='work_pair_n' value='".($n+3)."'>";
 	return $list;
 }
-function saveclientsLogistic($client_id,$index_pack,$height,$length,$width,$volume,$weight_netto,$weight_brutto,$necessary_amount_car,$units_id,$multiplicity_package,$shoulder_delivery,$general_quant,$work_pair){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveclientsLogistic($client_id,$index_pack,$height,$length,$width,$volume,$weight_netto,$weight_brutto,$necessary_amount_car,$units_id,$multiplicity_package,$shoulder_delivery,$general_quant,$work_pair){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$client_id=$slave->qq($client_id);$index_pack=$slave->qq($index_pack);$height=$slave->qq($slave->point_valid($height));$length=$slave->qq($slave->point_valid($length));$width=$slave->qq($slave->point_valid($width));$volume=$slave->qq($slave->point_valid($volume));$weight_netto=$slave->qq($slave->point_valid($weight_netto));$weight_brutto=$slave->qq($slave->point_valid($weight_brutto));$necessary_amount_car=$slave->qq($necessary_amount_car);$units_id=$slave->qq($units_id);
 	$multiplicity_package=$slave->qq($multiplicity_package);$shoulder_delivery=$slave->qq($shoulder_delivery);$general_quant=$slave->qq($general_quant);
 	if ($client_id>0){
@@ -1457,7 +1457,7 @@ function saveclientsLogistic($client_id,$index_pack,$height,$length,$width,$volu
 }
 
 
-function showCountryManual($sel_id){$db=new db;$manual=new manual;$list="";
+function showCountryManual($sel_id){$db=DbSingleton::getDb();$manual=new manual;$list="";
 	$form_htm=RD."/tpl/clients_country_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T2_COUNTRIES order by COUNTRY_NAME asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -1485,7 +1485,7 @@ function showCountryManual($sel_id){$db=new db;$manual=new manual;$list="";
 	return $form;	
 }
 
-function showCountryForm($id){$db=new db;$manual=new manual;$list="";
+function showCountryForm($id){$db=DbSingleton::getDb();$manual=new manual;$list="";
 	$form_htm=RD."/tpl/clients_country_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T2_COUNTRIES where COUNTRY_ID='$id' limit 0,1;");$n=$db->num_rows($r);$list="";
 	if ($n==1){
@@ -1504,9 +1504,9 @@ function showCountryForm($id){$db=new db;$manual=new manual;$list="";
 	$form=str_replace("{risk}",$risk,$form);
 	$form=str_replace("{risk_caption}",$manual->getManualMCaption("RISK",$risk),$form);
 	
-	return array($form,"Форма Країни походження");	
+	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");	
 }
-function saveclientsCountryForm($id,$name,$alfa2,$alfa3,$duty,$risk){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveclientsCountryForm($id,$name,$alfa2,$alfa3,$duty,$risk){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$id=$slave->qq($id);$name=$slave->qq($name);$alfa2=$slave->qq($alfa2);$alfa3=$slave->qq($alfa3);$duty=$slave->qq($duty);$risk=$slave->qq($risk);
 	if ($id>0){
 		$r=$db->query("select * from `T2_COUNTRIES` where `COUNTRY_ID`='$id' limit 0,1;");$n=$db->num_rows($r);
@@ -1523,7 +1523,7 @@ function saveclientsCountryForm($id,$name,$alfa2,$alfa3,$duty,$risk){$db=new db;
 	}
 	return array($answer,$err);
 }
-function showCostumsManual($sel_id){$db=new db;$manual=new manual;$list="";
+function showCostumsManual($sel_id){$db=DbSingleton::getDb();$manual=new manual;$list="";
 	$form_htm=RD."/tpl/clients_costums_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T2_COSTUMS order by COSTUMS_NAME asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -1553,7 +1553,7 @@ function showCostumsManual($sel_id){$db=new db;$manual=new manual;$list="";
 	$form=str_replace("{list}",$list,$form);
 	return $form;	
 }
-function showCostumsForm($id){$db=new db;$manual=new manual;$list="";
+function showCostumsForm($id){$db=DbSingleton::getDb();$manual=new manual;$list="";
 	$form_htm=RD."/tpl/clients_costums_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T2_COSTUMS where COSTUMS_ID='$id' limit 0,1;");$n=$db->num_rows($r);$list="";
 	if ($n==1){
@@ -1574,10 +1574,10 @@ function showCostumsForm($id){$db=new db;$manual=new manual;$list="";
 	$form=str_replace("{type_declaration}",$type_declaration,$form);
 	$form=str_replace("{type_declaration_caption}",$manual->getManualMCaption("costums_type_declaration",$type_declaration),$form);
 	
-	return array($form,"Форма митного коду УКТЕЗД");	
+	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");	
 }
 
-function saveclientsCostumsForm($id,$name,$preferential_rate,$full_rate,$type_declaration,$sertification,$gos_standart){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveclientsCostumsForm($id,$name,$preferential_rate,$full_rate,$type_declaration,$sertification,$gos_standart){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$id=$slave->qq($id);$name=$slave->qq($name);$preferential_rate=$slave->qq($slave->point_valid($preferential_rate));$full_rate=$slave->qq($slave->point_valid($full_rate));$type_declaration=$slave->qq($type_declaration);$sertification=$slave->qq($sertification);$gos_standart=$slave->qq($gos_standart);
 	if ($id>0){
 		$r=$db->query("select * from `T2_COSTUMS` where `COSTUMS_ID`='$id' limit 0,1;");$n=$db->num_rows($r);
@@ -1595,7 +1595,7 @@ function saveclientsCostumsForm($id,$name,$preferential_rate,$full_rate,$type_de
 	return array($answer,$err);
 }
 
-function loadArticleZED($client_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function loadArticleZED($client_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/clients_zed.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	$r=$db->query("select t2z.*,t2c.COUNTRY_NAME, t2s.COSTUMS_NAME from T2_ZED t2z 
@@ -1617,7 +1617,7 @@ function loadArticleZED($client_id){$db=new db;$slave=new slave;session_start();
 	
 	return $form;
 }
-function saveclientsZED($client_id,$country_id,$costums_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveclientsZED($client_id,$country_id,$costums_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$client_id=$slave->qq($client_id);$country_id=$slave->qq($country_id);$costums_id=$slave->qq($slave->point_valid($costums_id));
 	if ($client_id>0){
 		//T2_ZED UPDATE
@@ -1633,7 +1633,7 @@ function saveclientsZED($client_id,$country_id,$costums_id){$db=new db;$slave=ne
 	return array($answer,$err);
 }
 
-function loadClientStorage($client_id){$db=new db;$slave=new slave;
+function loadClientStorage($client_id){$db=DbSingleton::getDb();$slave=new slave;
 	$vis=0;
 	$form_htm=RD."/tpl/clients_storage_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select cc.*, t2cn.COUNTRY_NAME, t2st.STATE_NAME, t2rg.REGION_NAME, t2ct.CITY_NAME from A_CLIENTS_STORAGE cc
@@ -1669,7 +1669,7 @@ function loadClientStorage($client_id){$db=new db;$slave=new slave;
 			<td style='text-align: center;'><input id='$i' type='checkbox' name='check[$i]' class='check_cl' disabled='false' $vis/></td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td align='center' colspan=7><h3 class='text-center'>Склади відсутні</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan=7><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
 	$form=str_replace("{list_storage}",$list,$form);
 	$form=str_replace("{client_id}",$client_id,$form);
 	return $form;
@@ -1681,7 +1681,7 @@ function loadClientDocuments($client_id) {
 	return array($form_mandate,$form_basis);
 }
 	
-function loadClientMandate($client_id){$db=new db;
+function loadClientMandate($client_id){$db=DbSingleton::getDb();
 	$form_htm=RD."/tpl/clients_mandate_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from A_CLIENTS_MANDATE where client_id='$client_id' and status='1';");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -1705,13 +1705,13 @@ function loadClientMandate($client_id){$db=new db;
 			<td>$data_to</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td align='center' colspan=6><h3 class='text-center'>Доручення відсутні</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan=6><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
     $form=str_replace("{list_mandate}",$list,$form);
 	$form=str_replace("{client_id}",$client_id,$form);
 	return $form;
 }
 	
-function showClientMandateForm($client_id,$mandate_id){$db=new db;
+function showClientMandateForm($client_id,$mandate_id){$db=DbSingleton::getDb();
 	$form_htm=RD."/tpl/clients_mandate_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from A_CLIENTS_MANDATE where id='$mandate_id' limit 0,1;"); $n=$db->num_rows($r);
 	if ($n==1){
@@ -1730,11 +1730,11 @@ function showClientMandateForm($client_id,$mandate_id){$db=new db;
 	$form=str_replace("{data_from}",$data_from,$form);
 	$form=str_replace("{data_to}",$data_to,$form);
 	
-	return array($form,"Доручення контрагента");
+	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 }
 	
-function saveClientMandateForm($client_id,$mandate_id,$number,$seria,$receiver,$data_from,$data_to){$db=new db; $slave=new slave;
-	$answer=0;$err="Помилка збереження даних!";
+function saveClientMandateForm($client_id,$mandate_id,$number,$seria,$receiver,$data_from,$data_to){$db=DbSingleton::getDb(); $slave=new slave;
+	$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$client_id=$slave->qq($client_id);$mandate_id=$slave->qq($mandate_id);														
 	if ($client_id>0 && $mandate_id>0){
 		$r=$db->query("select * from `A_CLIENTS_MANDATE` where `id`='$mandate_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1753,8 +1753,8 @@ function saveClientMandateForm($client_id,$mandate_id,$number,$seria,$receiver,$
 	return array($answer,$err);
 }
 	
-function dropClientMandate($client_id,$mandate_id){$db=new db; $slave=new slave;
-	$answer=0;$err="Помилка збереження даних!";
+function dropClientMandate($client_id,$mandate_id){$db=DbSingleton::getDb(); $slave=new slave;
+	$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$client_id=$slave->qq($client_id);$mandate_id=$slave->qq($mandate_id);
 	if ($client_id>0 && $mandate_id>0){
 		$db->query("update A_CLIENTS_MANDATE set status='0' where id='$mandate_id' and client_id='$client_id';");
@@ -1763,7 +1763,7 @@ function dropClientMandate($client_id,$mandate_id){$db=new db; $slave=new slave;
 	return array($answer,$err);
 }
 		
-function loadClientBasis($client_id){$db=new db;
+function loadClientBasis($client_id){$db=DbSingleton::getDb();
 	$form_htm=RD."/tpl/clients_basis_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from A_CLIENTS_BASIS where client_id='$client_id' and status='1';");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -1783,13 +1783,13 @@ function loadClientBasis($client_id){$db=new db;
 			<td>$data_to</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td align='center' colspan=6><h3 class='text-center'>Підстави відсутні</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan=6><h3 class='text-center'>ПіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
     $form=str_replace("{list_basis}",$list,$form);
 	$form=str_replace("{client_id}",$client_id,$form);
 	return $form;
 }
 	
-function showClientBasisForm($client_id,$basis_id){$db=new db;
+function showClientBasisForm($client_id,$basis_id){$db=DbSingleton::getDb();
 	$form_htm=RD."/tpl/clients_basis_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from A_CLIENTS_BASIS where id='$basis_id' limit 0,1;"); $n=$db->num_rows($r);
 	if ($n==1){
@@ -1806,11 +1806,11 @@ function showClientBasisForm($client_id,$basis_id){$db=new db;
 	$form=str_replace("{data_from}",$data_from,$form);
 	$form=str_replace("{data_to}",$data_to,$form);
 	
-	return array($form,"Підстава контрагента");
+	return array($form,"ПіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 }
 	
-function saveClientBasisForm($client_id,$basis_id,$number,$data_from,$data_to){$db=new db; $slave=new slave;
-	$answer=0;$err="Помилка збереження даних!";
+function saveClientBasisForm($client_id,$basis_id,$number,$data_from,$data_to){$db=DbSingleton::getDb(); $slave=new slave;
+	$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$client_id=$slave->qq($client_id);$basis_id=$slave->qq($basis_id);														
 	if ($client_id>0 && $basis_id>0){
 		$r=$db->query("select * from `A_CLIENTS_BASIS` where `id`='$basis_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1829,8 +1829,8 @@ function saveClientBasisForm($client_id,$basis_id,$number,$data_from,$data_to){$
 	return array($answer,$err);
 }
 	
-function dropClientBasis($client_id,$basis_id){$db=new db; $slave=new slave;
-	$answer=0;$err="Помилка збереження даних!";
+function dropClientBasis($client_id,$basis_id){$db=DbSingleton::getDb(); $slave=new slave;
+	$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$client_id=$slave->qq($client_id);$basis_id=$slave->qq($basis_id);
 	if ($client_id>0 && $basis_id>0){
 		$db->query("update A_CLIENTS_BASIS set status='0' where id='$basis_id' and client_id='$client_id';");
@@ -1839,7 +1839,7 @@ function dropClientBasis($client_id,$basis_id){$db=new db; $slave=new slave;
 	return array($answer,$err);
 }
 	
-function showClientStorageForm($client_id,$storage_id){$db=new db;$slave=new slave;$manual=new manual;$list="";
+function showClientStorageForm($client_id,$storage_id){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual;$list="";
 	$form_htm=RD."/tpl/clients_storage_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from A_CLIENTS_STORAGE where id='$storage_id' limit 0,1;");$n=$db->num_rows($r);$list="";
 	if ($n==1){
@@ -1866,10 +1866,10 @@ function showClientStorageForm($client_id,$storage_id){$db=new db;$slave=new sla
 	$form=str_replace("{city_list}",$slave->showSelectSubList("T2_CITY","REGION_ID","$region","CITY_ID","CITY_NAME",$city),$form);						   
 	$form=str_replace("{client_checked}",$visible,$form);
 	
-	return array($form,"Карта складу контрагента");
+	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 }
 
-function saveClientStorageForm($client_id,$storage_id,$name,$email,$phone,$contact_person,$country,$state,$region,$city,$client_visible){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveClientStorageForm($client_id,$storage_id,$name,$email,$phone,$contact_person,$country,$state,$region,$city,$client_visible){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$client_id=$slave->qq($client_id);$storage_id=$slave->qq($storage_id);$name=$slave->qq($name);$email=$slave->qq($email);$phone=$slave->qq($phone);$contact_person=$slave->qq($contact_person);$country=$slave->qq($country);$state=$slave->qq($state);$region=$slave->qq($region);$city=$slave->qq($city);
 	if ($client_id>0 && $storage_id>0){
 		$r=$db->query("select * from `A_CLIENTS_STORAGE` where `id`='$storage_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1887,12 +1887,12 @@ function saveClientStorageForm($client_id,$storage_id,$name,$email,$phone,$conta
 	return array($answer,$err);
 }
 
-function getClientCash($client_id){$db=new db;$cash_id=1;
+function getClientCash($client_id){$db=DbSingleton::getDb();$cash_id=1;
 	$r=$db->query("select cash_id from A_CLIENTS_CONDITIONS where client_id='$client_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$cash_id=$db->result($r,0,"cash_id");}
 	return $cash_id;
 }
-function showClientGeneralSaldoForm($client_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showClientGeneralSaldoForm($client_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	if ($client_id>0){  $data_from=date("Y-m-01");$data_to=date("Y-m-t"); //current_month
 		$form_htm=RD."/tpl/client_general_saldo_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 				
@@ -1919,7 +1919,7 @@ function showClientGeneralSaldoForm($client_id){$db=new db;$slave=new slave;sess
 			$deb_kre=$db->result($r,$i-1,"deb_kre");
 			$balans_before=$db->result($r,$i-1,"balans_before");
 			$balans_after=$db->result($r,$i-1,"balans_after");
-			$doc_type_id=$db->result($r,$i-1,"doc_type_id"); // 1-Видаткова (SaleInvoice); 2- Оплата(Pay); 3-Автооплата(PayAuto) 
+			$doc_type_id=$db->result($r,$i-1,"doc_type_id"); // 1-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (SaleInvoice); 2- пїЅпїЅпїЅпїЅпїЅпїЅ(Pay); 3-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ(PayAuto) 
 			$doc_id=$db->result($r,$i-1,"doc_id");
 			$pay_cash_name=$db->result($r,$i-1,"pmc.abr");
 			$pay_summ=$db->result($r,$i-1,"pay_summ");
@@ -1952,22 +1952,22 @@ function showClientGeneralSaldoForm($client_id){$db=new db;$slave=new slave;sess
 				<td>$balans_after</td>
 				<td>$document_name</td>
 				<td>$pay_summ $pay_cash_name</td>
-				<td><button class='btn btn-xs btn-default' title='Переглянути' onClick='$function'><i class='fa fa-eye'></i></button></td>
+				<td><button class='btn btn-xs btn-default' title='пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ' onClick='$function'><i class='fa fa-eye'></i></button></td>
 			</tr>";
 		}$saldo_end=round($balans_after,2);
 		}
 		
-		if ($n==0){$list="<tr><td colspan='8' align='center'>Документи відсутні</td></tr>"; $saldo_end=$saldo_start;}
+		if ($n==0){$list="<tr><td colspan='8' align='center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>"; $saldo_end=$saldo_start;}
 		$form=str_replace("{list}",$list,$form);
 		$form=str_replace("{saldo_end}",$saldo_end."".$this->getCashAbr($saldo_cash_id),$form);
 					  $saldo_data_end=date("Y-m-d");
 		$form=str_replace("{saldo_data_end}",$saldo_data_end,$form);
 		$form=str_replace("{client_id}",$client_id,$form);			  
 	}
-	return array($form,"Взаєморозрахунки з контрагентом");
+	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 }
 	
-function getSaldoEnd($client_id){$db=new db;
+function getSaldoEnd($client_id){$db=DbSingleton::getDb();
 	$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	if ($client_id>0){ 
 		
@@ -2018,14 +2018,14 @@ function getSaldoEnd($client_id){$db=new db;
 		}
 		
 		$saldo_cap="";
-		if($saldo_end<0) $saldo_cap="<span style='color:red;'>(борг)</span>";
-		if($saldo_end>0) $saldo_cap="<span style='color:limegreen;'>(предоплата)</span>";
+		if($saldo_end<0) $saldo_cap="<span style='color:red;'>(пїЅпїЅпїЅпїЅ)</span>";
+		if($saldo_end>0) $saldo_cap="<span style='color:limegreen;'>(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)</span>";
 		
 		$saldo_end=$saldo_end." ".$this->getCashAbr($saldo_cash_id)." ".$saldo_cap;
 		
 		$saldo_cap="";
-		if($saldo_start<0) $saldo_cap="<span style='color:red;'>(борг)</span>";
-		if($saldo_start>0) $saldo_cap="<span style='color:limegreen;'>(предоплата)</span>";
+		if($saldo_start<0) $saldo_cap="<span style='color:red;'>(пїЅпїЅпїЅпїЅ)</span>";
+		if($saldo_start>0) $saldo_cap="<span style='color:limegreen;'>(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)</span>";
 		
 		$saldo_start=$saldo_start." ".$this->getCashAbr($saldo_cash_id)." ".$saldo_cap;
 						  
@@ -2033,7 +2033,7 @@ function getSaldoEnd($client_id){$db=new db;
 	return $saldo_start;
 }
 
-function filterClientGeneralSaldoForm($client_id,$data_from,$data_to){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function filterClientGeneralSaldoForm($client_id,$data_from,$data_to){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	if ($client_id>0){   //current_month
 		
 		$saldo_data_start=substr($data_from,0,-2)."01";$saldo_start=0;
@@ -2062,7 +2062,7 @@ function filterClientGeneralSaldoForm($client_id,$data_from,$data_to){$db=new db
 			$deb_kre=$db->result($r,$i-1,"deb_kre");
 			$balans_before=$db->result($r,$i-1,"balans_before");
 			$balans_after=$db->result($r,$i-1,"balans_after");
-			$doc_type_id=$db->result($r,$i-1,"doc_type_id"); // 1-Видаткова (SaleInvoice); 2- Оплата(Pay); 3-Автооплата(PayAuto) 
+			$doc_type_id=$db->result($r,$i-1,"doc_type_id"); // 1-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (SaleInvoice); 2- пїЅпїЅпїЅпїЅпїЅпїЅ(Pay); 3-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ(PayAuto) 
 			$doc_id=$db->result($r,$i-1,"doc_id");
 			$pay_cash_name=$db->result($r,$i-1,"pmc.abr");
 			$pay_summ=$db->result($r,$i-1,"pay_summ");
@@ -2101,13 +2101,13 @@ function filterClientGeneralSaldoForm($client_id,$data_from,$data_to){$db=new db
 				<td>$balans_after</td>
 				<td>$document_name</td>
 				<td>$pay_summ $pay_cash_name</td>
-				<td><button class='btn btn-xs btn-default' title='Переглянути' onClick='$function'><i class='fa fa-eye'></i></button></td>
+				<td><button class='btn btn-xs btn-default' title='пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ' onClick='$function'><i class='fa fa-eye'></i></button></td>
 			</tr>";
 		}$saldo_end=round($balans_after,2);
 		}
 		
 		if ($n==0){
-			$list="<tr><td colspan='8' align='center'>Документи відсутні</td></tr>";
+			$list="<tr><td colspan='8' align='center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>";
 			$client_saldo_end=$balans_after."".$this->getCashAbr($saldo_cash_id);
 			$client_saldo_start=$client_saldo_end=$saldo_start."".$this->getCashAbr($saldo_cash_id);
 		}
@@ -2116,7 +2116,7 @@ function filterClientGeneralSaldoForm($client_id,$data_from,$data_to){$db=new db
 	return array($list,$client_saldo_start,$client_saldo_end,$client_saldo_data_start,$client_saldo_data_end);
 }	
 	
-function getClientBalansPeriodStart($client_id,$cash_id,$data_from,$recursion){$db=new db;$saldo_start=0;$saldo_data_start=$data_from;
+function getClientBalansPeriodStart($client_id,$cash_id,$data_from,$recursion){$db=DbSingleton::getDb();$saldo_start=0;$saldo_data_start=$data_from;
 	$r=$db->query("select * from B_CLIENT_BALANS_PERIOD where client_id='$client_id' and data_start='".date("Y-m-01",strtotime($data_from))."' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$saldo_start=$db->result($r,0,"saldo_start");
@@ -2140,7 +2140,7 @@ function getClientBalansPeriodStart($client_id,$cash_id,$data_from,$recursion){$
 	return array($saldo_start,$cash_id,$saldo_data_start);
 }
 	
-function getSaleInvoceProlog($client_id,$date_search) { $db=new db; $list=""; $today=date("Y-m-d");
+function getSaleInvoceProlog($client_id,$date_search) { $db=DbSingleton::getDb(); $list=""; $today=date("Y-m-d");
 	session_start();$user_id=$_SESSION["media_user_id"];
 	if ($date_search=="" || $date_search==0) $date_search=$today;
 	require_once RD.'/lib/users_class.php';$users=new users;
@@ -2160,7 +2160,7 @@ function getSaleInvoceProlog($client_id,$date_search) { $db=new db; $list=""; $t
 			</tr>";
 	}
 	$form_htm=RD."/tpl/sale_invoice_prolog.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-	if ($n==0){$list="<tr><td align='center' colspan=5><h3 class='text-center'>Записи відсутні</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan=5><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
 	$form=str_replace("{prolog_range}",$list,$form);
 	$form=str_replace("{date_search}",$date_search,$form);
 	$form=str_replace("{disabled}","disabled='disabled'",$form);
@@ -2170,7 +2170,7 @@ function getSaleInvoceProlog($client_id,$date_search) { $db=new db; $list=""; $t
 	return $form;
 }
 	
-function getSaleInvocePrologHistory($client_id) { $db=new db; $list="";
+function getSaleInvocePrologHistory($client_id) { $db=DbSingleton::getDb(); $list="";
 	require_once RD.'/lib/users_class.php';$users=new users;
 	$r=$db->query("select jp.*,j.prefix,j.doc_nom from J_SALE_INVOICE_PROLONGATION jp
 		left outer join J_SALE_INVOICE j on (j.id=jp.invoice_id)
@@ -2193,12 +2193,12 @@ function getSaleInvocePrologHistory($client_id) { $db=new db; $list="";
 				</tr>";
 	}
 	$form_htm=RD."/tpl/sale_invoice_prolog_history.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-	if ($n==0){$list="<tr><td align='center' colspan=5><h3 class='text-center'>Записи відсутні</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan=5><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
 	$form=str_replace("{prolog_range}",$list,$form);
 	return $form;
 }
 	
-function checkSaleInvoceProlog($client_id,$date_start,$date_new) { $db=new db; $list=""; $today=date("Y-m-d");
+function checkSaleInvoceProlog($client_id,$date_start,$date_new) { $db=DbSingleton::getDb(); $list=""; $today=date("Y-m-d");
 	session_start();$user_id=$_SESSION["media_user_id"];
 	require_once RD.'/lib/users_class.php';$users=new users;
 	$users_credit=$users->getUsersAccessCredit($user_id);	
@@ -2226,7 +2226,7 @@ function checkSaleInvoceProlog($client_id,$date_start,$date_new) { $db=new db; $
 			</tr>";
 	}
 	$form_htm=RD."/tpl/sale_invoice_prolog.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-	if ($n==0){$list="<tr><td align='center' colspan=5><h3 class='text-center'>Записи відсутні</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan=5><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
 	$form=str_replace("{prolog_range}",$list,$form);
 	$form=str_replace("{date_search}",$date_start,$form);
 	$form=str_replace("{disabled}","",$form);
@@ -2236,7 +2236,7 @@ function checkSaleInvoceProlog($client_id,$date_start,$date_new) { $db=new db; $
 	return $form;
 }
 	
-function editSaleInvoceProlog($client_id,$date_start,$date_new) { $db=new db; $today=date("Y-m-d"); $err="Помилка збереження даних!"; 	
+function editSaleInvoceProlog($client_id,$date_start,$date_new) { $db=DbSingleton::getDb(); $today=date("Y-m-d"); $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!"; 	
 	session_start();$user_id=$_SESSION["media_user_id"];
 	require_once RD.'/lib/users_class.php';$users=new users;
 	$users_credit=$users->getUsersAccessCredit($user_id);	
@@ -2264,14 +2264,14 @@ function editSaleInvoceProlog($client_id,$date_start,$date_new) { $db=new db; $t
 	return array($answer,$err);
 }
 	
-function checkSaleInvoiceClients($client_id) {$db=new db; 
+function checkSaleInvoiceClients($client_id) {$db=DbSingleton::getDb(); 
 	$r=$db->query("select count(id) as kol from J_SALE_INVOICE where client_id='$client_id';");
   	$kol=$db->result($r,0,"kol");
     $kol>0 ? $res=true : $res=false;
     return $res;
 }
 	
-function checkJPayClients($client_id) {$db=new db; 
+function checkJPayClients($client_id) {$db=DbSingleton::getDb(); 
 	$r=$db->query("select count(id) as kol from J_PAY where client_id='$client_id';");
   	$kol=$db->result($r,0,"kol");
     $kol>0 ? $res=true : $res=false;
@@ -2279,7 +2279,7 @@ function checkJPayClients($client_id) {$db=new db;
 }
 	
 function printGeneralSaldoList($client_id,$data_from,$data_to) {
-	$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+	$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	if ($client_id>0){ // $data_from=date("Y-m-01");$data_to=date("Y-m-t"); //current_month
 		$form_htm=RD."/tpl/clients_print_saldo.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 				
@@ -2306,7 +2306,7 @@ function printGeneralSaldoList($client_id,$data_from,$data_to) {
 			$deb_kre=$db->result($r,$i-1,"deb_kre");
 			$balans_before=$db->result($r,$i-1,"balans_before");
 			$balans_after=$db->result($r,$i-1,"balans_after");
-			$doc_type_id=$db->result($r,$i-1,"doc_type_id"); // 1-Видаткова (SaleInvoice); 2- Оплата(Pay); 3-Автооплата(PayAuto) 
+			$doc_type_id=$db->result($r,$i-1,"doc_type_id"); // 1-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (SaleInvoice); 2- пїЅпїЅпїЅпїЅпїЅпїЅ(Pay); 3-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ(PayAuto) 
 			$doc_id=$db->result($r,$i-1,"doc_id");
 			$pay_cash_name=$db->result($r,$i-1,"pmc.abr");
 			$pay_summ=$db->result($r,$i-1,"pay_summ");
@@ -2343,7 +2343,7 @@ function printGeneralSaldoList($client_id,$data_from,$data_to) {
 		}$saldo_end=round($balans_after,2);
 		}
 		
-		if ($n==0){$list="<tr><td colspan='8' align='center'>Документи відсутні</td></tr>";}
+		if ($n==0){$list="<tr><td colspan='8' align='center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>";}
 		$form=str_replace("{list}",$list,$form);
 		$form=str_replace("{saldo_end}",$saldo_end."".$this->getCashAbr($saldo_cash_id),$form);
 					  $saldo_data_end=$data_to;

@@ -4,13 +4,13 @@ class SettingsNewClass {
 	
 	//contacts============================================================================================================================
 	
-	function getLangCap($lang_id) {$db = new dbt;
+	function getLangCap($lang_id) {$db = DbSingleton::getTokoDb();
 		$r=$db->query("select caption from new_lang where id='$lang_id';");
 		$caption=$db->result($r,0,"caption");
 		return $caption;
 	}
 	
-	function showContactsList() { $db = new dbt;
+	function showContactsList() { $db = DbSingleton::getTokoDb();
 		$form=""; $form_htm=RD."/tpl/new/contacts.htm"; if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}					
 		$r=$db->query("select * from contacts_new where status=1;"); $n=$db->num_rows($r);						
 		for ($i=1;$i<=$n;$i++){
@@ -34,7 +34,7 @@ class SettingsNewClass {
 		return $form;
 	}
 		
-	function loadContactsList() { $db = new dbt;
+	function loadContactsList() { $db = DbSingleton::getTokoDb();
 		$r=$db->query("select * from contacts_new where status=1;"); $n=$db->num_rows($r);						
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
@@ -54,13 +54,13 @@ class SettingsNewClass {
 		return $list;
 	}
 	
-	function newContactsCard($lang_var){ $db = new dbt;
+	function newContactsCard($lang_var){ $db = DbSingleton::getTokoDb();
 		$r=$db->query("select max(id) as mid from contacts_new;"); $max_id=0+$db->result($r,0,"mid")+1;
 		$db->query("insert into contacts_new (`id`,`status`,`lang_id`) values ('$max_id',1,'$lang_var');");
 		return $max_id;
 	}
 	
-	function showContactsCard($contact_id){ $db=new dbt;
+	function showContactsCard($contact_id){ $db=DbSingleton::getTokoDb();
 		$form_htm=RD."/tpl/new/contacts_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$r=$db->query("select * from contacts_new where id='$contact_id';"); $n=$db->num_rows($r);
 		if ($n>0){
@@ -78,7 +78,7 @@ class SettingsNewClass {
 		return $form;
   	}
 	
-	function saveContacts($contact_id,$title,$address,$schedule,$phone){ $db=new dbt; $answer=0;$err="Помилка збереження даних!";
+	function saveContacts($contact_id,$title,$address,$schedule,$phone){ $db=DbSingleton::getTokoDb(); $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 		if ($contact_id>0){
 			$db->query("update contacts_new set `title`='$title', `address`='$address', `schedule`='$schedule', `phone`='$phone' where `id`='$contact_id';");
 			$answer=1;$err="";
@@ -86,7 +86,7 @@ class SettingsNewClass {
 		return array($answer,$err);
 	}
 	
-	function dropContacts($contact_id) { $db=new dbt; $answer=0;$err="Помилка збереження даних!";
+	function dropContacts($contact_id) { $db=DbSingleton::getTokoDb(); $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 		if ($contact_id>0) {
 			$db->query("delete from contacts_new where id='$contact_id';");	
 			$answer=1;$err="";
@@ -96,7 +96,7 @@ class SettingsNewClass {
 
 	//language============================================================================================================================
 	
-	function showLanguageList() {$db = new dbt;
+	function showLanguageList() {$db = DbSingleton::getTokoDb();
 		$form=""; $form_htm=RD."/tpl/new/language.htm"; if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}						
 		$m = 3; 
 		$r=$db->query("select * from new_lang_wd");
@@ -117,7 +117,7 @@ class SettingsNewClass {
 		return $form;
 	}
 	
-	function loadLanguageList() {$db = new dbt;					
+	function loadLanguageList() {$db = DbSingleton::getTokoDb();					
 		$m = 3; 
 		$r=$db->query("select * from new_lang_wd");
 		$n=$db->num_rows($r);
@@ -135,13 +135,13 @@ class SettingsNewClass {
 		return $list;
 	}
 		
-	function newLanguageCard($lang_var){ $db = new dbt;
+	function newLanguageCard($lang_var){ $db = DbSingleton::getTokoDb();
 		$r=$db->query("select max(id) as mid from new_lang_wd;"); $max_id=0+$db->result($r,0,"mid")+1;
 		$db->query("insert into new_lang_wd (`id`,`variable`) values ('$max_id','$lang_var');");
 		return $max_id;
 	}
 	
-	function showLanguageCard($id){ $db=new dbt;
+	function showLanguageCard($id){ $db=DbSingleton::getTokoDb();
 		$form_htm=RD."/tpl/new/language_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}						
 		$m=3; $lang_arr=[];
 		$r=$db->query("select * from new_lang_wd where id=$id");
@@ -160,7 +160,7 @@ class SettingsNewClass {
 		return $form;
   	}
 	
-	function saveLanguage($lang_id,$lang_var,$lang_ru,$lang_ua,$lang_eng){ $db=new dbt; $answer=0; $err="Помилка збереження даних!";										  
+	function saveLanguage($lang_id,$lang_var,$lang_ru,$lang_ua,$lang_eng){ $db=DbSingleton::getTokoDb(); $answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";										  
 		if ($lang_id>0){
 			$r=$db->query("select * from new_lang_wdv where lang_id=1 and wd=$lang_id;"); $n=$db->num_rows($r);
 				if ($n>0) $db->query("update new_lang_wdv set caption='$lang_ru' where lang_id=1 and wd=$lang_id;");
@@ -176,7 +176,7 @@ class SettingsNewClass {
 		return array($answer,$err);
 	}
 	
-	function dropLanguage($lang_id) { $db=new dbt; $answer=0; $err="Помилка збереження даних!";
+	function dropLanguage($lang_id) { $db=DbSingleton::getTokoDb(); $answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 		if ($lang_id>0) {
 			$db->query("delete from new_lang_wd where id='$lang_id';");	
 			$db->query("delete from new_lang_wdv where wd='$lang_id';");	
@@ -187,7 +187,7 @@ class SettingsNewClass {
 	
 	//locations======================================================================================================================
 	
-	function showLocations() {$db = new dbt;
+	function showLocations() {$db = DbSingleton::getTokoDb();
 		$form=""; $form_htm=RD."/tpl/new/locations.htm"; if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}						
 		$r=$db->query("select t2c.CITY_NAME, t2r.REGION_NAME, t2s.STATE_NAME from T2_CITY t2c
 			left outer join T2_REGION t2r on t2r.REGION_ID=t2c.REGION_ID
@@ -212,11 +212,11 @@ class SettingsNewClass {
 	//Contacts bottom===============================================================================================================
 	
 	function getStatusCaption($status) {
-		$status ? $status_cap="Активний" : $status_cap="Відключений";
+		$status ? $status_cap="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ" : $status_cap="ВіпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 		return $status_cap;
 	}
 	
-	function showIcontSelectList($sel_id){$db=new dbt; $list="";;
+	function showIcontSelectList($sel_id){$db=DbSingleton::getTokoDb(); $list="";;
 		$r=$db->query("select * from new_icons;"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
@@ -228,7 +228,7 @@ class SettingsNewClass {
 		return $list;
 	}
 	
-	function getIcon($id) {$db=new dbt; $list="";;
+	function getIcon($id) {$db=DbSingleton::getTokoDb(); $list="";;
 		$r=$db->query("select * from new_icons where id='$id' limit 1;");
 		$name=$db->result($r,0,"name");
 		$icon=$db->result($r,0,"icon");
@@ -236,7 +236,7 @@ class SettingsNewClass {
 		return $full_name;
 	}
 	
-	function showContactsBotList() { $db = new dbt;
+	function showContactsBotList() { $db = DbSingleton::getTokoDb();
 		$form=""; $form_htm=RD."/tpl/new/contacts_bottom.htm"; if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}						
 		$r=$db->query("select * from contacts_bottom_new;"); $n=$db->num_rows($r);							
 		for ($i=1;$i<=$n;$i++){
@@ -257,7 +257,7 @@ class SettingsNewClass {
 		return $form;
 	}
 		
-	function loadContactsBotList() { $db = new dbt;
+	function loadContactsBotList() { $db = DbSingleton::getTokoDb();
 		$r=$db->query("select * from contacts_bottom_new;"); $n=$db->num_rows($r);							
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
@@ -276,13 +276,13 @@ class SettingsNewClass {
 		return $list;
 	}
 	
-	function newContactsBotCard(){ $db = new dbt;
+	function newContactsBotCard(){ $db = DbSingleton::getTokoDb();
 		$r=$db->query("select max(id) as mid from contacts_bottom_new;"); $max_id=0+$db->result($r,0,"mid")+1;
 		$db->query("insert into contacts_bottom_new (`id`,`status`) values ('$max_id',1);");
 		return $max_id;
 	}
 	
-	function showContactsBotCard($contact_id){ $db=new dbt;
+	function showContactsBotCard($contact_id){ $db=DbSingleton::getTokoDb();
 		$form_htm=RD."/tpl/new/contacts_bottom_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$r=$db->query("select * from contacts_bottom_new where id='$contact_id';"); $n=$db->num_rows($r);
 		if ($n>0){
@@ -301,7 +301,7 @@ class SettingsNewClass {
 		return $form;
   	}
 	
-	function saveContactsBot($contact_id,$text,$icon,$link,$status){ $db=new dbt; $answer=0;$err="Помилка збереження даних!";
+	function saveContactsBot($contact_id,$text,$icon,$link,$status){ $db=DbSingleton::getTokoDb(); $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 		if ($contact_id>0){
 			$db->query("update contacts_bottom_new set `text`='$text', `icon`='$icon', `link`='$link', `status`='$status' where `id`='$contact_id';");
 			$answer=1;$err="";
@@ -309,7 +309,7 @@ class SettingsNewClass {
 		return array($answer,$err);
 	}
 	
-	function dropContactsBot($contact_id) { $db=new dbt; $answer=0;$err="Помилка збереження даних!";
+	function dropContactsBot($contact_id) { $db=DbSingleton::getTokoDb(); $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 		if ($contact_id>0) {
 			$db->query("delete from contacts_bottom_new where id='$contact_id';");	
 			$answer=1;$err="";
@@ -319,13 +319,13 @@ class SettingsNewClass {
 	
 	//news=======================================================================================================================================
 	
-	function getLangCaption($lang_id) {$db = new dbt;
+	function getLangCaption($lang_id) {$db = DbSingleton::getTokoDb();
 		$r=$db->query("select caption from lang where id='$lang_id' limit 1;");
 	    $caption=$db->result($r,0,"caption");
 		return $caption;
 	}
 	
-	function showNewsList() { $db = new dbt; $date=date("Y-m-d");
+	function showNewsList() { $db = DbSingleton::getTokoDb(); $date=date("Y-m-d");
 		$form=""; $form_htm=RD."/tpl/new/news.htm"; if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}						
 		$r=$db->query("select * from news order by data desc;"); $n=$db->num_rows($r);							
 		for ($i=1;$i<=$n;$i++){
@@ -350,7 +350,7 @@ class SettingsNewClass {
 		return $form;
 	}
 		
-	function loadNewsList() { $db = new dbt; $date=date("Y-m-d");
+	function loadNewsList() { $db = DbSingleton::getTokoDb(); $date=date("Y-m-d");
 		$r=$db->query("select * from news order by data desc;"); $n=$db->num_rows($r);						
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
@@ -373,13 +373,13 @@ class SettingsNewClass {
 		return $list;
 	}
 	
-	function newNewsCard($lang){ $db = new dbt; $date=date("Y-m-d");
+	function newNewsCard($lang){ $db = DbSingleton::getTokoDb(); $date=date("Y-m-d");
 		$r=$db->query("select max(id) as mid from news;"); $max_id=0+$db->result($r,0,"mid")+1;
 		$db->query("insert into news (`id`,`status`,`data`,`lang_id`) values ('$max_id',0,'$date','$lang');");
 		return $max_id;
 	}
 	
-	function showNewsCard($news_id){ $db=new dbt;
+	function showNewsCard($news_id){ $db=DbSingleton::getTokoDb();
 		$form_htm=RD."/tpl/new/news_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$r=$db->query("select * from news where id='$news_id';"); $n=$db->num_rows($r);
 		if ($n>0){
@@ -408,7 +408,7 @@ class SettingsNewClass {
 		return $form;
   	}
 	
-	function saveNews($news_id,$caption,$data,$short,$descr,$status){ $db=new dbt; $answer=0;$err="Помилка збереження даних!";
+	function saveNews($news_id,$caption,$data,$short,$descr,$status){ $db=DbSingleton::getTokoDb(); $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 		if ($news_id>0){
 			$db->query("update news set `caption`='$caption', `data`='$data', `short_desc`='$short', `desc`='$descr', `status`='$status' where `id`='$news_id';");
 			$answer=1;$err="";
@@ -416,7 +416,7 @@ class SettingsNewClass {
 		return array($answer,$err);
 	}
 	
-	function dropNews($news_id) { $db=new dbt; $answer=0;$err="Помилка збереження даних!";
+	function dropNews($news_id) { $db=DbSingleton::getTokoDb(); $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 		if ($news_id>0) {
 			$db->query("delete from news where id='$news_id';");	
 			$answer=1;$err="";
@@ -424,7 +424,7 @@ class SettingsNewClass {
 		return array($answer,$err);	
     }
 	
-	function loadNewsPhoto($news_id,$lang_id) { $db=new dbt;
+	function loadNewsPhoto($news_id,$lang_id) { $db=DbSingleton::getTokoDb();
 		$form_htm=RD."/tpl/new/news_photo_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$r=$db->query("select * from news_galery where cat='$news_id';");
 		$n=$db->num_rows($r);$list="";
@@ -437,12 +437,12 @@ class SettingsNewClass {
 			$block=str_replace("{link}",$link,$block);
 			$list.=$block;
 		}
-		if ($n==0){$list="<h3 class='text-center'>Зображення відсутнє</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
 		return $list;
 	}
 	
-	function deleteNewsLogo($news_id) { $db=new dbt; 
-		$answer=0; $err="Помилка видалення даних!";
+	function deleteNewsLogo($news_id) { $db=DbSingleton::getTokoDb(); 
+		$answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 		if ($news_id>0){
 			$db->query("delete from news_galery where cat='$news_id';");
 			$answer=1;$err="";

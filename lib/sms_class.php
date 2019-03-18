@@ -47,7 +47,7 @@ function send_sms($sign,$nomber,$message){
 	print_r($result);
 	$xml = simplexml_load_string ( $result );
 	print_r($xml);
-	$answer="Надіслано!";
+	$answer="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";
 	return $answer;
 }
 function ShowSMSForm(){
@@ -66,7 +66,7 @@ function getBalans(){
 	$xml = simplexml_load_string ( $result );
 	return " ".$xml." ";
 }
-function show_tarif_type(){$db=new db;$list="<table border='0' class='t18_e'>";
+function show_tarif_type(){$db=DbSingleton::getDb();$list="<table border='0' class='t18_e'>";
 	$r=$db->query("select * from tarif_type order by id asc;");$n=$db->num_rows($r);$k=0;
 	for ($i=1;$i<=$n;$i++){$k++;
 		$id=$db->result($r,$i-1,"id");
@@ -77,7 +77,7 @@ function show_tarif_type(){$db=new db;$list="<table border='0' class='t18_e'>";
 	}$list.="</table><input type='hidden' id='kolTarif' value='$n'>";
 	return $list;
 }
-function show_driver_list(){$db=new db;$list="<table border='0' class='t18_e'>";$firms=array("2"=>"700-300");
+function show_driver_list(){$db=DbSingleton::getDb();$list="<table border='0' class='t18_e'>";$firms=array("2"=>"700-300");
 	$r=$db->query("select * from drivers where ison='1' order by firm,code,id asc;");$n=$db->num_rows($r);$k=0;
 	for ($i=1;$i<=$n;$i++){$k++;
 		$id=$db->result($r,$i-1,"id");
@@ -129,11 +129,11 @@ $xml='<sendsms>
 $xml.='</sendsms>';
 	$result=$this->send_xml($xml);
 	$xml = simplexml_load_string ( $result );
-	$answer="Рассылка СМС поставлена в очередь на отправку";
+	$answer="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 	return $answer;
 }
 
-function getDriverInfo($id){$db=new db;
+function getDriverInfo($id){$db=DbSingleton::getDb();
 	$r=$db->query("SELECT mob,firm FROM drivers where id='$id' limit 0,1;");$n=$db->num_rows($r); $phones="";
 	for ($i=1;$i<=$n;$i++){
 		$phones=$db->result($r,$i-1,"mob");
@@ -142,7 +142,7 @@ function getDriverInfo($id){$db=new db;
 	return array($phones,$sign);
 }
 
-function getDriversByTarif($firm,$tarif){$db=new db;
+function getDriversByTarif($firm,$tarif){$db=DbSingleton::getDb();
 	$where="";if ($tarif!=0){$where=" and `type`='$tarif'";}
 	$r=$db->query("SELECT * FROM firm_tarif where firm='$firm' $where order by id asc;");$n=$db->num_rows($r); $phones="";
 	for ($i=1;$i<=$n;$i++){
@@ -151,14 +151,14 @@ function getDriversByTarif($firm,$tarif){$db=new db;
 	}
 	return $phones;
 }
-function getTarifDriversPhones($firm,$tarif){$db=new db; $data_from=date('Y-m-d',(time() - (60 * 24 * 60 * 60)));
+function getTarifDriversPhones($firm,$tarif){$db=DbSingleton::getDb(); $data_from=date('Y-m-d',(time() - (60 * 24 * 60 * 60)));
 	$where="";if ($tarif!=0){$where=" and je.tarif='$tarif'";}
 	$r=$db->query("SELECT je.driver, dr.mob FROM journal_efir je inner join drivers dr on (dr.id=je.driver) where dr.firm='$firm' and je.ison='1' $where and je.data<=CURDATE() and je.data>='$data_from' group by dr.id;"); 
 	$n=$db->num_rows($r);$phones="";
 	for ($i=1;$i<=$n;$i++){ $phones.=$db->result($r,$i-1,"mob").","; }
 	return $phones;
 }
-	function getFirmSmsSign($id){ $db=new db;
+	function getFirmSmsSign($id){ $db=DbSingleton::getDb();
 		$r=$db->query("select sms_sign from firm where id='$id' limit 0,1;");$n=$db->num_rows($r);
 		if ($n==1) {return $db->result($r,0,"sms_sign");}
 		if ($n==0) {return "";}

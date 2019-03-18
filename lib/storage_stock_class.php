@@ -2,27 +2,27 @@
 
 class storage_stock {
 	
-	function getStorageName($sel_id){$db=new dbt;$name="";
+	function getStorageName($sel_id){$db=DbSingleton::getTokoDb();$name="";
 		$r=$db->query("select name from `STORAGE` where status='1' and id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 		if ($n==1){$name=$db->result($r,0,"name");}
 		return $name;	
 	}
 	
 	function getStorageCellsName($cell_id,$storage_id) {
-		$db=new dbt;$name="";
+		$db=DbSingleton::getTokoDb();$name="";
 		$r=$db->query("select cell_value from `STORAGE_CELLS` where status='1' and id='$cell_id' and storage_id='$storage_id' limit 1;");
 		$n=$db->num_rows($r);
 		if ($n==1){$name=$db->result($r,0,"cell_value");}
 		return $name;	
 	}
 	
-	function getArtDispl($art_id) {$db=new dbt;$ARTICLE_NR_DISPL="";
+	function getArtDispl($art_id) {$db=DbSingleton::getTokoDb();$ARTICLE_NR_DISPL="";
 		$r=$db->query("select ARTICLE_NR_DISPL from `T2_ARTICLES` where ART_ID='$art_id' limit 1;");$n=$db->num_rows($r);
 		if ($n==1){$ARTICLE_NR_DISPL=$db->result($r,0,"ARTICLE_NR_DISPL");}
 		return $ARTICLE_NR_DISPL;	
 	}
 	
-	function showStorageStock() { $db=new dbt; $list=$list2="";
+	function showStorageStock() { $db=DbSingleton::getTokoDb(); $list=$list2="";
 		$form_htm=RD."/tpl/storage_stock.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}		
 									  
 		$r=$db->query("

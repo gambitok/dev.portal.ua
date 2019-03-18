@@ -2,7 +2,7 @@
 
 class panel_manager {
 	
-	function showPanelManager() { $db=new db; $user_id=$_SESSION["media_user_id"]; $user_name=$this->getMediaUserName($user_id); 
+	function showPanelManager() { $db=DbSingleton::getDb(); $user_id=$_SESSION["media_user_id"]; $user_name=$this->getMediaUserName($user_id); 
 		$form_htm=RD."/tpl/panel_manager.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 							 
 		$seo_reports=new seo_reports; $date_start=$date_end=date("Y-m-d"); $cash_id=$client_status=1;
@@ -19,7 +19,7 @@ class panel_manager {
 		return $form;
 	}
 	
-	function getMediaUserName($user_id){$db=new db;$name="";
+	function getMediaUserName($user_id){$db=DbSingleton::getDb();$name="";
 		$r=$db->query("select name from media_users where id='$user_id' limit 1;");$n=$db->num_rows($r);
 		if ($n==1){$name=$db->result($r,0,"name");}
 		return $name;

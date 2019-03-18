@@ -1,7 +1,7 @@
 <?php
 class config {
 	
-	function get_meta_head(){$db=new db;$r=$db->query("select * from config limit 0,1;");$n=$db->num_rows($r);$title="";$title_short="";$keywords="";$descr="";$address="";
+	function get_meta_head(){$db=DbSingleton::getDb();$r=$db->query("select * from config limit 0,1;");$n=$db->num_rows($r);$title="";$title_short="";$keywords="";$descr="";$address="";
 		if ($n>0){ 
 			$title=$db->result($r,0,"title");
 			$title_short=$db->result($r,0,"title_short");
@@ -13,15 +13,15 @@ class config {
 		return array($title,$title_short,$keywords,$descr,$address);
 	}
 
-	function get_title(){$db=new db;
+	function get_title(){$db=DbSingleton::getDb();
 		$r=$db->query("select * from config limit 0,1;");$n=$db->num_rows($r);
 		if ($n>0){ 
 			define('SITE_NAME', $db->result($r,0,"address"));
 			return $db->result($r,0,"title"); 
 		}
-		if ($n==0){ return "Помилка підключення";}
+		if ($n==0){ return "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";}
 	}
-	function get_site_name(){$db=new db; $address="";
+	function get_site_name(){$db=DbSingleton::getDb(); $address="";
 		$r=$db->query("select address from config limit 0,1;");$n=$db->num_rows($r);
 		if ($n>0){ $address=$db->result($r,0,"address");}
 		return $address;
@@ -51,11 +51,11 @@ class config {
 		}
 		return array($dep_up,$dep_cur,$file_id,$file);
 	}
-	function checkNextLevel($dep_up){$db=new db;
+	function checkNextLevel($dep_up){$db=DbSingleton::getDb();
 		$r=$db->query("select count(id) as kol from deps where dep_up='$dep_up';");
 		return $db->result($r,0,"kol");
 	}
-	function findFileByLink($link){$db=new db; $file_id=1;$file="main_page";$module_id="";$page_id="";
+	function findFileByLink($link){$db=DbSingleton::getDb(); $file_id=1;$file="main_page";$module_id="";$page_id="";
 		if (substr($link,-1)=="/"){$link=substr($link,0,strlen($link)-1);} $links=explode("/", $link);$link=$links[0];
 
 		$r=$db->query("select mf.id,mf.file,mp.module as module_id,mp.id as page_id,m.id as mmodule_id, mf.caption as module_caption from module_files mf left join module_pages mp on (mp.file=mf.id) left join module m on (m.file=mf.id) where mp.link='$link' or m.link='$link' limit 0,1;");$n=$db->num_rows($r);
@@ -69,13 +69,13 @@ class config {
 		}
 		return array($file_id,$file,$module_id,$page_id,$module_caption);
 	}
-	function findIdByLink($link,$dep_up){$db=new db; $slave=new slave; $lan=$slave->get_lan();
+	function findIdByLink($link,$dep_up){$db=DbSingleton::getDb(); $slave=new slave; $lan=$slave->get_lan();
 		if ($dep_up!=""){$where=" and dep_up='$dep_up'";}
 		$r=$db->query("select id from deps where link='$link' and lang_id='$lan' $where and ison='1' and visible='1' limit 0,1;");$n=$db->num_rows($r);
 		if ($n==1){ return $db->result($r,0,"id");}
 		if ($n==0){ return 0;}
 	}
-	function findLinkById($id){$db=new db; $slave=new slave; $lan=$slave->get_lan();
+	function findLinkById($id){$db=DbSingleton::getDb(); $slave=new slave; $lan=$slave->get_lan();
 		$r=$db->query("select link from deps where id='$id' and ison='1' and visible='1' limit 0,1;");$n=$db->num_rows($r);
 		if ($n==1){ return $db->result($r,0,"link");}
 		if ($n==0){ return "";}
@@ -112,18 +112,18 @@ class config {
 		}
 */		return $deps;
 	}
-	function getDepLink($id){$db=new db;
+	function getDepLink($id){$db=DbSingleton::getDb();
 		$r=$db->query("select link from deps where id='$id' limit 0,1;");$n=$db->num_rows($r);
 		if ($n==1){ return $db->result($r,0,"link");}
 		if ($n==0){ return "";}
 	}
-	function showTableForm($tableName,$selId,$tableField){$db=new db;$form="";
+	function showTableForm($tableName,$selId,$tableField){$db=DbSingleton::getDb();$form="";
 		$r=$db->query("select `id`, IFNULL(`$tableField`,\"-\") as `$tableField` from `$tableName` where `$tableField`!='' order by id asc;");$n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++) {$id=$db->result($r,$i-1,"id");
 			$form.="<option value='".$id."' ";if ($selId==$id){$form.=" selected='selected'";} $form.=">".$db->result($r,$i-1,"$tableField")."</option>";}
 		return $form;
 	}
-	function showTableCaption($tableName,$selId,$tableField){$db=new db;$form="";
+	function showTableCaption($tableName,$selId,$tableField){$db=DbSingleton::getDb();$form="";
 		$r=$db->query("select `$tableField` from `$tableName` where id='$selId' limit 0,1;");$n=$db->num_rows($r);
 		if ($n==1) {$form=$db->result($r,0,"$tableField");}return $form;
 	}

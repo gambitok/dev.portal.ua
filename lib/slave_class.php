@@ -4,16 +4,16 @@ class slave {
 	
 //	
 	function get_weekday_name($week_day){
-		$wks = array ( '1' => "Ïîíåä³ëîê", '2' => "Â³âòîðîê", '3' => "Ñåðåäà", '4' => "×åòâåð", '5' => "Ï'ÿòíèöÿ", '6' => "Ñóáîòà", '7' => "Íåä³ëÿ");
+		$wks = array ( '1' => "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", '2' => "Â³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", '3' => "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", '4' => "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", '5' => "ï¿½'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", '6' => "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", '7' => "ï¿½ï¿½ï¿½ï¿½ï¿½");
 		return $wks["$week_day"];
 	}
 	function get_weekday_abr($week_day){
-		$wks = array ( '1' => "Ïí", '2' => "Âò", '3' => "Ñð", '4' => "×ò", '5' => "Ïò", '6' => "Ñá", '7' => "Íä");
+		$wks = array ( '1' => "ï¿½ï¿½", '2' => "ï¿½ï¿½", '3' => "ï¿½ï¿½", '4' => "ï¿½ï¿½", '5' => "ï¿½ï¿½", '6' => "ï¿½ï¿½", '7' => "ï¿½ï¿½");
 		return $wks["$week_day"];
 	}
 	
 	function showWeekdaySelectList($week_day){$list="";
-		$wks = array ( '1' => "Ïîíåä³ëîê", '2' => "Â³âòîðîê", '3' => "Ñåðåäà", '4' => "×åòâåð", '5' => "Ï'ÿòíèöÿ", '6' => "Ñóáîòà", '7' => "Íåä³ëÿ");
+		$wks = array ( '1' => "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", '2' => "Â³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", '3' => "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", '4' => "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", '5' => "ï¿½'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", '6' => "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", '7' => "ï¿½ï¿½ï¿½ï¿½ï¿½");
 		for ($i=1;$i<=7;$i++){
 			$sel="";if ($i==$week_day){$sel=" selected='selected'";}
 			$list.="<option value='$i' $sel>".$wks[$i]."</option>";
@@ -21,17 +21,17 @@ class slave {
 		return $list;
 	}
 	function get_month_name($month_id){
-		$mnths = array ( 'm01' => "Ñ³÷åíü", 'm02' => "Ëþòèé", 'm03' => "Áåðåçåíü", 'm04' => "Êâ³òåíü", 'm05' => "Òðàâåíü", 'm06' => "×åðâåíü", 'm07' => "Ëèïåíü", 'm08' => "Ñåðïåíü", 'm09' => "Âåðåñåíü",	'm10' => "Æîâòåíü",	'm11' => "Ëèñòîïàä",'m12' => "Ãðóäåíü");
+		$mnths = array ( 'm01' => "Ñ³ï¿½ï¿½ï¿½ï¿½", 'm02' => "ï¿½ï¿½ï¿½ï¿½ï¿½", 'm03' => "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", 'm04' => "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", 'm05' => "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", 'm06' => "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", 'm07' => "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", 'm08' => "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", 'm09' => "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",	'm10' => "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",	'm11' => "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",'m12' => "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 		if (strlen($month_id)<2){$month_id="0".$month_id;}
 		return $mnths["m$month_id"];
 	}
 	function data_word($data){$dataw="-";$time="";$dt=explode(" ",$data);$time=$dt[1];$data=$dt[0];if ($time=="00:00:00"){$time="";}
 		if ($data!="0000-00-00" && $data!=""){
 			$mon=substr($data,5,2);
-			$mnths = array ( '01'=>"Ñ³÷íÿ",'02'=>"Ëþòîãî",'03'=>"Áåðåçíÿ",'04'=>"Êâ³òíÿ",'05'=>"Òðàâíÿ",'06'=>"×åðâíÿ",'07'=>"Ëèïíÿ",'08'=>"Ñåðïíÿ",'09'=>"Âåðåñíÿ",'10'=>"Æîâòíÿ",'11'=>"Ëèñòîïàäà",'12'=>"Ãðóäíÿ");
+			$mnths = array ( '01'=>"Ñ³ï¿½ï¿½ï¿½",'02'=>"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",'03'=>"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",'04'=>"ï¿½ï¿½ï¿½ï¿½ï¿½",'05'=>"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",'06'=>"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",'07'=>"ï¿½ï¿½ï¿½ï¿½ï¿½",'08'=>"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",'09'=>"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",'10'=>"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",'11'=>"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",'12'=>"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 			if (substr($data,8,1)=="0"){$day=substr($data,9,1);}
 			if (substr($data,8,1)!="0"){$day=substr($data,8,2);}
-			$dataw=$day." ".$mnths[$mon]." ".substr($data,0,4)." ð.";
+			$dataw=$day." ".$mnths[$mon]." ".substr($data,0,4)." ï¿½.";
 		}
 		$dataw.=" ".$time;
 		return $dataw;
@@ -39,10 +39,10 @@ class slave {
 	function data_word_short($data){$dataw="-";$time="";$dt=explode(" ",$data);$time=$dt[1];$data=$dt[0];if ($time=="00:00:00"){$time="";}
 		if ($data!="0000-00-00" && $data!=""){
 			$mon=substr($data,5,2);
-			$mnths = array ( '01'=>"Ñ³÷",'02'=>"Ëþò",'03'=>"Áåð",'04'=>"Êâ³",'05'=>"Òðà",'06'=>"×åð",'07'=>"Ëèï",'08'=>"Ñåð",'09'=>"Âåð",'10'=>"Æîâ",'11'=>"Ëèñ",'12'=>"Ãðó");
+			$mnths = array ( '01'=>"Ñ³ï¿½",'02'=>"ï¿½ï¿½ï¿½",'03'=>"ï¿½ï¿½ï¿½",'04'=>"ï¿½ï¿½",'05'=>"ï¿½ï¿½ï¿½",'06'=>"ï¿½ï¿½ï¿½",'07'=>"ï¿½ï¿½ï¿½",'08'=>"ï¿½ï¿½ï¿½",'09'=>"ï¿½ï¿½ï¿½",'10'=>"ï¿½ï¿½ï¿½",'11'=>"ï¿½ï¿½ï¿½",'12'=>"ï¿½ï¿½ï¿½");
 			if (substr($data,8,1)=="0"){$day=substr($data,9,1);}
 			if (substr($data,8,1)!="0"){$day=substr($data,8,2);}
-			$dataw=$day." ".$mnths[$mon]." ".substr($data,2,2)."ð.";
+			$dataw=$day." ".$mnths[$mon]." ".substr($data,2,2)."ï¿½.";
 		}
 		$dataw.=" ".$time;
 		return $dataw;
@@ -58,7 +58,7 @@ class slave {
 				<iframe width=174 height=189 name='gToday:normal:agenda.js' id='gToday:normal:agenda.js' src='js/calendar/ipopeng.htm' scrolling='no' frameborder='0' style='visibility:visible; z-index:999; position:absolute; left:-500px; top:0px;'></iframe>";
 	}
 	
-	function addJuornalArtDocs($doc_type,$doc_id,$art_id,$amount){$db=new db;
+	function addJuornalArtDocs($doc_type,$doc_id,$art_id,$amount){$db=DbSingleton::getDb();
 		//doc_type: 1-income, 2-move, 3-sale, 4-backclient, 5-backsuppl
 	  	$db->query("insert into J_ART_DOCS (`art_id`,`amount`,`doc_type`,`doc_id`) values ('$art_id','$amount','$doc_type',$doc_id);");
 		if (($doc_type>=1 && $doc_type<=5) && $doc_id>0 && $art_id!=""){ }
@@ -98,31 +98,31 @@ class slave {
 	}
 	function qqback_js($q) { 
 		$q=str_replace("&rsquo;", "'", $q);
-		$q=str_replace('"', "»", $q);
+		$q=str_replace('"', "ï¿½", $q);
 		return $q; 
 	}
 	function translit($st) {
-		$st=strtr($st,"àáâãäå¸çèéêëìíîïðñòóôõúûý_", "abvgdeeziyklmnoprstufh'iei");
-		$st=strtr($st,"ÀÁÂÃÄÅ¨ÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÚÛÝ_", "ABVGDEEZIYKLMNOPRSTUFH'IEI");
+		$st=strtr($st,"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½_", "abvgdeeziyklmnoprstufh'iei");
+		$st=strtr($st,"ï¿½ï¿½ï¿½ï¿½ï¿½Å¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½_", "ABVGDEEZIYKLMNOPRSTUFH'IEI");
 		$st=strtr($st, array(
-			"æ"=>"zh", "ö"=>"ts", "÷"=>"ch", "ø"=>"sh", 
-			"ù"=>"shch","ü"=>"", "þ"=>"yu", "ÿ"=>"ya",
-			"Æ"=>"ZH", "Ö"=>"TS", "×"=>"CH", "Ø"=>"SH", 
-			"Ù"=>"SHCH","Ü"=>"", "Þ"=>"YU", "ß"=>"YA",
-			"¿"=>"i", "¯"=>"Yi", "º"=>"ye", "ª"=>"Ye", "³"=>"i", "²"=>"I"
+			"ï¿½"=>"zh", "ï¿½"=>"ts", "ï¿½"=>"ch", "ï¿½"=>"sh", 
+			"ï¿½"=>"shch","ï¿½"=>"", "ï¿½"=>"yu", "ï¿½"=>"ya",
+			"ï¿½"=>"ZH", "ï¿½"=>"TS", "ï¿½"=>"CH", "ï¿½"=>"SH", 
+			"ï¿½"=>"SHCH","ï¿½"=>"", "ï¿½"=>"YU", "ï¿½"=>"YA",
+			"ï¿½"=>"i", "ï¿½"=>"Yi", "ï¿½"=>"ye", "ï¿½"=>"Ye", "ï¿½"=>"i", "ï¿½"=>"I"
 		));
 		return $st;
 	}
 	function translit_file($st) {
-		$st=strtr($st,"àáâãäå¸çèéêëìíîïðñòóôõúûý_", "abvgdeeziyklmnoprstufh'iei");
-		$st=strtr($st,"ÀÁÂÃÄÅ¨ÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÚÛÝ_", "ABVGDEEZIYKLMNOPRSTUFH-IEI");
+		$st=strtr($st,"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½_", "abvgdeeziyklmnoprstufh'iei");
+		$st=strtr($st,"ï¿½ï¿½ï¿½ï¿½ï¿½Å¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½_", "ABVGDEEZIYKLMNOPRSTUFH-IEI");
 		$st=strtr($st, array(
-			"æ"=>"zh", "ö"=>"ts", "÷"=>"ch", "ø"=>"sh", 
-			"ù"=>"shch","ü"=>"", "þ"=>"yu", "ÿ"=>"ya",
-			"Æ"=>"ZH", "Ö"=>"TS", "×"=>"CH", "Ø"=>"SH", 
-			"Ù"=>"SHCH","Ü"=>"", "Þ"=>"YU", "ß"=>"YA",
-			"¿"=>"i", "¯"=>"Yi", "º"=>"ye", "ª"=>"Ye", 
-			" "=>"-", '"'=>"-", "³"=>"i", "²"=>"I"
+			"ï¿½"=>"zh", "ï¿½"=>"ts", "ï¿½"=>"ch", "ï¿½"=>"sh", 
+			"ï¿½"=>"shch","ï¿½"=>"", "ï¿½"=>"yu", "ï¿½"=>"ya",
+			"ï¿½"=>"ZH", "ï¿½"=>"TS", "ï¿½"=>"CH", "ï¿½"=>"SH", 
+			"ï¿½"=>"SHCH","ï¿½"=>"", "ï¿½"=>"YU", "ï¿½"=>"YA",
+			"ï¿½"=>"i", "ï¿½"=>"Yi", "ï¿½"=>"ye", "ï¿½"=>"Ye", 
+			" "=>"-", '"'=>"-", "ï¿½"=>"i", "ï¿½"=>"I"
 		));
 		return $st;
 	}
@@ -197,7 +197,7 @@ class slave {
 		return;
 	}
 	function get_file_deps($file){
-		$db=new db;
+		$db=DbSingleton::getDb();
 		$r=$db->query("select id from module_files where file='$file';");
 		$n=$db->num_rows($r);
 		if ($n>0){
@@ -209,7 +209,7 @@ class slave {
 		return array($dep_up,$dep_cur);
 	}
 	
-	function showSelectList($table,$field_id,$field,$sel_id){$db=new db;$list="<option value='0'></option>";
+	function showSelectList($table,$field_id,$field,$sel_id){$db=DbSingleton::getDb();$list="<option value='0'></option>";
 		$r=$db->query("select `$field_id`,`$field` from `$table` order by `$field` asc;");$n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"$field_id");
@@ -219,7 +219,7 @@ class slave {
 		}
 		return $list;
 	}
-	function showSelectSubList($table,$prnt_field,$prnt_id,$field_id,$field,$sel_id){$db=new dbt;$list="<option value='0'></option>";
+	function showSelectSubList($table,$prnt_field,$prnt_id,$field_id,$field,$sel_id){$db=DbSingleton::getTokoDb();$list="<option value='0'></option>";
 		$where="  and `$prnt_field`='$prnt_id'";//if ($prnt_id==0){$where="";}
 		$r=$db->query("select `$field_id`,`$field` from `$table` where 1 $where order by `$field` asc;");$n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
@@ -231,7 +231,7 @@ class slave {
 		return $list;
 	}
 	
-	function showSelectSubListDBM($table,$prnt_field,$prnt_id,$field_id,$field,$sel_id){$db=new db;$list="<option value='0'></option>";
+	function showSelectSubListDBM($table,$prnt_field,$prnt_id,$field_id,$field,$sel_id){$db=DbSingleton::getDb();$list="<option value='0'></option>";
 		$where="  and `$prnt_field`='$prnt_id'";//if ($prnt_id==0){$where="";}
 		$r=$db->query("select `$field_id`,`$field` from `$table` where 1 $where order by `$field` asc;");$n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
@@ -243,12 +243,12 @@ class slave {
 		return $list;
 	}
 	
-	function showTableField($table,$field_name,$field_id,$field_id_val){$db=new db;$name="";
+	function showTableField($table,$field_name,$field_id,$field_id_val){$db=DbSingleton::getDb();$name="";
 		$r=$db->query("select `$field_name` from `$table` where `$field_id`='$field_id_val' limit 0,1;");$n=$db->num_rows($r);
 		if ($n==1){	$name=$db->result($r,0,"$field_name");}
 		return $name;
 	}
-	function showTableFieldDBT($table,$field_name,$field_id,$field_id_val){$db=new dbt;$name="";
+	function showTableFieldDBT($table,$field_name,$field_id,$field_id_val){$db=DbSingleton::getTokoDb();$name="";
 		$r=$db->query("select `$field_name` from `$table` where `$field_id`='$field_id_val' limit 0,1;");$n=$db->num_rows($r);
 		if ($n==1){	$name=$db->result($r,0,"$field_name");}
 		return $name;

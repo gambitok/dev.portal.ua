@@ -1,12 +1,12 @@
 <?php
 class tpoint{
-function newTpointCard(){$db=new db;$dbt=new dbt;$slave=new slave;$manual=new manual; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $tpoint_id=0;
+function newTpointCard(){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$manual=new manual; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $tpoint_id=0;
 	$r=$db->query("select max(id) as mid from T_POINT;");$tpoint_id=0+$db->result($r,0,"mid")+1;
 	$db->query("insert into T_POINT (`id`,`user_id`) values ('$tpoint_id','$user_id');");
 	$dbt->query("insert into T_POINT (`id`,`user_id`) values ('$tpoint_id','$user_id');");
 	return $tpoint_id;
 }
-function show_tpoint_list(){$db=new dbt;$slave=new slave;$where="";
+function show_tpoint_list(){$db=DbSingleton::getTokoDb();$slave=new slave;$where="";
 	$r=$db->query("select t.*, t2cn.COUNTRY_NAME, t2st.STATE_NAME, t2rg.REGION_NAME, t2ct.CITY_NAME
 		from T_POINT t 
 		left outer join T2_COUNTRIES t2cn on t2cn.COUNTRY_ID=t.country 
@@ -42,7 +42,7 @@ function show_tpoint_list(){$db=new dbt;$slave=new slave;$where="";
 		return $list;
 }
 
-function showTpointCard($tpoint_id){$db=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showTpointCard($tpoint_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/tpoint_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	$r=$db->query("select t.* from T_POINT t where t.id='$tpoint_id' limit 0,1;");$n=$db->num_rows($r);
@@ -78,8 +78,8 @@ function showTpointCard($tpoint_id){$db=new dbt;$slave=new slave;session_start()
 	return $form;
 }
 	
-function deleteTpoint($tpoint_id) {$db=new dbt;
-	$answer=0;$err="Помилка збереження даних!";
+function deleteTpoint($tpoint_id) {$db=DbSingleton::getTokoDb();
+	$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	
 	if($tpoint_id>0) {
 		$db->query("update T_POINT set status=0 where id='$tpoint_id';");
@@ -89,7 +89,7 @@ function deleteTpoint($tpoint_id) {$db=new dbt;
 	return array($answer,$err);
 }
 
-function saveTpointGeneralInfo($tpoint_id,$name,$full_name,$address,$chief,$country_id,$state_id,$region_id,$city_id){$db=new db;$dbt=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveTpointGeneralInfo($tpoint_id,$name,$full_name,$address,$chief,$country_id,$state_id,$region_id,$city_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 
 	$tpoint_id=$slave->qq($tpoint_id);$name=$slave->qq($name);$full_name=$slave->qq($full_name);$address=$slave->qq($address);$chief=$slave->qq($chief);
 	$country_id=$slave->qq($country_id);$state_id=$slave->qq($state_id);$city_id=$slave->qq($city_id);$region_id=$slave->qq($region_id);
@@ -100,7 +100,7 @@ function saveTpointGeneralInfo($tpoint_id,$name,$full_name,$address,$chief,$coun
 	}
 	return array($answer,$err);
 }
-function showWorkersSelectList($sel_id){$db=new db;$list="";;
+function showWorkersSelectList($sel_id){$db=DbSingleton::getDb();$list="";;
 	$r=$db->query("select * from media_users order by name,id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -110,20 +110,20 @@ function showWorkersSelectList($sel_id){$db=new db;$list="";;
 	}
 	return $list;
 }
-function showPriceRatingSelectList($sel_id){$db=new db;$list="";$n=12;
+function showPriceRatingSelectList($sel_id){$db=DbSingleton::getDb();$list="";$n=12;
 	for ($i=1;$i<=$n;$i++){
 		$sel="";if ($i==$sel_id){$sel=" selected";}
-		$list.="<option value='$i' $sel>Прайс ".($i-1)."</option>";
+		$list.="<option value='$i' $sel>пїЅпїЅпїЅпїЅпїЅ ".($i-1)."</option>";
 	}
 	return $list;
 }
-function showPriceRatingName($sel_id){$db=new db;$name="Прайс ";
+function showPriceRatingName($sel_id){$db=DbSingleton::getDb();$name="пїЅпїЅпїЅпїЅпїЅ ";
 	if ($sel_id>0){$name.=($sel_id-1);}
 	return $name;
 }
 
 
-function loadTpointStorageShortList($tpoint_id){$db=new dbt;$slave=new slave;$gmanual=new gmanual;
+function loadTpointStorageShortList($tpoint_id){$db=DbSingleton::getTokoDb();$slave=new slave;$gmanual=new gmanual;
 	$r=$db->query("select ps.*,s.name as storage_name from T_POINT_STORAGE ps left outer join STORAGE s on s.id=ps.storage_id where ps.tpoint_id='$tpoint_id' and ps.status='1' order by ps.id asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -133,11 +133,11 @@ function loadTpointStorageShortList($tpoint_id){$db=new dbt;$slave=new slave;$gm
 		$delivery_days=$db->result($r,$i-1,"delivery_days");
 		$list.="$i) $local - $storage_name<br>";
 	}
-	if ($n==0){$list="Записи відсутні";}
+	if ($n==0){$list="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ";}
 	return $list;
 }
 	//edit storage
-function loadTpointStorage($tpoint_id){$db=new dbt;$slave=new slave;$gmanual=new gmanual;
+function loadTpointStorage($tpoint_id){$db=DbSingleton::getTokoDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/tpoint_storage_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select ps.*,s.name as storage_name,s.full_name as storage_full_name from T_POINT_STORAGE ps left outer join STORAGE s on s.id=ps.storage_id where ps.tpoint_id='$tpoint_id' and ps.status='1' order by ps.id asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -160,13 +160,13 @@ function loadTpointStorage($tpoint_id){$db=new dbt;$slave=new slave;$gmanual=new
 			<td>$def_cap</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td align='center' colspan=5><h3 class='text-center'>Записи відсутні</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan=5><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
 	$form=str_replace("{list_storage}",$list,$form);
 	$form=str_replace("{tpoint_id}",$tpoint_id,$form);
 	return $form;
 }
 
-function showTpointStorageForm($tpoint_id,$s_id){$db=new dbt;$slave=new slave;$gmanual=new gmanual;
+function showTpointStorageForm($tpoint_id,$s_id){$db=DbSingleton::getTokoDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/tpoint_storage_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T_POINT_STORAGE where id='$s_id' and tpoint_id='$tpoint_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -184,7 +184,7 @@ function showTpointStorageForm($tpoint_id,$s_id){$db=new dbt;$slave=new slave;$g
 	return $form;
 }
 	
-function showTpointSupplStorageForm($tpoint_id,$s_id){$db=new db;$slave=new slave;
+function showTpointSupplStorageForm($tpoint_id,$s_id){$db=DbSingleton::getDb();$slave=new slave;
 	$form_htm=RD."/tpl/tpoint_suppl_storage_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T_POINT_SUPPL_STORAGE where id='$s_id' and tpoint_id='$tpoint_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -198,7 +198,7 @@ function showTpointSupplStorageForm($tpoint_id,$s_id){$db=new db;$slave=new slav
 	return $form;
 }
 	
-function dropTpointSupplStorageForm($tpoint_id,$s_id){$db=new db;$dbt=new dbt;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function dropTpointSupplStorageForm($tpoint_id,$s_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$tpoint_id=$slave->qq($tpoint_id);$s_id=$slave->qq($s_id);
 	if ($tpoint_id>0 && $s_id>0){
 		$db->query("delete from T_POINT_SUPPL_STORAGE where id='$s_id' and tpoint_id='$tpoint_id';");
@@ -208,7 +208,7 @@ function dropTpointSupplStorageForm($tpoint_id,$s_id){$db=new db;$dbt=new dbt;$s
 	return array($answer,$err);
 }
 	
-function loadSupplStorageList($suppl_id,$sel_id){$db=new db;$list="<option value='0'> -- оберіть зі списку --</option>";
+function loadSupplStorageList($suppl_id,$sel_id){$db=DbSingleton::getDb();$list="<option value='0'> -- пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ --</option>";
 	$r=$db->query("select * from A_CLIENTS_STORAGE where client_id='$suppl_id' and status='1' order by name asc;"); $n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -220,7 +220,7 @@ function loadSupplStorageList($suppl_id,$sel_id){$db=new db;$list="<option value
 }
 
 function saveTpointSupplStorageForm($tpoint_id,$s_id,$storage_id,$suppl_id){ 
-	$db=new db;$dbt=new dbt;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+	$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$tpoint_id=$slave->qq($tpoint_id);$s_id=$slave->qq($s_id);$storage_id=$slave->qq($storage_id);$suppl_id=$slave->qq($suppl_id);
 	if ($tpoint_id>0){
 		if ($s_id==0 ){
@@ -237,7 +237,7 @@ function saveTpointSupplStorageForm($tpoint_id,$s_id,$storage_id,$suppl_id){
 	return array($answer,$err);
 }
 	
-function saveTpointStorageForm($tpoint_id,$s_id,$storage_id,$local,$default){ $db=new db;$dbt=new dbt;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveTpointStorageForm($tpoint_id,$s_id,$storage_id,$local,$default){ $db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$tpoint_id=$slave->qq($tpoint_id);$s_id=$slave->qq($s_id);$storage_id=$slave->qq($storage_id);$local=$slave->qq($local);$default=$slave->qq($default);
 	if ($tpoint_id>0){
 		
@@ -255,7 +255,7 @@ function saveTpointStorageForm($tpoint_id,$s_id,$storage_id,$local,$default){ $d
 	return array($answer,$err);
 }
 	
-function dropTpointStorage($tpoint_id,$s_id){$db=new db;$dbt=new dbt;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function dropTpointStorage($tpoint_id,$s_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$tpoint_id=$slave->qq($tpoint_id);$s_id=$slave->qq($s_id);
 	if ($tpoint_id>0 && $s_id>0){
 		$db->query("update T_POINT_STORAGE set status='0' where id='$s_id' and tpoint_id='$tpoint_id';");
@@ -265,20 +265,20 @@ function dropTpointStorage($tpoint_id,$s_id){$db=new db;$dbt=new dbt;$slave=new 
 	return array($answer,$err);
 }
 
-function loadTpointClientsShortList($tpoint_id){$db=new db;$slave=new slave;$gmanual=new gmanual;
+function loadTpointClientsShortList($tpoint_id){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;
 	$r=$db->query("select pc.* from T_POINT_CLIENTS pc where pc.tpoint_id='$tpoint_id' and pc.status='1' order by pc.id asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
 		$client_id=$db->result($r,$i-1,"client_id");
 		$client_name=$this->getAClientName($client_id);
-		$vat_use=$db->result($r,$i-1,"vat_use"); $vat="без ПДВ";if ($vat_use==1){$vat="з ПДВ";}
+		$vat_use=$db->result($r,$i-1,"vat_use"); $vat="пїЅпїЅпїЅ пїЅпїЅпїЅ";if ($vat_use==1){$vat="пїЅ пїЅпїЅпїЅ";}
 		$list.="$i) $client_name: $vat<br>";
 	}
-	if ($n==0){$list="Записи відсутні";}
+	if ($n==0){$list="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ";}
 	return $list;
 }
 
-function loadTpointClients($tpoint_id){$db=new dbt;$slave=new slave;$gmanual=new gmanual;
+function loadTpointClients($tpoint_id){$db=DbSingleton::getTokoDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/tpoint_clients_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select pc.* from T_POINT_CLIENTS pc where pc.tpoint_id='$tpoint_id' and pc.status='1' order by pc.id asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -302,12 +302,12 @@ function loadTpointClients($tpoint_id){$db=new dbt;$slave=new slave;$gmanual=new
 			<td>$in_use_cap</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td align='center' colspan=5><h3 class='text-center'>Записи відсутні</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan=5><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
 	$form=str_replace("{list_clients}",$list,$form);
 	$form=str_replace("{tpoint_id}",$tpoint_id,$form);
 	return $form;
 }
-function showTpointClientsForm($tpoint_id,$s_id){$db=new dbt;$slave=new slave;$gmanual=new gmanual;
+function showTpointClientsForm($tpoint_id,$s_id){$db=DbSingleton::getTokoDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/tpoint_clients_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select pc.* from T_POINT_CLIENTS pc where pc.id='$s_id' and pc.tpoint_id='$tpoint_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -331,7 +331,7 @@ function showTpointClientsForm($tpoint_id,$s_id){$db=new dbt;$slave=new slave;$g
 	return $form;
 }
 
-function saveTpointClientsForm($tpoint_id,$s_id,$client_id,$sale_type,$tax_credit,$tax_inform,$in_use){ $db=new db;$dbt=new dbt;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveTpointClientsForm($tpoint_id,$s_id,$client_id,$sale_type,$tax_credit,$tax_inform,$in_use){ $db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$tpoint_id=$slave->qq($tpoint_id);$s_id=$slave->qq($s_id);$client_id=$slave->qq($client_id);$sale_type=$slave->qq($sale_type);$tax_credit=$slave->qq($tax_credit);$tax_inform=$slave->qq($tax_inform);$in_use=$slave->qq($in_use);
 	if ($tpoint_id>0){
 		if ($s_id==0 ){
@@ -351,7 +351,7 @@ function saveTpointClientsForm($tpoint_id,$s_id,$client_id,$sale_type,$tax_credi
 	}else{$answer=0;}
 	return array($answer,$err);
 }
-function dropTpointClients($tpoint_id,$s_id){$db=new db;$dbt=new dbt;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function dropTpointClients($tpoint_id,$s_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$tpoint_id=$slave->qq($tpoint_id);$s_id=$slave->qq($s_id);
 	if ($tpoint_id>0 && $s_id>0){
 		$db->query("update T_POINT_CLIENTS set status='0' where id='$s_id' and tpoint_id='$tpoint_id';");
@@ -361,7 +361,7 @@ function dropTpointClients($tpoint_id,$s_id){$db=new db;$dbt=new dbt;$slave=new 
 	return array($answer,$err);
 }
 
-function loadTpointWorkers($tpoint_id){$db=new dbt;$slave=new slave;$gmanual=new gmanual;
+function loadTpointWorkers($tpoint_id){$db=DbSingleton::getTokoDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/tpoint_workers_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select pw.* from T_POINT_WORKERS pw where pw.tpoint_id='$tpoint_id' and pw.status='1' order by pw.id asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -378,13 +378,13 @@ function loadTpointWorkers($tpoint_id){$db=new dbt;$slave=new slave;$gmanual=new
 			<td>$worker_name</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td align='center' colspan=5><h3 class='text-center'>Записи відсутні</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan=5><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
 	$form=str_replace("{list_workers}",$list,$form);
 	$form=str_replace("{tpoint_id}",$tpoint_id,$form);
 	return $form;
 }
 
-function showTpointWorkersForm($tpoint_id,$s_id){$db=new dbt;$slave=new slave;$gmanual=new gmanual;
+function showTpointWorkersForm($tpoint_id,$s_id){$db=DbSingleton::getTokoDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/tpoint_workers_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T_POINT_WORKERS where id='$s_id' and tpoint_id='$tpoint_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -397,7 +397,7 @@ function showTpointWorkersForm($tpoint_id,$s_id){$db=new dbt;$slave=new slave;$g
 	return $form;
 }
 
-function saveTpointWorkersForm($tpoint_id,$s_id,$worker_id){ $db=new db;$dbt=new dbt;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveTpointWorkersForm($tpoint_id,$s_id,$worker_id){ $db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$tpoint_id=$slave->qq($tpoint_id);$s_id=$slave->qq($s_id);$worker_id=$slave->qq($worker_id);
 	if ($tpoint_id>0){
 		if ($s_id==0 ){
@@ -413,7 +413,7 @@ function saveTpointWorkersForm($tpoint_id,$s_id,$worker_id){ $db=new db;$dbt=new
 	}else{$answer=0;}
 	return array($answer,$err);
 }
-function dropTpointWorkers($tpoint_id,$s_id){$db=new dbt;$dbt=new dbt;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function dropTpointWorkers($tpoint_id,$s_id){$db=DbSingleton::getTokoDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$tpoint_id=$slave->qq($tpoint_id);$s_id=$slave->qq($s_id);
 	if ($tpoint_id>0 && $s_id>0){
 		$db->query("update T_POINT_WORKERS set status='0' where id='$s_id' and tpoint_id='$tpoint_id';");
@@ -423,7 +423,7 @@ function dropTpointWorkers($tpoint_id,$s_id){$db=new dbt;$dbt=new dbt;$slave=new
 	return array($answer,$err);
 }
 
-function showTpointClientList($sel_id){$db=new db;$dbt=new dbt;$slave=new slave;
+function showTpointClientList($sel_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;
 	$form_htm=RD."/tpl/clients_parrent_tree.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select c.*,ot.name as org_type_name, t2cn.COUNTRY_NAME, t2st.STATE_NAME, t2rg.REGION_NAME, t2ct.CITY_NAME  from A_CLIENTS c 
 		left outer join A_ORG_TYPE ot on ot.id=c.org_type 
@@ -464,7 +464,7 @@ function showTpointClientList($sel_id){$db=new db;$dbt=new dbt;$slave=new slave;
 	$form=str_replace("{list}",$list,$form);
 	return $form;
 }
-function showTpointSupplSelectList($sel_id){$db=new db;$list="";
+function showTpointSupplSelectList($sel_id){$db=DbSingleton::getDb();$list="";
 	$r=$db->query("select c.* from A_CLIENTS c left outer join A_CLIENTS_CATEGORY cc on cc.client_id=c.id where c.status='1' and cc.category_id='2';");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -474,7 +474,7 @@ function showTpointSupplSelectList($sel_id){$db=new db;$list="";
 	}
 	return $list;
 }
-function showTpointSupplStorageSelectList($suppl_id,$sel_id){$db=new db;$list="";
+function showTpointSupplStorageSelectList($suppl_id,$sel_id){$db=DbSingleton::getDb();$list="";
 	$r=$db->query("select * from A_CLIENTS_STORAGE where status='1' and client_id='$suppl_id' order by name,id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -485,7 +485,7 @@ function showTpointSupplStorageSelectList($suppl_id,$sel_id){$db=new db;$list=""
 	return $list;
 }
 
-function showTpointStorageSelectList($sel_id){$db=new dbt;$list="";
+function showTpointStorageSelectList($sel_id){$db=DbSingleton::getTokoDb();$list="";
 	$r=$db->query("select * from STORAGE where status='1' order by name,id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -509,21 +509,21 @@ function loadRegionSelectList($state_id,$sel_id){$slave=new slave;
 	return $slave->showSelectSubList("T2_REGION","STATE_ID","$state_id","REGION_ID","REGION_NAME",$sel_id);
 }
 function loadCitySelectList($region_id,$sel_id){$slave=new slave;//$list="";
-	return "<option value='NEW'>Добавити населений пункт</option>".$slave->showSelectSubList("T2_CITY","REGION_ID","$region_id","CITY_ID","CITY_NAME",$sel_id);
+	return "<option value='NEW'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ</option>".$slave->showSelectSubList("T2_CITY","REGION_ID","$region_id","CITY_ID","CITY_NAME",$sel_id);
 }
 
-function getMediaUserName($user_id){$db=new db;$name="";
+function getMediaUserName($user_id){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select name from media_users where id='$user_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"name");}
 	return $name;
 }
-function getAClientName($client_id){$db=new db;$name="";
+function getAClientName($client_id){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select name from A_CLIENTS where id='$client_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"name");}
 	return $name;
 }
 
-function loadTpointDeliveryTime($tpoint_id){$db=new dbt;$slave=new slave;$gmanual=new gmanual;
+function loadTpointDeliveryTime($tpoint_id){$db=DbSingleton::getTokoDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/tpoint_delivery_time_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select pd.*,s.name as storage_name from T_POINT_DELIVERY_TIME pd left outer join STORAGE s on s.id=pd.storage_id where pd.tpoint_id='$tpoint_id' and pd.status='1' order by pd.storage_id asc,  pd.week_day asc, pd.time_from asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -533,7 +533,7 @@ function loadTpointDeliveryTime($tpoint_id){$db=new dbt;$slave=new slave;$gmanua
 		$week_day=$slave->get_weekday_name($db->result($r,$i-1,"week_day"));
 		$time_from=substr($db->result($r,$i-1,"time_from"),0,-3);
 		$time_to=substr($db->result($r,$i-1,"time_to"),0,-3);
-		$delivery_days=$db->result($r,$i-1,"delivery_days");$dd_word="через ".$delivery_days." дн. ";if ($delivery_days==0){$dd_word="сьогодні";}if ($delivery_days==1){$dd_word="завтра";}
+		$delivery_days=$db->result($r,$i-1,"delivery_days");$dd_word="пїЅпїЅпїЅпїЅпїЅ ".$delivery_days." пїЅпїЅ. ";if ($delivery_days==0){$dd_word="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";}if ($delivery_days==1){$dd_word="пїЅпїЅпїЅпїЅпїЅпїЅ";}
 		$giveout_time=$db->result($r,$i-1,"giveout_time");
 		$time_from_del=substr($db->result($r,$i-1,"time_from_del"),0,-3);
 		$time_to_del=substr($db->result($r,$i-1,"time_to_del"),0,-3);
@@ -541,8 +541,8 @@ function loadTpointDeliveryTime($tpoint_id){$db=new dbt;$slave=new slave;$gmanua
 		
     	$date_del=date('d.m', strtotime(' + '.$delivery_days.' days'));
 		
-		$giveout_client_info="$date_del ($week_day_short) з $time_from_del до $time_to_del";
-		//$giveout_client_info="$dd_word з $time_from_del по $time_to_del";
+		$giveout_client_info="$date_del ($week_day_short) пїЅ $time_from_del пїЅпїЅ $time_to_del";
+		//$giveout_client_info="$dd_word пїЅ $time_from_del пїЅпїЅ $time_to_del";
 		
 		$list.="
 		<tr>
@@ -563,12 +563,12 @@ function loadTpointDeliveryTime($tpoint_id){$db=new dbt;$slave=new slave;$gmanua
 		</tr>";
 	}
 //											<td>$giveout_time</td>
-	if ($n==0){$list="<tr><td align='center' colspan='9'><h3 class='text-center'>Записи відсутні</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan='9'><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
 	$form=str_replace("{list_delivery}",$list,$form);
 	$form=str_replace("{tpoint_id}",$tpoint_id,$form);
 	return $form;
 }
-function showTpointDeliveryForm($tpoint_id,$s_id){$db=new dbt;$slave=new slave;$gmanual=new gmanual;
+function showTpointDeliveryForm($tpoint_id,$s_id){$db=DbSingleton::getTokoDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/tpoint_delivery_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T_POINT_DELIVERY_TIME where id='$s_id' and tpoint_id='$tpoint_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -596,7 +596,7 @@ function showTpointDeliveryForm($tpoint_id,$s_id){$db=new dbt;$slave=new slave;$
 	$form=str_replace("{workers_list}",$this->showWorkersSelectList($media_user_id),$form);
 	return $form;
 }
-function saveTpointDeliveryForm($tpoint_id,$s_id,$storage_id,$week_day,$time_from,$time_to,$delivery_days,$giveout_time,$time_from_del,$time_to_del){ $db=new db;$dbt=new dbt;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveTpointDeliveryForm($tpoint_id,$s_id,$storage_id,$week_day,$time_from,$time_to,$delivery_days,$giveout_time,$time_from_del,$time_to_del){ $db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$tpoint_id=$slave->qq($tpoint_id);$s_id=$slave->qq($s_id);$storage_id=$slave->qq($storage_id);$week_day=$slave->qq($week_day);$time_from=$slave->qq($time_from);$time_to=$slave->qq($time_to);$delivery_days=$slave->qq($delivery_days);$giveout_time=$slave->qq($giveout_time);
 	if ($tpoint_id>0){
 		if ($s_id==0 ){
@@ -612,7 +612,7 @@ function saveTpointDeliveryForm($tpoint_id,$s_id,$storage_id,$week_day,$time_fro
 	}else{$answer=0;}
 	return array($answer,$err);
 }
-function dropTpointDelivery($tpoint_id,$s_id){$db=new dbt;$dbt=new dbt;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function dropTpointDelivery($tpoint_id,$s_id){$db=DbSingleton::getTokoDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$tpoint_id=$slave->qq($tpoint_id);$s_id=$slave->qq($s_id);
 	if ($tpoint_id>0 && $s_id>0){
 		$db->query("update T_POINT_DELIVERY_TIME set status='0' where id='$s_id' and tpoint_id='$tpoint_id';");
@@ -623,7 +623,7 @@ function dropTpointDelivery($tpoint_id,$s_id){$db=new dbt;$dbt=new dbt;$slave=ne
 }
 
 
-function loadTpointSupplDeliveryTime($tpoint_id){$db=new db;$slave=new slave;$gmanual=new gmanual;
+function loadTpointSupplDeliveryTime($tpoint_id){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/tpoint_suppl_delivery_time_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select pd.*, cs.name as storage_name, c.name as client_name from T_POINT_SUPPL_DELIVERY_TIME pd 
 				   left outer join A_CLIENTS_STORAGE cs on cs.id=pd.suppl_storage_id
@@ -637,7 +637,7 @@ function loadTpointSupplDeliveryTime($tpoint_id){$db=new db;$slave=new slave;$gm
 		$week_day=$slave->get_weekday_name($db->result($r,$i-1,"week_day"));
 		$time_from=substr($db->result($r,$i-1,"time_from"),0,-3);
 		$time_to=substr($db->result($r,$i-1,"time_to"),0,-3);
-		$delivery_days=$db->result($r,$i-1,"delivery_days");$dd_word="через ".$delivery_days." дн. ";if ($delivery_days==0){$dd_word="сьогодні";}if ($delivery_days==1){$dd_word="завтра";}
+		$delivery_days=$db->result($r,$i-1,"delivery_days");$dd_word="пїЅпїЅпїЅпїЅпїЅ ".$delivery_days." пїЅпїЅ. ";if ($delivery_days==0){$dd_word="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";}if ($delivery_days==1){$dd_word="пїЅпїЅпїЅпїЅпїЅпїЅ";}
 		$giveout_time=$db->result($r,$i-1,"giveout_time");
 		$time_from_del=substr($db->result($r,$i-1,"time_from_del"),0,-3);
 		$time_to_del=substr($db->result($r,$i-1,"time_to_del"),0,-3);
@@ -645,7 +645,7 @@ function loadTpointSupplDeliveryTime($tpoint_id){$db=new db;$slave=new slave;$gm
 		$week_day_short=$slave->get_weekday_abr($db->result($r,$i-1,"week_day"));
     	$date_del=date('d.m', strtotime(' + '.$delivery_days.' days'));
 		
-		$giveout_client_info="$date_del ($week_day_short)<br>з $time_from_del по $time_to_del";
+		$giveout_client_info="$date_del ($week_day_short)<br>пїЅ $time_from_del пїЅпїЅ $time_to_del";
 		//$giveout_client_info="$dd_word $giveout_time";
 		$list.="
 		<tr>
@@ -665,13 +665,13 @@ function loadTpointSupplDeliveryTime($tpoint_id){$db=new db;$slave=new slave;$gm
 			<td>$giveout_client_info</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td align='center' colspan='9'><h3 class='text-center'>Записи відсутні</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan='9'><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
 	$form=str_replace("{list_delivery}",$list,$form);
 	$form=str_replace("{tpoint_id}",$tpoint_id,$form);
 	return $form;
 }
 
-function loadTpointSupplStorage($tpoint_id){$db=new db; $dbt=new dbt;$slave=new slave;$gmanual=new gmanual;
+function loadTpointSupplStorage($tpoint_id){$db=DbSingleton::getDb(); $dbt=DbSingleton::getTokoDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/tpoint_suppl_storage_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select pss.*, st.name as storage_name, cc.name as suppl_name from T_POINT_SUPPL_STORAGE pss left join A_CLIENTS_STORAGE st on st.id=pss.storage_id	left join A_CLIENTS cc on cc.id=pss.suppl_id where pss.tpoint_id='$tpoint_id' order by pss.id asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -688,13 +688,13 @@ function loadTpointSupplStorage($tpoint_id){$db=new db; $dbt=new dbt;$slave=new 
 			<td>$storage_name</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td align='center' colspan=5><h3 class='text-center'>Записи відсутні</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan=5><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
 	$form=str_replace("{list_storage}",$list,$form);
 	$form=str_replace("{tpoint_id}",$tpoint_id,$form);
 	return $form;
 }
 
-function showTpointSupplDeliveryForm($tpoint_id,$s_id){$db=new dbt;$slave=new slave;$gmanual=new gmanual;
+function showTpointSupplDeliveryForm($tpoint_id,$s_id){$db=DbSingleton::getTokoDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/tpoint_suppl_delivery_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T_POINT_SUPPL_DELIVERY_TIME where id='$s_id' and tpoint_id='$tpoint_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -724,7 +724,7 @@ function showTpointSupplDeliveryForm($tpoint_id,$s_id){$db=new dbt;$slave=new sl
 	$form=str_replace("{workers_list}",$this->showWorkersSelectList($media_user_id),$form);
 	return $form;
 }
-function saveTpointSupplDeliveryForm($tpoint_id,$s_id,$suppl_id,$suppl_storage_id,$week_day,$time_from,$time_to,$delivery_days,$giveout_time,$time_from_del,$time_to_del){ $db=new db;$dbt=new dbt;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveTpointSupplDeliveryForm($tpoint_id,$s_id,$suppl_id,$suppl_storage_id,$week_day,$time_from,$time_to,$delivery_days,$giveout_time,$time_from_del,$time_to_del){ $db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$tpoint_id=$slave->qq($tpoint_id);$s_id=$slave->qq($s_id);$suppl_id=$slave->qq($suppl_id);$suppl_storage_id=$slave->qq($suppl_storage_id);$week_day=$slave->qq($week_day);$time_from=$slave->qq($time_from);$time_to=$slave->qq($time_to);$delivery_days=$slave->qq($delivery_days);$giveout_time=$slave->qq($giveout_time);
 	if ($tpoint_id>0){
 		if ($s_id==0 ){
@@ -741,7 +741,7 @@ function saveTpointSupplDeliveryForm($tpoint_id,$s_id,$suppl_id,$suppl_storage_i
 	return array($answer,$err);
 }
 
-function dropTpointSupplDelivery($tpoint_id,$s_id){$db=new dbt;$dbt=new dbt;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function dropTpointSupplDelivery($tpoint_id,$s_id){$db=DbSingleton::getTokoDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$tpoint_id=$slave->qq($tpoint_id);$s_id=$slave->qq($s_id);
 	if ($tpoint_id>0 && $s_id>0){
 		$db->query("update T_POINT_SUPPL_DELIVERY_TIME set status='0' where id='$s_id' and tpoint_id='$tpoint_id';");
@@ -750,7 +750,7 @@ function dropTpointSupplDelivery($tpoint_id,$s_id){$db=new dbt;$dbt=new dbt;$sla
 	}
 	return array($answer,$err);
 }
-function loadTpointSupplFm($tpoint_id){$db=new db;$slave=new slave;$gmanual=new gmanual;
+function loadTpointSupplFm($tpoint_id){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/tpoint_suppl_fm_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select pd.*, cs.name as storage_name, c.name as client_name from T_POINT_SUPPL_FM pd 
 				   left outer join A_CLIENTS_STORAGE cs on cs.id=pd.suppl_storage_id
@@ -784,13 +784,13 @@ function loadTpointSupplFm($tpoint_id){$db=new db;$slave=new slave;$gmanual=new 
 			<td>$margin2</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td align='center' colspan='9'><h3 class='text-center'>Записи відсутні</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan='9'><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
 	$form=str_replace("{list_suppl_fm}",$list,$form);
 	$form=str_replace("{tpoint_id}",$tpoint_id,$form);
 	return $form;
 }
 
-function showTpointSupplFmForm($tpoint_id,$s_id){$db=new dbt;$slave=new slave;$gmanual=new gmanual;
+function showTpointSupplFmForm($tpoint_id,$s_id){$db=DbSingleton::getTokoDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/tpoint_suppl_fm_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from T_POINT_SUPPL_FM where id='$s_id' and tpoint_id='$tpoint_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -818,7 +818,7 @@ function showTpointSupplFmForm($tpoint_id,$s_id){$db=new dbt;$slave=new slave;$g
 	return $form;
 }
 
-function saveTpointSupplFmForm($tpoint_id,$s_id,$suppl_id,$suppl_storage_id,$price_rating_id,$price_from,$price_to,$margin,$delivery,$margin2){ $db=new db;$dbt=new dbt;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveTpointSupplFmForm($tpoint_id,$s_id,$suppl_id,$suppl_storage_id,$price_rating_id,$price_from,$price_to,$margin,$delivery,$margin2){ $db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$tpoint_id=$slave->qq($tpoint_id);$s_id=$slave->qq($s_id);$suppl_id=$slave->qq($suppl_id);$suppl_storage_id=$slave->qq($suppl_storage_id);$price_rating_id=$slave->qq($price_rating_id);$price_from=$slave->qq($price_from);$price_to=$slave->qq($price_to);$margin=$slave->qq($margin);$delivery=$slave->qq($delivery);$margin2=$slave->qq($margin2);
 	if ($tpoint_id>0){
 		if ($s_id==0 ){
@@ -835,7 +835,7 @@ function saveTpointSupplFmForm($tpoint_id,$s_id,$suppl_id,$suppl_storage_id,$pri
 	return array($answer,$err);
 }
 
-function dropTpointSupplFm($tpoint_id,$s_id){$db=new dbt;$dbt=new dbt;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function dropTpointSupplFm($tpoint_id,$s_id){$db=DbSingleton::getTokoDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$tpoint_id=$slave->qq($tpoint_id);$s_id=$slave->qq($s_id);
 	if ($tpoint_id>0 && $s_id>0){
 		$db->query("update T_POINT_SUPPL_FM set status='0' where id='$s_id' and tpoint_id='$tpoint_id';");
@@ -845,12 +845,12 @@ function dropTpointSupplFm($tpoint_id,$s_id){$db=new dbt;$dbt=new dbt;$slave=new
 	return array($answer,$err);
 }
 
-function getCashName($cash_id){$db=new db;$name="";
+function getCashName($cash_id){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select name from CASH where id ='$cash_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"name");}
 	return $name;
 }
-function showCashListSelect($sel_id,$ns){$db=new db;$list="";if ($ns==""){$ns=1;}
+function showCashListSelect($sel_id,$ns){$db=DbSingleton::getDb();$list="";if ($ns==""){$ns=1;}
 	$r=$db->query("select * from CASH order by name asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -861,7 +861,7 @@ function showCashListSelect($sel_id,$ns){$db=new db;$list="";if ($ns==""){$ns=1;
 	}
 	return $list;	
 }
-function loadTpointPayBox($tpoint_id){$db=new db;$slave=new slave;$gmanual=new gmanual;
+function loadTpointPayBox($tpoint_id){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/tpoint_pay_box_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select pb.* from T_POINT_PAY_BOX pb where pb.tpoint_id='$tpoint_id' and pb.status='1' order by pb.id asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -882,13 +882,13 @@ function loadTpointPayBox($tpoint_id){$db=new db;$slave=new slave;$gmanual=new g
 			<td>$in_use_cap</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td align='center' colspan=6><h3 class='text-center'>Записи відсутні</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan=6><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
 	$form=str_replace("{list_pay_box}",$list,$form);
 	$form=str_replace("{tpoint_id}",$tpoint_id,$form);
 	return $form;
 }
 
-function showTpointPayBoxForm($tpoint_id,$s_id){$db=new db;$slave=new slave;$gmanual=new gmanual;
+function showTpointPayBoxForm($tpoint_id,$s_id){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/tpoint_pay_box_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select pb.* from T_POINT_PAY_BOX pb where pb.id='$s_id' and pb.tpoint_id='$tpoint_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -908,7 +908,7 @@ function showTpointPayBoxForm($tpoint_id,$s_id){$db=new db;$slave=new slave;$gma
 	return $form;
 }
 
-function saveTpointPayBoxForm($tpoint_id,$s_id,$client_id,$name,$in_use){ $db=new db;$dbt=new dbt;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveTpointPayBoxForm($tpoint_id,$s_id,$client_id,$name,$in_use){ $db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$tpoint_id=$slave->qq($tpoint_id);$s_id=$slave->qq($s_id);$client_id=$slave->qq($client_id);$name=$slave->qq($name);$in_use=$slave->qq($in_use);
 	if ($tpoint_id>0){
 		if ($s_id==0 ){
@@ -922,7 +922,7 @@ function saveTpointPayBoxForm($tpoint_id,$s_id,$client_id,$name,$in_use){ $db=ne
 	}else{$answer=0;}
 	return array($answer,$err);
 }
-function dropTpointPayBox($tpoint_id,$s_id){$db=new db;$dbt=new dbt;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function dropTpointPayBox($tpoint_id,$s_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$tpoint_id=$slave->qq($tpoint_id);$s_id=$slave->qq($s_id);
 	if ($tpoint_id>0 && $s_id>0){
 		$db->query("update T_POINT_PAY_BOX set status='0' where id='$s_id' and tpoint_id='$tpoint_id';");

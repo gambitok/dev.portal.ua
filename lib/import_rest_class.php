@@ -1,19 +1,19 @@
 <?php
 class import_rest{
 
-function show_import_rest_form(){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function show_import_rest_form(){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/import_rest_str_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	list($csv_exist,$csv_file_name,$pre_table)=$this->showCsvPreview();
-	$form=str_replace("{records_list}","<tr><td colspan=10 align='center'>Записи не завантажено</td></tr>",$form);
-	$form=str_replace("{import_file_name}","Оберіть файл",$form);
+	$form=str_replace("{records_list}","<tr><td colspan=10 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>",$form);
+	$form=str_replace("{import_file_name}","пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ",$form);
 	$form=str_replace("{csv_str_file}",$pre_table,$form);
 	
 	return $form;
 }
 
 
-function showCsvPreview(){$db=new db;$slave=new slave; $csv_exist=0;$csv_file_name="Оберіть файл";$pre_table="<h3 align='center'>Записи не завантажено</h3>"; session_start();$user_id=$_SESSION["media_user_id"];
+function showCsvPreview(){$db=DbSingleton::getDb();$slave=new slave; $csv_exist=0;$csv_file_name="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ";$pre_table="<h3 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</h3>"; session_start();$user_id=$_SESSION["media_user_id"];
 	$r=$db->query("select * from J_IMPORT_REST_CSV where user_id='$user_id' order by id desc limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$file_name=$db->result($r,0,"file_name");
@@ -52,7 +52,7 @@ function showCsvPreview(){$db=new db;$slave=new slave; $csv_exist=0;$csv_file_na
 	return array($csv_exist,$csv_file_name,$pre_table);
 }
 
-function finishRestCsvImport(){$db=new db;$dbt=new dbt;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function finishRestCsvImport(){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$r=$db->query("select * from J_IMPORT_REST_CSV where user_id='$user_id' order by id desc limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$file_name=$db->result($r,0,"file_name");
@@ -139,7 +139,7 @@ function finishRestCsvImport(){$db=new db;$dbt=new dbt;$slave=new slave;session_
 	return array($answer,$err);
 }
 	
-function getKourForDate($cash_id_to,$cash_id_from,$data){$db=new db; $kours=1; if ($data=="0000-00-00"){$data=date("Y-m-d");}
+function getKourForDate($cash_id_to,$cash_id_from,$data){$db=DbSingleton::getDb(); $kours=1; if ($data=="0000-00-00"){$data=date("Y-m-d");}
 	if ($cash_id_from!=$cash_id_to){
 		$r=$db->query("select `kours_value` from `J_KOURS` where `cash_id`='$cash_id_from' and `data_from`<='$data' and (`data_to`='0000-00-00' or `data_to`>='$data') and in_use in (0,1) order by id desc limit 0,1;");$n=$db->num_rows($r);if ($n==1){$kours=$db->result($r,0,"kours_value");}
 	}
@@ -150,39 +150,39 @@ function loadIncomeKours($cash_id,$data){$usd_to_uah=1;$eur_to_uah=1;
 	$eur_to_uah=$this->getKourForDate(1,3,$data);
 	return array($usd_to_uah,$eur_to_uah);
 }
-function get_df_doc_nom_new(){ $db=new db;$doc_nom=0;
+function get_df_doc_nom_new(){ $db=DbSingleton::getDb();$doc_nom=0;
 	$r=$db->query("select max(doc_nom) as mid from J_INCOME where oper_status='30' and status='1' limit 0,1;");$doc_nom=0+$db->result($r,0,"mid")+1;
 	return $doc_nom;
 }	
-function getNewIncomeId($income_name,$suppl_id,$firm_id,$cash_id,$cours_to_uah,$storage_id,$cell_id){$db=new db;$slave=new slave;$manual=new manual; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $income_id=0;
+function getNewIncomeId($income_name,$suppl_id,$firm_id,$cash_id,$cours_to_uah,$storage_id,$cell_id){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $income_id=0;
 	$r=$db->query("select max(id) as mid from J_INCOME;");$income_id=0+$db->result($r,0,"mid")+1;
 	$doc_nom=$this->get_df_doc_nom_new();
-	$db->query("insert into J_INCOME (`id`,`type_id`,`prefix`,`doc_nom`,`import_1c`,`user_id`,`data`,`invoice_income`,`invoice_data`,`client_id`,`client_seller`,`cash_id`,`cours_to_uah`,`storage_id`,`storage_cells_id`) values ('$income_id','0','ДФ','$doc_nom','1','$user_id',CURDATE(),'$income_name',CURDATE(),'$firm_id','$suppl_id','$cash_id','$cours_to_uah','$storage_id','$cell_id');");
+	$db->query("insert into J_INCOME (`id`,`type_id`,`prefix`,`doc_nom`,`import_1c`,`user_id`,`data`,`invoice_income`,`invoice_data`,`client_id`,`client_seller`,`cash_id`,`cours_to_uah`,`storage_id`,`storage_cells_id`) values ('$income_id','0','пїЅпїЅ','$doc_nom','1','$user_id',CURDATE(),'$income_name',CURDATE(),'$firm_id','$suppl_id','$cash_id','$cours_to_uah','$storage_id','$cell_id');");
 	return $income_id;
 }
 
-function getArtId($code,$brand_id){$db=new dbt;$slave=new slave;$cat=new catalogue;$id=0; $code=$slave->qq($code); $code=$cat->clearArticle($code);
+function getArtId($code,$brand_id){$db=DbSingleton::getTokoDb();$slave=new slave;$cat=new catalogue;$id=0; $code=$slave->qq($code); $code=$cat->clearArticle($code);
 	$r=$db->query("select ART_ID from T2_ARTICLES where ARTICLE_NR_SEARCH='$code' and BRAND_ID='$brand_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$id=$db->result($r,0,"ART_ID");	}
 	return $id;	
 }
-function getCostumsId($code){$db=new dbt;$slave=new slave;$id=0; $code=$slave->qq($code);
+function getCostumsId($code){$db=DbSingleton::getTokoDb();$slave=new slave;$id=0; $code=$slave->qq($code);
 	$r=$db->query("select COSTUMS_ID from T2_COSTUMS where COSTUMS_CODE='$code' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$id=$db->result($r,0,"COSTUMS_ID");	}
 	return $id;	
 }
-function getCountryId($code){$db=new dbt;$slave=new slave;$id=0; $code=$slave->qq($code);
+function getCountryId($code){$db=DbSingleton::getTokoDb();$slave=new slave;$id=0; $code=$slave->qq($code);
 	$r=$db->query("select COUNTRY_ID from T2_COUNTRIES where COUNTRY_NAME='$code' or (`ALFA2`='$code' and `ALFA2`!='') or (`ALFA3`='$code' and `ALFA3`!='') limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$id=$db->result($r,0,"COUNTRY_ID");	}
 	return $id;	
 }
-function getBrandId($code){$db=new dbt;$slave=new slave;$id=0; $code=$slave->qq($code);
+function getBrandId($code){$db=DbSingleton::getTokoDb();$slave=new slave;$id=0; $code=$slave->qq($code);
 	$r=$db->query("select BRAND_ID from T2_BRANDS where BRAND_NAME='$code' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	$id=$db->result($r,0,"BRAND_ID");	}
 	return $id;	
 }
 
-function checkArtCostumCode($art_id,$costum_id)	{$db=new dbt;
+function checkArtCostumCode($art_id,$costum_id)	{$db=DbSingleton::getTokoDb();
 	$r=$db->query("select COSTUMS_ID from T2_ZED where ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==0){
 		$db->query("insert into T2_ZED (ART_ID,COSTUMS_ID) values ('$art_id','$costum_id');");
@@ -197,7 +197,7 @@ function checkArtCostumCode($art_id,$costum_id)	{$db=new dbt;
 }
 	
 	
-function recalculatePrice($income_id,$invoice_summ,$cours_to_uah,$cash_id,$usd_to_uah,$eur_to_uah,$storage_id){$db=new db; $dbt=new dbt; 
+function recalculatePrice($income_id,$invoice_summ,$cours_to_uah,$cash_id,$usd_to_uah,$eur_to_uah,$storage_id){$db=DbSingleton::getDb(); $dbt=DbSingleton::getTokoDb(); 
 	require_once(RD."/lib/catalogue_class.php");$cat=new catalogue;
 	$costums_pd_uah=$costums_pp_uah=$costums_summ_uah=0;
 	$tz=0;	$tl=0;	$rb=0;	$ro=0;	$sz=0; 

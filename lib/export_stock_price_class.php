@@ -2,7 +2,7 @@
 
 class export_stock_price {
 	
-	function exportStocks() {$db=new dbt;
+	function exportStocks() {$db=DbSingleton::getTokoDb();
 		header('Content-Type: text/csv; charset=utf-8');
 		header('Content-Disposition: attachment; filename=export_stocks.csv'); ob_clean();
 		$output = fopen('php://output', 'w');
@@ -14,7 +14,7 @@ class export_stock_price {
 		exit(0);
 	}	
 	
-	function exportPrices() {$db=new dbt;
+	function exportPrices() {$db=DbSingleton::getTokoDb();
 		header('Content-Type: text/csv; charset=utf-8');
 		header('Content-Disposition: attachment; filename=export_prices.csv'); ob_clean();
 		$output = fopen('php://output', 'w');
@@ -26,7 +26,7 @@ class export_stock_price {
 		exit(0);
 	}
 	
-	function getArticlesStockData() {$db=new dbt; $array=[];
+	function getArticlesStockData() {$db=DbSingleton::getTokoDb(); $array=[];
 		$r=$db->query("SELECT `T2_ARTICLES`.`ART_ID`, `T2_ARTICLES`.`ARTICLE_NR_DISPL` as `INDEX`, `T2_BRANDS`.`BRAND_NAME` as `BRAND`, `T2_ARTICLES_STRORAGE`.`AMOUNT`, `T2_ARTICLES_STRORAGE`.`RESERV_AMOUNT`, `STORAGE`.`name` as `SKLAD`, `STORAGE`.`full_name`, `T2_INNER_CROSS`.`CROSS`, `T2_ARTICLES_UNIV_NUMBER`.`UNIV_NUMBER`
 		FROM `T2_ARTICLES_STRORAGE`
 			left join `T2_ARTICLES` on `T2_ARTICLES_STRORAGE`.`ART_ID`=`T2_ARTICLES`.`ART_ID`
@@ -51,7 +51,7 @@ class export_stock_price {
 		return $array;
 	}
 	
-	function getArticlesPriceData() {$db=new dbt; $array=[];
+	function getArticlesPriceData() {$db=DbSingleton::getTokoDb(); $array=[];
 		$r=$db->query("SELECT `T2_ARTICLES`. *, `T2_BRANDS`.`BRAND_NAME`, `T2_ARTICLES_PRICE_RATING`.`price_3` 
 		FROM `T2_ARTICLES_PRICE_RATING` 
 			LEFT JOIN `T2_ARTICLES` ON `T2_ARTICLES_PRICE_RATING`.`art_id`=`T2_ARTICLES`.`art_id` 

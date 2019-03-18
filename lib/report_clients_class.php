@@ -2,19 +2,19 @@
 
 class report_clients {
 		
-	function getCashAbr($cash_id) {$db=new db; 
+	function getCashAbr($cash_id) {$db=DbSingleton::getDb(); 
 		$r=$db->query("select abr from CASH where id='$cash_id' limit 1");
 		$cash_abr=$db->result($r,0,"abr");
 	    return $cash_abr;
 	}
 	
-	function getManuaType($id) { $db=new db;
+	function getManuaType($id) { $db=DbSingleton::getDb();
 		$r=$db->query("select mcaption from manual where id='$id';");
 		$mcaption=$db->result($r,0,"mcaption");
 		return $mcaption;
 	}
 	
-	function getMediaUserName($user_id){$db=new db;$name="";
+	function getMediaUserName($user_id){$db=DbSingleton::getDb();$name="";
 		$r=$db->query("select name from media_users where id='$user_id' limit 0,1;");$n=$db->num_rows($r);
 		if ($n==1){$name=$db->result($r,0,"name");}
 		return $name;
@@ -37,13 +37,13 @@ class report_clients {
 		return round($summary,2);	
 	}
 	
-	function getTpointName($tpoint_id){$db=new db;
+	function getTpointName($tpoint_id){$db=DbSingleton::getDb();
 		$r=$db->query("select name from T_POINT where id='$tpoint_id' limit 1;");
 		$name=$db->result($r,0,"name");
 		return $name;	
 	}
 	
-	function getClientLocation($client_id) {$db=new db;
+	function getClientLocation($client_id) {$db=DbSingleton::getDb();
 		$r=$db->query("select c.*, t2st.STATE_NAME, t2rg.REGION_NAME, t2ct.CITY_NAME, cc.tpoint_id from A_CLIENTS c 
 			left outer join A_CLIENTS_CONDITIONS cc on cc.client_id=c.id 
 			left outer join T2_STATE t2st on t2st.STATE_ID=c.state
@@ -58,7 +58,7 @@ class report_clients {
 		return array($tpoint,$state,$region,$city);
 	}
 	
-	function getSummReportsSales($date_start,$date_end,$cash_id,$client_id) { $db=new db; $summary=0;	 
+	function getSummReportsSales($date_start,$date_end,$cash_id,$client_id) { $db=DbSingleton::getDb(); $summary=0;	 
 	    $r=$db->query("select j.* from J_SALE_INVOICE j
 		where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59'
 		and j.client_conto_id='$client_id';"); $n=$db->num_rows($r);
@@ -73,7 +73,7 @@ class report_clients {
 	    return $summary;
 	}
 	
-	function getSummReportsBacks($date_start,$date_end,$cash_id,$client_id) { $db=new db; $summary=0;	
+	function getSummReportsBacks($date_start,$date_end,$cash_id,$client_id) { $db=DbSingleton::getDb(); $summary=0;	
 		$r=$db->query("select j.* from J_BACK_CLIENTS j 
 			left outer join J_SALE_INVOICE js on js.id=j.sale_invoice_id
 		where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59'
@@ -90,7 +90,7 @@ class report_clients {
 	    return $summary;
 	}
 	
-	function showReportClients($date_start,$date_end,$clients,$cash_id,$tpoint_id) { $db=new db; $list=""; $sales=$backs=[]; $client=new clients;
+	function showReportClients($date_start,$date_end,$clients,$cash_id,$tpoint_id) { $db=DbSingleton::getDb(); $list=""; $sales=$backs=[]; $client=new clients;
 		$form_htm=RD."/tpl/report_clients_table.htm";if (file_exists("$form_htm")){ $form=file_get_contents($form_htm);} $summ_list=0; 
 																					  
 		if($clients=="") $where=""; else $where="j.client_conto_id in ($clients) and ";	 			
@@ -164,7 +164,7 @@ class report_clients {
 		return $form;
 	}
 		
-	function getSeoReportsSumm($date_start,$date_end,$managers,$cash_id,$client_status,$user_id) { $db=new db; $list=""; $clients=new clients;								$r=$db->query("select j.id, j.usd_to_uah, j.eur_to_uah, j.user_id, j.doc_type_id, j.summ as prodaga, jb.summ as vosvrat from J_SALE_INVOICE j
+	function getSeoReportsSumm($date_start,$date_end,$managers,$cash_id,$client_status,$user_id) { $db=DbSingleton::getDb(); $list=""; $clients=new clients;								$r=$db->query("select j.id, j.usd_to_uah, j.eur_to_uah, j.user_id, j.doc_type_id, j.summ as prodaga, jb.summ as vosvrat from J_SALE_INVOICE j
 			cross join J_BACK_CLIENTS jb 
 		where j.user_id='$user_id' 
 		and (j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59')
@@ -190,7 +190,7 @@ class report_clients {
 		return $list;
 	}
 	
-	function getSeoReportsSummClient($date_start,$date_end,$managers,$cash_id,$client_status,$user_id,$doc_type_id) { $db=new db; $list=""; $clients=new clients;			$r=$db->query("select j.id,j.user_id,j.client_id,j.doc_type_id,sum(j.summ) as prodaga from J_SALE_INVOICE j
+	function getSeoReportsSummClient($date_start,$date_end,$managers,$cash_id,$client_status,$user_id,$doc_type_id) { $db=DbSingleton::getDb(); $list=""; $clients=new clients;			$r=$db->query("select j.id,j.user_id,j.client_id,j.doc_type_id,sum(j.summ) as prodaga from J_SALE_INVOICE j
 		where j.user_id='$user_id' 
 		and j.doc_type_id='$doc_type_id'
 		and j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59'
@@ -213,7 +213,7 @@ class report_clients {
 		return $list;
 	}
 	
-	function getCashList() { $db=new db;
+	function getCashList() { $db=DbSingleton::getDb();
 		$r=$db->query("select * from CASH"); $n=$db->num_rows($r); $list="";				
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
@@ -224,7 +224,7 @@ class report_clients {
 		return $list;
 	}
 	
-	function getClientsList() { $db=new db;
+	function getClientsList() { $db=DbSingleton::getDb();
 		$r=$db->query("select * from A_CLIENTS where status='1';"); $n=$db->num_rows($r); $list="";					
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
@@ -235,7 +235,7 @@ class report_clients {
 		return $list;
 	}
 	
-	function getTpointList() { $db=new db;
+	function getTpointList() { $db=DbSingleton::getDb();
 		$r=$db->query("select * from T_POINT where status='1';"); $n=$db->num_rows($r); $list="";					
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");

@@ -1,10 +1,10 @@
 <?php
 class configs {
 	function show_configs(){
-		$db=new db; $slave=new slave;$mdl=new module;$url=$mdl->get_file_url(); $dep_up=$slave->get_dep_up();
+		$db=DbSingleton::getDb(); $slave=new slave;$mdl=new module;$url=$mdl->get_file_url(); $dep_up=$slave->get_dep_up();
 
 		$form_htm=RD."/tpl/configs_show.htm";
-		if (!file_exists("$form_htm")){ $form="Не знайдено файл шаблону"; }
+		if (!file_exists("$form_htm")){ $form="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"; }
 		if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		
 		$r=$db->query("select * from config order by id desc limit 0,1;");
@@ -22,9 +22,9 @@ class configs {
 	}
 	
 	function edit_configs_form(){
-		$db=new db; $slave=new slave;$mdl=new module;
+		$db=DbSingleton::getDb(); $slave=new slave;$mdl=new module;
 		$form_htm=RD."/tpl/configs_form.htm";
-		if (!file_exists("$form_htm")){ $form="Не знайдено файл шаблону"; }
+		if (!file_exists("$form_htm")){ $form="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"; }
 		if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		
 		$r=$db->query("select * from config order by id desc limit 0,1;");
@@ -51,7 +51,7 @@ class configs {
 	}
 	
 	function save_configs_form(){
-		$db=new db; $slave=new slave;
+		$db=DbSingleton::getDb(); $slave=new slave;
 		$title=$slave->qq($_POST["title"]);
 		$key_words=$slave->qq($_POST["key_words"]);
 		$description=$slave->qq($_POST["description"]);
@@ -59,10 +59,10 @@ class configs {
 		$db->query("update config set title='$title', key_words='$key_words', description='$description';");
 		
 		$form_htm=RD."/tpl/save_message.htm";
-		if (!file_exists("$form_htm")){ $form="Не знайдено файл шаблону"; }
+		if (!file_exists("$form_htm")){ $form="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"; }
 		if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		
-		$message="Конфігурацію сайту &quot;$title&quot; успішно збережено";
+		$message="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ &quot;$title&quot; пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 		
 		$form=str_replace("{message}",$message,$form);
 		$form=str_replace("{navigation}","",$form);

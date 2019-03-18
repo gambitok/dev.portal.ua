@@ -2,7 +2,7 @@
 
 class report_margin {
 	
-	function getClientDocsMarginReportData($type_id,$client_id,$doc_type_id,$date_start,$date_end,$cash_id) { $db=new db; $slave=new slave; 
+	function getClientDocsMarginReportData($type_id,$client_id,$doc_type_id,$date_start,$date_end,$cash_id) { $db=DbSingleton::getDb(); $slave=new slave; 
 		$where="";$sales=$backs=[]; 
 		if ($type_id==0) {
 			if ($client_id!=0) $where=" and j.client_conto_id='$client_id' "; else $where="";
@@ -76,7 +76,7 @@ class report_margin {
 		}
 	}
 	
-	function getClientMarginReportData($type_id,$doc_status,$doc_type_id,$date_start,$date_end,$cash_id) { $db=new db; $clients=new clients; $gmanual=new gmanual;
+	function getClientMarginReportData($type_id,$doc_status,$doc_type_id,$date_start,$date_end,$cash_id) { $db=DbSingleton::getDb(); $clients=new clients; $gmanual=new gmanual;
 		$where="";$sales=$backs=[]; $slave=new slave;
 		if ($type_id==0) {
 			$r=$db->query("select j.*, jsp.invoice_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah,jsp.price_invoice from J_SALE_INVOICE j
@@ -171,7 +171,7 @@ class report_margin {
 		}
 	}
 
-	function getReportMarginDataSales($date_start,$date_end,$doc_type_id,$client_status,$doc_status,$cash_id) { $db=new db; $gmanual=new gmanual; $slave=new slave;
+	function getReportMarginDataSales($date_start,$date_end,$doc_type_id,$client_status,$doc_status,$cash_id) { $db=DbSingleton::getDb(); $gmanual=new gmanual; $slave=new slave;
 		$summ_list=0; $where=$list=""; $sales=$backs=[]; 
 		if($doc_type_id>0) {$where.=" and j.doc_type_id='$doc_type_id'";}	
 		$r=$db->query("select j.*, jsp.invoice_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah, jsp.price_invoice from J_SALE_INVOICE j
@@ -267,7 +267,7 @@ class report_margin {
 		return $array;
 	}
 
-	function showReportMargin($date_start,$date_end,$doc_type_id,$client_status,$doc_status,$cash_id) { $db=new db; $gmanual=new gmanual;
+	function showReportMargin($date_start,$date_end,$doc_type_id,$client_status,$doc_status,$cash_id) { $db=DbSingleton::getDb(); $gmanual=new gmanual;
 		$form_htm=RD."/tpl/report_margin_list.htm";if (file_exists($form_htm)){ $form = file_get_contents($form_htm);}	 
 		$summ_list=0; $where=""; $sales=$backs=[]; 
 		if($doc_type_id>0) {$where.=" and j.doc_type_id='$doc_type_id'";}																			  
@@ -390,7 +390,7 @@ class report_margin {
 		return $form;
 	}
 	
-	function getClientMarginReport($type_id,$doc_status,$doc_type_id,$date_start,$date_end,$cash_id) {$db=new db; $clients=new clients; $gmanual=new gmanual;
+	function getClientMarginReport($type_id,$doc_status,$doc_type_id,$date_start,$date_end,$cash_id) {$db=DbSingleton::getDb(); $clients=new clients; $gmanual=new gmanual;
 		$where="";$sales=$backs=[];
 		if ($type_id==0) {
 	    $r=$db->query("select j.*, jsp.invoice_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah,jsp.price_invoice from J_SALE_INVOICE j
@@ -499,7 +499,7 @@ class report_margin {
 		return $list;
 	}
 	
-	function getClientDocsMarginReport($type_id,$client_id,$doc_type_id,$date_start,$date_end,$cash_id){	$db=new db; $slave=new slave; 
+	function getClientDocsMarginReport($type_id,$client_id,$doc_type_id,$date_start,$date_end,$cash_id){	$db=DbSingleton::getDb(); $slave=new slave; 
 		$where="";$sales=$backs=[]; 
 		if ($type_id==0) {
 		if ($client_id!=0) $where=" and j.client_conto_id='$client_id' "; else $where="";
@@ -526,7 +526,7 @@ class report_margin {
 			$price_invoice=$this->getSummCash($price_invoice,2,$usd_to_uah,$eur_to_uah,$cash_id);			
 			
 			$salesd[$id]["id"]=$id;
-			$salesd[$id]["doc_name"]=$prefix." â³ä ".$data_pay;
+			$salesd[$id]["doc_name"]=$prefix." ï¿½ï¿½ ".$data_pay;
 			$salesd[$id]["oper_price_partition"]+=$oper_price_partition*$partition_amount;
 			$salesd[$id]["price_partition"]+=$price_partition*$partition_amount;
 			$salesd[$id]["price_buh_uah"]+=$price_buh_uah*$partition_amount;
@@ -575,7 +575,7 @@ class report_margin {
 			$price_invoice=$this->getSummCash($price_invoice,2,$usd_to_uah,$eur_to_uah,$cash_id);			
 			
 			$backsd[$id]["id"]=$id;
-			$backsd[$id]["doc_name"]=$prefix." â³ä ".$data_pay;
+			$backsd[$id]["doc_name"]=$prefix." ï¿½ï¿½ ".$data_pay;
 			$backsd[$id]["oper_price_partition"]+=$oper_price_partition*$partition_amount;
 			$backsd[$id]["price_partition"]+=$price_partition*$partition_amount;
 			$backsd[$id]["price_buh_uah"]+=$price_buh_uah*$partition_amount;
@@ -622,7 +622,7 @@ class report_margin {
 		return round($summary,2);	
 	}
 		
-	function getCashList() { $db=new db;
+	function getCashList() { $db=DbSingleton::getDb();
 		$r=$db->query("select * from CASH"); $n=$db->num_rows($r); $list="";				
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
@@ -633,7 +633,7 @@ class report_margin {
 		return $list;
 	}
 	
-	function getCashAbr($cash_id) {$db=new db; 
+	function getCashAbr($cash_id) {$db=DbSingleton::getDb(); 
 		$r=$db->query("select * from CASH where id='$cash_id' limit 1");
 		$cash_abr=$db->result($r,0,"abr");
 	    return $cash_abr;

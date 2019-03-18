@@ -2,7 +2,7 @@
 session_start();$user_id=$_SESSION["user_id"];
 if ($user_id!=""){
 	define('RD', dirname (__FILE__));$op=$_REQUEST["op"];
-	require_once (RD."/lib/mysql_class.php");$db=new db;
+	require_once (RD."/lib/mysql_class.php");$db=DbSingleton::getDb();
 	require_once (RD."/lib/slave_class.php");$slave=new slave;
 
 	/*$headers = apache_request_headers();

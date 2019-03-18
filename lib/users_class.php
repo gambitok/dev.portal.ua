@@ -2,13 +2,13 @@
 
 class users {
 	
-function newUsersCard(){$db=new db;$slave=new slave;$manual=new manual; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $users_id=0;
+function newUsersCard(){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $users_id=0;
 	$r=$db->query("select max(id) as mid from media_users;");$users_id=0+$db->result($r,0,"mid")+1;
 	$db->query("insert into media_users (`id`,`ison`) values ('$users_id','1');");
 	return $users_id;
 }
 
-function show_users_list(){$db=new db;$slave=new slave;$where="";$list="";
+function show_users_list(){$db=DbSingleton::getDb();$slave=new slave;$where="";$list="";
 	$r=$db->query("select *, tp.name as tpoint_name, mr.caption as role_name, uss.mcaption as status_name
 	from media_users mu 
 		left outer join T_POINT tp on tp.id=mu.tpoint_id 
@@ -39,7 +39,7 @@ function show_users_list(){$db=new db;$slave=new slave;$where="";$list="";
 	return $list;
 }
 	
-function showTrustedIPList(){$db=new db;$slave=new slave;$where="";$list="";
+function showTrustedIPList(){$db=DbSingleton::getDb();$slave=new slave;$where="";$list="";
 	$r=$db->query("select * from trusted_ip where status=1;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -54,13 +54,13 @@ function showTrustedIPList(){$db=new db;$slave=new slave;$where="";$list="";
 	return $list;
 }
 	
-function newTrustedIPCard() {$db=new db;
+function newTrustedIPCard() {$db=DbSingleton::getDb();
 	$r=$db->query("select max(id) as mid from trusted_ip;");$trusted_id=0+$db->result($r,0,"mid")+1;
 	$db->query("insert into trusted_ip (`id`,`status`) values ('$trusted_id',1);");
 	return $trusted_id;
 }
 	
-function showTrustedIPCard($trusted_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showTrustedIPCard($trusted_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/trusted_ip_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from trusted_ip where id='$trusted_id' and status=1;");$n=$db->num_rows($r);
 	if ($n==0){$form_htm=RD."/tpl/access_deny.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);} }
@@ -75,21 +75,21 @@ function showTrustedIPCard($trusted_id){$db=new db;$slave=new slave;session_star
 	return $form;
 }
 	
-function saveTrustedIPGeneralInfo($trusted_id,$trusted_ip,$descr){$db=new db;
-  $slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveTrustedIPGeneralInfo($trusted_id,$trusted_ip,$descr){$db=DbSingleton::getDb();
+  $slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	if ($trusted_id>0){
 		$r=$db->query("select * from trusted_ip where ip='$trusted_ip' and status=1 limit 1;");$n=$db->num_rows($r);
 		if ($n==0){
 			$db->query("update trusted_ip set `ip`='$trusted_ip', descr='$descr' where `id`='$trusted_id';");
 			$answer=1;$err="";
 		} else {
-			$answer=0;$err="Вказаний IP вже доданий";
+			$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ IP пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 		}
 	}
 	return array($answer,$err);
 }
 	
-function dropTrustedIP($trusted_id) {$db=new db; $answer=0;$err="Помилка збереження даних!";
+function dropTrustedIP($trusted_id) {$db=DbSingleton::getDb(); $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	if ($trusted_id>0) {
 		$db->query("update trusted_ip set `status`=0 where `id`='$trusted_id';");	
 		$answer=1;$err="";
@@ -97,7 +97,7 @@ function dropTrustedIP($trusted_id) {$db=new db; $answer=0;$err="Помилка збереже
 	return array($answer,$err);	
 }
 
-function showUsersCard($users_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showUsersCard($users_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/users_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	$r=$db->query("select * from media_users where id='$users_id' and ison='1' limit 0,1;");$n=$db->num_rows($r);
@@ -130,7 +130,7 @@ function showUsersCard($users_id){$db=new db;$slave=new slave;session_start();$u
 	return $form;
 }
 
-function saveUsersGeneralInfo($users_id,$name,$post,$tpoint_id,$role_id,$phone2,$login,$pass,$status,$email){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveUsersGeneralInfo($users_id,$name,$post,$tpoint_id,$role_id,$phone2,$login,$pass,$status,$email){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$users_id=$slave->qq($users_id);$name=$slave->qq($name);$post=$slave->qq($post);$tpoint_id=$slave->qq($tpoint_id);$role_id=$slave->qq($role_id);
 	$phone2=$slave->qq($phone2);$login=$slave->qq($login);$pass=$slave->qq($pass);$status=$slave->qq($status);$email=$slave->qq($email);
 	if ($users_id>0){
@@ -139,13 +139,13 @@ function saveUsersGeneralInfo($users_id,$name,$post,$tpoint_id,$role_id,$phone2,
 			$db->query("update media_users set `name`='$name',status='$status', `post`='$post', `tpoint_id`='$tpoint_id', `role_id`='$role_id', `email`='$email', `phone2`='$phone2', `phone`='$login', `pass`='$pass' where `id`='$users_id';");
 			$answer=1;$err="";
 		}if ($n==1){
-			$answer=0;$err="Користувач із вказаним логіном вже існує у системі";
+			$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ";
 		}
 	}
 	return array($answer,$err);
 }
 	
-function showTpointSelectList($sel_id){$db=new db;$list="";;
+function showTpointSelectList($sel_id){$db=DbSingleton::getDb();$list="";;
 	$r=$db->query("select * from T_POINT where status=1 order by name,id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -156,7 +156,7 @@ function showTpointSelectList($sel_id){$db=new db;$list="";;
 	return $list;
 }
 	
-function showRoleSelectList($sel_id){$db=new db;$list="";;
+function showRoleSelectList($sel_id){$db=DbSingleton::getDb();$list="";;
 	$r=$db->query("select * from media_role where status=1 order by caption,id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -167,7 +167,7 @@ function showRoleSelectList($sel_id){$db=new db;$list="";;
 	return $list;
 }
 
-function loadUsersAccess($users_id){$db=new db;$list="";
+function loadUsersAccess($users_id){$db=DbSingleton::getDb();$list="";
 	$form_htm=RD."/tpl/users_access_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select mf.*,rs.lvl, al.caption as level_name
 	from module_files mf 
@@ -180,7 +180,7 @@ function loadUsersAccess($users_id){$db=new db;$list="";
 		$mf_caption=$db->result($r,$i-1,"mf.caption");
 		$lvl=$db->result($r,$i-1,"rs.lvl");
 		$level_name=$db->result($r,$i-1,"level_name");
-		$access="Відсутній";if ($lvl>0){$access="Доступ";}
+		$access="ВіпїЅпїЅпїЅпїЅпїЅпїЅ";if ($lvl>0){$access="пїЅпїЅпїЅпїЅпїЅпїЅ";}
 		$list.="<tr>
 			<td>
 				<button class='btn btn-sm btn-default' onClick='showUsersAccessItemForm(\"$users_id\",\"$mf_id\");'><i class='fa fa-edit'></i></button>
@@ -191,13 +191,13 @@ function loadUsersAccess($users_id){$db=new db;$list="";
 			<td>$level_name</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td align='center' colspan=5><h3 class='text-center'>Записи відсутні</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan=5><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
 	$form=str_replace("{list_range}",$list,$form);
 	$form=str_replace("{users_id}",$users_id,$form);
 	return $form;
 }
 	
-function loadUsersAccessCredit($users_id){$db=new db;
+function loadUsersAccessCredit($users_id){$db=DbSingleton::getDb();
 	$form_htm=RD."/tpl/users_access_credit.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from media_users where id='$users_id' limit 1;");
 	$access_credit=$db->result($r,0,"access_credit");								  
@@ -206,7 +206,7 @@ function loadUsersAccessCredit($users_id){$db=new db;
 	return $form;
 }
 	
-function loadUsersAccessTime($users_id){$db=new db;
+function loadUsersAccessTime($users_id){$db=DbSingleton::getDb();
 	$form_htm=RD."/tpl/users_access_time.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from media_users_time where id='$users_id' limit 1;");
 	$access=$db->result($r,0,"access");	
@@ -224,7 +224,7 @@ function loadUsersAccessTime($users_id){$db=new db;
 	return $form;
 }
 	
-function saveUsersAccessTime($users_id,$access,$access_time,$time_from,$time_to){$db=new db;$answer=0;$err="Помилка збереження даних!";
+function saveUsersAccessTime($users_id,$access,$access_time,$time_from,$time_to){$db=DbSingleton::getDb();$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	if ($users_id>0) {
 		$r=$db->query("select * from media_users_time where id='$users_id' limit 1;"); $n=$db->num_rows($r);
 		if ($n>0)
@@ -236,7 +236,7 @@ function saveUsersAccessTime($users_id,$access,$access_time,$time_from,$time_to)
 	return array($answer,$err);
 }
 	
-function saveUsersAccessCredit($users_id,$credit){$db=new db;$answer=0;$err="Помилка збереження даних!";
+function saveUsersAccessCredit($users_id,$credit){$db=DbSingleton::getDb();$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	if ($users_id>0) {
 		$r=$db->query("update media_users set access_credit='$credit' where id='$users_id';");
 		$answer=1;$err="";
@@ -244,14 +244,14 @@ function saveUsersAccessCredit($users_id,$credit){$db=new db;$answer=0;$err="Пом
 	return array($answer,$err);
 }
 	
-function getUsersAccessCredit($users_id) {$db=new db;
+function getUsersAccessCredit($users_id) {$db=DbSingleton::getDb();
 	$r=$db->query("select access_credit from media_users where id='$users_id' limit 1;");
 	$access_credit=$db->result($r,0,"access_credit");
 	return $access_credit;
 }
 	
-function clearUsersAcсess($users_id){$db=new db;
-	$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function clearUsersAcпїЅess($users_id){$db=DbSingleton::getDb();
+	$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$users_id=$slave->qq($users_id);
 	if ($users_id>0){
 		$db->query("delete from media_users_role_structure where user_id='$users_id';");
@@ -260,7 +260,7 @@ function clearUsersAcсess($users_id){$db=new db;
 	return array($answer,$err);
 }
 
-function showUsersAccessItemForm($users_id,$mf_id){$db=new db;$slave=new slave;$gmanual=new gmanual;
+function showUsersAccessItemForm($users_id,$mf_id){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/users_access_item_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select mf.*,rs.lvl
 	from module_files mf 
@@ -280,7 +280,7 @@ function showUsersAccessItemForm($users_id,$mf_id){$db=new db;$slave=new slave;$
 	return $form;
 }
 
-function showAccessLevelSelectList($sel_id){$db=new db;$list="";;
+function showAccessLevelSelectList($sel_id){$db=DbSingleton::getDb();$list="";;
 	$r=$db->query("select * from access_level where id<=6 order by id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -291,7 +291,7 @@ function showAccessLevelSelectList($sel_id){$db=new db;$list="";;
 	return $list;
 }
 
-function saveUsersAccessItemForm($users_id,$mf_id,$lvl_id,$file_access){ $db=new db;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function saveUsersAccessItemForm($users_id,$mf_id,$lvl_id,$file_access){ $db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$users_id=$slave->qq($users_id);$mf_id=$slave->qq($mf_id);$lvl_id=$slave->qq($lvl_id);$file_access=$slave->qq($file_access);
 	if ($users_id>0 && $mf_id>0){
 		if ($file_access==0){
@@ -308,13 +308,13 @@ function saveUsersAccessItemForm($users_id,$mf_id,$lvl_id,$file_access){ $db=new
 	return array($answer,$err);
 }
 
-function getMediaUserName($user_id){$db=new db;$name="";
+function getMediaUserName($user_id){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select name from media_users where id='$user_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"name");}
 	return $name;
 }
 
-function showUserStatusSelectList($sel_id){$db=new db;$list="";;
+function showUserStatusSelectList($sel_id){$db=DbSingleton::getDb();$list="";;
 	$r=$db->query("select * from manual where `key`='user_status' and  ison=1 order by mcaption,id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -325,9 +325,9 @@ function showUserStatusSelectList($sel_id){$db=new db;$list="";;
 	return $list;
 }
 
-function resetDbZero(){$db=new db;$dbt=new dbt;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function resetDbZero(){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	if ($media_user_id!=1 && $media_user_id!=2 && $media_user_id!=7){
-		$answer=0;$err="А пупчик не розвяжеться? доступ обмежено";
+		$answer=0;$err="пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ? пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 	}
 	if ($media_user_id==1 || $media_user_id==2 || $media_user_id==7){
 		$db->query("update J_INCOME set oper_status='30' where oper_status='31';");
@@ -400,14 +400,14 @@ function resetDbZero(){$db=new db;$dbt=new dbt;$slave=new slave;session_start();
 	return array($answer,$err);
 }
 	
-function getSuperUser($user_id) {$db=new db;
+function getSuperUser($user_id) {$db=DbSingleton::getDb();
 	$r=$db->query("select * from media_users where id='$user_id' and access=1;");
 	$n=$db->num_rows($r);
 	$n>0 ? $status=true : $status=false;
 	return $status;
 }
 
-function getManagerUser($user_id) {$db=new db;
+function getManagerUser($user_id) {$db=DbSingleton::getDb();
 	$r=$db->query("select * from media_users where id='$user_id' and access>0;");
 	$n=$db->num_rows($r);
 	$n>0 ? $status=true : $status=false;

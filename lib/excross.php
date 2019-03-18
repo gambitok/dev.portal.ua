@@ -4,7 +4,7 @@ function exportDocs($client_id,$date_start,$date_end) {
 	header('Content-Type: text/csv; charset=utf-8');
 	header('Content-Disposition: attachment; filename=export_documents.csv'); ob_clean();
 	$output = fopen('php://output', 'w');
-	fputcsv($output, array("Вид документа","Номер нашего документа","Дата нашего документа","Номер расходной поставщика","Дата расходной поставщика","Номер налоговой","Номер корректировки","Номер налоговой которую корректируем","Назва повна контрагента","ІПН","ЄДРПОУ","К-сть, шт.","Собівартість СБ","Сумма с ПДВ"),$delimiter = ';');
+	fputcsv($output, array("пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅ","пїЅпїЅпїЅпїЅпїЅпїЅ","пїЅ-пїЅпїЅпїЅ, пїЅпїЅ.","пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ","пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ"),$delimiter = ';');
 	$income_array=exportIncome($client_id,$date_start,$date_end);
 	$sale_array=exportSaleInvoice($client_id,$date_start,$date_end);
 	$back_array=exportBackClients($client_id,$date_start,$date_end);
@@ -20,7 +20,7 @@ function exportDocs($client_id,$date_start,$date_end) {
 	exit(0);
 }
 
-function getBackClientsStrSumm($back_id) { $db=new db; $summ=0; $col=0;
+function getBackClientsStrSumm($back_id) { $db=DbSingleton::getDb(); $summ=0; $col=0;
 	$r=$db->query("select price_buh_uah,partition_amount from J_BACK_CLIENTS_PARTITION_STR where back_id='$back_id';"); $n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){ $amount=0; $price=0;
 		$price=$db->result($r,$i-1,"price_buh_uah");
@@ -31,13 +31,13 @@ function getBackClientsStrSumm($back_id) { $db=new db; $summ=0; $col=0;
     return array($summ,$col);
 }
 
-function getTaxInvo($tax_id) { $db=new db;
+function getTaxInvo($tax_id) { $db=DbSingleton::getDb();
 	$r=$db->query("select doc_nom from J_TAX_INVOICE where id='$tax_id';");
 	$tax_type_id=$db->result($r,0,"doc_nom");
 	return $tax_type_id;
 }
 
-function exportBackClients($client_id,$date_start,$date_end) { $db=new db;														  
+function exportBackClients($client_id,$date_start,$date_end) { $db=DbSingleton::getDb();														  
 	$where=" and j.seller_id='$client_id' and j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59' ";
 	$r=$db->query("select j.*, c.full_name as client_seller_name, cd.edrpou, cd.vytjag, tx.doc_nom as tax_doc, tx.tax_type_id, tx.tax_to_back_id
 	from J_BACK_CLIENTS j
@@ -58,9 +58,9 @@ function exportBackClients($client_id,$date_start,$date_end) { $db=new db;
 		$tax_doc=$db->result($r,$i-1,"tax_doc");
 		$tax_type_id=$db->result($r,$i-1,"tax_type_id");
 		$tax_to_back_id=$db->result($r,$i-1,"tax_to_back_id"); $tax_to_back_id=getTaxInvo($tax_to_back_id);
-		$pre="НН"; if ($tax_type_id==161) $pre="КНН";
+		$pre="пїЅпїЅ"; if ($tax_type_id==161) $pre="пїЅпїЅпїЅ";
 		$tax_doc=$pre."-".$tax_doc;
-		$tax_to_back_id="НН-".$tax_to_back_id;
+		$tax_to_back_id="пїЅпїЅ-".$tax_to_back_id;
 		$summ_pdv=$db->result($r,$i-1,"summ");
 		list($summ,$amount)=getBackClientsStrSumm($id);
 	    $summ=number_format($summ, 2, '.', '');
@@ -69,7 +69,7 @@ function exportBackClients($client_id,$date_start,$date_end) { $db=new db;
 	return $list;
 }
 
-function getSaleInvoiceStrSumm($invoice_id) { $db=new db; $summ=0; $col=0;
+function getSaleInvoiceStrSumm($invoice_id) { $db=DbSingleton::getDb(); $summ=0; $col=0;
 	$r=$db->query("select price_buh_uah,invoice_amount from J_SALE_INVOICE_PARTITION_STR where invoice_id='$invoice_id';"); $n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){ $amount=0; $price=0;
 		$price=$db->result($r,$i-1,"price_buh_uah");
@@ -80,7 +80,7 @@ function getSaleInvoiceStrSumm($invoice_id) { $db=new db; $summ=0; $col=0;
     return array($summ,$col);
 }
 
-function exportSaleInvoice($client_id,$date_start,$date_end) { $db=new db;												  
+function exportSaleInvoice($client_id,$date_start,$date_end) { $db=DbSingleton::getDb();												  
 	$where=" and j.seller_id='$client_id' and j.data_create>='$date_start 00:00:00' and j.data_create<='$date_end 23:59:59' ";
 	$r=$db->query("select j.*, c.full_name as client_seller_name, cd.edrpou, cd.vytjag, tx.doc_nom as tax_doc from J_SALE_INVOICE j
 		left outer join A_CLIENTS c on c.id=j.client_conto_id
@@ -106,7 +106,7 @@ function exportSaleInvoice($client_id,$date_start,$date_end) { $db=new db;
 	return $list;
 }
 
-function getIncomeStrSumm($income_id) { $db=new db; $summ=0; $col=0;
+function getIncomeStrSumm($income_id) { $db=DbSingleton::getDb(); $summ=0; $col=0;
 	$r=$db->query("select price_buh_uah,amount from J_INCOME_STR where income_id='$income_id';"); $n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){ $amount=0; $price=0;
 		$price=$db->result($r,$i-1,"price_buh_uah");
@@ -117,7 +117,7 @@ function getIncomeStrSumm($income_id) { $db=new db; $summ=0; $col=0;
     return array($summ,$col);
 }
 
-function exportIncome($client_id,$date_start,$date_end) { $db=new db;
+function exportIncome($client_id,$date_start,$date_end) { $db=DbSingleton::getDb();
 	$where=" and j.client_id='$client_id' and j.data>='$date_start 00:00:00' and j.data<='$date_end 23:59:59' ";
 	$r=$db->query("select j.*, c.full_name as client_seller_name, cd.edrpou, cd.vytjag from J_INCOME j
 		left outer join A_CLIENTS c on c.id=j.client_seller
@@ -142,7 +142,7 @@ function exportIncome($client_id,$date_start,$date_end) { $db=new db;
 	return $list;
 }
 
-function showSelectList() { $db=new db;
+function showSelectList() { $db=DbSingleton::getDb();
 	$r=$db->query("select c.id, c.full_name, cc.category_id from A_CLIENTS c 
 		left outer join A_CLIENTS_CATEGORY cc on cc.client_id=c.id
 	where cc.category_id=3 order by c.id asc;");$n=$db->num_rows($r);
@@ -165,7 +165,7 @@ function exportDocsForm() {
 
 // export Cross -----------------------------------------------------------------------------------------------------------------------------------
 
-function ExportCross($br) { $db=new dbt;						
+function ExportCross($br) { $db=DbSingleton::getTokoDb();						
 	$br2="'".implode("','", $br)."'"; 
 	$r=$db->query("
 	SELECT b3.BRAND_NAME, tarez.ARTICLE_NR_DISPL, t2c.DISPLAY_NR, b2.BRAND_NAME
@@ -195,7 +195,7 @@ function ExportCross($br) { $db=new dbt;
 	return $list;
 }
 
-function showBrandsSelect() { $db=new dbt;
+function showBrandsSelect() { $db=DbSingleton::getTokoDb();
 	$r=$db->query("select b.* from T2_BRANDS b order by b.BRAND_NAME asc");
 	$n=$db->num_rows($r); 
 	$list="";

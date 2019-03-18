@@ -1,12 +1,12 @@
 <?php
 class paybox{
 
-function getMediaUserName($user_id){$db=new db;$name="";
+function getMediaUserName($user_id){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select name from media_users where id='$user_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"name");}
 	return $name;
 }
-function show_paybox_list(){$db=new db;$slave=new slave;$gmanual=new gmanual;$dp=new dp; $where="";
+function show_paybox_list(){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;$dp=new dp; $where="";
 	$r=$db->query("select pb.*, cl.name as client_name, cst.mcaption as doc_type_name from PAY_BOX pb 
 	left outer join A_CLIENTS cl on cl.id=pb.firm_id
 	left outer join manual cst on cst.id=pb.doc_type_id and cst.`key`='client_sale_type'
@@ -30,13 +30,13 @@ function show_paybox_list(){$db=new db;$slave=new slave;$gmanual=new gmanual;$dp
 	return $list;
 }
 	
-function newPayboxCard(){$db=new db;$slave=new slave;$manual=new manual; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $paybox_id=0;
+function newPayboxCard(){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $paybox_id=0;
 	$r=$db->query("select max(id) as mid from PAY_BOX;");$paybox_id=0+$db->result($r,0,"mid")+1;
 	//$db->query("insert into PAY_BOX (`id`) values ('$paybox_id');");
 	return $paybox_id;
 }
 
-function showPayboxCard($paybox_id){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+function showPayboxCard($paybox_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/paybox_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	$r=$db->query("select pb.*, cl.name as firm_name from PAY_BOX pb 
@@ -86,7 +86,7 @@ function showPayboxCard($paybox_id){$db=new db;$slave=new slave;session_start();
 	return $form;
 }
 
-function savePayboxGeneralInfo($paybox_id,$name,$full_name,$firm_id,$doc_type_id,$in_use){$db=new db;$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function savePayboxGeneralInfo($paybox_id,$name,$full_name,$firm_id,$doc_type_id,$in_use){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 
 	$paybox_id=$slave->qq($paybox_id);$name=$slave->qq($name);$full_name=$slave->qq($full_name);$firm_id=$slave->qq($firm_id);$doc_type_id=$slave->qq($doc_type_id);$in_use=$slave->qq($in_use);
 	if ($paybox_id>0){
@@ -102,7 +102,7 @@ function savePayboxGeneralInfo($paybox_id,$name,$full_name,$firm_id,$doc_type_id
 	}
 	return array($answer,$err);
 }
-function getDocTypeSelectList($sel_id){$db=new db;$list="<option value=0>Оберіть зі списку</option>";
+function getDocTypeSelectList($sel_id){$db=DbSingleton::getDb();$list="<option value=0>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</option>";
 	$r=$db->query("select id,mcaption from `manual` where ison='1' and `key`='client_sale_type' order by mid,id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -113,7 +113,7 @@ function getDocTypeSelectList($sel_id){$db=new db;$list="<option value=0>Оберіть
 	return $list;	
 }
 
-function showWorkersSelectList($sel_id){$db=new db;$list="";;
+function showWorkersSelectList($sel_id){$db=DbSingleton::getDb();$list="";;
 	$r=$db->query("select * from media_users order by name,id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -125,7 +125,7 @@ function showWorkersSelectList($sel_id){$db=new db;$list="";;
 }
 	
 	
-function showPayboxClientList($sel_id){$db=new db;$dbt=new dbt;$slave=new slave;
+function showPayboxClientList($sel_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;
 	$form_htm=RD."/tpl/clients_parrent_tree.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select c.*,ot.name as org_type_name, t2cn.COUNTRY_NAME, t2st.STATE_NAME, t2rg.REGION_NAME, t2ct.CITY_NAME  from A_CLIENTS c 
 		left outer join A_ORG_TYPE ot on ot.id=c.org_type 
@@ -167,7 +167,7 @@ function showPayboxClientList($sel_id){$db=new db;$dbt=new dbt;$slave=new slave;
 	return $form;
 }
 	
-function loadPayboxWorkersSaldo($paybox_id){$db=new db;$slave=new slave;$gmanual=new gmanual;
+function loadPayboxWorkersSaldo($paybox_id){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/paybox_workers_saldo_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select sum(saldo) as summ, cash_id, user_id, last_update from B_PAYBOX_BALANS where paybox_id='$paybox_id' group by user_id,cash_id order by user_id asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -187,12 +187,12 @@ function loadPayboxWorkersSaldo($paybox_id){$db=new db;$slave=new slave;$gmanual
 			</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td align='center' colspan=5><h3 class='text-center'>Записи відсутні</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan=5><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
 	$form=str_replace("{list_saldo}",$list,$form);
 	$form=str_replace("{paybox_id}",$paybox_id,$form);
 	return $form;
 }
-function showPayboxWorkerSaldoJournal($paybox_id,$user_id,$cash_id){$db=new db;$slave=new slave;$gmanual=new gmanual;
+function showPayboxWorkerSaldoJournal($paybox_id,$user_id,$cash_id){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/paybox_workers_saldo_journal.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select bj.* from B_PAYBOX_JOURNAL bj where paybox_id='$paybox_id' and cash_id='$cash_id' and user_id='$user_id' order by id desc limit 0,20;");$n=$db->num_rows($r);$list="";$worker_name=$this->getMediaUserName($user_id);
 	for ($i=1;$i<=$n;$i++){
@@ -213,13 +213,13 @@ function showPayboxWorkerSaldoJournal($paybox_id,$user_id,$cash_id){$db=new db;$
 			<td>$saldo_after</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td align='center' colspan=6><h3 class='text-center'>Записи відсутні</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan=6><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
 	$form=str_replace("{list_saldo}",$list,$form);
 	$form=str_replace("{paybox_id}",$paybox_id,$form);
 	return $form;
 }
 
-function loadPayboxWorkers($paybox_id){$db=new db;$slave=new slave;$gmanual=new gmanual;
+function loadPayboxWorkers($paybox_id){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/paybox_workers_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from PAY_BOX_WORKERS where paybox_id='$paybox_id' and status='1' order by id asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -236,13 +236,13 @@ function loadPayboxWorkers($paybox_id){$db=new db;$slave=new slave;$gmanual=new 
 			<td>$worker_name</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td align='center' colspan=5><h3 class='text-center'>Записи відсутні</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan=5><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
 	$form=str_replace("{list_workers}",$list,$form);
 	$form=str_replace("{paybox_id}",$paybox_id,$form);
 	return $form;
 }
 
-function showPayboxWorkerForm($paybox_id,$s_id){$db=new db;$slave=new slave;$gmanual=new gmanual;
+function showPayboxWorkerForm($paybox_id,$s_id){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/paybox_workers_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from PAY_BOX_WORKERS where id='$s_id' and paybox_id='$paybox_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -255,7 +255,7 @@ function showPayboxWorkerForm($paybox_id,$s_id){$db=new db;$slave=new slave;$gma
 	return $form;
 }
 
-function savePayboxWorkerForm($paybox_id,$s_id,$worker_id){ $db=new db;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function savePayboxWorkerForm($paybox_id,$s_id,$worker_id){ $db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$paybox_id=$slave->qq($paybox_id);$s_id=$slave->qq($s_id);$worker_id=$slave->qq($worker_id);
 	if ($paybox_id>0){
 		if ($s_id==0 ){
@@ -270,7 +270,7 @@ function savePayboxWorkerForm($paybox_id,$s_id,$worker_id){ $db=new db;$slave=ne
 	return array($answer,$err);
 }
 	
-function dropPaybox($paybox_id){$db=new db;$answer=0;$err="Помилка збереження даних!";$slave=new slave;
+function dropPaybox($paybox_id){$db=DbSingleton::getDb();$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";$slave=new slave;
 	
 	if ($paybox_id>0){
 		$db->query("update PAY_BOX set status='0' where id='$paybox_id';");
@@ -279,7 +279,7 @@ function dropPaybox($paybox_id){$db=new db;$answer=0;$err="Помилка збереження да
 	return array($answer,$err);
 }
 	
-function dropPayboxWorker($paybox_id,$s_id){$db=new db;$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
+function dropPayboxWorker($paybox_id,$s_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 	$paybox_id=$slave->qq($paybox_id);$s_id=$slave->qq($s_id);
 	if ($paybox_id>0 && $s_id>0){
 		$db->query("update PAY_BOX_WORKERS set status='0' where id='$s_id' and paybox_id='$paybox_id';");
@@ -288,7 +288,7 @@ function dropPayboxWorker($paybox_id,$s_id){$db=new db;$slave=new slave;session_
 	return array($answer,$err);
 }
 	
-function getPayboxSaldo($paybox_id,$user_id){$db=new db;$slave=new slave; $saldo="";
+function getPayboxSaldo($paybox_id,$user_id){$db=DbSingleton::getDb();$slave=new slave; $saldo="";
 	$r=$db->query("select sum(saldo) as summ, cash_id from B_PAYBOX_BALANS where paybox_id='$paybox_id' $where_user group by cash_id order by cash_id asc;");$n=$db->num_rows($r); if ($n==0){ $saldo="0";}
 	for ($i=1;$i<=$n;$i++){
 		$summ=$db->result($r,$i-1,"summ");
@@ -297,7 +297,7 @@ function getPayboxSaldo($paybox_id,$user_id){$db=new db;$slave=new slave; $saldo
 	} 
 	return $saldo;
 }
-function getCashAbr($cash_id){$db=new db;$name="";
+function getCashAbr($cash_id){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select abr from CASH where id ='$cash_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"abr");}
 	return $name;
