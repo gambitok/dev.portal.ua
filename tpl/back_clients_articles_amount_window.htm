@@ -1,0 +1,20 @@
+<form method="get" class="form-horizontal" onSubmit="setArticleToBackClients(); return false;">
+	<input type="hidden" id="art_idS2" value="{art_id}">
+	<input type="hidden" id="article_nr_displS2" value="">
+	<input type="hidden" id="max_amount" value="">
+	<input type="hidden" id="sis_id" value="">
+	<div class="form-group">
+		<label class="col-md-6 col-sm-12 control-label">Кількість для повернення</label>
+		<div class="col-md-6 col-sm-12">
+			<input type="text" id="amount_back" class="form-control amount_move_numbers" value='{amount}' min='1' max="">
+			
+		</div>
+	</div>
+	<div class="hr-line-dashed"></div>
+	<div class="form-group">
+		<div class="col-sm-12 text-right">
+			<button class="btn btn-primary" type="button" onClick="setArticleToBackClients();">Прийняти</button>
+			<button class="btn btn-white" type="button" data-dismiss="modal" onClick="closeAmountInputWindow();">Закрити</button>
+		</div>
+	</div>
+</form>

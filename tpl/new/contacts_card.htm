@@ -1,0 +1,46 @@
+<div class="tabs-container">
+    <ul class="nav nav-tabs" id="contacts_tabs">
+        <li class="active"><a data-toggle="tab" href="#us_tab1"><i class="fa fa-bars"></i> <span class="hidden-sm-down not-visible">Загальна інформація</span></a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="us_tab1" class="tab-pane active">
+            <div class="panel-body">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <form method="get" class="form-horizontal">
+							
+							<input type="hidden" id="contact_id" value="{id}">
+							
+                            <div class="form-group">
+                            	<label class="col-sm-2 control-label">Назва</label>
+                                <div class="col-sm-2"><input class="form-control" type="text" name="contact_title" id="contact_title" value="{title}" placeholder=""></div>
+                                <label class="col-sm-2 control-label">Адреса</label>
+                                <div class="col-sm-2"><input class="form-control" type="text" name="contact_address" id="contact_address" value="{address}" placeholder=""></div>
+                                <label class="col-sm-2 control-label">Розклад роботи</label>
+                                <div class="col-sm-2"><input class="form-control" type="text" name="contact_schedule" id="contact_schedule" value="{schedule}" placeholder=""></div>
+                            </div>
+							
+                            <div class="hr-line-dashed"></div>
+							
+                            <div class="form-group">
+                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Телефон</label>
+                                <div class="col-sm-2"><input class="form-control" type="text" name="contact_phone" id="contact_phone" value="{phone}" placeholder=""></div>
+                            </div>
+							
+                            <div class="hr-line-dashed"></div>
+							
+                            <div class="form-group">
+                                <div class="col-sm-10 text-right col-sm-offset-2">
+                                    <button class="btn btn-primary" type="button" onClick="saveContacts('{id}');">Зберігти зміни</button>
+                                    <button class="btn btn-danger" type="button" onClick="dropContacts('{id}');">Видалити</button>
+                                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                                </div>
+                            </div>
+							
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

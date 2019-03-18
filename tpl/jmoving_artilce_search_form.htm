@@ -1,0 +1,73 @@
+<div class="animated fadeInRight" style="margin-top:0; padding-top:0;">
+    <div class="row">
+    	<input type="hidden" id="row_pos" value="">
+        <form method="post" onSubmit="catalogue_article_storage_rest_search(1);return false;" class="form-inline">
+        	<input type="hidden" id="list2_art" value="">
+            <input type="hidden" id="list2_brand_id" value="">
+            <div class="form-group" id="srchInG">
+                <div class="input-group">
+                    
+                    <input type="text" class="form-control control-label required" style="width:250px;" id="catalogue_art" name="catalogue_art" value="{article_nr_display}" placeholder="Введіть артикул">
+                    <div class="input-group-btn"> 
+                        <button type="submit" tabindex="-1" class="btn btn-primary"><i class="fa fa-search"></i></button> 
+                        <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button"><span class="caret"></span></button>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a href="#s1" onClick="catalogue_article_storage_rest_search(0);">Пошук артикулу</a></li>
+                            <li><a href="#s2" onClick="catalogue_article_storage_rest_search(2);">Пошук по штрихкоду</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12 pull-right">
+                <input type="text" class="form-control input-sm m-b-xs" id="filter2" placeholder="Пошук у результатах">
+            </div>
+        </form><br>
+    </div>
+
+    <section id="filter_range_place">
+        <div class="table-responsive m-t-sm ">
+            <span id="waveSpinnerCat_place" class="text-center"></span>
+            
+            <table  id="datatable_catalogue" class="footable table table-stripped table-bordered" data-sorting="true" data-page-size="20" data-filter="#filter2">
+                <thead id="catalogue_header">
+                   <th>#</th>
+                   <th>Індекс</th>
+                   <th>Виробник</th>
+                   <th>Найменування</th>
+                   <th>Штрих-код</th>
+                   <th>Товарна група</th>
+                   <!--<th>Склад</th>
+                   <th>Комірка</th>-->
+                   <th>Залишок</th>
+                   <th>ART_ID</th>
+                </thead>
+                <tbody id="catalogue_range">
+                	{range_list}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="12">
+                        <ul class="pagination pull-right"></ul>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </section>
+</div>
+<span id="list_brand_select" class="hidden">{list_brand_select}</span>
+
+
+<script language="javascript">
+$(document).ready(function() {
+//	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,"searching": false,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}, "dom": '<"top">rt<"bottom"flpi><"clear">'});
+	$('.footable').footable({"useParentWidth": true});
+	$("#fil2Manufacture").select2({placeholder: "Вибрати виробника"});
+	$("#fil2Model").select2({placeholder: "Вибрати модель"});
+	$("#fil2Modification").select2({placeholder: "Вибрати модифікацію"});
+	$('#fil4SupplId').select2({placeholder: "Вибрати постачальника"});
+	$('#fil4BrandId').select2({placeholder: "Вибрати виробника"});
+	$('#fil4GoodsGroupId').select2({placeholder: "Вибрати товарну групу"});
+	checkBrandSelectList();
+});
+</script>

@@ -1,0 +1,41 @@
+<div class="ibox">
+	<div class="ibox-header">
+        <div class="row">
+	        <div class="col-lg-12 col-md-12 col-sm-12 pull-left">
+            	<h3>Видаткові накладні</h3>
+            </div>
+        </div>
+	</div>
+	<div class="ibox-content">
+    	<input type="hidden" id="kol_rows_un" value="{kol_rows}">
+        <table id="dp_storsel_str" class="table table-condensed table-striped table-hover table-bordered" width="100%">
+            <thead>
+                <tr>
+                    <th style="text-align:center">№ п/п</th>
+                    <th style="text-align:center">Номер накладної</th>
+                    <th style="text-align:center">Дата створення</th>
+                    <th style="text-align:center">Торгова точка</th>
+                    <th style="text-align:center">Продавець</th>
+                    <th style="text-align:center">Клієнт</th>
+                    <th style="text-align:center">Вид розрахунку</th>
+                    <th style="text-align:center">Сума</th>
+                    <th style="text-align:center">Заборгованість</th>
+                    <th style="text-align:center">Дата оплати</th>
+                    <th style="text-align:center">Статус</th>
+                </tr>
+            </thead>
+            <tbody id="sale_invoice_range">
+	            {sale_invoice_list}
+            </tbody>
+        </table>
+        <div class="hr-line-dashed"></div>
+        <div class="form-group">
+            <div class="col-sm-6 text-left">
+                <!--<button class="btn btn-warning" type="button" {oper_disabled} onClick="sendJmovingStorageSelect();">Передати в роботу</button>-->
+            </div>
+            <div class="col-sm-6 text-right">
+                <!--<button class="btn btn-primary" type="button" {oper_disabled} onClick="saveJmovingCard();">Зберігти зміни</button>-->
+            </div>
+        </div>
+	</div>
+</div>

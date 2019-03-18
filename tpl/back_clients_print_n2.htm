@@ -1,0 +1,128 @@
+<br>
+<table width="100%" border="0">
+<tr width="100%">
+<td width="50%" style="padding: 15px; padding-top: 0; border-right: 1px dashed black">
+
+<table width="100%" border="0" style="font-size: 12px;"><tr>
+	<td width="100%">&nbsp;</td>
+	<td style="float:right; text-align: right"><small>Дата: {curtime}</small></td>
+</tr></table>
+<br>
+<table width="500" border="0" style="margin-bottom: 10px;">
+	<tr>
+		<td align="center"><p style="font-size: 12px;">
+		Постачальник: {seller_name}<br>
+		Код ЄДРПОУ: {edrpou}<br>
+		ІПН: {ipn_nom}<br>
+		Є платником єдиного податку, 2 група
+		</td>
+	</tr>
+	<tr><td>&nbsp;&nbsp;&nbsp;</td></tr>
+	<tr>
+		<td align="center">
+			<h4 align="center" style="font-weight:bold;">НАКЛАДНА НА ПОВЕРНЕННЯ №{prefix}-{doc_nom} від {data}</h4>
+		</td>
+	</tr>
+</table>
+	
+<p><b>Покупець:</b> {client_id}/{client_name}</p>
+<p><b>Склад повернення:</b> {storage_name}</p>
+<p><b>Документ основи повернення:</b> {sale_invoice_name}</p>
+<p><b>Cпосіб оплати:</b> готівка</p>
+<br>
+	
+<table border="1" class="table table-condensed table-striped table-hover table-bordered" width="100%" style='font-size:12px;'>
+    <thead>
+        <tr align="center">
+            <th width="50" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">№ з/п</th>
+            <th width="120" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">Індекс/Бренд</th>
+            <th width="250" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">Найменування</th>
+            <th width="50" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">Од. виміру</th>
+            <th width="50" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">К-сть</th>
+            <th width="50" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">Ціна, {cash_abr}</th>
+            <th width="50" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">Сумма, {cash_abr}</th>
+        </tr>
+  </thead>
+  <tbody id="sklad_storage_view_range">
+    {list}
+    <tr align="center">
+        <td colspan=6 align="right" style="border-bottom-color: #fff; border-left-color: #fff;">Всього, {cash_abr}:</td>
+        <td style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ddd; text-align:right;">{back_summ}</td>
+    </tr>
+  </tbody>
+</table>
+	
+<table width="500" border="0">
+	<tr>
+		<td width=50%>Відвантажив(ла): ____________________</td>
+		<td align="right" width="25%">Отримав(ла): ____________________ </td>
+	</tr>
+</table>
+	
+</td>
+	
+	
+<td width="50%" style="padding: 15px; padding-top: 0px; padding-bottom: 15px;">
+	
+<table width="100%" border="0" style="font-size: 12px;"><tr>
+	<td width="100%">&nbsp;</td>
+	<td style="float:right; text-align: right"><small>Дата: {curtime}</small></td>
+</tr></table>
+<br>
+<table width="500" border="0" style="margin-bottom: 10px;">
+	<tr>
+		<td align="center"><p style="font-size: 12px;">
+		Постачальник: {seller_name}<br>
+		Код ЄДРПОУ: {edrpou}<br>
+		ІПН: {ipn_nom}<br>
+		Є платником єдиного податку, 2 група
+		</td>
+	</tr>
+	<tr><td>&nbsp;&nbsp;&nbsp;</td></tr>
+	<tr>
+		<td align="center">
+			<h4 align="center" style="font-weight:bold;">НАКЛАДНА НА ПОВЕРНЕННЯ №{prefix}-{doc_nom} від {data}</h4>
+		</td>
+	</tr>
+</table>
+	
+<p><b>Покупець:</b> {client_id}/{client_name}</p>
+<p><b>Склад повернення:</b> {storage_name}</p>
+<p><b>Документ основи повернення:</b> {sale_invoice_name}</p>
+<p><b>Cпосіб оплати:</b> готівка</p>
+<br>
+	
+<table border="1" class="table table-condensed table-striped table-hover table-bordered" width="100%" style='font-size:12px;'>
+    <thead>
+        <tr align="center">
+            <th width="50" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">№ з/п</th>
+            <th width="120" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">Індекс/Бренд</th>
+            <th width="250" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">Найменування</th>
+            <th width="50" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">Од. виміру</th>
+            <th width="50" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">К-сть</th>
+            <th width="50" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">Ціна, {cash_abr}</th>
+            <th width="50" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">Сумма, {cash_abr}</th>
+        </tr>
+  </thead>
+  <tbody id="sklad_storage_view_range">
+    {list}
+    <tr align="center">
+        <td colspan=6 align="right" style="border-bottom-color: #fff; border-left-color: #fff;">Всього, {cash_abr}:</td>
+        <td style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ddd; text-align:right;">{back_summ}</td>
+    </tr>
+  </tbody>
+</table>
+	
+<table width="500" border="0">
+	<tr>
+		<td width=50%>Відвантажив(ла): ____________________</td>
+		<td align="right" width="25%">Отримав(ла): ____________________ </td>
+	</tr>
+</table>
+	
+</td>
+	
+</tr>
+</table>
+
+

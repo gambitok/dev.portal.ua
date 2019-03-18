@@ -1,0 +1,30 @@
+<!---   ZED TAB BLOCK   -->
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <form method="get" onSubmit="return false;" class="form-horizontal">
+        	<input type='hidden' id="art_idS2" value="{art_id}">
+            <input type='hidden' id="article_nr_displS2" value="">
+            <input type='hidden' id="brand_idS2" value="">
+            <input type='hidden' id="brand_nameS2" value="">
+            <div class="row">
+            	<strong>Залишки по складам</strong>
+            	<table id="amount_select_storage_str" class="table table-condensed table-striped table-hover table-bordered" width="100%">
+                    <thead>
+                        <tr align="center">
+                            <th>№</th>
+                            <th>Склад</th>
+                            <th>Залишок</th>
+                            <th>Поточний відбір</th>
+                            <th>Резерв інший</th>
+                            <th>Доставка</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dp_str_range">
+                        {dp_rest_storage_list}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+</div>
+

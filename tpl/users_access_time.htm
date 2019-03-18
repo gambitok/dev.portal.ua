@@ -1,0 +1,39 @@
+<div class="row">
+	<div class="col-lg-2">
+		<label for="">¬кл/викл перев≥рку на дов≥рен≥ IP</label>
+	</div>
+	<div class="col-lg-2">
+		<label for="">¬кл/викл перев≥рку на час</label>
+	</div>
+	<div class="col-lg-4">
+		<label for="">„ас з</label>
+	</div>
+	<div class="col-lg-4">
+		<label for="">„ас до</label>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-lg-2">
+		<span class="buttons-inline pull-left">
+			<input type="checkbox" class="js-switch" data-size="small" id="file_access" value="1" {access_checked} />
+		</span>
+	</div>
+	<div class="col-lg-2">
+		<span class="buttons-inline pull-left">
+			<input type="checkbox" class="js-switch" data-size="small" id="file_access_time" value="1" {access_time_checked} />
+		</span>
+	</div>
+	<div class="col-lg-4">
+		<input class="form-control" type="time" name="access_time_from" id="access_time_from" value="{access_time_from}" placeholder="„ас з">
+	</div>
+	<div class="col-lg-4">
+		<input class="form-control" type="time" name="access_time_to" id="access_time_to" value="{access_time_to}" placeholder="„ас до">
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-lg-offset-10 col-lg-2 text-right">
+		<button class="btn btn-primary" type="button" onclick="saveUsersAccessTime({users_id});">«берегти зм≥ни</button>
+	</div>
+</div>

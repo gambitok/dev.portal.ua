@@ -1,0 +1,128 @@
+<link href="/js/plugins/jsTree/jstree_style.min.css" rel="stylesheet">
+<link href="/js/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
+<link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
+<link rel="stylesheet" href="/css/plugins/chosen-1.8.3/docsupport/prism.css">
+<link rel="stylesheet" href="/css/plugins/chosen-1.8.3/chosen.css">
+
+<h2 class="border-bottom white-bg dashboard-header">Панель менеджера: {user_name}</h2>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-6">
+			
+			<div class="ibox" style="border: 1px solid #ccc;">
+				<div class="ibox-content">
+					<div class="row" >
+						<div class="col-lg-6 col-sm-5" style="font-size: 96px; text-align: center;">
+							<i class="fa fa-dollar" 
+							   style="border: 10px solid;
+									  border-color: #676a6c;
+									  padding: 30px;
+									  border-radius: 1em;
+									  width: 180px;"></i>
+						</div>
+						<div class="col-lg-6 col-sm-5 summ_block" style="font-size: 36px; text-align: center;">
+							<p style="font-size: 20px;">Сума продаж</p>
+							<span id="summ_user" style="font-weight: bold;color: #18a689;">{summ_user}</span><br>
+							<a onclick="getSummToday();">За сьогодні</a>
+							<a onclick="getSummMonth();">За місяць</a><br>
+							<a id="toggle_btn" onclick="toggleManagerReport();" style="font-size: 19px; color: #18a689;">Показати звіт</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+            <div class="ibox" id="manager_report_list" style="border: 1px solid #ccc; display: none;">
+				
+                <div class="ibox-title" style="padding: 30px; border-top: none;">
+                    <div class="row align-items-center">
+						<div class="col-sm-5 col-lg-5">
+							<label for="date_start">Дата від</label>
+							<input id="date_start" type="date" value="{date}" class="form-control">
+							<label for="date_end">Дата до</label>
+							<input id="date_end" type="date" value="{date}" class="form-control">
+						</div>								
+
+						<div class="col-lg-5 col-sm-5">
+							<label>Валюта</label>
+							<select class="form-control" name="cash_select" id="cash_select" style="width: 200px;">
+								<option value="0">-</option>
+								{cash_select}
+							</select>
+							<label>Клієнти</label><br>
+							<span class="buttons-inline pull-left">
+								<input type="checkbox" class="js-switch" data-size="small" placeholder="Клієнти" id="client_status"/>
+							</span>
+						</div>
+
+						<div class="col-sm-2 col-lg-2">
+							<button class="btn btn-primary" onClick="showSeoReports();">Сформувати</button>	
+						</div>
+
+						<select id="managers" name="managers[]" style="display: none;">
+							<option value="{user_id}" selected>{user_name}</option>
+						</select>
+	                </div>
+                </div>
+				
+                <div class="ibox-content">
+					<div id="seo_reports_range">{panel_manager_range}</div>
+				</div>
+				
+			</div>
+		</div>
+		
+<!--
+		<div class="col-lg-6">
+			<div class="ibox" style="border: 1px solid #ccc;">
+				<div class="ibox-content">
+					<h2>Замітки менеджера</h2>
+					<textarea name="manager_notes" id="manager_notes" cols="30" rows="10" placeholder="Введіть текст замітки"></textarea>
+					<br>
+					<button class="btn btn-info float-right">Зберегти</button>
+				</div>
+			</div>
+		</div>
+-->
+		
+	</div>
+</div>
+
+<style>
+	.summ_block a {
+		font-size: 14px;
+		color: darkgray;
+	}
+	
+	.summ_block a:hover {
+		color:gray;
+		text-decoration: underline;
+	} 
+</style>
+
+<script src="/js/seo_reports/seo_reports.js"></script>
+
+<script type="text/javascript" src="/js/plugins/barcode-generator/jquery-barcode.js"></script>
+<!-- Bootstrap markdown -->
+<script src="/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>
+<script src="/js/plugins/bootstrap-markdown/markdown.js"></script>
+<script src="/vendors/jquery/generate-password.js"></script>
+<script src="/js/plugins/select2/js/select2.full.min.js"></script>
+<script src="/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/js/plugins/dropzone/dropzone.js"></script>
+<script src="/js/plugins/switchery/switchery.js"></script>
+
+<script src="/css/plugins/chosen-1.8.3/docsupport/jquery-3.2.1.min.js" type="text/javascript"></script>
+<script src="/css/plugins/chosen-1.8.3/chosen.jquery.js" type="text/javascript"></script>
+<script src="/css/plugins/chosen-1.8.3/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+<script src="/css/plugins/chosen-1.8.3/docsupport/init.js" type="text/javascript" charset="utf-8"></script>
+
+<script type="text/javascript">
+//Disabling autoDiscover
+Dropzone.autoDiscover = false;
+</script>
+<script src="/js/plugins/jsTree/jstree.min.js"></script>
+<style>.jstree-open > .jstree-anchor > .fa-folder:before {content: "\f07c";}.jstree-default .jstree-icon.none {width: 0;}</style>
+<!-- Sweet alert -->
+<script src="/js/plugins/sweetalert/sweetalert.min.js"></script>

@@ -1,0 +1,53 @@
+<div style="padding: 0 30px;">
+
+<table width="100%" border="0" style="font-size: 12px;"><tr>
+	<td width="100%"><strong>Накладна №{prefix}-{doc_nom} від {data}</strong></td>
+	<td style="float:right; text-align: right"><small>Дата: {curtime}</small></td>
+</tr></table>
+<br>
+<p ><b>Клієнт:</b> {client_id}/{client_name}</p>
+<p ><b>Адреса доставки:</b>_____________________________________ </p>
+<br>
+<table border="1" class="table table-condensed table-striped table-hover table-bordered" width="100%" style='font-size:12px;'>
+    <thead>
+        <tr align="center">
+            <th width="50" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">№ з/п</th>
+            <th width="120" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">Індекс/Бренд</th>
+            <th width="250" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">Найменування</th>
+            <th width="50" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">Од. виміру</th>
+            <th width="50" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">К-сть</th>
+            <th width="50" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">Ціна, {cash_abr}</th>
+            <th width="50" style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ccc; text-align:center;">Сумма, {cash_abr}</th>
+        </tr>
+  </thead>
+  <tbody id="sklad_storage_view_range">
+    {sale_invoice_str_list}
+    <tr align="center">
+        <td colspan=6 align="right" style="border-bottom-color: #fff; border-left-color: #fff;">Всього, {cash_abr}:</td>
+        <td style="font-weight:100; background-color:#ccc; padding:3px;color:#000;border:1px solid #ddd; text-align:right;">{invoice_summ}</td>
+    </tr>
+  </tbody>
+</table>
+	
+	<br><p>Сума: {invoice_summ_word}</p>
+
+<br><p>У випадку необгрунтованої відмови від запчастини сплачені раніше кошти за доставку залишаються у Продавця.</p><br><br>
+
+<table width="100%" border="0">
+	<tr>
+		<td width=50%>Відпустив: ____________________</td>
+		<td align="right"></td>
+	</tr>
+	<tr>
+		<td width=50%>&nbsp;</td>
+	</tr>
+	<tr>
+		<td width=50%>Склав: ____________________</td>
+		<td align="right">Одержав: ____________________ </td>
+	</tr>
+</table><br><br>
+	
+<br><p>По замовленням/складским відборам: {dp_name} / {dp_sale_invoice_storsel_list}</p>
+	
+
+</div>

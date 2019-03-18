@@ -1,0 +1,88 @@
+<script src="/js/plugins/ckeditor/ckeditor.js"></script>
+<script src="/js/plugins/ckeditor/samples/js/sample.js"></script>
+
+<div class="tabs-container">
+    <ul class="nav nav-tabs" id="news_tabs">
+        <li class="active"><a data-toggle="tab" href="#us_tab1"><i class="fa fa-bars"></i> <span class="hidden-sm-down not-visible">Загальна інформація</span></a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="us_tab1" class="tab-pane active">
+            <div class="panel-body">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <form method="get" class="form-horizontal">
+							
+							<input type="hidden" id="news_id" value="{id}">
+							
+                            <div class="form-group">
+                            	<label class="col-sm-2 control-label">Заголовок</label>
+                                <div class="col-sm-2"><input class="form-control" type="text" name="news_caption" id="news_caption" value="{caption}" placeholder=""></div>
+								
+                                <label class="col-sm-1 control-label">Дата</label>
+                                <div class="col-sm-2"><input class="form-control" type="date" name="news_data" id="news_data" value="{data}" placeholder=""></div>
+								
+								<label class="col-sm-1 control-label">Мова</label>
+                                <div class="col-sm-1">
+									<input class="form-control" type="text" readonly name="news_lang" id="news_lang" value="{lang_val}" placeholder="">
+									<input type="hidden" id="lang_id" value="{lang_id}">
+								</div>
+								
+                                <label class="col-sm-1 control-label">Статус</label>
+                                <div class="col-sm-1"><input type="checkbox" class="js-switch" data-size="small" id="news_status" value="1" {status} /></div>
+                            </div>
+							
+                            <div class="hr-line-dashed"></div>
+							
+                            <div class="form-group">
+                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Скорочено</label>
+                                <div class="col-sm-10"><textarea class="form-control" type="text" name="news_short" id="news_short" placeholder="">{short}</textarea></div>
+                            </div>
+							
+                            <div class="hr-line-dashed"></div>	
+							
+                            <div class="form-group">
+                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Опис</label>
+								<div class="col-sm-10">
+									<div id="editor" name="news_desc">
+										{descr}
+									</div>
+								</div>
+                            </div>
+							
+							<div class="hr-line-dashed"></div>	
+							
+							<div class="form-group">
+								<label class="col-lg-2 col-md-2 col-sm-4 control-label">Зображення</label>
+								
+								<div class="col-sm-2">
+									<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#fileNewsPhotoUploadForm" onClick="showNewsUploadLogoForm('{id}','{lang_id}','{file_id}')"><i class="fa fa-cloud-upload"></i> Завантажити фото</button>
+									<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#fileNewsDelete" id="deleteLogo" onClick="deleteNewsLogo('{id}')"><i class="fa fa-trash-o"></i> Видалити фото</button>
+								</div>
+								<div class="col-sm-8">
+									<div id="news_photo_place" name="news_photo_place">
+										{photo}
+									</div>
+								</div>
+							</div>
+							
+                            <div class="hr-line-dashed"></div>
+							
+                            <div class="form-group">
+                                <div class="col-sm-10 text-right col-sm-offset-2">
+                                    <button class="btn btn-primary" type="button" onClick="saveNews('{id}');">Зберігти зміни</button>
+                                    <button class="btn btn-danger" type="button" onClick="dropNews('{id}');">Видалити</button>
+                                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                                </div>
+                            </div>
+							
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+	    initSample();
+</script>

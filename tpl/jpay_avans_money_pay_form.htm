@@ -1,0 +1,88 @@
+<!---   PAY TAB BLOCK   -->
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <form method="get" onSubmit="return false;" class="form-horizontal">
+        	<input type='hidden' id="pay_auto" value="4">
+            <input type='hidden' id="pay_id" value="0">
+            <input type='hidden' id="doc_cash_id" value="{doc_cash_id}">
+            <div class="row">
+            	<div class="col-md-6 col-sm-12">
+                    <div class="form-group">
+                        <label class="col-md-4 col-sm-12 control-label">Клієнт</label>
+                        <div class="col-md-7 col-sm-12">
+                            <input type="hidden" id="client_id" name="client_id" value="0">
+                            <div class="input-group">
+                                <input class="form-control" type="text" readonly {oper_disabled} id="client_name" value="" placeholder="Отримувач товару">
+                                <span class="input-group-btn"> <button type="button" class="btn btn-primary" {oper_disabled} id="clientSelBtn" onClick="showJpayClientList('{pay_id}');"><i class="fa fa-bars"></i></button> </span>
+                                <span class="input-group-btn"> <button type="button" class="btn btn-default" {oper_disabled} id="clientDropBtn" onClick="unlinkJpayAutoClient();"><i class="fa fa-times"></i></button> </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 col-sm-12 control-label">Валюта договору</label>
+                        <div class="col-md-7 col-sm-12">
+                            <input type="text" id="doc_cash_name" class="form-control numbers" readonly value='{doc_cash_name}'>
+                        </div> 
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 col-sm-12 col-sm-4 control-label">Вид оплаты</label>
+                        <div class="col-md-7 col-sm-12">
+                            <select size="1" id="pay_type_id" {pay_type_id_disabled} class="form-control"><option value="0">--Оберіть зі списку--</option>{pay_type_list}</select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 col-sm-12 control-label">Борг клієнта, <span id="client_cash_name">{cash_name}</span></label>
+                        <div class="col-md-7 col-sm-12">
+                            <input type="text" id="client_balans" class="form-control numbers" readonly value='0' min='1' max="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 col-sm-12 control-label">Баланс авансу клієнта, <span id="client_balans_cash_name">{cash_name}</span></label>
+                        <div class="col-md-7 col-sm-12">
+                            <input type="text" id="client_balans_avans" class="form-control numbers" readonly value='{client_balans_avans}'>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 col-sm-12 control-label">Сума оплати з авансу</label>
+                        <div class="col-md-7 col-sm-12">
+                            <input type="text" id="avans_kredit" readonly class="form-control numbers" value='{avans_kredit}' min='1' max="">
+                        </div>
+                    </div>
+                   
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <div class="col-sm-12 text-right">
+                            <button id="jpay_save" class="btn btn-primary" type="button" onClick="saveJpayAvansMoneyPay();">Зафіксувати</button>
+                            <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                        </div>
+                    </div>
+	            </div>
+                <div class="col-md-6 col-sm-12">
+                	<div class="table-responsive">
+                        <table id="sale_invoice_datatable" class="table table-condensed table-striped table-hover table-bordered" width="100%">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center">№ п/п</th>
+                                    <th style="text-align:center">Номер накладної</th>
+                                    <th style="text-align:center">Дата створення</th>
+                                    <th style="text-align:center">ДП</th>
+                                    <th style="text-align:center">Торгова точка</th>
+                                    <th style="text-align:center">Продавець</th>
+                                    <th style="text-align:center">Вид розрахунку</th>
+                                    <th style="text-align:center">Сума</th>
+                                    <th style="text-align:center">Борг</th>
+                                    <th style="text-align:center">Дата оплати</th>
+                                    <th style="text-align:center">Статус</th>
+                                </tr>
+                            </thead>
+                            <tbody id="jpay_sale_invoice_range">
+                                <tr><td colspan="11" class="text-center">Оберіть клієнта для відображення накладних</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

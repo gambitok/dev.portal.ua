@@ -1,0 +1,28 @@
+<div class="row align-items-center" style="margin-right: 0;">
+	<div class="col-lg-3"><label>Максимальна пролонгація для клієнта: {prolog_days} дн.</label></div>
+	<div class="col-lg-7"><input class="form-control" type="text" name="data_search" id="data_search" value="{date_search}" placeholder="РРРР-ММ-ДД" data-provide="datepicker" data-date-format="yyyy-mm-dd"></div>	
+	<div class="col-lg-2"><button align="right" class="btn btn-primary" type="button" onclick="getSaleInvoceProlog();">Пошук</button></div>
+</div>
+<br>
+
+<table  id="datatable_prolog" class="table table-striped table-hover table-bordered" width="100%">
+    <thead>
+        <tr align="center">
+            <th>#</th>
+            <th>Документ</th>
+            <th>Дата створення</th>
+            <th>Дата оплати</th>
+        </tr>
+    </thead>
+    <tbody id="prolog_range">
+   		{prolog_range}
+    </tbody>
+</table>
+
+<div class="row align-items-center" style="margin-right: 0;">
+	<div class="col-lg-3"><label>Змінити дату оплати: </label></div>
+	<div class="col-lg-5"><input {disabled2} class="form-control" type="text" name="data_pay" id="data_pay" value="{data_pay}" placeholder="РРРР-ММ-ДД" data-provide="datepicker" data-date-format="yyyy-mm-dd"></div>
+	<div class="col-lg-2"><button align="right" class="btn btn-warning" type="button" {disabled2} onclick="checkSaleInvoceProlog();" style="width: 100%;">Перевірка</button></div>
+	<div class="col-lg-2"><button align="right" class="btn btn-primary" type="button" {disabled} onclick="editSaleInvoceProlog();">Зберегти зміни</button></div>
+</div>
+

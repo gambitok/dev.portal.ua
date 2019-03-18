@@ -1,0 +1,59 @@
+<!---   PAY TAB BLOCK   -->
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <form method="get" onSubmit="return false;" class="form-horizontal">
+            <input type='hidden' id="move_id" value="0">
+            <input type='hidden' id="move_cash_id" value="{move_cash_id}">
+			<input type='hidden' id="user_id" value="{user_id}">
+            <div class="row">
+				<div class="col-lg-6 col-md-6 col-sm-12">
+					<h3>Відправник грошей</h3>
+					<div class="form-group">
+						<label class="col-md-6 col-sm-12 control-label">Ваша Каса</label>
+						<div class="col-md-6 col-sm-12">
+							<select size="1" id="paybox_id_from" class="form-control" onChange="getPayboxUserCashSaldoList();"><option value="0">--Оберіть зі списку--</option>{paybox_from_list}</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-6 col-sm-12 control-label">Валюта переказу/Сума у касі</label>
+						<div class="col-md-6 col-sm-12">
+							<select size="1" id="balans_id_from" class="form-control" onChange="getPayboxResiverList();"><option value="0">--Оберіть спочатку касу--</option></select>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-12">
+					<h3>Отримувач грошей</h3>
+					<div class="form-group">
+						<label class="col-md-6 col-sm-12 control-label">Каса отримувача</label>
+						<div class="col-md-6 col-sm-12">
+							<select size="1" id="paybox_id_to" class="form-control" onChange="getPayboxManagerList();"><option value="0">--Оберіть зі списку--</option></select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-6 col-sm-12 control-label">Менеджер отримувач</label>
+						<div class="col-md-6 col-sm-12">
+							<select size="1" id="user_id_to" class="form-control"><option value="0">--Оберіть зі списку--</option></select>
+						</div>
+					</div>
+					<div class="form-group">
+					<label class="col-md-6 col-sm-12 control-label">Сума переводу</label>
+						<div class="col-md-6 col-sm-12">
+							<input type="text" id="summ_incash" class="form-control numbers" value='0' placeholder="0">
+						</div>
+					</div>
+				</div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-sm-4 text-right">
+                	<!--<button class="btn btn-default" type="button" {print_pay_disabled} onClick="printSaleInvoiceMoneyPay('{invoice_id}');"><i class="fa fa-print"></i> Друк чеку</button>-->
+                </div>
+                <div class="col-sm-8 text-right">
+                    <button class="btn btn-primary" type="button" onClick="saveMoneyMove();">Передати гроші</button>
+                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

@@ -1,0 +1,204 @@
+<link href="/js/plugins/jsTree/jstree_style.min.css" rel="stylesheet">
+<link href="/js/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
+<link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
+
+<h2 class=" border-bottom white-bg dashboard-header">Прострочені накладні</h2>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <div class="row align-items-center">
+						<div class="col-lg-1 col-sm-3">
+							<label for="date_start">Дата від</label>
+						</div>
+                        <div class="col-lg-2 col-sm-9">
+							<input id="date_start" onChange="getClientOverdraftList();" type="date" value="{date_today}" class="form-control">
+						</div>
+						<div class="col-lg-1 col-sm-3">
+							<label for="client_select">Клієнт</label>
+						</div>
+						<div class="col-lg-2 col-sm-9">
+							<select name="client_select" onChange="filterReportOverdraftList();" id="client_select" class="form-control">
+								{client_select}
+							</select>
+						</div>
+						<div class="col-lg-1 col-sm-3">
+							<label for="client_select">Торгова точка</label>
+						</div>
+						<div class="col-lg-2 col-sm-9">
+							<select name="tpoint_select" onChange="getClientOverdraftList();" id="tpoint_select" class="form-control">
+								{tpoint_select}
+							</select>
+						</div>
+	                </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table  id="datatable" class="table table-striped table-hover table-bordered" width="100%">
+                            <thead>
+                                <tr align="center">
+                                    <th style="text-align:left">Клієнт / Документ</th>
+                                    <th style="text-align:center">Прострочена сума на дату</th>
+                                    <th style="text-align:center">Валюта</th>
+                                    <th style="text-align:right">Дата оплати</th>
+                                    <th style="text-align:right">Прострочено днів</th>
+                                    <th style="text-align:right">Почтакова дата оплати</th>
+                                    <th style="text-align:right">Прострочено днів прологонації</th>
+                                    <th style="text-align:right">Кількість пролонгацій</th>
+                                </tr>
+                            </thead>
+                            <tbody id="report_overdraft_range">
+								{report_overdraft_range}
+                            </tbody>
+						</table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="SaleInvoiceCard" class="modal inmodal fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+			<div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
+                <h3 id="myModalLabel text-left">Накладна №<span id="SaleInvoiceCardLabel"></span></h3>
+            </div>
+            <div class="modal-body" id="SaleInvoiceCardBody">
+	        </div>
+        </div>
+    </div>
+</div>
+
+<div style="display: none;" class="modal inmodal fade fileSaleInvoiceCDNUploadForm" id="fileSaleInvoiceCDNUploadForm" tabindex="-1" data-keyboard="false" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">Х</button>
+                <h4 class="modal-title" id="myModalLabel">Завантаження файлів</h4>
+            </div>
+            <div class="modal-body" id="fileViewHolderDoc">
+                <p>Для завантаження файлів натисніть на форму або перетягніть файли у поле форми</p>
+                <form action="/cdn_file_upload.php" class="dropzone" id="myDropzone2" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="cdn_dp_id" id="cdn_dp_id" value="">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel" class="text-left"></h3></div>
+            <div class="modal-body" id="FormModalBody"></div>
+        </div>
+    </div>
+</div>
+<div style="display: none;" id="FormModalWindow2" class="modal fade FormModalWindow2" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel2" class="text-left"></h3></div>
+            <div class="modal-body" id="FormModalBody2"></div>
+        </div>
+    </div>
+</div>
+<div style="display: none;" id="FormModalWindow3" class="modal fade FormModalWindow3" tabindex="-1" role="dialog" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+			<div class="modal-header"><h3 id="FormModalLabel3" class="text-left"></h3></div>
+            <div class="modal-body" id="FormModalBody3"></div>
+        </div>
+    </div>
+</div>
+<div style="display: none;" id="FormModalWindow4" class="modal fade FormModalWindow3" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-wide2">
+        <div class="modal-content">
+			<div class="modal-header"><h3 id="FormModalLabel4" class="text-left"></h3></div>
+            <div class="modal-body" id="FormModalBody4"></div>
+        </div>
+    </div>
+</div>
+<div style="display: none;" id="FormModalWindow5" class="modal fade FormModalWindow5" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel5" class="text-left"></h3></div>
+            <div class="modal-body" id="FormModalBody5"></div>
+        </div>
+    </div>
+</div>
+
+<div style="display: none;" id="ModalPartiotionAmount" class="modal fade FormModalWindow" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog" style="width: 500px;">
+        <div class="modal-content">
+			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
+			</div>
+            <div class="modal-body" id="ModalPartiotionAmountBody">
+				<h3>Редагування початкової кількості</h3>
+				<div class="row" style="padding: 30px;">
+					<div class="col-1"><label for="partition_id">Партія ID:</label></div>
+					<div class="col-3"><input class="form-control" type="text" id="partition_id" name="partition_id" disabled></div>
+					<div class="col-1"><label for="invoice_amount">Початкова кількість:</label></div>
+					<div class="col-3"><input class="form-control" type="number" id="invoice_amount" name="invoice_amount"></div>
+				</div>
+				<div class="row" style="padding: 30px;">
+					<input type="hidden" id="invoice_id_tab" name="invoice_id_tab">
+					<button style="float:right;" class="btn btn-primary" onClick="savePartitionsInvoiceAmount()">Зберегти</button>
+				</div>
+				
+			</div>
+        </div>
+    </div>
+</div>
+
+<div style="display: none;" id="FormModalWindowAll" class="modal inmodal fade FormModalWindowAll" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
+				<h3 id="FormModalWindowAll" class="text-left">Визначення знижки для усіх обраних брендів</h3></div>
+            <div class="modal-body" id="FormModalWindowAll">
+			<form method="get" class="form-horizontal" onsubmit="" enctype="multipart/form-data">
+				<div class="form-group">
+						<div class="col-sm-3 text-left">
+							<input id="discountStr" type="text" class="form-control" placeholder="Введіть знижку (F2)" onKeyPress="return runScript(event)">
+						</div>
+						<div class="col-sm-3 text-left">
+							<button class="btn btn-white" type="button" data-dismiss="modal" onClick="calculateDiscountPriceAll();">Визначити ціну</button>
+						</div>
+				</div>
+        	</form>
+			</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/js/plugins/barcode-generator/jquery-barcode.js"></script>
+<!-- Bootstrap markdown -->
+<script src="/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>
+<script src="/js/plugins/bootstrap-markdown/markdown.js"></script>
+<script src="/vendors/jquery/generate-password.js"></script>
+<script src="/js/plugins/select2/js/select2.full.min.js"></script>
+<script src="/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/js/plugins/dropzone/dropzone.js"></script>
+<script src="/js/plugins/switchery/switchery.js"></script>
+<script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+<script src="/js/plugins/currency/currency.js"></script>
+
+<script src="/js/report_overdraft/report_overdraft.js"></script>
+<script src="/js/sale_invoice/sale_invoice.js"></script>
+
+<script language="javascript">
+$(document).ready(function() {
+	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+});
+</script>
+<script type="text/javascript">
+//Disabling autoDiscover
+Dropzone.autoDiscover = false;
+</script>
+<!-- Sweet alert -->
+<script src="/js/plugins/sweetalert/sweetalert.min.js"></script>

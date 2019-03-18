@@ -1,0 +1,128 @@
+<div class="tabs-container">
+    <ul class="nav nav-tabs" id="money_spend_tabs">
+        <li class="active"><a data-toggle="tab" href="#cat_tab1" onClick="showMoneySpendCard('{spend_id}');"><i class="fa fa-bars"></i> <span class="hidden-sm-down">Картка замовлення постачальника</span></a></li>
+        <li class="disabled"><a data-toggle="tab" href="#cat_tab4"><i class="fa fa-cloud"></i> <span class="hidden-sm-down">CDN Файли</span></a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="cat_tab1" class="tab-pane active">
+			<div class="panel-body">
+			<!---   PAY TAB BLOCK   -->
+					<form method="get" onSubmit="return false;" class="form-horizontal">
+						<input type='hidden' id="so_id" value="{so_id}">
+						<input type='hidden' id="user_id" value="{user_id}">
+						<div class="row">
+							<div class="col-lg-4 col-md-4 col-sm-12 border-right">
+								<div class="ibox float-e-margins">
+									<div class="ibox-title"><h5>Постачальник</h5></div>
+									<div class="ibox-content">
+										<div class="form-group">
+											<div class="col-sm-4">Назва</div>
+											<div class="col-sm-8"><strong>{suppl_name}</strong></div>
+										</div>
+										<div class="form-group">
+											<div class="col-sm-4">Склад/Регіон</div>
+											<div class="col-sm-8"><strong>{suppl_storage_name}</strong></div>
+										</div><hr>
+										<div class="form-group">
+											<div class="col-sm-12 text-center"><strong>Інформація по роботі з постачальником</strong></div>
+											<div class="col-sm-12">{suppl_info}</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-12 border-right">
+								<div class="ibox float-e-margins">
+									<div class="ibox-title"><h5>Товар</h5></div>
+									<div class="ibox-content">
+										<div class="form-group">
+											<div class="col-sm-4">Індекс/Бренд</div>
+											<div class="col-sm-8"><strong>{article_nr_displ}{brand_name} {article_name}</strong></div>
+										</div>
+										<div class="form-group">
+											<div class="col-sm-4">Індекс постачальника</div>
+											<div class="col-sm-8"><strong>{suppl_art_id}</strong></div>
+										</div>
+									</div>
+									<div class="ibox-title"><h5>Основа</h5></div>
+									<div class="ibox-content">
+										<div class="form-group">
+											<div class="col-sm-4">ДП</div>
+											<div class="col-sm-8"><strong>{dp_name}</strong></div>
+										</div>
+										<div class="form-group">
+											<div class="col-sm-4">Торгова точка</div>
+											<div class="col-sm-8"><strong>{tpoint_name}</strong></div>
+										</div>
+										<div class="form-group">
+											<div class="col-sm-4">Клієнт</div>
+											<div class="col-sm-8"><strong>{dp_client}</strong></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-12">
+								<div class="ibox float-e-margins">
+									<div class="ibox-title"><h5>Замовлення</h5></div>
+									<div class="ibox-content">
+										<div class="form-group">
+											<div class="col-sm-6">
+												Кількість замовлена
+												<input type="text" class="form-control" id="amount" readonly value="{amount}">
+											</div>
+											<div class="col-sm-6">
+												Кількість підтверджена
+												<input type="text" class="form-control" id="amount_order" value="{amount_order}">
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-sm-6 form-inline">
+												Дата/час доставки прогноз
+												<input type="text" class="form-control col-sm-6" readonly id="delivery_data" value="{delivery_data}">
+												<input type="text" class="form-control col-sm-6" readonly id="delivery_time" value="{delivery_time}">
+											</div>
+											<div class="col-sm-6">
+												Дата/час доставки корегування
+												<input type="text" class="form-control col-sm-6" id="delivery_data_finish" value="{delivery_data_finish}">
+												<input type="text" class="form-control col-sm-6" id="delivery_time_finish" value="{delivery_time_finish}">
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-sm-6">
+												Спосіб доставки
+												<select size="1" class="form-control" id="delivery_type_id">
+													{delivery_type_list}
+												</select>
+											</div>
+											<div class="col-sm-6">
+												Статус замовлення
+												<select size="1" class="form-control" id="suppl_order_status_id">
+													{suppl_order_status_list}
+												</select>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-sm-12">
+												Замовлення у постачальника
+												<input type="text" class="form-control" id="suppl_order_doc" value="{suppl_order_doc}">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="hr-line-dashed"></div>
+						<div class="form-group">
+							<div class="col-sm-4 text-right">
+							</div>
+							<div class="col-sm-8 text-right">
+								<button class="btn btn-primary" type="button" onClick="saveSupplOrder();">Зберегти</button>
+								<button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,85 @@
+<form class="form-horizontal" onsubmit="return false;">
+<input type="hidden" id="fraao_r_d2" value="">
+<div class="col-md-12">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Оберіть бренд</label>
+        <div class="col-sm-8"><select class="form-control" id="new_art_brand_id" onChange="setBrandLetter();" placeholder="Виробник" style="width:100%;">
+            {brand_list}
+        </select></div>
+    </div>
+    
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Оберіть групу товарів</label>
+        <div class="col-sm-8"><select class="form-control" id="new_art_goods_group_id" onChange="setGoodsGroupKey();"  placeholder="Група товарів" style="width:100%;">
+            {goods_list}
+        </select></div>
+    </div>
+    
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Оберіть підгрупу товарів</label>
+        <div class="col-sm-8"><select class="form-control" id="new_art_subgoods_group_id" onChange="setSubGoodsGroupKey();" placeholder="Підгрупа товарів" style="width:100%;">
+            {sub_goods_list}
+        </select></div>
+    </div>
+    
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Оберіть марку авто</label>
+        <div class="col-sm-8"><select class="form-control" id="new_art_manuf_id" onChange="setManufKey();" placeholder="Оберіть марку авто" style="width:100%;">
+            {manuf_list}
+        </select></div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Уточнення</label>
+        <div class="col-sm-8"><select class="form-control" id="new_art_refinement_id" onChange="setRefinementKey();" placeholder="Уточнення" style="width:100%;">
+            {refinement_list}
+        </select></div>
+    </div>
+    <div class="hr-line-dashed"></div>    
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Порядковий номер</label>
+        <div class="col-sm-8">
+        	<div class="input-group">
+            	<input class="form-control" type="text" id="new_art_next_num" value="" placeholder="Порядковий номер 3 цифри">
+                <div class="input-group-btn"> 
+                    <button type="button" tabindex="-1" class="btn btn-warning" onClick="findNewArtNextNum();"><i class="fa fa-search"></i></button> 
+                    <button type="button" tabindex="-1" class="btn btn-primary" onClick="setNewArtNum();"><i class="fa fa-paper-plane"></i></button> 
+                </div>
+            </div>
+        </div>
+        <span id="waveSpinner_num_place" class="text-center"></span>
+    </div>
+
+    
+    <div class="row">
+    	<div class="col-sm-12 text-center">
+        	<button class="btn btn-primary dim" type="button" id="art_p1" style="margin-right: 5px;"></button>
+            <button class="btn btn-primary dim" type="button" id="art_p2" style="margin-right: 5px;"></button>
+            <button class="btn btn-primary dim" type="button" id="art_p3" style="margin-right: 5px;"></button>
+			<button class="btn btn-primary dim" type="button" id="art_p4" style="margin-right: 5px;"></button>
+            <button class="btn btn-primary dim" type="button" id="art_p5" style="margin-right: 5px;"></button>
+            <button class="btn btn-primary dim" type="button" id="art_p6" style="margin-right: 5px;"></button>
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>    
+    <div class="form-group">
+        <label class="col-sm-2 control-label">ART_ID</label>
+        <div class="col-sm-8">
+        	<div class="input-group">
+            	<input class="form-control" type="text" id="new_art_id" value="" placeholder="Новий ART_ID">
+                <div class="input-group-btn"> 
+                    <button type="button" tabindex="-1" class="btn btn-primary" onClick="findNewArtID();"><i class="fa fa-search"></i></button> 
+                </div>
+            </div>
+        </div>
+        <span id="waveSpinner_art_place" class="text-center"></span>
+    </div>
+</div>
+<div class="hr-line-dashed"></div>
+<div class="form-group">
+    <div class="col-sm-10 text-right col-sm-offset-2">
+        <button class="btn btn-warning" type="button" onClick="checkCatalogueNewArt();">Первірити арикул</button>
+        <button class="btn btn-primary" id="saveButtonNewArt" disabled type="button" onClick="saveCatalogueNewArt();">Зберегти</button>
+        <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+    </div>
+</div>
+</form>

@@ -1,0 +1,34 @@
+<div class="table-responsive">
+    <table  id="datatable_models{mfa_id}" class="table table-striped table-hover table-bordered" width="100%">
+        <thead>
+            <tr align="center">
+                <th>Модель</th>
+                <th>Двигун</th>
+                <th>Тип палива</th>
+                <th>Період виробництва</th>
+                <th>Потужність, HP/kW</th>
+                <th>Об'єм двигуна, cm3</th>
+                <th>Код двигателя</th>
+                <th>LA_ID (Комент)</th>
+                <th align='center'>#</th>
+            </tr>
+        </thead>
+        <tbody id="models_list_range">
+        {models_list}
+        </tbody>
+        <tfoot>
+            <tr align="center">
+                <th>Модель</th>
+                <th>Двигун</th>
+                <th>Тип палива</th>
+                <th>Період виробництва</th>
+                <th>Потужність, HP/kW</th>
+                <th>Об'єм двигуна, cm3</th>
+                <th>Код двигателя</th>
+                <th>LA_ID (Комент)</th>
+                <th align='center'>#</th>   
+            </tr>
+        </tfoot>
+    </table>
+    <button class="btn btn-xs btn-default" onClick="clearActicleAplicabilityManuf('{art_id}','{mfa_id}');"><i class="fa fa-trash"></i> відвязати від усіх авто</button>
+</div>

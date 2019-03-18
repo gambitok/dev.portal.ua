@@ -1,0 +1,81 @@
+<!---   PAY TAB BLOCK   -->
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <form method="get" onSubmit="return false;" class="form-horizontal">
+        	<input type='hidden' id="pay_invoice_id" value="0">
+            <input type='hidden' id="pay_id" value="0">
+            <input type='hidden' id="doc_cash_id" value="{doc_cash_id}">
+            <div class="form-group">
+                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Клієнт</label>
+                <div class="col-lg-3 col-md-2 col-sm-7">
+                    <input type="hidden" id="client_id" name="client_id" value="0">
+                    <div class="input-group">
+                        <input class="form-control" type="text" readonly {oper_disabled} id="client_name" value="" placeholder="Отримувач товару">
+                        <span class="input-group-btn"> <button type="button" class="btn btn-primary" {oper_disabled} id="clientSelBtn" onClick="showJpayClientList('{pay_id}');"><i class="fa fa-bars"></i></button> </span>
+                        <span class="input-group-btn"> <button type="button" class="btn btn-default" {oper_disabled} id="clientDropBtn" onClick="unlinkJpayClient();"><i class="fa fa-times"></i></button> </span>
+                    </div>
+                </div>
+                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Номер накладної</label>
+                <div class="col-lg-3 col-md-2 col-sm-7">
+                    <input type="hidden" id="sale_invoice_id" name="sale_invoice_id" value="">
+                    <div class="input-group">
+                        <input class="form-control" type="text" readonly {oper_disabled} id="sale_invoice_name" value="" placeholder="Номер накладної">
+                        <span class="input-group-btn"><button type="button" class="btn btn-primary" {oper_disabled} id="clientSelBtn" onClick="showJpayClientSaleInvoiceList();"><i class="fa fa-bars"></i></button> </span>
+                        <span class="input-group-btn"><button type="button" class="btn btn-default" {oper_disabled} id="clientDropBtn" onClick="unlinkJpaySaleInvoice();"><i class="fa fa-times"></i></button> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Сума накладної, {cash_name}</label>
+                <div class="col-lg-3 col-md-2 col-sm-7">
+                    <input type="text" id="sale_invoice_summ" class="form-control numbers" readonly value='{sale_invoice_summ}' min='1' max="">
+                </div>
+                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Вид оплаты</label>
+                <div class="col-lg-3 col-md-2 col-sm-7">
+                    <select size="1" id="pay_type_id" {pay_type_id_disabled} class="form-control"><option value="0">--Оберіть зі списку--</option>{pay_type_list}</select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Борг по накладній, {cash_name}</label>
+                <div class="col-lg-3 col-md-2 col-sm-7">
+                    <input type="text" id="sale_invoice_debit" class="form-control numbers" readonly value='{sale_invoice_debit}' min='1' max="">
+                </div>
+                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Каса</label>
+                <div class="col-lg-3 col-md-2 col-sm-7">
+                    <select size="1" id="paybox_id" class="form-control"><option value="0">--Оберіть зі списку--</option>{paybox_list}</select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Валюта оплати</label>
+                <div class="col-lg-3 col-md-2 col-sm-7">
+                    <select size="1" id="cash_id" class="form-control" onChange="getCashKours();"><option value="0">--Оберіть зі списку--</option>{cash_list}</select>
+                </div>
+                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Курс</label>
+                <div class="col-lg-3 col-md-2 col-sm-7">
+                    <div class="input-group"><input class="form-control numbers" disabled type="text" id="cash_kours" value="{cash_kours}" placeholder="Курс валюти">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-info" onClick="unlockKours('#cash_kours')"><i class="fa fa-unlock-alt"></i></button>
+					</span></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Сума оплати клієнтом</label>
+                <div class="col-lg-3 col-md-2 col-sm-7 col-md-2 col-sm-7">
+                    <input type="text" id="sale_invoice_kredit" class="form-control numbers" value='{sale_invoice_kredit}' min='1' max="">
+                </div>
+            </div>
+           
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-sm-4 text-right">
+                	<button class="btn btn-default" type="button" {print_pay_disabled} onClick="printSaleInvoiceMoneyPay('{invoice_id}');"><i class="fa fa-print"></i> Друк чеку</button>
+                </div>
+                <div class="col-sm-8 text-right">
+                    <button class="btn btn-primary" type="button" onClick="saveJpayMoneyPay();">Зафіксувати</button>
+                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

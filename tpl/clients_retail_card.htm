@@ -1,0 +1,82 @@
+<div class="tabs-container">
+    <ul class="nav nav-tabs" id="catalogue_tabs">
+        <li class="active"><a data-toggle="tab" href="#cat_tab1" onClick="showClientCard('{client_id}');"><i class="fa fa-bars"></i> <span class="hidden-sm-down not-visible">Загальна інформація</span></a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="cat_tab1" class="tab-pane active">
+            <div class="panel-body">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <form method="get" class="form-horizontal">
+
+                            <div class="form-group">
+                            	<label class="col-sm-2 control-label">Код користувача</label>
+                                <div class="col-sm-1"><input class="form-control" type="text" readonly name="user_id" id="user_id" value="{user_id}" placeholder=""></div>
+                                <label class="col-sm-2 control-label">ПІБ користувача</label>
+                                <div class="col-sm-3"><input class="form-control" type="text" name="user_name" id="user_name" value="{user_name}" placeholder=""></div>
+                                <label class="col-sm-2 control-label">Контрагент</label>
+                                <div class="col-sm-2"><input class="form-control" type="text" readonly name="client_name" id="client_name" value="{client_name}" placeholder="">
+								<input type="hidden" id="{client_id}" name="{client_id}" value="{client_id}">
+								</div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+<!--
+	                            <label class="col-sm-2 control-label">Населений пункт</label>
+                                <div class="col-sm-2"><select class="form-control" id="user_city" name="user_city" placeholder="Населений пункт" style="width:100%;">{city_list}</select></div>
+
+-->
+								<label class="col-sm-2 control-label">Дата реєстрації</label>
+                                <div class="col-sm-2"><input readonly class="form-control" type="datetime" name="user_data" id="user_data" value="{user_data}" placeholder=""></div>
+                                <label class="col-sm-2 control-label">Категорія користувача</label>
+                                <div class="col-sm-2"><select class="form-control" id="user_category" name="user_category" placeholder="Категорія" style="width:100%;">{category_list}</select></div>
+                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Телефон</label>
+                                <div class="col-sm-2"><input class="form-control" type="text" name="user_phone" id="user_phone" value="{user_phone}" placeholder=""></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Email</label>
+                                <div class="col-sm-2"><input class="form-control" type="text" name="user_email" id="user_email" value="{user_email}" placeholder=""></div>
+                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Пароль</label>
+                                <div class="col-sm-2"><input class="form-control" type="text" readonly name="user_pass" id="user_pass" value="{user_pass}" placeholder=""></div>
+								<label class="col-sm-2 control-label">Статус</label>
+                                <div class="col-sm-2"><select class="form-control" id="user_status" name="user_status" placeholder="Статус" style="width:100%;">{status_list}</select></div>
+                            </div>
+							
+							<div class="hr-line-dashed"></div>
+							<div class="form-group">
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Країна</label>
+                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="country_id" name="country_id" placeholder="Країна" onChange="loadStateSelectList();" style="width:100%;"><option value="0"></option>{country_list}</select></div>
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Область</label>
+                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="state_id" name="state_id" placeholder="Область" onChange="loadRegionSelectList();" style="width:100%;">{state_list}</select></div>
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Район</label>
+                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="region_id" name="region_id" placeholder="Район" onChange="loadCitySelectList();" style="width:100%;">{region_list}</select></div>
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Населений пункт</label>
+                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="city_id" name="city_id" placeholder="Місто, село, смт" style="width:100%;">{city_list}</select></div>
+                            </div>
+                            
+                            
+							<div class="form-group">
+								<div class="col-sm-10 text-right col-sm-offset-2">
+									{move_client_retail}
+								</div>
+							</div>
+							
+							<div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-10 text-right col-sm-offset-2">
+                                    <button class="btn btn-primary" type="button" onClick="saveClientRetailGeneralInfo();">Зберігти зміни</button>
+<!--                                    <button class="btn btn-danger" type="button" onClick="dropClientRetail();">Видалити</button>-->
+                                    <button class="btn btn-warning" type="button" {disabled_status} onClick="moveClientsRetail('{user_id}','{client_id}');">Перемістити клієнта</button>
+                                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+			
+        </div>
+    </div>

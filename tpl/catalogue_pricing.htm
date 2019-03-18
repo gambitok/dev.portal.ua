@@ -1,0 +1,36 @@
+<style>
+input.nrCell{min-width:55px;}
+</style>
+<!---   ZED TAB BLOCK   -->
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="table-responsive">
+                        <table  id="datatable1" class="table table-striped table-hover table-bordered">
+                            <thead>
+                                <tr align="center">
+                                    <th style='width:120px; text-align:center;'>Индекс</th>
+                                    <th style='width:100px; text-align:center;'>Залишок</th>
+                                    <th style='width:60px; text-align:center;'>В дорозі</th>
+                                    <th style='width:100px; text-align:center;'>ОС, $</th>
+                                    {list_price_rating}
+                                    <th>-</th>
+                                    <th title="Продажі, шт.<br>(міс. / рік) ">Продажі</th>
+                                    <th style='width:80px; text-align:center;' title="Min націнка, %">Min, %</th>
+                                    <th>Користувач<br>Дата від</th>
+                                </tr>
+                            </thead>
+                            <tbody id="art_pricing_range">
+                                {articles_list}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

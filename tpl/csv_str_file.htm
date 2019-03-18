@@ -1,0 +1,20 @@
+<div class="form-group pull-right">
+    <label class="col-lg-4 col-md-4 col-sm-4 control-label">Початковий ряд</label>
+    <div class="col-lg-3 col-md-2 col-sm-8"><input class="form-control input-xs numberOnly" type="text" name="csv_from_row" id="csv_from_row" value="0" placeholder=""></div>
+    <div class="col-lg-2 col-md-2 col-sm-8"><button class="btn btn-primary btn-sm" onClick="finishCsvImport('{income_id}');">Завершити імпорт даних</button></div>
+</div>
+<input type="hidden" id="kol_cols" value="{kol_cols}">
+
+<div id="waveSpinner_place"></div>
+
+<table id="csv_table" class="table table-bordered table-hovered" style="width:100%">
+    <thead>
+        <tr> 
+        	<th>№</th>
+        	{cols_list}
+        </tr>
+    </thead>
+    <tbody>
+        {records_list}
+    </tbody>
+</table>

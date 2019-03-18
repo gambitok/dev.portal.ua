@@ -1,0 +1,90 @@
+<link href="/js/plugins/jsTree/jstree_style.min.css" rel="stylesheet">
+<link href="/js/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
+<link href="/js/plugins/jquery.treefilter/jquery.treefilter.custom.css" rel="stylesheet">
+<link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
+
+<style>
+	.dnone{
+		display: none;
+	}
+	.pointer {
+		cursor: pointer;
+	}
+	.pointer:hover {
+		text-decoration: underline;
+	}
+	.check-head {
+		color: lightcoral;
+	}
+</style>
+
+<h2 class=" border-bottom white-bg dashboard-header">Редагування дерева товарів</h2>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-content">
+					<div class="row">
+						<div class="col-lg-6">
+							{group_tree_range}
+						</div>
+
+						<div class="col-lg-6">
+							<button style="margin-bottom: 30px;" class="btn btn-primary" onClick="showGroupTreeHeadCard(0);"><i class="fa fa-plus"></i> Додати</button> 
+							<div id="group-tree">
+								{group_tree_head}
+							</div> 
+						</div>
+					</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="GroupTreeCard" class="modal inmodal fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+			<div class="modal-header">
+                <button type="button" class="close" aria-hidden="true">х</button>
+                <h3 id="myModalLabel text-left">Редагування вершини<span id="GroupTreeCardLabel"></span></h3>
+            </div>
+            <div class="modal-body" id="GroupTreeCardBody">
+	        </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/plugins/barcode-generator/jquery-barcode.js"></script>
+<!-- Bootstrap markdown -->
+<script src="/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>
+<script src="/js/plugins/bootstrap-markdown/markdown.js"></script>
+<script src="/vendors/jquery/generate-password.js"></script>
+<script src="/js/plugins/select2/js/select2.full.min.js"></script>
+<script src="/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/js/plugins/dropzone/dropzone.js"></script>
+<script src="/js/plugins/switchery/switchery.js"></script>
+<script src="/js/plugins/jquery.treefilter/jquery.treefilter.js"></script>
+
+<script src="/js/group_tree/group_tree.js"></script>
+<script language="javascript">
+$(document).ready(function() {
+	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+	var tree = new treefilter($('#my-tree'), {
+        searcher : $('input#my-search')
+    });
+	
+	$(".tree-head").on('click', function(event){
+		$(this).next().toggleClass("dnone");
+		$(this).toggleClass("check-head");
+	});
+});
+</script>
+<script type="text/javascript">
+//Disabling autoDiscover
+Dropzone.autoDiscover = false;
+</script>
+<!-- Sweet alert -->
+<script src="/js/plugins/sweetalert/sweetalert.min.js"></script>

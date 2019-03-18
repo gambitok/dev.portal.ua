@@ -1,0 +1,116 @@
+<link href="/js/plugins/jsTree/jstree_style.min.css" rel="stylesheet">
+<link href="/js/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
+<link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
+
+<h2 class=" border-bottom white-bg dashboard-header">Імпорт ціноутворення</h2>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-content" id="importArtpricePlace">
+					{import_artprice_form}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<div style="display: none;" class="modal inmodal fade fileIncomeStrUploadForm" id="fileIncomeStrUploadForm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">Х</button>
+                <h4 class="modal-title" id="myModalLabel">Завантаження файлів</h4>
+            </div>
+            <div class="modal-body" id="fileViewHolderDoc">
+                <p>Для завантаження файлів натисніть на форму або перетягніть файли у поле форми</p>
+                <form action="/cdn_file_upload.php" class="dropzone" id="myDropzone4" enctype="multipart/form-data" method="post">
+                    <input type="hidden" name="cdn_income_str_id" id="cdn_income_str_id" value="">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="fileUploadForm2" class="modal inmodal fade" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+			<div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
+                <h3 id="myModalLabel text-left">Накладна</h3>
+            </div>
+            <div class="modal-body" id="IncomeFilesBody">
+                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
+	        </div>
+        </div>
+    </div>
+</div>
+
+
+<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel" class="text-left"></h3></div>
+            <div class="modal-body" id="FormModalBody"></div>
+        </div>
+    </div>
+</div>
+<div style="display: none;" id="FormModalWindow2" class="modal fade FormModalWindow2" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel2" class="text-left"></h3></div>
+            <div class="modal-body" id="FormModalBody2"></div>
+        </div>
+    </div>
+</div>
+<div style="display: none;" id="FormModalWindow3" class="modal fade FormModalWindow3" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel3" class="text-left"></h3></div>
+            <div class="modal-body" id="FormModalBody3"></div>
+        </div>
+    </div>
+</div>
+<div style="display: none;" class="modal inmodal fade fileImportCsvUploadForm" id="fileImportCsvUploadForm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">Х</button>
+                <h4 class="modal-title" id="myModalLabel">Завантаження файлів</h4>
+            </div>
+            <div class="modal-body" id="fileViewHolderDoc">
+                <p>Для завантаження файлів натисніть на форму або перетягніть файли у поле форми</p>
+                <form action="/cdn_file_upload.php" class="dropzone" id="myDropzone3" method="post" enctype="multipart/form-data">
+					<input type="hidden" name="import_artprice" id="import_artprice" value="1">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap markdown -->
+<script src="/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>
+<script src="/js/plugins/bootstrap-markdown/markdown.js"></script>
+<script src="/js/plugins/select2/js/select2.full.min.js"></script>
+<script src="/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/js/plugins/dropzone/dropzone.js"></script>
+<script src="/js/plugins/switchery/switchery.js"></script>
+<script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+<script src="/js/plugins/currency/currency.js"></script>
+
+<script src="/js/catalogue/catalogue.js?201705301435"></script>
+<script src="/js/import_artprice/import_artprice.js?201808101435"></script>
+
+<script type="text/javascript">
+//Disabling autoDiscover
+Dropzone.autoDiscover = false;
+</script>
+<!-- Sweet alert -->
+<script src="/js/plugins/sweetalert/sweetalert.min.js"></script>

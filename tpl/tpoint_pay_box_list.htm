@@ -1,0 +1,23 @@
+<div class="user-button">
+    <div class="row">
+        <div class="col-md-6">
+            <button type="button" class="btn btn-primary btn-sm" onClick="showTpointPayBoxForm('{tpoint_id}','0');"><i class="fa fa-plus"></i> Добавити касу</button><br><br> 
+        </div>
+    </div>
+</div>
+<div class="row"><div class="col-sm-12 animated fadeInRight">
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+        	<thead>
+            	<th width="10%">-</th>
+                <th width="5%">#</th>
+                <th>Контрагент</th>
+                <th>Назва</th>
+                <th>Активність</th>
+            </thead>
+            <tbody id="pay_box_range">
+            {list_pay_box} 
+            </tbody>
+        </table>
+    </div>
+</div></div>

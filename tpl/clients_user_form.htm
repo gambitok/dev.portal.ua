@@ -1,0 +1,52 @@
+<!--   Size TAB BLOCK   -->
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <form method="get" class="form-horizontal">
+            <div class="col-sm-12">
+            	<h2>Картка WEB користувача</h2>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Ім'я</label>
+                    <div class="col-sm-10"><input class="form-control" type="text" name="user_name" id="user_name" value="{name}" required placeholder="Ім'я"></div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Email</label>
+                    <div class="col-sm-10"><input class="form-control" type="text" name="user_email" id="user_email" value="{email}" required placeholder="Email"></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Мобільний телефон</label>
+                    <div class="col-sm-10"><input class="form-control" type="text" name="user_phone" id="user_phone" value="{phone}" required placeholder="Мобільний телефон"></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Пароль</label>
+                    <div class="col-sm-10">
+	                    <div class="input-group"><input class="form-control" type="text" name="user_pass" id="user_pass" value="{pass}" required placeholder="Пароль" data-size="12" data-character-set="0-9,a-z,A-Z"><span class="input-group-btn"> <button type="button" class="btn btn-primary" onClick="randString('#user_pass')"><i class="fa fa-refresh"></i></button> </span></div>
+                    
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Головний користувач</label>
+                    <div class="col-sm-10"><input type='checkbox' class='i-checks' id='user_main' value='1' {main_ch}></div>
+                </div>
+				
+				<div class="form-group">
+                    <label class="col-sm-2 control-label">Вигрузка цін</label>
+                    <div class="col-sm-10"><input type='checkbox' class='i-checks' id='user_price' value='1' {price_ch}></div>
+                </div>
+				
+				<div class="form-group">
+                    <label class="col-sm-2 control-label">Розсилка на email</label>
+                    <div class="col-sm-10"><input type='checkbox' class='i-checks' id='user_export' value='1' {export_ch}></div>
+                </div>
+
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-sm-10 text-right col-sm-offset-2">
+                    <button class="btn btn-primary" type="button" onClick="saveClientUserForm('{client_id}','{user_id}');">Зберегти</button>
+                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

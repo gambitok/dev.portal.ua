@@ -1,0 +1,41 @@
+
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <form method="get" class="form-horizontal">
+            <div class="col-sm-12">
+            	<h2>Картка доручення контрагента</h2>
+				<div class="form-group">
+                    <label class="col-sm-2 control-label">Номер</label>
+                    <div class="col-sm-10"><input class="form-control" type="text" id="mandate_number" value="{number}" required placeholder="Номер"></div>
+                </div>
+				<div class="hr-line-dashed"></div>
+				<div class="form-group">
+                    <label class="col-sm-2 control-label">Серія</label>
+                    <div class="col-sm-10"><input class="form-control" type="text" id="mandate_seria" value="{seria}" required placeholder="Серія"></div>
+                </div>
+				<div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Отримувач</label>
+                    <div class="col-sm-10"><input class="form-control" type="text" id="mandate_receiver" value="{receiver}" required placeholder="Отримувач"></div>
+                </div>
+				<div class="hr-line-dashed"></div>
+				<div class="form-group">
+                    <label class="col-sm-2 control-label">Дійсне з</label>
+                    <div class="col-sm-10"><input class="form-control" type="date" id="mandate_data_from" value="{data_from}" required placeholder="Дійсна з"></div>
+                </div>
+				<div class="hr-line-dashed"></div>
+				<div class="form-group">
+                    <label class="col-sm-2 control-label">Дійсне до</label>
+                    <div class="col-sm-10"><input class="form-control" type="date" id="mandate_data_to" value="{data_to}" required placeholder="Дійсна до"></div>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-sm-10 text-right col-sm-offset-2">
+                    <button class="btn btn-primary" type="button" onClick="saveClientMandateForm('{client_id}','{mandate_id}');">Зберегти</button>
+                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

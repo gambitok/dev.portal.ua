@@ -1,0 +1,23 @@
+<div class="user-button">
+    <div class="row">
+        <div class="col-md-6">
+            <button type="button" class="btn btn-primary btn-sm" onClick="clearUsersAcсess('{users_id}');"><i class="fa fa-trash"></i> Очистити права</button><br><br> 
+        </div>
+    </div>
+</div>
+<div class="row"><div class="col-sm-12 animated fadeInRight">
+    <div class="table-responsive">
+        <table id="datatable_urs_range" class="table table-striped table-hover">
+            <thead>
+                <th width="10%">-</th>
+                <th width="5%">#</th>
+                <th>Модуль</th>
+                <th>Доступ</th>
+                <th>Права</th>
+            </thead>
+            <tbody id="urs_range">
+            	{list_range}
+            </tbody>
+        </table>
+    </div>
+</div></div>

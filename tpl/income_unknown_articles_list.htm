@@ -1,0 +1,35 @@
+<div class="ibox">
+	<div class="ibox-header">
+        <div class="row">
+	        <div class="col-lg-3 col-md-4 col-sm-5 pull-left">
+            	<h3>Не визначені артикули з накладної</h3>
+            	<span class="buttons-inline pull-left">
+                    <button class='btn btn-xs btn-warning' onClick="checkIncomeUnStrAll('{income_id}');"><i class='fa fa-refresh'></i> всі позиції</button>
+                    <button class='btn btn-xs btn-primary' onClick="exportIncomeUnStr('{income_id}');"><i class='fa fa-file-excel-o'></i> експорт позицій</button>
+                </span>
+            </div>
+        </div>
+	</div>
+	<div class="ibox-content">
+    	<input type="hidden" id="kol_rows_un" value="{kol_rows}">
+        <table id="income_unknown_str" class="table table-condensed table-striped table-hover table-bordered" width="100%">
+            <thead>
+                <tr align="center">
+                	<th>#</th>
+                    <th>№</th>
+                    <th>Індекс</th>
+                    <th>Бренд</th>
+                    <th>Країна</th>
+                    <th>Код УКТ ЗЕД</th>
+                    <th>К-ть прихід</th>
+                    <th>ЦЗДО, вал.пр.</th>
+                    <th>Вага нетто, кг</th>
+                    <th>-</th>
+                </tr>
+            </thead>
+            <tbody id="unknown_range">
+	            {UnknownArticlesList}
+            </tbody>
+        </table>
+	</div>
+</div>

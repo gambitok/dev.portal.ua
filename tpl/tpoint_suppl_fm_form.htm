@@ -1,0 +1,44 @@
+<!--   Size TAB BLOCK   -->
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <form method="get" class="form-horizontal">
+            <div class="col-sm-12">
+            	<h2>Інформація про ціноутворення для постачальника у торговій точці</h2>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Постачальник</label>
+                    <div class="col-sm-10"><select class="form-control" size="1" id="suppl_id" required onChange="loadTpointSupplStorageSelectList();"><option value='0'> -- Оберіть постачальника -- </option>{suppl_list}</select></div>
+                </div>
+                 <div class="form-group">
+                    <label class="col-sm-2 control-label">Склад</label>
+                    <div class="col-sm-10"><select class="form-control" size="1" id="suppl_storage_id" required><option value='0'> -- Оберіть склад -- </option>{suppl_storage_list}</select></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Категорія цін</label>
+                    <div class="col-sm-10"><select class="form-control" size="1" id="price_rating_id" required><option value='0'> -- Оберіть рейтинг -- </option>{price_rating_list}</select></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Ціна</label>
+                    <div class="col-sm-5"><input type="text" class="form-control" placeholder="від" id="price_from" value="{price_from}" required></div>
+                    <div class="col-sm-5"><input type="text" class="form-control" placeholder="до" id="price_to" value="{price_to}" required></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Доставка</label>
+                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="" id="delivery" value="{delivery}" required></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Націнка</label>
+                    <div class="col-sm-4"><input type="text" class="form-control" placeholder="" id="margin" value="{margin}" required></div>
+                    <label class="col-sm-2 control-label">Націнка 2</label>
+                    <div class="col-sm-4"><input type="text" class="form-control" placeholder="" id="margin2" value="{margin2}" required></div>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-sm-10 text-right col-sm-offset-2">
+                    <button class="btn btn-primary" type="button" onClick="saveTpointSupplFmForm('{tpoint_id}','{s_id}');">Зберігти</button>
+                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

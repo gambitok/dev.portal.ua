@@ -1,0 +1,44 @@
+<form class="form-horizontal" onsubmit="return false;">
+<input type="hidden" id="form_donor_search_number" value="{search_number}">
+<input type="hidden" id="form_donor_art_id2" value="">
+<div class="col-md-12">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">ART_ID</label>
+        <div class="col-sm-8"><input class="form-control" readonly type="text" value="{art_id}"></div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Індекс</label>
+        <div class="col-sm-8">
+        	<div class="input-group">
+	        	<input class="form-control" type="text" readonly name="form_donor_display_nr" id="form_donor_display_nr" value="" required placeholder="">
+                <div class="input-group-btn"> 
+                   	<button class="btn btn-primary" onClick="showCatalogueDonorIndexSearch();"><i class="fa fa-bars"></i></button>
+                </div>
+            </div>
+		</div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Получить информацию от донора:</label>
+        <div class="col-sm-8">
+            <ul class="no-list">
+                <li><label><input type='checkbox' class='i-checks' id='don_1' value='1'> - Аналоги: OE номери</label></li>
+                <li><label><input type='checkbox' class='i-checks' id='don_2' value='1'> - Аналоги: Інші номери</label> </li>
+                <li><label><input type='checkbox' class='i-checks' id='don_3' value='1'> - Аналоги: Артикул включає в себе</label> </li>
+                <li><label><input type='checkbox' class='i-checks' id='don_4' value='1'> - Аналоги: Артикул присутній в</label> </li>
+                <li><label><input type='checkbox' class='i-checks' id='don_5' value='1'> - Привязка до авто</label> </li>
+                <li><label><input type='checkbox' class='i-checks' id='don_6' value='1'> - Привязка до дерева TecDoc</label> </li>
+                <li><label><input type='checkbox' class='i-checks' id='don_7' value='1'> - Привязка до La-ID</label> </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="hr-line-dashed"></div>
+<div class="form-group">
+    <div class="col-sm-10 text-right col-sm-offset-2">
+        <button class="btn btn-primary" type="button" onClick="saveCatalogueDonorForm('{art_id}');">Зберегти</button>
+        <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+    </div>
+</div>
+</form>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name=".gitignore" server="myparts.pro//home/portal.myparts.pro/" local="131566116509747035" remote="131566118840000000" Dst="1" />
+<file name="CHANGELOG.md" server="myparts.pro//home/portal.myparts.pro/" local="131566116510152084" remote="131566118840000000" Dst="1" />
+<file name="composer.json" server="myparts.pro//home/portal.myparts.pro/" local="131566116512757426" remote="131566118840000000" Dst="1" />
+<file name="LICENSE.md" server="myparts.pro//home/portal.myparts.pro/" local="131566116510442126" remote="131566118840000000" Dst="1" />
+<file name="README.md" server="myparts.pro//home/portal.myparts.pro/" local="131566116510792165" remote="131566118840000000" Dst="1" />
+<file name="SpreadsheetReader.php" server="myparts.pro//home/portal.myparts.pro/" local="131566116511047214" remote="131566118840000000" Dst="1" />
+<file name="SpreadsheetReader_CSV.php" server="myparts.pro//home/portal.myparts.pro/" local="131566116511347241" remote="131566118840000000" Dst="1" />
+<file name="SpreadsheetReader_ODS.php" server="myparts.pro//home/portal.myparts.pro/" local="131566116511642286" remote="131566118840000000" Dst="1" />
+<file name="SpreadsheetReader_XLS.php" server="myparts.pro//home/portal.myparts.pro/" local="131566116511927319" remote="131566118840000000" Dst="1" />
+<file name="SpreadsheetReader_XLSX.php" server="myparts.pro//home/portal.myparts.pro/" local="131566116512217356" remote="131566118840000000" Dst="1" />
+<file name="test.php" server="myparts.pro//home/portal.myparts.pro/" local="131566126161966107" remote="131566126140000000" Dst="1" />
+<file name="1.xlsx" server="myparts.pro//home/portal.myparts.pro/" local="131566119839475434" remote="131566119980000000" Dst="1" />
+<file name="LICENSE.md" server="portal.myparts.pro//home/portal.myparts.pro/" local="131566118840000000" remote="131566118840000000" Dst="0" />
+<file name="composer.json" server="portal.myparts.pro//home/portal.myparts.pro/" local="131566118840000000" remote="131566118840000000" Dst="0" />
+<file name="SpreadsheetReader_ODS.php" server="portal.myparts.pro//home/portal.myparts.pro/" local="131566118840000000" remote="131566118840000000" Dst="0" />
+<file name="SpreadsheetReader_XLS.php" server="portal.myparts.pro//home/portal.myparts.pro/" local="131566118840000000" remote="131566118840000000" Dst="0" />
+<file name="SpreadsheetReader.php" server="portal.myparts.pro//home/portal.myparts.pro/" local="131566118840000000" remote="131566118840000000" Dst="0" />
+<file name="SpreadsheetReader_CSV.php" server="portal.myparts.pro//home/portal.myparts.pro/" local="131566118840000000" remote="131566118840000000" Dst="0" />
+<file name=".gitignore" server="portal.myparts.pro//home/portal.myparts.pro/" local="131566118840000000" remote="131566118840000000" Dst="0" />
+<file name="README.md" server="portal.myparts.pro//home/portal.myparts.pro/" local="131566118840000000" remote="131566118840000000" Dst="0" />
+<file name="1.xlsx" server="portal.myparts.pro//home/portal.myparts.pro/" local="131566119980000000" remote="131566119980000000" Dst="0" />
+<file name="test.php" server="portal.myparts.pro//home/portal.myparts.pro/" local="131566126140000000" remote="131566126140000000" Dst="0" />
+<file name="CHANGELOG.md" server="portal.myparts.pro//home/portal.myparts.pro/" local="131566118840000000" remote="131566118840000000" Dst="0" />
+<file name="SpreadsheetReader_XLSX.php" server="portal.myparts.pro//home/portal.myparts.pro/" local="131566118840000000" remote="131566118840000000" Dst="0" />
+</dwsync>

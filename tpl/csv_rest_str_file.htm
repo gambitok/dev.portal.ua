@@ -1,0 +1,29 @@
+<div class="form-group pull-right">
+    <div class="col-lg-12 col-md-12 col-sm-12"><button class="btn btn-primary btn-sm" onClick="finishCsvImport();">Завершити імпорт даних</button></div>
+</div>
+<input type="hidden" id="kol_cols" value="{kol_cols}">
+
+<div id="waveSpinner_place"></div>
+
+<table id="csv_table" class="table table-bordered table-hovered" style="width:100%">
+    <thead>
+        <tr> 
+        	<th>№</th>
+			<th># документа</th>
+			<th>Індекс МР</th>
+			<th>Бренд</th>
+			<th>Ціна, СУ</th>
+			<th>Валюта</th>
+			<th>Таможений код</th>
+			<th>Постачальник</th>
+			<th>Наша фірма</th>
+			<th>Курс до грн</th>
+			<th>Склад</th>
+			<th>Комірка</th>
+			<th>Кількість</th>
+        </tr>
+    </thead>
+    <tbody>
+        {records_list}
+    </tbody>
+</table>

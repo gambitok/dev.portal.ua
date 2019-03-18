@@ -1,0 +1,215 @@
+<link href="/js/plugins/jsTree/jstree_style.min.css" rel="stylesheet">
+<link href="/js/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
+<link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
+
+<h2 class=" border-bottom white-bg dashboard-header">Журнал накладних надходжень</h2>
+<input type="hidden" id="doc_prefix" value="{doc_prefix}">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <div class="row">
+                        <div class="col-md-8">
+							<a class="btn btn-success"  href="#newIncome" onClick="preNewIncomeCard();"><i class='fa fa-plus'></i> Нова накладна</a>
+							<label for="date_start" style="padding-right: 15px; padding-left: 30px;">Дата від</label><input id="date_start" type="date" value="{date_today}" class="form-control" style="width: 200px; display: inline; padding: 0px 5px;">
+							<label for="date_end" style="padding-right: 15px; padding-left: 30px;">Дата до</label><input id="date_end" type="date" value="{date_today}" class="form-control" style="width: 200px; display: inline; padding: 0px 5px;">
+							<button class="btn btn-primary" onClick="filterIncomesList();"><i class='fa fa-search'></i></button>
+						</div>
+                        <div class="col-md-4 text-right"><a class="btn btn-info collapsed" aria-expanded="false" data-toggle="collapse" data-parent="#accordion" href="#collapseSearch"><i class='fa fa-search'></i> Пошук у реєстрі</a></div>
+	                </div>
+                </div>
+                <div class="ibox-content">
+                	 <div aria-expanded="false" id="collapseSearch" class="panel-collapse collapse">
+                    	<h3 align="center">Пошук записів за параметрами</h3>
+                        <form method="get" id="incomeSearch" onSubmit="filterIncomesList(); return false;">
+                        <div class="row">
+                        	<div class="col-md-4">
+                        		<div class="row">
+                                    <div class="col-md-3 text-right"><strong>Найменування</strong></div>
+                                    <div class="col-md-9"><input class="form-control" name="filIncomeName" id="filIncomeName" placeholder="Повна або часткова назва" value="{filIncomeName}"></div>
+                                </div><br>
+                               </div>
+                            <div class="col-md-4">
+                        		<div class="row">
+                                    <div class="col-md-3 text-right"><strong>Дата</strong></div>
+                                    <div class="col-md-4"><input class="form-control" name="filDataFrom" id="filDataFrom" placeholder="рррр-мм-дд" value="{filDataFrom}"></div>
+                                    <div class="col-md-4"><input class="form-control" name="filDataTo" id="filDataTo" placeholder="рррр-мм-дд" value="{filDataTo}"></div>
+                                </div><br>
+								<div class="row">
+                                    <div class="col-md-3 text-right"><strong>Статус</strong></div>
+                                    <div class="col-md-9"><select class="form-control" size="1" id="filStatusMain"><option value="0">-- -- --</option>{status_main_list}</select></div>
+                                </div><br>
+                                <div class="row">
+	                                <div class="col-md-3"></div>
+                                    <div class="col-md-5"><button class="form-control btn btn-success"><i class='fa fa-search'></i> Пошук</button></div>
+                                    <div class="col-md-4"><a onClick="ClearIncomeSearch();" class="btn btn-info"><i class='fa fa-eraser'></i></a></div>
+                                </div>
+                            </div>
+                        </div>
+                        </form>
+					</div>
+                    <div class="table-responsive">
+                        <table  id="datatable" class="table table-striped table-hover table-bordered" width="100%">
+                            <thead>
+                                <tr align="center">
+                                    <th>Номер</th>
+                                    <th>Дата</th>
+                                    <th>Постачальник</th>
+                                    <th>Отримувач</th>
+                                    <th>Інвойс вхідний </th>
+                                    <th>Інвойс дата</th>
+                                    <th>Інвойс сума</th>
+                                    <!--<th>Сума кінцева</th>-->
+                                    <th>Валюта</th>
+                                    <th>Статус</th>
+                                    <th>Автор</th>
+                                </tr>
+                            </thead>
+                            <tbody id="income_range">
+							{income_range}
+                            </tbody>
+						</table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div id="IncomeCard" class="modal inmodal fade" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+			<div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
+                <h3 id="myModalLabel text-left">Накладна №<span id="IncomeCardLabel"></span></h3>
+            </div>
+            <div class="modal-body" id="IncomeCardBody">
+	        </div>
+        </div>
+    </div>
+</div>
+
+
+<div style="display: none;" class="modal inmodal fade fileIncomeStrUploadForm" id="fileIncomeStrUploadForm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">Х</button>
+                <h4 class="modal-title" id="myModalLabel">Завантаження файлів</h4>
+            </div>
+            <div class="modal-body" id="fileViewHolderDoc">
+                <p>Для завантаження файлів натисніть на форму або перетягніть файли у поле форми</p>
+                <form action="/cdn_file_upload.php" class="dropzone" id="myDropzone4" enctype="multipart/form-data" method="post">
+                    <input type="hidden" name="cdn_income_str_id" id="cdn_income_str_id" value="">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="fileUploadForm2" class="modal inmodal fade" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+			<div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
+                <h3 id="myModalLabel text-left">Накладна</h3>
+            </div>
+            <div class="modal-body" id="IncomeFilesBody">
+                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
+	        </div>
+        </div>
+    </div>
+</div>
+
+<div style="display: none;" class="modal inmodal fade fileIncomeCDNUploadForm" id="fileIncomeCDNUploadForm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">Х</button>
+                <h4 class="modal-title" id="myModalLabel">Завантаження файлів</h4>
+            </div>
+            <div class="modal-body" id="fileViewHolderDoc">
+                <p>Для завантаження файлів натисніть на форму або перетягніть файли у поле форми</p>
+                <form action="/cdn_file_upload.php" class="dropzone" id="myDropzone2" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="cdn_income_id" id="cdn_income_id" value="">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel" class="text-left"></h3></div>
+            <div class="modal-body" id="FormModalBody"></div>
+        </div>
+    </div>
+</div>
+<div style="display: none;" id="FormModalWindow2" class="modal fade FormModalWindow2" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel2" class="text-left"></h3></div>
+            <div class="modal-body" id="FormModalBody2"></div>
+        </div>
+    </div>
+</div>
+<div style="display: none;" id="FormModalWindow3" class="modal fade FormModalWindow3" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel3" class="text-left"></h3></div>
+            <div class="modal-body" id="FormModalBody3"></div>
+        </div>
+    </div>
+</div>
+<div style="display: none;" class="modal inmodal fade fileIncomesCsvUploadForm" id="fileIncomesCsvUploadForm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">Х</button>
+                <h4 class="modal-title" id="myModalLabel">Завантаження файлів</h4>
+            </div>
+            <div class="modal-body" id="fileViewHolderDoc">
+                <p>Для завантаження файлів натисніть на форму або перетягніть файли у поле форми</p>
+                <form action="/cdn_file_upload.php" class="dropzone" id="myDropzone3" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csv_income_id" id="csv_income_id" value="">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/js/plugins/barcode-generator/jquery-barcode.js"></script>
+<!-- Bootstrap markdown -->
+<script src="/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>
+<script src="/js/plugins/bootstrap-markdown/markdown.js"></script>
+<script src="/vendors/jquery/generate-password.js"></script>
+<script src="/js/plugins/select2/js/select2.full.min.js"></script>
+<script src="/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/js/plugins/dropzone/dropzone.js"></script>
+<script src="/js/plugins/switchery/switchery.js"></script>
+<script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+<script src="/js/plugins/currency/currency.js"></script>
+
+<script src="/js/catalogue/catalogue.js?201705301435"></script>
+<script src="/js/income/income.js?201705301435"></script>
+<script language="javascript">
+$(document).ready(function() {
+	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+});
+</script>
+<script type="text/javascript">
+//Disabling autoDiscover
+Dropzone.autoDiscover = false;
+</script>
+<!-- Sweet alert -->
+<script src="/js/plugins/sweetalert/sweetalert.min.js"></script>

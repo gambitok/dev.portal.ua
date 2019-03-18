@@ -1,0 +1,27 @@
+<form class="form-horizontal" onsubmit="return false;">
+<input type="hidden" id="kol_elem_la" value="{kol_elem}">
+<div class="row">
+<div class="col-md-12">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">ART_ID</label>
+        <div class="col-sm-4"><input class="form-control" readonly type="text" id="cm_art_id" value="{art_id}"></div>
+        <label class="col-sm-2 control-label">TYPE_ID</label>
+        <div class="col-sm-4"><input class="form-control" readonly type="text" id="cm_type_id" value="{type_id}"></div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <h4 align="center">Коментарі LA_ID</h4>
+	<div class="row">
+    	<div class="col-sm-12">
+        	{list_la_comment}
+        </div>
+    </div>    
+	<div class="hr-line-dashed"></div>
+    <div class="form-group">
+        <div class="col-sm-10 text-right col-sm-offset-2">
+            <button class="btn btn-primary" type="button" onClick="saveLaIdCommentForm();">Зберегти</button>
+            <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+        </div>
+    </div>
+</div>
+</div>
+</form>

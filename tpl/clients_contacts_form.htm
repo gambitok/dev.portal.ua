@@ -1,0 +1,27 @@
+<!--   Size TAB BLOCK   -->
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <form method="get" class="form-horizontal">
+            <div class="col-sm-12">
+            	<h2>Картка контакту</h2>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Ім'я</label>
+                    <div class="col-sm-10"><input class="form-control" type="text" name="contact_name" id="contact_name" value="{contact_name}" required placeholder="Ім'я"></div>
+				<div class="form-group">
+                </div>
+                    <label class="col-sm-2 control-label">Посада</label>
+                    <div class="col-sm-10"><input class="form-control" type="text" name="contact_post" id="contact_post" value="{contact_post}" required placeholder="Посада"></div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                {con_list}
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-sm-10 text-right col-sm-offset-2">
+                    <button class="btn btn-primary" type="button" onClick="saveClientContactForm('{client_id}','{contact_id}');">Зберігти</button>
+                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+<div class="tabs-container">
+    <ul class="nav nav-tabs" id="country_tabs">
+        <li class="active">
+			<a data-toggle="tab" href="#cnt_tab1"><i class="fa fa-bars"></i> <span class="hidden-sm-down not-visible">Загальна інформація</span></a>
+		</li>
+    </ul>
+    <div class="tab-content">
+		
+        <div id="cnt_tab1" class="tab-pane active">
+            <div class="panel-body">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <form method="get" class="form-horizontal">
+<!--						Код країни-->
+                            <div class="form-group">
+                            	<label class="col-sm-2 control-label">Код країни</label>
+                                <div class="col-sm-1"><input class="form-control" type="text" name="country_id" id="country_id" value="{country_id}" placeholder=""></div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+<!--						Назва країни-->
+                            <div class="form-group">
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Назва країни</label>
+                                <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" id="country_name" value="{country_name}" placeholder="Назва країни"></div>
+                            </div>
+							<div class="hr-line-dashed"></div>
+<!--						Тип2-->
+                            <div class="form-group">
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Alfa2 країни</label>
+                                <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" id="country_alfa2" value="{country_alfa2}" placeholder="Alfa2 країни"></div>
+<!--						Тип3-->
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Alfa3 країни</label>
+                                <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" id="country_alfa3" value="{country_alfa3}" placeholder="Alfa3 країни"></div> 
+                            </div>
+							<div class="hr-line-dashed"></div>
+<!--						Мито-->
+							<div class="form-group">
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Мито країни</label>
+								<div class="col-lg-2 col-md-4 col-sm-8">
+									<select class="form-control" id="country_duty" name="country_duty" placeholder="Не вибрано" style="width:100%;">
+										{duty_list}</select>
+								</div> 
+<!--						Ризик-->
+								<label class="col-lg-1 col-md-2 col-sm-4 control-label">Ризик країни</label>
+                                <div class="col-lg-2 col-md-4 col-sm-8">
+									<select class="form-control" id="country_risk" name="country_risk" placeholder="Не вибрано" style="width:100%;">
+										{risk_list}</select>
+								</div>   
+                            </div>
+							<div class="hr-line-dashed"></div>
+<!--						Збереження-->
+                            <div class="form-group">
+                                <div class="col-sm-10 text-right col-sm-offset-2">
+                                    <button class="btn btn-primary" type="button" onClick="saveCountryGeneralInfo();">Зберегти зміни</button>
+                                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+		
+    </div>
+</div>

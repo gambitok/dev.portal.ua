@@ -1,0 +1,22 @@
+<div class="user-button">
+    <div class="row">
+        <div class="col-md-6">
+            <button type="button" class="btn btn-primary btn-sm" onClick="showTpointStorageForm('{tpoint_id}','0');"><i class="fa fa-plus"></i> Добавити склад</button><br><br> 
+        </div>
+    </div>
+</div>
+<div class="row"><div class="col-sm-12 animated fadeInRight">
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <th width="10%">-</th>
+                <th width="5%">#</th>
+                <th>Склад</th>
+                <th>Тип складу</th>
+            </thead>
+            <tbody id="storage_range">
+            {list_storage} 
+            </tbody>
+        </table>
+    </div>
+</div></div>

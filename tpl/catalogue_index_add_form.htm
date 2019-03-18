@@ -1,0 +1,112 @@
+<link href="/js/plugins/jsTree/jstree_style.min.css" rel="stylesheet">
+<link href="/js/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
+<link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
+<link rel="stylesheet" href="/css/plugins/chosen-1.8.3/docsupport/prism.css">
+<link rel="stylesheet" href="/css/plugins/chosen-1.8.3/chosen.css">
+
+<h2 class=" border-bottom white-bg dashboard-header">Додати індекс</h2>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox">
+<!--
+				<div class="ibox-title">
+					<div class="row">
+						<div class="col-sm-2">
+							<button class="btn btn-success" type="button" onClick="addIndexArticle();"><i class="fa fa-plus"></i> Новий артикул</button>
+						</div>
+					</div>
+				</div>
+-->
+                <div class="ibox-content">
+                    <div class="tabs-container">
+						<div class="panel-body">
+							<div class="ibox float-e-margins">
+								
+								<div class="row">
+									<label class="col-sm-2 control-label">ART_ID</label>
+									<div class="col-sm-2"><input class="form-control" type="text" readonly name="art_id" id="art_id" value="{art_id}"></div>
+									<label class="col-sm-2 control-label">Індекс постачальника</label>
+									<div class="col-sm-2"><input class="form-control" type="checkbox" name="suppl_status" id="suppl_status" onChange="changeArtId();"></div>
+								</div>
+
+								<div class="hr-line-dashed"></div>
+
+								<div class="row">
+									<label class="col-sm-2 control-label">Номенклатурний номер </label>
+									<div class="col-sm-4"><input class="form-control" type="text" name="article_nr_displ" id="article_nr_displ"></div>
+									<label class="col-sm-2 control-label">Бренд</label>
+									<div class="col-sm-4">
+										<select class="form-control" id="brand_id" name="brand_id" style="width:100%;">
+											{brand_list}
+										</select>
+									</div>
+								</div>
+
+								<div class="hr-line-dashed"></div>
+
+								<div class="row">
+									<label class="col-sm-2 control-label">Найменування</label>
+									<div class="col-sm-4"><input class="form-control" type="text" name="article_name" id="article_name"></div>
+									<label class="col-sm-2 control-label">Найменування Укр</label>
+									<div class="col-sm-4"><input class="form-control" type="text" name="article_name_ukr" id="article_name_ukr"></div>
+								</div>
+
+								<div class="hr-line-dashed"></div>
+
+								<div class="row">
+									<label class="col-sm-2 control-label">Опис товару</label>
+<!--									data-provide="markdown" -->
+									<div class="col-sm-10"><textarea class="form-control" name="article_info" id="article_info" rows="5"></textarea></div>
+								</div>
+								
+								<hr>
+
+								<div class="row">
+									<div class="col-sm-10 text-right col-sm-offset-2">
+										<button class="btn btn-primary" type="button" onClick="saveIndexArticle();">Зберігти зміни</button>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="/js/catalogue/catalogue.js"></script>
+
+<script type="text/javascript" src="/js/plugins/barcode-generator/jquery-barcode.js"></script>
+<!-- Bootstrap markdown -->
+<script src="/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>
+<script src="/js/plugins/bootstrap-markdown/markdown.js"></script>
+<script src="/vendors/jquery/generate-password.js"></script>
+<script src="/js/plugins/select2/js/select2.full.min.js"></script>
+<script src="/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/js/plugins/dropzone/dropzone.js"></script>
+<script src="/js/plugins/switchery/switchery.js"></script>
+
+<script src="/css/plugins/chosen-1.8.3/docsupport/jquery-3.2.1.min.js" type="text/javascript"></script>
+<script src="/css/plugins/chosen-1.8.3/chosen.jquery.js" type="text/javascript"></script>
+<script src="/css/plugins/chosen-1.8.3/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+<script src="/css/plugins/chosen-1.8.3/docsupport/init.js" type="text/javascript" charset="utf-8"></script>
+
+<script src="/js/seo_reports/seo_reports.js"></script>
+
+<script type="text/javascript">
+//Disabling autoDiscover
+Dropzone.autoDiscover = false;
+</script>
+<script src="/js/plugins/jsTree/jstree.min.js"></script>
+<style>.jstree-open > .jstree-anchor > .fa-folder:before {content: "\f07c";}.jstree-default .jstree-icon.none {width: 0;}</style>
+<!-- Sweet alert -->
+<script src="/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script>
+	$("#article_info").markdown({autofocus:false,savable:false})
+</script>

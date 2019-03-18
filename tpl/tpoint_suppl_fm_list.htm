@@ -1,0 +1,28 @@
+<div class="user-button">
+    <div class="row">
+        <div class="col-md-6">
+            <button type="button" class="btn btn-primary btn-sm" onClick="showTpointSupplFmForm('{tpoint_id}','0');"><i class="fa fa-plus"></i> Добавити формулу ціни</button><br><br> 
+        </div>
+    </div>
+</div>
+<div class="row"><div class="col-sm-12 animated fadeInRight">
+    <div class="table-responsive">
+        <table id="datatable_suppl_fm" class="table table-striped table-hover">
+            <thead>
+                <th width="10%">-</th>
+                <th width="5%">#</th>
+                <th>Постачальник</th>
+                <th>Склад</th>
+                <th>Категорія цін</th>
+                <th>Ціна від</th>
+                <th>Ціна до</th>
+                <th>Націнка</th>
+                <th>Доставка</th>
+                <th>Націнка 2</th>
+            </thead>
+            <tbody id="fm_range">
+            	{list_suppl_fm}
+            </tbody>
+        </table>
+    </div>
+</div></div>

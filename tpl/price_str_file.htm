@@ -1,0 +1,27 @@
+<div class="form-group">
+	<label class="col-md-1 control-label">Валюта</label>
+    <div class="col-md-1"><select class="form-control input-xs" size="1" id="import_cash"><option value="0">Мультивалюта</option>{cash_list}</select></div>
+    <label class="col-md-1 control-label">Курс USD</label>
+    <div class="col-md-1"><input class="form-control input-xs numberOnly" type="text" id="import_kours_usd" value="1" placeholder=""></div>
+    <label class="col-md-1 control-label">Курс EUR</label>
+    <div class="col-md-1"><input class="form-control input-xs numberOnly" type="text" id="import_kours_eur" value="1" placeholder=""></div>
+    
+    <label class="col-md-1 control-label">Початковий ряд</label>
+    <div class="col-md-1"><input class="form-control input-xs numberOnly" type="text" id="start_row" value="0" placeholder=""></div>
+    <div class="col-md-2"><button class="btn btn-primary btn-sm" onClick="finishSupplPriceImport('{suppl_id}');">Завершити імпорт даних</button></div>
+</div>
+<input type="hidden" id="kol_cols" value="{kol_cols}">
+
+<div id="waveSpinner_place"></div>
+
+<table id="csv_table" class="table table-bordered table-hovered" style="width:100%">
+    <thead>
+        <tr> 
+        	<th>№</th>
+        	{cols_list}
+        </tr>
+    </thead>
+    <tbody>
+        {records_list}
+    </tbody>
+</table>

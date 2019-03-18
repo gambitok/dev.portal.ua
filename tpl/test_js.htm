@@ -1,0 +1,18 @@
+<script language="javascript">
+function isPalindrome(word){
+  String clean = word.toLowerCase();
+    int length = clean.length();
+    int forward = 0;
+    int backward = length - 1;
+    while (backward > forward) {
+        char forwardChar = clean.charAt(forward++);
+        char backwardChar = clean.charAt(backward--);
+        if (forwardChar != backwardChar)
+            return false;
+    }
+    return true;
+}
+var word = readline("Deleveled");
+print(isPalindrome(word));
+
+</script>

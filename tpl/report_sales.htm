@@ -1,0 +1,81 @@
+<link href="/js/plugins/jsTree/jstree_style.min.css" rel="stylesheet">
+<link href="/js/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
+<link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
+
+<h2 class=" border-bottom white-bg dashboard-header">Продажі по ТТ</h2>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <div class="row align-items-center">
+						<div class="col-lg-1 col-sm-3">
+							<label for="date_start">Місяць</label>
+						</div>
+                        <div class="col-lg-2 col-sm-9">
+							<input id="date_start" type="month" value="{date_today}" class="form-control">
+						</div>
+						<div class="col-lg-1 col-sm-3">
+							<label for="client_select">Торгова точка</label>
+						</div>
+						<div class="col-lg-2 col-sm-9">
+							<select id="tpoint_select" name="tpoint_select" class="form-control">
+								{tpoint_select}
+							</select>
+						</div>
+						<div class="col-lg-2 col-sm-9">
+							<button class="btn btn-primary" onClick="showReportSales();">Сформувати</button>
+						</div>
+	                </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table  id="datatable" class="table table-striped table-hover table-bordered" width="100%">
+                            <thead>
+                                <tr align="center">
+                                    <th style="text-align:left">#</th>
+                                    <th style="text-align:left">Артикул</th>
+                                    <th style="text-align:left">Бренд</th>
+                                    <th style="text-align:left">ART_ID</th>
+                                    <th style="text-align:left">Торгова точка</th>
+                                    <th style="text-align:left">Кількість</th>
+                                </tr>
+                            </thead>
+                            <tbody id="report_sales_range">
+								{report_sales_range}
+                            </tbody>
+						</table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/plugins/barcode-generator/jquery-barcode.js"></script>
+<!-- Bootstrap markdown -->
+<script src="/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>
+<script src="/js/plugins/bootstrap-markdown/markdown.js"></script>
+<script src="/vendors/jquery/generate-password.js"></script>
+<script src="/js/plugins/select2/js/select2.full.min.js"></script>
+<script src="/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/js/plugins/dropzone/dropzone.js"></script>
+<script src="/js/plugins/switchery/switchery.js"></script>
+<script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+<script src="/js/plugins/currency/currency.js"></script>
+
+<script src="/js/report_sales/report_sales.js"></script>
+
+<script language="javascript">
+$(document).ready(function() {
+	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+});
+</script>
+<script type="text/javascript">
+//Disabling autoDiscover
+Dropzone.autoDiscover = false;
+</script>
+<!-- Sweet alert -->
+<script src="/js/plugins/sweetalert/sweetalert.min.js"></script>

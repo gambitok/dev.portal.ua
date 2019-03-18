@@ -1,0 +1,59 @@
+<div class="tabs-container">
+    <ul class="nav nav-tabs" id="suppl_tabs">
+        <li class="active"><a data-toggle="tab" href="#tp_tab1"><i class="fa fa-bars"></i> <span class="hidden-sm-down not-visible">Загальна інформація</span></a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="tp_tab1" class="tab-pane active">
+            <div class="panel-body">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <form method="get" class="form-horizontal">
+                            <div class="form-group">
+                            	<label class="col-sm-2 control-label">Код контрагента</label>
+                                <div class="col-sm-1"><input class="form-control" type="text" readonly id="suppl_id" value="{suppl_id}" placeholder=""></div>
+                                <label class="col-sm-2 control-label">Назва компанії</label>
+                                <div class="col-sm-2"><input class="form-control" type="text" id="suppl_company" value="{suppl_company}" placeholder=""></div>
+                                <label class="col-sm-2 control-label">Фізична особа</label>
+                                <div class="col-sm-3"><input class="form-control" type="text" id="suppl_name" value="{suppl_name}" placeholder=""></div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Телефон</label>
+                                <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" id="suppl_phone" value="{suppl_phone}" placeholder="Контактний телефон"></div>
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">E-mail</label>
+                                <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" id="suppl_email" value="{suppl_email}" placeholder="Контактний e-mail"></div>
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Статус</label>
+							    <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="suppl_status" placeholder="Статус" style="width:100%;">{status_list}</select></div>
+                            </div>
+							<div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Країна</label>
+                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="country_id" placeholder="Країна" onChange="loadStateSelectList();" style="width:100%;"><option value="0"></option>{country_list}</select></div>
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Область</label>
+                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="state_id" placeholder="Область" onChange="loadRegionSelectList();" style="width:100%;">{state_list}</select></div>
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Район</label>
+                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="region_id" placeholder="Район" onChange="loadCitySelectList();" style="width:100%;">{region_list}</select></div>
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Населений пункт</label>
+                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="city_id" placeholder="Місто, село, смт" style="width:100%;">{city_list}</select></div>
+							</div>
+							<div class="form-group">
+                            	<label class="col-lg-1 col-md-2 col-sm-4 control-label">Коментар</label>
+                                <div class="col-lg-2 col-md-4 col-sm-8"><textarea class="form-control" type="text" id="suppl_comment">{suppl_comment}</textarea></div>
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Файл</label>
+                                <div class="col-lg-2 col-md-4 col-sm-8"><a class="btn btn-info" href="https://toko.ua/uploads/suppliers/{suppl_file}" target="_blank"><i class="fa fa-save"> </i> Скачати</a></div>
+                            </div>
+							
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-12 text-right">
+                                    <button class="btn btn-primary" type="button" onClick="saveSupplCoop('{suppl_id}');">Зберігти зміни</button>
+                                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+				</div>
+            </div>
+        </div>
+    </div>
+</div>

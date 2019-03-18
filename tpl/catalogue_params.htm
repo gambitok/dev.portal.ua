@@ -1,0 +1,47 @@
+<!--   Size TAB BLOCK   -->
+
+<div class="form-group">
+	<h4 class="col-sm-2">Товарна група: {goods_group_caption}<input type="hidden" id="goods_group_id" value="{goods_group_id}"></h4>
+    <label class="col-sm-2 control-label text-right">Шаблон характеристик</label>
+    <div class="col-sm-4"><select class="form-control" id="goods_group_template_id" size="1" onChange="loadCatalogueGoodGroupTemplateParams('{art_id}');"><option value=""></option>{goods_group_template_list}</select></div>
+    <div class="col-md-2"><button type="button" class="btn btn-warning btn-sm" onClick="editCatalogueGoodGroupTemplateForm('{art_id}');"><i class="fa fa-edit"></i> Редагувати шаблон</button></div>
+    <div class="col-md-2 pull-right"><button type="button" class="btn btn-primary btn-sm" onClick="showCatalogueGoodGroupTemplateForm('{art_id}',0);"><i class="fa fa-plus"></i> Добавити шаблон</button></div>
+</div>
+                
+<form method="get" class="form-horizontal">
+    <div class="col-md-12">
+        
+        <div class="hr-line-dashed"></div>
+        <div class="row">
+        	<div class="col-lg-6 col-md-7 animated fadeInRight">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <th>#</th>
+                            <th>Параметр</th>
+                            <th>Тип поля</th>
+                            <th>Значення</th>
+							<th>Тип</th>
+                        </thead>
+                        <tbody id="articles_params_range">
+                        {params_list} 
+                        </tbody>
+                    </table>
+                </div>
+        	</div>
+            <div class="col-lg-6 col-md-5  animated fadeInRight">
+            	<h4>Схема</h4>
+                <div class="panel" id="articles_params_scheme">
+                    <div class="panel-body" id="articles_params_scheme_view_files">{scheme_list}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        <div class="col-sm-10 text-right col-sm-offset-2">
+            <button class="btn btn-primary" type="button" onClick="saveCatalogueParams('{art_id}');">Зберігти зміни</button>
+            <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+        </div>
+    </div>
+</form>

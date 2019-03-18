@@ -1,0 +1,75 @@
+<div class="ibox">
+
+	<div class="ibox-content">
+        <form method="get" class="form-horizontal" onSubmit="return false;">
+			<input type="hidden" id="claim_id" value="{claim_id}">
+							
+            <div class="form-group">
+                <label class="col-sm-1 control-label">Контактна особа</label>
+                <div class="col-lg-2 col-sm-2"><input class="form-control"  type="text" value="{claim_client}"></div>
+									
+                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Адреса</label>
+                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control"  type="text" value="{claim_adress}"></div>        
+								
+				<label class="col-lg-2 col-md-2 col-sm-4 control-label">Телефон</label>
+                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control"  type="text" value="{claim_phone}"></div>  
+            </div>
+			
+			<div class="form-group">
+                <label class="col-sm-1 control-label">СТО</label>
+                <div class="col-lg-2 col-sm-2"><input class="form-control"  type="text" value="{claim_sto}"></div>
+									
+                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Кількість</label>
+                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control"  type="number" value="{claim_count}"></div>        
+								
+				<label class="col-lg-2 col-md-2 col-sm-4 control-label">Коментарі</label>
+                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control"  type="text" value="{claim_comment}"></div>  
+            </div>
+			
+			<div class="form-group">
+                <label class="col-sm-1 control-label">Авто</label>
+                <div class="col-lg-2 col-sm-2"><input class="form-control"  type="text" value="{claim_auto}"></div>
+									
+                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Рік</label>
+                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control"  type="text" value="{claim_year}"></div>        
+								
+				<label class="col-lg-2 col-md-2 col-sm-4 control-label">Номер</label>
+                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control"  type="text" value="{claim_number}"></div>  
+            </div>
+						
+			<div class="form-group">
+                <label class="col-sm-1 control-label">VIN</label>
+                <div class="col-lg-2 col-sm-2"><input class="form-control"  type="text" value="{claim_vin}"></div>
+									
+                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Пробіг до монтажу</label>
+                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control"  type="text" value="{claim_kilo1}"></div>        
+								
+				<label class="col-lg-2 col-md-2 col-sm-4 control-label">Пробіг після монтажу</label>
+                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control"  type="text" value="{claim_kilo2}"></div>  
+            </div>
+									
+			<div class="form-group">
+                <label class="col-sm-1 control-label">Стан</label>
+                <div class="col-lg-2 col-sm-2"><input class="form-control"  type="text" value="{claim_state}"></div>
+									
+                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Дата монтажу</label>
+                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control"  type="date" value="{claim_date1}"></div>        
+								
+				<label class="col-lg-2 col-md-2 col-sm-4 control-label">Дата демонтажу</label>
+                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control"  type="date" value="{claim_date2}"></div>  
+            </div>
+			
+			<div class="hr-line-dashed"></div> 
+							
+            <div class="form-group">
+                <div class="col-sm-6 text-left">
+					<button class="btn btn-primary" type="button" onClick="saveClaimActCard();">Зберегти</button>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <button class="btn btn-white" type="button" onClick="closeClaimCard();">Закрити</button>
+                </div>
+            </div>
+			
+		</form>
+	</div>
+</div>

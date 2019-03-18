@@ -1,0 +1,148 @@
+<div class="tabs-container">
+    <ul class="nav nav-tabs" id="catalogue_tabs">
+        <li class="active"><a data-toggle="tab" href="#cat_tab1" onClick="showJmovingCardLocal('{jmoving_id}');"><i class="fa fa-bars"></i> <span class="hidden-sm-down">Структура переміщення</span></a></li>
+        <li><a data-toggle="tab" href="#cat_tab2" onClick="loadJmovingUnknownArticles('{jmoving_id}');"><i class="fa fa-bug"></i> <span class="hidden-sm-down">Артикули без ваги та об'єму <span id="label_un_articles">{labelArticlesUnKnownCount}</span></span></a></li>
+        <li><a data-toggle="tab" href="#cat_tab4" onClick="loadJmovingStorageSelectLocal('{jmoving_id}');"><i class="fa fa-truck"></i> <span class="hidden-sm-down">Складські відбори</span></a></li>
+        <li class="tab-count-info"><a data-toggle="tab" class="tab-count-info" href="#cat_tab3" onClick="loadJmovingCommets('{jmoving_id}');"><i class="fa fa-edit"></i> Замітки <span id="label_comments">{labelCommentsCount}</span></a></li>
+        <li><a data-toggle="tab" href="#cat_tab4" onClick="loadJmovingCDN('{jmoving_id}');"><i class="fa fa-cloud"></i> <span class="hidden-sm-down">CDN Файли</span></a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="cat_tab1" class="tab-pane active">
+            
+			<div class="panel-body">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <form method="get" class="form-horizontal" onSubmit="return false;">
+                            <input type="hidden" id="jmoving_id" value="{jmoving_id}">
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">Номер переміщення</label>
+                                <div class="col-sm-2"><input class="form-control" readonly type="text" name="jmoving_nom" id="jmoving_nom" value="{jmoving_id}"></div>
+                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Тип переміщення</label>
+                                <div class="col-lg-3 col-md-2 col-sm-7">
+                                	<input class="form-control" readonly type="hidden" id="jmoving_type_id" value="{type_id}">
+                                	<input class="form-control" readonly type="text" value="{type_name}">
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-4 text-right">
+                                    Вага(кг):<span id="jmoving_weight" style="font-weight:bold">{weight}</span>
+                                    Об'єм(м&sup3;):<span id="jmoving_volume" style="font-weight:bold">{volume}</span>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-4">
+                                    Дата створення:<span style="font-weight:bold">{data_create}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">Дата</label>
+                                <div class="col-sm-2"><input class="form-control" {oper_disabled} type="text" name="jmoving_data" id="jmoving_data" value="{data}" placeholder="РРРР-ММ-ДД"></div>
+                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Склад переміщення</label>
+                                <div class="col-lg-3 col-md-2 col-sm-7">
+                                    <select id="storage_id_to" class="form-control {storage_to_disabled}"  {storage_to_disabled} name="storage_id_to" style="width:100%;" onChange="saveJmovingCardLocal();" size="1">{storage_list}</select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">Коментар</label>
+                                <div class="col-sm-8"><input class="form-control"{oper_disabled} type="text" name="jmoving_comment" id="jmoving_comment" value="{comment}" onChange="saveJmovingCardLocal();" placeholder="Коментар для друкованих форм"></div>
+                                <div class="col-sm-3 pull-right">
+                                    <span class="buttons-inline pull-right">
+                                        <button type="button" class="btn btn-sm btn-default" {hide_new_row_button} onClick="showJmovingLocalAutoCellForm();"><i class="fa fa-cubes"></i> Заповнити наявністю в комірці</button>
+                                        <button type="button" class="btn btn-sm btn-primary" {hide_new_row_button} onClick="addNewRowLocal();"><i class="fa fa-plus"></i> Новий ряд (Ins)</button>
+                                     </span>
+                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <div id="jmovingChildsList">
+                                    <h4 align="center">Структура переміщення</h4>
+                                    <div class="table-responsive">
+                                    <table id="jmoving_str" class="table table-condensed table-striped table-hover table-bordered" width="100%">
+                                        <thead>
+                                            <tr align="center">
+                                                <th style="text-align:center">№</th>
+                                                <th>Індекс</th>
+                                                <th style="text-align:center">Бренд</th>
+                                                <th style="text-align:center">Комірка відбору</th>
+                                                <th style="text-align:right">Кількість</th>
+                                                <th style="text-align:center">Комірка переміщеня</th>
+                                                <th> <button type="button" class="btn btn-sm btn-default" {hide_new_row_button} onClick="clearJmovingLocalAutoCellForm();"><i class="fa fa-times"></i></button></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="jmoving_сhild_range">
+                                            {jmovingChildsList}
+                                        </tbody>
+                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div> 
+                            <div class="form-group">
+                                <div class="col-sm-6 text-left">
+									<button class="btn btn-danger" type="button" {disabled100} style='display: none;' onClick="cancelJmoving();">Анулювати</button>
+                                    <button id="jmoving_send" class="btn btn-warning" type="button" {oper_disabled} onClick="startJmovingStorageSelectLocal();">Передати в роботу</button>
+                                    <button  id="jmoving_complete" class="btn btn-default {disabled48}" {disabled48} type="button" onClick="finishJmovingLocalAcceptForm('{jmoving_id}');"><i class="fa fa-flag-checkered"></i> Завершити переміщення</button>
+                                </div>
+                                <div class="col-sm-6 text-right">
+                                    <button class="btn btn-white" type="button" onClick="closeJmovingCard();" >Закрити</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        
+         
+        </div>
+        <div id="cat_tab2" class="tab-pane">
+            <div class="panel-body" id="unknown_articles_place">
+                <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
+            </div>
+        </div>
+        <div id="cat_tab4" class="tab-pane">
+            <div class="panel-body" id="jmoving_storage_select_place">
+                <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
+            </div>
+        </div>
+        <div id="cat_tab3" class="tab-pane">
+            <div class="panel-body">
+                <div class="social-footer">
+					<div class="social-comment">
+                        <a href="" class="pull-left">
+                            <img alt="{my_user_name}" title="{my_user_name}" src="/images/profile/{my_user_id}.jpg">
+                        </a>
+                        <div class="media-body">
+                             <textarea class="form-control" id="jmoving_comment_field" placeholder="Залишити свою замітку"></textarea><br>
+                             <div class="btn-group pull-right">
+                                <button class="btn btn-sm btn-primary pull-right m-t-n-xs" onClick="saveJmovingComment('{jmoving_id}');"><i class="fa fa-comments"></i> Зберегти замітку</button>
+                            </div>
+                        </div>
+                    </div>
+                    <span id="jmoving_commets_place">
+                        <div class="spiner-example">
+                            <div class="sk-spinner sk-spinner-wave">
+                                <div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div>
+                            </div>
+                        </div>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div id="cat_tab4" class="tab-pane">
+            <div class="panel-body">
+            <!--   PHOTO TAB BLOCK   -->
+                <div class="user-button">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#fileJmovingCDNUploadForm" onClick="showJmovingCDNUploadForm('{jmoving_id}')"><i class="fa fa-cloud-upload"></i> Завантажити файли</button><br><br> 
+						</div>
+                    </div>
+                </div>
+                <div class="row"><div class="col-lg-12 animated fadeInRight">
+                	<span id="jmoving_cdn_place">
+                        <div class="sk-spinner sk-spinner-wave">
+                            <div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div>
+                        </div>
+                    </span>
+                </div></div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

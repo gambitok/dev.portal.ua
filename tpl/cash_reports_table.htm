@@ -1,0 +1,24 @@
+<hr>
+<h2 style="text-align: center; padding-top: 30px;"><b>Касовий звіт за період з {date_start} по {date_end} - {cash_abr}</b></h2>
+
+<div class="table-responsive">
+	<table id="datatable_uah" class="table table-striped table-hover table-bordered" width="100%">
+		<thead>
+			<tr align="center">
+				<th>&nbsp;</th>
+				<th>Прихід</th>
+				<th>Видача</th>
+				<th>Сума</th>
+			</tr>
+		</thead>
+		<tbody id="reports_uah_range">
+			{reports_range}
+		</tbody>
+	</table>
+</div>
+
+<script language="javascript">
+$(document).ready(function() {
+	$('#datatable_uah').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+});
+</script>

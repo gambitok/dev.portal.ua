@@ -1,0 +1,160 @@
+<style>
+td.group{
+	background-color:#2a6257;
+	font-weight:bold; text-align:center;	
+	color:#FFF;
+}
+</style>
+<div class="wrapper wrapper-content" style="margin:0; padding:0;">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox" style="margin:0; padding:0;">
+                <div class="ibox-content">
+                   	<div class="row">
+                        <form method="post" onSubmit="catalogue_article_search(0,0);return false;" class="form-inline">
+                        	<input type="hidden" id="search_doc_type" value="{doc_type}">
+                            <input type="hidden" id="search_doc_id" value="{doc_id}">
+                        	<input type="hidden" id="search_brand_id" value="{brand_id}">
+                            <div class="form-group" id="srchInG">
+                                <div class="input-group">
+                                	
+                                    <input type="text" class="form-control control-label required" style="width:250px;" id="catalogue_art" name="catalogue_art" value="{art}" placeholder="Введите артикул (F2)">
+                                	<div class="input-group-btn"> 
+                                    	<button type="submit" tabindex="-1" class="btn btn-primary"><i class="fa fa-search"></i></button> 
+                                        <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button"><span class="caret"></span></button>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li><a href="#s1" onClick="catalogue_article_search(0,1);">Прямиий пошук артикулу</a></li>
+                                            <li><a href="#s2" onClick="catalogue_article_search(0,2);">Пошук по штрихкоду</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="#s3" onClick="catalogue_article_search(0,3);">Пошук по ART_ID</a></li>
+                                        </ul>
+                                    </div>
+								</div>
+                            </div>
+                            <div class="form-group">
+                                <a class="btn btn-primary collapsed"  title="Фільтр по номенклатурі" aria-expanded="false" data-toggle="collapse" data-parent="#accordion1" href="#collapseCatFilter4" onClick="$('#collapseCatFilter2').collapse('hide');"><i class='fa fa-glass'></i></a>
+                            
+                                <a class="btn btn-primary collapsed"  title="Фільтр по авто" aria-expanded="false" data-toggle="collapse" data-parent="#accordion2" href="#collapseCatFilter2" onClick="$('#collapseCatFilter4').collapse('hide');"><i class='fa fa-car'></i></a>
+                            </div>
+                            <button class="btn btn-default  pull-right"  title="Налаштування таблиці"  onClick="showCatFieldsViewForm(); return false;"><i class='fa fa-eye'></i></button>&nbsp; 
+                        </form><br>
+                    </div>
+
+                    <div aria-expanded="false" id="collapseCatFilter4" class="panel-collapse collapse">
+                    	<h3 align="center">Фільтр по номенклатурі</h3>
+                        <form method="post" id="CatFilterSearch" onSubmit="fil4Search(); return false;">
+                        <div class="row">
+                        	<div class="col-md-4">
+                                <div class="row">
+                                   <div class="col-md-3 text-right"><strong>Постачальник</strong></div>
+                                    <div class="col-md-9"><select class="form-control select2-multiple selectpicker"  multiple="multiple" data-actions-box="true" data-selected-text-format="count > 3" id="fil4SupplId" name="fil4SupplId" placeholder="Постачальник" style="width:100%;">
+                                    	{fil4SupplList}
+                                    </select></div>
+                                </div><br>
+                                <div class="row">
+                                    <div class="col-md-3 text-right"><strong>Бренд</strong></div>
+                                    <div class="col-md-9"><select class="form-control select2-multiple selectpicker"  multiple="multiple" data-actions-box="true" data-selected-text-format="count > 3" id="fil4BrandId" name="fil4BrandId" placeholder="Виробник" style="width:100%;">
+                                    	{fil4BrandList}
+                                    </select></div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+	                            <div class="row">
+                                    <div class="col-md-3 text-right"><strong>Товарна група</strong></div>
+									<div class="col-md-9">
+                                    	<select class="form-control select2-multiple" id="fil4GoodsGroupId" name="fil4GoodsGroupId"  multiple="multiple" data-actions-box="true"placeholder="Товарна група" style="width:100%;">
+                                    	{fil4GoodsGroupList}
+                                    </select>
+                                    </div>
+                                </div><br>
+                        		<div class="row">
+                                    <div class="col-md-3 text-right"><strong>ТОП</strong></div>
+                                    <div class="col-md-9"><input class="form-control" name="fil4Top" id="fil4Top" placeholder="ТОП" value="{fil4Top}"></div>
+                                </div><br>
+                            </div>
+                            <div class="col-md-4">
+                        		<div class="row">
+                                    <div class="col-md-3 text-right"><strong>Наявність</strong></div>
+                                    <div class="col-md-4"><input class="form-control" name="fil4StokTo" id="fil4StokTo" placeholder="від певної кількості" value="{fil4StokTo}"></div>
+                                    <div class="col-md-4"><input class="form-control" name="fil4StokFrom" id="fil4StokFrom" placeholder="до певної кількості" value="{fil4StokFrom}"></div>
+                                </div><br>
+                                <div class="row">
+                                	<div class="col-md-3 col-sm-hidden"></div>
+	                                <div class="col-md-9">
+                                    	<button class="btn btn-primary"><i class='fa fa-search'></i> Пошук</button>
+                                    	<a onClick="ClearFil4Search();" class="btn btn-info"><i class='fa fa-eraser'></i></a>
+									</div>
+                                </div>
+                            </div>
+                        </div>
+                        </form>
+					</div>
+
+
+					<div aria-expanded="false" id="collapseCatFilter2" class="panel-collapse collapse">
+                    	<h3 align="center">Фільтр по авто</h3>
+                        <form method="post" id="CatFilterSearch" class="form-inline border-bottom " onSubmit="fil2Search(); return false;">
+                        <input type="hidden" id="fil2StrId" value="{fil2StrId}"><input type="hidden" id="fil2ArtIds" value="{fil2ArtIds}">
+                        <input type="hidden" id="fil2StrText" value="{fil2StrText}">
+                        <div class="row">
+	                        <div class="form-group col-md-2">
+                                <div class="input-group col-md-12">
+                                    <label class="font-noraml">Виробник</label>
+                                    <select id="fil2Manufacture" data-placeholder="Вибрати марку" class="form-control" style="width:100%" onChange="loadFilterModelSelectList()"><option value="0"></option>{fil2ManufactureList}</select>
+                                </div>
+                            </div>
+							<div class="form-group col-md-3">
+                                <div class="input-group col-md-12">
+                                    <label class="font-noraml">Модель</label>
+                                    <select id="fil2Model" data-placeholder="Вибрати модель" class="form-control" style="width:100%" onChange="loadFilterModificationSelectList()"><option value="0"></option>{fil2ModelList}</select>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-5">
+                                <div class="input-group col-md-12">
+                                    <label class="font-noraml">Модифікація <small>(Тип палива  |  Двигун  |  Рік | К.С./кВт  | Об'єм двигуна, cm3  | Код двигуна)</small></label>
+                                    <select id="fil2Modification" data-placeholder="Вибрати модифікацію" class="form-control" style="width:100%" onChange="loadFilterGroupTreeListSide()"><option value="0"></option>{fil2ModificationList}</select>                                </div>
+                            </div>
+                            <!--<div class="form-group col-md-1">
+                                <div class="input-group col-md-6 pull-right">
+                                    <label class="font-noraml">&nbsp;</label>
+                                    <button class="form-control btn btn-primary"><i class='fa fa-search'></i> Пошук</button>
+                                </div>
+                            </div>-->
+                            <div class="form-group col-md-1">
+                                <div class="input-group">
+                                    <label class="font-noraml">&nbsp;</label>
+                                    <button class="form-control btn btn-info" onClick="ClearFil2Search();"><i class='fa fa-eraser'></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        </form>
+					</div>
+					<section id="filter_range_place">
+                        <div class="table-responsive m-t-sm ">
+                            <span id="waveSpinner_place" class="text-center"></span>
+                            <div class="col-md-2 col-sm-6 col-xs-12 pull-right">
+	                            <input type="text" class="form-control input-sm m-b-xs" id="filter2" placeholder="Пошук у результатах">
+                            </div>
+                            <table  id="datatable_catalogue" class="footable table table-stripped table-bordered" data-sorting="true" data-page-size="20" data-filter="#filter2">
+                                <thead id="catalogue_header">
+                                   {header_list}
+                                </thead>
+                                <tbody id="catalogue_range">
+                                {range_list}
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="12">
+                                        <ul class="pagination pull-right"></ul>
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

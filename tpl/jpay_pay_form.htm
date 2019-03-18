@@ -1,0 +1,61 @@
+<!---   PAY TAB BLOCK   -->
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <form method="get" onSubmit="return false;" class="form-horizontal">
+        	<input type='hidden' id="pay_invoice_id" value="{invoice_id}">
+            <input type='hidden' id="pay_id" value="{pay_id}">
+            <input type='hidden' id="doc_cash_id" value="{doc_cash_id}">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Сума накладної, {cash_name}</label>
+                <div class="col-sm-3">
+                    <input type="text" id="sale_invoice_summ" class="form-control numbers" readonly value='{sale_invoice_summ}' min='1' max="">
+                </div>
+                <label class="col-sm-3 control-label">Вид оплаты</label>
+                <div class="col-sm-3">
+                    <select size="1" id="pay_type_id" {pay_type_id_disabled} class="form-control"><option value="0">--Оберіть зі списку--</option>{pay_type_list}</select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Борг по накладній, {cash_name}</label>
+                <div class="col-sm-3">
+                    <input type="text" id="sale_invoice_debit" class="form-control numbers" readonly value='{sale_invoice_debit}' min='1' max="">
+                </div>
+                <label class="col-sm-3 control-label">Каса</label>
+                <div class="col-sm-3">
+                    <select size="1" id="paybox_id" class="form-control"><option value="0">--Оберіть зі списку--</option>{paybox_list}</select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Валюта оплати</label>
+                <div class="col-sm-3">
+                    <select size="1" id="cash_id" class="form-control" onChange="getCashKours();"><option value="0">--Оберіть зі списку--</option>{cash_list}</select>
+                </div>
+                <label class="col-sm-3 control-label">Курс</label>
+                <div class="col-sm-3">
+                    <div class="input-group"><input class="form-control numbers" disabled type="text" id="cash_kours" value="{cash_kours}" placeholder="Курс валюти">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-info" onClick="unlockKours('#cash_kours')"><i class="fa fa-unlock-alt"></i></button>
+					</span></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Сума оплати клієнтом</label>
+                <div class="col-sm-3">
+                    <input type="text" id="sale_invoice_kredit" class="form-control numbers" value='{sale_invoice_kredit}' min='1' max="">
+                </div>
+            </div>
+           
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-sm-4 text-right">
+                	<button class="btn btn-default" type="button" {print_pay_disabled} onClick="printSaleInvoiceMoneyPay('{invoice_id}');"><i class="fa fa-print"></i> Друк чеку</button>
+                </div>
+                <div class="col-sm-8 text-right">
+                    <button class="btn btn-primary" type="button" onClick="saveSaleInvoiceMoneyPay();">Зафіксувати</button>
+                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

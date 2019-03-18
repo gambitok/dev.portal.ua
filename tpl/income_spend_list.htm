@@ -1,0 +1,36 @@
+<div class="ibox">
+	<div class="ibox-header">
+        <div class="row">
+	        <div class="col-lg-3 col-md-4 col-sm-5 pull-left"><h3>{spend_item_caption}</h3></div>
+            <div class="col-lg-2 col-md-3 col-sm-3">Загальна вартість: <strong>{summ_str_uah} грн</strong></div>
+            <div class="col-lg-3 col-md-4 col-sm-4">Ознака витрати: <strong>{spend_type_caption}</strong></div>
+            <div class="col-lg-4 col-md-4 col-sm-4">Розподіл: <strong>{split_type_caption}</strong>
+        		<span class="pull-right"><button class="btn btn-primary btn-sm" onClick="showIncomeSpendItemRow('{income_id}','{spend_item_id}','0');"><i class="fa fa-plus"></i> Добавити витрату</button></span>
+            </div>
+        </div>
+	</div>
+	<div class="ibox-content">
+        <table class="table table-bordered table-hovered" style="width:100%">
+        	<thead>
+            	<tr>
+                    <th>#</th>
+                    <th>Дата</th>
+                    <th>Назва операції</th>
+                    <th>Валюта</th>
+                    <th>Сума</th>
+                    <th>Курс</th>
+                    <th>Сума, ГРН</th>
+                    <th>Файл</th>
+                    <th>-</th>
+                </tr>
+            </thead>
+            <tbody>
+            	{records_list}
+            </tbody>
+            <tfoot>
+            	<td colspan="6" align="right"><strong>Сумма, грн:</strong></td>
+                <td align="right"><strong>{summ_str_uah}</strong></td>
+            </tfoot>
+        </table>
+	</div>
+</div>

@@ -1,0 +1,30 @@
+<form method="post">
+<input type="hidden" name="modue" value="{module}">
+<input type="hidden" name="modue_page" value="{module_page}">
+<input type="hidden" name="file" value="{file}">
+
+<input type="hidden" name="w" value="{w}">
+<input type="hidden" name="conf" value="true">
+<input type="hidden" name="gmanual_id" id="gmanual_id" value="{gmanual_id}">
+
+<table width="100%" border="0" cellspacing="5">
+
+	<tr><td colspan="2" align="center">
+    
+<table width="100%" border="0" class="fanc">
+	<tr><td colspan="2" align="center"><h2>{action}</h2></td></tr>
+    <tr><td colspan="2" align="right"><input type="submit" value="Зберегти"> <input type="reset" value="Відмінити" onclick="history.back(-1);"></td></tr>
+</table><br />
+<table width="700" border="0" class="fancb">
+	<tr><td colspan="4"><h3>Загальні відомості</h3></td></tr>
+	<tr><td width="20%"><strong>Назва:</strong></td><td><input type="text" id="caption" name="caption" value="{caption}"  style="width: 510px;"></td></tr>
+</table><br />  
+<table width="700" border="0" class="fanc">
+	<tr>
+    	<td align="дуае"><input type="button" value="Видалити" onclick="DropGmanual();"></td>
+    	<td align="right"><input type="submit" value="Зберегти"> <input type="reset" value="Відмінити" onclick="history.back(-1);"></td>
+    </tr>
+</table>
+    </td></tr>
+</table>
+</form> 

@@ -1,0 +1,43 @@
+<!--   Size TAB BLOCK   -->
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <form method="get" class="form-horizontal">
+            <div class="col-sm-12">
+            	<h2>Інформація про доставку в торгову точку зі складу</h2>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Склад</label>
+                    <div class="col-sm-10"><select class="form-control" size="1" id="storage_id" required><option value='0'> -- Оберіть склад -- </option>{storage_list}</select></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">День тижня</label>
+                    <div class="col-sm-10"><select class="form-control" size="1" id="week_day" required><option value='0'> -- Оберіть день тижня -- </option>{week_day_list}</select></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Замовлення</label>
+                    <div class="col-sm-4"><input type="text" class="form-control" placeholder="Час від" id="time_from" value="{time_from}" required></div>
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-4"><input type="text" class="form-control" placeholder="Час до" id="time_to" value="{time_to}" required></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Днів доставка</label>
+                    <div class="col-sm-4"><input type="text" class="form-control" placeholder="0" id="delivery_days" value="{delivery_days}" required></div>
+                    <label class="col-sm-2 control-label">Час видачі</label>
+                    <div class="col-sm-4"><input type="text" class="form-control" placeholder="час від до" id="giveout_time" value="{giveout_time}" disabled="false" required></div>
+                </div>
+				<div class="form-group">
+                    <label class="col-sm-2 control-label">Час видачі</label>
+                    <div class="col-sm-4"><input type="text" class="form-control" placeholder="Час видачі від" id="time_from_del" value="{time_from_del}" required oninput="changeDeliveryTime();"></div>
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-4"><input type="text" class="form-control" placeholder="Час видачі до" id="time_to_del" value="{time_to_del}" required oninput="changeDeliveryTime();"></div>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-sm-10 text-right col-sm-offset-2">
+                    <button class="btn btn-primary" type="button" onClick="saveTpointDeliveryForm('{tpoint_id}','{s_id}');">Зберігти</button>
+                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

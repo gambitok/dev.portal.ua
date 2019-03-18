@@ -1,0 +1,146 @@
+<div class="row">
+	<div class="col-md-12 col-sm-12 gray-bg">
+        <div class="pull-right">
+        	<button type="button" class="btn btn-default btn-sm" onClick="showCatalogueDonorForm('{art_id}');"><i class="fa fa-plus"></i> Получить список от ДОНОРА</button>
+        </div>
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>1. OE номера<small>(kind=3 && relation=0)</small> </h5>
+                <div class="ibox-tools">
+                	<button class="btn btn-xs btn-default" onClick="clearCatalogueAnalogArticle('{art_id}','3','0');"><i class="fa fa-trash"></i> Очистити</button>
+                    <button type="button" class="btn btn-primary btn-sm" onClick="showCatalogueAnalogForm('{art_id}','3','0','');"><i class="fa fa-plus"></i> Добавити</button>
+                    <a class="collapse-link" data-toggle="collapse" data-target="#analogTab1"><i class="fa fa-chevron-up"></i></a>
+                </div>
+            </div>
+            <div id="analogTab1" class="ibox-content collapse in">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table  id="datatable1" class="table table-striped table-hover table-bordered" width="100%">
+                                <thead>
+                                    <tr align="center">
+                                    	<th>Номер для пошуку</th>
+                                        <th>Индекс</th>
+                                        <th>Бренд</th>
+                                        <th>Код бренда</th>
+                                        <th align='center'>#</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="analog_list_1_range">
+                                {analog_list_1}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-sm-12 gray-bg">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>2. Інші номера<small>(kind = 4 && relation=0)</small> </h5>
+                <div class="ibox-tools">
+                	<button class="btn btn-xs btn-default" onClick="clearCatalogueAnalogArticle('{art_id}','4','0');"><i class="fa fa-trash"></i> Очистити</button>
+					<button type="button" class="btn btn-primary btn-sm" onClick="showCatalogueAnalogForm('{art_id}','4','0','');"><i class="fa fa-plus"></i> Добавити</button>
+                    <a class="collapse-link" data-toggle="collapse" data-target="#analogTab2"><i class="fa fa-chevron-down"></i></a>
+                </div>
+            </div>
+            <div id="analogTab2" class="ibox-content collapse in">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table  id="datatable2" class="table table-striped table-hover table-bordered" width="100%">
+                                <thead>
+                                    <tr align="center">
+                                    	<th>Номер для пошуку</th>
+                                        <th>Индекс</th>
+                                        <th>Бренд</th>
+                                        <th>Код бренда</th>
+                                        <th align='center'>#</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="analog_list_2_range">
+                                {analog_list_2}
+                                </tbody>
+                                
+                            </table>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-sm-12 gray-bg">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>3. Артикул включає в себе<small>(kind = 3,4 && relation=1)</small></h5>
+                <div class="ibox-tools">
+                    <button class="btn btn-xs btn-default" onClick="clearCatalogueAnalogArticle('{art_id}','4','1');"><i class="fa fa-trash"></i> Очистити</button>
+					<button type="button" class="btn btn-primary btn-sm" onClick="showCatalogueAnalogForm('{art_id}','4','1','');"><i class="fa fa-plus"></i> Добавити</button>
+                    <a class="collapse-link" data-toggle="collapse" data-target="#analogTab3"><i class="fa fa-chevron-down"></i></a>
+                </div>
+            </div>
+            <div id="analogTab3" class="ibox-content collapse in">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table  id="datatable3" class="table table-striped table-hover table-bordered" width="100%">
+                                <thead>
+                                    <tr align="center">
+                                    	<th>Номер для пошуку</th>
+                                        <th>Индекс</th>
+                                        <th>Бренд</th>
+                                        <th>Код бренда</th>
+                                        <th align='center'>#</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="analog_list_3_range">
+                                {analog_list_3}
+                                </tbody>
+                                
+                            </table>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-sm-12 gray-bg">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>4. Артикул присутній в<small>(kind = 3,4 && relation=2)</small></h5>
+                <div class="ibox-tools">
+					<button class="btn btn-xs btn-default" onClick="clearCatalogueAnalogArticle('{art_id}','4','2');"><i class="fa fa-trash"></i> Очистити</button>
+					<button type="button" class="btn btn-primary btn-sm" onClick="showCatalogueAnalogForm('{art_id}','4','2','');"><i class="fa fa-plus"></i> Добавити</button>
+                    <a class="collapse-link" data-toggle="collapse" data-target="#analogTab4"><i class="fa fa-chevron-down"></i></a>
+                </div>
+            </div>
+            <div id="analogTab4" class="ibox-content collapsed collapse in">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table  id="datatable4" class="table table-striped table-hover table-bordered" width="100%">
+                                <thead>
+                                    <tr align="center">
+                                    	<th>Номер для пошуку</th>
+                                        <th>Индекс</th>
+                                        <th>Бренд</th>
+                                        <th>Код бренда</th>
+                                        <th align='center'>#</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="analog_list_4_range">
+                                {analog_list_4}
+                                </tbody>
+                                
+                            </table>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

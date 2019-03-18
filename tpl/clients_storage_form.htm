@@ -1,0 +1,55 @@
+<!--   Size TAB BLOCK   -->
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <form method="get" class="form-horizontal">
+            <div class="col-sm-12">
+            	<h2>Картка складу контрагента</h2>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Назва</label>
+                    <div class="col-sm-10"><input class="form-control" type="text" id="storage_name" value="{name}" required placeholder="Ім'я"></div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Країна</label>
+                    <div class="col-sm-10"><select class="form-control" id="storage_country_id" placeholder="Країна" onChange="loadStorageStateSelectList();" style="width:100%;"><option value="0"></option>{country_list}</select></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Область</label>
+                    <div class="col-sm-10"><select class="form-control" id="storage_state_id" placeholder="Область" onChange="loadStorageRegionSelectList();" style="width:100%;"><option value="0"></option>{state_list}</select></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Район</label>
+                    <div class="col-sm-10"><select class="form-control" id="storage_region_id"  placeholder="Район" onChange="loadStorageCitySelectList();" style="width:100%;"><option value="0"></option>{region_list}</select></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Населений пункт</label>
+                    <div class="col-sm-10"><select class="form-control" id="storage_city_id" placeholder="Місто, село, смт" style="width:100%;"><option value="0"></option>{city_list}</select></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Email</label>
+                    <div class="col-sm-10"><input class="form-control" type="text" id="storage_email" value="{email}" required placeholder="Email"></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Мобільний телефон</label>
+                    <div class="col-sm-10"><input class="form-control" type="text" id="storage_phone" value="{phone}" required placeholder="Мобільний телефон"></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Контактна особа</label>
+                    <div class="col-sm-10"><input class="form-control" type="text" id="storage_contact_person" value="{contact_person}" required placeholder="Контактна особа"></div>
+                </div>
+				<div class="form-group">
+                    <label class="col-sm-2 control-label">Видимість</label>
+                    <div class="col-sm-10"><input id="client_visible" name="client_visible" class="check_id_cl" {client_checked} type="checkbox"></div>
+                </div>
+
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-sm-10 text-right col-sm-offset-2">
+                    <button class="btn btn-primary" type="button" onClick="saveClientStorageForm('{client_id}','{storage_id}');">Зберігти</button>
+                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,37 @@
+<!--   Size TAB BLOCK   -->
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <form method="get" class="form-horizontal">
+            <div class="col-sm-12">
+            	<h2>Інформація про касу</h2>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Контагент</label>
+                    <div class="col-sm-6">
+	                    <input type="hidden" id="client_id" name="client_id" value="{client_id}">
+                        <div class="input-group">
+                            <input class="form-control" type="text" readonly id="client_name" name="client_name" value="{client_name}" placeholder="Контагент">
+                            <span class="input-group-btn"> <button type="button" class="btn btn-primary" id="clientSelBtn" onClick="showTpointClientList('{client_id}');"><i class="fa fa-bars"></i></button> </span>
+                        </div>
+                    </div>
+                    <label class="col-sm-2 control-label">Активність</label>
+                    <div class="col-sm-2">
+                        <span class="buttons-inline pull-left">
+                            <input type="checkbox" class="js-switch" data-size="small" id="in_use" {inuse_checked} />
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Назва</label>
+                    <div class="col-sm-5"><input class="form-control" type="text" id="name" name="name" value="{name}"></div>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-sm-10 text-right col-sm-offset-2">
+                    <button class="btn btn-primary" type="button" onClick="saveTpointPayBoxForm('{tpoint_id}','{s_id}');">Зберегти</button>
+                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

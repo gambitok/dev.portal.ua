@@ -1,0 +1,7 @@
+.idea/
+cron/
+fonts/
+images/
+.htaccess
+favicon.png
+docker/*

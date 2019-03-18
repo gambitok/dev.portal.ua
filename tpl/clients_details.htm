@@ -1,0 +1,97 @@
+<!--   Size TAB BLOCK   -->
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <form method="get" class="form-horizontal">
+            <div class="col-sm-12"><br>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Юридична адреса</label>
+                    <div class="col-sm-4"><input class="form-control" type="text" name="address_jur" id="address_jur" value="{address_jur}" required placeholder="адреса"></div>
+                    <label class="col-sm-2 control-label">Фактична адреса </label>
+                    <div class="col-sm-4"><input class="form-control" type="text" name="address_fakt" id="address_fakt" value="{address_fakt}" required placeholder="адреса"></div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="row">
+	                <div class="col-md-4 col-sm-12">
+                    	<div class="form-group">
+                        	<label class="col-sm-4 control-label">ЄДРПоУ</label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input class="form-control" type="text" name="edrpou" id="edrpou" value="{edrpou}" required placeholder="Номер">
+                                     <span class="input-group-btn"> <button type="button" class="btn btn-default" onclick="viewClientsDetailsFile('{client_id}','edrpou')"><i class="fa fa-eye"></i></button> </span>
+                                     <span class="input-group-btn"> <button type="button" class="btn btn-primary" onclick="fileClientsDetailsUploadForm('{client_id}','edrpou')"><i class="fa fa-upload"></i></button></span>
+                                </div>
+                            </div>
+						</div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Свідоцтво/виписка</label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input class="form-control" type="text" name="svidotctvo" id="svidotctvo" value="{svidotctvo}" required placeholder="Номер">
+                                     <span class="input-group-btn"> <button type="button" class="btn btn-default" onclick="viewClientsDetailsFile('{client_id}','svidotctvo')"><i class="fa fa-eye"></i></button> </span>
+                                     <span class="input-group-btn"> <button type="button" class="btn btn-primary" onclick="fileClientsDetailsUploadForm('{client_id}','svidotctvo')"><i class="fa fa-upload"></i></button></span>
+                                </div>
+                            </div>
+						</div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">ІПН</label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input class="form-control" type="text" name="vytjag" id="vytjag" value="{vytjag}" required placeholder="Номер">
+                                     <span class="input-group-btn"> <button type="button" class="btn btn-default" onclick="viewClientsDetailsFile('{client_id}','vytjag')"><i class="fa fa-eye"></i></button> </span>
+                                     <span class="input-group-btn"> <button type="button" class="btn btn-primary" onclick="fileClientsDetailsUploadForm('{client_id}','vytjag')"><i class="fa fa-upload"></i></button></span>
+                                </div>
+                            </div>
+						</div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Свідоцтво платника ПДВ</label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input class="form-control" type="text" name="vat" id="vat" value="{vat}" placeholder="Номер">
+                                     <span class="input-group-btn"> <button type="button" class="btn btn-default" onclick="viewClientsDetailsFile('{client_id}','vat')"><i class="fa fa-eye"></i></button> </span>
+                                     <span class="input-group-btn"> <button type="button" class="btn btn-primary" onclick="fileClientsDetailsUploadForm('{client_id}','vat')"><i class="fa fa-upload"></i></button></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                    	<div class="form-group">
+                            <label class="col-sm-4 control-label">МФО</label>
+                            <div class="col-sm-8"><input class="form-control" type="number" name="mfo" id="mfo" value="{mfo}" required placeholder="МФО банку"></div>
+						</div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Назва банку</label>
+                            <div class="col-sm-8"><input class="form-control" type="text" name="bank" id="bank" value="{bank}" required placeholder="Назва банку"></div><br>
+						</div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Номер рахунку</label>
+                            <div class="col-sm-8"><input class="form-control" type="text" name="account" id="account" value="{account}" required placeholder="Номер рахунку"></div><br>
+                        </div>
+						<div class="form-group">
+                            <label class="col-sm-4 control-label">ПІБ Бухгалтера</label>
+                            <div class="col-sm-8"><input class="form-control" type="text" name="buh_name" id="buh_name" value="{buh_name}" required placeholder="Номер рахунку"></div><br>
+                        </div>
+						<div class="form-group">
+                            <label class="col-sm-4 control-label">ЕДРПоУ Бухгалтера</label>
+                            <div class="col-sm-8"><input class="form-control" type="text" name="buh_edrpou" id="buh_edrpou" value="{buh_edrpou}" required placeholder="Номер рахунку"></div><br>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                    	<div class="form-group">
+                            <label class="col-sm-4">Не резидент</label>
+                            <div class="col-sm-2"><input type="checkbox" name="not_resident" id="not_resident" value="1" {not_resident_checked} onClick="norResidentAcive();"></div>
+                           <label class="col-sm-6">Реквізити не резидента</label>
+                            <div class="col-sm-12"><textarea class="form-control" name="nr_details" id="nr_details" {nr_details_disabled} style="width:100%" rows="6" placeholder="Реквізити у довільній формі">{nr_details}</textarea></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-sm-10 text-right col-sm-offset-2">
+                    <button class="btn btn-primary" type="button" onClick="preconfirmClientDetails('{client_id}');">Зберігти зміни</button>
+                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

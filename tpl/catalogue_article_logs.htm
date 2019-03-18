@@ -1,0 +1,26 @@
+<div class="table-responsive">
+	<table id="datatable" class="table table-striped table-hover table-bordered" width="100%">
+		<thead style="background: lightgreen;">
+			<tr align="center">
+				<th>#</th>
+				<th>Дата</th>
+				<th>Користувач</th>
+				<th>Артикул</th>
+				<th>Бренд</th>
+				<th>Найменування (РУС)</th>
+				<th>Найменування (УКР)</th>
+				<th>Крос-ключ</th>
+				<th>Універсальний номер</th>
+			</tr>
+		</thead>
+		<tbody id="seo_reports_range">
+			{article_logs_range}
+		</tbody>
+	</table>
+</div>
+
+<script language="javascript">
+$(document).ready(function() {
+	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+});
+</script>
