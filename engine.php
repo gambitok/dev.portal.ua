@@ -29,7 +29,7 @@ require_once RD.'/lib/suppl_orders_class.php';$suppl_orders=new suppl_orders;
 require_once RD.'/lib/report_margin_class.php';$report_margin=new report_margin;
 
 require_once (RD."/js/JsHttpRequest/JsHttpRequest.php");
-$JsHttpRequest =& new JsHttpRequest("windows-1251");
+$JsHttpRequest = new JsHttpRequest("windows-1251");
 session_start();
 
 $media_user_id=$media_users->get_media_user();

@@ -28,7 +28,7 @@ function checkEmptyClients() {$db=DbSingleton::getDb(); $list="";
 	return $list;	
 }
 	
-function show_clients_list($client_id,$client_name,$phone,$email,$state_id){$db=DbSingleton::getDb();$slave=new slave;$where="";
+function show_clients_list($client_id = 0,$client_name = '',$phone = '',$email = '',$state_id = ''){$db=DbSingleton::getDb();$slave=new slave;$where="";
 	if ($client_name!=""){$where=" and c.name LIKE '%$client_name%'";}
 	if ($phone!=""){$where=" and c.phone like '%$phone%'";}
 	if ($email!=""){$where=" and c.email like '%$email%'";}
@@ -192,7 +192,7 @@ function unlinkClientsSubclient($client_id,$subclient_id){$db=DbSingleton::getDb
 }
 
 
-function showCategoryTree($client_id,$sel_id){$db=DbSingleton::getDb();$tree="";
+function showCategoryTree($client_id = null,$sel_id = null){$db=DbSingleton::getDb();$tree="";
 	$form_htm=RD."/tpl/clients_category_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from A_CATEGORY where parrent_id='0' order by id asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
@@ -305,7 +305,7 @@ function showClientCard($client_id){$db=DbSingleton::getDb();$slave=new slave;se
 	return $form;
 }
 		
-function show_clients_retail_list($press){ $db=DbSingleton::getDb();$slave=new slave;
+function show_clients_retail_list($press = false){ $db=DbSingleton::getDb();$slave=new slave;
 	$r=$db->query("select * from A_CLIENTS_USERS_RETAIL order by client_category desc, data desc, name asc;");$n=$db->num_rows($r);$list="";
 									
 		for ($i=1;$i<=$n;$i++){
@@ -1237,7 +1237,7 @@ function loadClientConditions($client_id){$db=DbSingleton::getDb();$slave=new sl
 }
 
 
-function saveClientConditions($client_id,$cash_id,$country_cash_id,$price_lvl,$margin_price_lvl,$price_suppl_lvl,$margin_price_suppl_lvl,$tpoint_id,$client_vat,$payment_delay,$payment_delay,$credit_limit,$credit_cash_id,$credit_return,$doc_type_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="������� ���������� �����!";
+function saveClientConditions($client_id,$cash_id,$country_cash_id,$price_lvl,$margin_price_lvl,$price_suppl_lvl,$margin_price_suppl_lvl,$tpoint_id,$client_vat,$payment_delay,$credit_limit,$credit_cash_id,$credit_return,$doc_type_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="������� ���������� �����!";
 
 	$client_id=$slave->qq($client_id);$cash_id=$slave->qq($cash_id);$country_cash_id=$slave->qq($country_cash_id);$price_lvl=$slave->qq($price_lvl);$margin_price_lvl=$slave->qq($margin_price_lvl);$price_suppl_lvl=$slave->qq($price_suppl_lvl);$margin_price_suppl_lvl=$slave->qq($margin_price_suppl_lvl);$tpoint_id=$slave->qq($tpoint_id);$client_vat=$slave->qq($client_vat);$payment_delay=$slave->qq($payment_delay);$credit_limit=$slave->qq($slave->point_valid($credit_limit));$credit_cash_id=$slave->qq($credit_cash_id);$credit_return=$slave->qq($credit_return);$doc_type_id=$slave->qq($doc_type_id);
 	if ($client_id>0){

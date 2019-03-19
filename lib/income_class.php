@@ -1803,7 +1803,7 @@ function getBrandId($code){$db=DbSingleton::getTokoDb();$slave=new slave;$id=0; 
 }
 
 
-function saveIncomeConditions($income_id,$cash_id,$country_cash_id,$price_lvl,$payment_delay,$payment_delay,$credit_limit,$credit_cash_id,$credit_return){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="������� ���������� �����!";
+function saveIncomeConditions($income_id,$cash_id,$country_cash_id,$price_lvl,$payment_delay,$credit_limit,$credit_cash_id,$credit_return){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="������� ���������� �����!";
 
 	$income_id=$slave->qq($income_id);$cash_id=$slave->qq($cash_id);$country_cash_id=$slave->qq($country_cash_id);$price_lvl=$slave->qq($price_lvl);$payment_delay=$slave->qq($payment_delay);$credit_limit=$slave->qq($slave->point_valid($credit_limit));$credit_cash_id=$slave->qq($credit_cash_id);$credit_return=$slave->qq($credit_return);
 	if ($income_id>0){

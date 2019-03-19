@@ -9,7 +9,7 @@ class report_overdraft {
 		return $tpoint;
 	}
 	
-	function getClientOverdraftList($date_cur,$tpoint_id) { $db=DbSingleton::getDb(); $clients=[]; $list="<option value='0'>�� �볺���</option>";
+	function getClientOverdraftList($date_cur,$tpoint_id = null) { $db=DbSingleton::getDb(); $clients=[]; $list="<option value='0'>�� �볺���</option>";
 		$where=" and sv.data_pay<'$date_cur'";
 		if ($tpoint_id!="0" && $tpoint_id!=NULL) $where_tpoint=" and cc.tpoint_id=$tpoint_id "; else $where_tpoint="";
 		$r=$db->query("select cc.client_id from J_SALE_INVOICE sv 

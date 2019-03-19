@@ -146,7 +146,7 @@ function newDpFromDp($from_dp_id,$tpoint_id,$dp_storage_id_from){$db=DbSingleton
 	return $dp_id;
 }
 
-function show_dp_list($status){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;$income=new income;  session_start(); $ses_tpoint_id=$_SESSION["media_tpoint_id"]; $media_user_id=$_SESSION["media_user_id"];$media_role_id=$_SESSION["media_role_id"]; 
+function show_dp_list($status=null){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;$income=new income;  session_start(); $ses_tpoint_id=$_SESSION["media_tpoint_id"]; $media_user_id=$_SESSION["media_user_id"];$media_role_id=$_SESSION["media_role_id"];
 	$where=" and (j.tpoint_id='$ses_tpoint_id' or j.user_id='$media_user_id') and ((j.status_dp!=0 and j.summ>0) || (j.status_dp=81)) "; $limit="limit 0,500";
     if (!$status) $where_status=" and status_dp!=81 "; 
 	if ($media_user_id==1){$where=" and j.status_dp!=0";$limit="";} if ($media_role_id==1){$where=" and ((j.status_dp!=0 and j.summ>0) || (j.status_dp=81)) "; $limit="";}

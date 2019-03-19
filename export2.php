@@ -4,6 +4,7 @@ error_reporting(E_ERROR);
 @ini_set('html_errors', false);
 define('RD', dirname (__FILE__));
 $content=null;
+require_once (RD."/lib/DbSingleton.php");
 require_once (RD."/lib/mysql_class.php");
 require_once (RD."/lib/slave_class.php");
 require_once (RD."/lib/manual_class.php");
@@ -22,7 +23,7 @@ if ($w=="ExportBrands"){
 		header('Content-Type: text/csv; charset=utf-8');
 		header('Content-Disposition: attachment; filename=t2brands.csv');
 		$output = fopen('php://output', 'w');
-		fputcsv($output, array("Код","Назва","Тип","Країна","Видимість"),$delimiter = ';');
+		fputcsv($output, array("пїЅпїЅпїЅ","пїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅ","пїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"),$delimiter = ';');
 		foreach ($exb as $fields) {
 			fputcsv($output,$fields,$delimiter = ';');
 		}
