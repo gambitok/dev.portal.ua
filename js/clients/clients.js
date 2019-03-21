@@ -86,7 +86,7 @@ function showClientCard(client_id){
 			document.getElementById("ClientCardBody").innerHTML=result["content"];
 			document.getElementById("ClientCardLabel").innerHTML=$("#client_name").val()+" (ID:"+$("#client_id").val()+")";
 			$('#client_tabs').tab();
-			$("#comment_info").markdown({autofocus:false,savable:false})
+			$("#comment_info").markdown({autofocus:false,savable:false});
 			$("#country_id").select2({placeholder: "Виберіть країну",dropdownParent: $("#ClientCard")});
 			$("#state_id").select2({placeholder: "Виберіть область",dropdownParent: $("#ClientCard")});
 			$("#region_id").select2({placeholder: "Виберіть район",dropdownParent: $("#ClientCard")});
