@@ -158,7 +158,7 @@ function getSaleInvoiceName($id){$db=DbSingleton::getDb();$name="";
 	
 function getJPayName($id){$db=DbSingleton::getDb();$name="";$pay_type_id=0;
 	$r=$db->query("select p.*, m.mcaption as pay_type_name from J_PAY p left outer join manual m on (m.id=p.pay_type_id and m.`key`='pay_type_id') where p.status=1 and p.id='$id' limit 0,1;");$n=$db->num_rows($r);
-	if ($n==1){ $pay_type_id=$db->result($r,0,"pay_type_id"); $name=$db->result($r,0,"pay_type_name")." пїЅ".$db->result($r,0,"doc_nom"); }
+	if ($n==1){ $pay_type_id=$db->result($r,0,"pay_type_id"); $name=$db->result($r,0,"pay_type_name")." №".$db->result($r,0,"doc_nom"); }
 	return array($pay_type_id,$name);
 }
 	
@@ -168,7 +168,7 @@ function checkTaxExist($invoice_id){$db=DbSingleton::getDb();$tax_id=0;
 	return $tax_id;
 }	
 
-function createTaxInvoice($invoice_id){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual; $gmanual=new gmanual;$cat=new catalogue; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $tax_id=0;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";
+function createTaxInvoice($invoice_id){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual; $gmanual=new gmanual;$cat=new catalogue; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $tax_id=0;$answer=0;$err="Помилка!";
 	$r=$db->query("select * from J_SALE_INVOICE where id='$invoice_id' limit 0,1"); $n=$db->num_rows($r);
 	if ($n==1){
 		$seller_id=$db->result($r,0,"seller_id");
@@ -347,7 +347,7 @@ function showdpDocumentList($dp_id,$dp_op_id,$document_id){$db=DbSingleton::getD
 	$form=str_replace("{dp_id}",$dp_id,$form);
 	$form=str_replace("{dp_op_id}",$dp_op_id,$form);
 	
-	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");
+	return array($form,"Реєстр документів основи");
 }
 
 function finddpDocumentsSearch($dp_id,$dp_op_id,$s_nom){$db=DbSingleton::getDb();$slave=new slave;$income=new income;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
@@ -520,7 +520,7 @@ function loadSaleInvoicePartitions($invoice_id){$db=DbSingleton::getDb();$slave=
 			<td align='right'>$price_invoice</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td colspan=8 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>";}
+	if ($n==0){$list="<tr><td colspan=8 align='center'>Записи відсутні</td></tr>";}
 	$form=str_replace("{partitions_list}",$list,$form);
 	$form=str_replace("{invoice_id}",$invoice_id,$form);
 	return $form;
@@ -558,7 +558,7 @@ function loadSaleInvoiceMoneyPay($invoice_id){$db=DbSingleton::getDb();$slave=ne
 			<td>$user_name</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td colspan=7 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>";}
+	if ($n==0){$list="<tr><td colspan=7 align='center'>Документи оплати відсутні</td></tr>";}
 	$form=str_replace("{money_pay_list}",$list,$form);
 	$form=str_replace("{invoice_id}",$invoice_id,$form);
 	return $form;
@@ -619,17 +619,17 @@ function showCashListSelect($sel_id,$ns){$db=DbSingleton::getDb();$list="";if ($
 	return $list;	
 }
 
-function unlockSaleInvoiceMoneyPayKours($invoice_id,$pay_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function unlockSaleInvoiceMoneyPayKours($invoice_id,$pay_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	if ($invoice_id==0 || $invoice_id==""){
-		$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ";$answer=0;
+		$err="Не вказано номер накладної для оплати";$answer=0;
 	}
 	if ($invoice_id>0 && $pay_id==0){
 		if ($user_id==1){
 			$err="";$answer=1;
-		}else{$err="пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ! ";$answer=0;}
+		}else{$err="Нашу гріх на душу брати! ";$answer=0;}
 	}
 	if ($invoice_id>0 && $pay_id>0){
-		$err="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";$answer=0;
+		$err="Оплату проведено. Зміну курсу заблоковано";$answer=0;
 	}
 	return array($answer,$err);
 }
@@ -644,9 +644,9 @@ function showTpointPayBoxSelectList($client_id,$tpoint_id){$db=DbSingleton::getD
 	return $list;
 }
 
-function getCashKoursSaleInvoiceMoneyPay($doc_cash_id,$cash_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";
+function getCashKoursSaleInvoiceMoneyPay($doc_cash_id,$cash_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка!";
 	$cash_id=$slave->qq($cash_id);$kours_value=1;
-	if ($cash_id==0 || $cash_id==""){ $err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ";$answer=0; }
+	if ($cash_id==0 || $cash_id==""){ $err="Не вказано валюту";$answer=0; }
 	if ($cash_id>0){
 		if ($doc_cash_id==$cash_id){ $kours_value=1; $answer=1;$err="";}
 		if ($doc_cash_id!=$cash_id){
@@ -675,10 +675,10 @@ function getCashKoursSaleInvoiceMoneyPay($doc_cash_id,$cash_id){$db=DbSingleton:
 	return array($answer,$err,$kours_value);
 }
 
-function saveSaleInvoiceMoneyPay($invoice_id,$pay_id,$kredit,$pay_type_id,$paybox_id,$doc_cash_id,$cash_id,$cash_kours){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveSaleInvoiceMoneyPay($invoice_id,$pay_id,$kredit,$pay_type_id,$paybox_id,$doc_cash_id,$cash_id,$cash_kours){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$invoice_id=$slave->qq($invoice_id);
 	if ($invoice_id==0 || $invoice_id==""){
-		$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ";$answer=0;
+		$err="Не вказано номер накладної для оплати";$answer=0;
 	}
 	if ($invoice_id>0 && $pay_id==0){
 		$pay_id=$slave->qq($pay_id);$kredit=$slave->qq($kredit);$pay_type_id=$slave->qq($pay_type_id);$paybox_id=$slave->qq($paybox_id);
@@ -821,7 +821,7 @@ function printSaleInvoice($invoice_id){$db=DbSingleton::getDb();$cat=new catalog
 		$doc_type_abr=$db->result($r,0,"doc_type_abr");
 		$select_id=$db->result($r,0,"select_id");
 		
-		$dp_name="пїЅпїЅ-$dp_id"; 
+		$dp_name="ДП-$dp_id"; 
 		$sel_ar[$select_id]=$select_id;
 		
 		$summ=$db->result($r,0,"summ");
@@ -840,7 +840,7 @@ function printSaleInvoice($invoice_id){$db=DbSingleton::getDb();$cat=new catalog
 			$article_nr_displ=$db->result($r,$i-1,"article_nr_displ");
 			$brand_id=$db->result($r,$i-1,"brand_id");$brand_name=$cat->getBrandName($brand_id);
 			$amount=$db->result($r,$i-1,"amount");
-			$unit=$this->getUnitArticle($art_id); //if ($unit=="") $unit="пїЅпїЅ.";
+			$unit=$this->getUnitArticle($art_id); //if ($unit=="") $unit="шт.";
 			$price=$db->result($r,$i-1,"price");
 			$price_summ=$price*$amount;
 			$price_end=$db->result($r,$i-1,"price_end");
@@ -870,7 +870,7 @@ function printSaleInvoice($invoice_id){$db=DbSingleton::getDb();$cat=new catalog
 		
 		$vat_summ=$invoice_summ/6;
 		
-		$storsel_list="пїЅпїЅпїЅ-";
+		$storsel_list="СКВ-";
 		foreach($sel_ar as $slr){
 			$storsel_list.="$slr ";
 		}
@@ -895,7 +895,7 @@ function printSaleInvoice($invoice_id){$db=DbSingleton::getDb();$cat=new catalog
 		if ($mandate_data!=0) $mandate_data = date("d.m.Y", strtotime($mandate_data)); else $mandate_data="";
 		$basis_date = date("d.m.Y", strtotime($basis_date));
 		
-		if($basis_nomber!="") $basis_data="пїЅ$basis_nomber, пїЅпїЅ $basis_date"; else $basis_data="пїЅ/пїЅ";
+		if($basis_nomber!="") $basis_data="№$basis_nomber, від $basis_date"; else $basis_data="б/н";
 	
 		$form=str_replace("{curtime}",date("d.m.Y H:i:s"),$form);
 		$form=str_replace("{invoice_id}",$invoice_id,$form);
@@ -932,7 +932,7 @@ function printSaleInvoice($invoice_id){$db=DbSingleton::getDb();$cat=new catalog
 		$form=str_replace("{sale_invoice_str_list}",$list,$form);
 		$form=str_replace("{ses_tpoint_name}",$ses_tpoint_name,$form);
 
-		//"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ"
+		//"Формування друкованої форми"
 		$mp=new media_print;
 		if ($doc_type_id==63){$mp->print_document($form,"A4-L");}
 		if ($n<=$max_row && $doc_type_id==64){$mp->print_document($form,"A4-L");}	
@@ -971,7 +971,7 @@ function getMandateData($client_id,$data) { $db=DbSingleton::getDb();
 		$data_from=$db->result($r,0,"data_from");
 		$seria=$db->result($r,0,"seria");
 	}
-	if ($seria!="") $seria="пїЅпїЅпїЅпїЅ: $seria,";
+	if ($seria!="") $seria="Серія: $seria,";
 	return array($number,$receiver,$data_from,$seria);
 }
 	
@@ -1145,17 +1145,17 @@ function exportSaleInvoiceExcel($invoice_id){$db=DbSingleton::getDb();$cat=new c
 		$filename=str_replace("/","_",$filename);
 		$filename=str_replace("'","",$filename);
 		$filename=str_replace('"',"",$filename);
-		$filename=str_replace("пїЅ","",$filename);
-		$filename=str_replace("пїЅ","",$filename);
+		$filename=str_replace("«","",$filename);
+		$filename=str_replace("»","",$filename);
 		
-		$header = "пїЅпїЅ/пїЅ;пїЅпїЅпїЅпїЅпїЅпїЅ;пїЅпїЅпїЅпїЅпїЅ;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ;пїЅ-пїЅпїЅпїЅ;ЦіпїЅпїЅ;пїЅпїЅпїЅпїЅ\n";
+		$header = "№п/п;Індекс;Бренд;Найменування;К-сть;Ціна;Сума\n";
 		
 		header('Content-Type: text/csv; charset=utf-8');
 		header("Content-Disposition: attachment; filename=$filename.csv");
-		$output = fopen('php://output', 'w'); $nakladna="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ$prefix-$doc_nom-$client_name пїЅпїЅ $data_create\n";
+		$output = fopen('php://output', 'w'); $nakladna="Видакова накладна №$prefix-$doc_nom-$client_name від $data_create\n";
 		fputs($output, $nakladna);
-		fputs($output, "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $seller_name\n");
-		fputs($output, "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $client_name\n");
+		fputs($output, "Продавець: $seller_name\n");
+		fputs($output, "Покупець: $client_name\n");
 		fputs($output, $header);
 		foreach ($list as $row) {
 			fwrite($output, $row);

@@ -2,13 +2,11 @@ var errs=[];
 errs[0]="Помилка індексу";
 errs[1]="Занадто короткий запит для пошуку";
 
-
 $(document).ready(function() {
 	$(document).bind('keydown', 'ctrl+a', function(){ ShowCheckAll2();});
 	$(document).bind('keydown', 'a', function(){ ShowCheckAll2();});
 	$(document).bind('keydown', 'p', function(){ ShowModalAll(); });
-	$(document).bind('keydown', 'f2', function(){ document.getElementById("discountStr").focus()});			
-	
+	$(document).bind('keydown', 'f2', function(){ document.getElementById("discountStr").focus()});		
 });
 
 $(window).bind('beforeunload', function(e){
@@ -48,7 +46,6 @@ function filterJPayList() {
 	}}, true);
 }
 
-
 function showJpayMoneyPayForm(){
 	JsHttpRequest.query($rcapi,{ 'w': 'showJpayMoneyPayForm'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -79,7 +76,6 @@ function saveJpayMoneyPay(){
 	var doc_cash_id=$("#doc_cash_id").val();
 	var cash_id=$("#cash_id option:selected").val();
 	var cash_kours=$("#cash_kours").val();
-	
 	if (invoice_id<=0 || invoice_id==""){toastr["error"](errs[0]);}
 	if (invoice_id>0){
 		if (kredit<=0){toastr["error"]("Введіть суму оплати");}
@@ -98,6 +94,7 @@ function saveJpayMoneyPay(){
 		}
 	}
 }
+
 function saveJpayAutoMoneyPay(){
 	var client_id=parseFloat($("#client_id").val()).toFixed(2);
 	var kredit=parseFloat($("#sale_invoice_kredit").val()).toFixed(2);
@@ -106,7 +103,6 @@ function saveJpayAutoMoneyPay(){
 	var cash_id=$("#cash_id option:selected").val();
 	var cash_kours=$("#cash_kours").val();
 	var doc_cash_id=$("#doc_cash_id").val();
-	
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
 		if (kredit<=0){toastr["error"]("Введіть суму оплати");}
@@ -115,8 +111,7 @@ function saveJpayAutoMoneyPay(){
 			$("#jpay_save").attr("disabled", true); //disable button
 			JsHttpRequest.query($rcapi,{ 'w': 'saveJpayAutoMoneyPay', 'client_id':client_id, 'kredit':kredit,'pay_type_id':pay_type_id,'paybox_id':paybox_id,'cash_id':cash_id,'cash_kours':cash_kours,'doc_cash_id':doc_cash_id}, 
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
-				if (result["answer"]==1){ 
-					
+				if (result["answer"]==1){
 					$("#FormModalWindow").modal('hide');document.getElementById("FormModalBody").innerHTML="";document.getElementById("FormModalLabel").innerHTML="";
 					setTimeout("window.location.reload();",500);
 				}
@@ -131,7 +126,6 @@ function saveJpayAvansMoneyPay(){
 	var kredit=parseFloat($("#avans_kredit").val()).toFixed(2);
 	var pay_type_id=$("#pay_type_id option:selected").val();
 	var doc_cash_id=$("#doc_cash_id").val();
-		
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
 		if (kredit<=0){toastr["error"]("Введіть суму оплати з авансу");}
@@ -150,7 +144,6 @@ function saveJpayAvansMoneyPay(){
 	}
 }
 
-
 function saveJpayAvansPay(){
 	var client_id=parseFloat($("#client_id").val()).toFixed(2);
 	var kredit=parseFloat($("#sale_invoice_kredit").val()).toFixed(2);
@@ -159,8 +152,6 @@ function saveJpayAvansPay(){
 	var doc_cash_id=$("#doc_cash_id").val();
 	var cash_id=$("#cash_id option:selected").val();
 	var cash_kours=$("#cash_kours").val();
-	
-	
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
 		if (kredit<=0){toastr["error"]("Введіть суму оплати");}
@@ -211,6 +202,7 @@ function showJpayAvansForm(){
 		numberOnlyPlace("cash_kours");
 	}}, true);
 }
+
 function showJpayMoneyBackForm(){
 	JsHttpRequest.query($rcapi,{ 'w': 'showJpayMoneyBackForm'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -230,7 +222,6 @@ function saveJpayMoneyBackPay(){
 	var pay_type_id=$("#pay_type_id option:selected").val();
 	var paybox_id=$("#paybox_id option:selected").val();
 	var cash_kours=$("#cash_kours").val();
-	
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
 		if (avans_debit<=0){toastr["error"]("Введіть суму виплати");}
@@ -239,7 +230,6 @@ function saveJpayMoneyBackPay(){
 			JsHttpRequest.query($rcapi,{ 'w': 'saveJpayMoneyBackPay', 'client_id':client_id, 'avans_debit':avans_debit,'pay_type_id':pay_type_id,'paybox_id':paybox_id,'cash_id':cash_id,'cash_kours':cash_kours,'doc_cash_id':doc_cash_id}, 
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
 				if (result["answer"]==1){ 
-		
 					$("#FormModalWindow").modal('hide'); document.getElementById("FormModalBody").innerHTML=""; document.getElementById("FormModalLabel").innerHTML="";
 					setTimeout("window.location.reload();",500);
 				}
@@ -247,13 +237,11 @@ function saveJpayMoneyBackPay(){
 			}}, true);
 		}
 	}
-	
 }
 
 function unlockKours(id){
 	var invoice_id=$("#pay_invoice_id").val();
 	var pay_id=$("#pay_id").val();
-	
 	if (invoice_id<=0 || invoice_id==""){toastr["error"](errs[0]);}
 	if (invoice_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'unlockSaleInvoiceMoneyPayKours', 'invoice_id':invoice_id, 'pay_id':pay_id}, 
@@ -302,6 +290,7 @@ function showJpayClientList(client_id){
 		setTimeout(function() { $('#datatable_parrent').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}}); }, 500);
 	}}, true);
 }
+
 function setJpayClient(id,name){ 
 	$('#client_id').val(id); $('#client_name').val(Base64.decode(name));
 	$('#sale_invoice_id').val("");$('#sale_invoice_name').val("");
@@ -386,6 +375,7 @@ function unlinkJpayClient(){
 		} else { swal("Відмінено", "Операцію анульовано.", "error"); }
 	});
 }
+
 function unlinkJpayAutoClient(){
 	swal({
 		title: "Відвязати клієнта від оплати?",text: "Внесені Вами зміни вплинуть на роботу Контагента",
@@ -401,7 +391,6 @@ function unlinkJpayAutoClient(){
 	});
 }
 
-
 function showJpayClientSaleInvoiceList(){
 	var client_id=$('#client_id').val();
 	JsHttpRequest.query($rcapi,{ 'w': 'showJpayClientSaleInvoiceList', 'client_id':client_id}, 
@@ -412,6 +401,7 @@ function showJpayClientSaleInvoiceList(){
 		setTimeout(function() { $('#datatable_parrent').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}}); }, 500);
 	}}, true);
 }
+
 function loadCashBoxList(client_id,document_type_id,seller_id){
 	//client_id=$("client_id").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadJpayCashBoxList', 'client_id':client_id, 'document_type_id':document_type_id,'seller_id':seller_id}, 
@@ -419,6 +409,7 @@ function loadCashBoxList(client_id,document_type_id,seller_id){
 		document.getElementById("paybox_id").innerHTML=result["content"];
 	}}, true);
 }
+
 function setJpaySaleInvoice(id,name,summ,summ_debit,tpoint_id,document_type_id,cash_id,cash_name,seller_id){
 	$('#sale_invoice_id').val(id);$('#sale_invoice_name').val(name);
 	$('#sale_invoice_summ').val(summ);$('#sale_invoice_debit').val(summ_debit);$('#sale_invoice_kredit').val(summ_debit);

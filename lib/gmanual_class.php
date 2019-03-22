@@ -14,9 +14,9 @@ class gmanual {
 				$gkey=$db->result($r,$i-1,"gkey");
 				$caption=$db->result($r,$i-1,"caption");
 				
-				$op_btn="<a href='$url/edit/$id' class='btn btn-default btn-round' title='пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ'><i class='fa fa-edit'></i></a> 
-				<!--<a href='$url/drop/$id' class='btn btn-default btn-round' title='пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ'><i class='fa fa-trash'></i></a>-->";
-				$view_btn="<a href='$url/view/$gkey' class='btn btn-default btn-round' title='пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ'><i class='fa fa-folder-open'></i></a>";
+				$op_btn="<a href='$url/edit/$id' class='btn btn-default btn-round' title='Перейменувати довідник'><i class='fa fa-edit'></i></a> 
+				<!--<a href='$url/drop/$id' class='btn btn-default btn-round' title='Видалити довідник'><i class='fa fa-trash'></i></a>-->";
+				$view_btn="<a href='$url/view/$gkey' class='btn btn-default btn-round' title='Переглянути довідник'><i class='fa fa-folder-open'></i></a>";
 				
 				$list.="
 				<tr align='center'>
@@ -29,13 +29,13 @@ class gmanual {
 			}
 		}
 		if ($n==0){
-			$list="<tr><td colspan=12 align='center'><h2>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</h2></td></tr>";
+			$list="<tr><td colspan=12 align='center'><h2>Інформацію про довідники не знайдено</h2></td></tr>";
 		}
-		$form=str_replace("{ModuleCaption}","пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ",$form);
-		$form=str_replace("{OperationCaption}","пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ",$form);
+		$form=str_replace("{ModuleCaption}","Довідники системи",$form);
+		$form=str_replace("{OperationCaption}","Реєстр довідників",$form);
 		$form=str_replace("{keys_list}",$list,$form);
 		$form=str_replace("{alert}",$alert,$form);
-		$new_btn="<a href='$url/new' class='btn btn-success btn-round' title='пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ'><i class='fa fa-plus'></i></a>";
+		$new_btn="<a href='$url/new' class='btn btn-success btn-round' title='Новий довідник'><i class='fa fa-plus'></i></a>";
 		$form=str_replace("{new_button}",$new_btn,$form);
 		return $form;
 	}
@@ -48,8 +48,8 @@ class gmanual {
 			$mid=$db->result($r,$i-1,"mid");
 			$caption=$db->result($r,$i-1,"mcaption");
 			
-			$op_btn="<a href='#editItem' data-toggle=\"modal\" data-target=\".ItemModal\" onclick='setModalFormData(\"$id\",\"$caption\")' class='btn btn-default btn-round' title='пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ'><i class='fa fa-edit'></i></a> 
-				<!--<a href='$url/drop/$id' class='btn btn-default btn-round' title='пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ'><i class='fa fa-trash'></i></a>-->";
+			$op_btn="<a href='#editItem' data-toggle=\"modal\" data-target=\".ItemModal\" onclick='setModalFormData(\"$id\",\"$caption\")' class='btn btn-default btn-round' title='Змінити значення'><i class='fa fa-edit'></i></a> 
+				<!--<a href='$url/drop/$id' class='btn btn-default btn-round' title='Видалити довідник'><i class='fa fa-trash'></i></a>-->";
 			$list.="
 				<tr>
 					<td align='center'>$i</td>
@@ -58,24 +58,24 @@ class gmanual {
 					<td>$op_btn</td>
 				</tr>";
 		}
-		if ($list==""){$list="<tr><td align='center' colspan='12'><h2>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</h2></td></tr>";}
+		if ($list==""){$list="<tr><td align='center' colspan='12'><h2>Довідник порожній</h2></td></tr>";}
 		$form=str_replace("{list}",$list,$form);
 		$form=str_replace("{gkey}",$key,$form);
-		$form=str_replace("{ModuleCaption}","пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ",$form);
+		$form=str_replace("{ModuleCaption}","Довідники системи",$form);
 		$form=str_replace("{GmanualCaption}",$this->getGmanualCaptionByKey($key),$form);
 		return $form;
 	}
 	
 	
 	function sendGmanualRequest1($gkey,$id,$caption){$db=DbSingleton::getDb();$slave=new slave;$mdl=new module;$url=$mdl->get_file_url("Gmanual");session_start();$label="info";
-		if ($caption==""){$label="error"; $message="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ";}
+		if ($caption==""){$label="error"; $message="Не заповнено поле назва змінної";}
 		else{$caption=$slave->qq($caption);
 			if ($id==0 || $id==""){ $mid=$this->get_manMid_id($gkey); 
 				$db->query("insert into manual (`key`,`mid`,`mcaption`) values ('$gkey','$mid','$caption');");
-				$message="пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ &quot;$caption&quot; пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
+				$message="Нову значення &quot;$caption&quot; успішно додано!";
 			}else{
 				$db->query("update manual set `mcaption`='$caption' where id='$id';");
-				$message="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ &quot;$caption&quot; пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";
+				$message="Значення довідника &quot;$caption&quot; успішно відредаговано!";
 			}
 		}
 		return array($message,$label);
@@ -84,12 +84,12 @@ class gmanual {
 		if ($id>0 || $id!=""){ 
 			$r=$db->query("select count(id) as `kol` from manual_keys where id='$id' and gkey='$gkey';");$ex=$db->result($r,0,"kol");
 			if ($ex==1){$answer=0;}
-			if ($ex==0){$answer=1; $message="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ";}
+			if ($ex==0){$answer=1; $message="Помилка ключа";}
 		}
 		if ($id==0 || $id==""){ 
 			$r=$db->query("select count(id) as `kol` from manual_keys where gkey='$gkey' limit 0,1");$ex=$db->result($r,0,"kol");
 			if ($ex==0){$answer=0;}
-			if ($ex==1){$answer=1; $message="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.";}
+			if ($ex==1){$answer=1; $message="Вказаний вами ключ вже існує в системі. Придумайте інший.";}
 		}
 		return array($message,$answer);
 	}
@@ -109,7 +109,7 @@ class gmanual {
 					<td>&nbsp; $caption</td>
 				</tr>";
 		}
-		if ($list==""){$list="<tr><td align='center' colspan=2><h2>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</h2></td></tr>";}
+		if ($list==""){$list="<tr><td align='center' colspan=2><h2>Інформація відсутня</h2></td></tr>";}
 		$form=str_replace("{list}",$list,$form);
 		return $form;
 	}
@@ -126,10 +126,10 @@ class gmanual {
 		$form=str_replace("{module_page}", $slave->get_module_page(), $form);
 		$form=str_replace("{file}", $slave->get_file(), $form);
 		if ($n==0){
-			$alert="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+			$alert="Інформацію про довідник не знайдено";
 		}
-		$form=str_replace("{ModuleCaption}","пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ",$form);
-		$form=str_replace("{OperationCaption}","пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ",$form);
+		$form=str_replace("{ModuleCaption}","Довідники системи",$form);
+		$form=str_replace("{OperationCaption}","Створення довідника",$form);
 		$form=str_replace("{alert}",$alert,$form);
 		$form=str_replace("{visibility}",$visibility,$form);
 		return $form;
@@ -140,12 +140,12 @@ class gmanual {
 		$db->query("insert into manual_keys (`id`,`gkey`,`caption`) values ('$gmanual_id','$gkey','$caption');");
 		
 		$form_htm=RD."/tpl/gmanual_save.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-		$message="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ \"$caption\" пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+		$message="Довідник \"$caption\" успішно створено";
 		
-		$form=str_replace("{ModuleCaption}","пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ",$form);
-		$form=str_replace("{OperationCaption}","пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ",$form);
+		$form=str_replace("{ModuleCaption}","Довідники системи",$form);
+		$form=str_replace("{OperationCaption}","Картка довідника",$form);
 		$form=str_replace("{message}",$message,$form);
-		$form=str_replace("{back_caption}","пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ",$form);
+		$form=str_replace("{back_caption}","До загального реєстру",$form);
 		$form=str_replace("{back_url}",$url."/",$form);
 		return $form;
 	}
@@ -169,10 +169,10 @@ class gmanual {
 		$form=str_replace("{module_page}", $slave->get_module_page(), $form);
 		$form=str_replace("{file}", $slave->get_file(), $form);
 		if ($n==0){
-			$alert="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+			$alert="Інформацію про довідник не знайдено";
 		}
-		$form=str_replace("{ModuleCaption}","пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ",$form);
-		$form=str_replace("{OperationCaption}","пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ",$form);
+		$form=str_replace("{ModuleCaption}","Довідники системи",$form);
+		$form=str_replace("{OperationCaption}","Картка довідника",$form);
 		$form=str_replace("{alert}",$alert,$form);
 		$form=str_replace("{visibility}",$visibility,$form);
 		return $form;
@@ -184,12 +184,12 @@ class gmanual {
 		$db->query("update manual_keys set caption='$caption' where id='$gmanual_id' and gkey='$gkey';");
 		
 		$form_htm=RD."/tpl/gmanual_save.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-		$message="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+		$message="Інформацію про довідник успішно збережено";
 		
-		$form=str_replace("{ModuleCaption}","пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ",$form);
-		$form=str_replace("{OperationCaption}","пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ",$form);
+		$form=str_replace("{ModuleCaption}","Довідники системи",$form);
+		$form=str_replace("{OperationCaption}","Картка довідника",$form);
 		$form=str_replace("{message}",$message,$form);
-		$form=str_replace("{back_caption}","пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ",$form);
+		$form=str_replace("{back_caption}","До загального реєстру",$form);
 		$form=str_replace("{back_url}",$url."/",$form);
 		return $form;
 	}
@@ -222,11 +222,11 @@ class gmanual {
 			$form.="<option value='".$id."' ";if ($selId==$id){$form.=" selected='selected'";} $form.=">".$db->result($r,$i-1,"$tableField")."</option>";}
 		return $form;
 	}
-	function show_navigation($item_id,$nav_menu){ $mdl=new module;$url=$mdl->get_file_url("gmanual");$nav_menu="<a class='navigation' href='?$url'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a>";return $nav_menu;}
+	function show_navigation($item_id,$nav_menu){ $mdl=new module;$url=$mdl->get_file_url("gmanual");$nav_menu="<a class='navigation' href='?$url'>Контрагенти</a>";return $nav_menu;}
 	function show_menu($w){$slave=new slave; $mdl=new module; $url=$mdl->get_file_url("gmanual");
 		$menu="
-		<div class='sideMenu' onclick='location.href=\"?$url\";'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ</div><br />
-		<div class='sideMenu' onclick='location.href=\"?$url&w=new_gmanual\";'>пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</div><br />
+		<div class='sideMenu' onclick='location.href=\"?$url\";'>Загальний реєстр</div><br />
+		<div class='sideMenu' onclick='location.href=\"?$url&w=new_gmanual\";'>Нове значення</div><br />
 		";
 		return $menu;
 	}

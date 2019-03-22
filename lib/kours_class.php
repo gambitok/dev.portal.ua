@@ -15,8 +15,8 @@ function show_kours_list(){$db=DbSingleton::getDb();$slave=new slave;$where="";
 			$symbol=$db->result($r,$i-1,"symbol");
 			$kours_value=$db->result($r,$i-1,"kours_value");
 			$data_from=$db->result($r,$i-1,"data_from");
-			$data_to=$db->result($r,$i-1,"data_to");if ($data_to=="0000-00-00 00:00:00"){$data_to="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ";}
-			$in_use=$db->result($r,$i-1,"in_use");$inuse="";if ($in_use==1){$inuse="пїЅпїЅпїЅпїЅпїЅ";}
+			$data_to=$db->result($r,$i-1,"data_to");if ($data_to=="0000-00-00 00:00:00"){$data_to="поточний курс";}
+			$in_use=$db->result($r,$i-1,"in_use");$inuse="";if ($in_use==1){$inuse="діючий";}
 			$list.="<tr>
 				<td>$inuse</td>
 				<td>$name ($symbol)</td>
@@ -41,7 +41,7 @@ function showKoursCard($kours_id){$db=DbSingleton::getDb();$slave=new slave;sess
 	}
 	return $form;
 }
-function saveKoursForm($kours_id,$kours_value,$cash_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveKoursForm($kours_id,$kours_value,$cash_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$kours_id=$slave->qq($kours_id);$kours_value=$slave->qq($kours_value);$cash_id=$slave->qq($cash_id);
 	if ($kours_id>0){
 		$data_from=date("Y-m-d H:i:s");$data_to=$data_from;

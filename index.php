@@ -5,6 +5,7 @@ header('Content-Type: text/html; charset=windows-1251');
 define('RD', dirname (__FILE__));
 date_default_timezone_set("Europe/Kiev");
 $content=null;
+
 require_once (RD."/lib/DbSingleton.php");
 require_once (RD."/lib/slave_class.php");
 require_once (RD."/lib/manual_class.php");

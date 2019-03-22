@@ -526,7 +526,7 @@ class report_margin {
 			$price_invoice=$this->getSummCash($price_invoice,2,$usd_to_uah,$eur_to_uah,$cash_id);			
 			
 			$salesd[$id]["id"]=$id;
-			$salesd[$id]["doc_name"]=$prefix." ï¿½ï¿½ ".$data_pay;
+			$salesd[$id]["doc_name"]=$prefix." â³ä ".$data_pay;
 			$salesd[$id]["oper_price_partition"]+=$oper_price_partition*$partition_amount;
 			$salesd[$id]["price_partition"]+=$price_partition*$partition_amount;
 			$salesd[$id]["price_buh_uah"]+=$price_buh_uah*$partition_amount;
@@ -575,7 +575,7 @@ class report_margin {
 			$price_invoice=$this->getSummCash($price_invoice,2,$usd_to_uah,$eur_to_uah,$cash_id);			
 			
 			$backsd[$id]["id"]=$id;
-			$backsd[$id]["doc_name"]=$prefix." ï¿½ï¿½ ".$data_pay;
+			$backsd[$id]["doc_name"]=$prefix." â³ä ".$data_pay;
 			$backsd[$id]["oper_price_partition"]+=$oper_price_partition*$partition_amount;
 			$backsd[$id]["price_partition"]+=$price_partition*$partition_amount;
 			$backsd[$id]["price_buh_uah"]+=$price_buh_uah*$partition_amount;

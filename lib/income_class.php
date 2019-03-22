@@ -1,9 +1,9 @@
 <?php
 class income{
 
-protected $prefix_new = 'пїЅпїЅ';
+protected $prefix_new = 'ДФ';
 	
-function get_doc_prefix($client_id,$prefix_id){ $db=DbSingleton::getDb();$prefix="пїЅпїЅ";
+function get_doc_prefix($client_id,$prefix_id){ $db=DbSingleton::getDb();$prefix="ДФ";
 	$r=$db->query("select prefix from A_CLIENTS_DOCUMENT_PREFIX where client_id='$client_id' and id='$prefix_id' and status='1' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$prefix=$db->result($r,0,"prefix");}
 	return $prefix; 
@@ -392,22 +392,22 @@ function showIncomeImportStrList($income_id,$oper_status){$db=DbSingleton::getDb
 				<td>$i<input type='hidden' id='idStr_$i' value='$id'></td>
 				<td style='min-width:140px;'><input type='hidden' id='artIdStr_$i' value='$art_id'>
 					<div class='input-group'>
-						<input class='form-control input-xs' type='text' readonly id='article_nr_displStr_$i' value='$article_nr_displ' placeholder='пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ'>
+						<input class='form-control input-xs' type='text' readonly id='article_nr_displStr_$i' value='$article_nr_displ' placeholder='Індекс товару'>
 						<span class='input-group-btn'> <button type='button' class='btn btn-xs btn-primary' onClick=\"showIncomeArticleSearchForm('$i','$art_id','$brand_id','$article_nr_displ');\"><i class=\"fa fa-bars\"></i></button> </span>
 					</div>
 				</td>
 				<td style='min-width:120px;'><input type='hidden' id='brandIdStr_$i' value='$brand_id'>
-					<input class='form-control input-xs' type='text' readonly id='brandNameStr_$i' value='$brand_name' placeholder='пїЅпїЅпїЅпїЅпїЅ'>
+					<input class='form-control input-xs' type='text' readonly id='brandNameStr_$i' value='$brand_name' placeholder='Бренд'>
 				</td>
 				<td style='min-width:80px;'><input type='hidden' id='countryIdStr_$i' value='$country_id'>
 					<div class='input-group'>
-						<input class='form-control input-xs' type='text' readonly id='countryAbrStr_$i' value='$country_abr' placeholder='пїЅпїЅпїЅ'>
+						<input class='form-control input-xs' type='text' readonly id='countryAbrStr_$i' value='$country_abr' placeholder='Абр'>
 						<span class='input-group-btn'> <button type='button' class='btn btn-xs btn-primary' onClick=\"showIncomeCountrySearchForm('$i','$art_id','$country_id');\"><i class=\"fa fa-bars\"></i></button> </span>
 					</div>
 				</td>
 				<td style='min-width:120px;'><input type='hidden' id='costumsIdStr_$i' value='$costums_id'>
 					<div class='input-group'>
-						<input class='form-control input-xs' type='text' readonly id='costumsStr_$i' value='$costums_code' placeholder='пїЅпїЅпїЅ'>
+						<input class='form-control input-xs' type='text' readonly id='costumsStr_$i' value='$costums_code' placeholder='Код'>
 						<span class='input-group-btn'> <button type='button' class='btn btn-xs btn-primary' onClick=\"showIncomeCostumsSearchForm('$i','$art_id','$costums_id');\"><i class=\"fa fa-bars\"></i></button> </span>
 					</div>
 				</td>
@@ -454,22 +454,22 @@ function showIncomeImportStrList($income_id,$oper_status){$db=DbSingleton::getDb
 				<td>nom_i<input type='hidden' id='idStr_' value=''></td>
 				<td style='min-width:140px;'><input type='hidden' id='artIdStr_' value=''>
 					<div class='input-group'>
-						<input class='form-control input-xs' type='text' readonly id='article_nr_displStr_' value='' placeholder='пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ'>
+						<input class='form-control input-xs' type='text' readonly id='article_nr_displStr_' value='' placeholder='Індекс товару'>
 						<span class='input-group-btn'> <button type='button' class='btn btn-xs btn-primary' onClick=\"showIncomeArticleSearchForm('i_0','0','0','');\"><i class=\"fa fa-bars\"></i></button> </span>
 					</div>
 				</td>
 				<td style='min-width:120px;'><input type='hidden' id='brandIdStr_' value=''>
-					<input class='form-control input-xs' type='text' readonly id='brandNameStr_' value='' placeholder='пїЅпїЅпїЅпїЅпїЅ'>
+					<input class='form-control input-xs' type='text' readonly id='brandNameStr_' value='' placeholder='Бренд'>
 				</td>
 				<td style='min-width:80px;'><input type='hidden' id='countryIdStr_' value=''>
 					<div class='input-group'>
-						<input class='form-control input-xs' type='text' readonly id='countryAbrStr_' value='' placeholder='пїЅпїЅпїЅ'>
+						<input class='form-control input-xs' type='text' readonly id='countryAbrStr_' value='' placeholder='Абр'>
 						<span class='input-group-btn'> <button type='button' class='btn btn-xs btn-primary' onClick=\"showIncomeCountrySearchForm('i_0','','');\"><i class=\"fa fa-bars\"></i></button> </span>
 					</div>
 				</td>
 				<td style='min-width:120px;'><input type='hidden' id='costumsIdStr_' value=''>
 					<div class='input-group'>
-						<input class='form-control input-xs' type='text' readonly id='costumsStr_' value='' placeholder='пїЅпїЅпїЅ'>
+						<input class='form-control input-xs' type='text' readonly id='costumsStr_' value='' placeholder='Код'>
 						<span class='input-group-btn'> <button type='button' class='btn btn-xs btn-primary' onClick=\"showIncomeCostumsSearchForm('i_0','0','0');\"><i class=\"fa fa-bars\"></i></button> </span>
 					</div>
 				</td>
@@ -514,16 +514,16 @@ function showIncomeLocalStrList($income_id,$oper_status){$db=DbSingleton::getDb(
 				<td>$i<input type='hidden' id='idStr_$i' value='$id'></td>
 				<td style='min-width:140px;'><input type='hidden' id='artIdStr_$i' value='$art_id'>
 					<div class='input-group'>
-						<input class='form-control input-xs' type='text' readonly id='article_nr_displStr_$i' value='$article_nr_displ' placeholder='пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ'>
+						<input class='form-control input-xs' type='text' readonly id='article_nr_displStr_$i' value='$article_nr_displ' placeholder='Індекс товару'>
 						<span class='input-group-btn'> <button type='button' class='btn btn-xs btn-primary' onClick=\"showIncomeArticleSearchForm('$i','$art_id','$brand_id','$article_nr_displ');\"><i class=\"fa fa-bars\"></i></button> </span>
 					</div>
 				</td>
 				<td style='min-width:120px;'><input type='hidden' id='brandIdStr_$i' value='$brand_id'>
-					<input class='form-control input-xs' type='text' readonly id='brandNameStr_$i' value='$brand_name' placeholder='пїЅпїЅпїЅпїЅпїЅ'>
+					<input class='form-control input-xs' type='text' readonly id='brandNameStr_$i' value='$brand_name' placeholder='Бренд'>
 				</td>
 				<td style='min-width:120px;'><input type='hidden' id='costumsIdStr_$i' value='$costums_id'>
 					<div class='input-group'>
-						<input class='form-control input-xs' type='text' readonly id='costumsStr_$i' value='$costums_code' placeholder='пїЅпїЅпїЅ'>
+						<input class='form-control input-xs' type='text' readonly id='costumsStr_$i' value='$costums_code' placeholder='Код'>
 						<span class='input-group-btn'> <button type='button' class='btn btn-xs btn-primary' onClick=\"showIncomeCostumsSearchForm('$i','$art_id','$costums_id');\"><i class=\"fa fa-bars\"></i></button> </span>
 					</div>
 				</td>
@@ -563,16 +563,16 @@ function showIncomeLocalStrList($income_id,$oper_status){$db=DbSingleton::getDb(
 				<td>nom_i<input type='hidden' id='idStr_' value=''></td>
 				<td style='min-width:140px;'><input type='hidden' id='artIdStr_' value=''>
 					<div class='input-group'>
-						<input class='form-control input-xs' type='text' readonly id='article_nr_displStr_' value='' placeholder='пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ'>
+						<input class='form-control input-xs' type='text' readonly id='article_nr_displStr_' value='' placeholder='Індекс товару'>
 						<span class='input-group-btn'> <button type='button' class='btn btn-xs btn-primary' onClick=\"showIncomeArticleSearchForm('i_0','0','0','');\"><i class=\"fa fa-bars\"></i></button> </span>
 					</div>
 				</td>
 				<td style='min-width:120px;'><input type='hidden' id='brandIdStr_' value=''>
-					<input class='form-control input-xs' type='text' readonly id='brandNameStr_' value='' placeholder='пїЅпїЅпїЅпїЅпїЅ'>
+					<input class='form-control input-xs' type='text' readonly id='brandNameStr_' value='' placeholder='Бренд'>
 				</td>
 				<td style='min-width:120px;'><input type='hidden' id='costumsIdStr_' value=''>
 					<div class='input-group'>
-						<input class='form-control input-xs' type='text' readonly id='costumsStr_' value='' placeholder='пїЅпїЅпїЅ'>
+						<input class='form-control input-xs' type='text' readonly id='costumsStr_' value='' placeholder='Код'>
 						<span class='input-group-btn'> <button type='button' class='btn btn-xs btn-primary' onClick=\"showIncomeCostumsSearchForm('i_0','0','0');\"><i class=\"fa fa-bars\"></i></button> </span>
 					</div>
 				</td>
@@ -652,14 +652,14 @@ function printIncome($income_id){$db=DbSingleton::getDb();$cat=new catalogue;$sl
 	
 	//$this->addJournalRecord($income_id,52);
 	
-	//"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ"
+	//"Структура складського відбору"
 	$mp=new media_print;
 	$mp->print_document($form,array(210,280));
 								 
 	return $form;
 }
 
-function saveIncomeCard($income_id,$type_id,$document_prefix,$data,$client_seller,$invoice_income,$cash_id,$client_id,$invoice_data,$cours_to_uah,$cours_to_uah_nbu,$invoice_summ,$comment,$usd_to_uah,$eur_to_uah,$costums_pd_uah,$costums_pp_uah,$costums_summ_uah){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveIncomeCard($income_id,$type_id,$document_prefix,$data,$client_seller,$invoice_income,$cash_id,$client_id,$invoice_data,$cours_to_uah,$cours_to_uah_nbu,$invoice_summ,$comment,$usd_to_uah,$eur_to_uah,$costums_pd_uah,$costums_pp_uah,$costums_summ_uah){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 
 	$income_id=$slave->qq($income_id);$type_id=$slave->qq($type_id);$document_prefix=$slave->qq($document_prefix);$data=$slave->qq($data);$client_seller=$slave->qq($client_seller);$invoice_income=$slave->qq($invoice_income);$cash_id=$slave->qq($cash_id);$client_id=$slave->qq($client_id);$invoice_data=$slave->qq($invoice_data);$cours_to_uah=$slave->qq($cours_to_uah);$cours_to_uah_nbu=$slave->qq($cours_to_uah_nbu);$invoice_summ=$slave->qq($invoice_summ);$comment=$slave->qq($comment);$usd_to_uah=$slave->qq($usd_to_uah);$eur_to_uah=$slave->qq($eur_to_uah);$costums_pd_uah=$slave->qq($costums_pd_uah);$costums_pp_uah=$slave->qq($costums_pp_uah);$costums_summ_uah=$slave->qq($costums_summ_uah);
 	if ($income_id==0 || $income_id==""){
@@ -676,16 +676,16 @@ function saveIncomeCard($income_id,$type_id,$document_prefix,$data,$client_selle
 			if ($invoice_income_str==$invoice_income) $k++;
 		}
 		if ($k>0) {
-			$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+			$answer=0;$err="Повторний вхідний документ";
 		} else {
-			$db->query("update J_INCOME set `client_id`='$client_id', `prefix`='пїЅпїЅ', `data`='$data', `invoice_income`='$invoice_income', `invoice_data`='$invoice_data', `invoice_summ`='$invoice_summ', `client_seller`='$client_seller', `cash_id`='$cash_id', `cours_to_uah`='$cours_to_uah', `cours_to_uah_nbu`='$cours_to_uah_nbu', `usd_to_uah`='$usd_to_uah' , `eur_to_uah`='$eur_to_uah' , `summ_end`='$invoice_summ' , `costums_pd_uah`='$costums_pd_uah' , `costums_pp_uah`='$costums_pp_uah' , `costums_summ_uah`='$costums_summ_uah', `user_id`='$user_id' where `id`='$income_id';");		
+			$db->query("update J_INCOME set `client_id`='$client_id', `prefix`='ДФ', `data`='$data', `invoice_income`='$invoice_income', `invoice_data`='$invoice_data', `invoice_summ`='$invoice_summ', `client_seller`='$client_seller', `cash_id`='$cash_id', `cours_to_uah`='$cours_to_uah', `cours_to_uah_nbu`='$cours_to_uah_nbu', `usd_to_uah`='$usd_to_uah' , `eur_to_uah`='$eur_to_uah' , `summ_end`='$invoice_summ' , `costums_pd_uah`='$costums_pd_uah' , `costums_pp_uah`='$costums_pp_uah' , `costums_summ_uah`='$costums_summ_uah', `user_id`='$user_id' where `id`='$income_id';");		
 			$answer=1;$err="";
 		}
 	}
 	return array($answer,$err);
 }
 
-function saveIncomeCardData($income_id,$type_id,$frm,$tto,$idStr,$artIdStr,$article_nr_displStr,$brandIdStr,$countryIdStr,$costumsIdStr,$amountStr,$price_buh_cashinStr,$weightNettoStr,$rateStr,$typeDeclarationIdStr,$price_man_cashinStr,$price_man_usdStr,$price_buh_uahStr,$price_man_uahStr){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveIncomeCardData($income_id,$type_id,$frm,$tto,$idStr,$artIdStr,$article_nr_displStr,$brandIdStr,$countryIdStr,$costumsIdStr,$amountStr,$price_buh_cashinStr,$weightNettoStr,$rateStr,$typeDeclarationIdStr,$price_man_cashinStr,$price_man_usdStr,$price_buh_uahStr,$price_man_uahStr){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$income_id=$slave->qq($income_id);$type_id=$slave->qq($type_id);$frm=$slave->qq($frm);$tto=$slave->qq($tto);
 	if ($income_id>0){
 		$idStr=$slave->qq($idStr);$artIdStr=$slave->qq($artIdStr);$article_nr_displStr=$slave->qq($article_nr_displStr);$brandIdStr=$slave->qq($brandIdStr);$countryIdStr=$slave->qq($countryIdStr);$costumsIdStr=$slave->qq($costumsIdStr);$amountStr=$slave->qq($amountStr);$price_buh_cashinStr=$slave->qq($price_buh_cashinStr);$weightNettoStr=$slave->qq($weightNettoStr);$rateStr=$slave->qq($rateStr);$typeDeclarationIdStr=$slave->qq($typeDeclarationIdStr);$price_man_cashinStr=$slave->qq($price_man_cashinStr);$price_man_usdStr=$slave->qq($price_man_usdStr);$price_buh_uahStr=$slave->qq($price_buh_uahStr);$price_man_uahStr=$slave->qq($price_man_uahStr);
@@ -720,7 +720,7 @@ function makeIncomeCardFinish($income_id){$db=DbSingleton::getDb();$dbt=DbSingle
 		$client_id=$db->result($r,0,"client_id");
 		$import_1c=$db->result($r,0,"import_1c");
 		
-		if ($storage_id==0 || $storage_cells_id==0){$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ \"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ\" пїЅпїЅпїЅ \"пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ\". пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";}
+		if ($storage_id==0 || $storage_cells_id==0){$answer=0;$err="Не вказано \"Склад зберігання\" або \"Комірка зберігання\". Накладну не проведено!";}
 		if ($storage_id>0 && $storage_cells_id>0){
 			if ($oper_status==30) {
 				list($prefix,$doc_nom)=$this->getIncomeClientPrefixDocument($income_id,$client_id);
@@ -747,8 +747,8 @@ function makeIncomeCardFinish($income_id){$db=DbSingleton::getDb();$dbt=DbSingle
 					$dbt->query("insert into T2_ARTICLES_STOCK (`art_id`,`income_id`,`amount`,`price`,`oper_price`) value ('$art_id','$income_id','$amount','$price_man_usd','$new_oper_price')");
 					
 					/*
-						op_type=1-пїЅпїЅпїЅпїЅпїЅпїЅ, 2-пїЅпїЅпїЅпїЅпїЅпїЅ
-						parrent_type_id=1-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, 2-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, 3-пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, 4-пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+						op_type=1-приход, 2-расход
+						parrent_type_id=1-Приходная накладная, 2-расходная накладная, 3-возврат от покупателя, 4-возврат поставщику
 					*/
 					$db->query("insert into T2_ARTICLES_PARTITIONS (`art_id`,`op_type`,`parrent_type_id`,`parrent_doc_id`,`amount`,`rest`,`price`,`oper_price`,`price_buh_uah`,`price_man_uah`) value ('$art_id','1','1','$income_id','$amount','$amount','$price_man_usd','$new_oper_price','$price_buh_uah','$price_man_uah')");
 					
@@ -787,7 +787,7 @@ function makeIncomeCardFinish($income_id){$db=DbSingleton::getDb();$dbt=DbSingle
 				
 				/* 				end calculation income  */
 				$answer=1;$err="";
-			} else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+			} else {$answer=0;$err="Накладну заблоковано. Зміни вносити заборонено.";}
 		}
 	}
 	return array($answer,$err);
@@ -812,36 +812,36 @@ function showIncomeUnknownStrList($income_id){$db=DbSingleton::getDb();$slave=ne
 	$r=$db->query("select * from J_INCOME_STR_UNKNOWN where income_id='$income_id' order by id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
-		$art_id=$db->result($r,$i-1,"art_id");$art_id_comment="";if ($art_id==0){$art_id_comment="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ART_ID! пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ";}
+		$art_id=$db->result($r,$i-1,"art_id");$art_id_comment="";if ($art_id==0){$art_id_comment="Не визначено ART_ID! Артикул відсутній у базі";}
 		$article_nr_displ=$db->result($r,$i-1,"article_nr_displ");
-		$brand_id=$db->result($r,$i-1,"brand_id");$brand_name=$cat->getBrandName($brand_id);$brand_id_comment="";if ($brand_id==0 || $brand_name==""){$brand_id_comment="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";}
-		$country_id=$db->result($r,$i-1,"country_id");$country_abr=$cat->getCountryAbr($country_id);$country_id_comment="";if ($country_id==0 || $country_abr==""){$country_id_comment="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";}
-		$costums_id=$db->result($r,$i-1,"costums_id");$costums_code=$cat->getCostumsCode($costums_id);$costums_id_comment="";if ($costums_id==0 || $costums_code==""){$costums_id_comment="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ!";}
-		$amount=$db->result($r,$i-1,"amount");$amount_comment="";if ($amount<=0){$amount_comment="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";}
-		$price_buh_cashin=$db->result($r,$i-1,"price_buh_cashin");$price_comment="";if ($price_buh_cashin<=0){$price_comment="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";}
-		$weight_netto=$db->result($r,$i-1,"weight_netto");$weight_comment="";if ($weight_netto<=0){$weight_comment="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";}
+		$brand_id=$db->result($r,$i-1,"brand_id");$brand_name=$cat->getBrandName($brand_id);$brand_id_comment="";if ($brand_id==0 || $brand_name==""){$brand_id_comment="Не визначено Бренд!";}
+		$country_id=$db->result($r,$i-1,"country_id");$country_abr=$cat->getCountryAbr($country_id);$country_id_comment="";if ($country_id==0 || $country_abr==""){$country_id_comment="Не визначено Країну!";}
+		$costums_id=$db->result($r,$i-1,"costums_id");$costums_code=$cat->getCostumsCode($costums_id);$costums_id_comment="";if ($costums_id==0 || $costums_code==""){$costums_id_comment="Не визначено Митний код!";}
+		$amount=$db->result($r,$i-1,"amount");$amount_comment="";if ($amount<=0){$amount_comment="Не визначено кількість товару!";}
+		$price_buh_cashin=$db->result($r,$i-1,"price_buh_cashin");$price_comment="";if ($price_buh_cashin<=0){$price_comment="Не визначено ціну товару!";}
+		$weight_netto=$db->result($r,$i-1,"weight_netto");$weight_comment="";if ($weight_netto<=0){$weight_comment="Не визначено вагу товару!";}
 
 		$list.="<tr id='strUnRow_$i'>
 			<td><button class='btn btn-xs btn-warning' onClick='checkIncomUnStr(\"$income_id\",\"$i\",\"$id\",\"0\");'><i class='fa fa-refresh'></i></button></td>
 			<td>$i<input type='hidden' id='idUnStr_$i' value='$id'></td>
 			<td style='min-width:140px;'><input type='hidden' id='artIdUnStr_$i' value='$art_id'>
 				<div class='input-group'>
-					<input class='form-control input-xs' type='text' readonly id='article_nr_displUnStr_$i' value='$article_nr_displ' placeholder='пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ'>
+					<input class='form-control input-xs' type='text' readonly id='article_nr_displUnStr_$i' value='$article_nr_displ' placeholder='Індекс товару'>
 					<span class='input-group-btn'> <button type='button' class='btn btn-xs btn-primary' onClick=\"showIncomeArticleSearchForm('$i','$art_id','$brand_id','$article_nr_displ');\"><i class=\"fa fa-bars\"></i></button> </span>
 				</div>$art_id_comment
 			</td>
 			<td style='min-width:120px;'><input type='hidden' id='brandIdUnStr_$i' value='$brand_id'>
-				<input class='form-control input-xs' type='text' readonly id='brandNameUnStr_$i' value='$brand_name' placeholder='пїЅпїЅпїЅпїЅпїЅ'>$brand_id_comment
+				<input class='form-control input-xs' type='text' readonly id='brandNameUnStr_$i' value='$brand_name' placeholder='Бренд'>$brand_id_comment
 			</td>
 			<td style='min-width:80px;'><input type='hidden' id='countryIdStr_$i' value='$country_id'>
 				<div class='input-group'>
-					<input class='form-control input-xs' type='text' readonly id='countryAbrUnStr_$i' value='$country_abr' placeholder='пїЅпїЅпїЅ'>
+					<input class='form-control input-xs' type='text' readonly id='countryAbrUnStr_$i' value='$country_abr' placeholder='Абр'>
 					<span class='input-group-btn'> <button type='button' class='btn btn-xs btn-primary' onClick=\"showIncomeCountrySearchForm('$i','$art_id','$country_id');\"><i class=\"fa fa-bars\"></i></button> </span>
 				</div>$country_id_comment
 			</td>
 			<td style='min-width:120px;'><input type='hidden' id='costumsIdUnStr_$i' value='$costums_id'>
 				<div class='input-group'>
-					<input class='form-control input-xs' type='text' readonly id='costumsUnStr_$i' value='$costums_code' placeholder='пїЅпїЅпїЅ'>
+					<input class='form-control input-xs' type='text' readonly id='costumsUnStr_$i' value='$costums_code' placeholder='Код'>
 					<span class='input-group-btn'> <button type='button' class='btn btn-xs btn-primary' onClick=\"showIncomeCostumsSearchForm('$i','$art_id','$costums_id');\"><i class=\"fa fa-bars\"></i></button> </span>
 				</div>$costums_id_comment
 			</td>
@@ -858,14 +858,14 @@ function exportIncomeUnStr($income_id){$db=DbSingleton::getDb();$slave=new slave
 	$r=$db->query("select * from J_INCOME_STR_UNKNOWN where income_id='$income_id' order by id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){$comment="";
 		$id=$db->result($r,$i-1,"id");
-		$art_id=$db->result($r,$i-1,"art_id");if ($art_id==0){$comment.="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ART_ID! пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ";}
+		$art_id=$db->result($r,$i-1,"art_id");if ($art_id==0){$comment.="Не визначено ART_ID! Артикул відсутній у базі";}
 		$article_nr_displ=$db->result($r,$i-1,"article_nr_displ");
-		$brand_id=$db->result($r,$i-1,"brand_id");$brand_name=$cat->getBrandName($brand_id);if ($brand_id==0 || $brand_name==""){$comment.="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";}
-		$country_id=$db->result($r,$i-1,"country_id");$country_abr=$cat->getCountryAbr($country_id);if ($country_id==0 || $country_abr==""){$comment.="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";}
-		$costums_id=$db->result($r,$i-1,"costums_id");$costums_code=$cat->getCostumsCode($costums_id);if ($costums_id==0 || $costums_code==""){$comment.="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ!";}
-		$amount=$db->result($r,$i-1,"amount");if ($amount<=0){$comment.="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";}
-		$price_buh_cashin=$db->result($r,$i-1,"price_buh_cashin");if ($price_buh_cashin<=0){$comment.="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";}
-		$weight_netto=$db->result($r,$i-1,"weight_netto");if ($weight_netto<=0){$comment.="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";}
+		$brand_id=$db->result($r,$i-1,"brand_id");$brand_name=$cat->getBrandName($brand_id);if ($brand_id==0 || $brand_name==""){$comment.="Не визначено Бренд!";}
+		$country_id=$db->result($r,$i-1,"country_id");$country_abr=$cat->getCountryAbr($country_id);if ($country_id==0 || $country_abr==""){$comment.="Не визначено Країну!";}
+		$costums_id=$db->result($r,$i-1,"costums_id");$costums_code=$cat->getCostumsCode($costums_id);if ($costums_id==0 || $costums_code==""){$comment.="Не визначено Митний код!";}
+		$amount=$db->result($r,$i-1,"amount");if ($amount<=0){$comment.="Не визначено кількість товару!";}
+		$price_buh_cashin=$db->result($r,$i-1,"price_buh_cashin");if ($price_buh_cashin<=0){$comment.="Не визначено ціну товару!";}
+		$weight_netto=$db->result($r,$i-1,"weight_netto");if ($weight_netto<=0){$comment.="Не визначено вагу товару!";}
 
 		$list[$i]=array("$i","$art_id","$article_nr_displ","$brand_name","$country_abr","$costums_code","$amount","$price_buh_cashin","$weight_netto","$comment");
 	}
@@ -887,8 +887,8 @@ function checkIncomUnStr($income_id,$unknown_id,$art_id,$article_nr_displ,$brand
 				$db->query("update J_INCOME_STR set unknown_id='0',art_id='$art_id',`article_nr_displ`='$article_nr_displ',brand_id='$brand_id',country_id='$country_id',costums_id='$costums_id',amount='$amount',price_buh_cashin='$price',weight_netto='$weight' where income_id='$income_id' and unknown_id='$unknown_id' limit 1;");
 				$db->query("delete from J_INCOME_STR_UNKNOWN where income_id='$income_id' and id='$unknown_id' limit 1;");
 				$answer=1;$err="";
-			}else {$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";}
-		} else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+			}else {$answer=0;$err="Не заповнені всі поля для артикулу";}
+		} else {$answer=0;$err="Накладну заблоковано. Зміни вносити заборонено.";}
 	}
 	return array($answer,$err);
 }
@@ -902,12 +902,12 @@ function dropIncomUnStr($income_id,$unknown_id){$db=DbSingleton::getDb();$slave=
 			$db->query("delete from J_INCOME_STR where income_id='$income_id' and unknown_id='$unknown_id' limit 1;");
 			$db->query("delete from J_INCOME_STR_UNKNOWN where income_id='$income_id' and id='$unknown_id' limit 1;");
 			$answer=1;$err="";
-		} else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+		} else {$answer=0;$err="Накладну заблоковано. Зміни вносити заборонено.";}
 	}
 	return array($answer,$err);
 }
 	
-function dropIncomeStr($income_id,$art_id) {$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function dropIncomeStr($income_id,$art_id) {$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка видалення даних!";
 	$income_id=$slave->qq($income_id);
 	$r=$db->query("select oper_status from J_INCOME where id='$income_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -915,7 +915,7 @@ function dropIncomeStr($income_id,$art_id) {$db=DbSingleton::getDb();$slave=new 
 		if ($oper_status==30) {
 			$db->query("delete from J_INCOME_STR where income_id='$income_id' and art_id='$art_id' limit 1;");
 			$answer=1;$err="";
-		} else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+		} else {$answer=0;$err="Накладну заблоковано. Зміни вносити заборонено.";}
 	}
 	return array($answer,$err);
 }
@@ -929,7 +929,7 @@ function clearIncomeStr($income_id){$db=DbSingleton::getDb();$slave=new slave;$a
 			$db->query("delete from J_INCOME_STR where income_id='$income_id';");
 			$db->query("delete from J_INCOME_STR_UNKNOWN where income_id='$income_id';");
 			$answer=1;$err="";
-		} else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+		} else {$answer=0;$err="Накладну заблоковано. Зміни вносити заборонено.";}
 	}
 	return array($answer,$err);
 }
@@ -943,7 +943,7 @@ function setIncomeVat($income_id,$vat_use){$db=DbSingleton::getDb();$slave=new s
 		if ($oper_status==30) {
 			$db->query("update J_INCOME set vat_use='$vat_use' where id='$income_id';");
 			$answer=1;$err="";
-		} else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+		} else {$answer=0;$err="Накладну заблоковано. Зміни вносити заборонено.";}
 	}
 	return array($answer,$err);
 }
@@ -991,7 +991,7 @@ function showIncomeClientList($sel_id){$db=DbSingleton::getDb();$slave=new slave
 }
 
 
-function unlinkIncomeClient($income_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function unlinkIncomeClient($income_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
 	$income_id=$slave->qq($income_id);
 	if ($income_id>0){
 		$db->query("update J_INCOME set `client_id`='0' where `id`='$income_id';");
@@ -1043,7 +1043,7 @@ function showIncomeClientSellerList($sel_id){$db=DbSingleton::getDb();$slave=new
 }
 
 
-function unlinkIncomeClientSeller($income_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function unlinkIncomeClientSeller($income_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
 	$income_id=$slave->qq($income_id);
 	if ($income_id>0){
 		$db->query("update J_INCOME set `client_seller_id`='0' where `id`='$income_id';");
@@ -1086,7 +1086,7 @@ function getStorageName($sel_id){$db=DbSingleton::getTokoDb();$name="";
 	return $name;	
 }
 
-function showStorageSelectList($sel_id){$db=DbSingleton::getTokoDb();$list="<option value=0>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</option>";
+function showStorageSelectList($sel_id){$db=DbSingleton::getTokoDb();$list="<option value=0>Оберіть зі списку</option>";
 	$r=$db->query("select * from `STORAGE` where status='1' order by name,id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -1102,7 +1102,7 @@ function getStorageCellName($sel_id){$db=DbSingleton::getTokoDb();$name="";
 	return $name;	
 }
 
-function showStorageCellsSelectList($storage_id,$sel_id){$db=DbSingleton::getDb(); $list="<option value=0>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</option>";
+function showStorageCellsSelectList($storage_id,$sel_id){$db=DbSingleton::getDb(); $list="<option value=0>Оберіть зі списку</option>";
 														 
 	$r=$db->query("select * from `STORAGE_CELLS` where status='1' and storage_id='$storage_id' order by cell_value, id asc;");
 	$n=$db->num_rows($r);
@@ -1124,7 +1124,7 @@ function checkStorageCellsExist(){$db=DbSingleton::getTokoDb();$ex=0;$kol=0;
 	return $ex;	
 }
 
-function saveIncomeStorage($income_id,$storage_id,$storage_cells_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveIncomeStorage($income_id,$storage_id,$storage_cells_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$income_id=$slave->qq($income_id);$storage_id=$slave->qq($storage_id);$storage_cells_id=$slave->qq($storage_cells_id);
 	if ($income_id>0 && $storage_id>0){
 		$ex_cells=$this->checkStorageCellsExist($storage_id);
@@ -1133,7 +1133,7 @@ function saveIncomeStorage($income_id,$storage_id,$storage_cells_id){$db=DbSingl
 			$answer=1;$err="";
 		}
 		if ($ex_cells==1 && ($storage_cells_id==0 || $storage_cells_id=="")){
-			$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ";
+			$answer=0;$err="Не вказана комірка зберігання для складу";
 		}
 	}
 	return array($answer,$err);
@@ -1197,7 +1197,7 @@ function loadIncomeSpend($income_id){$db=DbSingleton::getDb();$slave=new slave;$
 					</td>
                 </tr>";
 		}
-		if ($list2==""){$list2="<tr><td colspan=10 align='center'>ВіпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>";}
+		if ($list2==""){$list2="<tr><td colspan=10 align='center'>Відсутні витрати</td></tr>";}
 		$list=str_replace("{records_list}",$list2,$list);
 		$list=str_replace("{summ_str_uah}",$slave->to_money($summ_str_uah),$list);
 	}
@@ -1225,10 +1225,10 @@ function showIncomeSpendItemRow($income_id,$spend_item_id,$str_id){$db=DbSinglet
 	$form=str_replace("{summ_cash}",$summ_cash,$form);
 	$form=str_replace("{cash_list}",$this->showCashListSelect($cash_id,1),$form);
 	
-	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+	return array($form,"Інформація про витрату");
 }
 
-function saveIncomeSpendStrForm($income_id,$spend_item_id,$str_id,$caption,$data,$cash_id,$summ_cash,$kours,$summ_uah){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveIncomeSpendStrForm($income_id,$spend_item_id,$str_id,$caption,$data,$cash_id,$summ_cash,$kours,$summ_uah){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$income_id=$slave->qq($income_id);$spend_item_id=$slave->qq($spend_item_id);$str_id=$slave->qq($str_id);$caption=$slave->qq($caption);$data=$slave->qq($data);$cash_id=$slave->qq($cash_id);$summ_cash=$slave->qq($slave->point_valid($summ_cash));$kours=$slave->qq($slave->point_valid($kours));$summ_uah=$slave->qq($slave->point_valid($summ_uah));
 	if ($income_id>0 && $spend_item_id>0){
 		
@@ -1242,7 +1242,7 @@ function saveIncomeSpendStrForm($income_id,$spend_item_id,$str_id,$caption,$data
 	return array($answer,$err);
 }
 
-function dropIncomeSpendItemRow($income_id,$spend_item_id,$str_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function dropIncomeSpendItemRow($income_id,$spend_item_id,$str_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$income_id=$slave->qq($income_id);$spend_item_id=$slave->qq($spend_item_id);$str_id=$slave->qq($str_id);
 	if ($income_id>0 && $str_id>0){
 		$db->query("update J_INCOME_SPEND_STR set status='0' where id='$str_id' and income_id='$income_id';");
@@ -1278,7 +1278,7 @@ function getRateTypeDeclarationdocumentPos($costums_id,$country_id){$db=DbSingle
 	return array($rate,$type_declaration,$type_declaration_id);
 }
 
-function saveIncomeContactForm($income_id,$contact_id,$contact_name,$contact_post,$contact_con_kol,$con_id,$sotc_cont,$contact_value){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveIncomeContactForm($income_id,$contact_id,$contact_name,$contact_post,$contact_con_kol,$con_id,$sotc_cont,$contact_value){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$income_id=$slave->qq($income_id);$contact_id=$slave->qq($contact_id);$contact_name=$slave->qq($contact_name);$contact_post=$slave->qq($contact_post);$contact_con_kol=$slave->qq($contact_con_kol);
 	if ($income_id>0){
 		
@@ -1301,7 +1301,7 @@ function saveIncomeContactForm($income_id,$contact_id,$contact_name,$contact_pos
 	}
 	return array($answer,$err);
 }
-function dropIncomeContact($income_id,$contact_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function dropIncomeContact($income_id,$contact_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$income_id=$slave->qq($income_id);$contact_id=$slave->qq($contact_id);
 	if ($income_id>0 && $contact_id>0){
 		$db->query("delete from A_CLIENTS_CONTACTS where id='$contact_id' and income_id='$income_id';");
@@ -1335,10 +1335,10 @@ function loadIncomeCommets($income_id){$db=DbSingleton::getDb();$slave=new slave
 			$list.=$block;
 			
 		}
-		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>Коментарі відсутні</h3>";}
 		return $list;
 }
-function saveIncomeComment($income_id,$comment){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveIncomeComment($income_id,$comment){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	
 	$income_id=$slave->qq($income_id);$comment=$slave->qq($comment);
 	if ($income_id>0 && $comment!=""){
@@ -1347,7 +1347,7 @@ function saveIncomeComment($income_id,$comment){$db=DbSingleton::getDb();$slave=
 	}
 	return array($answer,$err);
 }
-function dropIncomeComment($income_id,$comment_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
+function dropIncomeComment($income_id,$comment_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення запису!";
 	$income_id=$slave->qq($income_id);$comment_id=$slave->qq($comment_id);
 	if ($income_id>0 && $comment_id>0){
 		$r=$db->query("select * from J_INCOME_COMMENTS where income_id='$income_id' and id='$comment_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1407,11 +1407,11 @@ function loadIncomeDetailsFile($income_id,$file_type){$db=DbSingleton::getDb();$
 			$list.=$block;
 			
 		}
-		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>Файли відсутні</h3>";}
 		return $list;
 }
 
-function incomeDetailsDropFile($income_id,$file_type,$file_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function incomeDetailsDropFile($income_id,$file_type,$file_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення файлу!";
 	
 	$income_id=$slave->qq($income_id);$file_id=$slave->qq($file_id);
 	if ($income_id>0 && $file_id>0 && $file_type!=""){
@@ -1463,11 +1463,11 @@ function loadIncomeCDN($income_id){$db=DbSingleton::getDb();$slave=new slave;
 			$list.=$block;
 			
 		}
-		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>Файли відсутні</h3>";}
 		return $list;
 }
 
-function incomeCDNDropFile($income_id,$file_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function incomeCDNDropFile($income_id,$file_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення файлу!";
 	
 	$income_id=$slave->qq($income_id);$file_id=$slave->qq($file_id);
 	if ($income_id>0 && $file_id>0){
@@ -1494,8 +1494,8 @@ function loadArticleFoto($income_id){$db=DbSingleton::getDb();$slave=new slave;
 			$data=$db->result($r,$i-1,"DATA");
 			$user_name=$db->result($r,$i-1,"user_name");
 			$main=$db->result($r,$i-1,"MAIN");
-			$main_v="<a class=\"btn btn-xs btn-white\" onClick=\"setArticlesFotoMain('$income_id','$file_id')\"><i class=\"fa fa-check\"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ</a>";
-			if ($main==1){$main_v=" <span class=\"btn btn-xs label-primary\"><i class=\"fa fa-check\"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ</span>";}
+			$main_v="<a class=\"btn btn-xs btn-white\" onClick=\"setArticlesFotoMain('$income_id','$file_id')\"><i class=\"fa fa-check\"></i> Основне фото</a>";
+			if ($main==1){$main_v=" <span class=\"btn btn-xs label-primary\"><i class=\"fa fa-check\"></i> Основне фото</span>";}
 			
 			$link="http://portal.myparts.pro/cdn/artfoto/$file_name";
 			
@@ -1515,10 +1515,10 @@ function loadArticleFoto($income_id){$db=DbSingleton::getDb();$slave=new slave;
 			$list.=$block;
 			
 		}
-		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>Фото відсутні</h3>";}
 		return $list;
 }
-function setArticlesFotoMain($income_id,$file_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
+function setArticlesFotoMain($income_id,$file_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка обробки запиту!";
 	$income_id=$slave->qq($income_id);$file_id=$slave->qq($file_id);
 	if ($income_id>0 && $file_id>0){
 		$db->query("update T2_PHOTOS set MAIN='0' where ART_ID='$income_id' and MAIN='1';");
@@ -1527,7 +1527,7 @@ function setArticlesFotoMain($income_id,$file_id){$db=DbSingleton::getDb();$slav
 	}
 	return array($answer,$err);
 }
-function articlesFotoDropFile($income_id,$file_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function articlesFotoDropFile($income_id,$file_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення файлу!";
 	$income_id=$slave->qq($income_id);$file_id=$slave->qq($file_id);
 	if ($income_id>0 && $file_id>0){
 		$r=$db->query("select PHOTO_NAME from T2_PHOTOS where ART_ID='$income_id' and ID='$file_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1579,7 +1579,7 @@ function loadCitySelectList($region_id,$sel_id){$db=DbSingleton::getDb();$slave=
 		$list.="<option value='$id' $sel>$name</option>";
 	}
 	*/
-	return "<option value='NEW'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ</option>".$slave->showSelectSubList("T2_CITY","REGION_ID","$region_id","CITY_ID","CITY_NAME",$sel_id);
+	return "<option value='NEW'>Добавити населений пункт</option>".$slave->showSelectSubList("T2_CITY","REGION_ID","$region_id","CITY_ID","CITY_NAME",$sel_id);
 }
 function showCategoryCheckList($income_id){$db=DbSingleton::getDb();$list="";
 	$r=$db->query("select  * from A_CATEGORY where parrent_id=0 order by id asc;");$n=$db->num_rows($r);
@@ -1609,7 +1609,7 @@ function showPriceLvlListSelect($sel_id){$db=DbSingleton::getDb();$list="";
 	return $list;	
 }
 
-function getCashAbr($sel_id){$db=DbSingleton::getDb();$name="пїЅпїЅпїЅ";
+function getCashAbr($sel_id){$db=DbSingleton::getDb();$name="грн";
 	$r=$db->query("select abr from CASH where id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"abr");}
 	return $name;	
@@ -1662,18 +1662,18 @@ function showImportIncomeStrCSVform($income_id){$db=DbSingleton::getDb();$slave=
 	
 	
 	
-	$form=str_replace("{records_list}","<tr><td colspan=10 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>",$form);
-	$form=str_replace("{import_file_name}","пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ",$form);
+	$form=str_replace("{records_list}","<tr><td colspan=10 align='center'>Записи не завантажено</td></tr>",$form);
+	$form=str_replace("{import_file_name}","Оберіть файл",$form);
 	$form=str_replace("{income_id}",$income_id,$form);
 	$form=str_replace("{csv_str_file}",$pre_table,$form);
 	
 	
 	
-	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+	return array($form,"Імпорт вхідного інвойсу");
 }
 
 
-function showCsvPreview($income_id){$db=DbSingleton::getDb();$slave=new slave; $csv_exist=0;$csv_file_name="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ";$pre_table="<h3 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";
+function showCsvPreview($income_id){$db=DbSingleton::getDb();$slave=new slave; $csv_exist=0;$csv_file_name="Оберіть файл";$pre_table="<h3 align='center'>Записи відсутні</h3>";
 	$r=$db->query("select * from J_INCOME_CSV where income_id='$income_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$file_name=$db->result($r,0,"file_name");
@@ -1695,7 +1695,7 @@ function showCsvPreview($income_id){$db=DbSingleton::getDb();$slave=new slave; $
 						for ($i=1;$i<=$kol_cols;$i++){
 							if ($i==1){$row="<td>$fn</td>";}
 							$row.="<td>".trim($buf[$i-1])."</td>";
-							if ($ex_cols==1){$cols_list.="<th><select id=\"clm-$i\" size='1'><option value='0'>-</option><option value='1'>пїЅпїЅпїЅпїЅпїЅпїЅ</option><option value='2'>пїЅпїЅпїЅпїЅпїЅ</option><option value='3'>пїЅпїЅпїЅпїЅпїЅ</option><option value='4'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ</option><option value='5'>КіпїЅпїЅпїЅпїЅпїЅпїЅ</option><option value='6'>ЦіпїЅпїЅ</option><option value='7'>пїЅпїЅпїЅпїЅ</option></select></th>";}
+							if ($ex_cols==1){$cols_list.="<th><select id=\"clm-$i\" size='1'><option value='0'>-</option><option value='1'>Індекс</option><option value='2'>Бренд</option><option value='3'>Країна</option><option value='4'>Митний код</option><option value='5'>Кількість</option><option value='6'>Ціна</option><option value='7'>Вага</option></select></th>";}
 						}if ($row!=""){
 							$records_list.="<tr>$row</tr>";
 						}
@@ -1714,7 +1714,7 @@ function showCsvPreview($income_id){$db=DbSingleton::getDb();$slave=new slave; $
 	return array($csv_exist,$csv_file_name,$pre_table);
 }
 
-function finishCsvImport($income_id,$start_row,$kol_cols,$cols){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function finishCsvImport($income_id,$start_row,$kol_cols,$cols){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$income_id=$slave->qq($income_id);$start_row=$slave->qq($start_row);$kol_cols=$slave->qq($kol_cols);$cols=$slave->qq($cols);
 	if ($income_id>0){
 		$r=$db->query("select * from J_INCOME_CSV where income_id='$income_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1803,7 +1803,7 @@ function getBrandId($code){$db=DbSingleton::getTokoDb();$slave=new slave;$id=0; 
 }
 
 
-function saveIncomeConditions($income_id,$cash_id,$country_cash_id,$price_lvl,$payment_delay,$credit_limit,$credit_cash_id,$credit_return){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveIncomeConditions($income_id,$cash_id,$country_cash_id,$price_lvl,$payment_delay,$credit_limit,$credit_cash_id,$credit_return){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 
 	$income_id=$slave->qq($income_id);$cash_id=$slave->qq($cash_id);$country_cash_id=$slave->qq($country_cash_id);$price_lvl=$slave->qq($price_lvl);$payment_delay=$slave->qq($payment_delay);$credit_limit=$slave->qq($slave->point_valid($credit_limit));$credit_cash_id=$slave->qq($credit_cash_id);$credit_return=$slave->qq($credit_return);
 	if ($income_id>0){
@@ -1856,7 +1856,7 @@ function loadIncomeDetails($income_id){$db=DbSingleton::getDb();$slave=new slave
 	return $form;
 }
 
-function saveIncomeDetails($income_id,$address_jur,$address_fakt,$edrpou,$svidotctvo,$vytjag,$vat,$mfo,$bank,$account,$not_resident,$nr_details){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveIncomeDetails($income_id,$address_jur,$address_fakt,$edrpou,$svidotctvo,$vytjag,$vat,$mfo,$bank,$account,$not_resident,$nr_details){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 
 	$income_id=$slave->qq($income_id);$address_jur=$slave->qq($address_jur);$address_fakt=$slave->qq($address_fakt);$edrpou=$slave->qq($edrpou);$svidotctvo=$slave->qq($svidotctvo);$vytjag=$slave->qq($vytjag);$vat=$slave->qq($vat);$mfo=$slave->qq($mfo);$bank=$slave->qq($bank);$account=$slave->qq($account);$not_resident=$slave->qq($not_resident);$nr_details=$slave->qq($nr_details);
 	if ($income_id>0){
@@ -1881,7 +1881,7 @@ function showWorkPairForm($income_id){$db=DbSingleton::getDb();$list="";
 	}$list.="<input type='hidden' id='work_pair_n' value='".($n+3)."'>";
 	return $list;
 }
-function saveincomeLogistic($income_id,$index_pack,$height,$length,$width,$volume,$weight_netto,$weight_brutto,$necessary_amount_car,$units_id,$multiplicity_package,$shoulder_delivery,$general_quant,$work_pair){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveincomeLogistic($income_id,$index_pack,$height,$length,$width,$volume,$weight_netto,$weight_brutto,$necessary_amount_car,$units_id,$multiplicity_package,$shoulder_delivery,$general_quant,$work_pair){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$income_id=$slave->qq($income_id);$index_pack=$slave->qq($index_pack);$height=$slave->qq($slave->point_valid($height));$length=$slave->qq($slave->point_valid($length));$width=$slave->qq($slave->point_valid($width));$volume=$slave->qq($slave->point_valid($volume));$weight_netto=$slave->qq($slave->point_valid($weight_netto));$weight_brutto=$slave->qq($slave->point_valid($weight_brutto));$necessary_amount_car=$slave->qq($necessary_amount_car);$units_id=$slave->qq($units_id);
 	$multiplicity_package=$slave->qq($multiplicity_package);$shoulder_delivery=$slave->qq($shoulder_delivery);$general_quant=$slave->qq($general_quant);
 	if ($income_id>0){
@@ -1952,9 +1952,9 @@ function showCountryForm($id){$db=DbSingleton::getDb();$manual=new manual;$list=
 	$form=str_replace("{risk}",$risk,$form);
 	$form=str_replace("{risk_caption}",$manual->getManualMCaption("RISK",$risk),$form);
 	
-	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");	
+	return array($form,"Форма Країни походження");	
 }
-function saveincomeCountryForm($id,$name,$alfa2,$alfa3,$duty,$risk){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveincomeCountryForm($id,$name,$alfa2,$alfa3,$duty,$risk){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$id=$slave->qq($id);$name=$slave->qq($name);$alfa2=$slave->qq($alfa2);$alfa3=$slave->qq($alfa3);$duty=$slave->qq($duty);$risk=$slave->qq($risk);
 	if ($id>0){
 		$r=$db->query("select * from `T2_COUNTRIES` where `COUNTRY_ID`='$id' limit 0,1;");$n=$db->num_rows($r);
@@ -2022,10 +2022,10 @@ function showCostumsForm($id){$db=DbSingleton::getDb();$manual=new manual;$list=
 	$form=str_replace("{type_declaration}",$type_declaration,$form);
 	$form=str_replace("{type_declaration_caption}",$manual->getManualMCaption("costums_type_declaration",$type_declaration),$form);
 	
-	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");	
+	return array($form,"Форма митного коду УКТЕЗД");	
 }
 
-function saveincomeCostumsForm($id,$name,$preferential_rate,$full_rate,$type_declaration,$sertification,$gos_standart){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveincomeCostumsForm($id,$name,$preferential_rate,$full_rate,$type_declaration,$sertification,$gos_standart){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$id=$slave->qq($id);$name=$slave->qq($name);$preferential_rate=$slave->qq($slave->point_valid($preferential_rate));$full_rate=$slave->qq($slave->point_valid($full_rate));$type_declaration=$slave->qq($type_declaration);$sertification=$slave->qq($sertification);$gos_standart=$slave->qq($gos_standart);
 	if ($id>0){
 		$r=$db->query("select * from `T2_COSTUMS` where `COSTUMS_ID`='$id' limit 0,1;");$n=$db->num_rows($r);
@@ -2065,7 +2065,7 @@ function loadArticleZED($income_id){$db=DbSingleton::getDb();$slave=new slave;se
 	
 	return $form;
 }
-function saveincomeZED($income_id,$country_id,$costums_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveincomeZED($income_id,$country_id,$costums_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$income_id=$slave->qq($income_id);$country_id=$slave->qq($country_id);$costums_id=$slave->qq($slave->point_valid($costums_id));
 	if ($income_id>0){
 		//T2_ZED UPDATE
@@ -2097,7 +2097,7 @@ function getCostumsName($costums_id) {$db=DbSingleton::getTokoDb();
 	return $costums_code;
 }
 	
-function saveArticleZed($art_id,$costums_id) {$db=DbSingleton::getTokoDb();$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveArticleZed($art_id,$costums_id) {$db=DbSingleton::getTokoDb();$answer=0;$err="Помилка збереження даних!";
 	if ($art_id>0){
 		$r=$db->query("select * from T2_ZED where ART_ID='$art_id' limit 1;"); $n=$db->num_rows($r);
 		if ($n==0) {

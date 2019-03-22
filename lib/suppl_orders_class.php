@@ -1,7 +1,7 @@
 <?php
 class suppl_orders{
 
-protected $prefix_new = 'пїЅпїЅ';
+protected $prefix_new = 'ДП';
 
 function getMediaUserName($user_id){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select name from media_users where id='$user_id' limit 0,1;");$n=$db->num_rows($r);
@@ -84,7 +84,7 @@ function showSupplOrder($so_id){$db=DbSingleton::getDb();$cat=new catalogue;$sla
 	$form_htm=RD."/tpl/suppl_orders_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$disabled="disabled"; 
 								
-	$r=$db->query("select j.*, CASH.name as cash_name, CONCAT(jd.prefix ,'-', jd.doc_nom,' пїЅпїЅ ', jd.time_stamp) as dp_name, tp.name as tpoint_name, c.name as suppl_name, cs.name as suppl_storage_name, mu.name as user_name, si.info as suppl_info, cl.name as client_name
+	$r=$db->query("select j.*, CASH.name as cash_name, CONCAT(jd.prefix ,'-', jd.doc_nom,' від ', jd.time_stamp) as dp_name, tp.name as tpoint_name, c.name as suppl_name, cs.name as suppl_storage_name, mu.name as user_name, si.info as suppl_info, cl.name as client_name
 	from J_DP_SUPPL_ORDER j
 	left outer join J_DP jd on jd.id=j.dp_id
 	left outer join CASH on CASH.id=j.cash_id
@@ -189,7 +189,7 @@ function getCashName($cash_id){$db=DbSingleton::getDb();$name="";
 	return $name;
 }
 
-function saveSupplOrder($so_id,$amount_order,$delivery_data_finish,$delivery_time_finish,$delivery_type_id,$suppl_order_status_id,$suppl_order_doc){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveSupplOrder($so_id,$amount_order,$delivery_data_finish,$delivery_time_finish,$delivery_type_id,$suppl_order_status_id,$suppl_order_doc){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$so_id=$slave->qq($so_id);
 	if ($so_id>0){
 		$amount_order=$slave->qq($amount_order);$delivery_data_finish=$slave->qq($delivery_data_finish);$delivery_time_finish=$slave->qq($delivery_time_finish);$delivery_type_id=$slave->qq($delivery_type_id);$suppl_order_status_id=$slave->qq($suppl_order_status_id);$suppl_order_doc=$slave->qq($suppl_order_doc);

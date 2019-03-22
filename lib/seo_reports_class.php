@@ -73,7 +73,7 @@ class seo_reports {
 		header('Content-Type: text/csv; charset=utf-8');
 		header('Content-Disposition: attachment; filename=export_reports.csv'); ob_clean();
 		$output = fopen('php://output', 'w');
-		fputcsv($output, array("пїЅпїЅпїЅпїЅпїЅпїЅпїЅ/пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅпїЅ"),$delimiter = ';');
+		fputcsv($output, array("Менежер/Вид документу","Продажі","Повернення","Сума"),$delimiter = ';');
 		$reports_array=$this->getSeoReportsData($date_start,$date_end,$managers,$cash_id,$client_status); 
 		foreach ($reports_array as $fields) {
 			fputcsv($output,$fields,$delimiter = ';');
@@ -174,7 +174,7 @@ class seo_reports {
 					if ($user_id==$user) {
 						if ($doc_type_id==$doc) {
 							if ($client_status) {
-								$kilk++; $list[$kilk]=array("пїЅлієпїЅпїЅ - ".$client_name,$summ,$summ_deb,$summ_all);
+								$kilk++; $list[$kilk]=array("Клієнт - ".$client_name,$summ,$summ_deb,$summ_all);
 							}
 						}
 					}

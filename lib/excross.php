@@ -4,7 +4,7 @@ function exportDocs($client_id,$date_start,$date_end) {
 	header('Content-Type: text/csv; charset=utf-8');
 	header('Content-Disposition: attachment; filename=export_documents.csv'); ob_clean();
 	$output = fopen('php://output', 'w');
-	fputcsv($output, array("пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ","пїЅпїЅпїЅ","пїЅпїЅпїЅпїЅпїЅпїЅ","пїЅ-пїЅпїЅпїЅ, пїЅпїЅ.","пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ","пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ"),$delimiter = ';');
+	fputcsv($output, array("Вид документа","Номер нашего документа","Дата нашего документа","Номер расходной поставщика","Дата расходной поставщика","Номер налоговой","Номер корректировки","Номер налоговой которую корректируем","Назва повна контрагента","ІПН","ЄДРПОУ","К-сть, шт.","Собівартість СБ","Сумма с ПДВ"),$delimiter = ';');
 	$income_array=exportIncome($client_id,$date_start,$date_end);
 	$sale_array=exportSaleInvoice($client_id,$date_start,$date_end);
 	$back_array=exportBackClients($client_id,$date_start,$date_end);
@@ -58,9 +58,9 @@ function exportBackClients($client_id,$date_start,$date_end) { $db=DbSingleton::
 		$tax_doc=$db->result($r,$i-1,"tax_doc");
 		$tax_type_id=$db->result($r,$i-1,"tax_type_id");
 		$tax_to_back_id=$db->result($r,$i-1,"tax_to_back_id"); $tax_to_back_id=getTaxInvo($tax_to_back_id);
-		$pre="пїЅпїЅ"; if ($tax_type_id==161) $pre="пїЅпїЅпїЅ";
+		$pre="НН"; if ($tax_type_id==161) $pre="КНН";
 		$tax_doc=$pre."-".$tax_doc;
-		$tax_to_back_id="пїЅпїЅ-".$tax_to_back_id;
+		$tax_to_back_id="НН-".$tax_to_back_id;
 		$summ_pdv=$db->result($r,$i-1,"summ");
 		list($summ,$amount)=getBackClientsStrSumm($id);
 	    $summ=number_format($summ, 2, '.', '');

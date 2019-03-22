@@ -29,7 +29,7 @@ function showClaimList() { $db=DbSingleton::getDb();
 }
 	
 function getClaimState($id) {
-	$id ? $cap="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ" : $cap="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+	$id ? $cap="Устанавливался" : $cap="Не устанавливался";
 	return $cap;
 }
 			

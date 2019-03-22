@@ -4,17 +4,15 @@ class unknown_numbers {
 	
 	function showSupplList() { $db=DbSingleton::getDb();
 		$r=$db->query("select cl.* from A_CLIENTS cl
-		left outer join A_CLIENTS_CATEGORY cc on cc.client_id=cl.id
-		left outer join A_CLIENTS_STORAGE cs on cs.client_id=cl.id
-		where cc.category_id=2 and cs.id>0 group by cs.client_id;"); $n=$db->num_rows($r);
-								
+			left outer join A_CLIENTS_CATEGORY cc on cc.client_id=cl.id
+			left outer join A_CLIENTS_STORAGE cs on cs.client_id=cl.id
+		where cc.category_id=2 and cs.id>0 group by cs.client_id;"); $n=$db->num_rows($r);						
 		for ($i=1;$i<=$n;$i++){
 			$suppl_id=$db->result($r,$i-1,"id");
 			$suppl_name=$db->result($r,$i-1,"name");
 			$list.="
 			<option value='$suppl_id'>$suppl_name</option>";
-		}
-			
+		}	
 		return $list;
 	}
 	
@@ -25,8 +23,7 @@ class unknown_numbers {
 	}
 	
 	function showNumbersList($suppl_id) { $db=DbSingleton::getTokoDb();					
-		$r=$db->query("select * from T2_SUPPL_IMPORT where status=1 and art_id=0 and suppl_id=$suppl_id group by suppl_index, brand;"); $n=$db->num_rows($r);
-							
+		$r=$db->query("select * from T2_SUPPL_IMPORT where status=1 and art_id=0 and suppl_id=$suppl_id group by suppl_index, brand;"); $n=$db->num_rows($r);				
 		for ($i=1;$i<=$n;$i++){
 			$suppl_id=$db->result($r,$i-1,"suppl_id");
 			$suppl_index=$db->result($r,$i-1,"suppl_index");
@@ -54,8 +51,7 @@ class unknown_numbers {
 				<th>$return_delay</th>
 				<th>$warranty_info</th>
 			</tr>";
-		}
-								
+		}						
 		return $list;
 	}
 }

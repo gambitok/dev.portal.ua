@@ -29,7 +29,7 @@ function show_money_spend_list(){$db=DbSingleton::getDb();$slave=new slave;$gman
 		
 		$function="viewMoneySpend(\"$id\")";
 		$list.="<tr style='cursor:pointer' onClick='$function'>
-				<td align='center'>пїЅпїЅ-$id</td>
+				<td align='center'>ВГ-$id</td>
 				<td align='center'>$data</td>
 				<td align='center'>$cash_name</td>
 				<td align='center'>$summ</td>
@@ -121,7 +121,7 @@ function showPayBoxUserSelectList($user_id,$paybox_id){$db=DbSingleton::getDb();
 	return $list;
 }
 	
-function getPayboxUserCashSaldoList($paybox_id,$user_id){$db=DbSingleton::getDb(); $list="<option value=\"0\">--пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ--</option>";
+function getPayboxUserCashSaldoList($paybox_id,$user_id){$db=DbSingleton::getDb(); $list="<option value=\"0\">--Оберіть зі списку--</option>";
 	if ($user_id>0 || $paybox_id>0 ){
 		$r=$db->query("select pb.* from B_PAYBOX_BALANS pb where pb.user_id='$user_id' and pb.paybox_id='$paybox_id' order by pb.cash_id asc;");$n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
@@ -133,7 +133,7 @@ function getPayboxUserCashSaldoList($paybox_id,$user_id){$db=DbSingleton::getDb(
 	}
 	return $list;
 }
-function getPayboxResiverList($paybox_id,$balans_id_from, $user_id){$db=DbSingleton::getDb(); $list="<option value=\"0\">--пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ--</option>";
+function getPayboxResiverList($paybox_id,$balans_id_from, $user_id){$db=DbSingleton::getDb(); $list="<option value=\"0\">--Оберіть зі списку--</option>";
 	$paybox_type_id=$this->getPayBoxType($paybox_id);
 	$r=$db->query("select pb.* from PAY_BOX pb left outer join PAY_BOX_WORKERS pbw on pbw.paybox_id=pb.id where pbw.worker_id!='$user_id' and pb.doc_type_id='$paybox_type_id' and pbw.status=1 and pb.status=1 and pb.in_use=1 group by pb.id order by pb.name asc;");
 	$n=$db->num_rows($r);
@@ -144,7 +144,7 @@ function getPayboxResiverList($paybox_id,$balans_id_from, $user_id){$db=DbSingle
 	}
 	return $list;
 }
-function getPayboxManagerList($paybox_id,$balans_id_from){$db=DbSingleton::getDb(); $list="<option value=\"0\">--пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ--</option>";
+function getPayboxManagerList($paybox_id,$balans_id_from){$db=DbSingleton::getDb(); $list="<option value=\"0\">--Оберіть зі списку--</option>";
 	$paybox_type_id=$this->getPayBoxType($paybox_id);
 	$r=$db->query("select pbw.* from PAY_BOX pb left outer join PAY_BOX_WORKERS pbw on pbw.paybox_id=pb.id where  pb.doc_type_id='$paybox_type_id' and pbw.status=1 and pb.status=1 and pb.in_use=1 group by pb.id order by pb.name asc;");
 	$n=$db->num_rows($r);
@@ -203,12 +203,12 @@ function getPayBoxUserBalansById($id){$db=DbSingleton::getDb(); $saldo=$cash_id=
 	return array($saldo,$cash_id,$user_id_from);
 }
 	
-function saveMoneySpend($paybox_id_from,$balans_id_from,$spend_type_id,$summ,$comment){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveMoneySpend($paybox_id_from,$balans_id_from,$spend_type_id,$summ,$comment){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$paybox_id_from=$slave->qq($paybox_id_from);$spend_type_id=$slave->qq($spend_type_id);$comment=$slave->qq($comment);
 	$balans_id_from=$slave->qq($balans_id_from);$summ=$slave->qq($summ);
 	if ($paybox_id_from>0 && $spend_type_id>0 && $balans_id_from>0 && $summ>=0){
 		list($current_balans_summ,$cash_id,$user_id_from)=$this->getPayBoxUserBalansById($balans_id_from);
-		if ($summ>$current_balans_summ){ $answer=0;$err="пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ!"; }
+		if ($summ>$current_balans_summ){ $answer=0;$err="Сума видачы вже більша за наявну у касі!"; }
 		if ($summ<=$current_balans_summ){
 			$r=$db->query("select max(id) as mid from J_MONEY_SPEND;"); $spend_id=$db->result($r,0,"mid")+1;
 			$db->query("insert into J_MONEY_SPEND (`id`,`paybox_id_from`,`user_id_from`,`spend_type_id`,`cash_id`,`summ`,`comment`) value ('$spend_id','$paybox_id_from','$user_id_from','$spend_type_id','$cash_id','$summ','$comment');");
@@ -275,11 +275,11 @@ function loadMoneySpendCDN($spend_id){$db=DbSingleton::getDb();$slave=new slave;
 			$list.=$block;
 			
 		}
-		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>Файли відсутні</h3>";}
 		return $list;
 }
 
-function moneySpendCDNDropFile($spend_id,$file_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function moneySpendCDNDropFile($spend_id,$file_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення файлу!";
 	
 	$spend_id=$slave->qq($spend_id);$file_id=$slave->qq($file_id);
 	if ($spend_id>0 && $file_id>0){

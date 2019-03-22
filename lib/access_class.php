@@ -18,11 +18,11 @@ class access {
 	
 	function show_access_deny($file){$db=DbSingleton::getDb(); $slave=new slave;$slave=new slave;$mdl=new module;$url=$mdl->get_file_url($file);
 		$form_htm=RD."/tpl/access_deny.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-		$message="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. <br><br><small>пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</small>";
-		$form=str_replace("{ModuleCaption}","пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ",$form);
+		$message="Доступ заборонено. <br><br><small>За додатковою інформацією зверніться до Адміністрації</small>";
+		$form=str_replace("{ModuleCaption}","Доступ обмежено",$form);
 		$form=str_replace("{OperationCaption}","",$form);
 		$form=str_replace("{message}",$message,$form);
-		$form=str_replace("{back_caption}","пїЅпїЅпїЅпїЅпїЅ",$form);
+		$form=str_replace("{back_caption}","Назад",$form);
 		$form=str_replace("{back_url}","/",$form);
 		return $form;
 	}

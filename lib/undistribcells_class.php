@@ -70,7 +70,7 @@ function showUndistribCellsCard($storage_cells_id,$income_id){$db=DbSingleton::g
 			<td>$article_nr_displ</td>
 			<td>$brand_name</td>
 			<td align='right'>$amount</td>
-			<td><button class='btn btn-sm btn-warning' onclick='showStorageCellSelectForm(\"$art_id\",\"$storage_id\",\"$income_id\",\"$amount\");'><i class='fa fa-delicious' title='пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ'></i></button></td>
+			<td><button class='btn btn-sm btn-warning' onclick='showStorageCellSelectForm(\"$art_id\",\"$storage_id\",\"$income_id\",\"$amount\");'><i class='fa fa-delicious' title='Переміщення у комірку'></i></button></td>
 		</tr>";
 	}
 	$form=str_replace("{art_list}",$list,$form);
@@ -119,7 +119,7 @@ function showStorageCellsSelectList($storage_id,$sel_id){$db=DbSingleton::getDb(
 	}
 	return $list;	
 }
-function saveUndistribCellsStorageCellForm($art_id,$income_id,$storage_id,$storage_cells_id,$amount){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveUndistribCellsStorageCellForm($art_id,$income_id,$storage_id,$storage_cells_id,$amount){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$art_id=$slave->qq($art_id);$income_id=$slave->qq($income_id);$storage_id=$slave->qq($storage_id);$storage_cells_id=$slave->qq($storage_cells_id);$amount=$slave->qq($amount);
 	if ($art_id>0 && $income_id>0 && $storage_id>0 && $storage_cells_id>0 && $amount>0){
 		
@@ -135,13 +135,13 @@ function saveUndistribCellsStorageCellForm($art_id,$income_id,$storage_id,$stora
 				if ($new_amount==0){
 					$db->query("delete from T2_ARTICLES_STRORAGE_CELLS where  `ART_ID`='$art_id' and `INCOME_ID`='$income_id' and `STORAGE_ID`='$storage_id' and `STORAGE_CELLS_ID`='$doc_storage_cells_id';");$op=1;
 				}
-				if ($new_amount<0){ $answer=0;$err="КіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";}
+				if ($new_amount<0){ $answer=0;$err="Кількість переміщеного товару перевищує фактичну наявну!";}
 				if ($op==1){
 					$db->query("insert into T2_ARTICLES_STRORAGE_CELLS (`ART_ID`,`AMOUNT`,`INCOME_ID`,`STORAGE_ID`,`STORAGE_CELLS_ID`) values ('$art_id','$amount','$income_id','$storage_id','$storage_cells_id');");
 				}
 			}
 			if ($doc_storage_cells_id==$storage_cells_id){
-				 $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";
+				 $answer=0;$err="Оберіть комірку для переміщення товару відмінну від поточної!";
 			}
 		}
 		$answer=1;$err="";
@@ -168,9 +168,9 @@ function showCountryForm($id){$db=DbSingleton::getDb();$manual=new manual;$list=
 	$form=str_replace("{risk}",$risk,$form);
 	$form=str_replace("{risk_caption}",$manual->getManualMCaption("RISK",$risk),$form);
 	
-	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");	
+	return array($form,"Форма Країни походження");	
 }
-function saveundistribcellsCountryForm($id,$name,$alfa2,$alfa3,$duty,$risk){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveundistribcellsCountryForm($id,$name,$alfa2,$alfa3,$duty,$risk){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$id=$slave->qq($id);$name=$slave->qq($name);$alfa2=$slave->qq($alfa2);$alfa3=$slave->qq($alfa3);$duty=$slave->qq($duty);$risk=$slave->qq($risk);
 	if ($id>0){
 		$r=$db->query("select * from `T2_COUNTRIES` where `COUNTRY_ID`='$id' limit 0,1;");$n=$db->num_rows($r);
@@ -238,10 +238,10 @@ function showCostumsForm($id){$db=DbSingleton::getDb();$manual=new manual;$list=
 	$form=str_replace("{type_declaration}",$type_declaration,$form);
 	$form=str_replace("{type_declaration_caption}",$manual->getManualMCaption("costums_type_declaration",$type_declaration),$form);
 	
-	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");	
+	return array($form,"Форма митного коду УКТЕЗД");	
 }
 
-function saveundistribcellsCostumsForm($id,$name,$preferential_rate,$full_rate,$type_declaration,$sertification,$gos_standart){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveundistribcellsCostumsForm($id,$name,$preferential_rate,$full_rate,$type_declaration,$sertification,$gos_standart){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$id=$slave->qq($id);$name=$slave->qq($name);$preferential_rate=$slave->qq($slave->point_valid($preferential_rate));$full_rate=$slave->qq($slave->point_valid($full_rate));$type_declaration=$slave->qq($type_declaration);$sertification=$slave->qq($sertification);$gos_standart=$slave->qq($gos_standart);
 	if ($id>0){
 		$r=$db->query("select * from `T2_COSTUMS` where `COSTUMS_ID`='$id' limit 0,1;");$n=$db->num_rows($r);
@@ -281,7 +281,7 @@ function loadArticleZED($undistribcells_id){$db=DbSingleton::getDb();$slave=new 
 	
 	return $form;
 }
-function saveundistribcellsZED($undistribcells_id,$country_id,$costums_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveundistribcellsZED($undistribcells_id,$country_id,$costums_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$undistribcells_id=$slave->qq($undistribcells_id);$country_id=$slave->qq($country_id);$costums_id=$slave->qq($slave->point_valid($costums_id));
 	if ($undistribcells_id>0){
 		//T2_ZED UPDATE

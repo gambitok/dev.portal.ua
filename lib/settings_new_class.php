@@ -78,7 +78,7 @@ class SettingsNewClass {
 		return $form;
   	}
 	
-	function saveContacts($contact_id,$title,$address,$schedule,$phone){ $db=DbSingleton::getTokoDb(); $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+	function saveContacts($contact_id,$title,$address,$schedule,$phone){ $db=DbSingleton::getTokoDb(); $answer=0;$err="Помилка збереження даних!";
 		if ($contact_id>0){
 			$db->query("update contacts_new set `title`='$title', `address`='$address', `schedule`='$schedule', `phone`='$phone' where `id`='$contact_id';");
 			$answer=1;$err="";
@@ -86,7 +86,7 @@ class SettingsNewClass {
 		return array($answer,$err);
 	}
 	
-	function dropContacts($contact_id) { $db=DbSingleton::getTokoDb(); $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+	function dropContacts($contact_id) { $db=DbSingleton::getTokoDb(); $answer=0;$err="Помилка збереження даних!";
 		if ($contact_id>0) {
 			$db->query("delete from contacts_new where id='$contact_id';");	
 			$answer=1;$err="";
@@ -160,7 +160,7 @@ class SettingsNewClass {
 		return $form;
   	}
 	
-	function saveLanguage($lang_id,$lang_var,$lang_ru,$lang_ua,$lang_eng){ $db=DbSingleton::getTokoDb(); $answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";										  
+	function saveLanguage($lang_id,$lang_var,$lang_ru,$lang_ua,$lang_eng){ $db=DbSingleton::getTokoDb(); $answer=0; $err="Помилка збереження даних!";										  
 		if ($lang_id>0){
 			$r=$db->query("select * from new_lang_wdv where lang_id=1 and wd=$lang_id;"); $n=$db->num_rows($r);
 				if ($n>0) $db->query("update new_lang_wdv set caption='$lang_ru' where lang_id=1 and wd=$lang_id;");
@@ -176,7 +176,7 @@ class SettingsNewClass {
 		return array($answer,$err);
 	}
 	
-	function dropLanguage($lang_id) { $db=DbSingleton::getTokoDb(); $answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+	function dropLanguage($lang_id) { $db=DbSingleton::getTokoDb(); $answer=0; $err="Помилка збереження даних!";
 		if ($lang_id>0) {
 			$db->query("delete from new_lang_wd where id='$lang_id';");	
 			$db->query("delete from new_lang_wdv where wd='$lang_id';");	
@@ -212,7 +212,7 @@ class SettingsNewClass {
 	//Contacts bottom===============================================================================================================
 	
 	function getStatusCaption($status) {
-		$status ? $status_cap="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ" : $status_cap="ВіпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+		$status ? $status_cap="Активний" : $status_cap="Відключений";
 		return $status_cap;
 	}
 	
@@ -301,7 +301,7 @@ class SettingsNewClass {
 		return $form;
   	}
 	
-	function saveContactsBot($contact_id,$text,$icon,$link,$status){ $db=DbSingleton::getTokoDb(); $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+	function saveContactsBot($contact_id,$text,$icon,$link,$status){ $db=DbSingleton::getTokoDb(); $answer=0;$err="Помилка збереження даних!";
 		if ($contact_id>0){
 			$db->query("update contacts_bottom_new set `text`='$text', `icon`='$icon', `link`='$link', `status`='$status' where `id`='$contact_id';");
 			$answer=1;$err="";
@@ -309,7 +309,7 @@ class SettingsNewClass {
 		return array($answer,$err);
 	}
 	
-	function dropContactsBot($contact_id) { $db=DbSingleton::getTokoDb(); $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+	function dropContactsBot($contact_id) { $db=DbSingleton::getTokoDb(); $answer=0;$err="Помилка збереження даних!";
 		if ($contact_id>0) {
 			$db->query("delete from contacts_bottom_new where id='$contact_id';");	
 			$answer=1;$err="";
@@ -408,7 +408,7 @@ class SettingsNewClass {
 		return $form;
   	}
 	
-	function saveNews($news_id,$caption,$data,$short,$descr,$status){ $db=DbSingleton::getTokoDb(); $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+	function saveNews($news_id,$caption,$data,$short,$descr,$status){ $db=DbSingleton::getTokoDb(); $answer=0;$err="Помилка збереження даних!";
 		if ($news_id>0){
 			$db->query("update news set `caption`='$caption', `data`='$data', `short_desc`='$short', `desc`='$descr', `status`='$status' where `id`='$news_id';");
 			$answer=1;$err="";
@@ -416,7 +416,7 @@ class SettingsNewClass {
 		return array($answer,$err);
 	}
 	
-	function dropNews($news_id) { $db=DbSingleton::getTokoDb(); $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+	function dropNews($news_id) { $db=DbSingleton::getTokoDb(); $answer=0;$err="Помилка збереження даних!";
 		if ($news_id>0) {
 			$db->query("delete from news where id='$news_id';");	
 			$answer=1;$err="";
@@ -437,12 +437,12 @@ class SettingsNewClass {
 			$block=str_replace("{link}",$link,$block);
 			$list.=$block;
 		}
-		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>Зображення відсутнє</h3>";}
 		return $list;
 	}
 	
 	function deleteNewsLogo($news_id) { $db=DbSingleton::getTokoDb(); 
-		$answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+		$answer=0; $err="Помилка видалення даних!";
 		if ($news_id>0){
 			$db->query("delete from news_galery where cat='$news_id';");
 			$answer=1;$err="";

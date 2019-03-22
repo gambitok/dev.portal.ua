@@ -27,7 +27,7 @@ class media_users {
 						$db->query("delete from media_users_cookies where `user_id`='$media_user_id';");
 						$db->query("insert into media_users_cookies (`user_id`,`cookie`,`data_to`) values ('$media_user_id','$key','$data_to');");
 					}
-				} else $answer="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!\n\tпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
+				} else $answer="Помилка авторизації!\n\tНе надано доступ.";
 			}
 									   
 			if ($n==0 && $phone=="+380671662125" && $pass=="audit"){
@@ -46,7 +46,7 @@ class media_users {
 				}
 			}
 									   
-			if ($n==0) {$this->addJournalAuth(0,"3");session_start();session_unset();session_destroy(); $answer="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!\n\tпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+			if ($n==0) {$this->addJournalAuth(0,"3");session_start();session_unset();session_destroy(); $answer="Помилка авторизації!\n\tКористувача не знайдено.";}
 		}
 		return $answer;
 	}

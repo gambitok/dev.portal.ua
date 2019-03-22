@@ -27,8 +27,8 @@ require_once RD.'/lib/money_move_class.php';$money_move=new money_move;
 require_once RD.'/lib/money_spend_class.php';$money_spend=new money_spend;
 require_once RD.'/lib/suppl_orders_class.php';$suppl_orders=new suppl_orders;
 require_once RD.'/lib/report_margin_class.php';$report_margin=new report_margin;
-
 require_once (RD."/js/JsHttpRequest/JsHttpRequest.php");
+
 $JsHttpRequest = new JsHttpRequest("windows-1251");
 session_start();
 
@@ -473,7 +473,7 @@ if ($_REQUEST["w"]=="showUsersCard"){ $GLOBALS['_RESULT'] = array("content"=>$us
 if ($_REQUEST["w"]=="saveUsersGeneralInfo"){ list($answer,$err)=$users->saveUsersGeneralInfo($_REQUEST["users_id"],$_REQUEST["name"],$_REQUEST["post"],$_REQUEST["tpoint_id"],$_REQUEST["role_id"],$_REQUEST["phone2"],$_REQUEST["login"],$_REQUEST["pass"],$_REQUEST["status"],$_REQUEST["email"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 if ($_REQUEST["w"]=="loadUsersAccess"){ $GLOBALS['_RESULT'] = array("content"=>$users->loadUsersAccess($_REQUEST["users_id"]));}
 if ($_REQUEST["w"]=="loadUsersAccessCredit"){ $GLOBALS['_RESULT'] = array("content"=>$users->loadUsersAccessCredit($_REQUEST["users_id"]));}
-if ($_REQUEST["w"]=="clearUsersAcï¿½ess"){ list($answer,$err)=$users->clearUsersAcï¿½ess($_REQUEST["users_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+if ($_REQUEST["w"]=="clearUsersAcñess"){ list($answer,$err)=$users->clearUsersAcñess($_REQUEST["users_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 if ($_REQUEST["w"]=="showUsersAccessItemForm"){ $GLOBALS['_RESULT'] = array("content"=>$users->showUsersAccessItemForm($_REQUEST["users_id"],$_REQUEST["mf_id"]));}
 if ($_REQUEST["w"]=="saveUsersAccessItemForm"){ list($answer,$err)=$users->saveUsersAccessItemForm($_REQUEST["users_id"],$_REQUEST["mf_id"],$_REQUEST["lvl_id"],$_REQUEST["file_access"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 	

@@ -1,21 +1,21 @@
 <?php
 class dp{
 
-protected $prefix_new = 'пїЅпїЅ';
+protected $prefix_new = 'ДП';
 
 function getMediaUserName($user_id){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select name from media_users where id='$user_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"name");}
 	return $name;
 }
-function get_doc_prefix($client_id,$prefix_id){ $db=DbSingleton::getDb();$prefix="пїЅпїЅ-";
+function get_doc_prefix($client_id,$prefix_id){ $db=DbSingleton::getDb();$prefix="Дф-";
 	$r=$db->query("select prefix from A_CLIENTS_DOCUMENT_PREFIX where client_id='$client_id' and id='$prefix_id' and status='1' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$prefix=$db->result($r,0,"prefix");}
 	return $prefix; 
 }
-function get_dp_prefix($dp_id){ $db=DbSingleton::getDb();$prefix="пїЅпїЅ";
+function get_dp_prefix($dp_id){ $db=DbSingleton::getDb();$prefix="ПР";
 	$r=$db->query("select type_id from J_DP where id='$dp_id' limit 0,1;");$n=$db->num_rows($r);
-	if ($n==1){$type_id=$db->result($r,0,"type_id"); if ($type_id==0){$prefix="пїЅ-пїЅпїЅ";}}
+	if ($n==1){$type_id=$db->result($r,0,"type_id"); if ($type_id==0){$prefix="В-ПР";}}
 	return $prefix; 
 }
 function get_doc_client_prefix($client_id){ $db=DbSingleton::getDb();$prefix_id=0;$doc_type_id=40;
@@ -152,7 +152,7 @@ function showDpCard($dp_id){$db=DbSingleton::getDb();$slave=new slave;$manual=ne
 			$form_htm=RD."/tpl/dp_use_deny.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 			$form=str_replace("{user_name}",$this->getMediaUserName($user_use),$form);
 			$admin_unlock="";
-			if ($user_id==1 || $user_id==2){$admin_unlock="<button class='btn btn-sm btn-warning' onClick='unlockDpCard(\"$dp_id\");'><i class='fa fa-unlock'></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</button>";}
+			if ($user_id==1 || $user_id==2){$admin_unlock="<button class='btn btn-sm btn-warning' onClick='unlockDpCard(\"$dp_id\");'><i class='fa fa-unlock'></i> Розблокувати</button>";}
 			$form=str_replace("{admin_unlock}",$admin_unlock,$form);
 		}
 		if ($user_id==$user_use || $user_use==0){
@@ -162,7 +162,7 @@ function showDpCard($dp_id){$db=DbSingleton::getDb();$slave=new slave;$manual=ne
 			
 			
 			
-			$type_id=$db->result($r,0,"type_id");if ($type_id==1){$type_name="МіпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";}
+			$type_id=$db->result($r,0,"type_id");if ($type_id==1){$type_name="Між складами";}
 			$tpoint_id=$db->result($r,0,"tpoint_id"); $tpoint_name=$this->getTpointName($tpoint_id);
 			$client_id=$db->result($r,0,"client_id");$client_name=$this->getClientName($client_id);
 			$client_conto_id=$db->result($r,0,"client_conto_id");$client_conto_list=$this->getClientContoSelectList($client_id,$client_conto_id);
@@ -309,12 +309,12 @@ function clearDpStr($dp_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb
 			$db->query("update J_DP set summ=0 where id='$dp_id' limit 1;");
 			//???
 			$answer=1;$err="";
-		} else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+		} else {$answer=0;$err="Документ заблоковано. Зміни вносити заборонено.";}
 	}
 	return array($answer,$err);
 }
 
-function setDpClient($dp_id,$client_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function setDpClient($dp_id,$client_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
 	$dp_id=$slave->qq($dp_id);$client_id=$slave->qq($client_id);
 	if ($dp_id>0 && $client_id>0){
 		$db->query("update J_DP set `client_id`='$client_id',`client_conto_id`='$client_id' where `id`='$dp_id';");
@@ -370,7 +370,7 @@ function showDpClientList($sel_id){$db=DbSingleton::getDb();$slave=new slave;
 }
 
 
-function unlinkDpClient($dp_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function unlinkDpClient($dp_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
 	$dp_id=$slave->qq($dp_id);
 	if ($dp_id>0){
 		$db->query("update J_DP set `client_id`='0' where `id`='$dp_id';");
@@ -417,7 +417,7 @@ function showDpTpointList($sel_id){$db=DbSingleton::getDb();$slave=new slave;
 	return $form;
 }
 
-function unlinkDpTpoint($dp_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function unlinkDpTpoint($dp_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
 	$dp_id=$slave->qq($dp_id);
 	if ($dp_id>0){
 		$db->query("update J_DP set `tpoint_id`='0' where `id`='$dp_id';");
@@ -534,7 +534,7 @@ function showDpStrList($dp_id,$status_dp,$client_id,$cash_id,$usd_to_uah,$euro_t
 				<td>$i<input type='hidden' id='idStr_$i' value='$id'></td>
 				<td style='min-width:140px;'><input type='hidden' id='artIdStr_$i' value='$art_id'>
 					<div class='input-group'>
-						<input class='form-control input-xs' type='text' readonly id='article_nr_displStr_$i' value='$article_nr_displ' placeholder='пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ'>
+						<input class='form-control input-xs' type='text' readonly id='article_nr_displStr_$i' value='$article_nr_displ' placeholder='Індекс товару'>
 						<span class='input-group-btn'> 
 							<button type='button' class='btn btn-xs btn-info $disabled' $disabled onClick=\"showArticleSearchDocumentForm('$i','$art_id','$brand_id','$article_nr_displ','dp','$dp_id');\"><i class=\"fa fa-bars\"></i></button>
 						</span>
@@ -542,7 +542,7 @@ function showDpStrList($dp_id,$status_dp,$client_id,$cash_id,$usd_to_uah,$euro_t
 					<span class='hidden'>$article_nr_displ</span>
 				</td>
 				<td style='min-width:100px;'><input type='hidden' id='brandIdStr_$i' value='$brand_id'>
-					<input class='form-control input-xs' type='text' readonly id='brandNameStr_$i' value='$brand_name' placeholder='пїЅпїЅпїЅпїЅпїЅ'>
+					<input class='form-control input-xs' type='text' readonly id='brandNameStr_$i' value='$brand_name' placeholder='Бренд'>
 					<span class='hidden'>$brand_name</span>
 				</td>
 				<td>
@@ -608,7 +608,7 @@ function showDpStrList($dp_id,$status_dp,$client_id,$cash_id,$usd_to_uah,$euro_t
 				<td>nom_i<input type='hidden' id='idStr_0' value=''></td>
 				<td style='min-width:140px;'><input type='hidden' id='artIdStr_0' value=''>
 					<div class='input-group'>
-						<input class='form-control input-xs' type='text' readonly id='article_nr_displStr_0' value='' placeholder='пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ'>
+						<input class='form-control input-xs' type='text' readonly id='article_nr_displStr_0' value='' placeholder='Індекс товару'>
 						<span class='input-group-btn'> 
 	
 							<button type='button' class='btn btn-xs btn-info' onClick=\"showArticleSearchDocumentForm('i_0','0','0','','dp','$dp_id');\"><i class=\"fa fa-bars\"></i></button>
@@ -616,7 +616,7 @@ function showDpStrList($dp_id,$status_dp,$client_id,$cash_id,$usd_to_uah,$euro_t
 					</div>
 				</td>
 				<td style='min-width:120px;'><input type='hidden' id='brandIdStr_0' value=''>
-					<input class='form-control input-xs' type='text' readonly id='brandNameStr_0' value='' placeholder='пїЅпїЅпїЅпїЅпїЅ'>
+					<input class='form-control input-xs' type='text' readonly id='brandNameStr_0' value='' placeholder='Бренд'>
 				</td>
 				<td>
 					<input type='text' id='amountStr_0' value='' readonly class='form-control input-xs numberOnly' autocomplete='off' maxlength=''  min='1' max=''>
@@ -650,7 +650,7 @@ function showDpStrList($dp_id,$status_dp,$client_id,$cash_id,$usd_to_uah,$euro_t
 	return array($list,$kl_rw);
 }
 
-function saveDpCard($dp_id,$data_pay,$cash_id,$dp_summ,$doc_type_id,$tpoint_id,$client_id,$client_conto_id,$delivery_type_id,$carrier_id,$delivery_address){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveDpCard($dp_id,$data_pay,$cash_id,$dp_summ,$doc_type_id,$tpoint_id,$client_id,$client_conto_id,$delivery_type_id,$carrier_id,$delivery_address){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 
 	$dp_id=$slave->qq($dp_id);$data_pay=$slave->qq($data_pay);$cash_id=$slave->qq($cash_id);$dp_summ=$slave->qq($dp_summ);$doc_type_id=$slave->qq($doc_type_id);$tpoint_id=$slave->qq($tpoint_id);$client_id=$slave->qq($client_id);$client_conto_id=$slave->qq($client_conto_id);$delivery_type_id=$slave->qq($delivery_type_id);$carrier_id=$slave->qq($carrier_id);$delivery_address=$slave->qq($delivery_address);
 	if ($dp_id==0 || $dp_id==""){
@@ -664,7 +664,7 @@ function saveDpCard($dp_id,$data_pay,$cash_id,$dp_summ,$doc_type_id,$tpoint_id,$
 	return array($answer,$err);
 }
 
-function saveDpCardData($dp_id,$cash_id,$frm,$tto,$idStr,$artIdStr,$article_nr_displStr,$brandIdStr,$amountStr,$priceStr,$priceEndStr,$discountStr,$summStr){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveDpCardData($dp_id,$cash_id,$frm,$tto,$idStr,$artIdStr,$article_nr_displStr,$brandIdStr,$amountStr,$priceStr,$priceEndStr,$discountStr,$summStr){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$dp_id=$slave->qq($dp_id);$frm=$slave->qq($frm);$tto=$slave->qq($tto);$cash_id=$slave->qq($cash_id);
 	if ($dp_id>0){
 		
@@ -690,7 +690,7 @@ function saveDpCardData($dp_id,$cash_id,$frm,$tto,$idStr,$artIdStr,$article_nr_d
 }
 
 
-function updateDpStrPrice($dp_id,$str_id,$discount_new,$cash_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function updateDpStrPrice($dp_id,$str_id,$discount_new,$cash_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$dp_id=$slave->qq($dp_id);$str_id=$slave->qq($str_id);$cash_id=$slave->qq($cash_id);
 	if ($dp_id>0 && $str_id>0 && $discount_new!=""){
 		$discount_new=$slave->qq($discount_new);//$price_end=$slave->qq($price_end);$summ=$slave->qq($summ);
@@ -713,7 +713,7 @@ function updateDpStrPrice($dp_id,$str_id,$discount_new,$cash_id){$db=DbSingleton
 	return array($answer,$err);
 }
 
-function setArticleToDp($dp_id,$tpoint_id,$artIdStr,$article_nr_displStr,$brandIdStr,$storageIdStr,$amountStr){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function setArticleToDp($dp_id,$tpoint_id,$artIdStr,$article_nr_displStr,$brandIdStr,$storageIdStr,$amountStr){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$dp_id=$slave->qq($dp_id);$tpoint_id=$slave->qq($tpoint_id);
 	if ($dp_id>0){
 		$artIdS=$slave->qq($artIdStr);$article_nr_displS=$slave->qq($article_nr_displStr);$brandIdS=$slave->qq($brandIdStr);$amountS=$slave->qq($amountStr);$storageIdS=$slave->qq($storageIdStr);
@@ -726,7 +726,7 @@ function setArticleToDp($dp_id,$tpoint_id,$artIdStr,$article_nr_displStr,$brandI
 		}
 		list($info,$max_moving,$rest_amount)=$this->showArticleRestStorageSelectText($artIdS,$storageIdS,$amountS,$amountEx);
 		
-		if ($amountS>$max_moving && $rest_amount<=0){$answer=0;$err="КіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ! (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $max_moving)";}
+		if ($amountS>$max_moving && $rest_amount<=0){$answer=0;$err="Кількість для переміщення ВЖЕ більша за залишок! (максимально: $max_moving)";}
 		if ($amountS<=$max_moving){
 			$no_unreserv=1;$can_drop=0;
 			if ($idS=="" || $idS==0){
@@ -759,7 +759,7 @@ function setArticleToDp($dp_id,$tpoint_id,$artIdStr,$article_nr_displStr,$brandI
 						list($empty_kol,$label_empty)=$this->labelArtEmptyCount($dp_id,$empty_kol);
 						$answer=1;$err="";
 					}else{
-						$answer=0;$err="ЦіпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+						$answer=0;$err="Ціна товару не визначена. Зверніться до відповідального менеджера";
 						if ($can_drop==1){
 							$db->query("delete from J_DP_STR where `id`='$idS' and `dp_id`='$dp_id' limit 1;");
 						}
@@ -767,12 +767,12 @@ function setArticleToDp($dp_id,$tpoint_id,$artIdStr,$article_nr_displStr,$brandI
 				}
 			}
 		}
-		//if ($answer==0){$err="КіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!3";}
+		//if ($answer==0){$err="Кількість для переміщення ВЖЕ БІЛЬША ЗА ЗАЛИШОК!3";}
 	}
 	return array($answer,$err,$idS,$weight,$volume,$empty_kol,$label_empty,$dp_summ);
 }
 
-function setArticleSupplToDp($dp_id,$tpoint_id,$artIdStr,$article_nr_displStr,$brandIdStr,$supplIdStr,$supplStorageIdStr,$amountStr){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function setArticleSupplToDp($dp_id,$tpoint_id,$artIdStr,$article_nr_displStr,$brandIdStr,$supplIdStr,$supplStorageIdStr,$amountStr){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$dp_id=$slave->qq($dp_id);$tpoint_id=$slave->qq($tpoint_id);
 	if ($dp_id>0){
 		$artIdS=$slave->qq($artIdStr);$article_nr_displS=$slave->qq($article_nr_displStr);$brandIdS=$slave->qq($brandIdStr);$amountS=$slave->qq($amountStr);$supplIdS=$slave->qq($supplIdStr);$supplStorageIdS=$slave->qq($supplStorageIdStr);
@@ -785,7 +785,7 @@ function setArticleSupplToDp($dp_id,$tpoint_id,$artIdStr,$article_nr_displStr,$b
 		}
 //		list($info,$max_moving,$rest_amount)=$this->showArticleRestStorageSelectText($artIdS,$storageIdS,$amountS,$amountEx);
 		
-//		if ($amountS>$max_moving && $rest_amount<=0){$answer=0;$err="КіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ! (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $max_moving)";}
+//		if ($amountS>$max_moving && $rest_amount<=0){$answer=0;$err="Кількість для переміщення ВЖЕ більша за залишок! (максимально: $max_moving)";}
 //		if ($amountS<=$max_moving){
 			$no_unreserv=1;$can_drop=0;
 			if ($idS=="" || $idS==0){
@@ -810,7 +810,7 @@ function setArticleSupplToDp($dp_id,$tpoint_id,$artIdStr,$article_nr_displStr,$b
 						list($empty_kol,$label_empty)=$this->labelArtEmptyCount($dp_id,$empty_kol);
 						$answer=1;$err="";
 					}else{
-						$answer=0;$err="ЦіпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+						$answer=0;$err="Ціна товару не визначена. Зверніться до відповідального менеджера";
 						if ($can_drop==1){
 							$db->query("delete from J_DP_STR where `id`='$idS' and `dp_id`='$dp_id' limit 1;");
 						}
@@ -818,7 +818,7 @@ function setArticleSupplToDp($dp_id,$tpoint_id,$artIdStr,$article_nr_displStr,$b
 				}
 			}
 		//}
-		//if ($answer==0){$err="КіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!3";}
+		//if ($answer==0){$err="Кількість для переміщення ВЖЕ БІЛЬША ЗА ЗАЛИШОК!3";}
 	}
 	return array($answer,$err,$idS,$weight,$volume,$empty_kol,$label_empty,$dp_summ);
 }
@@ -842,17 +842,17 @@ function getCashName($cash_id){$db=DbSingleton::getDb();$name="";
 	return $name;
 }
 
-function getDpClientContoCash($client_id){$db=DbSingleton::getDb();$cash_id=1;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+function getDpClientContoCash($client_id){$db=DbSingleton::getDb();$cash_id=1;$answer=0;$err="Помилка";
 	$r=$db->query("select cash_id from A_CLIENTS_CONDITIONS where client_id ='$client_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$cash_id=$db->result($r,0,"cash_id");$answer=1;$err="";}
 	return array($answer,$err,$cash_id);
 }
-function getDpClientDocType($client_id){$db=DbSingleton::getDb();$doc_type_id=64;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+function getDpClientDocType($client_id){$db=DbSingleton::getDb();$doc_type_id=64;$answer=0;$err="Помилка";
 	$r=$db->query("select doc_type_id from A_CLIENTS_CONDITIONS where client_id ='$client_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$doc_type_id=$db->result($r,0,"doc_type_id");$answer=1;$err="";}
 	return array($answer,$err,$doc_type_id);
 }
-function getClientPaymentDelay($client_id){$db=DbSingleton::getDb();$data_pay=date("Y-m-d");$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+function getClientPaymentDelay($client_id){$db=DbSingleton::getDb();$data_pay=date("Y-m-d");$answer=0;$err="Помилка";
 	$r=$db->query("select * from A_CLIENTS_CONDITIONS where client_id='$client_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){	
 		$payment_delay=$db->result($r,0,"payment_delay");
@@ -863,7 +863,7 @@ function getClientPaymentDelay($client_id){$db=DbSingleton::getDb();$data_pay=da
 }
 
 
-function changeDpCash($dp_id,$cash_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function changeDpCash($dp_id,$cash_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$dp_id=$slave->qq($dp_id);$cash_id=$slave->qq($cash_id);
 	if ($dp_id>0){
 		$r=$db->query("select oper_status,client_conto_id from J_DP where id='$dp_id' limit 0,1;");$n=$db->num_rows($r);
@@ -877,8 +877,8 @@ function changeDpCash($dp_id,$cash_id){$db=DbSingleton::getDb();$dbt=DbSingleton
 					$db->query("update J_DP set cash_id='$cash_id' where id='$dp_id';");
 					$this->updateDpPriceCash($dp_id);
 					$answer=1;$err="";
-				}else{$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅлієпїЅпїЅпїЅ ".$this->getCashName($client_cash_id).". пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ ".$this->getCashName($cash_id);}
-			} else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+				}else{$answer=0;$err="Валюта розрахунку клієнта ".$this->getCashName($client_cash_id).". Змініть кінцевого платника на того кому дозволено розрахунок у валюті ".$this->getCashName($cash_id);}
+			} else {$answer=0;$err="Документ заблоковано. Зміни вносити заборонено.";}
 		}
 		
 	}
@@ -987,7 +987,7 @@ function getArticleSupplPrice($art_id,$dp_id,$suppl_id,$suppl_storage_id){$db=Db
 }
 
 
-function changeArticleToDp($dp_id,$dp_str_id,$amount_change){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function changeArticleToDp($dp_id,$dp_str_id,$amount_change){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$dp_id=$slave->qq($dp_id);
 	if ($dp_id>0){
 		$dp_str_id=$slave->qq($dp_str_id);$amount_change=$slave->qq($amount_change);
@@ -1014,7 +1014,7 @@ function changeArticleToDp($dp_id,$dp_str_id,$amount_change){$db=DbSingleton::ge
 	return array($answer,$err,$weight,$volume);
 }
 
-function dropDpStr($dp_id,$dp_str_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+function dropDpStr($dp_id,$dp_str_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка індексу";
 	$dp_id=$slave->qq($dp_id);
 	$r=$db->query("select oper_status,status from J_DP where id='$dp_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -1056,9 +1056,9 @@ function dropDpStr($dp_id,$dp_str_id){$db=DbSingleton::getDb();$dbt=DbSingleton:
 							$answer=1;$err="";
 						}
 					}
-				}else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. ВіпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";}
+				}else {$answer=0;$err="Видалення заблоковано. Відбір передано в роботу.";}
 			}
-		}else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";}
+		}else {$answer=0;$err="Видалення заблоковано. Замовлення передано в роботу.";}
 	}
 	return array($answer,$err,$dp_summ);
 }
@@ -1112,7 +1112,7 @@ function makeDpCardFinish($dp_id){$db=DbSingleton::getDb();$slave=new slave;$cat
 		$oper_status=$db->result($r,0,"oper_status");
 		$storage_id=$db->result($r,0,"storage_id");
 		$storage_cells_id=$db->result($r,0,"storage_cells_id");
-		if ($storage_id==0 || $storage_cells_id==0){$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ \"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ\" пїЅпїЅпїЅ \"пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ\". пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";}
+		if ($storage_id==0 || $storage_cells_id==0){$answer=0;$err="Не вказано \"Склад зберігання\" або \"Комірка зберігання\". Накладну не проведено!";}
 		if ($storage_id>0 && $storage_cells_id>0){
 			if ($oper_status==30) {
 				$db->query("update J_INCOME set oper_status='31' where id='$dp_id';");
@@ -1135,7 +1135,7 @@ function makeDpCardFinish($dp_id){$db=DbSingleton::getDb();$slave=new slave;$cat
 				
 				/* 				end calculation dp  */
 	/*			$answer=1;$err="";
-			} else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+			} else {$answer=0;$err="Накладну заблоковано. Зміни вносити заборонено.";}
 		}
 	}*/
 	return array($answer,$err);
@@ -1152,7 +1152,7 @@ function showDpLocalAutoCellForm($dp_id,$storage_id_to){$db=DbSingleton::getDb()
 	return $form;
 }
 
-function saveDpLocalAutoCell($dp_id,$storage_id_to,$cell_id_from){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$catalogue=new catalogue;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";$kol_row=0;
+function saveDpLocalAutoCell($dp_id,$storage_id_to,$cell_id_from){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$catalogue=new catalogue;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";$kol_row=0;
 	$dp_id=$slave->qq($dp_id);$storage_id_to=$slave->qq($storage_id_to);$cell_id_from=$slave->qq($cell_id_from);
 	if ($dp_id>0 && $storage_id_to>0 && $cell_id_from>0){
 		$db->query("update J_DP set storage_id_to='$storage_id_to' where id='$dp_id';");
@@ -1205,7 +1205,7 @@ function saveDpLocalAutoCell($dp_id,$storage_id_to,$cell_id_from){$db=DbSingleto
 }
 
 
-function clearDpLocalAutoCellForm($dp_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+function clearDpLocalAutoCellForm($dp_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка індексу";
 	$dp_id=$slave->qq($dp_id);
 	$r=$db->query("select oper_status,status_dp from J_DP where id='$dp_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -1243,9 +1243,9 @@ function clearDpLocalAutoCellForm($dp_id){$db=DbSingleton::getDb();$dbt=DbSingle
 					$this->updatedpWeightVolume($dp_id);
 					$answer=1;$err="";
 
-				}else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. ВіпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";}
+				}else {$answer=0;$err="Видалення заблоковано. Відбір передано в роботу.";}
 			}
-		}else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";}
+		}else {$answer=0;$err="Видалення заблоковано. Переміщення передано в роботу.";}
 	}
 	return array($answer,$err);
 }
@@ -1390,7 +1390,7 @@ function showArticlesSearchDocumentList($art,$brand_id,$search_type,$dp_id,$tpoi
 	}
 //	print $query;
 	$r=$db->query($query);$n=$db->num_rows($r);$list="";$header_list="";
-	if ($list2==""){  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+	if ($list2==""){  // сработал внешний фильр или основной поиск с выбором бренда
 		$lst=array();
 		for ($i=1;$i<=$n;$i++){$amountRestNotTpoint="";$amountRestTpoint="";$price=0;$suppl_storage_code=0;
 			$art_id=$db->result($r,$i-1,"ART_ID");
@@ -1554,7 +1554,7 @@ function showArticleRestStorageSelectText($art_id,$storage_id,$input_amount,$amo
 		$amount=$db->result($r,$i-1,"AMOUNT");
 		$reserv_amount=$db->result($r,$i-1,"RESERV_AMOUNT");
 		$max_moving=$amount+$amountEx;
-		$info="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $amount | пїЅпїЅпїЅпїЅпїЅпїЅ: $reserv_amount<br>пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ: $cur_amount";
+		$info="Залишок: $amount | Резерв: $reserv_amount<br>У поточному записі: $cur_amount";
 	}
 	return array($info,$max_moving,$amount);
 }
@@ -1571,7 +1571,7 @@ function showArticleRestStorageCellSelectText($art_id,$dp_id,$cur_amount,$cell_i
 		$reserv_amount_storage+=$db->result($r,$i-1,"RESERV_AMOUNT_STORAGE");
 		if ($amount>$amount_storage){$amount=$amount_storage; $reserv_amount=$reserv_amount_storage;}
 		$max_moving=$amount+$cur_amount;
-		$info="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $amount | пїЅпїЅпїЅпїЅпїЅпїЅ: $reserv_amount<br>пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ: $cur_amount";
+		$info="Залишок: $amount | Резерв: $reserv_amount<br>У поточному записі: $cur_amount";
 	}
 	return array($info,$max_moving,$amount);
 }
@@ -1583,7 +1583,7 @@ function getDpTpoint($dp_id){$db=DbSingleton::getDb();$tpoint_id=0;
 }
 
 
-function getArticleTpointDeliveryInfo($tpoint_id,$art_id){$db=DbSingleton::getTokoDb();$slave=new slave; $info="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"; $week_day=date("N");$cur_time=date("H:i:s");
+function getArticleTpointDeliveryInfo($tpoint_id,$art_id){$db=DbSingleton::getTokoDb();$slave=new slave; $info="Не вказано"; $week_day=date("N");$cur_time=date("H:i:s");
 	$query="select dt.* from T_POINT_DELIVERY_TIME dt 
 					left outer join STORAGE s on s.id=dt.storage_id
 					left outer join T2_ARTICLES_STRORAGE t2as on t2as.STORAGE_ID=s.id
@@ -1597,13 +1597,13 @@ function getArticleTpointDeliveryInfo($tpoint_id,$art_id){$db=DbSingleton::getTo
 		$week=date('N', strtotime(' + '.$delivery_days.' days'));
 		$week_day_short=$slave->get_weekday_abr($week);
     	$date_del=date('d.m', strtotime(' + '.$delivery_days.' days'));
-		$info="$delivery_days - пїЅпїЅ. $date_del ($week_day_short)<br>пїЅ $time_from_del пїЅпїЅ $time_to_del";
+		$info="$delivery_days - дн. $date_del ($week_day_short)<br>з $time_from_del до $time_to_del";
 	}
 	return $info;
 }
 
 
-function getArticleTpointSupplDeliveryInfo($tpoint_id,$art_id){$db=DbSingleton::getTokoDb(); $slave=new slave; $info="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"; $week_day=date("N");$cur_time=date("H:i:s");
+function getArticleTpointSupplDeliveryInfo($tpoint_id,$art_id){$db=DbSingleton::getTokoDb(); $slave=new slave; $info="Не вказано"; $week_day=date("N");$cur_time=date("H:i:s");
 	$query="select dt.* from T_POINT_SUPPL_DELIVERY_TIME dt 
 				left outer join T2_SUPPL_IMPORT t2si on (t2si.suppl_id=dt.suppl_id and t2si.client_storage_id=dt.suppl_storage_id)
 				where dt.status='1' and dt.tpoint_id='$tpoint_id' and t2si.art_id='$art_id' and t2si.status=1 and dt.week_day='$week_day' and dt.time_from<='$cur_time' and dt.time_to>='$cur_time' and t2si.price_usd>0 order by dt.delivery_days limit 0,1;";
@@ -1616,11 +1616,11 @@ function getArticleTpointSupplDeliveryInfo($tpoint_id,$art_id){$db=DbSingleton::
 		$week=date('N', strtotime(' + '.$delivery_days.' days'));
 		$week_day_short=$slave->get_weekday_abr($week);
     	$date_del=date('d.m', strtotime(' + '.$delivery_days.' days'));
-		$info="$delivery_days - пїЅпїЅ. $date_del ($week_day_short)<br>пїЅ $time_from_del пїЅпїЅ $time_to_del";
+		$info="$delivery_days - дн. $date_del ($week_day_short)<br>з $time_from_del до $time_to_del";
 	}
 	return $info;
 }
-function getArticleTpointSupplPriceUsdDeliveryInfo($tpoint_id,$art_id){$db=DbSingleton::getTokoDb(); $price=0; $info="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"; $week_day=date("N");$cur_time=date("H:i:s");
+function getArticleTpointSupplPriceUsdDeliveryInfo($tpoint_id,$art_id){$db=DbSingleton::getTokoDb(); $price=0; $info="Не вказано"; $week_day=date("N");$cur_time=date("H:i:s");
 	$query="select t2si.price_usd,dt.* from T_POINT_SUPPL_DELIVERY_TIME dt 
 				left outer join T2_SUPPL_IMPORT t2si on (t2si.suppl_id=dt.suppl_id and t2si.client_storage_id=dt.suppl_storage_id)
 				where dt.status='1' and dt.tpoint_id='$tpoint_id' and t2si.art_id='$art_id' and t2si.status=1 and t2si.price_usd>0  and dt.week_day='$week_day' and dt.time_from<='$cur_time' and dt.time_to>='$cur_time'  order by t2si.price_usd,dt.delivery_days,dt.giveout_time asc limit 0,1;";
@@ -1634,12 +1634,12 @@ function getArticleTpointSupplPriceUsdDeliveryInfo($tpoint_id,$art_id){$db=DbSin
 		$week=date('N', strtotime(' + '.$delivery_days.' days'));
 		$week_day_short=$slave->get_weekday_abr($week);
     	$date_del=date('d.m', strtotime(' + '.$delivery_days.' days'));
-		$info="$delivery_days - пїЅпїЅ. $date_del ($week_day_short)<br>пїЅ $time_from_del пїЅпїЅ $time_to_del";
+		$info="$delivery_days - дн. $date_del ($week_day_short)<br>з $time_from_del до $time_to_del";
 	}
 	return array($price,$info);
 }
 	
-function getTpointDeliveryInfo($tpoint_id,$storage_id){$db=DbSingleton::getDb(); $info="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"; $week_day=date("N");$cur_time=date("H:i:s");$slave=new slave; 
+function getTpointDeliveryInfo($tpoint_id,$storage_id){$db=DbSingleton::getDb(); $info="Не вказано"; $week_day=date("N");$cur_time=date("H:i:s");$slave=new slave; 
 	$r=$db->query("select delivery_days, week_day, time_from_del, time_to_del from T_POINT_DELIVERY_TIME where status='1' and tpoint_id='$tpoint_id' and storage_id='$storage_id' and week_day='$week_day' and time_from<='$cur_time' and time_to>='$cur_time' order by delivery_days asc limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$delivery_days=$db->result($r,0,"delivery_days");
@@ -1649,12 +1649,12 @@ function getTpointDeliveryInfo($tpoint_id,$storage_id){$db=DbSingleton::getDb();
 		$week=date('N', strtotime(' + '.$delivery_days.' days'));
 		$week_day_short=$slave->get_weekday_abr($week);
     	$date_del=date('d.m', strtotime(' + '.$delivery_days.' days'));
-		$info="$delivery_days - пїЅпїЅ. $date_del ($week_day_short)<br>пїЅ $time_from_del пїЅпїЅ $time_to_del";
+		$info="$delivery_days - дн. $date_del ($week_day_short)<br>з $time_from_del до $time_to_del";
 	}
 	return $info;
 }
 
-function getTpointSupplDeliveryInfo($tpoint_id,$suppl_id,$suppl_storage_id){$db=DbSingleton::getDb();$slave=new slave; $info="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"; $week_day=date("N");$cur_time=date("H:i:s");
+function getTpointSupplDeliveryInfo($tpoint_id,$suppl_id,$suppl_storage_id){$db=DbSingleton::getDb();$slave=new slave; $info="Не вказано"; $week_day=date("N");$cur_time=date("H:i:s");
 	$r=$db->query("select delivery_days, week_day, time_from_del, time_to_del from T_POINT_SUPPL_DELIVERY_TIME where status='1' and tpoint_id='$tpoint_id' and suppl_storage_id='$suppl_storage_id' and suppl_id='$suppl_id' and week_day='$week_day' and time_from<='$cur_time' and time_to>='$cur_time' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$delivery_days=$db->result($r,0,"delivery_days");
@@ -1664,7 +1664,7 @@ function getTpointSupplDeliveryInfo($tpoint_id,$suppl_id,$suppl_storage_id){$db=
 		$week=date('N', strtotime(' + '.$delivery_days.' days'));
 		$week_day_short=$slave->get_weekday_abr($week);
     	$date_del=date('d.m', strtotime(' + '.$delivery_days.' days'));
-		$info="$delivery_days - пїЅпїЅ. $date_del ($week_day_short) пїЅ $time_from_del пїЅпїЅ $time_to_del";
+		$info="$delivery_days - дн. $date_del ($week_day_short) з $time_from_del до $time_to_del";
 	}
 	return $info;
 }
@@ -1737,7 +1737,7 @@ function showDpSupplAmountInputWindow($art_id,$article_nr_displ,$brand_id,$dp_id
 	return $form;
 }
 
-function showArticleRestStorageCellsList($art_id,$storage_id){$db=DbSingleton::getTokoDb();$list="<option value='0'>-- пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ --</option>";
+function showArticleRestStorageCellsList($art_id,$storage_id){$db=DbSingleton::getTokoDb();$list="<option value='0'>-- Оберіть зі списку --</option>";
 	$query="SELECT sc.id, sc.cell_value, t2asc.AMOUNT, t2asc.RESERV_AMOUNT,t2as.AMOUNT as AMOUNT_STORAGE, t2as.RESERV_AMOUNT as RESERV_AMOUNT_STORAGE
 			FROM STORAGE_CELLS sc
 			LEFT OUTER JOIN T2_ARTICLES_STRORAGE_CELLS t2asc ON ( t2asc.STORAGE_CELLS_ID = sc.id )
@@ -1758,13 +1758,13 @@ function showArticleRestStorageCellsList($art_id,$storage_id){$db=DbSingleton::g
 		
 		$max_moving=$amount;
 		if ($reserv_amount!=0 || $amount!=0){
-			$list.="<option value='$id' data-max-mov='$max_moving' data-cellId-mov='0'>$name | пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $amount; пїЅпїЅпїЅпїЅпїЅпїЅ: $reserv_amount; </option>";
+			$list.="<option value='$id' data-max-mov='$max_moving' data-cellId-mov='0'>$name | Залишок: $amount; Резерв: $reserv_amount; </option>";
 		}
 	}
 	return $list;
 }
 
-function showStorageCellsList($storage_id,$exclude_id){$db=DbSingleton::getTokoDb();$list="<option value='0'>-- пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ --</option>";
+function showStorageCellsList($storage_id,$exclude_id){$db=DbSingleton::getTokoDb();$list="<option value='0'>-- Оберіть зі списку --</option>";
 	$query=" SELECT id, cell_value FROM STORAGE_CELLS WHERE status = '1' AND storage_id='$storage_id' AND id<>'$exclude_id'  ORDER BY cell_value ASC , id ASC;";
 	$r=$db->query($query);$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
@@ -1862,7 +1862,7 @@ function getStorageName($sel_id){$db=DbSingleton::getTokoDb();$name="";
 	return $name;	
 }
 
-function showStorageSelectList($sel_id,$cells_only=0){$db=DbSingleton::getTokoDb();$list="<option value=0>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</option>";
+function showStorageSelectList($sel_id,$cells_only=0){$db=DbSingleton::getTokoDb();$list="<option value=0>Оберіть зі списку</option>";
 	$query="select * from `STORAGE` where status='1' order by name,id asc;";
 	if ($cells_only==1){
 		$query="select s.* from `STORAGE` s inner join STORAGE_STR ss on ss.storage_id=s.id where s.status='1' group by ss.storage_id order by s.name,s.id asc;";
@@ -1881,7 +1881,7 @@ function getStorageCellName($sel_id){$db=DbSingleton::getTokoDb();$name="";
 	if ($n==1){$name=$db->result($r,0,"cell_value");}
 	return $name;	
 }
-function showStorageCellsSelectList($storage_id,$sel_id){$db=DbSingleton::getTokoDb();$list="<option value=0>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</option>";$cells_show=1;
+function showStorageCellsSelectList($storage_id,$sel_id){$db=DbSingleton::getTokoDb();$list="<option value=0>Оберіть зі списку</option>";$cells_show=1;
 	$r=$db->query("select * from `STORAGE_CELLS` where status='1' and storage_id='$storage_id' order by cell_value,id asc;");$n=$db->num_rows($r);
 	if ($n==0){$cells_show=0;}
 	for ($i=1;$i<=$n;$i++){
@@ -1893,7 +1893,7 @@ function showStorageCellsSelectList($storage_id,$sel_id){$db=DbSingleton::getTok
 	return array($list,$cells_show);	
 }
 
-function getCashAbr($sel_id){$db=DbSingleton::getDb();$name="пїЅпїЅпїЅ";
+function getCashAbr($sel_id){$db=DbSingleton::getDb();$name="грн";
 	$r=$db->query("select abr from CASH where id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){$name=$db->result($r,0,"abr");}
 	return $name;	
@@ -1910,7 +1910,7 @@ function showCashListSelect($sel_id,$ns){$db=DbSingleton::getDb();$list="";if ($
 	return $list;	
 }
 
-function getDocTypeSelectList($sel_id){$db=DbSingleton::getDb();$list="<option value=0>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</option>";
+function getDocTypeSelectList($sel_id){$db=DbSingleton::getDb();$list="<option value=0>Оберіть зі списку</option>";
 	$r=$db->query("select id,mcaption from `manual` where ison='1' and `key`='client_sale_type' order by mid,id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -1920,7 +1920,7 @@ function getDocTypeSelectList($sel_id){$db=DbSingleton::getDb();$list="<option v
 	}
 	return $list;	
 }
-function getCarrierSelectList($sel_id){$db=DbSingleton::getDb();$list="<option value=0>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</option>";$cells_show=1;
+function getCarrierSelectList($sel_id){$db=DbSingleton::getDb();$list="<option value=0>Оберіть зі списку</option>";$cells_show=1;
 	$r=$db->query("select id,name from `M_CARRIER` where status='1' order by id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
@@ -1944,7 +1944,7 @@ function getClientContoSelectList($client_id,$sel_id){$db=DbSingleton::getDb();$
 	return $list;	
 }
 
-function saveDpStorage($dp_id,$storage_id,$storage_cells_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveDpStorage($dp_id,$storage_id,$storage_cells_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$dp_id=$slave->qq($dp_id);$storage_id=$slave->qq($storage_id);$storage_cells_id=$slave->qq($storage_cells_id);
 	if ($dp_id>0 && $storage_id>0 && $storage_cells_id>0){
 		$db->query("update J_INCOME set storage_id='$storage_id', `storage_cells_id`='$storage_cells_id' where id='$dp_id';");
@@ -1991,10 +1991,10 @@ function loadDpCommets($dp_id){$db=DbSingleton::getDb();$slave=new slave;
 		$block=str_replace("{comment}",$comment,$block);
 		$list.=$block;
 	}
-	if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
+	if ($n==0){$list="<h3 class='text-center'>Коментарі відсутні</h3>";}
 	return $list;
 }
-function saveDpComment($dp_id,$comment){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveDpComment($dp_id,$comment){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$dp_id=$slave->qq($dp_id);$comment=$slave->qq($comment);
 	if ($dp_id>0 && $comment!=""){
 		$r=$db->query("insert into J_DP_COMMENTS (`dp_id`,`user_id`,`comment`) values ('$dp_id','$user_id','$comment');");
@@ -2002,7 +2002,7 @@ function saveDpComment($dp_id,$comment){$db=DbSingleton::getDb();$slave=new slav
 	}
 	return array($answer,$err);
 }
-function dropDpComment($dp_id,$comment_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
+function dropDpComment($dp_id,$comment_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення запису!";
 	$dp_id=$slave->qq($dp_id);$comment_id=$slave->qq($comment_id);
 	if ($dp_id>0 && $comment_id>0){
 		$r=$db->query("select * from J_DP_COMMENTS where dp_id='$dp_id' and id='$comment_id' limit 0,1;");$n=$db->num_rows($r);
@@ -2051,11 +2051,11 @@ function loadDpCDN($dp_id){$db=DbSingleton::getDb();$slave=new slave;
 			$list.=$block;
 			
 		}
-		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>Файли відсутні</h3>";}
 		return $list;
 }
 
-function dpCDNDropFile($dp_id,$file_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function dpCDNDropFile($dp_id,$file_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення файлу!";
 	
 	$dp_id=$slave->qq($dp_id);$file_id=$slave->qq($file_id);
 	if ($dp_id>0 && $file_id>0){
@@ -2078,7 +2078,7 @@ function loadRegionSelectList($state_id,$sel_id){$db=DbSingleton::getDb();$slave
 	return $slave->showSelectSubList("T2_REGION","STATE_ID","$state_id","REGION_ID","REGION_NAME",$sel_id);
 }
 function loadCitySelectList($region_id,$sel_id){$db=DbSingleton::getDb();$slave=new slave;//$list="";
-	return "<option value='NEW'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ</option>".$slave->showSelectSubList("T2_CITY","REGION_ID","$region_id","CITY_ID","CITY_NAME",$sel_id);
+	return "<option value='NEW'>Добавити населений пункт</option>".$slave->showSelectSubList("T2_CITY","REGION_ID","$region_id","CITY_ID","CITY_NAME",$sel_id);
 }
 function showCategoryCheckList($dp_id){$db=DbSingleton::getDb();$list="";
 	$r=$db->query("select  * from A_CATEGORY where parrent_id=0 order by id asc;");$n=$db->num_rows($r);
@@ -2119,7 +2119,7 @@ function showdpDocumentList($dp_id,$dp_op_id,$document_id){$db=DbSingleton::getD
 	$form=str_replace("{dp_id}",$dp_id,$form);
 	$form=str_replace("{dp_op_id}",$dp_op_id,$form);
 	
-	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");
+	return array($form,"Реєстр документів основи");
 }
 function finddpDocumentsSearch($dp_id,$dp_op_id,$s_nom){$db=DbSingleton::getDb();$slave=new slave;$income=new income;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	if ($dp_op_id==1){$document_list=$income->search_documents_income_list($s_nom);}
@@ -2209,7 +2209,7 @@ function showdpUnknownStrList($dp_id){$db=DbSingleton::getDb();$slave=new slave;
 	$r=$db->query("select * from J_DP_STR where dp_id='$dp_id' group by art_id order by id asc;");$n=$db->num_rows($r);$empty_kol=0;
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
-		$art_id=$db->result($r,$i-1,"art_id");$art_id_comment="";if ($art_id==0){$art_id_comment="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ART_ID! пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ";}
+		$art_id=$db->result($r,$i-1,"art_id");$art_id_comment="";if ($art_id==0){$art_id_comment="Не визначено ART_ID! Артикул відсутній у базі";}
 		$article_nr_displ=$db->result($r,$i-1,"article_nr_displ");
 		$brand_id=$db->result($r,$i-1,"brand_id");$brand_name=$cat->getBrandName($brand_id);
 		
@@ -2244,8 +2244,8 @@ function checkdpUnStr($dp_id,$art_id,$volume,$weight,$weight2){$db=DbSingleton::
 				if ($ns==1){ $dbt->query("update `T2_PACKAGING` set `VOLUME`='$volume', `WEIGHT_NETTO`='$weight', `WEIGHT_BRUTTO`='$weight2' where ART_ID='$art_id' limit 1;");	}
 				else{ $dbt->query("insert into `T2_PACKAGING` (`ART_ID`,`VOLUME`,`WEIGHT_NETTO`,`WEIGHT_BRUTTO`) values ('$art_id','$volume','$weight','$weight2');"); }
 				$answer=1;$err="";
-			}else {$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";}
-		} else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+			}else {$answer=0;$err="Не заповнені всі поля для артикулу";}
+		} else {$answer=0;$err="Переміщення заблоковано. Зміни вносити заборонено.";}
 	}
 	return array($answer,$err);
 }
@@ -2285,7 +2285,7 @@ function getdpSelectJournalRecords($dp_id,$select_id){$db=DbSingleton::getDb();$
 //======================================================================================
 
 
-function startDpExecute($dp_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";$suppl_ex=0;
+function startDpExecute($dp_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка індексу!";$suppl_ex=0;
 	$dp_id=$slave->qq($dp_id);
 	if ($dp_id>0){
 		$r=$db->query("select tpoint_id,status_dp from J_DP where id='$dp_id' limit 0,1;");$n=$db->num_rows($r);
@@ -2293,7 +2293,7 @@ function startDpExecute($dp_id){$db=DbSingleton::getDb();$slave=new slave;$answe
 			$status_dp=$db->result($r,0,"status_dp");
 			$tpoint_id=$db->result($r,0,"tpoint_id");
 			if ($status_dp==80){
-				$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
+				$answer=0;$err="Документ уже передано в роботу!";
 			}
 			if ($status_dp==79){
 				$db->query("update J_DP set status_dp='80' where id='$dp_id' limit 1;");
@@ -2328,7 +2328,7 @@ function createStorsel($dp_id,$tpoint_id,$storage_id){$db=DbSingleton::getDb();$
 	return $select_id;
 }
 
-function makeDpJmovingStorselPreorder($dp_id,$local){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$jmoving=new jmoving;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";
+function makeDpJmovingStorselPreorder($dp_id,$local){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$jmoving=new jmoving;$answer=0;$err="Помилка індексу!";
 	$ar_st=array();$tpoint_id=$this->getDpTpoint($dp_id);$stor_arr=array();
 	$r=$db->query("select storage_id_from from J_DP_STR ds where ds.dp_id='$dp_id' and status_dps='93' group by storage_id_from;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
@@ -2354,7 +2354,7 @@ function makeDpJmovingStorselPreorder($dp_id,$local){$db=DbSingleton::getDb();$d
 					
 					$s_amount+=$amount;	$s_articles_amount+=1; $s_volume+=$volume;$s_weight_netto+=$weight_netto;
 					//$db->query("insert into J_SELECT_STR (`select_id`,`art_id`,`article_nr_displ`,`brand_id`,`amount`,`storage_id_from`) values ('$select_id','$art_id','$article_nr_displ','$brand_id','$amount','$storage_id_from');");
-					$db->query("update J_DP_STR set status_dps='94' where id='$id' limit 1;"); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ;
+					$db->query("update J_DP_STR set status_dps='94' where id='$id' limit 1;"); // обновляем статус записи что бы понимать на каком этапе находится артикул;
 					
 					$rsc=$dbt->query("select * from `T2_ARTICLES_STRORAGE_CELLS` where `ART_ID`='$art_id' and `STORAGE_ID`='$storage_id_from';");$nsc=$dbt->num_rows($rsc);
 					if ($nsc==0){
@@ -2414,7 +2414,7 @@ function makeDpJmovingStorselPreorder($dp_id,$local){$db=DbSingleton::getDb();$d
 					
 					$db->query("insert into J_MOVING_STR (`jmoving_id`,`art_id`,`article_nr_displ`,`brand_id`,`amount`,`storage_id_from`) values ('$jmoving_id','$art_id','$article_nr_displ','$brand_id','$amount','$storage_id_from');");
 					
-					$db->query("update J_DP_STR set status_dps='95' where id='$id' limit 1;"); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ;
+					$db->query("update J_DP_STR set status_dps='95' where id='$id' limit 1;"); // обновляем статус записи что бы понимать на каком этапе находится артикул;
 					
 				}
 				$jmoving->startJmovingStorageSelect($jmoving_id);
@@ -2455,7 +2455,7 @@ function makeDpJmovingStorselPreorder($dp_id,$local){$db=DbSingleton::getDb();$d
 						$volume=$db->result($r2,$i2-1,"volume");
 					
 						$s_amount+=$amount;	$s_articles_amount+=1; $s_volume+=$volume;$s_weight_netto+=$weight_netto;
-						$db->query("update J_DP_STR set status_dps='94' where id='$id' limit 1;"); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ;
+						$db->query("update J_DP_STR set status_dps='94' where id='$id' limit 1;"); // обновляем статус записи что бы понимать на каком этапе находится артикул;
 					
 						$rsc=$dbt->query("select * from `T2_ARTICLES_STRORAGE_CELLS` where `ART_ID`='$art_id' and `STORAGE_ID`='$storage_id_from';");$nsc=$dbt->num_rows($rsc);
 						if ($nsc==0){
@@ -2519,7 +2519,7 @@ function loadDpJmoving($dp_id){$db=DbSingleton::getDb();$slave=new slave;$gmanua
 	where j.status=1 and j.parrent_type_id='1' and j.parrent_doc_id='$dp_id' order by j.status_jmoving asc, j.data desc, j.doc_nom desc, j.id desc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
-		$type_id=$db->result($r,$i-1,"type_id");$type_name="<i class='fa fa-inbox'></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";if ($type_id==1){$type_name="<i class='fa fa-truck'></i> МіпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";}
+		$type_id=$db->result($r,$i-1,"type_id");$type_name="<i class='fa fa-inbox'></i> Внутрішнє переміщення";if ($type_id==1){$type_name="<i class='fa fa-truck'></i> Між складами";}
 		$prefix=$db->result($r,$i-1,"prefix");
 		$doc_nom=$db->result($r,$i-1,"doc_nom");
 		$storage_id_to=$db->result($r,$i-1,"storage_id_to");
@@ -2545,7 +2545,7 @@ function loadDpJmoving($dp_id){$db=DbSingleton::getDb();$slave=new slave;$gmanua
 				<td>$status_jmoving</td>
 			</tr>";
 	}
-	if ($n==0){$list="<tr><td colspan=6>ВіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>";}
+	if ($n==0){$list="<tr><td colspan=6>Віддалені переміщення відсутні</td></tr>";}
 	$form=str_replace("{jmoving_list}",$list,$form);
 	return $form;
 }
@@ -2575,7 +2575,7 @@ function loadDpStorsel($dp_id){$db=DbSingleton::getDb();$slave=new slave;$gmanua
 		
 		$list.="<tr id='strStsRow_$i'>
 			<td>$i</td>
-			<td style='min-width:140px;'>пїЅпїЅпїЅ-$id</td>
+			<td style='min-width:140px;'>СкВ-$id</td>
 			<td style='min-width:140px;'>$tpoint_name</td>
 			<td style='min-width:120px;'>$storage_name</td>
 			<td style='min-width:80px;'>$loc_type_name</td>
@@ -2589,7 +2589,7 @@ function loadDpStorsel($dp_id){$db=DbSingleton::getDb();$slave=new slave;$gmanua
 		
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td colspan=6>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>";}
+	if ($n==0){$list="<tr><td colspan=6>Локальні відбори відсутні</td></tr>";}
 	$form=str_replace("{storsel_list}",$list,$form);
 	return $form;
 }
@@ -2631,7 +2631,7 @@ function viewDpStorageSelect($dp_id,$select_id,$select_status){$db=DbSingleton::
 	$form=str_replace("{weight_netto}",$weight_netto,$form);
 	$form=str_replace("{weight_brutto}",$weight_brutto,$form);
 	$form=str_replace("{ArticlesList}",$list,$form);
-	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ-$select_id; пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ: ".$gmanual->get_gmanual_caption($select_status));
+	return array($form,"Структура складського відбору № СкВ-$select_id; Статус відбору: ".$gmanual->get_gmanual_caption($select_status));
 }
 
 function getStorageSelectBugList($dp_id,$select_id,$art_id,$str_id){$db=DbSingleton::getDb();$manual=new manual;$list="";
@@ -2641,7 +2641,7 @@ function getStorageSelectBugList($dp_id,$select_id,$art_id,$str_id){$db=DbSingle
 		$amount_bug=$db->result($r,$i-1,"amount_bug");
 		
 		$storage_select_bug_name=$manual->getManualMCaption("storage_select_bug",$storage_select_bug);
-		$list.="$amount_bug"."пїЅпїЅ. - $storage_select_bug_name";if ($i<$n){$list.="<br>";}
+		$list.="$amount_bug"."шт. - $storage_select_bug_name";if ($i<$n){$list.="<br>";}
 	}
 	return $list;
 }
@@ -2695,7 +2695,7 @@ function loadDpSaleInvoice($dp_id){$db=DbSingleton::getDb();$slave=new slave;$gm
 			</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td colspan=11 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>";}
+	if ($n==0){$list="<tr><td colspan=11 align='center'>Накладні відсутні</td></tr>";}
 	$form=str_replace("{sale_invoice_list}",$list,$form);
 	return $form;	
 }
@@ -2730,7 +2730,7 @@ function showDpStorselForSaleInvoice($dp_id){$db=DbSingleton::getDb();$cat=new c
 		$list.="<tr id='strStsRow_$i'>
 			<td><input type='checkbox' class='ch_dp_sts' id='dp_strosel_$i' value='$id' checked></td>
 			<td>$i</td>
-			<td style='min-width:140px;'>пїЅпїЅпїЅ-$id</td>
+			<td style='min-width:140px;'>СкВ-$id</td>
 			<td style='min-width:140px;'>$tpoint_name</td>
 			<td style='min-width:120px;'>$storage_name</td>
 			<td style='min-width:80px;'>$loc_type_name</td>
@@ -2743,7 +2743,7 @@ function showDpStorselForSaleInvoice($dp_id){$db=DbSingleton::getDb();$cat=new c
 			<td align='center'>$status_select_cap</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td colspan=13 align=center>ВіпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>";}
+	if ($n==0){$list="<tr><td colspan=13 align=center>Відбори відсутні</td></tr>";}
 	$form=str_replace("{storsel_list}",$list,$form);
 	$form=str_replace("{dp_id}",$dp_id,$form);
 	$form=str_replace("{kol_storsel}",$n,$form);	
@@ -2774,7 +2774,7 @@ function checkClientCreditLimitBeforeSaleInvoice($dp_id,$kol_storsel,$ar_storsel
 		list($a1,$a1,$data_pay)=$this->getClientPaymentDelay($client_conto_id);
 		
 		
-		$r=$db->query("select max(id) as mid from J_SALE_INVOICE;");$invoice_id=0+$db->result($r,0,"mid")+1; $sale_invoice_nom=$invoice_id; //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		$r=$db->query("select max(id) as mid from J_SALE_INVOICE;");$invoice_id=0+$db->result($r,0,"mid")+1; $sale_invoice_nom=$invoice_id; //Временно
 		$ai=0;$select_str="0";
 		for ($i=1;$i<=$kol_storsel;$i++){
 			if ($ar_storsel[$i]!="" && $ar_storsel[$i]>0){$ai+=1;
@@ -2814,7 +2814,7 @@ function getClientCreditLimit($client_id){$db=DbSingleton::getDb();$credit_limit
 	return $credit_limit;
 }
 	
-function sendDpStorselToSaleInvoice($dp_id,$kol_storsel,$ar_storsel){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";$sale_invoice_nom=0; session_start();$user_id=$_SESSION["media_user_id"];
+function sendDpStorselToSaleInvoice($dp_id,$kol_storsel,$ar_storsel){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка індексу!";$sale_invoice_nom=0; session_start();$user_id=$_SESSION["media_user_id"];
 	$dp_id=$slave->qq($dp_id);
 	if ($dp_id>0){
 		$kol_storsel=$slave->qq($kol_storsel);
@@ -2825,7 +2825,7 @@ function sendDpStorselToSaleInvoice($dp_id,$kol_storsel,$ar_storsel){$db=DbSingl
 			
 			if ($client_saldo==0 || (($sale_storsell_summ+abs($client_saldo)<$client_credit_limit))){ //////CHECK NOW
 
-				$r=$db->query("select max(id) as mid from J_SALE_INVOICE;");$invoice_id=0+$db->result($r,0,"mid")+1; $sale_invoice_nom=$invoice_id; //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+				$r=$db->query("select max(id) as mid from J_SALE_INVOICE;");$invoice_id=0+$db->result($r,0,"mid")+1; $sale_invoice_nom=$invoice_id; //Временно
 				$db->query("insert into J_SALE_INVOICE (`id`,`dp_id`) values ('$invoice_id','$dp_id');");$ai=0;
 				for ($i=1;$i<=$kol_storsel;$i++){
 					if ($ar_storsel[$i]!="" && $ar_storsel[$i]>0){$ai+=1;
@@ -2919,7 +2919,7 @@ function sendDpStorselToSaleInvoice($dp_id,$kol_storsel,$ar_storsel){$db=DbSingl
 					
 				}
 			}else{
-				$answer=0;$err="пїЅ пїЅлієпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ: $client_saldo(".$this->getCashAbr($cash_id).")";
+				$answer=0;$err="У клієнта є заборгованість у сумі: $client_saldo(".$this->getCashAbr($cash_id).")";
 			}
 		}
 	}
@@ -3082,7 +3082,7 @@ function viewDpSaleInvoice($dp_id,$invoice_id){$db=DbSingleton::getDb();$cat=new
 
 		$form=str_replace("{sale_invoice_str_list}",$list,$form);
 	}
-	return array($form,"пїЅ $prefix-$doc_nom; пїЅпїЅпїЅ:$doc_type_name; пїЅпїЅпїЅпїЅпїЅпїЅ: ".$status_invoice_cap);
+	return array($form,"№ $prefix-$doc_nom; вид:$doc_type_name; Статус: ".$status_invoice_cap);
 }
 
 
@@ -3163,7 +3163,7 @@ function printDpSaleInvoice($invoice_id){$db=DbSingleton::getDb();$cat=new catal
 				<td align='center'>$summ</td>
 			</tr>";
 		}
-		$storsel_list="пїЅпїЅпїЅ-";
+		$storsel_list="СКВ-";
 		foreach($sel_ar as $slr){
 			$storsel_list.="$slr/";
 		}
@@ -3195,7 +3195,7 @@ function printDpSaleInvoice($invoice_id){$db=DbSingleton::getDb();$cat=new catal
 		$form=str_replace("{storsel_list}",$storsel_list,$form);
 		$form=str_replace("{sale_invoice_str_list}",$list,$form);
 		$form=str_replace("{delivery_address}",$delivery_address,$form);
-		//"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ"
+		//"Формування друкованої форми"
 		$mp=new media_print;
 		if ($doc_type_id==63){$mp->print_document($form,"A4-L");}
 		if ($doc_type_id==64){$mp->print_document($form,array(210,280));}
@@ -3339,7 +3339,7 @@ function loadDpMoneyPay($dp_id){$db=DbSingleton::getDb();$slave=new slave;$gmanu
 			<td>$user_name</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td colspan=9 align='center'><h3>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
+	if ($n==0){$list="<tr><td colspan=9 align='center'><h3>Документи оплати відсутні</h3></td></tr>";}
 	$form=str_replace("{money_pay_list}",$list,$form);
 	return $form;
 }

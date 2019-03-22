@@ -14,7 +14,7 @@ class HistoryMovingClass {
 		"); $n=$db->num_rows($r);
 								
 		for ($i=1;$i<=$n;$i++){
-			$type_name="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+			$type_name="Приходная накладная";
 			
 			$id=$db->result($r,$i-1,"id");
 			$data=$db->result($r,$i-1,"data");

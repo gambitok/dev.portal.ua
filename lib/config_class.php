@@ -19,7 +19,7 @@ class config {
 			define('SITE_NAME', $db->result($r,0,"address"));
 			return $db->result($r,0,"title"); 
 		}
-		if ($n==0){ return "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";}
+		if ($n==0){ return "Помилка підключення";}
 	}
 	function get_site_name(){$db=DbSingleton::getDb(); $address="";
 		$r=$db->query("select address from config limit 0,1;");$n=$db->num_rows($r);

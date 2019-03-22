@@ -76,7 +76,7 @@ function showBrandsCard($brands_id){
 function saveBrandsGeneralInfo($brands_id, $brands_name, $brands_type, $brands_kind, $brands_country, $brands_visible) {
 	$db=DbSingleton::getDb(); $dbt=DbSingleton::getTokoDb(); $slave=new slave; session_start();
 	$user_id=$_SESSION["media_user_id"]; $user_name=$_SESSION["user_name"];
-	$answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+	$answer=0; $err="Помилка збереження даних!";
 	
     $brands_id=$slave->qq($brands_id);
 	$brands_name=$slave->qq($brands_name);
@@ -97,7 +97,7 @@ function saveBrandsGeneralInfo($brands_id, $brands_name, $brands_type, $brands_k
 function saveBrandsDetails($brands_id, $descr, $link){ 
 	$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();
 	$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];
-	$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+	$answer=0;$err="Помилка збереження даних!";
 	
 	$brands_id=$slave->qq($brands_id);
 	$descr=$slave->qq($descr);
@@ -154,14 +154,14 @@ function loadBrandsPhoto($brands_id){
 		$list.=$block;
 	}
 	
-	if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
+	if ($n==0){$list="<h3 class='text-center'>Логотип відсутній</h3>";}
 	return $list;
 }
 	
 function deleteBrandsLogo($brands_id) {
 	$db=DbSingleton::getTokoDb(); $slave=new slave; session_start();
 	//$user_id=$_SESSION["media_user_id"]; $user_name=$_SESSION["user_name"];
-	$answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+	$answer=0; $err="Помилка видалення даних!";
 	
 	if ($brands_id>0){
 		$db->query("update T2_BRAND_LINK set logo_name='' where brand_id='$brands_id';");
@@ -196,15 +196,15 @@ function ImportBrands() {
 	$form_htm=RD."/tpl/brands_import.htm"; if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	list($csv_exist,$csv_file_name,$pre_table)=showCsvPreviewIndex();
 	
-	$form=str_replace("{records_list}","<tr><td colspan=10 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>",$form);
-	$form=str_replace("{import_file_name}","пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ",$form);
+	$form=str_replace("{records_list}","<tr><td colspan=10 align='center'>Записи не завантажено</td></tr>",$form);
+	$form=str_replace("{import_file_name}","Оберіть файл",$form);
 	$form=str_replace("{csv_str_file}",$pre_table,$form);
 	
 	return $form;
 }
 
 function showCsvPreviewIndex(){
-	$db=DbSingleton::getDb(); $slave=new slave; $csv_exist=0; $csv_file_name="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ"; $pre_table="<h3 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";
+	$db=DbSingleton::getDb(); $slave=new slave; $csv_exist=0; $csv_file_name="Оберіть файл"; $pre_table="<h3 align='center'>Записи відсутні</h3>";
 	$r=$db->query("select * from T2_BRANDS_CSV limit 0,1;");
 	$n=$db->num_rows($r);
 
@@ -254,7 +254,7 @@ function showCsvPreviewIndex(){
 	
 function finishBrandsIndexImport($start_row,$kol_cols,$cols){
 	$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();
-	$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";$err2 = "пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";
+	$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";$err2 = "Файл з дуплікатами індексів!";
 	$start_row=$slave->qq($start_row);$kol_cols=$slave->qq($kol_cols);$cols=$slave->qq($cols);
 	
 		$r=$db->query("select * from T2_BRANDS_CSV limit 0,1;");

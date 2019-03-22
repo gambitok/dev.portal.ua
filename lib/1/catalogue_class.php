@@ -11,7 +11,7 @@ function showCatNewArticle(){$db=DbSingleton::getDb();$slave=new slave;
 	$form=str_replace("{goods_list}",$this->showGoodsGroupLetterListSelect(""),$form);
 	$form=str_replace("{manuf_list}",$this->showManufListSelect(""),$form);
 	
-	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+	return array($form,"Генерування нового артиклу номенклатури");
 }
 function findNewArtNextNum($brand,$group,$sub_group,$manuf){$db=DbSingleton::getTokoDb();$slave=new slave;$num="";
 	$brand=explode("-",$brand);$brand_key=$brand[1];
@@ -31,15 +31,15 @@ function findNewArtID($brand){$db=DbSingleton::getTokoDb();$slave=new slave; $ad
 	$mid+=1;
 	return $mid;
 }
-function checkCatalogueNewArt($num,$art_id){$db=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
+function checkCatalogueNewArt($num,$art_id){$db=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка обробки данних!";
 	$r=$db->query("select COUNT(ART_ID) as kol from T2_ARTICLES where ART_ID='$art_id'");$art_ex=$db->result($r,0,"kol")+0;
 	$r=$db->query("select COUNT(ARTICLE_NR_SEARCH) as kol from T2_ARTICLES where ARTICLE_NR_SEARCH='$num'");$num_ex=$db->result($r,0,"kol")+0;
 	if ($num_ex==0 && $art_ex==0){$answer=1;$err="";}
-	if ($num_ex>0){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ";}
-	if ($art_ex>0){$answer=0;$err="ART_ID пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ";}
+	if ($num_ex>0){$answer=0;$err="Індекс існує у базі";}
+	if ($art_ex>0){$answer=0;$err="ART_ID існує у базі";}
 	return array($answer,$err);
 }
-function saveCatalogueNewArt($num,$art_id,$brand,$group,$sub_group,$manuf){$db=DbSingleton::getTokoDb();$slave=new slave;$new_art_id="";$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
+function saveCatalogueNewArt($num,$art_id,$brand,$group,$sub_group,$manuf){$db=DbSingleton::getTokoDb();$slave=new slave;$new_art_id="";$answer=0;$err="Помилка обробки данних!";
 	$brand=explode("-",$brand);$brand_key=$brand[1];$brand_id=$brand[0];
 	$group=explode("-",$group);$group_key=$group[1];$group_id=$group[0];
 	$sub_group=explode("-",$sub_group);$sub_group_key=$sub_group[1];$sub_group_id=$sub_group[0];
@@ -47,8 +47,8 @@ function saveCatalogueNewArt($num,$art_id,$brand,$group,$sub_group,$manuf){$db=D
 	if ($art_id!="" && $num!="" && $brand>0 && $sub_group_id>0){
 		$r=$db->query("select COUNT(ART_ID) as kol from T2_ARTICLES where ART_ID='$art_id'");$art_ex=$db->result($r,0,"kol")+0;
 		$r=$db->query("select COUNT(ARTICLE_NR_SEARCH) as kol from T2_ARTICLES where ARTICLE_NR_SEARCH='$num'");$num_ex=$db->result($r,0,"kol")+0;
-		if ($num_ex>0){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ";}
-		if ($art_ex>0){$answer=0;$err="ART_ID пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ";}
+		if ($num_ex>0){$answer=0;$err="Індекс існує у базі";}
+		if ($art_ex>0){$answer=0;$err="ART_ID існує у базі";}
 		if ($num_ex==0 && $art_ex==0){
 			$num_up=strtoupper($num);
 			$db->query("insert into T2_ARTICLES (`ART_ID`,`ARTICLE_NR_DISPL`,`ARTICLE_NR_SEARCH`,`BRAND_ID`) values ('$art_id','$num_up','$num_up','$brand_id');");
@@ -116,7 +116,7 @@ function showCatFieldsViewForm(){$db=DbSingleton::getDb();$slave=new slave;sessi
 	$form=str_replace("{fields_list}",$list,$form);
 	$form=str_replace("{kol_fields}",$n,$form);
 	$form=str_replace("{table_key}",$table_key,$form);
-	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+	return array($form,"Налаштування відображення таблиці Номенклатура");
 }
 
 function showCatFieldsViewDocForm(){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$table_key="catalogue_doc";
@@ -148,7 +148,7 @@ function showCatFieldsViewDocForm(){$db=DbSingleton::getDb();$slave=new slave;se
 	$form=str_replace("{fields_list}",$list,$form);
 	$form=str_replace("{kol_fields}",$n,$form);
 	$form=str_replace("{table_key}",$table_key,$form);
-	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+	return array($form,"Налаштування відображення таблиці Номенклатура");
 }
 
 
@@ -161,7 +161,7 @@ function checkCatalogueFieldsUserCheck($user_id,$table_key,$field_key){$db=DbSin
 	return array($ch,$field_pos);
 }
 
-function saveCatalogueFieldsViewForm($kol_fields,$fl_id,$fl_ch,$table_key){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";if ($table_key==""){$table_key="catalogue";}
+function saveCatalogueFieldsViewForm($kol_fields,$fl_id,$fl_ch,$table_key){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";if ($table_key==""){$table_key="catalogue";}
 	$kol_fields=$slave->qq($kol_fields);$fl_id=$slave->qq($fl_id);$fl_ch=$slave->qq($fl_ch);
 	if ($kol_fields>0){
 		$db->query("delete from CFN_USERS_TABLE_CONFIG where user_id='$user_id' and table_key='$table_key';");
@@ -355,12 +355,12 @@ function showArticlesSearchList($art,$query_2,$search_type){$db=DbSingleton::get
 	}
 	if ($query_2!=""){$query=$query_2;}
 	$r=$db->query($query);$n=$db->num_rows($r);$list="";$header_list="";
-	if ($query_2!="" || $list2==""){  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+	if ($query_2!="" || $list2==""){  // сработал внешний фильр или основной поиск с выбором бренда
 		list($fldcnf,$kol_f)=$this->getCatalogueClientViewFieldsData($user_id,"catalogue");
 		for ($i=1;$i<=$kol_f;$i++){
 			$header_list.="<th>".$fldcnf[$i]["field_name"]."</th>";
 			$range_list.="<td onClick='showCatalogueCard(\"{art_id}\")'>{".$fldcnf[$i]["field_key"]."}</td>";
-		}$header_list="<tr align='center'><th data-sortable=\"false\">пїЅпїЅпїЅпїЅ</th><th data-sortable=\"false\">пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</th>".$header_list."</tr>";
+		}$header_list="<tr align='center'><th data-sortable=\"false\">Фото</th><th data-sortable=\"false\">Тип артикула</th>".$header_list."</tr>";
 	
 		$lst=array();
 		for ($i=1;$i<=$n;$i++){
@@ -383,11 +383,11 @@ function showArticlesSearchList($art,$query_2,$search_type){$db=DbSingleton::get
 			$lst[$i]["relation"]=$relation;
 			/*
 			$kind_name="";
-			if ($kind_id==0 && $relation==0){ $kind_name="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"; }
-			if ($kind_id>0 && $relation==0){ $kind_name="пїЅпїЅпїЅпїЅпїЅпїЅ"; }
-			if (($kind_id==3 || $kind_id==4) && $relation==1){ $kind_name="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ"; }
-			if (($kind_id==3 || $kind_id==4) && $relation==2){ $kind_name="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ"; }
-			if ($kind_id=="" || $relation==""){$kind_name="пїЅпїЅпїЅпїЅ";}
+			if ($kind_id==0 && $relation==0){ $kind_name="запитаний артикул"; }
+			if ($kind_id>0 && $relation==0){ $kind_name="аналог"; }
+			if (($kind_id==3 || $kind_id==4) && $relation==1){ $kind_name="артикул присутні в"; }
+			if (($kind_id==3 || $kind_id==4) && $relation==2){ $kind_name="артикул включає в себе"; }
+			if ($kind_id=="" || $relation==""){$kind_name="інше";}
 			*/
 			$lst[$i]["data"]="<tr style='cursor:pointer'>
 				<td class='text-center'><button class='btn btn-sm btn-default' onclick='showArtilceGallery(\"$art_id\",\"$article_nr_displ\")'><i class='fa fa-image'></i></button></td>
@@ -418,11 +418,11 @@ function showArticlesSearchList($art,$query_2,$search_type){$db=DbSingleton::get
 			if ($kind=="" || $relation==""){$lst_kr[5].=$lst[$i]["data"];}
 
 		}$kol_f+=1;
-		if ($lst_kr[1]!=""){$lst_kr[1]=str_replace("{kind_name}","пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ",$lst_kr[1]);$list.=$lst_kr[1];}
-		if ($lst_kr[2]!=""){$lst_kr[2]=str_replace("{kind_name}","пїЅпїЅпїЅпїЅпїЅпїЅ",$lst_kr[2]);$list.=$lst_kr[2];}
-		if ($lst_kr[3]!=""){$lst_kr[3]=str_replace("{kind_name}","пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ",$lst_kr[3]);$list.=$lst_kr[3];}
-		if ($lst_kr[4]!=""){$lst_kr[4]=str_replace("{kind_name}","пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ",$lst_kr[4]);$list.=$lst_kr[4];}
-		if ($lst_kr[5]!=""){$lst_kr[5]=str_replace("{kind_name}","пїЅпїЅпїЅпїЅ",$lst_kr[5]);$list.=$lst_kr[5];}
+		if ($lst_kr[1]!=""){$lst_kr[1]=str_replace("{kind_name}","запитаний артикул",$lst_kr[1]);$list.=$lst_kr[1];}
+		if ($lst_kr[2]!=""){$lst_kr[2]=str_replace("{kind_name}","аналог",$lst_kr[2]);$list.=$lst_kr[2];}
+		if ($lst_kr[3]!=""){$lst_kr[3]=str_replace("{kind_name}","артикул присутні в",$lst_kr[3]);$list.=$lst_kr[3];}
+		if ($lst_kr[4]!=""){$lst_kr[4]=str_replace("{kind_name}","артикул включає в себе",$lst_kr[4]);$list.=$lst_kr[4];}
+		if ($lst_kr[5]!=""){$lst_kr[5]=str_replace("{kind_name}","інше",$lst_kr[5]);$list.=$lst_kr[5];}
 
 		/*if ($lst_kr[1]!=""){$list.="".$lst_kr[1];}
 		if ($lst_kr[2]!=""){$list.="".$lst_kr[2];}
@@ -592,7 +592,7 @@ function showCatalogueCard($art_id){$db=DbSingleton::getTokoDb();$slave=new slav
 	return array($form,$article_nr_displ);
 }
 
-function saveCatalogueGeneralInfo($art_id,$article_nr_displ,$barcode,$inner_cross,$brand_id,$goods_group_id,$article_name,$article_info){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveCatalogueGeneralInfo($art_id,$article_nr_displ,$barcode,$inner_cross,$brand_id,$goods_group_id,$article_name,$article_info){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$art_id=$slave->qq($art_id);$article_nr_displ=$slave->qq($article_nr_displ);$barcode=$slave->qq($barcode);$inner_cross=$slave->qq($inner_cross);$brand_id=$slave->qq($brand_id);$goods_group_id=$slave->qq($goods_group_id);$article_name=$slave->qq($article_name);$article_info=$slave->qq($article_info);
 	if ($art_id>0){
 		
@@ -654,7 +654,7 @@ function saveCatalogueGeneralInfo($art_id,$article_nr_displ,$barcode,$inner_cros
 }
 
 function clearArticle($art){
-	$art=str_replace(" ","",$art);$art=str_replace("_","",$art);$art=str_replace("-","",$art);$art=str_replace(".","",$art);$art=str_replace("+","",$art);$art=str_replace("'","",$art);$art=str_replace("/","",$art);$art=str_replace('"',"",$art);$art=preg_replace ("/[^a-zA-ZпїЅ-пїЅпїЅ-пїЅ0-9\s]/","",$art);$art=strtolower($art);
+	$art=str_replace(" ","",$art);$art=str_replace("_","",$art);$art=str_replace("-","",$art);$art=str_replace(".","",$art);$art=str_replace("+","",$art);$art=str_replace("'","",$art);$art=str_replace("/","",$art);$art=str_replace('"',"",$art);$art=preg_replace ("/[^a-zA-ZА-Яа-я0-9\s]/","",$art);$art=strtolower($art);
 	return $art;
 }
 
@@ -679,10 +679,10 @@ function loadArticleCommets($art_id){$db=DbSingleton::getTokoDb();$slave=new sla
 			$list.=$block;
 			
 		}
-		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>Коментарі відсутні</h3>";}
 		return $list;
 }
-function saveArticleComment($art_id,$comment){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveArticleComment($art_id,$comment){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	
 	$art_id=$slave->qq($art_id);$comment=$slave->qq($comment);
 	if ($art_id>0 && $comment!=""){
@@ -691,7 +691,7 @@ function saveArticleComment($art_id,$comment){$db=DbSingleton::getTokoDb();$slav
 	}
 	return array($answer,$err);
 }
-function dropArticleComment($art_id,$comment_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
+function dropArticleComment($art_id,$comment_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення запису!";
 	$art_id=$slave->qq($art_id);$comment_id=$slave->qq($comment_id);
 	if ($art_id>0 && $comment_id>0){
 		$r=$db->query("select * from T2_ARTICLES_COMMENTS where ART_ID='$art_id' and ID='$comment_id' limit 0,1;");$n=$db->num_rows($r);
@@ -744,11 +744,11 @@ function loadArticleCDN($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;
 			$list.=$block;
 			
 		}
-		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>Файли відсутні</h3>";}
 		return $list;
 }
 
-function articlesCDNDropFile($art_id,$file_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function articlesCDNDropFile($art_id,$file_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення файлу!";
 	
 	$art_id=$slave->qq($art_id);$file_id=$slave->qq($file_id);
 	if ($art_id>0 && $file_id>0){
@@ -785,10 +785,10 @@ function showArtilceGallery($art_id,$disp_nomber){$db=DbSingleton::getTokoDb();$
 			</div>";
 			$slide_list.="<li data-slide-to=\"".($i-1)."\" data-target=\"#carouselArticleModal\" $main_c></li>";
 		}
-		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>Фото відсутні</h3>";}
 		$form=str_replace("{items_list}",$list,$form);
 		$form=str_replace("{slide_list}",$slide_list,$form);
-		return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $disp_nomber");
+		return array($form,"Фотогалерея артикула: $disp_nomber");
 }
 
 function loadArticleFoto($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;
@@ -801,8 +801,8 @@ function loadArticleFoto($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;
 		$data=$db->result($r,$i-1,"DATA");
 		$user_name=$this->getMediaUserName($user_id);
 		$main=$db->result($r,$i-1,"MAIN");
-		$main_v="<a class=\"btn btn-xs btn-white\" onClick=\"setArticlesFotoMain('$art_id','$file_id')\"><i class=\"fa fa-check\"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ</a>";
-		if ($main==1){$main_v=" <span class=\"btn btn-xs label-primary\"><i class=\"fa fa-check\"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ</span>";}
+		$main_v="<a class=\"btn btn-xs btn-white\" onClick=\"setArticlesFotoMain('$art_id','$file_id')\"><i class=\"fa fa-check\"></i> Основне фото</a>";
+		if ($main==1){$main_v=" <span class=\"btn btn-xs label-primary\"><i class=\"fa fa-check\"></i> Основне фото</span>";}
 		
 		$link="http://portal.myparts.pro/cdn/artfoto/$file_name";
 		
@@ -822,10 +822,10 @@ function loadArticleFoto($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;
 		$list.=$block;
 		
 	}
-	if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
+	if ($n==0){$list="<h3 class='text-center'>Фото відсутні</h3>";}
 	return $list;
 }
-function setArticlesFotoMain($art_id,$file_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
+function setArticlesFotoMain($art_id,$file_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка обробки запиту!";
 	$art_id=$slave->qq($art_id);$file_id=$slave->qq($file_id);
 	if ($art_id>0 && $file_id>0){
 		$db->query("update T2_PHOTOS set MAIN='0' where ART_ID='$art_id' and MAIN='1';");
@@ -834,7 +834,7 @@ function setArticlesFotoMain($art_id,$file_id){$db=DbSingleton::getTokoDb();$sla
 	}
 	return array($answer,$err);
 }
-function articlesFotoDropFile($art_id,$file_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function articlesFotoDropFile($art_id,$file_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення файлу!";
 	$art_id=$slave->qq($art_id);$file_id=$slave->qq($file_id);
 	if ($art_id>0 && $file_id>0){
 		$r=$db->query("select PHOTO_NAME from T2_PHOTOS where ART_ID='$art_id' and ID='$file_id' limit 0,1;");$n=$db->num_rows($r);
@@ -878,11 +878,11 @@ function loadArticleScheme($template_id,$op){$db=DbSingleton::getTokoDb();$slave
 		$list.=$block;
 		
 	}
-	if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
+	if ($n==0){$list="<h3 class='text-center'>Схеми відсутні</h3>";}
 	return $list;
 }
 
-function articlesSchemeDropFile($file_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function articlesSchemeDropFile($file_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення файлу!";
 	$file_id=$slave->qq($file_id);
 	if ($file_id>0){
 		$r=$db->query("select TEMPLATE_ID,FILE_NAME from T2_ARTICLES_SCHEME where ID='$file_id' limit 0,1;");$n=$db->num_rows($r);
@@ -955,7 +955,7 @@ function showFilterModificationSelectList($mod_id,$sel_id){$db=DbSingleton::getT
 		}else{$name.="&infin;) | ";}
 		$name.=$db->result($r,$i-1,"TYP_HP_FROM")."HP/";
 		$name.=$db->result($r,$i-1,"TYP_KW_FROM")."kW | ";
-		$name.=$db->result($r,$i-1,"TYP_CCM")."пїЅпїЅ<sup>3</sup> | ";
+		$name.=$db->result($r,$i-1,"TYP_CCM")."см<sup>3</sup> | ";
 		$name.=$db->result($r,$i-1,"ENG_Cod");
 		
 		$sel="";if ($sel_id==$id){$sel="selected='selected'";}
@@ -1079,7 +1079,7 @@ function createTDtree_universal($art_id,$level, $parent_id, $tree) {$db = DbSing
 function loadFilterGroupTreeList($mfa_id, $mod_id, $typ_id,$sel_id){
 	$form_htm=RD."/tpl/catalogue_tecdoc_group_tree.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$form = str_replace("{menu}", $this->createTDtree($mfa_id, $mod_id, $typ_id, $level, $parent_id, ""), $form);
-	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+	return array($form,"Оберіть групу запчастин");
 }
 
 
@@ -1202,7 +1202,7 @@ function showGoodsGroupSubListSelect($parrent_id,$sel_id,$prn_i){$db=DbSingleton
 	return $list;	
 }
 
-function unlinkCatalogueGoodGroup($art_id,$group_id){$db=DbSingleton::getTokoDb(); $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ";
+function unlinkCatalogueGoodGroup($art_id,$group_id){$db=DbSingleton::getTokoDb(); $answer=0;$err="Помилка обробки даних";
 	$r=$db->query("select * from T2_GOODS_GROUP where ART_ID='$art_id' and `GOODS_GROUP_ID`='$group_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$db->query("delete from T2_GOODS_GROUP where ART_ID='$art_id' and `GOODS_GROUP_ID`='$group_id';");
@@ -1336,7 +1336,7 @@ function showCatalogueGoodGroupTemplateForm($art_id,$template_id){$slave=new sla
 	$form=str_replace("{scheme_list}",$this->loadArticleScheme($template_id,0),$form);
 	
 
-	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+	return array($form,"Редагування шаблону");
 }
 
 function loadArticleParams($art_id){$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
@@ -1358,7 +1358,7 @@ function loadCatalogueGoodGroupTemplateParams($art_id,$template_id){session_star
 	return array($this->showGoodsGroupParamsList($art_id,$template_id),$this->loadArticleScheme($template_id,1));
 }
 
-function saveCatalogueParams($art_id,$goods_group_id,$template_id,$fields_type,$params_value){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveCatalogueParams($art_id,$goods_group_id,$template_id,$fields_type,$params_value){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$art_id=$slave->qq($art_id);$goods_group_id=$slave->qq($goods_group_id);$template_id=$slave->qq($template_id);$fields_type=$slave->qq($fields_type);$params_value=$slave->qq($params_value);
 	if ($art_id>0){
 		
@@ -1394,7 +1394,7 @@ function saveCatalogueParams($art_id,$goods_group_id,$template_id,$fields_type,$
 	return array($answer,$err);
 }
 
-function saveCatalogueParamsTemplate($art_id,$goods_group_id,$template_id,$template_name,$cn,$params_id,$fields_type,$params_name){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveCatalogueParamsTemplate($art_id,$goods_group_id,$template_id,$template_name,$cn,$params_id,$fields_type,$params_name){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$art_id=$slave->qq($art_id);$goods_group_id=$slave->qq($goods_group_id);$template_id=$slave->qq($template_id);$template_name=$slave->qq($template_name);$cn=$slave->qq($cn);$fields_type=$slave->qq($fields_type);$params_name=$slave->qq($params_name);
 	if ($art_id>0){
 		
@@ -1423,7 +1423,7 @@ function saveCatalogueParamsTemplate($art_id,$goods_group_id,$template_id,$templ
 
 function showCatalogueAnalogIndexSearch(){session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/catalogue_analog_search.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+	return array($form,"Пошук аналогу по індексу");
 }
 
 function findCatalogueAnalogIndexSearch($index){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
@@ -1456,7 +1456,7 @@ function findCatalogueAnalogIndexSearch($index){$db=DbSingleton::getTokoDb();$sl
 function showCatalogueAnalogForm($art_id,$kind,$relation,$search_number){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/catalogue_analog_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$form=str_replace("{art_id}",$art_id,$form);
-	$form=str_replace("{kind}",$kind,$form); $kind_name=" пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ";if ($kind==4){$kind_name=" пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ";}
+	$form=str_replace("{kind}",$kind,$form); $kind_name=" ОЕ номер";if ($kind==4){$kind_name=" інший номер";}
 	$form=str_replace("{relation}",$relation,$form);
 	$form=str_replace("{search_number}",$search_number,$form);
 	
@@ -1467,9 +1467,9 @@ function showCatalogueAnalogForm($art_id,$kind,$relation,$search_number){$db=DbS
 	}
 	$form=str_replace("{display_nr}",$display_nr,$form);
 	$form=str_replace("{brand_list}",$this->showBrandListSelect($brand_id),$form);
-	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ".$kind_name);
+	return array($form,"Редагування аналогу".$kind_name);
 }
-function saveCatalogueAnalogForm($art_id,$kind,$relation,$search_number,$display_nr,$brand_id,$art_id2,$index2){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveCatalogueAnalogForm($art_id,$kind,$relation,$search_number,$display_nr,$brand_id,$art_id2,$index2){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$art_id=$slave->qq($art_id);$kind=$slave->qq($kind);$relation=$slave->qq($relation);$search_number=$slave->qq($search_number);$display_nr=$slave->qq($display_nr);$brand_id=$slave->qq($brand_id);
 	$art_id2=$slave->qq($art_id2);$index2=$slave->qq($index2);
 	if ($art_id>0 && $kind>0 && $relation>=0 && $display_nr!="" && $brand_id>0){
@@ -1496,7 +1496,7 @@ function saveCatalogueAnalogForm($art_id,$kind,$relation,$search_number,$display
 	}
 	return array($answer,$err);
 }
-function dropCatalogueAnalog($art_id,$kind,$relation,$search_number,$brand_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function dropCatalogueAnalog($art_id,$kind,$relation,$search_number,$brand_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$art_id=$slave->qq($art_id);$kind=$slave->qq($kind);$relation=$slave->qq($relation);$search_number=$slave->qq($search_number);$brand_id=$slave->qq($brand_id);
 	if ($art_id>0 && $kind>0 && $relation>=0 && $search_number!="" && $brand_id>0){
 		$db->query("delete from T2_CROSS where `ART_ID`='$art_id' and `SEARCH_NUMBER`='$search_number' and `KIND`='$kind' and `BRAND_ID`='$brand_id' and `RELATION`='$relation' limit 1;");
@@ -1505,7 +1505,7 @@ function dropCatalogueAnalog($art_id,$kind,$relation,$search_number,$brand_id){$
 	return array($answer,$err);
 }
 
-function clearCatalogueAnalogArticle($art_id,$kind,$relation){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function clearCatalogueAnalogArticle($art_id,$kind,$relation){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$art_id=$slave->qq($art_id);$kind=$slave->qq($kind);$relation=$slave->qq($relation);
 	if ($art_id>0 && $kind>0 && $relation>=0){
 		$db->query("delete from T2_CROSS where `ART_ID`='$art_id' and `KIND`='$kind' and `RELATION`='$relation';");
@@ -1567,7 +1567,7 @@ function loadArticleAplicability($art_id){$db=DbSingleton::getTokoDb();$dbp=DbSi
 				</div>
 			</div>\n";
 		}
-	}else {$cont_list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
+	}else {$cont_list="<h3 class='text-center'>Привязка до авто відсутня</h3>";}
 	$tab_list.="<a href=\"#aplic_new\" class='btn btn-primary pull-right' onClick=\"loadArticleAplicabilityNew('$art_id');\"><i class=\"fa fa-plus\"></i></a>";
 	$form=str_replace("{manuf_tab_list}",$tab_list,$form);
 	$form=str_replace("{manuf_cont_list}",$cont_list,$form);
@@ -1628,7 +1628,7 @@ function loadArticleAplicabilityModels($art_id,$mfa_id){$db=DbSingleton::getToko
 				<td>$typ_ccm</td>
 				<td>$eng_cod</td>
 				<td>$la_id_comment <buttom class='btn btn-xs btn-warning' onclick=\"showLaIdCommentForm('$art_id','$typ_id');\"><i class='fa fa-edit'></i></td>
-				<td align='center'><button class='btn btn-xs btn-danger btn-bitbucket' title='ВіпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ' onclick='unlinkArticleAplicabilityModel(\"$mfa_id\",\"$art_id\",\"$typ_id\",\"".$slave->qq($typ_text)."\");'><i class='fa fa-times'></i></button></td>
+				<td align='center'><button class='btn btn-xs btn-danger btn-bitbucket' title='Відвязати авто' onclick='unlinkArticleAplicabilityModel(\"$mfa_id\",\"$art_id\",\"$typ_id\",\"".$slave->qq($typ_text)."\");'><i class='fa fa-times'></i></button></td>
 			</tr>";
 				
 	}
@@ -1638,7 +1638,7 @@ function loadArticleAplicabilityModels($art_id,$mfa_id){$db=DbSingleton::getToko
 	return $form;
 }
 
-function unlinkArticleAplicabilityModel($art_id,$typ_id){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave; $answer="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ";
+function unlinkArticleAplicabilityModel($art_id,$typ_id){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave; $answer="Помилка обробки даних";
 	if ($art_id>0 && $typ_id>0){
 		$query="delete from T2_LINKS where ART_ID='$art_id' and `TYP_ID`='$typ_id';";
 		$dbp->query($query);$db->query($query); $answer=1;
@@ -1646,7 +1646,7 @@ function unlinkArticleAplicabilityModel($art_id,$typ_id){$db=DbSingleton::getTok
 	return $answer;
 }
 
-function clearActicleAplicabilityManuf($art_id,$mfa_id){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave; $answer="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ";
+function clearActicleAplicabilityManuf($art_id,$mfa_id){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave; $answer="Помилка обробки даних";
 	if ($art_id>0 && $mfa_id>0){
 		$r=$db->query("select tt.TYP_ID from T_types tt left outer join T_models tm on tm.MOD_ID=tt.TYP_MOD_ID where tm.MOD_MFA_ID='$mfa_id';");$n=$db->num_rows($r);
 		if ($n>0){
@@ -1671,10 +1671,10 @@ function loadArticleAplicabilityNew($art_id,$index){$db=DbSingleton::getDb();$db
 		$form = str_replace("{menu}", $menu, $form);
 		$form=str_replace("{kol_elem}",$menu_kol_elem,$form);
 	}
-	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ");
+	return array($form,"Привязка до авто");
 }
 
-function saveCatalogueAplicabilityForm($art_id,$display_number,$comment,$typ_array,$str_array){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveCatalogueAplicabilityForm($art_id,$display_number,$comment,$typ_array,$str_array){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$art_id=$slave->qq($art_id);$display_number=$slave->qq($display_number);$comment=$slave->qq($comment);$typ_array=$slave->qq($typ_array);
 	//print "$art_id,$display_number,comment=$comment;typ_array=$typ_array;str_array=$str_array\n";
 	if ($art_id>0){
@@ -1729,13 +1729,13 @@ function showLaIdCommentForm($art_id,$type_id){$db=DbSingleton::getTokoDb();$dbp
 			$list.="
 			<div class='form-group'>
 				<input type='hidden' id='la_id_$i' value='$la_id'>
-		        <label class='col-sm-1 control-label'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</label>
+		        <label class='col-sm-1 control-label'>Позиція</label>
         		<div class='col-sm-1'><input class='form-control' type='text' id='sort_$i' value='$sort'></div>
-				<label class='col-sm-1 control-label'>пїЅпїЅпїЅ</label>
+				<label class='col-sm-1 control-label'>Тип</label>
         		<div class='col-sm-1'><input class='form-control' type='text' placeholder='K' id='type_$i' value='$type'></div>
-				<label class='col-sm-1 control-label'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</label>
+				<label class='col-sm-1 control-label'>Параметр</label>
         		<div class='col-sm-2'><input class='form-control' type='text' id='text_name_$i' value='$text_name'></div>
-				<label class='col-sm-1 control-label'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</label>
+				<label class='col-sm-1 control-label'>Значення</label>
         		<div class='col-sm-3'><input class='form-control' type='text' id='text_$i' value='$text'></div>
 				<div class='col-sm-1'>$button</div>
 		    </div>";
@@ -1743,9 +1743,9 @@ function showLaIdCommentForm($art_id,$type_id){$db=DbSingleton::getTokoDb();$dbp
 		$form=str_replace("{list_la_comment}",$list,$form);
 		$form=str_replace("{kol_elem}",($n+1),$form);
 	}
-	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ LA_ID");
+	return array($form,"Коментарі LA_ID");
 }
-function saveLaIdCommentForm($art_id,$type_id,$kol,$la_ids,$sorts,$types,$text_names,$texts){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveLaIdCommentForm($art_id,$type_id,$kol,$la_ids,$sorts,$types,$text_names,$texts){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$art_id=$slave->qq($art_id);$type_id=$slave->qq($type_id);$kol=$slave->qq($kol);$la_ids=$slave->qq($la_ids);$sorts=$slave->qq($sorts);$types=$slave->qq($types);$text_names=$slave->qq($text_names);$texts=$slave->qq($texts);
 	if ($art_id>0 && $type_id>0){
 		for ($i=1;$i<=$kol;$i++){
@@ -1769,7 +1769,7 @@ function saveLaIdCommentForm($art_id,$type_id,$kol,$la_ids,$sorts,$types,$text_n
 	}
 	return array($answer,$err);
 }
-function dropLaIdComment($art_id,$type_id,$la_id,$sort,$type){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function dropLaIdComment($art_id,$type_id,$la_id,$sort,$type){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$art_id=$slave->qq($art_id);$type_id=$slave->qq($type_id);$la_id=$slave->qq($la_id);$sort=$slave->qq($sort);$type=$slave->qq($type);
 	if ($art_id>0 && $type_id>0 && $la_id>0){
 		
@@ -1815,10 +1815,10 @@ function loadAplicabilityModificationList($mfa_id,$mod_id,$sel_id){$db=DbSinglet
 		}else{$name.="&infin;) | ";}
 		$name.=$db->result($r,$i-1,"TYP_HP_FROM")."HP/";
 		$name.=$db->result($r,$i-1,"TYP_KW_FROM")."kW | ";
-		$name.=$db->result($r,$i-1,"TYP_CCM")."пїЅпїЅ<sup>3</sup> | ";
+		$name.=$db->result($r,$i-1,"TYP_CCM")."см<sup>3</sup> | ";
 		$name.=$db->result($r,$i-1,"ENG_Cod");
 		$list.="<li><input type='checkbox' id='modif$i' value='$typ_id'> $name</li>";
-	}if ($n>0){$list="<li><input id='modif0' value='0' onclick=\"checkModifAll(this)\" type=\"checkbox\"> - ВіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ</li>".$list."<input type='hidden' id='modif_kol' value='$n'>";}
+	}if ($n>0){$list="<li><input id='modif0' value='0' onclick=\"checkModifAll(this)\" type=\"checkbox\"> - Відмітити все</li>".$list."<input type='hidden' id='modif_kol' value='$n'>";}
 	return $list;
 }
 
@@ -1866,7 +1866,7 @@ function showWorkPairForm($art_id){$db=DbSingleton::getTokoDb();$list="";
 	}$list.="<input type='hidden' id='work_pair_n' value='".($n+3)."'>";
 	return $list;
 }
-function saveCatalogueLogistic($art_id,$index_pack,$height,$length,$width,$volume,$weight_netto,$weight_brutto,$necessary_amount_car,$units_id,$multiplicity_package,$shoulder_delivery,$general_quant,$work_pair){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveCatalogueLogistic($art_id,$index_pack,$height,$length,$width,$volume,$weight_netto,$weight_brutto,$necessary_amount_car,$units_id,$multiplicity_package,$shoulder_delivery,$general_quant,$work_pair){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$art_id=$slave->qq($art_id);$index_pack=$slave->qq($index_pack);$height=$slave->qq($slave->point_valid($height));$length=$slave->qq($slave->point_valid($length));$width=$slave->qq($slave->point_valid($width));$volume=$slave->qq($slave->point_valid($volume));$weight_netto=$slave->qq($slave->point_valid($weight_netto));$weight_brutto=$slave->qq($slave->point_valid($weight_brutto));$necessary_amount_car=$slave->qq($necessary_amount_car);$units_id=$slave->qq($units_id);
 	$multiplicity_package=$slave->qq($multiplicity_package);$shoulder_delivery=$slave->qq($shoulder_delivery);$general_quant=$slave->qq($general_quant);
 	if ($art_id>0){
@@ -1950,9 +1950,9 @@ function showCountryForm($id){$db=DbSingleton::getTokoDb();$manual=new manual;$l
 	$form=str_replace("{risk}",$risk,$form);
 	$form=str_replace("{risk_caption}",$manual->getManualMCaption("RISK",$risk),$form);
 	
-	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");	
+	return array($form,"Форма Країни походження");	
 }
-function saveCatalogueCountryForm($id,$name,$alfa2,$alfa3,$duty,$risk){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveCatalogueCountryForm($id,$name,$alfa2,$alfa3,$duty,$risk){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$id=$slave->qq($id);$name=$slave->qq($name);$alfa2=$slave->qq($alfa2);$alfa3=$slave->qq($alfa3);$duty=$slave->qq($duty);$risk=$slave->qq($risk);
 	if ($id>0){
 		$r=$db->query("select * from `T2_COUNTRIES` where `COUNTRY_ID`='$id' limit 0,1;");$n=$db->num_rows($r);
@@ -1970,7 +1970,7 @@ function saveCatalogueCountryForm($id,$name,$alfa2,$alfa3,$duty,$risk){$db=DbSin
 	return array($answer,$err);
 }
 
-function dropCountry($id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
+function dropCountry($id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення запису!";
 	$id=$slave->qq($id);
 	if ($id>0){
 		$r=$db->query("select * from T2_COUNTRIES where COUNTRY_ID='$id' limit 0,1;");$n=$db->num_rows($r);
@@ -2069,10 +2069,10 @@ function showCostumsForm($id){$db=DbSingleton::getTokoDb();$manual=new manual;$l
 	$form=str_replace("{type_declaration}",$type_declaration,$form);
 	$form=str_replace("{type_declaration_caption}",$manual->getManualMCaption("costums_type_declaration",$type_declaration),$form);
 	
-	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");	
+	return array($form,"Форма митного коду УКТЕЗД");	
 }
 
-function saveCatalogueCostumsForm($id,$code,$name,$preferential_rate,$full_rate,$type_declaration,$sertification,$gos_standart){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveCatalogueCostumsForm($id,$code,$name,$preferential_rate,$full_rate,$type_declaration,$sertification,$gos_standart){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$id=$slave->qq($id);$code=$slave->qq($code);$name=$slave->qq($name);$preferential_rate=$slave->qq($slave->point_valid($preferential_rate));$full_rate=$slave->qq($slave->point_valid($full_rate));$type_declaration=$slave->qq($type_declaration);$sertification=$slave->qq($sertification);$gos_standart=$slave->qq($gos_standart);
 	if ($id>0){
 		$r=$db->query("select * from `T2_COSTUMS` where `COSTUMS_ID`='$id' limit 0,1;");$n=$db->num_rows($r);
@@ -2090,7 +2090,7 @@ function saveCatalogueCostumsForm($id,$code,$name,$preferential_rate,$full_rate,
 	return array($answer,$err);
 }
 
-function dropCostums($id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
+function dropCostums($id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення запису!";
 	$id=$slave->qq($id);
 	if ($id>0){
 		$r=$db->query("select * from T2_COSTUMS where COSTUMS_ID='$id' limit 0,1;");$n=$db->num_rows($r);
@@ -2149,7 +2149,7 @@ function loadArticlePricing($art_id){$db=DbSingleton::getTokoDb();$slave=new sla
 	$form_htm=RD."/tpl/catalogue_pricing.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);} $list_price_rating="";$articles_list="";
 	$form=str_replace("{art_id}",$art_id,$form);
 	$rating_ar=array();$rating_ar=$this->getPriceRatingArray();$kol_rating=0;
-	foreach ($rating_ar as $rar){$kol_rating+=1; $list_price_rating.="<th class='text-center' title='".$rar["name"]."'>пїЅпїЅпїЅпїЅпїЅ<br>".$rar["abr"]."</th>"; }
+	foreach ($rating_ar as $rar){$kol_rating+=1; $list_price_rating.="<th class='text-center' title='".$rar["name"]."'>Прайс<br>".$rar["abr"]."</th>"; }
 	$form=str_replace("{list_price_rating}",$list_price_rating,$form); 
 		
 	list($article_nr_displ,$brand_id,$brand_name)=$this->getArticleNrDisplBrand($art_id);	
@@ -2180,7 +2180,7 @@ function loadArticlePricing($art_id){$db=DbSingleton::getTokoDb();$slave=new sla
 		
 		
 		list($article_oper_price,$article_storage_amount)=$this->getArticleOperPriceGeneralStock($analog_art_id);
-		$article_sales="ВіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+		$article_sales="Відсутня інформація";
 		$article_income_amount=0;
 		$minMarkUp=0;
 		
@@ -2204,7 +2204,7 @@ function loadArticlePricing($art_id){$db=DbSingleton::getTokoDb();$slave=new sla
 			$row2.="<td><input type='text' class='form-control input-xs price_numbers nrCell' id='artRatingPersent_".$analog_art_id."_$k' value='$rating_persent' onKeyup='recalcPRArt(\"$analog_art_id\",\"$k\",\"0\")'></td>";
 		}
 		$row2="<tr>
-			<td colspan=3 align='right'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $template_price_rating_select %</td>".$row2."
+			<td colspan=3 align='right'>Шаблон націнки: $template_price_rating_select %</td>".$row2."
 			<td id='artDataUpdate_".$analog_art_id."'>$data_use</td>
 		</tr>";
 		$sales=$this->getLineArticleSales($analog_art_id);
@@ -2225,7 +2225,7 @@ function loadArticlePricing($art_id){$db=DbSingleton::getTokoDb();$slave=new sla
 	return $form;
 }
 
-function saveArticlePriceRating($art_id,$kol_elm,$template_id,$minMarkup,$prc,$prs){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";$info="";
+function saveArticlePriceRating($art_id,$kol_elm,$template_id,$minMarkup,$prc,$prs){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";$info="";
 	$art_id=$slave->qq($art_id);$kol_elm=$slave->qq($kol_elm);$template_id=$slave->qq($template_id);$minMarkup=$slave->qq($minMarkup);$prc=$slave->qq($prc);$prs=$slave->qq($prs);
 	if ($art_id>0){
 		$r=$db->query("select * from T2_ARTICLES_PRICE_RATING where art_id='$art_id' and in_use='1' limit 0,1;");$n=$db->num_rows($r);
@@ -2271,7 +2271,7 @@ function showPriceRatingTemplateSelect($art_id,$sel_id){$db=DbSingleton::getToko
 	return $form;
 }
 
-function loadPriceRatingTemplateStr($art_id,$sel_id){$db=DbSingleton::getTokoDb();$params=array();$min_markup=0;$kol_val=$this->kol_price_rating;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";
+function loadPriceRatingTemplateStr($art_id,$sel_id){$db=DbSingleton::getTokoDb();$params=array();$min_markup=0;$kol_val=$this->kol_price_rating;$answer=0;$err="Помилка!";
 	$r=$db->query("select * from price_rating_template_str where template_id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$min_markup=$db->result($r,0,"min_markup");
@@ -2284,7 +2284,7 @@ function loadPriceRatingTemplateStr($art_id,$sel_id){$db=DbSingleton::getTokoDb(
 }
 
 
-function showArticlePriceRatingHistory($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+function showArticlePriceRatingHistory($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка індексу";
 	$form_htm=RD."/tpl/catalogue_pricing_history.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	if ($art_id!=""){
 		$r=$db->query("select * from T2_ARTICLES_PRICE_RATING where art_id='$art_id' order by data_update desc, id desc;");$n=$db->num_rows($r);$list="";
@@ -2311,7 +2311,7 @@ function showArticlePriceRatingHistory($art_id){$db=DbSingleton::getTokoDb();$sl
 		$form=str_replace("{kol_elm}",$this->kol_price_rating,$form); 
 		$answer=1;$err="";
 	}
-	return array($answer,$err,$form,"пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+	return array($answer,$err,$form,"Історія ціноутворення");
 }
 
 function getTpointName($tpoint_id){$db=DbSingleton::getDb(); $name="";
@@ -2333,7 +2333,7 @@ function getLineArticleSales($art_id){$db=DbSingleton::getTokoDb();$slave=new sl
 }
 
 
-function showArticleSales($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+function showArticleSales($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка індексу";
 	$block_htm=RD."/tpl/catalogue_article_sales.htm";if (file_exists("$block_htm")){ $block = file_get_contents($block_htm);}
 	
 	if ($art_id!=""){ list($article_displ_nomber,$brand_id)=$this->getArticleNrDisplBrand($art_id);
@@ -2362,7 +2362,7 @@ function showArticleSales($art_id){$db=DbSingleton::getTokoDb();$slave=new slave
 		$list=str_replace("{kol_elm}",$kol_month,$list);
 		$answer=1;$err="";
 	}
-	return array($answer,$err,$list,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: $article_displ_nomber");
+	return array($answer,$err,$list,"Інформація про продажі артикулу: $article_displ_nomber");
 }
 
 
@@ -2389,7 +2389,7 @@ function loadArticleZED($art_id){$db=DbSingleton::getTokoDb();$slave=new slave;s
 	
 	return $form;
 }
-function saveCatalogueZED($art_id,$country_id,$costums_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveCatalogueZED($art_id,$country_id,$costums_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$art_id=$slave->qq($art_id);$country_id=$slave->qq($country_id);$costums_id=$slave->qq($slave->point_valid($costums_id));
 	if ($art_id>0){
 		//T2_ZED UPDATE
@@ -2536,7 +2536,7 @@ function showArticlesSearchDocumentList($art,$brand_id,$search_type){$db=DbSingl
 	}
 	//print $query;
 	$r=$db->query($query);$n=$db->num_rows($r);$list="";$header_list="";
-	if ($list2==""){  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+	if ($list2==""){  // сработал внешний фильр или основной поиск с выбором бренда
 		$lst=array();
 		for ($i=1;$i<=$n;$i++){
 			$art_id=$db->result($r,$i-1,"ART_ID");
@@ -2587,8 +2587,8 @@ function showArticleStorageCellsRestForm($art_id){$db=DbSingleton::getTokoDb();$
 				<td>$storage_name</td>
 				<td>$amount</td>
 				<td>$reserv_amount</td>
-				<td><button class='btn btn-xs btn-default' title='пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ' onClick='viewArticleReservDocs(\"$art_id\",\"$storage_id\");'><i class='fa fa-eye'></i></button></td>
-				<td><button class='btn btn-xs btn-default' title='пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ' onClick='viewArticleCellsRest(\"$art_id\",\"$storage_id\");'><i class='fa fa-eye'></i></button></td>
+				<td><button class='btn btn-xs btn-default' title='Переглянути' onClick='viewArticleReservDocs(\"$art_id\",\"$storage_id\");'><i class='fa fa-eye'></i></button></td>
+				<td><button class='btn btn-xs btn-default' title='Переглянути' onClick='viewArticleCellsRest(\"$art_id\",\"$storage_id\");'><i class='fa fa-eye'></i></button></td>
 			</tr>";
 		}
 		$form=str_replace("{list}",$list,$form);
@@ -2596,7 +2596,7 @@ function showArticleStorageCellsRestForm($art_id){$db=DbSingleton::getTokoDb();$
 		$form=str_replace("{article_nr_displ}",$article_nr_displ." ".$brand_name,$form);
 		
 	}
-	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+	return array($form,"Наявність на складах");
 }
 
 function getClientName($id){$db=DbSingleton::getDb(); $name="";
@@ -2605,7 +2605,7 @@ function getClientName($id){$db=DbSingleton::getDb(); $name="";
 	return $name;
 }
 
-function viewArticleReservDocs($art_id,$storage_id){ $db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+function viewArticleReservDocs($art_id,$storage_id){ $db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка";
 	if ($art_id>0){
 		$form_htm=RD."/tpl/catalogue_storage_reserv_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		
@@ -2656,9 +2656,9 @@ function viewArticleReservDocs($art_id,$storage_id){ $db=DbSingleton::getDb();$s
 		$form=str_replace("{list}",$list,$form);
 		$answer=1;$err=""; 
 	}
-	return array($answer,$err,$form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+	return array($answer,$err,$form,"Наявність в документах переміщення");
 }
-function viewArticleCellsRest($art_id,$storage_id){ $db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+function viewArticleCellsRest($art_id,$storage_id){ $db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка";
 	if ($art_id>0){
 		$form_htm=RD."/tpl/catalogue_storage_cells_rest_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		
@@ -2684,7 +2684,7 @@ function viewArticleCellsRest($art_id,$storage_id){ $db=DbSingleton::getDb();$db
 		
 		$answer=1;$err=""; 
 	}
-	return array($answer,$err,$form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");
+	return array($answer,$err,$form,"Наявність у комірках складу");
 }
 function getStorageName($sel_id){$db=DbSingleton::getTokoDb();$name="";
 	$r=$db->query("select name from `STORAGE` where status='1' and id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
@@ -2698,11 +2698,11 @@ function showCatalogueDonorForm($art_id){$db=DbSingleton::getTokoDb();$slave=new
 	list($search_number,$d,$d)=$this->getArticleNrDisplBrand($art_id);
 	$form=str_replace("{search_number}",$search_number,$form);
 	$form=str_replace("{display_nr}","",$form);
-	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ".$kind_name);
+	return array($form,"Імпорт інформації від донора".$kind_name);
 }
 function showCatalogueDonorIndexSearch(){session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/catalogue_donor_search.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-	return array($form,"пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+	return array($form,"Пошук аналогу по індексу");
 }
 
 function findCatalogueDonorIndexSearch($index){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
@@ -2732,7 +2732,7 @@ function findCatalogueDonorIndexSearch($index){$db=DbSingleton::getTokoDb();$sla
 	return $list;
 }
 
-function saveCatalogueDonorForm($art_id,$search_number,$display_nr,$art_id2,$ch){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveCatalogueDonorForm($art_id,$search_number,$display_nr,$art_id2,$ch){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$art_id=$slave->qq($art_id);$search_number_q=$slave->qq($search_number_q);$display_nr_q=$slave->qq($display_nr_q);$art_id2=$slave->qq($art_id2);$ch=$slave->qq($ch);
 	if ($art_id>0 && $display_nr!="" && $art_id2>0){
 		if ($ch[1]==1){
@@ -3046,12 +3046,12 @@ function showArticlesSearchListDoc($art,$brand_id,$query_2,$search_type,$doc_typ
 	}
 	if ($query_2!=""){$query=$query_2;}
 	$r=$db->query($query);$n=$db->num_rows($r);$list="";$header_list="";
-	if ($query_2!="" || $list2==""){  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+	if ($query_2!="" || $list2==""){  // сработал внешний фильр или основной поиск с выбором бренда
 		list($fldcnf,$kol_f)=$this->getCatalogueClientViewFieldsData($user_id,"catalogue_doc");
 		for ($i=1;$i<=$kol_f;$i++){
 			$header_list.="<th>".$fldcnf[$i]["field_name"]."</th>";
 			$range_list.="<td onClick='showDpSupplAmountInputWindow(\"{art_id}\")'>{".$fldcnf[$i]["field_key"]."}</td>";
-		}$header_list="<tr align='center'><th data-sortable=\"false\">пїЅпїЅпїЅпїЅ</th><th data-sortable=\"false\">пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</th>".$header_list."</tr>";
+		}$header_list="<tr align='center'><th data-sortable=\"false\">Фото</th><th data-sortable=\"false\">Тип артикула</th>".$header_list."</tr>";
 	
 		$lst=array();
 		for ($i=1;$i<=$n;$i++){
@@ -3132,11 +3132,11 @@ function showArticlesSearchListDoc($art,$brand_id,$query_2,$search_type,$doc_typ
 			$lst[$i]["relation"]=$relation;
 			/*
 			$kind_name="";
-			if ($kind_id==0 && $relation==0){ $kind_name="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"; }
-			if ($kind_id>0 && $relation==0){ $kind_name="пїЅпїЅпїЅпїЅпїЅпїЅ"; }
-			if (($kind_id==3 || $kind_id==4) && $relation==1){ $kind_name="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ"; }
-			if (($kind_id==3 || $kind_id==4) && $relation==2){ $kind_name="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ"; }
-			if ($kind_id=="" || $relation==""){$kind_name="пїЅпїЅпїЅпїЅ";}
+			if ($kind_id==0 && $relation==0){ $kind_name="запитаний артикул"; }
+			if ($kind_id>0 && $relation==0){ $kind_name="аналог"; }
+			if (($kind_id==3 || $kind_id==4) && $relation==1){ $kind_name="артикул присутні в"; }
+			if (($kind_id==3 || $kind_id==4) && $relation==2){ $kind_name="артикул включає в себе"; }
+			if ($kind_id=="" || $relation==""){$kind_name="інше";}
 			*/
 			$lst[$i]["data"]="<tr style='cursor:pointer'>
 				<td class='text-center'><button class='btn btn-sm btn-default' onclick='showArtilceGallery(\"$art_id\",\"$article_nr_displ\")'><i class='fa fa-image'></i></button></td>
@@ -3168,11 +3168,11 @@ function showArticlesSearchListDoc($art,$brand_id,$query_2,$search_type,$doc_typ
 			if ($kind=="" || $relation==""){$lst_kr[5].=$lst[$i]["data"];}
 
 		}$kol_f+=1;
-		if ($lst_kr[1]!=""){$lst_kr[1]=str_replace("{kind_name}","пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ",$lst_kr[1]);$list.=$lst_kr[1];}
-		if ($lst_kr[2]!=""){$lst_kr[2]=str_replace("{kind_name}","пїЅпїЅпїЅпїЅпїЅпїЅ",$lst_kr[2]);$list.=$lst_kr[2];}
-		if ($lst_kr[3]!=""){$lst_kr[3]=str_replace("{kind_name}","пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ",$lst_kr[3]);$list.=$lst_kr[3];}
-		if ($lst_kr[4]!=""){$lst_kr[4]=str_replace("{kind_name}","пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ",$lst_kr[4]);$list.=$lst_kr[4];}
-		if ($lst_kr[5]!=""){$lst_kr[5]=str_replace("{kind_name}","пїЅпїЅпїЅпїЅ",$lst_kr[5]);$list.=$lst_kr[5];}
+		if ($lst_kr[1]!=""){$lst_kr[1]=str_replace("{kind_name}","запитаний артикул",$lst_kr[1]);$list.=$lst_kr[1];}
+		if ($lst_kr[2]!=""){$lst_kr[2]=str_replace("{kind_name}","аналог",$lst_kr[2]);$list.=$lst_kr[2];}
+		if ($lst_kr[3]!=""){$lst_kr[3]=str_replace("{kind_name}","артикул присутні в",$lst_kr[3]);$list.=$lst_kr[3];}
+		if ($lst_kr[4]!=""){$lst_kr[4]=str_replace("{kind_name}","артикул включає в себе",$lst_kr[4]);$list.=$lst_kr[4];}
+		if ($lst_kr[5]!=""){$lst_kr[5]=str_replace("{kind_name}","інше",$lst_kr[5]);$list.=$lst_kr[5];}
 
 		/*if ($lst_kr[1]!=""){$list.="".$lst_kr[1];}
 		if ($lst_kr[2]!=""){$list.="".$lst_kr[2];}

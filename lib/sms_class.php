@@ -47,7 +47,7 @@ function send_sms($sign,$nomber,$message){
 	print_r($result);
 	$xml = simplexml_load_string ( $result );
 	print_r($xml);
-	$answer="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";
+	$answer="Надіслано!";
 	return $answer;
 }
 function ShowSMSForm(){
@@ -129,7 +129,7 @@ $xml='<sendsms>
 $xml.='</sendsms>';
 	$result=$this->send_xml($xml);
 	$xml = simplexml_load_string ( $result );
-	$answer="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+	$answer="Рассылка СМС поставлена в очередь на отправку";
 	return $answer;
 }
 

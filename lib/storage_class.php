@@ -39,7 +39,7 @@ function show_storage_list(){$db=DbSingleton::getDb();$slave=new slave;$where=""
 }
 	
 function deleteStorage($storage_id) {$db=DbSingleton::getDb();
-	$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+	$answer=0;$err="Помилка збереження даних!";
 	if($storage_id>0) {
 		$db->query("update STORAGE set status=0 where id='$storage_id';");
 		$answer=1;$err="";
@@ -69,7 +69,7 @@ function loadStorageUsers($storage_id) {$db=DbSingleton::getDb();
 		$user="<a onclick='setUserStorage($id,$storage_id)'>$id. $name ($storage_name)</a><br>"; 	
 		$list_tp.=$user;
 	}
-	if ($list=="") $list="пїЅпїЅпїЅпїЅпїЅ"; if ($list_tp=="") $list_tp="пїЅпїЅпїЅпїЅпїЅ";									
+	if ($list=="") $list="Пусто"; if ($list_tp=="") $list_tp="Пусто";									
 	$form_htm=RD."/tpl/storage_users_list.htm";if (file_exists("$form_htm")){$form = file_get_contents($form_htm);}
 	$form=str_replace("{users_list}",$list,$form);
 	$form=str_replace("{users_list_tp}",$list_tp,$form);
@@ -159,7 +159,7 @@ function showOrderSelectList($gkey,$selId){$db=DbSingleton::getDb();$form="";
 }
 	
 
-function saveStorageGeneralInfo($storage_id,$name,$full_name,$address,$storekeeper,$country_id,$state_id,$region_id,$city_id,$order_by){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveStorageGeneralInfo($storage_id,$name,$full_name,$address,$storekeeper,$country_id,$state_id,$region_id,$city_id,$order_by){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 
 	$storage_id=$slave->qq($storage_id);$name=$slave->qq($name);$full_name=$slave->qq($full_name);$address=$slave->qq($address);$storekeeper=$slave->qq($storekeeper);
 	$country_id=$slave->qq($country_id);$state_id=$slave->qq($state_id);$city_id=$slave->qq($city_id);$region_id=$slave->qq($region_id);
@@ -191,7 +191,7 @@ function loadStorageDetails($storage_id){$db=DbSingleton::getTokoDb();$slave=new
 			<td>$param_value</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td align='center' colspan=6><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan=6><h3 class='text-center'>Записи відсутні</h3></td></tr>";}
 	$form=str_replace("{list_details}",$list,$form);
 	$form=str_replace("{storage_id}",$storage_id,$form);
 	return $form;
@@ -234,19 +234,19 @@ function showStorageParamTypeSelectList($storage_id,$sel_id){$db=DbSingleton::ge
 		$field_key=$db->result($r,$i-1,"field_key");
 		$code_length=$db->result($r,$i-1,"code_length");
 		$sel="";if ($param_id==$sel_id){$sel=" selected";}
-		$list.="<option value='$param_id' $sel>$param_name $param_type | $code_length(пїЅпїЅпїЅпїЅпїЅпїЅпїЅ)</option>";
+		$list.="<option value='$param_id' $sel>$param_name $param_type | $code_length(символи)</option>";
 	}
 	return $list;
 }
 
 
-function saveStorageDetailsForm($storage_id,$storage_str_id,$param_id){ $db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveStorageDetailsForm($storage_id,$storage_str_id,$param_id){ $db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$storage_id=$slave->qq($storage_id);$storage_str_id=$slave->qq($storage_str_id);$param_id=$slave->qq($param_id);
 	if ($storage_id>0 && $param_id>0){
 		
 		$r=$db->query("select count(id) as kol from STORAGE_STR where storage_id='$storage_id' and param_id='$param_id' and id<>'$storage_str_id' and status='1';");$param_ex=$db->result($r,0,"kol");
 		if ($param_ex>0){
-			$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
+			$answer=0;$err="Обраний Вами тип зберігання на складі вже присвоєно Вашому склдау!";
 		}
 		if ($param_ex==0 ){
 			if ($storage_str_id==0 || $storage_str_id==""){
@@ -258,10 +258,10 @@ function saveStorageDetailsForm($storage_id,$storage_str_id,$param_id){ $db=DbSi
 			$dbt->query("update STORAGE_STR set param_id='$param_id' where id='$storage_str_id' and storage_id='$storage_id';");
 			$answer=1;$err="";
 		}
-	}else{$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!$storage_id,$storage_str_id,$param_id;";}
+	}else{$answer=0;$err="Не обрано тип зберігання на складі!$storage_id,$storage_str_id,$param_id;";}
 	return array($answer,$err);
 }
-function dropStorageDetails($storage_id,$storage_str_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function dropStorageDetails($storage_id,$storage_str_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$storage_id=$slave->qq($storage_id);$storage_str_id=$slave->qq($storage_str_id);
 	if ($storage_id>0 && $storage_str_id>0){
 		$db->query("update STORAGE_STR set status='0' where id='$storage_str_id' and storage_id='$storage_id';");
@@ -277,7 +277,7 @@ function loadStorageCells($storage_id){$db=DbSingleton::getTokoDb();$slave=new s
 	$r=$db->query("select * from STORAGE_CELLS where storage_id='$storage_id' and status='1' order by id asc;");$n=$db->num_rows($r);$list="";
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
-		$default=$db->result($r,$i-1,"default");$default_cap="-"; if ($default==1){$default_cap="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";}
+		$default=$db->result($r,$i-1,"default");$default_cap="-"; if ($default==1){$default_cap="По замовчуванню";}
 		$str_arr=$db->result($r,$i-1,"str_arr");
 		$cell_value=$db->result($r,$i-1,"cell_value");
 		$list.="
@@ -291,7 +291,7 @@ function loadStorageCells($storage_id){$db=DbSingleton::getTokoDb();$slave=new s
 			<td>$default_cap</td>
 		</tr>";
 	}
-	if ($n==0){$list="<tr><td align='center' colspan=6><h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3></td></tr>";}
+	if ($n==0){$list="<tr><td align='center' colspan=6><h3 class='text-center'>Записи відсутні</h3></td></tr>";}
 	$form=str_replace("{list_cells}",$list,$form);
 	$form=str_replace("{storage_id}",$storage_id,$form);
 	return $form;
@@ -336,7 +336,7 @@ function showStorageStrArr($storage_id,$str_arr,$cell_value){$db=DbSingleton::ge
 }
 
 
-function saveStorageCellsForm($storage_id,$cells_id,$str_kol,$cell_str_ids,$cell_param_ids,$cell_vls,$def_ch){ $db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveStorageCellsForm($storage_id,$cells_id,$str_kol,$cell_str_ids,$cell_param_ids,$cell_vls,$def_ch){ $db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$storage_id=$slave->qq($storage_id);$cells_id=$slave->qq($cells_id);$str_kol=$slave->qq($str_kol);$cell_str_ids=$slave->qq($cell_str_ids);$cell_param_ids=$slave->qq($cell_param_ids);$cell_vls=$slave->qq($cell_vls);
 	$def_ch=$slave->qq($def_ch);
 	if ($storage_id>0){
@@ -360,11 +360,11 @@ function saveStorageCellsForm($storage_id,$cells_id,$str_kol,$cell_str_ids,$cell
 			$answer=1;$err="";
 		}
 		
-	}else{$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!$storage_id,$storage_str_id,$param_id;";}
+	}else{$answer=0;$err="Не обрано тип зберігання на складі!$storage_id,$storage_str_id,$param_id;";}
 	return array($answer,$err);
 }
 
-function dropStorageCells($storage_id,$cells_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function dropStorageCells($storage_id,$cells_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$storage_id=$slave->qq($storage_id);$cells_id=$slave->qq($cells_id);
 	if ($storage_id>0 && $cells_id>0){
 		$db->query("update STORAGE_CELLS set status='0' where id='$cells_id' and storage_id='$storage_id';");
@@ -412,7 +412,7 @@ function loadCitySelectList($region_id,$sel_id){$db=DbSingleton::getDb();$slave=
 		$list.="<option value='$id' $sel>$name</option>";
 	}
 	*/
-	return "<option value='NEW'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ</option>".$slave->showSelectSubList("T2_CITY","REGION_ID","$region_id","CITY_ID","CITY_NAME",$sel_id);
+	return "<option value='NEW'>Добавити населений пункт</option>".$slave->showSelectSubList("T2_CITY","REGION_ID","$region_id","CITY_ID","CITY_NAME",$sel_id);
 }
 
 }

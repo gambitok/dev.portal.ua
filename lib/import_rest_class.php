@@ -5,15 +5,15 @@ function show_import_rest_form(){$db=DbSingleton::getDb();$slave=new slave;sessi
 	$form_htm=RD."/tpl/import_rest_str_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	
 	list($csv_exist,$csv_file_name,$pre_table)=$this->showCsvPreview();
-	$form=str_replace("{records_list}","<tr><td colspan=10 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>",$form);
-	$form=str_replace("{import_file_name}","пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ",$form);
+	$form=str_replace("{records_list}","<tr><td colspan=10 align='center'>Записи не завантажено</td></tr>",$form);
+	$form=str_replace("{import_file_name}","Оберіть файл",$form);
 	$form=str_replace("{csv_str_file}",$pre_table,$form);
 	
 	return $form;
 }
 
 
-function showCsvPreview(){$db=DbSingleton::getDb();$slave=new slave; $csv_exist=0;$csv_file_name="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ";$pre_table="<h3 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</h3>"; session_start();$user_id=$_SESSION["media_user_id"];
+function showCsvPreview(){$db=DbSingleton::getDb();$slave=new slave; $csv_exist=0;$csv_file_name="Оберіть файл";$pre_table="<h3 align='center'>Записи не завантажено</h3>"; session_start();$user_id=$_SESSION["media_user_id"];
 	$r=$db->query("select * from J_IMPORT_REST_CSV where user_id='$user_id' order by id desc limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$file_name=$db->result($r,0,"file_name");
@@ -52,7 +52,7 @@ function showCsvPreview(){$db=DbSingleton::getDb();$slave=new slave; $csv_exist=
 	return array($csv_exist,$csv_file_name,$pre_table);
 }
 
-function finishRestCsvImport(){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function finishRestCsvImport(){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$r=$db->query("select * from J_IMPORT_REST_CSV where user_id='$user_id' order by id desc limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$file_name=$db->result($r,0,"file_name");
@@ -157,7 +157,7 @@ function get_df_doc_nom_new(){ $db=DbSingleton::getDb();$doc_nom=0;
 function getNewIncomeId($income_name,$suppl_id,$firm_id,$cash_id,$cours_to_uah,$storage_id,$cell_id){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual; session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"]; $income_id=0;
 	$r=$db->query("select max(id) as mid from J_INCOME;");$income_id=0+$db->result($r,0,"mid")+1;
 	$doc_nom=$this->get_df_doc_nom_new();
-	$db->query("insert into J_INCOME (`id`,`type_id`,`prefix`,`doc_nom`,`import_1c`,`user_id`,`data`,`invoice_income`,`invoice_data`,`client_id`,`client_seller`,`cash_id`,`cours_to_uah`,`storage_id`,`storage_cells_id`) values ('$income_id','0','пїЅпїЅ','$doc_nom','1','$user_id',CURDATE(),'$income_name',CURDATE(),'$firm_id','$suppl_id','$cash_id','$cours_to_uah','$storage_id','$cell_id');");
+	$db->query("insert into J_INCOME (`id`,`type_id`,`prefix`,`doc_nom`,`import_1c`,`user_id`,`data`,`invoice_income`,`invoice_data`,`client_id`,`client_seller`,`cash_id`,`cours_to_uah`,`storage_id`,`storage_cells_id`) values ('$income_id','0','ДФ','$doc_nom','1','$user_id',CURDATE(),'$income_name',CURDATE(),'$firm_id','$suppl_id','$cash_id','$cours_to_uah','$storage_id','$cell_id');");
 	return $income_id;
 }
 

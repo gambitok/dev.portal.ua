@@ -26,7 +26,7 @@ class cash_reports {
 	}
 	
 	function showCashReportsList($date_start,$date_end,$payboxes,$cash_id) { $db=DbSingleton::getDb(); $list=""; $summ_kasa=0;													   
-		// пїЅпїЅпїЅпїЅ														   
+		// КАСА														   
 		$r=$db->query("select id,paybox_id,pay_type_id from J_PAY 
 		where paybox_id in ($payboxes) 
 		and pay_type_id in (89,90,91,98)
@@ -56,7 +56,7 @@ class cash_reports {
 		}
 																   
 		$list.="<tr style='background:lightgreen;'>
-			<td><b>пїЅпїЅпїЅпїЅ</b></td>
+			<td><b>Каси</b></td>
 			<td></td>
 			<td></td>
 			<td>$summ_kasa</td>
@@ -103,7 +103,7 @@ class cash_reports {
 		}
 																   
 		$list.="<tr style='background:pink;'>
-			<td><b>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</b></td>
+			<td><b>Видатки</b></td>
 			<td></td>
 			<td></td>
 			<td>$summ_vidatki</td>

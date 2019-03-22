@@ -76,7 +76,7 @@ function showCountryCard($country_id){
 function saveCountryGeneralInfo($country_id, $country_name, $country_alfa2, $country_alfa3, $country_duty, $country_risk) {
 	$db=DbSingleton::getDb(); $dbt=DbSingleton::getTokoDb(); $slave=new slave; session_start();
 	$user_id=$_SESSION["media_user_id"]; $user_name=$_SESSION["user_name"];
-	$answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+	$answer=0; $err="Помилка збереження даних!";
 	
     $country_id=$slave->qq($country_id);
 	$country_name=$slave->qq($country_name);
@@ -96,7 +96,7 @@ function saveCountryGeneralInfo($country_id, $country_name, $country_alfa2, $cou
 function DeleteCountry($country_id) {
 	$db=DbSingleton::getDb(); $dbt=DbSingleton::getTokoDb(); $slave=new slave; session_start();
 	$user_id=$_SESSION["media_user_id"]; $user_name=$_SESSION["user_name"];
-	$answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+	$answer=0; $err="Помилка видалення даних!";
 	
     $country_id=$slave->qq($country_id);
 	

@@ -49,7 +49,7 @@ class report_sales {
 		return array($article,$brand_id);	
 	}
 	
-	function getTpointList() { $db=DbSingleton::getDb(); $list=""; $list="<option value='0'>пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ</option>";
+	function getTpointList() { $db=DbSingleton::getDb(); $list=""; $list="<option value='0'>Всі торгові точки</option>";
 		$r=$db->query("select * from T_POINT where status=1 order by id asc;"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");

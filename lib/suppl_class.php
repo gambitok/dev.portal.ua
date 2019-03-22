@@ -77,7 +77,7 @@ function showSupplCard($suppl_id){$db=DbSingleton::getDb();$slave=new slave;sess
 	return $form;
 }
 
-function saveSupplGeneralInfo($suppl_id,$name,$full_name,$address,$chief,$country_id,$state_id,$region_id,$city_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveSupplGeneralInfo($suppl_id,$name,$full_name,$address,$chief,$country_id,$state_id,$region_id,$city_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 
 	$suppl_id=$slave->qq($suppl_id);$name=$slave->qq($name);$full_name=$slave->qq($full_name);$address=$slave->qq($address);$chief=$slave->qq($chief);
 	$country_id=$slave->qq($country_id);$state_id=$slave->qq($state_id);$city_id=$slave->qq($city_id);$region_id=$slave->qq($region_id);
@@ -94,8 +94,8 @@ function loadSupplIndex($suppl_id){$db=DbSingleton::getTokoDb();$slave=new slave
 	
 	list($csv_exist,$csv_file_name,$pre_table)=$this->showCsvPreviewIndex($suppl_id);
 	
-	$form=str_replace("{records_list}","<tr><td colspan=10 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>",$form);
-	$form=str_replace("{import_file_name}","пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ",$form);
+	$form=str_replace("{records_list}","<tr><td colspan=10 align='center'>Записи не завантажено</td></tr>",$form);
+	$form=str_replace("{import_file_name}","Оберіть файл",$form);
 	$form=str_replace("{csv_str_file}",$pre_table,$form);
 	$form=str_replace("{suppl_id}",$suppl_id,$form);
 	return $form;
@@ -119,7 +119,7 @@ function loadSupplVat($suppl_id){$db=DbSingleton::getDb();$slave=new slave;$gman
 }
 
 
-function saveSupplVat($suppl_id,$price_in_vat,$show_in_vat,$price_add_vat){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveSupplVat($suppl_id,$price_in_vat,$show_in_vat,$price_add_vat){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$suppl_id=$slave->qq($suppl_id);$price_in_vat=$slave->qq($price_in_vat);$show_in_vat=$slave->qq($show_in_vat);$price_add_vat=$slave->qq($price_add_vat);
 	if ($suppl_id>0){
 		$r=$db->query("select count(client_id) as kol from A_CLIENTS_VAT_CONDITIONS where client_id='$suppl_id';");$ex=$db->result($r,0,"kol");
@@ -143,7 +143,7 @@ function loadSupplOrderInfo($suppl_id){$db=DbSingleton::getDb();$slave=new slave
 }
 
 
-function saveSupplOrderInfo($suppl_id,$info){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveSupplOrderInfo($suppl_id,$info){$db=DbSingleton::getDb();$slave=new slave;session_start();$media_user_id=$_SESSION["media_user_id"];$media_user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$suppl_id=$slave->qq($suppl_id);$info=$slave->qq($info);
 	if ($suppl_id>0){
 		$r=$db->query("select count(client_id) as kol from A_CLIENTS_SUPPL_INFO where client_id='$suppl_id';");$ex=$db->result($r,0,"kol");
@@ -159,14 +159,14 @@ function loadSupplPrice($suppl_id){$db=DbSingleton::getTokoDb();$slave=new slave
 	
 	list($csv_exist,$csv_file_name,$pre_table)=$this->showCsvPreviewPrice($suppl_id);
 	
-	$form=str_replace("{records_list}","<tr><td colspan=10 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</td></tr>",$form);
-	$form=str_replace("{import_file_name}","пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ",$form);
+	$form=str_replace("{records_list}","<tr><td colspan=10 align='center'>Записи не завантажено</td></tr>",$form);
+	$form=str_replace("{import_file_name}","Оберіть файл",$form);
 	$form=str_replace("{csv_str_file}",$pre_table,$form);
 	$form=str_replace("{suppl_id}",$suppl_id,$form);
 	return $form;
 }
 
-function showCsvPreviewIndex($suppl_id){$db=DbSingleton::getDb();$slave=new slave; $csv_exist=0;$csv_file_name="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ";$pre_table="<h3 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";
+function showCsvPreviewIndex($suppl_id){$db=DbSingleton::getDb();$slave=new slave; $csv_exist=0;$csv_file_name="Оберіть файл";$pre_table="<h3 align='center'>Записи відсутні</h3>";
 	$r=$db->query("select * from T2_SUPPL_CSV where suppl_id='$suppl_id' and ftype='index' limit 0,1;");$n=$db->num_rows($r);require_once RD."/lib/clients_class.php"; $clients=new clients;
 	if ($n==1){
 		$file_name=$db->result($r,0,"file_name");
@@ -198,7 +198,7 @@ function showCsvPreviewIndex($suppl_id){$db=DbSingleton::getDb();$slave=new slav
 				}
 				if ($records_list!=""){
 					for ($i=1;$i<=$kol_cols;$i++){
-						$cols_list.="<th><select id=\"clm-$i\" style='width:auto;' size='1'><option value='0'>-</option><option value='1'>пїЅпїЅпїЅпїЅпїЅпїЅ</option><option value='2'>пїЅпїЅпїЅпїЅпїЅ</option><option value='3'>ART_ID</option><option value='4'>пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</option><option value='5'>пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</option></select></th>";
+						$cols_list.="<th><select id=\"clm-$i\" style='width:auto;' size='1'><option value='0'>-</option><option value='1'>Індекс</option><option value='2'>Бренд</option><option value='3'>ART_ID</option><option value='4'>Дні для повернення</option><option value='5'>Текст гарантії</option></select></th>";
 					}
 				}
 			}
@@ -211,7 +211,7 @@ function showCsvPreviewIndex($suppl_id){$db=DbSingleton::getDb();$slave=new slav
 				
 				for ($i=1;$i<=$rows;$i++){ $row="";
 					for ($j=1;$j<=$kol_cols;$j++){
-						if ($i==1){$cols_list.="<th><select id=\"clm-$j\" style='width:auto;' size='1'><option value='0'>-</option><option value='1'>пїЅпїЅпїЅпїЅпїЅпїЅ</option><option value='2'>пїЅпїЅпїЅпїЅпїЅ</option><option value='4'>пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</option><option value='5'>пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</option></select></th>";}
+						if ($i==1){$cols_list.="<th><select id=\"clm-$j\" style='width:auto;' size='1'><option value='0'>-</option><option value='1'>Індекс</option><option value='2'>Бренд</option><option value='4'>Дні для повернення</option><option value='5'>Текст гарантії</option></select></th>";}
 						if ($j==1){$row="<td>$i</td>";}
 						$row.="<td>".trim($data->val($i,$j,$sheet))."</td>";
 					}
@@ -236,7 +236,7 @@ function showCsvPreviewIndex($suppl_id){$db=DbSingleton::getDb();$slave=new slav
 								if ($i==1){$row="<td>$fn</td>";}
 								$row.="<td>".trim($buf[$i-1])."</td>";
 								if ($ex_cols==1){
-									$cols_list.="<th><select id=\"clm-$i\" size='1'><option value='0'>-</option><option value='1'>пїЅпїЅпїЅпїЅпїЅпїЅ</option><option value='2'>пїЅпїЅпїЅпїЅпїЅ</option><option value='3'>ART_ID</option><option value='4'>пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</option><option value='5'>пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</option></select></th>";
+									$cols_list.="<th><select id=\"clm-$i\" size='1'><option value='0'>-</option><option value='1'>Індекс</option><option value='2'>Бренд</option><option value='3'>ART_ID</option><option value='4'>Дні для повернення</option><option value='5'>Текст гарантії</option></select></th>";
 								}
 							}if ($row!=""){
 								$records_list.="<tr>$row</tr>";
@@ -259,7 +259,7 @@ function showCsvPreviewIndex($suppl_id){$db=DbSingleton::getDb();$slave=new slav
 }
 
 
-function finishSupplIndexImport($suppl_id,$start_row,$kol_cols,$cols){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";require_once RD."/lib/clients_class.php"; $clients=new clients;
+function finishSupplIndexImport($suppl_id,$start_row,$kol_cols,$cols){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";require_once RD."/lib/clients_class.php"; $clients=new clients;
 	$suppl_id=$slave->qq($suppl_id);$start_row=$slave->qq($start_row);$kol_cols=$slave->qq($kol_cols);$cols=$slave->qq($cols);
 	if ($suppl_id>0){		
 		$r=$db->query("select * from T2_SUPPL_CSV where suppl_id='$suppl_id' and ftype='index' limit 0,1;");$n=$db->num_rows($r);
@@ -359,7 +359,7 @@ function getSupplStorageArray($suppl_id){$db=DbSingleton::getDb();$st=array();
 	
 }
 
-function showCsvPreviewPrice($suppl_id){$db=DbSingleton::getDb();$slave=new slave; $csv_exist=0;$csv_file_name="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ";$pre_table="<h3 align='center'>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";
+function showCsvPreviewPrice($suppl_id){$db=DbSingleton::getDb();$slave=new slave; $csv_exist=0;$csv_file_name="Оберіть файл";$pre_table="<h3 align='center'>Записи відсутні</h3>";
 	$r=$db->query("select * from T2_SUPPL_CSV where suppl_id='$suppl_id' and ftype='price' limit 0,1;");$n=$db->num_rows($r);require_once RD."/lib/clients_class.php"; $clients=new clients;
 	if ($n==1){
 		$file_name=$db->result($r,0,"file_name");
@@ -396,7 +396,7 @@ function showCsvPreviewPrice($suppl_id){$db=DbSingleton::getDb();$slave=new slav
 						$storage_list.="<option value='stor_".$st["id"]."'>".$st["name"]."</option>";
 					}
 					for ($i=1;$i<=$kol_cols;$i++){
-						$cols_list.="<th><select id=\"clm-$i\" style='width:auto;' size='1'><option value='0'>-</option><option value='1'>пїЅпїЅпїЅпїЅпїЅпїЅ</option><option value='2'>пїЅпїЅпїЅпїЅпїЅ</option><option value='3'>ЦіпїЅпїЅ</option><option value='4'>пїЅпїЅпїЅпїЅпїЅпїЅ</option>$storage_list</select></th>";
+						$cols_list.="<th><select id=\"clm-$i\" style='width:auto;' size='1'><option value='0'>-</option><option value='1'>Індекс</option><option value='2'>Бренд</option><option value='3'>Ціна</option><option value='4'>Валюта</option>$storage_list</select></th>";
 					}
 				}
 			}
@@ -409,7 +409,7 @@ function showCsvPreviewPrice($suppl_id){$db=DbSingleton::getDb();$slave=new slav
 				
 				for ($i=1;$i<=$rows;$i++){ $row="";
 					for ($j=1;$j<=$kol_cols;$j++){
-						if ($i==1){$cols_list.="<th><select id=\"clm-$j\" style='width:auto;' size='1'><option value='0'>-</option><option value='1'>пїЅпїЅпїЅпїЅпїЅпїЅ</option><option value='2'>пїЅпїЅпїЅпїЅпїЅ</option><option value='3'>ЦіпїЅпїЅ</option><option value='4'>пїЅпїЅпїЅпїЅпїЅпїЅ</option>$storage_list</select></th>";}
+						if ($i==1){$cols_list.="<th><select id=\"clm-$j\" style='width:auto;' size='1'><option value='0'>-</option><option value='1'>Індекс</option><option value='2'>Бренд</option><option value='3'>Ціна</option><option value='4'>Валюта</option>$storage_list</select></th>";}
 						if ($j==1){$row="<td>$i</td>";}
 						$row.="<td>".trim($data->val($i,$j,$sheet))."</td>";
 					}
@@ -438,7 +438,7 @@ function showCsvPreviewPrice($suppl_id){$db=DbSingleton::getDb();$slave=new slav
 									foreach($storages as $st){
 										$storage_list.="<option value='stor_".$st["id"]."'>".$st["name"]."</option>";
 									}
-									$cols_list.="<th><select id=\"clm-$i\" size='1'><option value='0'>-</option><option value='1'>пїЅпїЅпїЅпїЅпїЅпїЅ</option><option value='2'>пїЅпїЅпїЅпїЅпїЅ</option><option value='3'>ЦіпїЅпїЅ</option><option value='4'>пїЅпїЅпїЅпїЅпїЅпїЅ</option>$storage_list</select></th>";
+									$cols_list.="<th><select id=\"clm-$i\" size='1'><option value='0'>-</option><option value='1'>Індекс</option><option value='2'>Бренд</option><option value='3'>Ціна</option><option value='4'>Валюта</option>$storage_list</select></th>";
 								}
 							}if ($row!=""){
 								$records_list.="<tr>$row</tr>";
@@ -470,7 +470,7 @@ function findCachId($suppl_cash,$cash_data){$id=0;
 	return $id;
 }
 
-function finishSupplPriceImport($suppl_id,$start_row,$kol_cols,$main_cash_id,$kours_usd,$kours_eur,$cols){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";require_once RD."/lib/clients_class.php"; $clients=new clients;
+function finishSupplPriceImport($suppl_id,$start_row,$kol_cols,$main_cash_id,$kours_usd,$kours_eur,$cols){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";require_once RD."/lib/clients_class.php"; $clients=new clients;
 	$suppl_id=$slave->qq($suppl_id);$start_row=$slave->qq($start_row);$kol_cols=$slave->qq($kol_cols);$main_cash_id=$slave->qq($main_cash_id);$kours_usd=$slave->qq($kours_usd);$kours_eur=$slave->qq($kours_eur);$cols=$slave->qq($cols);
 	if ($suppl_id>0){		
 		$kours_usd=str_replace(",",".",$kours_usd);$kours_eur=str_replace(",",".",$kours_eur);
@@ -686,7 +686,7 @@ function loadRegionSelectList($state_id,$sel_id){$slave=new slave;
 	return $slave->showSelectSubList("T2_REGION","STATE_ID","$state_id","REGION_ID","REGION_NAME",$sel_id);
 }
 function loadCitySelectList($region_id,$sel_id){$slave=new slave;//$list="";
-	return "<option value='NEW'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ</option>".$slave->showSelectSubList("T2_CITY","REGION_ID","$region_id","CITY_ID","CITY_NAME",$sel_id);
+	return "<option value='NEW'>Добавити населений пункт</option>".$slave->showSelectSubList("T2_CITY","REGION_ID","$region_id","CITY_ID","CITY_NAME",$sel_id);
 }
 
 function getMediaUserName($user_id){$db=DbSingleton::getDb();$name="";
@@ -793,7 +793,7 @@ $manual=new manual;
 	return $form;
 }
 	
-function saveSupplCoop($suppl_id,$company,$name,$phone,$email,$city_id,$comment,$status) { $db=DbSingleton::getDb(); $answer=0; $err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveSupplCoop($suppl_id,$company,$name,$phone,$email,$city_id,$comment,$status) { $db=DbSingleton::getDb(); $answer=0; $err="Помилка збереження даних!";
 	if ($suppl_id>0){
 		$db->query("update J_SUPPLIERS_COOPERATION set `company`='$company', `name`='$name', `phone`='$phone', `email`='$email', `city_id`='$city_id', `commentary`='$comment', `status`='$status' where `id`='$suppl_id';");
 		$answer=1; $err="";

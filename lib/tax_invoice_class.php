@@ -34,8 +34,8 @@ function show_tax_invoice_list(){$db=DbSingleton::getDb();$slave=new slave;$gman
 		$user_name=$this->getMediaUserName($db->result($r,$i-1,"user_id"));
 		$status_tax=$db->result($r,$i-1,"status_tax");
 		$status_tax_cap=$gmanual->get_gmanual_caption($status_tax);
-		$function="showTaxInvoiceCard";$prefix="пїЅпїЅ"; 
-		if ($tax_type_id==161){$function="showTaxInvoiceBackCard";$prefix="пїЅпїЅпїЅ";}
+		$function="showTaxInvoiceCard";$prefix="НН"; 
+		if ($tax_type_id==161){$function="showTaxInvoiceBackCard";$prefix="КНН";}
 		
 		$list.="<tr id='strStsRow_$i' style='cursor:pointer' align='center' onClick='$function(\"$id\");'>
 			<td>$i</td>
@@ -170,7 +170,7 @@ function showTaxInvoiceBackCard($tax_id){$db=DbSingleton::getDb();$cat=new catal
 		$status_xml_tax=$db->result($r,0,"status_xml_tax");
 		$status_tax=$db->result($r,0,"status_tax");
 		list($tb_doc_nom,$tb_seller_id,$tb_seller_name,$tb_tax_type_id,$tb_cash_id,$tb_cash_name,$tb_summ,$tb_data_create)=$this->getTaxInvoceHeader($tax_to_back_id);
-		$tax_to_back_document="пїЅпїЅ-$tb_doc_nom $tb_data_create";
+		$tax_to_back_document="НН-$tb_doc_nom $tb_data_create";
 	}
 	$form=str_replace("{tax_id}",$tax_id,$form);								 
 	$form=str_replace("{user_id}",$user_id,$form);
@@ -240,8 +240,8 @@ function showTaxStrList($tax_id,$status_tax){$db=DbSingleton::getDb();$slave=new
 		$list="
 			<tr id='taxStrNewRow' class='hidden'>
 				<td>nom_i<input type='hidden' id='idStr_0' value=''></td>
-				<td style='min-width:90px;'><input class='form-control input-xs numberOnly' type='text' id='zedStr_0' value='' placeholder='пїЅпїЅпїЅ'></td>
-				<td style='min-width:160px;'><input class='form-control input-xs' type='text' id='goods_nameStr_0' value='' placeholder='пїЅпїЅпїЅпїЅпїЅ'></td>
+				<td style='min-width:90px;'><input class='form-control input-xs numberOnly' type='text' id='zedStr_0' value='' placeholder='код'></td>
+				<td style='min-width:160px;'><input class='form-control input-xs' type='text' id='goods_nameStr_0' value='' placeholder='Товар'></td>
 				<td><input type='text' id='amountStr_0' value='0' class='form-control input-xs numberOnly' autocomplete='off' maxlength=''  min='1' max=''></td>
 				<td><input type='text' id='priceStr_0' value='0' class='form-control input-xs numberOnly' autocomplete='off'></td>
 				<td><input type='text' id='summStr_0' value='0' class='form-control input-xs numberOnly' autocomplete='off'></td>
@@ -285,11 +285,11 @@ function showTaxStrBackList($tax_id,$status_tax){$db=DbSingleton::getDb();$slave
 			<tr id='taxStrNewRow' class='hidden'>
 				<td>nom_i<input type='hidden' id='idStr_0' value=''></td>
 				<td style='min-width:40px;'>
-					<input class='form-control input-xs' type='text numberOnly' id='nomStr_0'  value='' placeholder='пїЅпїЅпїЅпїЅпїЅ'>
+					<input class='form-control input-xs' type='text numberOnly' id='nomStr_0'  value='' placeholder='рядок'>
 					<input type='hidden' id='tax_str_idStr_0' value='0'>
 				</td>
-				<td style='min-width:90px;'><input class='form-control input-xs numberOnly' type='text' id='zedStr_0' value='' placeholder='пїЅпїЅпїЅ'></td>
-				<td style='min-width:160px;'><input class='form-control input-xs' type='text' id='goods_nameStr_0' value='' placeholder='пїЅпїЅпїЅпїЅпїЅ'></td>
+				<td style='min-width:90px;'><input class='form-control input-xs numberOnly' type='text' id='zedStr_0' value='' placeholder='код'></td>
+				<td style='min-width:160px;'><input class='form-control input-xs' type='text' id='goods_nameStr_0' value='' placeholder='Товар'></td>
 				<td><input type='text' id='amountStr_0' value='0' class='form-control input-xs numberOnly' autocomplete='off' maxlength=''  min='1' max=''></td>
 				<td><input type='text' id='priceStr_0' value='0' class='form-control input-xs numberOnly' autocomplete='off'></td>
 				<td><input type='text' id='summStr_0' value='0' class='form-control input-xs numberOnly' autocomplete='off'></td>
@@ -305,7 +305,7 @@ function showTaxStrBackList($tax_id,$status_tax){$db=DbSingleton::getDb();$slave
 
 	
 	
-function saveTaxCard($tax_id,$data_create,$data_send,$cash_id,$tax_summ,$tax_type_id,$tpoint_id,$seller_id,$client_id,$status_tax,$doc_xml_nom){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveTaxCard($tax_id,$data_create,$data_send,$cash_id,$tax_summ,$tax_type_id,$tpoint_id,$seller_id,$client_id,$status_tax,$doc_xml_nom){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$tax_id=$slave->qq($tax_id);$data_create=$slave->qq($data_create);$data_send=$slave->qq($data_send);$cash_id=$slave->qq($cash_id);$tax_summ=$slave->qq($tax_summ);$tax_type_id=$slave->qq($tax_type_id);$tpoint_id=$slave->qq($tpoint_id);$client_id=$slave->qq($client_id);$seller_id=$slave->qq($seller_id);$status_tax=$slave->qq($status_tax);$doc_xml_nom=$slave->qq($doc_xml_nom);
 	if ($tax_id==0 || $tax_id==""){
 		$r=$db->query("select max(id) as mid from J_TAX_INVOICE;");$tax_id=$db->result($r,0,"mid")+1;
@@ -320,7 +320,7 @@ function saveTaxCard($tax_id,$data_create,$data_send,$cash_id,$tax_summ,$tax_typ
 	return array($answer,$err,$tax_id);
 }
 
-function saveTaxCardData($tax_id,$frm,$tto,$idStr,$zedStr,$goods_nameStr,$amountStr,$priceStr,$summStr){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveTaxCardData($tax_id,$frm,$tto,$idStr,$zedStr,$goods_nameStr,$amountStr,$priceStr,$summStr){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$tax_id=$slave->qq($tax_id);$frm=$slave->qq($frm);$tto=$slave->qq($tto);
 	if ($tax_id>0){
 		
@@ -343,7 +343,7 @@ function saveTaxCardData($tax_id,$frm,$tto,$idStr,$zedStr,$goods_nameStr,$amount
 	return array($answer,$err);
 }
 
-function saveTaxBackCard($tax_id,$tax_to_back_id,$data_create,$data_send,$cash_id,$tax_summ,$tax_type_id,$tpoint_id,$seller_id,$client_id,$status_tax,$doc_xml_nom){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveTaxBackCard($tax_id,$tax_to_back_id,$data_create,$data_send,$cash_id,$tax_summ,$tax_type_id,$tpoint_id,$seller_id,$client_id,$status_tax,$doc_xml_nom){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$tax_id=$slave->qq($tax_id);$tax_to_back_id=$slave->qq($tax_to_back_id);$data_create=$slave->qq($data_create);$data_send=$slave->qq($data_send);$cash_id=$slave->qq($cash_id);$tax_summ=$slave->qq($tax_summ);$tax_type_id=$slave->qq($tax_type_id);$tpoint_id=$slave->qq($tpoint_id);$client_id=$slave->qq($client_id);$seller_id=$slave->qq($seller_id);$status_tax=$slave->qq($status_tax);$doc_xml_nom=$slave->qq($doc_xml_nom);
 	if ($tax_id==0 || $tax_id==""){
 		$r=$db->query("select max(id) as mid from J_TAX_INVOICE;");$tax_id=$db->result($r,0,"mid")+1;
@@ -358,7 +358,7 @@ function saveTaxBackCard($tax_id,$tax_to_back_id,$data_create,$data_send,$cash_i
 	return array($answer,$err,$tax_id);
 }
 
-function saveTaxBackCardData($tax_id,$frm,$tto,$idStr,$tsidStr,$nomStr,$zedStr,$goods_nameStr,$amountStr,$priceStr,$summStr){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveTaxBackCardData($tax_id,$frm,$tto,$idStr,$tsidStr,$nomStr,$zedStr,$goods_nameStr,$amountStr,$priceStr,$summStr){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$tax_id=$slave->qq($tax_id);$frm=$slave->qq($frm);$tto=$slave->qq($tto);
 	if ($tax_id>0){
 		
@@ -423,7 +423,7 @@ function exportTaxInvoiceXML($tax_id){$db=DbSingleton::getDb();$cat=new catalogu
 					<RXXXXG33 ROWNUM=\"$i\"></RXXXXG33>
 					<RXXXXG4 ROWNUM=\"$i\">$zed</RXXXXG4>
 					<RXXXXG011 ROWNUM=\"$i\"></RXXXXG011>
-					<RXXXXG4S ROWNUM=\"$i\">пїЅпїЅ</RXXXXG4S>
+					<RXXXXG4S ROWNUM=\"$i\">шт</RXXXXG4S>
 					<RXXXXG105_2S ROWNUM=\"$i\">2009</RXXXXG105_2S>
 					<RXXXXG5 ROWNUM=\"$i\">$amount</RXXXXG5>
 					<RXXXXG6 ROWNUM=\"$i\">".round($price/1.2,6)."</RXXXXG6>
@@ -540,7 +540,7 @@ function exportTaxBackInvoiceXML($tax_id){$db=DbSingleton::getDb();$cat=new cata
 			$invoice_summ+=$summ;
 			$list.="
 					<RXXXXG001 ROWNUM=\"1\">$nom</RXXXXG001>
-					<RXXXXG2S ROWNUM=\"1\">пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</RXXXXG2S>
+					<RXXXXG2S ROWNUM=\"1\">повернення товару</RXXXXG2S>
 					<RXXXXG3S ROWNUM=\"$i\">$goods_name</RXXXXG3S>
 					<RXXXXG21 ROWNUM=\"$i\">103</RXXXXG21>
 					<RXXXXG22 ROWNUM=\"$i\">1</RXXXXG22>
@@ -548,7 +548,7 @@ function exportTaxBackInvoiceXML($tax_id){$db=DbSingleton::getDb();$cat=new cata
 					<RXXXXG33 ROWNUM=\"$i\"></RXXXXG33>
 					<RXXXXG4 ROWNUM=\"$i\">$zed</RXXXXG4>
 					<RXXXXG011 ROWNUM=\"$i\"></RXXXXG011>
-					<RXXXXG4S ROWNUM=\"$i\">пїЅпїЅ</RXXXXG4S>
+					<RXXXXG4S ROWNUM=\"$i\">шт</RXXXXG4S>
 					<RXXXXG105_2S ROWNUM=\"$i\">2009</RXXXXG105_2S>
 					<RXXXXG5 ROWNUM=\"$i\">$amount</RXXXXG5>
 					<RXXXXG6 ROWNUM=\"$i\">".round($price/1.2,6)."</RXXXXG6>
@@ -645,7 +645,7 @@ function getCashName($cash_id){$db=DbSingleton::getDb();$name="";
 	if ($n==1){$name=$db->result($r,0,"name");}
 	return $name;
 }
-function dropTaxStr($tax_id,$tax_str_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+function dropTaxStr($tax_id,$tax_str_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка індексу";
 	$tax_id=$slave->qq($tax_id);
 	$r=$db->query("select status_tax,status from J_TAX_INVOICE where id='$tax_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -658,7 +658,7 @@ function dropTaxStr($tax_id,$tax_str_id){$db=DbSingleton::getDb();$dbt=DbSinglet
 				$answer=1;$err="";
 //				$tax_summ=$this->updateTaxSumm($tax_id);
 			}
-		}else {$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅПІ.";}
+		}else {$answer=0;$err="Видалення заблоковано. Накладну передано в ДПІ.";}
 	}
 	return array($answer,$err,$tax_summ);
 }
@@ -700,7 +700,7 @@ function loadTaxInvoiceCDN($tax_id){$db=DbSingleton::getDb();$slave=new slave;
 			$list.=$block;
 			
 		}
-		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>Файли відсутні</h3>";}
 		return $list;
 }
 
@@ -760,7 +760,7 @@ function showTaxSelectList($sel_id){$db=DbSingleton::getDb();$slave=new slave;$g
 		$cash_abr=$db->result($r,$i-1,"cash_abr");
 		$data_send=$db->result($r,$i-1,"data_send");
 		$user_name=$this->getMediaUserName($db->result($r,$i-1,"user_id"));
-		$cur="";$fn=" onClick='setTaxBackSelect(\"$id\", \"".base64_encode(iconv("windows-1251","utf-8","пїЅпїЅ-$doc_nom $data_create"))."\")'";
+		$cur="";$fn=" onClick='setTaxBackSelect(\"$id\", \"".base64_encode(iconv("windows-1251","utf-8","НН-$doc_nom $data_create"))."\")'";
 		if ($id==$prnt_id){$cur="background-color:#FFFF00;";}if ($id==$sel_id){$cur="background-color:#0CF;";}
 		$list.="<tr style='$cur cursor:pointer;' $fn>
 			<td>$i</td>
@@ -779,7 +779,7 @@ function showTaxSelectList($sel_id){$db=DbSingleton::getDb();$slave=new slave;$g
 	return $form;
 }
 
-function unlinkTaxBack($tax_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function unlinkTaxBack($tax_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
 	$tax_id=$slave->qq($tax_id);
 	if ($tax_id>0){
 		$db->query("update J_TAX_INVOICE set `client_id`='0' where `id`='$tax_id';");
@@ -787,7 +787,7 @@ function unlinkTaxBack($tax_id){$db=DbSingleton::getDb();$slave=new slave;$answe
 	}
 	return array($answer,$err);
 }
-function loadTaxBackSellerClient($tax_id){$db=DbSingleton::getDb(); $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+function loadTaxBackSellerClient($tax_id){$db=DbSingleton::getDb(); $answer=0;$err="Помилка";
 	$r=$db->query("select * from J_TAX_INVOICE where status=1 and id='$tax_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
 		$client_id=$db->result($r,0,"client_id");$client_name=$this->getClientName($client_id);

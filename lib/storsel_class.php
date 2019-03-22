@@ -1,8 +1,8 @@
 <?php
 class storsel{
 
-protected $prefix_new = 'пїЅпїЅпїЅ';
-public $storsel_prefix ='пїЅпїЅпїЅ';
+protected $prefix_new = 'СКв';
+public $storsel_prefix ='СКв';
 
 function getMediaUserName($user_id){$db=DbSingleton::getDb();$name="";
 	$r=$db->query("select name from media_users where id='$user_id' limit 0,1;");$n=$db->num_rows($r);
@@ -40,7 +40,7 @@ function statusStorage($user_id,$storage_id) {$db=DbSingleton::getDb();
 	return $status;
 }
 	
-function show_storsel_list($status){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual; $jmoving=new jmoving; $dp=new dp; session_start(); 	
+function show_storsel_list($status = null){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual; $jmoving=new jmoving; $dp=new dp; session_start();
 	$ses_tpoint_id=$_SESSION["media_tpoint_id"]; $count=0;
 	$where=" and sel.tpoint_id='$ses_tpoint_id'"; 
 	$media_user_id=$_SESSION["media_user_id"]; 
@@ -100,7 +100,7 @@ function show_storsel_list($status){$db=DbSingleton::getDb();$slave=new slave;$g
 		
 
 		if($status=="") {
-		//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ, пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ - 'пїЅ пїЅпїЅпїЅпїЅпїЅ' || $parrent_doc_status==0 
+		//показувати всі, окрім тих, де в переміщеннях статус - 'В дорозі' || $parrent_doc_status==0 
 		if ($status_select_id==127 || $status_select_id<85 || $parrent_doc_status==107 || ($status_select==85 && $parrent_doc_status!=48)){
 			if ($this->statusStorage($media_user_id,$storage_id)) {
 			$function="showStorselCard(\"$id\")";
@@ -188,7 +188,7 @@ function show_storsel_list($status){$db=DbSingleton::getDb();$slave=new slave;$g
 	return array($list,$count);
 }
 	
-function updateStorselStatus($select_id) {$db=DbSingleton::getDb(); $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function updateStorselStatus($select_id) {$db=DbSingleton::getDb(); $answer=0;$err="Помилка збереження даних!";
 	$db->query("update J_SELECT set status_select=128 where id='$select_id';");
     $answer=1; $err="";
     return array($answer,$err);
@@ -223,7 +223,7 @@ function showStorselCard($select_id){$db=DbSingleton::getDb();$slave=new slave;$
 			$form_htm=RD."/tpl/storsel_use_deny.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 			$form=str_replace("{user_name}",$this->getMediaUserName($user_use),$form);
 			$admin_unlock="";
-			if ($user_id==1 || $user_id==2){$admin_unlock="<button class='btn btn-sm btn-warning' onClick='unlockStorselCard(\"$id\");'><i class='fa fa-unlock'></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</button>";}
+			if ($user_id==1 || $user_id==2){$admin_unlock="<button class='btn btn-sm btn-warning' onClick='unlockStorselCard(\"$id\");'><i class='fa fa-unlock'></i> Розблокувати</button>";}
 			$form=str_replace("{admin_unlock}",$admin_unlock,$form);
 		}
 		if ($user_id==$user_use || $user_use==0){
@@ -433,10 +433,10 @@ function loadStorselCommets($select_id){$db=DbSingleton::getDb();$slave=new slav
 			$list.=$block;
 			
 		}
-		if ($n==0){$list="<h3 class='text-center'>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>";}
+		if ($n==0){$list="<h3 class='text-center'>Коментарі відсутні</h3>";}
 		return $list;
 }
-function saveStorselComment($select_id,$comment){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
+function saveStorselComment($select_id,$comment){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка збереження даних!";
 	$select_id=$slave->qq($select_id);$comment=$slave->qq($comment);
 	if ($select_id>0 && $comment!=""){
 		$r=$db->query("insert into J_SELECT_COMMENTS (`select_id`,`user_id`,`comment`) values ('$select_id','$user_id','$comment');");
@@ -444,7 +444,7 @@ function saveStorselComment($select_id,$comment){$db=DbSingleton::getDb();$slave
 	}
 	return array($answer,$err);
 }
-function dropStorselComment($select_id,$comment_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
+function dropStorselComment($select_id,$comment_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення запису!";
 	$select_id=$slave->qq($select_id);$comment_id=$slave->qq($comment_id);
 	if ($select_id>0 && $comment_id>0){
 		$r=$db->query("select * from J_SELECT_COMMENTS where select_id='$select_id' and id='$comment_id' limit 0,1;");$n=$db->num_rows($r);
@@ -501,14 +501,14 @@ function startJmovingStorageSelect($jmoving_id){$db=DbSingleton::getDb();$slave=
 		$oper_status=$db->result($r,0,"oper_status");
 		$status_select=$db->result($r,0,"status_select");
 		$storage_id_to=$db->result($r,0,"storage_id_to");
-		if ($storage_id_to==0){$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
-		if ($status_select>47 || $oper_status>30){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+		if ($storage_id_to==0){$answer=0;$err="Не зазначено склад переміщення.";}
+		if ($status_select>47 || $oper_status>30){$answer=0;$err="Переміщення заблоковано. Зміни вносити заборонено.";}
 		if ($oper_status==30 && $status_select>=44 && $status_select<=47 && $storage_id_to>0) {
 
 			/* 				make calculation jmoving  */
 			$ms_ar=array();
 			$r1=$db->query("select storage_id_from from J_MOVING_STR where jmoving_id='$jmoving_id' and status_select='44' group by storage_id_from,cell_id_from order by storage_id_from asc;");$n1=$db->num_rows($r1);
-			if ($n1==0){ $answer=0;$err="ВіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ";}
+			if ($n1==0){ $answer=0;$err="Відсутній товар для створення відбору";}
 			if($n1>0){
 				for ($i=1;$i<=$n1;$i++){
 					$storage_id_from=$db->result($r1,$i-1,"storage_id_from");
@@ -551,8 +551,8 @@ function makesJmovingStorageSelect($jmoving_id){$db=DbSingleton::getDb();$dbt=Db
 		$oper_status=$db->result($r,0,"oper_status");
 		$status_select=$db->result($r,0,"status_select");
 		$storage_id_to=$db->result($r,0,"storage_id_to");
-		if ($storage_id_to==0){$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
-		if ($status_select>47 || $oper_status>30){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+		if ($storage_id_to==0){$answer=0;$err="Не зазначено склад переміщення.";}
+		if ($status_select>47 || $oper_status>30){$answer=0;$err="Переміщення заблоковано. Зміни вносити заборонено.";}
 		if ($oper_status==30 && $status_select>=44 && $status_select<=47 && $storage_id_to>0) {
 			$db->query("update J_MOVING set status_select='45' where id='$jmoving_id';");
 			
@@ -637,8 +637,8 @@ function makesJmovingStorageSelectLocal($jmoving_id){$db=DbSingleton::getDb();$d
 		$oper_status=$db->result($r,0,"oper_status");
 		$status_select=$db->result($r,0,"status_select");
 		$storage_id_to=$db->result($r,0,"storage_id_to");
-		if ($storage_id_to==0){$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
-		if ($status_select>47 || $oper_status>30){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+		if ($storage_id_to==0){$answer=0;$err="Не зазначено склад переміщення.";}
+		if ($status_select>47 || $oper_status>30){$answer=0;$err="Переміщення заблоковано. Зміни вносити заборонено.";}
 		if ($oper_status==30 && $status_select>=44 && $status_select<=47 && $storage_id_to>0) {
 			$db->query("update J_MOVING set status_select='45' where id='$jmoving_id';");
 			
@@ -714,8 +714,8 @@ function clearJmovingStorageSelect($jmoving_id){$db=DbSingleton::getDb();$slave=
 		$oper_status=$db->result($r,0,"oper_status");
 		$status_select=$db->result($r,0,"status_select");
 		$storage_id_to=$db->result($r,0,"storage_id_to");
-		if ($storage_id_to==0){$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
-		if ($status_select>47 || $oper_status>30){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+		if ($storage_id_to==0){$answer=0;$err="Не зазначено склад переміщення.";}
+		if ($status_select>47 || $oper_status>30){$answer=0;$err="Переміщення заблоковано. Зміни вносити заборонено.";}
 		if ($oper_status==30 && $status_select>=44 && $status_select<=47 && $storage_id_to>0) {
 			$db->query("delete from J_MOVING_SELECT_TEMP where jmoving_id='$jmoving_id' and status_select='44';");
 			$db->query("delete from J_MOVING_SELECT_STR_TEMP  where jmoving_id='$jmoving_id';");
@@ -731,8 +731,8 @@ function clearJmovingStorageSelectLocal($jmoving_id){$db=DbSingleton::getDb();$s
 		$oper_status=$db->result($r,0,"oper_status");
 		$status_select=$db->result($r,0,"status_select");
 		$storage_id_to=$db->result($r,0,"storage_id_to");
-		if ($storage_id_to==0){$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
-		if ($status_select>47 || $oper_status>30){$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";}
+		if ($storage_id_to==0){$answer=0;$err="Не зазначено склад переміщення.";}
+		if ($status_select>47 || $oper_status>30){$answer=0;$err="Переміщення заблоковано. Зміни вносити заборонено.";}
 		if ($oper_status==30 && $status_select>=44 && $status_select<=47 && $storage_id_to>0) {
 			$db->query("delete from J_MOVING_LOCAL_SELECT_TEMP where jmoving_id='$jmoving_id' and status_select='44';");
 			$db->query("delete from J_MOVING_LOCAL_SELECT_STR_TEMP  where jmoving_id='$jmoving_id';");
@@ -783,7 +783,7 @@ function showJmovingSkladStorageSelectList($jmoving_id,$jmoving_status){$db=DbSi
 		$list.="<tr id='strStsRow_$i'>
 			<td>$i</td>";
 			if ($jmoving_status>44){
-				$list.="<td style='min-width:140px;'>пїЅпїЅпїЅ-$id</td>";	
+				$list.="<td style='min-width:140px;'>СкВ-$id</td>";	
 			}
 		$list.="<td style='min-width:140px;'>$tpoint_name</td>
 			<td style='min-width:120px;'>$storage_name</td>
@@ -850,7 +850,7 @@ function showJmovingSkladStorageSelectListLocal($jmoving_id,$jmoving_status){$db
 		$list.="<tr id='strStsRow_$i'>
 			<td>$i</td>";
 			if ($jmoving_status>44){
-				$list.="<td style='min-width:140px;'>пїЅпїЅпїЅпїЅ-$id</td>";	
+				$list.="<td style='min-width:140px;'>СкВн-$id</td>";	
 			}
 		$list.="<td style='min-width:140px;'>$tpoint_name</td>
 			<td style='min-width:120px;'>$storage_name</td>
@@ -940,7 +940,7 @@ function viewJmovingStorageSelect($jmoving_id,$select_id,$jmoving_status){$db=Db
 	$form=str_replace("{data_48}",$data_records[48],$form);
 	
 	
-	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ-$select_id");
+	return array($form,"Структура складського відбору № СкВ-$select_id");
 }
 function viewJmovingStorageSelectLocal($jmoving_id,$select_id,$jmoving_status){$db=DbSingleton::getDb();$cat=new catalogue;$slave=new slave;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
 	$form_htm=RD."/tpl/jmoving_local_storage_select_view.htm";
@@ -1008,10 +1008,10 @@ function viewJmovingStorageSelectLocal($jmoving_id,$select_id,$jmoving_status){$
 	$form=str_replace("{data_48}",$data_records[48],$form);
 	
 	
-	return array($form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ-$select_id");
+	return array($form,"Структура складського відбору № СкВн-$select_id");
 }
 
-function dropJmovingStorageSelect($jmoving_id,$select_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
+function dropJmovingStorageSelect($jmoving_id,$select_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення запису!";
 	$jmoving_id=$slave->qq($jmoving_id);$select_id=$slave->qq($select_id);
 	if ($jmoving_id>0 && $select_id>0){
 		$r=$db->query("select count(id) as kol from J_MOVING_SELECT_STR_TEMP where jmoving_id='$jmoving_id' and select_id='$select_id';");$kol=$db->result($r,0,"kol");
@@ -1024,7 +1024,7 @@ function dropJmovingStorageSelect($jmoving_id,$select_id){$db=DbSingleton::getDb
 	}
 	return array($answer,$err);
 }
-function dropJmovingStorageSelectLocal($jmoving_id,$select_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!";
+function dropJmovingStorageSelectLocal($jmoving_id,$select_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка видалення запису!";
 	$jmoving_id=$slave->qq($jmoving_id);$select_id=$slave->qq($select_id);
 	if ($jmoving_id>0 && $select_id>0){
 		$r=$db->query("select count(id) as kol from J_MOVING_LOCAL_SELECT_STR_TEMP where jmoving_id='$jmoving_id' and select_id='$select_id';");$kol=$db->result($r,0,"kol");
@@ -1037,7 +1037,7 @@ function dropJmovingStorageSelectLocal($jmoving_id,$select_id){$db=DbSingleton::
 	}
 	return array($answer,$err);
 }
-function collectStorsel($select_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!"; $date=date("Y-m-d H:i:s");
+function collectStorsel($select_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$answer=0;$err="Помилка обробки запису!"; $date=date("Y-m-d H:i:s");
 	$select_id=$slave->qq($select_id);
 	if ($select_id>0){
 		$r=$db->query("select status_select,parrent_doc_id from J_SELECT where id='$select_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1047,7 +1047,7 @@ function collectStorsel($select_id){$db=DbSingleton::getDb();$slave=new slave;se
 			if ($status_select==82){
 				//correct
 				$db->query("update J_SELECT set status_select='83', user_start='$user_id', data_start='$date' where id='$select_id' limit 1;");
-				//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ'
+				//Статус переміщення 'Збирається'
 				$db->query("update J_MOVING set status_jmoving='46' where id='$parrent_doc_id' limit 1;");
 				$this->addJournalRecord($select_id,83);
 				$answer=1;$err="";
@@ -1085,7 +1085,7 @@ function getStorselInfo($select_id){$db=DbSingleton::getDb();$slave=new slave;$c
 		$parrent_doc_type_id=$db->result($r,0,"parrent_doc_type_id");
 		$parrent_doc_id=$db->result($r,0,"parrent_doc_id");
 	}
-	return array("пїЅпїЅпїЅ-$select_id/$storage_name",$data_create,$data_start,$data_collect,$storage_id,$storage_name,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$tpoint_id,$tpoint_name,$parrent_doc_type_id,$parrent_doc_id);
+	return array("СКв-$select_id/$storage_name",$data_create,$data_start,$data_collect,$storage_id,$storage_name,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$tpoint_id,$tpoint_name,$parrent_doc_type_id,$parrent_doc_id);
 }
 	
 function getStorageOrder($storage_id) { $db=DbSingleton::getTokoDb();
@@ -1168,7 +1168,7 @@ function printStorselView($select_id){$db=DbSingleton::getDb();$cat=new catalogu
 
 	$this->addJournalRecord($select_id,52);
 	
-	//"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ"
+	//"Структура складського відбору"
 	$mp=new media_print;
 	$mp->print_document($form,array(210,280));
 	return $form;
@@ -1275,7 +1275,7 @@ function printStorselView2($select_id){$db=DbSingleton::getDb();$cat=new catalog
 
 	$this->addJournalRecord($select_id,52);
 	
-	//"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ"
+	//"Структура складського відбору"
 	$mp=new media_print;
 	$mp->print_document($form,array(210,280));
 	return $form;
@@ -1301,7 +1301,7 @@ function getStorselJournalRecords($select_id){$db=DbSingleton::getDb();$data=arr
 	return $data;
 }
 
-function showStorselBarcodeForm($select_id){$db=DbSingleton::getDb();$cat=new catalogue;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+function showStorselBarcodeForm($select_id){$db=DbSingleton::getDb();$cat=new catalogue;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка індексу";
 	$form_htm=RD."/tpl/storsel_barcode_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from J_SELECT_STR  where select_id='$select_id' order by id asc;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
@@ -1319,10 +1319,10 @@ function showStorselBarcodeForm($select_id){$db=DbSingleton::getDb();$cat=new ca
 		if ($dif_amount_barcodes<0){$dif_amount_barcodes=0;}
 		$storage_select_list=$this->getStorselBugList($select_id,$art_id,$id);
 		
-//		пїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
-//		ЖёпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
-//		пїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-//		пїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+//		Красный - вовсе не сканировался.
+//		Жёлтый - частично сканирован.
+//		Зелёный - полностью сканирован
+//		Синий - только ячейка, где без сканера
 		
 		if ($amount==$dif_amount_barcodes) $style="style='background:pink'";
 		if ($amount_barcodes>0 && $amount>$amount_barcodes) $style="style='background:lightyellow'";
@@ -1339,8 +1339,8 @@ function showStorselBarcodeForm($select_id){$db=DbSingleton::getDb();$cat=new ca
 			<td align='center' id='amr_$id'>$amount_barcodes</td>
 			<td align='center' id='amrd_$id'>$dif_amount_barcodes</td>
 			<td align='center' id='amrns_$id'>$amount_barcodes_noscan</td>
-			<td align='center'><button class='btn btn-xs btn-default' onclick='showStorselNoscanForm(\"$select_id\",\"$art_id\",\"$id\");' title='ФіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ' alt='ФіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ'><i class='fa fa-cube'></i></button></td>
-			<td align='center'><button class='btn btn-xs btn-danger' onclick='showStorselBugForm(\"$select_id\",\"$id\");' title='пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ' alt='пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ'><i class='fa fa-bug'></i></button></td>
+			<td align='center'><button class='btn btn-xs btn-default' onclick='showStorselNoscanForm(\"$select_id\",\"$art_id\",\"$id\");' title='Фіксація без сканування' alt='Фіксація без сканування'><i class='fa fa-cube'></i></button></td>
+			<td align='center'><button class='btn btn-xs btn-danger' onclick='showStorselBugForm(\"$select_id\",\"$id\");' title='відхилення/брак/недостача' alt='відхилення/брак/недостача'><i class='fa fa-bug'></i></button></td>
 			<td align='center' id='ambg_$id'>$amount_bug</td>
 			<td id='ssbug_$id'>$storage_select_list</td>
 		</tr>";
@@ -1358,10 +1358,10 @@ function showStorselBarcodeForm($select_id){$db=DbSingleton::getDb();$cat=new ca
 	$db->query("update J_SELECT set status_select='84' where id='$select_id' limit 1;");
 	
 	$answer=1;$err="";
-	return array($answer,$err,$form,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅ");	
+	return array($answer,$err,$form,"Пакування товару по штрих-кодам");	
 }
 
-function saveStorselBarcodeForm($select_id,$barcode){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!";
+function saveStorselBarcodeForm($select_id,$barcode){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$answer=0;$err="Помилка індексу!!";
 	$select_id=$slave->qq($select_id);$barcode=$slave->qq($barcode);
 	if ($select_id>0 && $barcode!=""){
 		$art_id=$this->getArtIdByBarcode($barcode);
@@ -1380,15 +1380,15 @@ function saveStorselBarcodeForm($select_id,$barcode){$db=DbSingleton::getDb();$s
 				$ex=1;$i=$n+1;
 			}
 		}
-	}else{ $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅ";}
+	}else{ $answer=0;$err="Помилка штрих-коду";}
 	return array($answer,$err,$id,$amount_barcodes,$dif_amount_barcodes);
 }
-function finishStorselBarcodeForm($select_id){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!";$dp=new dp;
+function finishStorselBarcodeForm($select_id){$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;$answer=0;$err="Помилка індексу!!";$dp=new dp;
 	$select_id=$slave->qq($select_id); $cur_date=date("Y-m-d H:i:s"); session_start(); $user_id=$_SESSION["media_user_id"];
 	if ($select_id>0){
 		$r=$db->query("select * from J_SELECT_STR where select_id='$select_id' and amount>(amount_barcodes+amount_barcodes_noscan+amount_bug);");$n=$db->num_rows($r);
 		if ($n>0){
-			$answer=0;$err="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅ";
+			$answer=0;$err="Не завершено перевірку по штрих-кодам";
 		}
 		if ($n==0){
 			$r=$db->query("select (SUM(amount_barcodes)+SUM(amount_barcodes_noscan)) as new_amount from J_SELECT_STR where select_id='$select_id';");$n=$db->num_rows($r);
@@ -1398,7 +1398,7 @@ function finishStorselBarcodeForm($select_id){$db=DbSingleton::getDb();$slave=ne
 				$db->query("update J_SELECT set status_select='85', amount='$new_amount', data_collect='$cur_date', user_collect='$user_id'  where id='$select_id' limit 1;");}
 				if ($new_amount==0){
 				$db->query("update J_SELECT set status_select='128', amount='$new_amount', data_collect='$cur_date', user_collect='$user_id'  where id='$select_id' limit 1;");}
-				//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 'ВіпїЅпїЅпїЅпїЅпїЅпїЅ'
+				//Статус переміщення 'Відібрано'
 				$r=$db->query("select parrent_doc_id from J_SELECT where id='$select_id' limit 1;");$n=$db->num_rows($r);
 				$parrent_doc_id = $db->result($r,0,"parrent_doc_id");
 				if ($n>0) $db->query("update J_MOVING set status_jmoving='107' where id='$parrent_doc_id' limit 1;");
@@ -1427,9 +1427,9 @@ function finishStorselBarcodeForm($select_id){$db=DbSingleton::getDb();$slave=ne
 						//$new_amount_barcodes=$db->result($ra,0,"amount_barcodes");
 						
 						
-						if ($parrent_doc_type_id==1){ // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+						if ($parrent_doc_type_id==1){ // Перемещение
 							$db->query("update J_MOVING_STR set amount='$new_amount_select' where jmoving_id='$parrent_doc_id' and select_id='$select_id' and art_id='$art_id' and storage_id_from='$select_storage_id_from'  and (cell_id_from='$select_cell_id_from' or cell_id_from='0') limit 1;");
-							if ($parrent_doc_type_id2==1 && $parrent_doc_id2>0){$all_pd_summ=0; //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+							if ($parrent_doc_type_id2==1 && $parrent_doc_id2>0){$all_pd_summ=0; //предпродажа с перемещением
 								$r2=$db->query("select * from J_DP_STR where dp_id='$parrent_doc_id2' and art_id='$art_id' and storage_id_from='$select_storage_id_from' limit 0,1;");$n2=$db->num_rows($r2);
 								if ($n2==1){
 									$dp_str_id=$db->result($r2,0,"id");
@@ -1446,7 +1446,7 @@ function finishStorselBarcodeForm($select_id){$db=DbSingleton::getDb();$slave=ne
 								}
 							}
 						}
-						if ($parrent_doc_type_id==2){ $all_pd_summ=0; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+						if ($parrent_doc_type_id==2){ $all_pd_summ=0; // Предпродажа без перемещения
 							$r2=$db->queryP("select * from J_DP_STR where dp_id='$parrent_doc_id' and art_id='$art_id' and cur_select_str_id='$str_id' limit 0,1;");$n2=$db->num_rows($r2);
 							if ($n2==1){
 								$dp_str_id=$db->result($r2,0,"id");
@@ -1475,11 +1475,11 @@ function finishStorselBarcodeForm($select_id){$db=DbSingleton::getDb();$slave=ne
 			$this->addJournalRecord($select_id,85);
 			$answer=1;$err="";
 		}
-	}else{ $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅ";}
+	}else{ $answer=0;$err="Помилка штрих-коду";}
 	return array($answer,$err,$id,85);
 }
 
-function showStorselBugForm($select_id,$str_id){$db=DbSingleton::getDb();$cat=new catalogue;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+function showStorselBugForm($select_id,$str_id){$db=DbSingleton::getDb();$cat=new catalogue;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка індексу";
 	$form_htm=RD."/tpl/storsel_bug_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from J_SELECT_STR where select_id='$select_id' and id='$str_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -1503,7 +1503,7 @@ function showStorselBugForm($select_id,$str_id){$db=DbSingleton::getDb();$cat=ne
 	return array($answer,$err,$form,"");	
 }
 
-function saveStorselBugForm($select_id,$str_id,$storage_select_bug,$amount_bug){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual;$cat=new catalogue;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!";
+function saveStorselBugForm($select_id,$str_id,$storage_select_bug,$amount_bug){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual;$cat=new catalogue;$answer=0;$err="Помилка індексу!!";
 	$select_id=$slave->qq($select_id);$str_id=$slave->qq($str_id);$storage_select_bug=$slave->qq($storage_select_bug);$amount_bug=$slave->qq($amount_bug);
 	if ($select_id>0 && $str_id>0 && $storage_select_bug>0 && $amount_bug>0){
 		$r=$db->query("select * from J_SELECT_STR where select_id='$select_id' and id='$str_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1522,7 +1522,7 @@ function saveStorselBugForm($select_id,$str_id,$storage_select_bug,$amount_bug){
 			 	
 			$ex_dif_amount=$amount-$amount_bug;
 			if ($ex_dif_amount<($amount_bug_ex)){
-				$answer=0;$err="КіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+				$answer=0;$err="Кількість відхилення не відповідає обліковій кількості";
 			}
 			
 			if ($ex_dif_amount>=$amount_bug_ex){
@@ -1555,7 +1555,7 @@ function saveStorselBugForm($select_id,$str_id,$storage_select_bug,$amount_bug){
 				$db->query("insert into J_SELECT_STR_BUG (`select_id`,`art_id`,`str_id`,`article_nr_displ`,`storage_select_bug`,`amount_bug`) values ('$select_id','$art_id','$str_id','$article_nr_displ','$storage_select_bug','$amount_bug');");
 				
 				/*
-					пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+					ОБНОВИТЬ РЕЗЕРВЫ ПОСЛЕ ФИКСАЦИИ ОТКЛОНЕНИЯ
 				*/
 				$this->updateStockStorageBug($art_id,$storage_id_from,$cell_id_from,$cell_use,$amount_bug);
 				
@@ -1563,7 +1563,7 @@ function saveStorselBugForm($select_id,$str_id,$storage_select_bug,$amount_bug){
 				$answer=1;$err="";
 			}
 		}
-	}else{ $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅ";}
+	}else{ $answer=0;$err="Помилка штрих-коду";}
 	//print "return data: $dif_amount_barcodes,$new_amount_bug,$amount_barcodes,$amount_barcodes_noscan";
 	return array($answer,$err,$id,$storage_select_bug_list,$dif_amount_barcodes,$new_amount_bug,$amount_barcodes,$amount_barcodes_noscan);
 }
@@ -1591,7 +1591,7 @@ function getStorselBugList($select_id,$art_id,$str_id){$db=DbSingleton::getDb();
 		$amount_bug=$db->result($r,$i-1,"amount_bug");
 		
 		$storage_select_bug_name=$manual->getManualMCaption("storage_select_bug",$storage_select_bug);
-		$list.="$amount_bug"."пїЅпїЅ. - $storage_select_bug_name";if ($i<$n){$list.="<br>";}
+		$list.="$amount_bug"."шт. - $storage_select_bug_name";if ($i<$n){$list.="<br>";}
 	}
 	return $list;
 }
@@ -1602,12 +1602,12 @@ function getJmovingBugList($jmoving_id,$art_id){$db=DbSingleton::getDb();$manual
 		$amount_bug=$db->result($r,$i-1,"amount_bug");
 		
 		$storage_select_bug_name=$manual->getManualMCaption("storage_select_bug",$storage_select_bug);
-		$list.="$amount_bug"."пїЅпїЅ. - $storage_select_bug_name";if ($i<$n){$list.="<br>";}
+		$list.="$amount_bug"."шт. - $storage_select_bug_name";if ($i<$n){$list.="<br>";}
 	}
 	return $list;
 }
 
-function showStorselNoscanForm($select_id,$art_id,$str_id){$db=DbSingleton::getDb();$cat=new catalogue;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+function showStorselNoscanForm($select_id,$art_id,$str_id){$db=DbSingleton::getDb();$cat=new catalogue;$manual=new manual;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка індексу";
 	$form_htm=RD."/tpl/storsel_noscan_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$r=$db->query("select * from J_SELECT_STR where select_id='$select_id' and id='$str_id' limit 0,1;");$n=$db->num_rows($r);
 	if ($n==1){
@@ -1633,7 +1633,7 @@ function showStorselNoscanForm($select_id,$art_id,$str_id){$db=DbSingleton::getD
 	}
 	return array($answer,$err,$form,"");	
 }
-function saveStorselNoscanForm($select_id,$art_id,$str_id,$amount_barcode_noscan){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual;$cat=new catalogue;$answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!";
+function saveStorselNoscanForm($select_id,$art_id,$str_id,$amount_barcode_noscan){$db=DbSingleton::getDb();$slave=new slave;$manual=new manual;$cat=new catalogue;$answer=0;$err="Помилка індексу!!";
 	$select_id=$slave->qq($select_id);$art_id=$slave->qq($art_id);$str_id=$slave->qq($str_id);$amount_barcode_noscan=$slave->qq($amount_barcode_noscan);
 	if ($select_id>0 && $art_id>0 && $str_id>0 && $amount_barcode_noscan>0){
 		$r=$db->query("select * from J_SELECT_STR where select_id='$select_id' and art_id='$art_id' and id='$str_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1646,7 +1646,7 @@ function saveStorselNoscanForm($select_id,$art_id,$str_id,$amount_barcode_noscan
 
 			$ex_dif_amount=($amount-$amountBarcodes-$amountBarcodesNoscan-$amountBug);
 			if ($ex_dif_amount<$amount_barcode_noscan){
-				$answer=0;$err="КіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ $ex_dif_amount";
+				$answer=0;$err="Кількість не відповідає обліковій кількості $ex_dif_amount";
 			}
 			if ($ex_dif_amount>=$amount_barcode_noscan){
 				$new_amount_barcode_noscan=$amount_barcode_noscan+$amountBarcodesNoscan;
@@ -1655,7 +1655,7 @@ function saveStorselNoscanForm($select_id,$art_id,$str_id,$amount_barcode_noscan
 				$answer=1;$err="";
 			}
 		}
-	}else{ $answer=0;$err="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅ";}
+	}else{ $answer=0;$err="Помилка штрих-коду";}
 	return array($answer,$err,$id,$dif_amount_barcodes,$new_amount_barcode_noscan);
 }
 
