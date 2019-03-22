@@ -27,7 +27,7 @@ class db {
 
         mysqli_set_charset($this->db, 'cp1251');
         mysqli_query($this->db, "SET NAMES 'cp1251' COLLATE 'cp1251_general_ci'");
-        mysqli_query($this->db, "SET CHARACTER SET 'cp1251' COLLATE 'cp1251_general_ci'");
+        mysqli_query($this->db, "SET CHARACTER SET 'cp1251'");
     }
 
     public function close()
@@ -97,7 +97,7 @@ class dbt {
 
         mysqli_set_charset($this->db, 'cp1251');
         mysqli_query($this->db, "SET NAMES 'cp1251' COLLATE 'cp1251_general_ci'");
-        mysqli_query($this->db, "SET CHARACTER SET 'cp1251' COLLATE 'cp1251_general_ci'");
+        mysqli_query($this->db, "SET CHARACTER SET 'cp1251'");
     }
 
     public function close()
