@@ -174,11 +174,11 @@ function loadUsersAccess($users_id){$db=DbSingleton::getDb();$list="";
 		left outer join media_users_role_structure rs on (rs.file_id=mf.id and rs.user_id='$users_id')
 		left outer join access_level al on al.id=rs.lvl
 	where mf.system=1 order by mf.id asc;");$n=$db->num_rows($r);
-									
+
 	for ($i=1;$i<=$n;$i++){
-		$mf_id=$db->result($r,$i-1,"mf.id");
-		$mf_caption=$db->result($r,$i-1,"mf.caption");
-		$lvl=$db->result($r,$i-1,"rs.lvl");
+		$mf_id=$db->result($r,$i-1,"id");
+		$mf_caption=$db->result($r,$i-1,"caption");
+		$lvl=$db->result($r,$i-1,"lvl");
 		$level_name=$db->result($r,$i-1,"level_name");
 		$access="Відсутній";if ($lvl>0){$access="Доступ";}
 		$list.="<tr>
