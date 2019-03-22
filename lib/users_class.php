@@ -9,7 +9,7 @@ function newUsersCard(){$db=DbSingleton::getDb();$slave=new slave;$manual=new ma
 }
 
 function show_users_list(){$db=DbSingleton::getDb();$slave=new slave;$where="";$list="";
-	$r=$db->query("select *, tp.name as tpoint_name, mr.caption as role_name, uss.mcaption as status_name
+	$r=$db->query("select mu.*, tp.name as tpoint_name, mr.caption as role_name, uss.mcaption as status_name
 	from media_users mu 
 		left outer join T_POINT tp on tp.id=mu.tpoint_id 
 		left outer join media_role mr on mr.id=mu.role_id
