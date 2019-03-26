@@ -11,25 +11,23 @@
                         <form method="get" class="form-horizontal">
 
                             <div class="form-group">
-                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Вершина дерева</label>
-                                <div class="col-sm-2"><input class="form-control" type="text" name="str_id" readonly id="str_id" value="{str_id}" placeholder=""></div>
-                                <label class="col-sm-2 control-label">Позиція</label>
-                                <div class="col-sm-4">
+                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Номер категорії</label>
+                                <div class="col-sm-2"><input class="form-control" type="text" name="cat_id" readonly id="cat_id" value="{cat_id}" placeholder=""></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Заголовок</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control" name="head_list" id="head_list" onChange="changeTreeHeader();">
+                                        {head_list}
+                                    </select>
+                                </div>
+                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Позиція</label>
+                                <div class="col-sm-2">
                                     <select class="form-control" name="position_list" id="position_list">
                                         {position_list}
                                     </select>
                                 </div>
-                            </div>
-
-                            <div class="hr-line-dashed"></div>
-
-                            <div class="form-group">
-                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Стандартна назва (РУС)</label>
-                                <div class="col-sm-2"><input class="form-control" type="text" name="tex_text_ru" readonly id="tex_text_ru" value="{tex_text_ru}" placeholder=""></div>
-                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Стандартна назва (УКР)</label>
-                                <div class="col-sm-2"><input class="form-control" type="text" name="tex_text_ua" readonly id="tex_text_ua" value="{tex_text_ua}" placeholder=""></div>
-                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Стандартна назва (ENG)</label>
-                                <div class="col-sm-2"><input class="form-control" type="text" name="tex_text_en" readonly id="tex_text_en" value="{tex_text_en}" placeholder=""></div>
                             </div>
 
                             <div class="hr-line-dashed"></div>
@@ -47,7 +45,8 @@
 
                             <div class="form-group">
                                 <div class="col-sm-10 text-right col-sm-offset-2">
-                                    <button class="btn btn-primary" type="button" onClick="saveGroupTreeCard('{str_id}');">Зберегти зміни</button>
+                                    <button class="btn btn-primary" type="button" onClick="saveGroupTreeHeadCategoryCard('{cat_id}');">Зберегти зміни</button>
+                                    <button class="btn btn-danger" type="button" onClick="dropGroupTreeHeadCategory('{cat_id}');" {disabled}>Видалити</button>
                                     <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
                                 </div>
                             </div>

@@ -15,7 +15,7 @@ class report_clients {
 	}
 	
 	function getMediaUserName($user_id){$db=DbSingleton::getDb();$name="";
-		$r=$db->query("select name from media_users where id='$user_id' limit 0,1;");$n=$db->num_rows($r);
+		$r=$db->query("select name from media_users where id='$user_id' limit 1;");$n=$db->num_rows($r);
 		if ($n==1){$name=$db->result($r,0,"name");}
 		return $name;
 	}	
@@ -79,7 +79,6 @@ class report_clients {
 		where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59'
 		and js.client_conto_id='$client_id' and j.status_back=103;"); $n=$db->num_rows($r); 	
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"id"); 
 			$usd_to_uah=$db->result($r,$i-1,"usd_to_uah"); 
 			$eur_to_uah=$db->result($r,$i-1,"eur_to_uah"); 
 			$cash=$db->result($r,$i-1,"cash_id"); 
@@ -91,7 +90,7 @@ class report_clients {
 	}
 	
 	function showReportClients($date_start,$date_end,$clients,$cash_id,$tpoint_id) { $db=DbSingleton::getDb(); $list=""; $sales=$backs=[]; $client=new clients;
-		$form_htm=RD."/tpl/report_clients_table.htm";if (file_exists("$form_htm")){ $form=file_get_contents($form_htm);} $summ_list=0; 
+		$form="";$form_htm=RD."/tpl/report_clients_table.htm";if (file_exists("$form_htm")){ $form=file_get_contents($form_htm);} $summ_list=0;
 																					  
 		if($clients=="") $where=""; else $where="j.client_conto_id in ($clients) and ";	 			
 		if($tpoint_id=="0") $where_tpoint=""; else $where_tpoint="and cc.tpoint_id=$tpoint_id";	
@@ -103,12 +102,7 @@ class report_clients {
 		group by j.client_conto_id;"); $n=$db->num_rows($r); 
 
 		for ($i=1;$i<=$n;$i++) {
-			$id=$db->result($r,$i-1,"id"); 																			  
-			$user_id=$db->result($r,$i-1,"user_id"); 
-			$doc_type_id=$db->result($r,$i-1,"doc_type_id"); 
 			$client_id=$db->result($r,$i-1,"client_conto_id");
-			$usd_to_uah=$db->result($r,$i-1,"usd_to_uah"); 
-			$eur_to_uah=$db->result($r,$i-1,"eur_to_uah"); 
 			$cash=$db->result($r,$i-1,"cash_id");
 			$summ=$this->getSummReportsSales($date_start,$date_end,$cash_id,$client_id);
 			$sales[$client_id] = ["client_id"=>$client_id, "summ"=>$summ, "cash"=>$cash];
@@ -125,20 +119,15 @@ class report_clients {
 		group by js.client_conto_id;"); $n=$db->num_rows($r); 
 																					 
 		for ($i=1;$i<=$n;$i++) {
-			$id=$db->result($r,$i-1,"id"); 																			  
-			$user_id=$db->result($r,$i-1,"sale_user"); 
-			$doc_type_id=$db->result($r,$i-1,"doc_type_id"); 
-			$client_id=$db->result($r,$i-1,"client_id"); 
-			$usd_to_uah=$db->result($r,$i-1,"usd_to_uah"); 
-			$eur_to_uah=$db->result($r,$i-1,"eur_to_uah"); 
+			$client_id=$db->result($r,$i-1,"client_id");
 			$cash=$db->result($r,$i-1,"cash_id"); 
 			$summ=$this->getSummReportsBacks($date_start,$date_end,$cash_id,$client_id);
+            if ($sales[$client_id]==null) $sales[$client_id] = ["client_id"=>$client_id, "summ"=>0, "cash"=>$cash];
 			$backs[$client_id] = ["client_id"=>$client_id, "summ_deb"=>$summ, "cash"=>$cash];
 		}	
 					 
 		foreach ($sales as $key=>$value) {
 			$client_id=$value["client_id"];
-			$cash=$value["cash"];
 			$summ=$value["summ"];
 			$summ_deb=$backs[$key]["summ_deb"]; 
 			$client_name=$client->getClientNameById($client_id,"name"); 
@@ -164,15 +153,15 @@ class report_clients {
 		return $form;
 	}
 		
-	function getSeoReportsSumm($date_start,$date_end,$managers,$cash_id,$client_status,$user_id) { $db=DbSingleton::getDb(); $list=""; $clients=new clients;								$r=$db->query("select j.id, j.usd_to_uah, j.eur_to_uah, j.user_id, j.doc_type_id, j.summ as prodaga, jb.summ as vosvrat from J_SALE_INVOICE j
+	function getSeoReportsSumm($date_start,$date_end,$managers,$cash_id,$client_status,$user_id) { $db=DbSingleton::getDb(); $list="";
+	    $r=$db->query("select j.id, j.usd_to_uah, j.eur_to_uah, j.user_id, j.doc_type_id, j.summ as prodaga, jb.summ as vosvrat from J_SALE_INVOICE j
 			cross join J_BACK_CLIENTS jb 
 		where j.user_id='$user_id' 
 		and (j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59')
 		or (jb.time_stamp>='$date_start 00:00:00' and jb.time_stamp<='$date_end 23:59:59')
 		and j.cash_id='$cash_id'
-		group by j.doc_type_id;"); $n=$db->num_rows($r); $prodaga=$vosvrat=0;			 														  						
+		group by j.doc_type_id;"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"id"); 																										  
 			$user_id=$db->result($r,$i-1,"user_id");
 			$doc_type_id=$db->result($r,$i-1,"doc_type_id"); $doc_name=$this->getManuaType($doc_type_id);											
 			$prodaga=$db->result($r,$i-1,"prodaga");
@@ -190,17 +179,16 @@ class report_clients {
 		return $list;
 	}
 	
-	function getSeoReportsSummClient($date_start,$date_end,$managers,$cash_id,$client_status,$user_id,$doc_type_id) { $db=DbSingleton::getDb(); $list=""; $clients=new clients;			$r=$db->query("select j.id,j.user_id,j.client_id,j.doc_type_id,sum(j.summ) as prodaga from J_SALE_INVOICE j
+	function getSeoReportsSummClient($date_start,$date_end,$managers,$cash_id,$client_status,$user_id,$doc_type_id) { $db=DbSingleton::getDb(); $list=""; $clients=new clients;
+	    $r=$db->query("select j.id,j.user_id,j.client_id,j.doc_type_id,sum(j.summ) as prodaga from J_SALE_INVOICE j
 		where j.user_id='$user_id' 
 		and j.doc_type_id='$doc_type_id'
 		and j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59'
 		and j.cash_id='$cash_id'
 		group by j.client_id;"); $n=$db->num_rows($r);																	  
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"id"); 																			  
-			$user_id=$db->result($r,$i-1,"user_id");
-			$client_id=$db->result($r,$i-1,"client_id"); $client_name=$clients->getClientNameById($client_id,"name");
-			$doc_type_id=$db->result($r,$i-1,"doc_type_id"); $doc_name=$this->getManuaType($doc_type_id);											
+			$client_id=$db->result($r,$i-1,"client_id");
+			$client_name=$clients->getClientNameById($client_id,"name");
 			$prodaga=$db->result($r,$i-1,"prodaga"); 
 			$vosvrat=$db->result($r,$i-1,"vosvrat"); 
 			$list.="<tr>
@@ -241,8 +229,7 @@ class report_clients {
 			$id=$db->result($r,$i-1,"id");
 			$name=$db->result($r,$i-1,"name"); 
 			$full_name=$db->result($r,$i-1,"full_name"); 
-			$list.="
-			<option value='$id' $selected>$full_name ($name)</option>";
+			$list.="<option value='$id'>$full_name ($name)</option>";
 		}
 		return $list;
 	}

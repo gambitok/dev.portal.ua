@@ -338,15 +338,28 @@ if ($_REQUEST["w"]=="showGroupTreeHeaders"){ $GLOBALS['_RESULT'] = array("conten
 
 if ($_REQUEST["w"]=="saveGroupTreeCard"){ list($answer,$err)=$group_tree->saveGroupTreeCard($_REQUEST["str_id"],$_REQUEST["position"],$_REQUEST["disp_text_ru"],$_REQUEST["disp_text_ua"],$_REQUEST["disp_text_en"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
-if ($_REQUEST["w"]=="addStrHeader"){ $GLOBALS['_RESULT'] = array("content"=>$group_tree->addStrHeader($_REQUEST["str_id"],$_REQUEST["head_id"]));}
-
-if ($_REQUEST["w"]=="dropStrHeader"){ $GLOBALS['_RESULT'] = array("content"=>$group_tree->dropStrHeader($_REQUEST["str_id"],$_REQUEST["head_id"]));}
-
 if ($_REQUEST["w"]=="showGroupTreeHead"){ $GLOBALS['_RESULT'] = array("content"=>$group_tree->showGroupTreeHead($_REQUEST["head_id"]));}
 
 if ($_REQUEST["w"]=="saveGroupTreeHead"){ list($answer,$err)=$group_tree->saveGroupTreeHead($_REQUEST["head_id"],$_REQUEST["disp_text_ru"],$_REQUEST["disp_text_ua"],$_REQUEST["disp_text_en"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
 if ($_REQUEST["w"]=="dropGroupTreeHead"){ list($answer,$err)=$group_tree->dropGroupTreeHead($_REQUEST["head_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
+//head str
+
+if ($_REQUEST["w"]=="addGroupTreeHeadStr"){ $GLOBALS['_RESULT'] = array("content"=>$group_tree->addGroupTreeHeadStr($_REQUEST["head_id"]));}
+
+if ($_REQUEST["w"]=="showGroupTreeHeadStr"){ $GLOBALS['_RESULT'] = array("content"=>$group_tree->showGroupTreeHeadStr($_REQUEST["group_id"]));}
+
+if ($_REQUEST["w"]=="saveGroupTreeHeadStrCard"){ list($answer,$err)=$group_tree->saveGroupTreeHeadStrCard($_REQUEST["group_id"],$_REQUEST["head_id"],$_REQUEST["str_id"],$_REQUEST["position"],$_REQUEST["category"],$_REQUEST["disp_text_ru"],$_REQUEST["disp_text_ua"],$_REQUEST["disp_text_en"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+
+if ($_REQUEST["w"]=="dropGroupTreeHeadStr"){ list($answer,$err)=$group_tree->dropGroupTreeHeadStr($_REQUEST["group_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+
+//category
+
+if ($_REQUEST["w"]=="showGroupTreeHeadCategory"){ $GLOBALS['_RESULT'] = array("content"=>$group_tree->showGroupTreeHeadCategory($_REQUEST["cat_id"]));}
+
+if ($_REQUEST["w"]=="saveGroupTreeHeadCategoryCard"){ list($answer,$err)=$group_tree->saveGroupTreeHeadCategoryCard($_REQUEST["cat_id"],$_REQUEST["head_id"],$_REQUEST["position"],$_REQUEST["disp_text_ru"],$_REQUEST["disp_text_ua"],$_REQUEST["disp_text_en"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+
+if ($_REQUEST["w"]=="dropGroupTreeHeadCategory"){ list($answer,$err)=$group_tree->dropGroupTreeHeadCategory($_REQUEST["cat_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
 ?>
