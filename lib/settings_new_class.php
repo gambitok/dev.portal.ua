@@ -10,7 +10,7 @@ class SettingsNewClass {
 		return $caption;
 	}
 	
-	function showContactsList() { $db = DbSingleton::getTokoDb();
+	function showContactsList() { $db = DbSingleton::getTokoDb();$list="";
 		$form=""; $form_htm=RD."/tpl/new/contacts.htm"; if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}					
 		$r=$db->query("select * from contacts_new where status=1;"); $n=$db->num_rows($r);						
 		for ($i=1;$i<=$n;$i++){
@@ -20,7 +20,6 @@ class SettingsNewClass {
 			$schedule=$db->result($r,$i-1,"schedule");
 			$phone=$db->result($r,$i-1,"phone");
 			$lang_id=$db->result($r,$i-1,"lang_id"); $lang_id=$this->getLangCap($lang_id);
-			
 			$list.="<tr style='cursor:pointer' onClick='showContactsCard(\"$id\")'>";
 				$list.="<td>$title</td>";
 				$list.="<td>$address</td>";
@@ -29,12 +28,11 @@ class SettingsNewClass {
 				$list.="<td>$lang_id</td>";
 			$list.="</tr>";
 		}
-
 		$form=str_replace("{contacts_range}",$list,$form);
 		return $form;
 	}
 		
-	function loadContactsList() { $db = DbSingleton::getTokoDb();
+	function loadContactsList() { $db = DbSingleton::getTokoDb();$list="";
 		$r=$db->query("select * from contacts_new where status=1;"); $n=$db->num_rows($r);						
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
@@ -42,7 +40,6 @@ class SettingsNewClass {
 			$address=$db->result($r,$i-1,"address");
 			$schedule=$db->result($r,$i-1,"schedule");
 			$phone=$db->result($r,$i-1,"phone");
-			
 			$list.="<tr style='cursor:pointer' onClick='showContactsCard(\"$id\")'>";
 				$list.="<td>$title</td>";
 				$list.="<td>$address</td>";
@@ -50,7 +47,6 @@ class SettingsNewClass {
 				$list.="<td>$phone</td>";
 			$list.="</tr>";
 		}
-
 		return $list;
 	}
 	
@@ -61,7 +57,7 @@ class SettingsNewClass {
 	}
 	
 	function showContactsCard($contact_id){ $db=DbSingleton::getTokoDb();
-		$form_htm=RD."/tpl/new/contacts_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        $form="";$form_htm=RD."/tpl/new/contacts_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$r=$db->query("select * from contacts_new where id='$contact_id';"); $n=$db->num_rows($r);
 		if ($n>0){
 			$id=$db->result($r,0,"id");
@@ -96,8 +92,8 @@ class SettingsNewClass {
 
 	//language============================================================================================================================
 	
-	function showLanguageList() {$db = DbSingleton::getTokoDb();
-		$form=""; $form_htm=RD."/tpl/new/language.htm"; if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}						
+	function showLanguageList() {$db = DbSingleton::getTokoDb();$list="";
+		$form=""; $form_htm=RD."/tpl/new/language.htm"; if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$m = 3; 
 		$r=$db->query("select * from new_lang_wd");
 		$n=$db->num_rows($r);
@@ -112,12 +108,11 @@ class SettingsNewClass {
 			}
 			$list.="</tr>";
 		}
-
 		$form=str_replace("{lang_range}",$list,$form);
 		return $form;
 	}
 	
-	function loadLanguageList() {$db = DbSingleton::getTokoDb();					
+	function loadLanguageList() {$db = DbSingleton::getTokoDb(); $list="";
 		$m = 3; 
 		$r=$db->query("select * from new_lang_wd");
 		$n=$db->num_rows($r);
@@ -187,13 +182,12 @@ class SettingsNewClass {
 	
 	//locations======================================================================================================================
 	
-	function showLocations() {$db = DbSingleton::getTokoDb();
+	function showLocations() {$db = DbSingleton::getTokoDb();$list="";
 		$form=""; $form_htm=RD."/tpl/new/locations.htm"; if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}						
 		$r=$db->query("select t2c.CITY_NAME, t2r.REGION_NAME, t2s.STATE_NAME from T2_CITY t2c
 			left outer join T2_REGION t2r on t2r.REGION_ID=t2c.REGION_ID
 			left outer join T2_STATE t2s on t2s.STATE_ID=t2r.STATE_ID");
 		$n=$db->num_rows($r);
-		
 		for ($i=1;$i<=$n;$i++){
 			$city=$db->result($r,$i-1,"CITY_NAME");
 			$region=$db->result($r,$i-1,"REGION_NAME");
@@ -204,7 +198,6 @@ class SettingsNewClass {
 				<td>$city</td>
 			</tr>";
 		}
-					  	
 		$form=str_replace("{location_range}",$list,$form);
 		return $form;
 	}
@@ -221,14 +214,13 @@ class SettingsNewClass {
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
 			$name=$db->result($r,$i-1,"name");
-			$icon=$db->result($r,$i-1,"icon");
 			$sel="";if ($id==$sel_id){$sel=" selected";}
 			$list.="<option value='$id' $sel>$name</option>";
 		}
 		return $list;
 	}
 	
-	function getIcon($id) {$db=DbSingleton::getTokoDb(); $list="";;
+	function getIcon($id) {$db=DbSingleton::getTokoDb();
 		$r=$db->query("select * from new_icons where id='$id' limit 1;");
 		$name=$db->result($r,0,"name");
 		$icon=$db->result($r,0,"icon");
@@ -236,7 +228,7 @@ class SettingsNewClass {
 		return $full_name;
 	}
 	
-	function showContactsBotList() { $db = DbSingleton::getTokoDb();
+	function showContactsBotList() { $db = DbSingleton::getTokoDb();$list="";
 		$form=""; $form_htm=RD."/tpl/new/contacts_bottom.htm"; if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}						
 		$r=$db->query("select * from contacts_bottom_new;"); $n=$db->num_rows($r);							
 		for ($i=1;$i<=$n;$i++){
@@ -245,7 +237,6 @@ class SettingsNewClass {
 			$icon=$db->result($r,$i-1,"icon"); $icon=$this->getIcon($icon);
 			$link=$db->result($r,$i-1,"link"); 
 			$status=$db->result($r,$i-1,"status"); $status=$this->getStatusCaption($status);
-			
 			$list.="<tr style='cursor:pointer' onClick='showContactsBotCard(\"$id\")'>";
 				$list.="<td>$text</td>";
 				$list.="<td>$icon</td>";
@@ -257,7 +248,7 @@ class SettingsNewClass {
 		return $form;
 	}
 		
-	function loadContactsBotList() { $db = DbSingleton::getTokoDb();
+	function loadContactsBotList() { $db = DbSingleton::getTokoDb();$list="";
 		$r=$db->query("select * from contacts_bottom_new;"); $n=$db->num_rows($r);							
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
@@ -265,7 +256,6 @@ class SettingsNewClass {
 			$icon=$db->result($r,$i-1,"icon"); $icon=$this->getIcon($icon);
 			$link=$db->result($r,$i-1,"link");
 			$status=$db->result($r,$i-1,"status"); $status=$this->getStatusCaption($status);
-			
 			$list.="<tr style='cursor:pointer' onClick='showContactsBotCard(\"$id\")'>";
 				$list.="<td>$text</td>";
 				$list.="<td>$icon</td>";
@@ -283,7 +273,7 @@ class SettingsNewClass {
 	}
 	
 	function showContactsBotCard($contact_id){ $db=DbSingleton::getTokoDb();
-		$form_htm=RD."/tpl/new/contacts_bottom_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        $form="";$form_htm=RD."/tpl/new/contacts_bottom_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$r=$db->query("select * from contacts_bottom_new where id='$contact_id';"); $n=$db->num_rows($r);
 		if ($n>0){
 			$id=$db->result($r,0,"id");
@@ -325,7 +315,7 @@ class SettingsNewClass {
 		return $caption;
 	}
 	
-	function showNewsList() { $db = DbSingleton::getTokoDb(); $date=date("Y-m-d");
+	function showNewsList() { $db = DbSingleton::getTokoDb(); $date=date("Y-m-d");$list="";
 		$form=""; $form_htm=RD."/tpl/new/news.htm"; if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}						
 		$r=$db->query("select * from news order by data desc;"); $n=$db->num_rows($r);							
 		for ($i=1;$i<=$n;$i++){
@@ -350,7 +340,7 @@ class SettingsNewClass {
 		return $form;
 	}
 		
-	function loadNewsList() { $db = DbSingleton::getTokoDb(); $date=date("Y-m-d");
+	function loadNewsList() { $db = DbSingleton::getTokoDb(); $date=date("Y-m-d");$list="";
 		$r=$db->query("select * from news order by data desc;"); $n=$db->num_rows($r);						
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
@@ -380,7 +370,7 @@ class SettingsNewClass {
 	}
 	
 	function showNewsCard($news_id){ $db=DbSingleton::getTokoDb();
-		$form_htm=RD."/tpl/new/news_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        $form="";$form_htm=RD."/tpl/new/news_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$r=$db->query("select * from news where id='$news_id';"); $n=$db->num_rows($r);
 		if ($n>0){
 			$id=$db->result($r,0,"id");
@@ -391,7 +381,6 @@ class SettingsNewClass {
 			$status=$db->result($r,0,"status");
 			$descr=$db->result($r,0,"desc");
 			$checked=""; if($status>0){$checked=" checked";}
-			
 			$form=str_replace("{id}",$id,$form);
 			$form=str_replace("{caption}",$caption,$form);
 			$form=str_replace("{lang_id}",$lang_id,$form);
@@ -400,8 +389,7 @@ class SettingsNewClass {
 			$form=str_replace("{data}",$data,$form);
 			$form=str_replace("{descr}",$descr,$form);
 			$form=str_replace("{status}",$checked,$form);
-			
-			$r2=$db->query("select id from news_galery where cat='$id'"); $file_id="";
+			$r2=$db->query("select id from news_galery where cat='$id'");
 			$file_id=$db->result($r2,0,"id");
 			$form=str_replace("{file_id}",$file_id,$form);
 		}

@@ -38,7 +38,7 @@ class seo_reports {
 	}
 	
 	function getSummReportsSales($date_start,$date_end,$cash_id,$doc_type_id,$user_id,$client_id) { $db=DbSingleton::getDb(); $summary=0;	 
-	    $r=$db->queryP("select j.* from J_SALE_INVOICE j
+	    $r=$db->query("select j.* from J_SALE_INVOICE j
 		where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59'
 		and j.doc_type_id='$doc_type_id' and j.user_id='$user_id' and j.client_conto_id='$client_id';"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
@@ -58,7 +58,6 @@ class seo_reports {
 		where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59'
 		and j.doc_type_id='$doc_type_id' and js.user_id='$user_id' and js.client_conto_id='$client_id' and j.status_back=103;"); $n=$db->num_rows($r); 	
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"id"); 
 			$usd_to_uah=$db->result($r,$i-1,"usd_to_uah"); 
 			$eur_to_uah=$db->result($r,$i-1,"eur_to_uah"); 
 			$cash=$db->result($r,$i-1,"cash_id"); 
@@ -85,18 +84,15 @@ class seo_reports {
 	    $list=[]; $sales=$backs=[]; $clients=new clients; $users=$docs=[]; $summ_list=0;
 		if($managers=="" || $managers==0) $where=""; else $where="j.user_id in ($managers) and ";
 																																									  
-	    $r=$db->queryP("select j.*, sum(j.summ) as summary from J_SALE_INVOICE j
+	    $r=$db->query("select j.*, sum(j.summ) as summary from J_SALE_INVOICE j
 		where $where 
 		j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59'
 		group by j.doc_type_id,j.client_conto_id,j.user_id;"); $n=$db->num_rows($r); 
 																					 
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"id"); 																			  
 			$user_id=$db->result($r,$i-1,"user_id"); array_push($users,$user_id);
 			$doc_type_id=$db->result($r,$i-1,"doc_type_id"); 
-			$client_id=$db->result($r,$i-1,"client_conto_id"); 
-			$usd_to_uah=$db->result($r,$i-1,"usd_to_uah"); 
-			$eur_to_uah=$db->result($r,$i-1,"eur_to_uah"); 
+			$client_id=$db->result($r,$i-1,"client_conto_id");
 			$cash=$db->result($r,$i-1,"cash_id");
 			$summ=$this->getSummReportsSales($date_start,$date_end,$cash_id,$doc_type_id,$user_id,$client_id);
 			$sales["$user_id-$doc_type_id-$client_id"]=["user_id"=>$user_id, "doc_type_id"=>$doc_type_id, "client_id"=>$client_id, "summ"=>$summ, "cash"=>$cash];
@@ -109,12 +105,9 @@ class seo_reports {
 		group by js.doc_type_id,js.client_conto_id,js.user_id;"); $n=$db->num_rows($r); 
 																					 
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"id"); 																			  
 			$user_id=$db->result($r,$i-1,"sale_user"); array_push($users,$user_id);
 			$doc_type_id=$db->result($r,$i-1,"doc_type_id"); 
-			$client_id=$db->result($r,$i-1,"client_id"); 
-			$usd_to_uah=$db->result($r,$i-1,"usd_to_uah"); 
-			$eur_to_uah=$db->result($r,$i-1,"eur_to_uah"); 
+			$client_id=$db->result($r,$i-1,"client_id");
 			$cash=$db->result($r,$i-1,"cash_id"); 
 			$summ=$this->getSummReportsBacks($date_start,$date_end,$cash_id,$doc_type_id,$user_id,$client_id);
 			$backs["$user_id-$doc_type_id-$client_id"]=["user_id"=>$user_id, "doc_type_id"=>$doc_type_id, "client_id"=>$client_id, "summ_deb"=>$summ, "cash"=>$cash];
@@ -122,7 +115,7 @@ class seo_reports {
 																					  
 		$users=array_unique($users);
 																				  
-		$result=array_merge_recursive($sales, $backs); $docs = array(); $kilk=0;	
+		$result=array_merge_recursive($sales, $backs); $docs = array(); $kilk=0; $usumm=$usumm_deb=$usumm_all=0; $dsumm=$dsumm_deb=$dsumm_all=0;
 																						 
 		foreach ($users as $user) {
 			
@@ -186,8 +179,9 @@ class seo_reports {
 	}
 
 	
-	function showSeoReports($date_start,$date_end,$managers,$cash_id,$client_status) { $db=DbSingleton::getDb(); $list=""; $sales=$backs=[]; $clients=new clients;
-		$form_htm=RD."/tpl/seo_reports_table.htm";if (file_exists("$form_htm")){ $form=file_get_contents($form_htm);} $users=$docs=[]; $summ_list=0;
+	function showSeoReports($date_start,$date_end,$managers,$cash_id,$client_status) { $db=DbSingleton::getDb(); $clients=new clients;
+        $users=$docs=[]; $summ_list=0; $list=""; $sales=$backs=[];
+        $form="";$form_htm=RD."/tpl/seo_reports_table.htm";if (file_exists("$form_htm")){ $form=file_get_contents($form_htm);}
 																					  
 		if($managers=="") $where=""; else $where="j.user_id in ($managers) and ";	 			
 																					  
@@ -197,12 +191,9 @@ class seo_reports {
 		group by j.doc_type_id, j.client_conto_id, j.user_id;"); $n=$db->num_rows($r); 
 																					 
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"id"); 																			  
 			$user_id=$db->result($r,$i-1,"user_id"); array_push($users,$user_id);
 			$doc_type_id=$db->result($r,$i-1,"doc_type_id"); 
-			$client_id=$db->result($r,$i-1,"client_conto_id"); 
-			$usd_to_uah=$db->result($r,$i-1,"usd_to_uah"); 
-			$eur_to_uah=$db->result($r,$i-1,"eur_to_uah"); 
+			$client_id=$db->result($r,$i-1,"client_conto_id");
 			$cash=$db->result($r,$i-1,"cash_id");
 			$summ=$this->getSummReportsSales($date_start,$date_end,$cash_id,$doc_type_id,$user_id,$client_id);
 			$sales["$user_id-$doc_type_id-$client_id"]=["user_id"=>$user_id, "doc_type_id"=>$doc_type_id, "client_id"=>$client_id, "summ"=>$summ, "cash"=>$cash];
@@ -217,19 +208,16 @@ class seo_reports {
 		group by js.doc_type_id, js.client_conto_id, js.user_id;"); $n=$db->num_rows($r); 
 																					 
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"id"); 																			  
 			$user_id=$db->result($r,$i-1,"sale_user"); array_push($users,$user_id);
 			$doc_type_id=$db->result($r,$i-1,"doc_type_id"); 
-			$client_id=$db->result($r,$i-1,"client_id"); 
-			$usd_to_uah=$db->result($r,$i-1,"usd_to_uah"); 
-			$eur_to_uah=$db->result($r,$i-1,"eur_to_uah"); 
+			$client_id=$db->result($r,$i-1,"client_id");
 			$cash=$db->result($r,$i-1,"cash_id"); 
 			$summ=$this->getSummReportsBacks($date_start,$date_end,$cash_id,$doc_type_id,$user_id,$client_id);
 			$backs["$user_id-$doc_type_id-$client_id"]=["user_id"=>$user_id, "doc_type_id"=>$doc_type_id, "client_id"=>$client_id, "summ_deb"=>$summ, "cash"=>$cash];
 		}	
 																					  
 		$users=array_unique($users);																		  
-		$result=array_merge_recursive($sales, $backs); $docs = array();	
+		$result=array_merge_recursive($sales, $backs); $docs = array();	$usumm=$usumm_deb=$usumm_all=0; $dsumm=$dsumm_deb=$dsumm_all=0;
 					 
 		foreach ($users as $user) {
 			foreach ($result as $key=>$value) {
@@ -309,15 +297,16 @@ class seo_reports {
 		return $form;
 	}
 		
-	function getSeoReportsSumm($date_start,$date_end,$managers,$cash_id,$client_status,$user_id) { $db=DbSingleton::getDb(); $list=""; $clients=new clients;									$r=$db->query("select j.id, j.usd_to_uah, j.eur_to_uah, j.user_id, j.doc_type_id, j.summ as prodaga, jb.summ as vosvrat from J_SALE_INVOICE j
-		cross join J_BACK_CLIENTS jb 
+	function getSeoReportsSumm($date_start,$date_end,$managers,$cash_id,$client_status,$user_id) { $db=DbSingleton::getDb(); $list="";
+	    $r=$db->query("select j.id, j.usd_to_uah, j.eur_to_uah, j.user_id, j.doc_type_id, j.summ as prodaga, jb.summ as vosvrat 
+	    from J_SALE_INVOICE j
+		    cross join J_BACK_CLIENTS jb 
 		where j.user_id='$user_id' 
 		and (j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59')
 		or (jb.time_stamp>='$date_start 00:00:00' and jb.time_stamp<='$date_end 23:59:59')
 		and j.cash_id='$cash_id'
-		group by j.doc_type_id;"); $n=$db->num_rows($r); $prodaga=$vosvrat=0;			 														  						
+		group by j.doc_type_id;"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"id"); 																										  
 			$user_id=$db->result($r,$i-1,"user_id");
 			$doc_type_id=$db->result($r,$i-1,"doc_type_id"); $doc_name=$this->getManuaType($doc_type_id);											
 			$prodaga=$db->result($r,$i-1,"prodaga");
@@ -335,17 +324,17 @@ class seo_reports {
 		return $list;
 	}
 	
-	function getSeoReportsSummClient($date_start,$date_end,$managers,$cash_id,$client_status,$user_id,$doc_type_id) { $db=DbSingleton::getDb(); $list=""; $clients=new clients;				$r=$db->query("select j.id,j.user_id,j.client_id,j.doc_type_id,sum(j.summ) as prodaga from J_SALE_INVOICE j
+	function getSeoReportsSummClient($date_start,$date_end,$managers,$cash_id,$client_status,$user_id,$doc_type_id) { $db=DbSingleton::getDb(); $list=""; $clients=new clients;
+	    $r=$db->query("select j.id,j.user_id,j.client_id,j.doc_type_id,sum(j.summ) as prodaga 
+	    from J_SALE_INVOICE j
 		where j.user_id='$user_id' 
 		and j.doc_type_id='$doc_type_id'
 		and j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59'
 		and j.cash_id='$cash_id'
 		group by j.client_id;"); $n=$db->num_rows($r);																	  
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"id"); 																			  
-			$user_id=$db->result($r,$i-1,"user_id");
 			$client_id=$db->result($r,$i-1,"client_id"); $client_name=$clients->getClientNameById($client_id,"name");
-			$doc_type_id=$db->result($r,$i-1,"doc_type_id"); $doc_name=$this->getManuaType($doc_type_id);											
+			//$doc_type_id=$db->result($r,$i-1,"doc_type_id"); $doc_name=$this->getManuaType($doc_type_id);
 			$prodaga=$db->result($r,$i-1,"prodaga"); 
 			$vosvrat=$db->result($r,$i-1,"vosvrat"); 
 			$list.="<tr>
@@ -381,42 +370,36 @@ class seo_reports {
 	}
 	
 	function getSummUser($user_id,$date_start,$date_end,$cash_id) { $db=DbSingleton::getDb();
-		$summ_list=$summ_sales=$summ_backs=0;
+		$summ_sales=$summ_backs=0;
 		$where="j.user_id in ($user_id) and ";	 			
 																					  
-	    $r=$db->query("select j.*, sum(j.summ) as summary from J_SALE_INVOICE j
+	    $r=$db->query("select j.*, sum(j.summ) as summary 
+	    from J_SALE_INVOICE j
 		where $where 
 		j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59'
 		group by j.doc_type_id, j.client_conto_id, j.user_id;"); $n=$db->num_rows($r); 
 																					 
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"id"); 																			  
 			$user_id=$db->result($r,$i-1,"user_id"); array_push($users,$user_id);
 			$doc_type_id=$db->result($r,$i-1,"doc_type_id"); 
-			$client_id=$db->result($r,$i-1,"client_conto_id"); 
-			$usd_to_uah=$db->result($r,$i-1,"usd_to_uah"); 
-			$eur_to_uah=$db->result($r,$i-1,"eur_to_uah"); 
-			$cash=$db->result($r,$i-1,"cash_id");
+			$client_id=$db->result($r,$i-1,"client_conto_id");
 			$summ=$this->getSummReportsSales($date_start,$date_end,$cash_id,$doc_type_id,$user_id,$client_id);
 			$summ_sales+=$summ;
 		}
 																   
 	    $where="js.user_id in ($user_id) and ";	
 																					  
-	    $r=$db->query("select j.*, sum(j.summ) as summary, js.user_id as sale_user from J_BACK_CLIENTS j
-		left outer join J_SALE_INVOICE js on js.id=j.sale_invoice_id
+	    $r=$db->query("select j.*, sum(j.summ) as summary, js.user_id as sale_user 
+	    from J_BACK_CLIENTS j
+		    left outer join J_SALE_INVOICE js on js.id=j.sale_invoice_id
 		where $where 
 		j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59' and j.status_back=103
 		group by js.doc_type_id, js.client_conto_id, js.user_id;"); $n=$db->num_rows($r); 													   
 																   
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"id"); 																			  
 			$user_id=$db->result($r,$i-1,"sale_user"); array_push($users,$user_id);
 			$doc_type_id=$db->result($r,$i-1,"doc_type_id"); 
-			$client_id=$db->result($r,$i-1,"client_id"); 
-			$usd_to_uah=$db->result($r,$i-1,"usd_to_uah"); 
-			$eur_to_uah=$db->result($r,$i-1,"eur_to_uah"); 
-			$cash=$db->result($r,$i-1,"cash_id"); 
+			$client_id=$db->result($r,$i-1,"client_id");
 			$summ=$this->getSummReportsBacks($date_start,$date_end,$cash_id,$doc_type_id,$user_id,$client_id);
 			$summ_backs+=$summ;
 		}	

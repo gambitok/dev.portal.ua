@@ -35,9 +35,9 @@ class cash_reports {
 		group by paybox_id;"); $n=$db->num_rows($r); 	
 																   
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"id"); 
+			//$id=$db->result($r,$i-1,"id");
 			$paybox_id=$db->result($r,$i-1,"paybox_id"); 
-			$pay_type_id=$db->result($r,$i-1,"pay_type_id"); 
+			//$pay_type_id=$db->result($r,$i-1,"pay_type_id");
 			$name=$this->getPayBoxName($paybox_id);
 			$summ_1=$this->getSummPayBox($date_start,$date_end,$paybox_id,"89",$cash_id);
 			$summ_2=$this->getSummPayBox($date_start,$date_end,$paybox_id,"90",$cash_id);
@@ -60,8 +60,7 @@ class cash_reports {
 			<td></td>
 			<td></td>
 			<td>$summ_kasa</td>
-		</tr>";	
-																   
+		</tr>";
 																   
 		// RASXODI		
 		$array_spend=$this->getSpendTypes(); $summ_vidatki=0; 
@@ -73,10 +72,10 @@ class cash_reports {
 		group by paybox_id_from;"); $n=$db->num_rows($r); 		
 
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"id"); 
+			//$id=$db->result($r,$i-1,"id");
 			$paybox_id=$db->result($r,$i-1,"paybox_id_from"); 
 			$name=$this->getPayBoxName($paybox_id);
-			$summ=$this->getSummMoneySpend($date_start,$date_end,$paybox_id,$cash_id);
+			//$summ=$this->getSummMoneySpend($date_start,$date_end,$paybox_id,$cash_id);
 
 			$summ_spend=0;
 			foreach ($array_spend as $spend_type_id) {
@@ -115,8 +114,8 @@ class cash_reports {
 																   
 		if ($date_end!=null) {
 		$date_end = strtotime($date_end);
-		$date_convert_end=date('d.m.Y', $date_end); } else $date_convert_end=$date_end;	
-																			
+		$date_convert_end=date('d.m.Y', $date_end); } else $date_convert_end=$date_end;
+        $form="";
 		if ($cash_id==1) {
 			$form_htm=RD."/tpl/cash_reports_table.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}	
 			$form=str_replace("{cash_abr}","UAH",$form);
@@ -151,7 +150,7 @@ class cash_reports {
 		return $caption;
 	}
 	
-	function getSummPayBox($date_start,$date_end,$paybox_id,$pay_type_id,$cash_id) { $db=DbSingleton::getDb(); $list=""; $summ=0;	 												   
+	function getSummPayBox($date_start,$date_end,$paybox_id,$pay_type_id,$cash_id) { $db=DbSingleton::getDb();
 		$r=$db->query("select sum(summ) as pay_summ from J_PAY 
 		where paybox_id=$paybox_id 
 		and pay_type_id=$pay_type_id
@@ -162,23 +161,23 @@ class cash_reports {
 		return $summ;
 	}
 	
-	function getSummMoneySpend($date_start,$date_end,$paybox_id,$cash_id) { $db=DbSingleton::getDb(); $list=""; $summ=0;	 												   
+	function getSummMoneySpend($date_start,$date_end,$paybox_id,$cash_id) { $db=DbSingleton::getDb();
 		$r=$db->query("select id,paybox_id_from,sum(summ) as summa from J_MONEY_SPEND 
 		where paybox_id_from=$paybox_id
 		and data>='$date_start 00:00:00' and data<='$date_end 23:59:59'
 		and cash_id='$cash_id'
-		group by paybox_id_from;"); $n=$db->num_rows($r); 				
+		group by paybox_id_from;");
 		$summ=$db->result($r,0,"summa");
 		return $summ;
 	}
 	
-	function getSummMoneySpendType($date_start,$date_end,$paybox_id,$spend_type_id,$cash_id) { $db=DbSingleton::getDb(); $list=""; $summ=0;
+	function getSummMoneySpendType($date_start,$date_end,$paybox_id,$spend_type_id,$cash_id) { $db=DbSingleton::getDb();
 		$r=$db->query("select id,paybox_id_from,sum(summ) as summa from J_MONEY_SPEND 
 		where paybox_id_from=$paybox_id
 		and data>='$date_start 00:00:00' and data<='$date_end 23:59:59'
 		and spend_type_id='$spend_type_id'
 		and cash_id='$cash_id'
-		group by paybox_id_from;"); $n=$db->num_rows($r); 						
+		group by paybox_id_from;");
 		$summ=$db->result($r,0,"summa");
 		return $summ;
 	}

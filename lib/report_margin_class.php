@@ -2,13 +2,14 @@
 
 class report_margin {
 	
-	function getClientDocsMarginReportData($type_id,$client_id,$doc_type_id,$date_start,$date_end,$cash_id) { $db=DbSingleton::getDb(); $slave=new slave; 
-		$where="";$sales=$backs=[]; 
+	function getClientDocsMarginReportData($type_id,$client_id,$doc_type_id,$date_start,$date_end,$cash_id) { $db=DbSingleton::getDb(); $slave=new slave;
+        $salesd=$backsd=[];
 		if ($type_id==0) {
 			if ($client_id!=0) $where=" and j.client_conto_id='$client_id' "; else $where="";
-			$r=$db->query("select j.*, jsp.invoice_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah,jsp.price_invoice from J_SALE_INVOICE j
-			inner join J_SALE_INVOICE_PARTITION_STR jsp on jsp.invoice_id=j.id
-			where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59' $where and j.doc_type_id='$doc_type_id';"); $n=$db->num_rows($r); $list=""; 
+			$r=$db->query("select j.*, jsp.invoice_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah,jsp.price_invoice 
+			from J_SALE_INVOICE j
+			    inner join J_SALE_INVOICE_PARTITION_STR jsp on jsp.invoice_id=j.id
+			where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59' $where and j.doc_type_id='$doc_type_id';"); $n=$db->num_rows($r);
 			for ($i=1;$i<=$n;$i++){
 				$id=$db->result($r,$i-1,"j.id");
 				$prefix=$db->result($r,$i-1,"prefix"); $doc_nom=$db->result($r,$i-1,"doc_nom"); $prefix=$prefix."-".$doc_nom;
@@ -43,7 +44,7 @@ class report_margin {
 			if ($client_id!=0) $where=" and j.client_id='$client_id' "; else $where="";
 			$r=$db->query("select j.*, jsp.partition_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah,jsp.price_invoice from J_BACK_CLIENTS j
 			inner join J_BACK_CLIENTS_PARTITION_STR jsp on jsp.back_id=j.id
-			where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59' $where and j.doc_type_id='$doc_type_id';"); $n=$db->num_rows($r); $list=""; 
+			where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59' $where and j.doc_type_id='$doc_type_id';"); $n=$db->num_rows($r);
 			for ($i=1;$i<=$n;$i++){
 				$id=$db->result($r,$i-1,"j.id");
 				$prefix=$db->result($r,$i-1,"prefix"); $doc_nom=$db->result($r,$i-1,"doc_nom"); $prefix=$prefix."-".$doc_nom;
@@ -76,14 +77,14 @@ class report_margin {
 		}
 	}
 	
-	function getClientMarginReportData($type_id,$doc_status,$doc_type_id,$date_start,$date_end,$cash_id) { $db=DbSingleton::getDb(); $clients=new clients; $gmanual=new gmanual;
-		$where="";$sales=$backs=[]; $slave=new slave;
+	function getClientMarginReportData($type_id,$doc_status,$doc_type_id,$date_start,$date_end,$cash_id) { $db=DbSingleton::getDb(); $clients=new clients;
+        $salesc=$backsc=[]; $slave=new slave;
 		if ($type_id==0) {
-			$r=$db->query("select j.*, jsp.invoice_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah,jsp.price_invoice from J_SALE_INVOICE j
-			inner join J_SALE_INVOICE_PARTITION_STR jsp on jsp.invoice_id=j.id
-			where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59' and j.doc_type_id='$doc_type_id';"); $n=$db->num_rows($r); $list=""; 
+			$r=$db->query("select j.*, jsp.invoice_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah,jsp.price_invoice 
+			from J_SALE_INVOICE j
+			    inner join J_SALE_INVOICE_PARTITION_STR jsp on jsp.invoice_id=j.id
+			where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59' and j.doc_type_id='$doc_type_id';"); $n=$db->num_rows($r);
 			for ($i=1;$i<=$n;$i++){
-				$id=$db->result($r,$i-1,"j.id");
 				$doc_type_id=$db->result($r,$i-1,"doc_type_id");
 				$usd_to_uah=$db->result($r,$i-1,"usd_to_uah");
 				$eur_to_uah=$db->result($r,$i-1,"eur_to_uah");
@@ -125,11 +126,11 @@ class report_margin {
 		} 
 																										  
 		else {																					
-			$r=$db->query("select j.*, jsp.partition_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah,jsp.price_invoice from J_BACK_CLIENTS j
-			inner join J_BACK_CLIENTS_PARTITION_STR jsp on jsp.back_id=j.id
+			$r=$db->query("select j.*, jsp.partition_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah,jsp.price_invoice 
+			from J_BACK_CLIENTS j
+			    inner join J_BACK_CLIENTS_PARTITION_STR jsp on jsp.back_id=j.id
 			where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59' and j.doc_type_id='$doc_type_id';"); $n=$db->num_rows($r); 
 			for ($i=1;$i<=$n;$i++){
-				$id=$db->result($r,$i-1,"j.id");
 				$doc_type_id=$db->result($r,$i-1,"doc_type_id");
 				$usd_to_uah=$db->result($r,$i-1,"usd_to_uah");
 				$eur_to_uah=$db->result($r,$i-1,"eur_to_uah");
@@ -172,14 +173,14 @@ class report_margin {
 	}
 
 	function getReportMarginDataSales($date_start,$date_end,$doc_type_id,$client_status,$doc_status,$cash_id) { $db=DbSingleton::getDb(); $gmanual=new gmanual; $slave=new slave;
-		$summ_list=0; $where=$list=""; $sales=$backs=[]; 
+		$where=$list=""; $sales=$backs=[];
 		if($doc_type_id>0) {$where.=" and j.doc_type_id='$doc_type_id'";}	
-		$r=$db->query("select j.*, jsp.invoice_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah, jsp.price_invoice from J_SALE_INVOICE j
-		inner join J_SALE_INVOICE_PARTITION_STR jsp on jsp.invoice_id=j.id
+		$r=$db->query("select j.*, jsp.invoice_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah, jsp.price_invoice 
+		from J_SALE_INVOICE j
+		    inner join J_SALE_INVOICE_PARTITION_STR jsp on jsp.invoice_id=j.id
 		where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59' $where;"); $n=$db->num_rows($r);
 		
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"j.id");					  
 			$doc_type_id=$db->result($r,$i-1,"doc_type_id");
 			$usd_to_uah=$db->result($r,$i-1,"usd_to_uah");
 			$eur_to_uah=$db->result($r,$i-1,"eur_to_uah");
@@ -189,7 +190,6 @@ class report_margin {
 			$price_man_uah=$db->result($r,$i-1,"price_man_uah");
 			$price_invoice=$db->result($r,$i-1,"price_invoice");
 			$partition_amount=$db->result($r,$i-1,"invoice_amount");
-			$client_id=$db->result($r,$i-1,"client_conto_id");
 			$doc_type_name=$gmanual->get_gmanual_caption($doc_type_id); $doc_type_name=$slave->translit($doc_type_name); 
 			$doc_type_name = mb_convert_encoding($doc_type_name, "SJIS");
 			$sales[$doc_type_id]["doc_type_id"]=$doc_type_name;	 
@@ -218,12 +218,12 @@ class report_margin {
 		}																									   
 		$sales=$sales_cl;
 																											   
-		$r=$db->query("select j.*, jsp.partition_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah, jsp.price_invoice from J_BACK_CLIENTS j
-		inner join J_BACK_CLIENTS_PARTITION_STR jsp on jsp.back_id=j.id
+		$r=$db->query("select j.*, jsp.partition_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah, jsp.price_invoice 
+		from J_BACK_CLIENTS j
+		    inner join J_BACK_CLIENTS_PARTITION_STR jsp on jsp.back_id=j.id
 		where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59' $where;"); $n=$db->num_rows($r);
 		
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"j.id");					  
 			$doc_type_id=$db->result($r,$i-1,"doc_type_id");
 			$usd_to_uah=$db->result($r,$i-1,"usd_to_uah");
 			$eur_to_uah=$db->result($r,$i-1,"eur_to_uah");
@@ -233,7 +233,6 @@ class report_margin {
 			$price_man_uah=$db->result($r,$i-1,"price_man_uah");
 			$price_invoice=$db->result($r,$i-1,"price_invoice");
 			$partition_amount=$db->result($r,$i-1,"partition_amount");
-			$client_id=$db->result($r,$i-1,"client_conto_id");
 			$doc_type_name=$gmanual->get_gmanual_caption($doc_type_id); $doc_type_name=$slave->translit($doc_type_name);
 			$doc_type_name = mb_convert_encoding($doc_type_name, "SJIS");
 			$backs[$doc_type_id]["doc_type_id"]=$doc_type_name;
@@ -261,22 +260,20 @@ class report_margin {
 			}																									   
 			$backs=$backs_cl;
 		}
-		$array=[];
 		$array=array_merge($sales,$backs);
-		
 		return $array;
 	}
 
 	function showReportMargin($date_start,$date_end,$doc_type_id,$client_status,$doc_status,$cash_id) { $db=DbSingleton::getDb(); $gmanual=new gmanual;
-		$form_htm=RD."/tpl/report_margin_list.htm";if (file_exists($form_htm)){ $form = file_get_contents($form_htm);}	 
+        $form="";$form_htm=RD."/tpl/report_margin_list.htm";if (file_exists($form_htm)){ $form = file_get_contents($form_htm);}
 		$summ_list=0; $where=""; $sales=$backs=[]; 
 		if($doc_type_id>0) {$where.=" and j.doc_type_id='$doc_type_id'";}																			  
-	    $r=$db->query("select j.*, jsp.invoice_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah, jsp.price_invoice from J_SALE_INVOICE j
-		inner join J_SALE_INVOICE_PARTITION_STR jsp on jsp.invoice_id=j.id
+	    $r=$db->query("select j.*, jsp.invoice_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah, jsp.price_invoice 
+	    from J_SALE_INVOICE j
+		    inner join J_SALE_INVOICE_PARTITION_STR jsp on jsp.invoice_id=j.id
 		where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59' $where;"); $n=$db->num_rows($r); $list=""; 
 
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"j.id");					  
 			$doc_type_id=$db->result($r,$i-1,"doc_type_id");
 			$usd_to_uah=$db->result($r,$i-1,"usd_to_uah");
 			$eur_to_uah=$db->result($r,$i-1,"eur_to_uah");
@@ -286,7 +283,6 @@ class report_margin {
 			$price_man_uah=$db->result($r,$i-1,"price_man_uah");
 			$price_invoice=$db->result($r,$i-1,"price_invoice");
 			$partition_amount=$db->result($r,$i-1,"invoice_amount");
-			$client_id=$db->result($r,$i-1,"client_conto_id");
 			$sales[$doc_type_id]["doc_type_id"]=$doc_type_id;
 			
 			$oper_price_partition=$this->getSummCash($oper_price_partition,2,$usd_to_uah,$eur_to_uah,$cash_id);
@@ -321,17 +317,17 @@ class report_margin {
 				$list.=$this->getClientMarginReport(0,$doc_status,$doc_type_id,$date_start,$date_end,$cash_id);
 			}
 			if ($doc_status==1){
-				$list.=$this->getClientDocsMarginReport(0,$doc_type_id,$date_start,$date_end,$cash_id);
+				$list.=$this->getClientDocsMarginReport(0,0,$doc_type_id,$date_start,$date_end,$cash_id);
 			}
 			$summ_list+=$price_invoice;
 		}
 		
-		$r=$db->query("select j.*, jsp.partition_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah, jsp.price_invoice from J_BACK_CLIENTS j
-		inner join J_BACK_CLIENTS_PARTITION_STR jsp on jsp.back_id=j.id
+		$r=$db->query("select j.*, jsp.partition_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah, jsp.price_invoice 
+		from J_BACK_CLIENTS j
+		    inner join J_BACK_CLIENTS_PARTITION_STR jsp on jsp.back_id=j.id
 		where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59' $where;"); $n=$db->num_rows($r); 
 
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"j.id");					  
 			$doc_type_id=$db->result($r,$i-1,"doc_type_id");
 			$usd_to_uah=$db->result($r,$i-1,"usd_to_uah");
 			$eur_to_uah=$db->result($r,$i-1,"eur_to_uah");
@@ -341,7 +337,6 @@ class report_margin {
 			$price_man_uah=$db->result($r,$i-1,"price_man_uah");
 			$price_invoice=$db->result($r,$i-1,"price_invoice");
 			$partition_amount=$db->result($r,$i-1,"partition_amount");
-			$client_id=$db->result($r,$i-1,"client_id");
 			$backs[$doc_type_id]["doc_type_id"]=$doc_type_id;
 			
 			$oper_price_partition=$this->getSummCash($oper_price_partition,2,$usd_to_uah,$eur_to_uah,$cash_id);
@@ -376,13 +371,11 @@ class report_margin {
 				$list.=$this->getClientMarginReport(1,$doc_status,$doc_type_id,$date_start,$date_end,$cash_id);
 			}
 			if ($doc_status==1){
-				$list.=$this->getClientDocsMarginReport(1,$doc_type_id,$date_start,$date_end,$cash_id);
+				$list.=$this->getClientDocsMarginReport(1,0,$doc_type_id,$date_start,$date_end,$cash_id);
 			}
 			$summ_list-=$price_invoice;
 		}
-																									  
-		unset($sales);$sales = array(); 
-		unset($backs);$backs = array(); 
+
 		$cash_abr=$this->getCashAbr($cash_id);
 		$form=str_replace("{report_margin_range}",$list,$form);
 		$form=str_replace("{summ_reports}",$summ_list,$form);
@@ -390,14 +383,13 @@ class report_margin {
 		return $form;
 	}
 	
-	function getClientMarginReport($type_id,$doc_status,$doc_type_id,$date_start,$date_end,$cash_id) {$db=DbSingleton::getDb(); $clients=new clients; $gmanual=new gmanual;
-		$where="";$sales=$backs=[];
+	function getClientMarginReport($type_id,$doc_status,$doc_type_id,$date_start,$date_end,$cash_id) {$db=DbSingleton::getDb(); $clients=new clients;
+        $salesc=$backsc=[];$list="";
 		if ($type_id==0) {
 	    $r=$db->query("select j.*, jsp.invoice_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah,jsp.price_invoice from J_SALE_INVOICE j
 		inner join J_SALE_INVOICE_PARTITION_STR jsp on jsp.invoice_id=j.id
-		where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59' and j.doc_type_id='$doc_type_id';"); $n=$db->num_rows($r); $list=""; 
+		where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59' and j.doc_type_id='$doc_type_id';"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"j.id");
 			$doc_type_id=$db->result($r,$i-1,"doc_type_id");
 			$usd_to_uah=$db->result($r,$i-1,"usd_to_uah");
 			$eur_to_uah=$db->result($r,$i-1,"eur_to_uah");
@@ -448,7 +440,6 @@ class report_margin {
 		inner join J_BACK_CLIENTS_PARTITION_STR jsp on jsp.back_id=j.id
 		where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59' and j.doc_type_id='$doc_type_id';"); $n=$db->num_rows($r); 
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"j.id");
 			$doc_type_id=$db->result($r,$i-1,"doc_type_id");
 			$usd_to_uah=$db->result($r,$i-1,"usd_to_uah");
 			$eur_to_uah=$db->result($r,$i-1,"eur_to_uah");
@@ -494,18 +485,16 @@ class report_margin {
 			}
 		}
 		}
-		unset($salesc);$salesc = array();
-		unset($backsc);$backsc = array();
 		return $list;
 	}
 	
-	function getClientDocsMarginReport($type_id,$client_id,$doc_type_id,$date_start,$date_end,$cash_id){	$db=DbSingleton::getDb(); $slave=new slave; 
-		$where="";$sales=$backs=[]; 
+	function getClientDocsMarginReport($type_id,$client_id,$doc_type_id,$date_start,$date_end,$cash_id){$db=DbSingleton::getDb();
+		$salesd=$backsd=[]; $list="";
 		if ($type_id==0) {
 		if ($client_id!=0) $where=" and j.client_conto_id='$client_id' "; else $where="";
 	    $r=$db->query("select j.*, jsp.invoice_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah,jsp.price_invoice from J_SALE_INVOICE j
 		inner join J_SALE_INVOICE_PARTITION_STR jsp on jsp.invoice_id=j.id
-		where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59' $where and j.doc_type_id='$doc_type_id';"); $n=$db->num_rows($r); $list=""; 
+		where j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59' $where and j.doc_type_id='$doc_type_id';"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"j.id");
 			$prefix=$db->result($r,$i-1,"prefix"); $doc_nom=$db->result($r,$i-1,"doc_nom"); $prefix=$prefix."-".$doc_nom;
@@ -535,7 +524,7 @@ class report_margin {
 		}
 			
 		foreach($salesd as $sls){
-			$id=$sls["id"]; $doc_name=$sls["doc_name"];
+			$doc_name=$sls["doc_name"];
 			$oper_price_partition=$sls["oper_price_partition"];
 			$price_partition=$sls["price_partition"];
 			$price_buh_uah=$sls["price_buh_uah"];
@@ -584,7 +573,7 @@ class report_margin {
 		}
 			
 		foreach($backsd as $sls){
-			$id=$sls["id"]; $doc_name=$sls["doc_name"];
+			$doc_name=$sls["doc_name"];
 			$oper_price_partition=$sls["oper_price_partition"];
 			$price_partition=$sls["price_partition"];
 			$price_buh_uah=$sls["price_buh_uah"];
@@ -600,8 +589,6 @@ class report_margin {
 			</tr>";
 		}
 		}
-		unset($salesd);$salesd = array();
-		unset($backsd);$backsd = array();
 		return $list;
 	}
 	

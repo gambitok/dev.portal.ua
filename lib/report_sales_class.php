@@ -5,8 +5,7 @@ class report_sales {
 	function showReportSales($date,$tpoint) {$db=DbSingleton::getTokoDb(); $list=""; 
 		if ($tpoint=="0") $where_tpoint=""; else $where_tpoint="and TPOINT_ID=$tpoint";
 		if ($date=="0") $where_date=""; else $where_date="and MONTH='$date"."-00'";
-											 
-		$form_htm=RD."/tpl/report_sales_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}	
+        $form="";$form_htm=RD."/tpl/report_sales_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$r=$db->query("select * from T2_ARTICLES_SALES where art_id>0 $where_tpoint $where_date;"); $n=$db->num_rows($r);
 		if ($n>0) {
 			for ($i=1;$i<=$n;$i++){
@@ -41,15 +40,13 @@ class report_sales {
 	}
 	
 	function getArticle($art_id){$db=DbSingleton::getTokoDb();
-		$r=$db->query("select ARTICLE_NR_DISPL,BRAND_ID from T2_ARTICLES where ART_ID='$art_id' limit 1;"); $n=$db->num_rows($r);
-		if ($n==1){	
-			$article=$db->result($r,0,"ARTICLE_NR_DISPL");	
-			$brand_id=$db->result($r,0,"BRAND_ID");	
-		}
+		$r=$db->query("select ARTICLE_NR_DISPL,BRAND_ID from T2_ARTICLES where ART_ID='$art_id' limit 1;");
+        $article=$db->result($r,0,"ARTICLE_NR_DISPL");
+        $brand_id=$db->result($r,0,"BRAND_ID");
 		return array($article,$brand_id);	
 	}
 	
-	function getTpointList() { $db=DbSingleton::getDb(); $list=""; $list="<option value='0'>Всі торгові точки</option>";
+	function getTpointList() { $db=DbSingleton::getDb(); $list="<option value='0'>Всі торгові точки</option>";
 		$r=$db->query("select * from T_POINT where status=1 order by id asc;"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
