@@ -1,17 +1,20 @@
 <?php
+
 class module {
+
 	function show_user_info(){ session_start(); $user_name=$_SESSION["user_name"]; $slave=new slave;
 		$form_htm=RD."/tpl/user_info.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$form=str_replace("{user_name}", $user_name, $form);
 		$form=str_replace("{data}", $slave->data_word(date("Y-m-d")), $form);
 		return $form;
 	}
+
 	function show_kours(){$list="";
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, 'https://api.privatbank.ua/p24api/pubinfo?exchange&coursid=3');
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
+		//curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
 		$result = curl_exec($ch);
 		$xml=simplexml_load_string ($result);
 		$ex=$xml->row;
@@ -24,12 +27,12 @@ class module {
 		}
 		return $list;
 	}
-	function show_menu($module_id,$page_id){$db=DbSingleton::getDb(); $slave=new slave;$menu="";if ($module_id=="" && $page_id==""){$module_id=1; $page_id=1;}
-		$r=$db->query("select * from module where ison='1' order by lenta,id asc;");$n=$db->num_rows($r);$list_menu="";$sub_menu="";
+
+	function show_menu($module_id,$page_id){$db=DbSingleton::getDb(); $menu="";if ($module_id=="" && $page_id==""){$module_id=1; $page_id=1;}
+		$r=$db->query("select * from module where ison='1' order by lenta,id asc;");$n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
 			$caption=$db->result($r,$i-1,"caption");
-			$file=$db->result($r,$i-1,"file");
 			$link=$db->result($r,$i-1,"link");
 			$icon=$db->result($r,$i-1,"icon");
 			$active="";if ($id==$module_id){$active=" class=\"active\"";}
@@ -39,32 +42,35 @@ class module {
 		}
 		return $menu;
 	}
-	function show_sub_menu($module_id,$page_id){$db=DbSingleton::getDb(); $slave=new slave;$menu="";
+
+	function show_sub_menu($module_id,$page_id){$db=DbSingleton::getDb();$menu="";
 		$r=$db->query("select mp.id,mp.caption,mf.file, mp.link from module_pages mp inner join module_files mf on (mf.id=mp.file) where mp.module='$module_id' order by mp.id asc;");$n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
 			$caption=$db->result($r,$i-1,"caption");
 			$link=$db->result($r,$i-1,"link");
-			
 			$active="";if ($id==$page_id){$active=" class=\"active\"";}
-			
 			$menu.="<li $active><a href='/$link'>$caption</a></li>";
 		}
 		return $menu;
 	}
+
 	function get_module_caption($module){$db=DbSingleton::getDb();
 		$r=$db->query("select caption from module where id='$module';");$n=$db->num_rows($r);
 		if ($n>0){ return $db->result($r,0,"caption");}	if ($n==0){ return "";}
 	}
+
 	function get_module_file($file,$var){$db=DbSingleton::getDb();
 		if ($var==1){ $r=$db->query("select file from module_files where id='$file';");}
 		if ($var==2){ $r=$db->query("select file from module_files where file='$file';");}
 		$n=$db->num_rows($r);if ($n>0){ return $db->result($r,0,"file");}if ($n==0){ return "";}
 	}
+
 	function get_module_file_cap($file){$db=DbSingleton::getDb();
 		$r=$db->query("select caption from module_files where id='$file';");$n=$db->num_rows($r);
 		if ($n>0){ return $db->result($r,0,"caption");}if ($n==0){ return "";}
 	}
+
 	function show_file_form($file){$db=DbSingleton::getDb();
 		$r=$db->query("select * from module_files where system='1' order by id asc;");$n=$db->num_rows($r);
 		$form="<select name='dep_file' id='dep_file' size=1 style='width:400px;'>";
@@ -119,7 +125,8 @@ class module {
 		</script>";
 		return $menu;
 	}
-	function get_sub_menu($id){	$db=DbSingleton::getDb();session_start();$url=$this->get_url();
+
+	function get_sub_menu($id){	$db=DbSingleton::getDb();session_start();$url=$this->get_url();$smenu="";
 		$r=$db->query("select * from deps where dep_up='$id' order by lenta,id asc;");$n=$db->num_rows($r);
 		if ($n>0){$_SESSION["k"]+=1;}
 		for ($i=1;$i<=$n;$i++){
@@ -135,6 +142,7 @@ class module {
 		}
 		return $smenu;
 	}
+
 	function get_url(){
 		$url=$_SERVER["QUERY_STRING"];
 		if (stristr($url,"&dep_up=")){ $url=ereg_replace("&dep_up=([0-9])*","",$url); }
@@ -143,6 +151,7 @@ class module {
 		if (stristr($url,"&w=")){ $url=ereg_replace("&w=([a-z_])*","",$url); }	
 		return $url;
 	}
+
 	function get_file_url($file){$url=$_SERVER["QUERY_STRING"];
 		if (stristr($url,"&file=") === FALSE and $file!=""){$db=DbSingleton::getDb();
 			$r=$db->query("SELECT mp.link as link2, m.link FROM module_files mf LEFT OUTER JOIN module_pages mp ON ( mf.id = mp.file ) LEFT OUTER JOIN module m ON ( m.file = mf.id ) WHERE mf.file = '$file';");$n=$db->num_rows($r);
@@ -154,6 +163,7 @@ class module {
 		}
 		return $url;
 	}
+
 	function get_file_url2($file){$url=$_SERVER["QUERY_STRING"];
 		if (stristr($url,"&file=") === FALSE and $file!=""){
 			$db=DbSingleton::getDb();
@@ -164,16 +174,13 @@ class module {
 			}
 		}
 		if (stristr($url,"&wn=")){ $url=ereg_replace("&wn=([a-z0-9_])*","",$url); }
-		
 		if (stristr($url,"&w=")){ $url=ereg_replace("&w=([a-z0-9_])*","",$url); }
 		if (stristr($url,"&conf=")){ $url=ereg_replace("&conf=([a-z_])*","",$url); }
 		if (stristr($url,"&var=")){ $url=ereg_replace("&var=([a-z0-9_])*","",$url); }
 		if (stristr($url,"&cat_id=")){ $url=ereg_replace("&cat_id=([a-z0-9_])*","",$url); }
 		if (stristr($url,"&top_id=")){ $url=ereg_replace("&top_id=([a-z0-9_])*","",$url); }
-		
 		if (stristr($url,"&clientId=")){ $url=ereg_replace("&clientId=([a-z0-9_])*","",$url); }
 		if (stristr($url,"&docId=")){ $url=ereg_replace("&docId=([a-z0-9_])*","",$url); }
-		
 		if (stristr($url,"&firm_id=")){ $url=ereg_replace("&firm_id=([a-z0-9_])*","",$url); }
 		if (stristr($url,"&department_id=")){ $url=ereg_replace("&department_id=([a-z0-9_])*","",$url); }
 		if (stristr($url,"&users_id=")){ $url=ereg_replace("&users_id=([a-z0-9_])*","",$url); }
@@ -183,6 +190,6 @@ class module {
 		if (stristr($url,"&journal_id=")){ $url=ereg_replace("&journal_id=([a-z0-9_])*","",$url); }
 		if (stristr($url,"&journal_pay_id=")){ $url=ereg_replace("&journal_pay_id=([a-z0-9_])*","",$url); }
 		return $url;
-	}	
+	}
+
 }
-?>
