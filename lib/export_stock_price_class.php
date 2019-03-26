@@ -2,7 +2,7 @@
 
 class export_stock_price {
 	
-	function exportStocks() {$db=DbSingleton::getTokoDb();
+	function exportStocks() {
 		header('Content-Type: text/csv; charset=utf-8');
 		header('Content-Disposition: attachment; filename=export_stocks.csv'); ob_clean();
 		$output = fopen('php://output', 'w');
@@ -14,7 +14,7 @@ class export_stock_price {
 		exit(0);
 	}	
 	
-	function exportPrices() {$db=DbSingleton::getTokoDb();
+	function exportPrices() {
 		header('Content-Type: text/csv; charset=utf-8');
 		header('Content-Disposition: attachment; filename=export_prices.csv'); ob_clean();
 		$output = fopen('php://output', 'w');
@@ -52,7 +52,7 @@ class export_stock_price {
 	}
 	
 	function getArticlesPriceData() {$db=DbSingleton::getTokoDb(); $array=[];
-		$r=$db->query("SELECT `T2_ARTICLES`. *, `T2_BRANDS`.`BRAND_NAME`, `T2_ARTICLES_PRICE_RATING`.`price_3` 
+		$r=$db->query("SELECT `T2_ARTICLES`.*, `T2_BRANDS`.`BRAND_NAME`, `T2_ARTICLES_PRICE_RATING`.`price_3` 
 		FROM `T2_ARTICLES_PRICE_RATING` 
 			LEFT JOIN `T2_ARTICLES` ON `T2_ARTICLES_PRICE_RATING`.`art_id`=`T2_ARTICLES`.`art_id` 
 			LEFT JOIN `T2_BRANDS` ON `T2_ARTICLES`.`BRAND_ID`=`T2_BRANDS`.`BRAND_ID`

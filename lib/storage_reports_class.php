@@ -2,29 +2,24 @@
 
 class storage_reports {
 	
-	function exportStorageReports($storages) { $db=DbSingleton::getTokoDb(); $list=[]; $storages_array=[]; 
-
+	function exportStorageReports($storages) { $db=DbSingleton::getTokoDb(); $list=[];
 		if($storages=="" || $storages==0) $storages_list=$this->getStoragesIds(); else $storages_list=$storages;
-															  
-		$storages_array=explode(",",$storages_list); $count_storages=count($storages_array);
-		
+		$storages_array=explode(",",$storages_list);
 		$list[0]=array("ART_ID","Brand","Index");
 		foreach ($storages_array as $storage_id) {
 			$storage_name=$this->getStorageName($storage_id);
 			array_push($list[0],"$storage_name - AMOUNT");	
 			array_push($list[0],"$storage_name - RESERV");	
 		}
-		
-		$r=$db->query("select t2s.STORAGE_ID, t2s.AMOUNT, t2s.RESERV_AMOUNT, t2s.ART_ID, t2a.ARTICLE_NR_DISPL, t2a.BRAND_ID from T2_ARTICLES_STRORAGE t2s
-		left outer join T2_ARTICLES t2a on t2a.ART_ID=t2s.ART_ID
-		;"); $n=$db->num_rows($r); 																
+
+		$r=$db->query("select t2s.STORAGE_ID, t2s.AMOUNT, t2s.RESERV_AMOUNT, t2s.ART_ID, t2a.ARTICLE_NR_DISPL, t2a.BRAND_ID 
+		from T2_ARTICLES_STRORAGE t2s
+		    left outer join T2_ARTICLES t2a on t2a.ART_ID=t2s.ART_ID;"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
 			$art_id=$db->result($r,$i-1,"ART_ID"); 																			  
 			$brand_id=$db->result($r,$i-1,"BRAND_ID"); $brand=$this->getBrandName($brand_id);																		  
-			$article=$db->result($r,$i-1,"ARTICLE_NR_DISPL"); 
-
+			$article=$db->result($r,$i-1,"ARTICLE_NR_DISPL");
 			$list[$i]=array($art_id,$brand,$article);
-
 			$AMOUNT=$RESERV_AMOUNT=0;
 			foreach ($storages_array as $storage_id) {
 				$rs=$db->query("select * from T2_ARTICLES_STRORAGE where ART_ID='$art_id' and STORAGE_ID='$storage_id' limit 1;"); $ns=$db->num_rows($rs);
@@ -35,8 +30,7 @@ class storage_reports {
 				array_push($list[$i],$AMOUNT);
 				array_push($list[$i],$RESERV_AMOUNT);
 			}
-		}		
-											
+		}
 		return $list;
 	}
 	

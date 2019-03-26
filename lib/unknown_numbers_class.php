@@ -2,7 +2,7 @@
 
 class unknown_numbers {
 	
-	function showSupplList() { $db=DbSingleton::getDb();
+	function showSupplList() { $db=DbSingleton::getDb();$list="";
 		$r=$db->query("select cl.* from A_CLIENTS cl
 			left outer join A_CLIENTS_CATEGORY cc on cc.client_id=cl.id
 			left outer join A_CLIENTS_STORAGE cs on cs.client_id=cl.id
@@ -10,8 +10,7 @@ class unknown_numbers {
 		for ($i=1;$i<=$n;$i++){
 			$suppl_id=$db->result($r,$i-1,"id");
 			$suppl_name=$db->result($r,$i-1,"name");
-			$list.="
-			<option value='$suppl_id'>$suppl_name</option>";
+			$list.="<option value='$suppl_id'>$suppl_name</option>";
 		}	
 		return $list;
 	}
@@ -22,10 +21,9 @@ class unknown_numbers {
 		return $name;
 	}
 	
-	function showNumbersList($suppl_id) { $db=DbSingleton::getTokoDb();					
+	function showNumbersList($suppl_id) { $db=DbSingleton::getTokoDb();$list="";
 		$r=$db->query("select * from T2_SUPPL_IMPORT where status=1 and art_id=0 and suppl_id=$suppl_id group by suppl_index, brand;"); $n=$db->num_rows($r);				
 		for ($i=1;$i<=$n;$i++){
-			$suppl_id=$db->result($r,$i-1,"suppl_id");
 			$suppl_index=$db->result($r,$i-1,"suppl_index");
 			$brand=$db->result($r,$i-1,"brand");
 			$price_suppl=$db->result($r,$i-1,"price_suppl");
@@ -54,4 +52,5 @@ class unknown_numbers {
 		}						
 		return $list;
 	}
+
 }
