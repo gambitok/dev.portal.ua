@@ -2,16 +2,13 @@ var errs=[];
 errs[0]="Помилка індексу";
 errs[1]="Занадто короткий запит для пошуку";
 
-
-$(document).ready(function() {
-});
-
 function changeDeliveryTime(){
 	var value1 = $("#time_from_del").val();
 	var value2 = $("#time_to_del").val();
 	if(value1!==0 || value2!==0) 
-    $("#giveout_time").val('з '+value1+' по '+value2);
-		else $("#giveout_time").val('');
+    	$("#giveout_time").val('з '+value1+' по '+value2);
+	else
+		$("#giveout_time").val('');
 }
 
 function loadUsersList(){
@@ -21,6 +18,7 @@ function loadUsersList(){
 		$("#users_range").html(result["content"]);
 	}}, true);
 }
+
 function newUsersCard(){
 	JsHttpRequest.query($rcapi,{ 'w': 'newUsersCard'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -45,27 +43,6 @@ function showUsersCard(users_id){
 	}
 }
 
-function resetDbZero(){
-	swal({
-		title: "Ахтунг Катуп?",
-		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
-		confirmButtonText: "Я, Я!", cancelButtonText: "Відмінити!", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
-	},
-	function (isConfirm) {
-		if (isConfirm) {
-			JsHttpRequest.query($rcapi,{'w':'resetDbZero'},
-			function (result, errors){ if (errors) {alert(errors);} if (result){  
-				if (result["answer"]==1){ 
-					swal("Виконано!", "Наша пісня гарна й нова починаймо її знову :)", "success");
-					loadUsersList();
-				}
-				else{ swal("Помилка!", result["error"], "error");}
-			}}, true);
-		} else {
-			swal("Відмінено", "Спробу скасовано. Життя врятовано", "error");
-		}
-	});	
-}
 function saveUsersGeneralInfo(){
 	swal({
 		title: "Зберегти зміни?",
@@ -197,7 +174,6 @@ function showUsersAccessItemForm(users_id, mf_id){
 	}
 }
 
-
 function clearUsersAcсess(users_id){
 	swal({
 		title: "Очистити права користувача?",
@@ -277,8 +253,6 @@ function saveUsersSupplStorageForm(users_id,s_id){
 	});
 }
 
-
-
 function loadUsersClients(users_id){
 	if (users_id<=0 || users_id==""){toastr["error"](errs[0]);}
 	if (users_id>0){
@@ -289,6 +263,7 @@ function loadUsersClients(users_id){
 		}}, true);
 	}
 }
+
 function showUsersClientsForm(users_id, s_id){
 	if (users_id<=0 || users_id==""){toastr["error"](errs[0]);}
 	if (users_id>0){
@@ -300,6 +275,7 @@ function showUsersClientsForm(users_id, s_id){
 		}}, true);
 	}
 }
+
 function showUsersClientList(client_id){
 	JsHttpRequest.query($rcapi,{ 'w': 'showUsersClientList', 'client_id':client_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -309,6 +285,7 @@ function showUsersClientList(client_id){
 		setTimeout(function() { $('#datatable_parrent').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}}); }, 500);
 	}}, true);
 }
+
 function setUsersClient(id,name){
 	$('#client_id').val(id);
 	$('#client_name').val(name);
@@ -373,7 +350,6 @@ function saveUsersClientsForm(users_id,s_id){
 	});
 }
 
-
 function loadUsersWorkers(users_id){
 	if (users_id<=0 || users_id==""){toastr["error"](errs[0]);}
 	if (users_id>0){
@@ -395,6 +371,7 @@ function showUsersWorkersForm(users_id, s_id){
 		}}, true);
 	}
 }
+
 function dropUsersWorkers(users_id,s_id){
 	swal({
 		title: "Відкріпити працівника від торгової точки?",
@@ -446,8 +423,6 @@ function saveUsersWorkersForm(users_id,s_id){
 		}
 	});
 }
-
-
 
 function loadUsersDeliveryTime(users_id){
 	if (users_id<=0 || users_id==""){toastr["error"](errs[0]);}
@@ -509,6 +484,7 @@ function saveUsersDeliveryForm(users_id,s_id){
 		}
 	});
 }
+
 function dropUsersDelivery(users_id,s_id){
 	swal({
 		title: "Видалити умову доставки для складу?",
@@ -567,6 +543,7 @@ function loadUsersSupplStorageSelectList(){
 		}}, true);
 	}
 }
+
 function loadSupplStorageList(){
 	var suppl_id=$("#suppl_id option:selected").val(); 
 	if (suppl_id>0){
@@ -576,7 +553,7 @@ function loadSupplStorageList(){
 		}}, true);
 	}
 }
-//
+
 function showUsersSupplDeliveryForm(users_id, s_id){
 	if (users_id<=0 || users_id==""){toastr["error"](errs[0]);}
 	if (users_id>0){
@@ -589,7 +566,6 @@ function showUsersSupplDeliveryForm(users_id, s_id){
 }
 
 function saveUsersSupplDeliveryForm(users_id,s_id){
-	
 	var suppl_name=$("#suppl_id option:selected").html();
 	var storage_name=$("#suppl_storage_id option:selected").html();
 	swal({
@@ -625,6 +601,7 @@ function saveUsersSupplDeliveryForm(users_id,s_id){
 		}
 	});
 }
+
 function dropUsersSupplDelivery(users_id,s_id){
 	swal({
 		title: "Видалити умову доставки для складу?",
@@ -674,8 +651,8 @@ function showUsersSupplFmForm(users_id, s_id){
 		}}, true);
 	}
 }
+
 function saveUsersSupplFmForm(users_id,s_id){
-	
 	var suppl_name=$("#suppl_id option:selected").html();
 	var storage_name=$("#suppl_storage_id option:selected").html();
 	var price_rating_id=$("#price_rating_id option:selected").html();

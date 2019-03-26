@@ -2,7 +2,6 @@ var errs=[];
 errs[0]="Помилка індексу";
 errs[1]="Занадто короткий запит для пошуку";
 
-
 $(document).ready(function() {
 });
 
@@ -21,6 +20,7 @@ function loadTpointList(){
 		$("#tpoint_range").html(result["content"]);
 	}}, true);
 }
+
 function newTpointCard(){
 	JsHttpRequest.query($rcapi,{ 'w': 'newTpointCard'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -49,6 +49,7 @@ function showTpointCard(tpoint_id){
 		}}, true);
 	}
 }
+
 function saveTpointGeneralInfo(){
 	swal({
 		title: "Зберегти зміни у розділі \"Загальна інформація\"?",
@@ -117,6 +118,7 @@ function loadStateSelectList(){
 		$("#state_id").select2({placeholder: "Виберіть область",dropdownParent: $("#TpointCard")});
 	}}, true);
 }
+
 function loadRegionSelectList(){
 	var state_id=$("#state_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientRegionSelectList', 'state_id':state_id}, 
@@ -125,6 +127,7 @@ function loadRegionSelectList(){
 		$("#region_id").select2({placeholder: "Виберіть район",dropdownParent: $("#TpointCard")});
 	}}, true);
 }
+
 function loadCitySelectList(){
 	var region_id=$("#region_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientCitySelectList', 'region_id':region_id}, 
@@ -192,7 +195,6 @@ function dropTpointSupplStorageForm(tpoint_id,s_id){
 		}
 	});
 }
-
 
 function dropTpointStorage(tpoint_id,s_id){
 	swal({
@@ -275,8 +277,6 @@ function saveTpointSupplStorageForm(tpoint_id,s_id){
 	});
 }
 
-
-
 function loadTpointClients(tpoint_id){
 	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
@@ -287,6 +287,7 @@ function loadTpointClients(tpoint_id){
 		}}, true);
 	}
 }
+
 function showTpointClientsForm(tpoint_id, s_id){
 	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
@@ -298,6 +299,7 @@ function showTpointClientsForm(tpoint_id, s_id){
 		}}, true);
 	}
 }
+
 function showTpointClientList(client_id){
 	JsHttpRequest.query($rcapi,{ 'w': 'showTpointClientList', 'client_id':client_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -307,6 +309,7 @@ function showTpointClientList(client_id){
 		setTimeout(function() { $('#datatable_parrent').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}}); }, 500);
 	}}, true);
 }
+
 function setTpointClient(id,name){
 	$('#client_id').val(id);
 	$('#client_name').val(name);
@@ -371,7 +374,6 @@ function saveTpointClientsForm(tpoint_id,s_id){
 	});
 }
 
-
 function loadTpointWorkers(tpoint_id){
 	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
@@ -393,6 +395,7 @@ function showTpointWorkersForm(tpoint_id, s_id){
 		}}, true);
 	}
 }
+
 function dropTpointWorkers(tpoint_id,s_id){
 	swal({
 		title: "Відкріпити працівника від торгової точки?",
@@ -444,8 +447,6 @@ function saveTpointWorkersForm(tpoint_id,s_id){
 		}
 	});
 }
-
-
 
 function loadTpointDeliveryTime(tpoint_id){
 	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
@@ -507,6 +508,7 @@ function saveTpointDeliveryForm(tpoint_id,s_id){
 		}
 	});
 }
+
 function dropTpointDelivery(tpoint_id,s_id){
 	swal({
 		title: "Видалити умову доставки для складу?",
@@ -565,6 +567,7 @@ function loadTpointSupplStorageSelectList(){
 		}}, true);
 	}
 }
+
 function loadSupplStorageList(){
 	var suppl_id=$("#suppl_id option:selected").val(); 
 	if (suppl_id>0){
@@ -574,7 +577,7 @@ function loadSupplStorageList(){
 		}}, true);
 	}
 }
-//
+
 function showTpointSupplDeliveryForm(tpoint_id, s_id){
 	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
@@ -587,7 +590,6 @@ function showTpointSupplDeliveryForm(tpoint_id, s_id){
 }
 
 function saveTpointSupplDeliveryForm(tpoint_id,s_id){
-	
 	var suppl_name=$("#suppl_id option:selected").html();
 	var storage_name=$("#suppl_storage_id option:selected").html();
 	swal({
@@ -623,6 +625,7 @@ function saveTpointSupplDeliveryForm(tpoint_id,s_id){
 		}
 	});
 }
+
 function dropTpointSupplDelivery(tpoint_id,s_id){
 	swal({
 		title: "Видалити умову доставки для складу?",
@@ -672,10 +675,9 @@ function showTpointSupplFmForm(tpoint_id, s_id){
 		}}, true);
 	}
 }
+
 function saveTpointSupplFmForm(tpoint_id,s_id){
-	
 	var suppl_name=$("#suppl_id option:selected").html();
-	var storage_name=$("#suppl_storage_id option:selected").html();
 	var price_rating_id=$("#price_rating_id option:selected").html();
 	swal({
 		title: "Зберегти ціноутворення для рейтингу \""+price_rating_id+"\" постачальника "+suppl_name+"?",
@@ -710,6 +712,30 @@ function saveTpointSupplFmForm(tpoint_id,s_id){
 	});
 }
 
+function dropTpointSupplFm(tpoint_id,s_id){
+    swal({
+            title: "Видалити умову доставки для складу?",
+            text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
+            confirmButtonText: "Так", cancelButtonText: "Відмінити", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
+        },
+        function (isConfirm) {
+            if (isConfirm) {
+                if (tpoint_id.length>0){
+                    JsHttpRequest.query($rcapi,{ 'w':'dropTpointSupplDelivery','tpoint_id':tpoint_id,'s_id':s_id},
+                        function (result, errors){ if (errors) {alert(errors);} if (result){
+                            if (result["answer"]==1){
+                                swal("Відкріплено!", "", "success");
+                                loadTpointDeliveryTime(tpoint_id);
+                            }
+                            else{ swal("Помилка!", result["error"], "error");}
+                        }}, true);
+                }
+            } else {
+                swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
+            }
+        });
+}
+
 function loadTpointPayBox(tpoint_id){
 	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
@@ -720,6 +746,7 @@ function loadTpointPayBox(tpoint_id){
 		}}, true);
 	}
 }
+
 function showTpointPayBoxForm(tpoint_id, s_id){
 	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){

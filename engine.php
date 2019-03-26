@@ -42,9 +42,6 @@ if ($_REQUEST["w"]=="getNBUKours"){ $GLOBALS['_RESULT'] = array("content"=>$inco
 
 if ($media_user_id>0 && $media_user_id!=""){
 
-
-if ($_REQUEST["w"]=="resetDbZero"){ list($answer,$err)=$users->resetDbZero(); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
-
 if ($_REQUEST["w"]=="showCatNewArticle"){ list($content,$header)=$cat->showCatNewArticle();$GLOBALS['_RESULT'] = array("content"=>$content,"header"=>$header);}
 if ($_REQUEST["w"]=="showGoodsGroupLetterListSelect"){ $content=$cat->showGoodsGroupLetterListSelect($_REQUEST["prnt_id"]);$GLOBALS['_RESULT'] = array("content"=>$content);}
 if ($_REQUEST["w"]=="loadRefinementList"){ $content=$cat->loadRefinementListSelect($_REQUEST["subgoods_group_id"]);$GLOBALS['_RESULT'] = array("content"=>$content);}
@@ -535,6 +532,7 @@ if ($_REQUEST["w"]=="loadTpointSupplFm"){ $GLOBALS['_RESULT'] = array("content"=
 if ($_REQUEST["w"]=="showTpointSupplFmForm"){ $GLOBALS['_RESULT'] = array("content"=>$tpoint->showTpointSupplFmForm($_REQUEST["tpoint_id"],$_REQUEST["s_id"]));}
 
 if ($_REQUEST["w"]=="saveTpointSupplFmForm"){ list($answer,$err)=$tpoint->saveTpointSupplFmForm($_REQUEST["tpoint_id"],$_REQUEST["s_id"],$_REQUEST["suppl_id"],$_REQUEST["suppl_storage_id"],$_REQUEST["price_rating_id"],$_REQUEST["price_from"],$_REQUEST["price_to"],$_REQUEST["margin"],$_REQUEST["delivery"],$_REQUEST["margin2"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+if ($_REQUEST["w"]=="dropTpointSupplFm"){ list($answer,$err)=$tpoint->dropTpointSupplFm($_REQUEST["tpoint_id"],$_REQUEST["s_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
 
 if ($_REQUEST["w"]=="loadTpointSupplStorage"){ $GLOBALS['_RESULT'] = array("content"=>$tpoint->loadTpointSupplStorage($_REQUEST["tpoint_id"]));}
