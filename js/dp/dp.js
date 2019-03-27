@@ -930,19 +930,23 @@ function setArticleToDp(art_id){
 		var article_nr_displStr=$('#article_nr_displS2').val();
 		var brandIdStr=$('#brand_idS2').val();
 		var brand_nameS2=$('#brand_nameS2').val();
-		var amount_move=parseFloat($("#amount_move").val());var amountStr=amount_move;
+		var amount_move=parseFloat($("#amount_move").val());
+		var amountStr=amount_move;
 		var storageIdStr=$("#amount_storage_id").val();
 		
 		if (amountStr>0){
 			if (storageIdStr>0 && art_id.length>0){
+				console.log('load func');
 				JsHttpRequest.query($rcapi,{ 'w':'setArticleToDp','dp_id':dp_id,'tpoint_id':tpoint_id,'artIdStr':artIdStr,'article_nr_displStr':article_nr_displStr,'brandIdStr':brandIdStr,'storageIdStr':storageIdStr,'amountStr':amountStr},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){
+                        console.log('load setDP');
 						document.getElementById("dp_weight").innerHTML=result["weight"];
 						document.getElementById("dp_volume").innerHTML=result["volume"];
 						document.getElementById("dp_summ").value=result["dp_summ"];
 						JsHttpRequest.query($rcapi,{ 'w': 'showDpCardStr', 'dp_id':dp_id},
-						function (result, errors){ if (errors) {alert(errors);} if (result){  
+						function (result, errors){ if (errors) {alert(errors);} if (result){
+                            console.log('load showDP');
 							document.getElementById("dp_doc_range").innerHTML=result["content"];
 							numberOnly();
 							setTimeout(function (){
@@ -953,6 +957,7 @@ function setArticleToDp(art_id){
 						$("#FormModalWindow3").modal('hide');document.getElementById("FormModalBody3").innerHTML="";document.getElementById("FormModalLabel3").innerHTML="";
 						formCatalogueModalLabel();
 						setArticleToSelectAmountDp(art_id,article_nr_displStr,brandIdStr,brand_nameS2,dp_id);
+                        console.log('func end');
 					}
 					else{ 
 						swal("Помилка!", result["error"], "error"); 
