@@ -104,7 +104,6 @@ class module {
 			$file=$db->result($r,$i-1,"file");
 //			if ($i>1){$menu.=",,,,,\n";}
 			$menu.="[\"$caption\", \"?$url&dep_up=$dep_up&dep_cur=$id&file=$file\", null";
-			$rmenu="";
 			$rmenu=$this->get_sub_menu($id);
 			if ($rmenu=="" and $i==$n){$menu.="]]\n";}
 			if ($rmenu=="" and $i<$n){$menu.="],\n";}
@@ -135,7 +134,7 @@ class module {
 			$caption=$db->result($r,$i-1,"caption");
 			$file=$db->result($r,$i-1,"file");
 			$smenu.="[\"$caption\", \"?$url&dep_up=$dep_up&dep_cur=$cur_id&file=$file\", null";
-			$rmenu="";$rmenu=$this->get_sub_menu($cur_id);
+			$rmenu=$this->get_sub_menu($cur_id);
 			if ($rmenu=="" and $i==$n){$smenu.="]";$_SESSION["k"]-=1;$smenu.="],\n";}
 			if ($rmenu=="" and $i<$n){$smenu.="],\n";}
 			if ($rmenu!=""){$smenu.=",\n".$rmenu;}
@@ -152,9 +151,12 @@ class module {
 		return $url;
 	}
 
-	function get_file_url($file){$url=$_SERVER["QUERY_STRING"];
+	function get_file_url($file=""){$url=$_SERVER["QUERY_STRING"];
 		if (stristr($url,"&file=") === FALSE and $file!=""){$db=DbSingleton::getDb();
-			$r=$db->query("SELECT mp.link as link2, m.link FROM module_files mf LEFT OUTER JOIN module_pages mp ON ( mf.id = mp.file ) LEFT OUTER JOIN module m ON ( m.file = mf.id ) WHERE mf.file = '$file';");$n=$db->num_rows($r);
+			$r=$db->query("SELECT mp.link as link2, m.link FROM module_files mf 
+			    LEFT OUTER JOIN module_pages mp ON ( mf.id = mp.file ) 
+			    LEFT OUTER JOIN module m ON ( m.file = mf.id ) 
+            WHERE mf.file = '$file';");$n=$db->num_rows($r);
 			if ($n==1){
 				$link=$db->result($r,0,"link");
 				if ($link==""){$link=$db->result($r,0,"link2");}

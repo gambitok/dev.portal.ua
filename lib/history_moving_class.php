@@ -16,6 +16,8 @@ class HistoryMovingClass {
 			$storage_id_from=$db->result($r,$i-1,"storage_id_from"); $storage_name_from=$this->getStorageName($storage_id_from);
 			$storage_id_to=$db->result($r,$i-1,"storage_id_to"); $storage_name_to=$this->getStorageName($storage_id_to);
 			$amount_moved=$db->result($r,$i-1,"amount");
+            $amount_come=$amount_gone=$amount_reserved=0;//???
+            $address=$comment="";
 			$list.="<tr>
 				<td>$id</td>
 				<td>$data</td>

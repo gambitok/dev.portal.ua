@@ -1,4 +1,5 @@
 <?php
+
 class storage {
 
     function newStorageCard(){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();session_start();$user_id=$_SESSION["media_user_id"];
@@ -149,13 +150,11 @@ class storage {
     function showOrderSelectList($gkey,$selId){$db=DbSingleton::getDb();$form="";
         $r=$db->query("select `id`,`mcaption` from `manual` where `key`='$gkey' order by mcaption,id asc;");$n=$db->num_rows($r);
         for ($i=0;$i<$n;$i++) {
-            //$id=$db->result($r,$i,"id");
             $form.="<option value='".$i."' ";if ($selId==$i){$form.=" selected='selected'";}
             $form.=">".$db->result($r,$i,"mcaption")."</option>";
         }
         return $form;
     }
-
 
     function saveStorageGeneralInfo($storage_id,$name,$full_name,$address,$storekeeper,$country_id,$state_id,$region_id,$city_id,$order_by){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;
         $answer=0;$err="Помилка збереження даних!";

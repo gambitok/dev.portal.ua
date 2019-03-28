@@ -1,5 +1,6 @@
 <?php
-class country{
+
+class country {
 
     function show_country_list(){$db=DbSingleton::getDb(); $manual=new manual;
         $r=$db->query("select t2cnt.* from T2_COUNTRIES t2cnt;");

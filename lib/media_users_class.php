@@ -1,5 +1,7 @@
 <?php
+
 class media_users {
+
 	function clearPhone($phone){ $phone="+".(string)((int)"$phone"); return $phone; }
 	
 	function authUsermedia($phone,$pass,$remember){$db=DbSingleton::getDb();session_start();$answer="";$access=new access;

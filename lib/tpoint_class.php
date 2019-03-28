@@ -1,5 +1,6 @@
 <?php
-class tpoint{
+
+class tpoint {
 
     function newTpointCard(){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();session_start();$user_id=$_SESSION["media_user_id"];
         $r=$db->query("select max(id) as mid from T_POINT;");$tpoint_id=0+$db->result($r,0,"mid")+1;

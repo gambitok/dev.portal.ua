@@ -1,4 +1,5 @@
 <?php
+
 class manual {
 	
 	function loadManualData($key,$manValue,$manText){$db=DbSingleton::getDb();$list="";$k=0;
