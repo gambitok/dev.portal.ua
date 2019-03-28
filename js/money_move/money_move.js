@@ -2,13 +2,11 @@ var errs=[];
 errs[0]="Помилка індексу";
 errs[1]="Занадто короткий запит для пошуку";
 
-
 $(document).ready(function() {
 	$(document).bind('keydown', 'ctrl+a', function(){ ShowCheckAll2();});
 	$(document).bind('keydown', 'a', function(){ ShowCheckAll2();});
 	$(document).bind('keydown', 'p', function(){ ShowModalAll(); });
-	$(document).bind('keydown', 'f2', function(){ document.getElementById("discountStr").focus()});			
-	
+	$(document).bind('keydown', 'f2', function(){ document.getElementById("discountStr").focus()});
 });
 
 $(window).bind('beforeunload', function(e){
@@ -69,6 +67,7 @@ function saveMoneyMove(){
 		}
 	}
 }
+
 function acceptMoneyMove(){
 	var move_id=$("#move_id").val();
 	if (move_id<=0 || move_id<=""){toastr["error"](errs[0]);}
@@ -84,7 +83,6 @@ function acceptMoneyMove(){
 		}}, true);
 	}
 }
-
 
 function getPayBoxBalans(){
 	var paybox_id=$("#paybox_id option:selected").val();
@@ -108,6 +106,7 @@ function getPayboxUserCashSaldoList(){
 		}}, true);
 	}
 }
+
 function getPayboxResiverList(){
 	var paybox_id=$("#paybox_id_from option:selected").val();
 	var balans_id_from=$("#balans_id_from option:selected").val();
@@ -124,7 +123,6 @@ function getPayboxResiverList(){
 function getPayboxManagerList(){
 	var paybox_id_to=$("#paybox_id_to option:selected").val();
 	var balans_id_from=$("#balans_id_from option:selected").val();
-	var user_id=$("#user_id").val();
 	if (paybox_id_to<=0 || paybox_id_to==""){toastr["error"](errs[0]);}
 	if (paybox_id_to>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'getPayboxManagerList','paybox_id':paybox_id_to,  'balans_id_from':balans_id_from}, 
@@ -134,9 +132,7 @@ function getPayboxManagerList(){
 	}
 }
 
-
 function loadCashBoxList(client_id,document_type_id,seller_id){
-	//client_id=$("client_id").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadMoneyMoveCashBoxList', 'client_id':client_id, 'document_type_id':document_type_id,'seller_id':seller_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		document.getElementById("paybox_id").innerHTML=result["content"];

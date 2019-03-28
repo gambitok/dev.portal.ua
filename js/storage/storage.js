@@ -2,10 +2,6 @@ var errs=[];
 errs[0]="Помилка індексу";
 errs[1]="Занадто короткий запит для пошуку";
 
-
-$(document).ready(function() {
-});
-
 function loadStorageList(){
 	$("#storage_range").empty();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadStorageList'}, 
@@ -13,6 +9,7 @@ function loadStorageList(){
 		$("#storage_range").html(result["content"]);
 	}}, true);
 }
+
 function newStorageCard(){
 	JsHttpRequest.query($rcapi,{ 'w': 'newStorageCard'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -74,6 +71,7 @@ function loadStateSelectList(){
 		$("#state_id").select2({placeholder: "Виберіть область",dropdownParent: $("#StorageCard")});
 	}}, true);
 }
+
 function loadRegionSelectList(){
 	var state_id=$("#state_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadStorageRegionSelectList', 'state_id':state_id}, 
@@ -82,6 +80,7 @@ function loadRegionSelectList(){
 		$("#region_id").select2({placeholder: "Виберіть район",dropdownParent: $("#StorageCard")});
 	}}, true);
 }
+
 function loadCitySelectList(){
 	var region_id=$("#region_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadStorageCitySelectList', 'region_id':region_id}, 
@@ -103,8 +102,6 @@ function loadStorageDetails(storage_id){
 	}
 }
 
-
-
 function preconfirmStorageDetails(){
 	swal({
 		title: "Зберегти зміни у розділі \"Реквізити\"?",
@@ -119,6 +116,7 @@ function preconfirmStorageDetails(){
 		}
 	});
 }
+
 function saveStorageDetails(){
 	var storage_id=$("#storage_id").val();
 	var address_jur=$("#address_jur").val();
@@ -132,7 +130,6 @@ function saveStorageDetails(){
 	var account=$("#account").val();
 	var nr_details=$("#nr_details").val();
 	var not_resident=0; if (document.getElementById("not_resident").checked){not_resident=1;}else{nr_details="";}
-
 	if (storage_id.length>0){
 		JsHttpRequest.query($rcapi,{ 'w':'saveStorageDetails','storage_id':storage_id,'address_jur':address_jur,'address_fakt':address_fakt,'edrpou':edrpou,'svidotctvo':svidotctvo,'vytjag':vytjag,'vat':vat,'mfo':mfo, 'bank':bank,'account':account,'not_resident':not_resident,'nr_details':nr_details},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -145,8 +142,6 @@ function saveStorageDetails(){
 	}
 }
 
-
-
 function loadStorageDetails(storage_id){
 	if (storage_id<=0 || storage_id==""){toastr["error"](errs[0]);}
 	if (storage_id>0){
@@ -157,6 +152,7 @@ function loadStorageDetails(storage_id){
 		}}, true);
 	}
 }
+
 function showStorageDetailsForm(storage_id, param_id){
 	if (storage_id<=0 || storage_id==""){toastr["error"](errs[0]);}
 	if (storage_id>0){
@@ -167,6 +163,7 @@ function showStorageDetailsForm(storage_id, param_id){
 		}}, true);
 	}
 }
+
 function dropStorageDetails(storage_id,param_id,param_name){
 	swal({
 		title: "Видалити тип зберігання на складі\""+param_name+"\"?",
@@ -201,7 +198,6 @@ function saveStorageDetailsForm(storage_id,storage_str_id){
 	function (isConfirm) {
 		if (isConfirm) {
 			var param_id=$("#param_type_id option:selected").val();
-
 			if (storage_id.length>0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveStorageDetailsForm','storage_id':storage_id,'storage_str_id':storage_str_id,'param_id':param_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -236,8 +232,7 @@ function saveStorageGeneralInfo(){
 			var state_id=$("#state_id option:selected").val();
 			var region_id=$("#region_id option:selected").val();
 			var city_id=$("#city_id option:selected").val(); 
-			var order_by=$("#order_by option:selected").val(); 
-		
+			var order_by=$("#order_by option:selected").val();
 			if (storage_id.length>0){
 				JsHttpRequest.query($rcapi,{'w':'saveStorageGeneralInfo','storage_id':storage_id,'name':name,'full_name':full_name,'address':address,'storekeeper':storekeeper,'country_id':country_id,'state_id':state_id,'region_id':region_id,'city_id':city_id,'order_by':order_by},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -264,6 +259,7 @@ function loadStorageCells(storage_id){
 		}}, true);
 	}
 }
+
 function showStorageCellsForm(storage_id, cells_id){
 	if (storage_id<=0 || storage_id==""){toastr["error"](errs[0]);}
 	if (storage_id>0){
@@ -308,6 +304,7 @@ function saveStorageCellsForm(storage_id,cells_id){
 		}
 	});
 }
+
 function dropStorageCells(storage_id,cells_id,cell_name){
 	swal({
 		title:"Видалити  комірку зберігання на складі\""+cell_name+"\"?",
