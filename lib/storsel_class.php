@@ -596,8 +596,8 @@ class storsel {
                                 $reserv_amount_sc=$dbt->result($rsc2,0,"RESERV_AMOUNT");
 
                                 if ($amount_sc>=$amount && $amount_sc>0){
-                                    $amount_sc-=$amount;
-                                    $reserv_amount_sc+=$amount;
+                                    //$amount_sc-=$amount;
+                                    //$reserv_amount_sc+=$amount;
                                     $db->query("insert into J_MOVING_SELECT_STR (`jmoving_id`,`select_id`,`art_id`,`article_nr_displ`,`brand_id`,`amount`,`storage_id_from`) values ('$jmoving_id','$select_id','$art_id','$article_nr_displ','$brand_id','$amount','$storage_id_from');");
                                     //$dbt->query("update `T2_ARTICLES_STRORAGE` set `AMOUNT`='$amount_sc', `RESERV_AMOUNT`='$reserv_amount_sc' where `ART_ID`='$art_id' and `STORAGE_ID`='$storage_id_from' limit 1;");
                                 }
@@ -784,9 +784,7 @@ class storsel {
                 if ($jmoving_status==44){
                     $list.="<td align='center'><button class='btn btn-xs btn-danger' onClick='dropJmovingStorageSelect(\"$jmoving_id\",\"$id\");'><i class='fa fa-trash'></i></button></td>";
                 }
-            $list.="
-                <td align='center'>$status_select_name</td>
-            </tr>";
+            $list.="<td align='center'>$status_select_name</td></tr>";
         }
         return array($list,$n);
     }
@@ -845,9 +843,7 @@ class storsel {
                 if ($jmoving_status==44){
                     $list.="<td align='center'><button class='btn btn-xs btn-danger' onClick='dropJmovingStorageSelectLocal(\"$jmoving_id\",\"$id\");'><i class='fa fa-trash'></i></button></td>";
                 }
-            $list.="
-                <td align='center'>$status_select_name</td>
-            </tr>";
+            $list.="<td align='center'>$status_select_name</td></tr>";
         }
         return array($list,$n);
     }
@@ -1142,36 +1138,24 @@ class storsel {
         return $form;
     }
 
-    function printStorselView2($select_id){$db=DbSingleton::getDb();$cat=new catalogue;$dp=new dp; $slave=new slave;session_start();$user_name=$_SESSION["user_name"]; $mas=[];$list="";
+    function printStorselView2($select_id){$db=DbSingleton::getDb();$cat=new catalogue;$dp=new dp;$slave=new slave;session_start();$user_name=$_SESSION["user_name"];
+        $client_name="";$jmoving_name="";$dp_name="";$mas=[];$list="";
         $form="";$form_htm=RD."/tpl/storsel_select_print.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        //$rstr=$db->query("select storage_id from J_SELECT where id='$select_id';");
-        //$storage_id=$db->result($rstr,0,"storage_id");
-        //$order_by=$this->getStorageOrder($storage_id);
         $r=$db->query("select j.*, cll.cell_value from J_SELECT_STR j
             left outer join STORAGE_CELLS cll on cll.id=j.cell_id_from
         where j.select_id='$select_id' and cll.status=1 order by cll.cell_value desc, j.article_nr_displ asc;"); $n=$db->num_rows($r);
 
         for ($i=1;$i<=$n;$i++){
-            //$id=$db->result($r,$i-1,"id");
             $art_id=$db->result($r,$i-1,"art_id");
-            $article_nr_displ=$db->result($r,$i-1,"article_nr_displ"); //$article_name=$this->getArticleName($art_id);
-            $brand_id=$db->result($r,$i-1,"brand_id"); //$brand_name=$cat->getBrandName($brand_id);
+            $article_nr_displ=$db->result($r,$i-1,"article_nr_displ");
+            $brand_id=$db->result($r,$i-1,"brand_id");
             $amount=$db->result($r,$i-1,"amount");
             $storage_id_from=$db->result($r,$i-1,"storage_id_from");
             $storage_name_from=$this->getStorageName($storage_id_from);
             $cell_id_from=$db->result($r,$i-1,"cell_id_from");
             $cell_name_from=$this->getStorageCellName($cell_id_from);
-
-            $mas[$i]=["art_id"=>$art_id,"article_nr_displ"=>$article_nr_displ,"brand_id"=>$brand_id,"amount"=>$amount,"storage_id_from"=>$storage_id_from,"storage_name_from"=>$storage_name_from,"cell_id_from"=>$cell_id_from,"cell_name_from"=>"$cell_name_from"];
-    //		$list.="<tr>
-    //			<td align='center'>$i</td>
-    //			<td align='center'>$cell_name_from</td>
-    //			<td align='center'>$article_nr_displ</td>
-    //			<td align='center'>$brand_name</td>
-    //			<td align='center'>$amount</td>
-    //			<td align='left'>$article_name</td>
-    //			<td>&nbsp;</td>
-    //		</tr>";
+            $cell_name_clear=str_replace("|","",$cell_name_from);
+            $mas[$i]=["art_id"=>$art_id,"article_nr_displ"=>$article_nr_displ,"brand_id"=>$brand_id,"amount"=>$amount,"storage_id_from"=>$storage_id_from,"storage_name_from"=>$storage_name_from,"cell_id_from"=>$cell_id_from,"cell_name_from"=>"$cell_name_from","cell_name_clear"=>"$cell_name_clear"];
         }
 
         usort($mas, "myCmp"); $i=0;
@@ -1206,7 +1190,6 @@ class storsel {
         }
         if ($parrent_doc_type_id==2){ // DP
             $dp_name=$dp->getDpName($parrent_doc_id); $client_name=$dp->getDpClientName($parrent_doc_id);
-            //$tpoint_address="";
             $tpoint_name="---";
         }
 
@@ -1701,10 +1684,37 @@ class storsel {
         return $er;
     }
 
+    function calculateStorselParams($select_id) {$db=DbSingleton::getDb();
+        $select_volume=$select_weight_netto=$select_weight_brutto=0;
+        $r=$db->query("select * from J_SELECT_STR where select_id='$select_id';");$n=$db->num_rows($r);
+        if ($n>0) {
+            for ($i=1;$i<=$n;$i++){
+                $art_id=$db->result($r,$i-1,"art_id");
+                list($VOLUME,$WEIGHT_NETTO,$WEIGHT_BRUTTO)=$this->getArtLogistic($art_id);
+                $select_volume+=$VOLUME;
+                $select_weight_netto+=$WEIGHT_NETTO;
+                $select_weight_brutto+=$WEIGHT_BRUTTO;
+            }
+            $db->query("update J_SELECT set volume='$select_volume', weight_netto='$select_weight_netto', weight_brutto='$select_weight_brutto' where id='$select_id';");
+        }
+        return "VOLUME=$select_volume, WEIGHT_NETTO=$select_weight_netto, WEIGHT_BRUTTO=$select_weight_brutto";
+    }
+
+    function getArtLogistic($art_id) {$db=DbSingleton::getTokoDb();
+        $VOLUME=$WEIGHT_NETTO=$WEIGHT_BRUTTO=0;
+        $r=$db->query("select * from T2_PACKAGING where ART_ID='$art_id' limit 1;");$n=$db->num_rows($r);
+        if ($n>0) {
+            $VOLUME=$db->result($r,0,"VOLUME");
+            $WEIGHT_NETTO=$db->result($r,0,"WEIGHT_NETTO");
+            $WEIGHT_BRUTTO=$db->result($r,0,"WEIGHT_BRUTTO");
+        }
+        return array($VOLUME,$WEIGHT_NETTO,$WEIGHT_BRUTTO);
+    }
+
 }
 
 function myCmp($a, $b) {
-   if ($a["cell_name_from"] == $b["cell_name_from"]) return 0;
-   return $a["cell_name_from"] > $b["cell_name_from"] ? 1 : -1;
+   if ($a["cell_name_clear"] == $b["cell_name_clear"]) return 0;
+   return $a["cell_name_clear"] > $b["cell_name_clear"] ? 1 : -1;
 }
 

@@ -351,9 +351,10 @@ function saveJmovingLocalAutoCell(){
 	var jmoving_id=$("#jmoving_idA").val();
 	var storage_id_to=$("#storage_id_toA").val();
 	var cell_id_from=$("#cell_from_move option:selected").val();
+    var cell_id_to=$("#cell_from_move_to option:selected").val();
 	if (cell_id_from==0 || cell_id_from==""){swal("Помилка!", "Оберіть комірку розміщення", "error");}
 	if (cell_id_from>0){
-		JsHttpRequest.query($rcapi,{ 'w': 'saveJmovingLocalAutoCell','jmoving_id':jmoving_id,'storage_id_to':storage_id_to,'cell_id_from':cell_id_from}, 
+		JsHttpRequest.query($rcapi,{ 'w': 'saveJmovingLocalAutoCell','jmoving_id':jmoving_id,'storage_id_to':storage_id_to,'cell_id_from':cell_id_from,'cell_id_to':cell_id_to},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow3").modal('hide');document.getElementById("FormModalBody3").innerHTML="";	document.getElementById("FormModalLabel3").innerHTML="";
 			if (result["no_row"]==1){

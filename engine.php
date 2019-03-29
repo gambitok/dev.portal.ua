@@ -236,7 +236,7 @@ if ($_REQUEST["w"]=="loadJmovingStorageCellsSelectList"){ list($content,$cells_s
 
 
 if ($_REQUEST["w"]=="showJmovingLocalAutoCellForm"){ $GLOBALS['_RESULT'] = array("content"=>$jmoving->showJmovingLocalAutoCellForm($_REQUEST["jmoving_id"],$_REQUEST["storage_id_to"]));}
-if ($_REQUEST["w"]=="saveJmovingLocalAutoCell"){ list($answer,$err,$no_row)=$jmoving->saveJmovingLocalAutoCell($_REQUEST["jmoving_id"],$_REQUEST["storage_id_to"],$_REQUEST["cell_id_from"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err,"no_row"=>$no_row);}
+if ($_REQUEST["w"]=="saveJmovingLocalAutoCell"){ list($answer,$err,$no_row)=$jmoving->saveJmovingLocalAutoCell($_REQUEST["jmoving_id"],$_REQUEST["storage_id_to"],$_REQUEST["cell_id_from"],$_REQUEST["cell_id_to"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err,"no_row"=>$no_row);}
 
 if ($_REQUEST["w"]=="showJmovingArticleSearchForm"){ $GLOBALS['_RESULT'] = array("content"=>$jmoving->showJmovingArticleSearchForm($_REQUEST["art_id"],$_REQUEST["brand_id"],$_REQUEST["article_nr_displ"],$_REQUEST["jmoving_id"],$_REQUEST["storage_id_to"]));}
 if ($_REQUEST["w"]=="showJmovingArticleLocalSearchForm"){ $GLOBALS['_RESULT'] = array("content"=>$jmoving->showJmovingArticleLocalSearchForm($_REQUEST["art_id"],$_REQUEST["brand_id"],$_REQUEST["article_nr_displ"],$_REQUEST["jmoving_id"],$_REQUEST["storage_id_from"]));}

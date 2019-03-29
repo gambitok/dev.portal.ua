@@ -1184,7 +1184,7 @@ class back_clients {
         return $list;
     }
 
-    function showStorageCellsList($storage_id,$exclude_id){$db=DbSingleton::getTokoDb();$list="<option value='0'>-- ќбер≥ть з≥ списку --</option>";
+    function showStorageCellsList($storage_id,$exclude_id=""){$db=DbSingleton::getTokoDb();$list="<option value='0'>-- ќбер≥ть з≥ списку --</option>";
         $query=" SELECT id, cell_value FROM STORAGE_CELLS WHERE status = '1' AND storage_id='$storage_id' ORDER BY cell_value ASC , id ASC;";//AND id<>'$exclude_id'
         $r=$db->query($query);$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){

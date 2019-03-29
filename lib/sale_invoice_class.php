@@ -1229,7 +1229,7 @@ class sale_invoice {
             }
             exit(0);
         }
-        return;
+        return true;
     }
 
 }
