@@ -137,7 +137,7 @@ class SettingsNewClass {
 	}
 	
 	function showLanguageCard($id){ $db=DbSingleton::getTokoDb();
-		$form_htm=RD."/tpl/new/language_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}						
+        $form="";$form_htm=RD."/tpl/new/language_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$m=3; $lang_arr=[];
 		$r=$db->query("select * from new_lang_wd where id=$id");
 		$lang_var=$db->result($r,0,"variable");

@@ -1,11 +1,11 @@
-<?
-class toMoney{
+<?php
+
+class toMoney {
+
 	function globals_var(){
-		
-		
 		$this->_1_2[1]="оОдна ";
 		$this->_1_2[2]="дві ";
-		
+
 		$this->_1_19[1]="одна ";
 		$this->_1_19[2]="дві ";
 		$this->_1_19[3]="три ";
@@ -64,7 +64,7 @@ class toMoney{
 		$this->kopeek[1]="копійка ";
 		$this->kopeek[2]="копійки ";
 		$this->kopeek[3]="копійок ";
-		
+
 		$this->fl["с"]="С";
 		$this->fl["с"]="С";
 		$this->fl["т"]="Т";
@@ -75,72 +75,72 @@ class toMoney{
 		$this->fl["д"]="Д";
 	}
 
-function semantic($i,&$words,&$many,$f){
-	$words="";
-	$fl=0;
-	if($i >= 100){
-		$jkl = intval($i / 100);
-		$words.=$this->hang[$jkl];
-		$i%=100;
+	function semantic($i,&$words,&$many,$f){
+		$words=""; $fl=0;
+		if($i >= 100){
+			$jkl = intval($i / 100);
+			$words.=$this->hang[$jkl];
+			$i%=100;
+		}
+		if($i >= 20){
+			$jkl = intval($i / 10);
+			$words.=$this->des[$jkl];
+			$i%=10;
+			$fl=1;
+		}
+		switch($i){
+		  case 1: $many=1; break;
+		  case 2:
+		  case 3:
+		  case 4: $many=2; break;
+		  default: $many=3; break;
+		}
+		if($i){
+		  if($i < 3 && $f == 1)
+		   $words.=$this->_1_2[$i];
+		  else
+		   $words.=$this->_1_19[$i];
+		}
 	}
-	if($i >= 20){
-		$jkl = intval($i / 10);
-		$words.=$this->des[$jkl];
-		$i%=10;
-		$fl=1;
+
+	function num2str($L){
+		$this->globals_var();
+		$s=" ";$s1=" ";
+		$kop=intval(( intval(round($L*100)) - intval($L)*100 ));
+		$L=intval($L);
+		if($L>=1000000000){
+		  $many=0;
+		  $this->semantic(intval($L / 1000000000),$s1,$many,3);
+		  $s.=$s1.$this->namemrd[$many];
+		  $L%=1000000000;
+		  if($L==0){ $s.="гривень ";}
+		}
+		if($L >= 1000000){
+			$many=0;
+			$this->semantic(intval($L / 1000000),$s1,$many,2);
+			$s.=$s1.$this->namemil[$many];
+			$L%=1000000;
+			if($L==0) {  $s.="гривень "; }
+		}
+		if($L >= 1000){
+			$many=0; $this->semantic(intval($L / 1000),$s1,$many,1);
+			$s.=$s1.$this->nametho[$many];
+			$L%=1000;
+			if($L==0){$s.="гривень ";}
+		}
+		if($L != 0){
+			$many=0;$this->semantic($L,$s1,$many,0);
+			$s.=$s1.$this->namerub[$many];
+		}
+		if($kop > 0){
+			$many=0;$this->semantic($kop,$s1,$many,1);
+			//$s.=$s1.$this->kopeek[$many];
+			$s.=$kop." ".$this->kopeek[$many];
+		}
+		else{  $s.=" 00 копійок";}
+		$fl=substr($s,1,1);
+		$s=$this->fl["$fl"].(substr($s,2));
+		return $s;
 	}
-switch($i){
-  case 1: $many=1; break;
-  case 2:
-  case 3:
-  case 4: $many=2; break;
-  default: $many=3; break;
+
 }
-if($i){
-  if($i < 3 && $f == 1)
-   $words.=$this->_1_2[$i];
-  else
-   $words.=$this->_1_19[$i];
-}
-}
-function num2str($L){
-	$this->globals_var();
-	$s=" ";$s1=" "; 
-	$kop=intval(( intval(round($L*100)) - intval($L)*100 ));
-	$L=intval($L);
-	if($L>=1000000000){
-	  $many=0;
-	  $this->semantic(intval($L / 1000000000),$s1,$many,3);
-	  $s.=$s1.$this->namemrd[$many];
-	  $L%=1000000000;
-	  if($L==0){ $s.="гривень ";}
-	}
-	if($L >= 1000000){
-		$many=0;
-		$this->semantic(intval($L / 1000000),$s1,$many,2);
-		$s.=$s1.$this->namemil[$many];
-		$L%=1000000;
-		if($L==0) {  $s.="гривень "; }
-	}
-	if($L >= 1000){
-		$many=0; $this->semantic(intval($L / 1000),$s1,$many,1);
-		$s.=$s1.$this->nametho[$many];
-		$L%=1000;
-		if($L==0){$s.="гривень ";}
-	}
-	if($L != 0){
-		$many=0;$this->semantic($L,$s1,$many,0);
-		$s.=$s1.$this->namerub[$many];
-	}
-	if($kop > 0){
-		$many=0;$this->semantic($kop,$s1,$many,1);
-		//$s.=$s1.$this->kopeek[$many];
-		$s.=$kop." ".$this->kopeek[$many];
-	}
-	else{  $s.=" 00 копійок";}
-	$fl=substr($s,1,1);
-	$s=$this->fl["$fl"].(substr($s,2));
-	return $s;
-}
-}
-?> 

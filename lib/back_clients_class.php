@@ -189,7 +189,7 @@ class back_clients {
         return $list;
     }
 
-    function getKoursData($data){$db=DbSingleton::getDb();$slave=new slave;$usd_to_uah=0;$eur_to_uah=0;
+    function getKoursData(){$db=DbSingleton::getDb();$slave=new slave;$usd_to_uah=0;$eur_to_uah=0;
         $r=$db->query("select kours_value from J_KOURS where cash_id='2' and in_use='1' order by id desc limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){$usd_to_uah=$slave->to_money(round($db->result($r,0,"kours_value"),2));}
         $r=$db->query("select kours_value from J_KOURS where cash_id='3' and in_use='1' order by id desc limit 0,1;");$n=$db->num_rows($r);
@@ -243,7 +243,7 @@ class back_clients {
                 $usd_to_uah=$db->result($r,0,"usd_to_uah");
                 $eur_to_uah=$db->result($r,0,"eur_to_uah");
 
-                list($usd_to_uah_new,$eur_to_uah_new)=$this->getKoursData('');
+                list($usd_to_uah_new,$eur_to_uah_new)=$this->getKoursData();
 
                 if($usd_to_uah!=$usd_to_uah_new){$usd_to_uah=$usd_to_uah_new;}
                 if($eur_to_uah!=$eur_to_uah_new){$eur_to_uah=$eur_to_uah_new;}
@@ -449,7 +449,7 @@ class back_clients {
         $form="";$form_htm=RD."/tpl/back_clients_articles_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select sis.* from J_SALE_INVOICE_STR sis where sis.status=1 and sis.invoice_id='$si_id' order by sis.id asc;");$n=$db->num_rows($r);
         if ($n>0){
-            list($cash_id,$usd_to_uah,$eur_to_uah)=$this->getSaleInvoiceCashData($si_id);
+            //list($cash_id,$usd_to_uah,$eur_to_uah)=$this->getSaleInvoiceCashData($si_id);
             for ($i=1;$i<=$n;$i++){
                 $sis_id=$db->result($r,$i-1,"id");
                 $art_id=$db->result($r,$i-1,"art_id");
@@ -775,10 +775,9 @@ class back_clients {
 
             if ($max_back<$amount_back){$answer=0;$err="Кількість для повернення ВЖЕ більша за можливу! (максимально: $max_back)";}
             if ($max_back>0 && $max_back>=$amount_back){
-                list($cash_id,$usd_to_uah,$eur_to_uah)=$this->getSaleInvoiceCashData($si_id);
-                /*
+                /*list($cash_id,$usd_to_uah,$eur_to_uah)=$this->getSaleInvoiceCashData($si_id);
                 if ($cash_id==1){ $sis_price=round($sis_price*$usd_to_uah,2);}
-                if ($cash_id==3){ $sis_price=round($sis_price*$usd_to_uah/$euro_to_uah,2);}			*/
+                if ($cash_id==3){ $sis_price=round($sis_price*$usd_to_uah/$euro_to_uah,2);}*/
                 if ($n==0){ $brand_id=$this->getBrandIdByArtId($art_id);
                     $r=$db->query("select max(id) as mid from J_BACK_CLIENTS_STR;");$bcs_id=0+$db->result($r,0,"mid")+1;
                     $db->query("insert into J_BACK_CLIENTS_STR (`id`,`back_id`,`sale_invoice_str_id`,`art_id`,`article_nr_displ`,`brand_id`,`price`) values ('$bcs_id','$back_id','$sis_id','$art_id','$article_nr_displ','$brand_id','$sis_price');");
@@ -868,17 +867,17 @@ class back_clients {
             if ($oper_status==30) {
                 //$client_conto_id=$db->result($r,0,"client_conto_id");
                 $cash_id=$db->result($r,0,"cash_id");
-                list($usd_to_uah,$eur_to_uah)=$this->getKoursData('');
+                list($usd_to_uah,$eur_to_uah)=$this->getKoursData();
                 $r=$db->query("select * from J_BACK_CLIENTS_STR where back_id='$back_id' order by id asc;");$n=$db->num_rows($r);$summ_back=0;
                 for ($i=1;$i<=$n;$i++){
                     //$art_id=$db->result($r,$i-1,"art_id");
+                    //$price=$db->result($r,$i-1,"price");
                     $amount=$db->result($r,$i-1,"amount");
-                    $price=$db->result($r,$i-1,"price");
                     $price_end=$db->result($r,$i-1,"price_end");
                     //$discount=$db->result($r,$i-1,"discount");
                     //$summ=$db->result($r,$i-1,"summ");
-                    if ($cash_id==1){$price=round($price*$usd_to_uah,2); $price_end=round($price_end*$usd_to_uah,2); }
-                    if ($cash_id==3){$price=round($price*$usd_to_uah/$eur_to_uah,2); $price_end=round($price_end*$usd_to_uah/$eur_to_uah,2); }
+                    if ($cash_id==1){/*$price=round($price*$usd_to_uah,2);*/ $price_end=round($price_end*$usd_to_uah,2); }
+                    if ($cash_id==3){/*$price=round($price*$usd_to_uah/$eur_to_uah,2);*/ $price_end=round($price_end*$usd_to_uah/$eur_to_uah,2); }
                     $summ=$amount*$price_end;
                     $summ_back+=$summ;
                 }
@@ -889,44 +888,41 @@ class back_clients {
         return $answer;
     }
 
-    function getArticlePrice($art_id,$back_id){$dbt=DbSingleton::getTokoDb();$price=0;
+    function getArticlePrice($art_id,$back_id){$dbt=DbSingleton::getTokoDb();$price=0;$dp=new dp;
         if ($back_id>0 && $art_id!=""){
-            list($price_lvl,$margin_price_lvl,$price_suppl_lvl,$margin_price_suppl_lvl,$client_vat)=$this->getBackClientsClientPriceLevels($back_id);
+            list($price_lvl,$margin_price_lvl,$price_suppl_lvl,$margin_price_suppl_lvl,$client_vat)=$dp->getDpClientPriceLevels($back_id);//getBackClientsClientPriceLevels
             $query="select t2apr.price_".$price_lvl.", t2si.price_usd as suppl_price_usd
             from T2_ARTICLES t2a 
                 left outer join T2_ARTICLES_PRICE_RATING t2apr on (t2apr.art_id=t2a.ART_ID)
                 left outer join T2_SUPPL_IMPORT t2si on (t2si.art_id=t2a.ART_ID)
             where t2a.ART_ID='$art_id' and t2apr.in_use='1' limit 0,1;";
-
             $r=$dbt->query($query);$n=$dbt->num_rows($r);
             if ($n==1){
                 $price=$dbt->result($r,0,"price_".$price_lvl);
                 if ($margin_price_lvl>0){
                     $price=$price+round($price*$margin_price_lvl/100,2);
                 }
-                //$suppl_price_usd=$dbt->result($r,0,"suppl_price_usd");
             }
         }
         return $price;
     }
 
-    function getArticleSupplPrice($art_id,$back_id,$suppl_id,$suppl_storage_id){$dbt=DbSingleton::getTokoDb();$price=0;
+    function getArticleSupplPrice($art_id,$back_id,$suppl_id,$suppl_storage_id){$dbt=DbSingleton::getTokoDb();$price=0;$dp=new dp;
         if ($back_id>0 && $art_id!=""){
-            list($price_lvl,$margin_price_lvl,$price_suppl_lvl,$margin_price_suppl_lvl,$client_vat)=$this->getBackClientsClientPriceLevels($back_id);
+            list($price_lvl,$margin_price_lvl,$price_suppl_lvl,$margin_price_suppl_lvl,$client_vat)=$dp->getDpClientPriceLevels($back_id);//getBackClientsClientPriceLevels
             $query="select t2si.price_usd from T2_ARTICLES t2a 
                 left outer join T2_SUPPL_ARTICLES_IMPORT t2sai on (t2sai.art_id=t2a.ART_ID)
                 left outer join T2_SUPPL_IMPORT t2si on (t2si.art_id=t2sai.art_id and t2si.suppl_id=t2sai.suppl_id and t2si.status=1)
             where t2a.ART_ID = '$art_id' and t2sai.suppl_id='$suppl_id' limit 0,1;";
             $r=$dbt->query($query);$n=$dbt->num_rows($r);
             if ($n==1){
-                //////////////
                 $suppl_price_usd=$dbt->result($r,0,"price_usd");
 
-                list($price_in_vat,$show_in_vat,$price_add_vat)=$this->getSupplVatConditions($suppl_id);
+                list($price_in_vat,$show_in_vat,$price_add_vat)=$dp->getSupplVatConditions($suppl_id);
                 $price_suppl=$suppl_price_usd;
                 $tpoint_id=$this->getBackClientsTpoint($back_id);
                 //Step 1;
-                list($suppl_margin_fm,$suppl_delivery_fm,$suppl_margin2_fm)=$this->getTpointSupplFm($tpoint_id,$suppl_id,$suppl_storage_id,$price_suppl,$price_suppl_lvl);
+                list($suppl_margin_fm,$suppl_delivery_fm,$suppl_margin2_fm)=$dp->getTpointSupplFm($tpoint_id,$suppl_id,$suppl_storage_id,$price_suppl,$price_suppl_lvl);
                 if ($suppl_margin_fm>0){
 
                     $price=($price_suppl+$price_suppl*$suppl_margin_fm/100)-$price_suppl;
@@ -952,7 +948,6 @@ class back_clients {
                     }
                 }
                 $price=round($price,2);
-                //////////////
             }
         }
         return $price;
@@ -978,7 +973,7 @@ class back_clients {
     }
 
     function updateBackClientsSumm($back_id){$db=DbSingleton::getDb();$slave=new slave;$sum=0;
-        //$cash_id=$this->getBackClientsCashId($back_id);list($usd_to_uah,$eur_to_uah)=$this->getKoursData('');
+        //$cash_id=$this->getBackClientsCashId($back_id);list($usd_to_uah,$eur_to_uah)=$this->getKoursData();
         $r=$db->query("select * from J_BACK_CLIENTS_STR where back_id='$back_id';");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $str_id=$db->result($r,$i-1,"id");
@@ -1061,13 +1056,13 @@ class back_clients {
     }
 
     function setArticleToSelectAmountBackClients($art_id,$back_id){
-        $form_htm=RD."/tpl/back_clients_select_amount_article_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        $form="";$form_htm=RD."/tpl/back_clients_select_amount_article_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $form=str_replace("{back_clients_rest_storage_list}",$this->showArticleRestStorageSelectList($art_id,$back_id),$form);
         $form=str_replace("{art_id}",$art_id,$form);
         return $form;
     }
 
-    function showBackClientsArticleAmountChange($art_id,$back_clients_str_id,$amount){$db=DbSingleton::getDb();
+    function showBackClientsArticleAmountChange($art_id,$back_clients_str_id,$amount){$db=DbSingleton::getDb();$dp=new dp;
         $form="";$form_htm=RD."/tpl/back_clients_select_amount_article_change_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from J_BACK_CLIENTS_STR where id='$back_clients_str_id' and status_back='93' limit 0,1");
         //$back_id=$db->result($r,0,"back_id");
@@ -1075,7 +1070,7 @@ class back_clients {
         $brand_id=$db->result($r,0,"brand_id");$brand_name=$this->getBrandName($brand_id);
         $amount=$db->result($r,0,"amount");
         $storage_id=$db->result($r,0,"storage_id_from");
-        list($info,$max_moving)=$this->showArticleRestStorageSelectText($art_id,$storage_id,$amount);
+        list($info,$max_moving)=$dp->showArticleRestStorageSelectText($art_id,$storage_id,$amount);
         $form=str_replace("{storage_name}",$this->getStorageName($storage_id),$form);
         $form=str_replace("{amountRestText}",$info,$form);
         $form=str_replace("{max_moving}",$max_moving,$form);
@@ -1104,7 +1099,7 @@ class back_clients {
         return $amount;
     }
 
-    function showArticleRestStorageSelectList($art_id,$back_id){$db=DbSingleton::getTokoDb();$list="";
+    function showArticleRestStorageSelectList($art_id,$back_id){$db=DbSingleton::getTokoDb();$list="";$dp=new dp;
         $where=""; $tpoint_id=$this->getBackClientsTpoint($back_id);
         $query="select s.id,s.name,t2as.AMOUNT, t2as.RESERV_AMOUNT from STORAGE s 
             left outer join T2_ARTICLES_STRORAGE t2as on t2as.STORAGE_ID=s.id 
@@ -1118,7 +1113,7 @@ class back_clients {
             $reserv_amount=$db->result($r,$i-1,"RESERV_AMOUNT");
             $cur_amount=$this->getArticleStorageAmountBackClients($art_id,$back_id,$id);
             $reserv_amount_rest=$reserv_amount-$cur_amount;
-            $delivery_info=$this->getTpointDeliveryInfo($tpoint_id,$id);
+            $delivery_info=$dp->getTpointDeliveryInfo($tpoint_id,$id);
             if ($amount!=0 || $cur_amount!=0 || $reserv_amount_rest!=0){
                 $list.="<tr onClick=\"showBackClientsAmountInputWindow('$art_id','$id');\" style='cursor:pointer'>
                     <td>$i <input type='hidden' id='storage_amount_id' value='$id'></td>
@@ -1141,7 +1136,7 @@ class back_clients {
         return $form;
     }
 
-    function showBackClientsSupplAmountInputWindow($art_id,$article_nr_displ,$brand_id,$back_id,$suppl_id,$suppl_storage_id,$price){
+    function showBackClientsSupplAmountInputWindow($art_id,$article_nr_displ,$brand_id,$back_id,$suppl_id,$suppl_storage_id,$price){$dp=new dp;
         $form="";$form_htm=RD."/tpl/back_clients_amount_suppl_window.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $form=str_replace("{art_id}",$art_id,$form);
         $amount=$this->getArticleSupplStorageAmountBackClients($art_id,$back_id,$suppl_id,$suppl_storage_id);
@@ -1156,7 +1151,7 @@ class back_clients {
         $suppl_storage_name=$cat->getSupplStorageName($suppl_storage_id);
         $form=str_replace("{suppl_storage_id}",$suppl_storage_id,$form);
         $form=str_replace("{suppl_storage_code}",$suppl_storage_name." ($suppl_id.$suppl_storage_id)",$form);
-        $form=str_replace("{suppl_delivery_info}",$this->getTpointSupplDeliveryInfo($this->getBackClientsTpoint($back_id),$suppl_id,$suppl_storage_id),$form);
+        $form=str_replace("{suppl_delivery_info}",$dp->getTpointSupplDeliveryInfo($this->getBackClientsTpoint($back_id),$suppl_id,$suppl_storage_id),$form);
         return $form;
     }
 
@@ -1555,13 +1550,13 @@ class back_clients {
         return $list;
     }
 
-    function labelArtEmptyCount($back_id,$kol){$label="";
-        if ($kol==0 || $kol==""){
-            list($weight,$volume,$kol)=$this->updateBackClientsWeightVolume($back_id);
-        }
-        if ($kol>0){$label="<span class='label label-tab label-info'>$kol</span>";}
-        return array($kol,$label);
-    }
+//    function labelArtEmptyCount($back_id,$kol){$label="";
+//        if ($kol==0 || $kol==""){
+//            list($weight,$volume,$kol)=$this->updateBackClientsWeightVolume($back_id);
+//        }
+//        if ($kol>0){$label="<span class='label label-tab label-info'>$kol</span>";}
+//        return array($kol,$label);
+//    }
 
     function labelCommentsCount($back_id){$db=DbSingleton::getDb();$label="";
         $r=$db->query("select count(id) as kol from J_BACK_CLIENTS_COMMENTS where back_id='$back_id';");$kol=0+$db->result($r,0,"kol");

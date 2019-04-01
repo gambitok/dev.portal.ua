@@ -550,7 +550,7 @@ class tax_invoice {
                         <RXXXXG11_10 ROWNUM=\"$i\">".round($summ*0.2,3)."</RXXXXG11_10>";
             }
             $doc_stan=1;$dfill=date("dmY",strtotime($data_create));
-            $sum_vat=round($invoice_summ*0.2);//$sum_non_vat=$invoice_summ-$sum_vat;
+            //$sum_vat=round($invoice_summ*0.2);//$sum_non_vat=$invoice_summ-$sum_vat;
             $period_month=substr($data_create,5,2);$period_year=substr($data_create,0,4);
 
             //22250035541076J1201009100000032311120182225.xml

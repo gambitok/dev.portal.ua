@@ -228,52 +228,50 @@ protected $prefix_new = 'ДП';
         return $form;
     }
 
-    function viewJpayMoneyPay($pay_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_name=$_SESSION["user_name"];$summ_kredit=0;
+    function viewJpayMoneyPay($pay_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$summ_kredit=$parent_doc_name=$pay_cash_kours=0;
         $form="";$form_htm=RD."/tpl/jpay_money_pay_view.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select jp.*, mu.name as user_name, pt.mcaption as pay_type_name,tpb.name as paybox_name from J_PAY jp 
             left outer join media_users mu on mu.id=jp.user_id
             left outer join manual pt on pt.id=jp.pay_type_id
             left outer join PAY_BOX tpb on tpb.id=jp.paybox_id
-        where jp.id='$pay_id' limit 0,1;");$n=$db->num_rows($r);
+        where jp.id='$pay_id' limit 0,1;");
+        //$pay_type_id=$db->result($r,0,"pay_type_id");
+        $pay_type_name=$db->result($r,0,"pay_type_name");
+        //$paybox_id=$db->result($r,0,"paybox_id");
+        $paybox_name=$db->result($r,0,"paybox_name");
+        $data_time=$db->result($r,0,"data_time");
+        $doc_nom=$db->result($r,0,"doc_nom");
+        $client_id=$db->result($r,0,"client_id");$client_name=$this->getClientName($client_id);
+        $cash_id=$db->result($r,0,"cash_id");$cash_name=$this->getCashAbr($cash_id);
+        $summ=$db->result($r,0,"summ");
+        //$user_id=$db->result($r,0,"user_id");
+        $user_name=$db->result($r,0,"user_name");
 
-        if ($n==1){
-            //$pay_type_id=$db->result($r,0,"pay_type_id");
-            $pay_type_name=$db->result($r,0,"pay_type_name");
-            //$paybox_id=$db->result($r,0,"paybox_id");
-            $paybox_name=$db->result($r,0,"paybox_name");
-            $data_time=$db->result($r,0,"data_time");
-            $doc_nom=$db->result($r,0,"doc_nom");
-            $client_id=$db->result($r,0,"client_id");$client_name=$this->getClientName($client_id);
-            $cash_id=$db->result($r,0,"cash_id");$cash_name=$this->getCashAbr($cash_id);
-            $summ=$db->result($r,0,"summ");
-            //$user_id=$db->result($r,0,"user_id");
-            $user_name=$db->result($r,0,"user_name");
-
-            $r1=$db->query("select * from J_PAY_STR where pay_id='$pay_id' order by id asc;");$n1=$db->num_rows($r1);$str_list="";
-            for ($i1=1;$i1<=$n1;$i1++){
-                $parrent_doc_type_id=$db->result($r1,$i1-1,"parrent_doc_type_id");
-                $parrent_doc_id=$db->result($r1,$i1-1,"parrent_doc_id");
-                $summ_doc=$db->result($r1,$i1-1,"summ_doc");
-                $doc_cash_id=$db->result($r1,$i1-1,"doc_cash_id");$doc_cash_name=$this->getCashAbr($doc_cash_id);
-                $str_summ_pay=$db->result($r1,$i1-1,"summ_pay");
-                $pay_cash_id=$db->result($r1,$i1-1,"pay_cash_id");$pay_cash_name=$this->getCashAbr($pay_cash_id);
-                $pay_cash_kours=$db->result($r1,$i1-1,"pay_cash_kours");
-                $pay_cash_summ=$db->result($r1,$i1-1,"pay_cash_summ");
-    //			if ($parrent_doc_type_id==63){ $parent_doc_name="Видаткова накладна №".$this->getSaleInvoiceName($parrent_doc_id); }
-                $parent_doc_name="Видаткова накладна №".$this->getSaleInvoiceName($parrent_doc_id);
-                if ($parrent_doc_type_id==98){ $parent_doc_name="Авансовий платіж №$doc_nom"; }
-                $str_list.="<tr>
-                    <td style='text-align:center'>$i1</td>
-                    <td style='text-align:center'>$parent_doc_name</td>
-                    <td style='text-align:center'>$summ_doc</td>
-                    <td style='text-align:center'>$str_summ_pay</td>
-                    <td style='text-align:center'>$doc_cash_name</td>
-                    <td style='text-align:center'>$pay_cash_kours</td>
-                    <td style='text-align:center'>$pay_cash_summ $pay_cash_name</td>
-                    <td style='text-align:center'>$user_name</td>
-                </tr>";
-            }
+        $r1=$db->query("select * from J_PAY_STR where pay_id='$pay_id' order by id asc;");$n1=$db->num_rows($r1);$str_list="";
+        for ($i1=1;$i1<=$n1;$i1++){
+            $parrent_doc_type_id=$db->result($r1,$i1-1,"parrent_doc_type_id");
+            $parrent_doc_id=$db->result($r1,$i1-1,"parrent_doc_id");
+            $summ_doc=$db->result($r1,$i1-1,"summ_doc");
+            $doc_cash_id=$db->result($r1,$i1-1,"doc_cash_id");$doc_cash_name=$this->getCashAbr($doc_cash_id);
+            $str_summ_pay=$db->result($r1,$i1-1,"summ_pay");
+            $pay_cash_id=$db->result($r1,$i1-1,"pay_cash_id");$pay_cash_name=$this->getCashAbr($pay_cash_id);
+            $pay_cash_kours=$db->result($r1,$i1-1,"pay_cash_kours");
+            $pay_cash_summ=$db->result($r1,$i1-1,"pay_cash_summ");
+//			if ($parrent_doc_type_id==63){ $parent_doc_name="Видаткова накладна №".$this->getSaleInvoiceName($parrent_doc_id); }
+            $parent_doc_name="Видаткова накладна №".$this->getSaleInvoiceName($parrent_doc_id);
+            if ($parrent_doc_type_id==98){ $parent_doc_name="Авансовий платіж №$doc_nom"; }
+            $str_list.="<tr>
+                <td style='text-align:center'>$i1</td>
+                <td style='text-align:center'>$parent_doc_name</td>
+                <td style='text-align:center'>$summ_doc</td>
+                <td style='text-align:center'>$str_summ_pay</td>
+                <td style='text-align:center'>$doc_cash_name</td>
+                <td style='text-align:center'>$pay_cash_kours</td>
+                <td style='text-align:center'>$pay_cash_summ $pay_cash_name</td>
+                <td style='text-align:center'>$user_name</td>
+            </tr>";
         }
+
         if ($pay_id==0){$form_htm=RD."/tpl/access_deny.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);} }
         $form=str_replace("{pay_id}",$pay_id,$form);
         $form=str_replace("{parent_doc_name}",$parent_doc_name,$form);
@@ -570,7 +568,7 @@ protected $prefix_new = 'ДП';
         return $form;
     }
 
-    function loadJpayClientSaleInvoiceUnpayedList($client_id){$db=DbSingleton::getDb();$list="";$summ_balans=0;
+    function loadJpayClientSaleInvoiceUnpayedList($client_id){$db=DbSingleton::getDb();$list="";$summ_balans=0;$tpoint_id=$doc_type_id=0;
         list($cash_id,$cash_name)=$this->getJpayClientDocCashId($client_id);
         list($client_balans_avans,$client_balans_cash_id)=$this->getClientBalansAvans($client_id);
         $r=$db->query("select sv.*, t.name as tpoint_name, sl.name as seller_name, cl.name as client_name, dt.mvalue as doc_type_name from J_SALE_INVOICE sv
@@ -621,7 +619,8 @@ protected $prefix_new = 'ДП';
 
     function saveJpayMoneyPay($invoice_id,$kredit,$pay_type_id,$paybox_id,$doc_cash_id,$cash_id,$cash_kours){$db=DbSingleton::getDb();
         $slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка збереження даних!";
-        $invoice_id=$slave->qq($invoice_id);$pay_id=0;//????????
+        $invoice_id=$slave->qq($invoice_id);$invoice_client_id=0;$pay_id=0;//????????
+        $invoice_doc_type_id=$invoice_summ_debit=$invoice_summ=0;
 
         if ($invoice_id==0 || $invoice_id==""){
             $err="Не вказано номер накладної для оплати";$answer=0;
@@ -817,6 +816,7 @@ protected $prefix_new = 'ДП';
 
     function saveJpayAutoMoneyPay($client_id,$kredit_gbl,$pay_type_id,$paybox_id,$cash_id,$cash_kours,$doc_cash_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка збереження даних!";
         $client_id=$slave->qq($client_id);$kredit_gbl=$slave->qq($kredit_gbl);$cash_id=$slave->qq($cash_id);$cash_kours=$slave->qq($cash_kours);$doc_cash_id=$slave->qq($doc_cash_id);
+        $doc_sum_pay=0;$pay_id=0;
 
         if ($client_id==0 || $client_id==""){
             $err="Не вказано клієнта для оплати";$answer=0;
@@ -902,7 +902,6 @@ protected $prefix_new = 'ДП';
                 }
             }// END SALE INVOICE DOCS
             //CHECK IF AVANS
-
             if ($na>0 && $doc_sum_pay>0){
                 $avans_summ=$doc_sum_pay;
                 //list($balans_before,$balans_before_cash_id)=$this->getClientGeneralSaldo($client_id);
@@ -918,7 +917,7 @@ protected $prefix_new = 'ДП';
     }
 
     function saveJpayAvansPay($client_id,$kredit_gbl,$pay_type_id,$paybox_id,$cash_id,$cash_kours,$doc_cash_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка збереження даних!";
-        $client_id=$slave->qq($client_id);$kredit_gbl=$slave->qq($kredit_gbl);$cash_id=$slave->qq($cash_id);$cash_kours=$slave->qq($cash_kours);$doc_cash_id=$slave->qq($doc_cash_id);
+        $client_id=$slave->qq($client_id);$kredit_gbl=$slave->qq($kredit_gbl);$cash_id=$slave->qq($cash_id);$cash_kours=$slave->qq($cash_kours);$doc_cash_id=$slave->qq($doc_cash_id);$pay_id=0;
         if ($client_id==0 || $client_id==""){
             $err="Не вказано клієнта для авансу";$answer=0;
         }
@@ -963,7 +962,7 @@ protected $prefix_new = 'ДП';
     }
 
     function saveJpayAvansMoneyPay($client_id,$kredit_gbl,$pay_type_id,$doc_cash_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка збереження даних!";
-        $client_id=$slave->qq($client_id);$kredit_gbl=$slave->qq($kredit_gbl);$doc_cash_id=$slave->qq($doc_cash_id);
+        $client_id=$slave->qq($client_id);$kredit_gbl=$slave->qq($kredit_gbl);$doc_cash_id=$slave->qq($doc_cash_id);$doc_sum_pay=0;$pay_id=0;
         if ($client_id==0 || $client_id==""){
             $err="Не вказано клієнта для оплати";$answer=0;
         }

@@ -81,7 +81,7 @@ class seo_reports {
 	}
 	
 	function getSeoReportsData($date_start,$date_end,$managers,$cash_id,$client_status) { $db=DbSingleton::getDb(); 
-	    $list=[]; $sales=$backs=[]; $clients=new clients; $users=$docs=[]; $summ_list=0;
+	    $list=[]; $sales=$backs=[]; $clients=new clients; $users=$docs=[]; $summ_list=0; $user_name=$doc_name="";
 		if($managers=="" || $managers==0) $where=""; else $where="j.user_id in ($managers) and ";
 																																									  
 	    $r=$db->query("select j.*, sum(j.summ) as summary from J_SALE_INVOICE j
@@ -180,7 +180,7 @@ class seo_reports {
 
 	
 	function showSeoReports($date_start,$date_end,$managers,$cash_id,$client_status) { $db=DbSingleton::getDb(); $clients=new clients;
-        $users=$docs=[]; $summ_list=0; $list=""; $sales=$backs=[];
+        $users=$docs=[]; $summ_list=0; $list=""; $sales=$backs=[]; $user_name=$doc_name="";
         $form="";$form_htm=RD."/tpl/seo_reports_table.htm";if (file_exists("$form_htm")){ $form=file_get_contents($form_htm);}
 																					  
 		if($managers=="") $where=""; else $where="j.user_id in ($managers) and ";	 			
@@ -407,4 +407,5 @@ class seo_reports {
 		$summ_list.=" ".$this->getCashAbr($cash_id);
 		return $summ_list;
    }
+
 }

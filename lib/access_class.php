@@ -1,4 +1,5 @@
 <?php
+
 class access {
 	
 	function check_user_access($file){$db=DbSingleton::getDb(); session_start(); $media_user_id=$_SESSION["media_user_id"];

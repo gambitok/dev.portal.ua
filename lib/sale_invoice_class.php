@@ -137,7 +137,7 @@ class sale_invoice {
         return array($list,$summ_price);
     }
 
-    function getKoursData($data){$db=DbSingleton::getDb();$slave=new slave;$usd_to_uah=0;$eur_to_uah=0;
+    function getKoursData(){$db=DbSingleton::getDb();$slave=new slave;$usd_to_uah=0;$eur_to_uah=0;
         $r=$db->query("select kours_value from J_KOURS where cash_id='2' and in_use='1' order by id desc limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){$usd_to_uah=$slave->to_money(round($db->result($r,0,"kours_value"),2));}
         $r=$db->query("select kours_value from J_KOURS where cash_id='3' and in_use='1' order by id desc limit 0,1;");$n=$db->num_rows($r);
@@ -234,7 +234,7 @@ class sale_invoice {
             $usd_to_uah=$db->result($r,0,"usd_to_uah");
             $eur_to_uah=$db->result($r,0,"eur_to_uah");
 
-            list($usd_to_uah_new,$eur_to_uah_new)=$this->getKoursData('');
+            list($usd_to_uah_new,$eur_to_uah_new)=$this->getKoursData();
     //		if($usd_to_uah!=$usd_to_uah_new){$usd_to_uah=$usd_to_uah_new;}
     //		if($eur_to_uah!=$eur_to_uah_new){$eur_to_uah=$eur_to_uah_new;}
             if($usd_to_uah==0){$usd_to_uah=$usd_to_uah_new;}
@@ -746,7 +746,7 @@ class sale_invoice {
     }
 
     function saveSaleInvoiceMoneyPay($invoice_id,$pay_id,$kredit,$pay_type_id,$paybox_id,$doc_cash_id,$cash_id,$cash_kours){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка збереження даних!";
-        $invoice_id=$slave->qq($invoice_id);$invoice_client_id=0;$invoice_doc_type_id=0;$invoice_summ=$invoice_summ_debit=0;
+        $invoice_id=$slave->qq($invoice_id);$invoice_client_id=0;$invoice_doc_type_id=0;$invoice_summ=$invoice_summ_debit=0;$doc_nom=0;
         if ($invoice_id==0 || $invoice_id==""){
             $err="Не вказано номер накладної для оплати";$answer=0;
         }

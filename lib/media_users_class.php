@@ -4,7 +4,7 @@ class media_users {
 
 	function clearPhone($phone){ $phone="+".(string)((int)"$phone"); return $phone; }
 	
-	function authUsermedia($phone,$pass,$remember){$db=DbSingleton::getDb();session_start();$answer="";$access=new access;
+	function authUsermedia($phone,$pass,$remember){$db=DbSingleton::getDb();session_start();$answer="";$access=new access;$media_user_id=$role_id=0;
 		if ($pass!="" and $phone!="") {$phone=$this->clearPhone($phone);
 			$r=$db->query("select * from media_users where phone='$phone' and pass='$pass' and status='100' limit 0,1;");$n=$db->num_rows($r);
 			if ($n==1){

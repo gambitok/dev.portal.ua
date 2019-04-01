@@ -187,19 +187,19 @@ function showCsvPreviewIndex(){$db=DbSingleton::getDb(); $csv_exist=$fn=$kol_col
 	
 function finishBrandsIndexImport($start_row,$kol_cols,$cols){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;
     $err="Помилка збереження даних!";$err2 = "Файл з дуплікатами індексів!";
-	$start_row=$slave->qq($start_row);$kol_cols=$slave->qq($kol_cols);$cols=$slave->qq($cols);
+	$start_row=$slave->qq($start_row);//$kol_cols=$slave->qq($kol_cols);$cols=$slave->qq($cols);
     $r=$db->query("select * from T2_BRANDS_CSV limit 0,1;"); $n=$db->num_rows($r);
     if ($n==1){
         $file_name=$db->result($r,0,"FILE_NAME");
         $file_path=RD."/cdn/brands_files/index/$file_name";
         if (file_exists($file_path)){
-            for ($i=1;$i<=$kol_cols;$i++){
-                if ($cols[$i]==1){$bid=$i;}
-                if ($cols[$i]==2){$bname=$i;}
-                if ($cols[$i]==3){$btype=$i;}
-                if ($cols[$i]==4){$bcountry=$i;}
-                if ($cols[$i]==5){$bvisible=$i;}
-            }
+//            for ($i=1;$i<=$kol_cols;$i++){
+//                if ($cols[$i]==1){$bid=$i;}
+//                if ($cols[$i]==2){$bname=$i;}
+//                if ($cols[$i]==3){$btype=$i;}
+//                if ($cols[$i]==4){$bcountry=$i;}
+//                if ($cols[$i]==5){$bvisible=$i;}
+//            }
             $fna=explode(".",$file_name);$ft=count($fna);$file_type=$fna[$ft-1];$krs=0;
 
             $handle2 = @fopen($file_path, "r");
@@ -269,7 +269,6 @@ function finishBrandsIndexImport($start_row,$kol_cols,$cols){$db=DbSingleton::ge
             }
         }
     }
-	
 	return array($answer,$err);
 }
 

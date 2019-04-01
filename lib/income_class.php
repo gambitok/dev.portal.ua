@@ -605,7 +605,6 @@ class income {
         $form="";$form_htm=RD."/tpl/income_print.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from J_INCOME_STR  where income_id='$income_id' order by id asc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
-            //$id=$db->result($r,$i-1,"id");
             $art_id=$db->result($r,$i-1,"art_id");
             $article_nr_displ=$db->result($r,$i-1,"article_nr_displ"); $article_name=$this->getArticleName($art_id);
             $brand_id=$db->result($r,$i-1,"brand_id");$brand_name=$cat->getBrandName($brand_id);
@@ -1569,7 +1568,7 @@ class income {
 
     function showGoodGroupTree($income_id,$sel_id){$db=DbSingleton::getDb();$tree="";
         $form="";$form_htm=RD."/tpl/income_goods_group_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from GOODS_GROUP where PARRENT_ID='0' order by NAME asc;");$n=$db->num_rows($r);$list="";
+        $r=$db->query("select * from GOODS_GROUP where PARRENT_ID='0' order by NAME asc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"ID");
             $name=$db->result($r,$i-1,"NAME");

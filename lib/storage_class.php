@@ -324,7 +324,7 @@ class storage {
 
     function saveStorageCellsForm($storage_id,$cells_id,$str_kol,$cell_str_ids,$cell_param_ids,$cell_vls,$def_ch){ $db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;
         $answer=0;$err="Помилка збереження даних!";
-        $storage_id=$slave->qq($storage_id);$cells_id=$slave->qq($cells_id);$str_kol=$slave->qq($str_kol);$cell_str_ids=$slave->qq($cell_str_ids);$cell_param_ids=$slave->qq($cell_param_ids);$cell_vls=$slave->qq($cell_vls);
+        $storage_id=$slave->qq($storage_id);$cells_id=$slave->qq($cells_id);$str_kol=$slave->qq($str_kol);$cell_param_ids=$slave->qq($cell_param_ids);$cell_vls=$slave->qq($cell_vls);
         $def_ch=$slave->qq($def_ch);
         if ($storage_id>0){
             if ($cells_id==0 || $cells_id==""){
@@ -346,7 +346,6 @@ class storage {
                 $dbt->query("update STORAGE_CELLS set str_arr='$str_arr', `cell_value`='$cell_value', `status`='1', `default`='$def_ch' where id='$cells_id' and storage_id='$storage_id';");
                 $answer=1;$err="";
             }
-
         }
         else {
             $storage_str_id=$param_id=0;

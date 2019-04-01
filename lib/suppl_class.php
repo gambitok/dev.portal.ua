@@ -236,8 +236,8 @@ class suppl {
         return array($csv_exist,$csv_file_name,$pre_table);
     }
 
-    function finishSupplIndexImport($suppl_id,$start_row,$kol_cols,$cols){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";require_once RD."/lib/clients_class.php"; $clients=new clients;
-        $suppl_id=$slave->qq($suppl_id);$start_row=$slave->qq($start_row);$kol_cols=$slave->qq($kol_cols);$cols=$slave->qq($cols);
+    function finishSupplIndexImport($suppl_id,$start_row,$kol_cols,$cols){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
+        $suppl_id=$slave->qq($suppl_id);$start_row=$slave->qq($start_row);$kol_cols=$slave->qq($kol_cols);$cols=$slave->qq($cols);$return_delay=$warranty_info=0;
         if ($suppl_id>0){
             $r=$db->query("select * from T2_SUPPL_CSV where suppl_id='$suppl_id' and ftype='index' limit 0,1;");$n=$db->num_rows($r);
             if ($n==1){
@@ -436,6 +436,7 @@ class suppl {
 
     function finishSupplPriceImport($suppl_id,$start_row,$kol_cols,$main_cash_id,$kours_usd,$kours_eur,$cols){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";require_once RD."/lib/clients_class.php"; $clients=new clients;$price=0;
         $suppl_id=$slave->qq($suppl_id);$start_row=$slave->qq($start_row);$kol_cols=$slave->qq($kol_cols);$main_cash_id=$slave->qq($main_cash_id);$kours_usd=$slave->qq($kours_usd);$kours_eur=$slave->qq($kours_eur);$cols=$slave->qq($cols);
+        $suppl_cash_id=2;
         if ($suppl_id>0){
             $kours_usd=str_replace(",",".",$kours_usd);$kours_eur=str_replace(",",".",$kours_eur);
             $r=$db->query("select * from T2_SUPPL_CSV where suppl_id='$suppl_id' and ftype='price' limit 0,1;");$n=$db->num_rows($r);
@@ -519,11 +520,9 @@ class suppl {
                                         $suppl_index=trim($buf[$index-1]);
                                         $suppl_brand=trim($buf[$brand-1]);
                                         $suppl_price=str_replace(",",".",trim($buf[$price-1]));
-                                        //print "suppl_price=$suppl_price";
                                         if ($main_cash_id==0){
                                             $suppl_cash=trim($buf[$cash-1]);$suppl_cash_id=$this->findCachId($suppl_cash,$cash_data);
                                         }
-                                        //print "suppl_cash_id=$suppl_cash_id\n";
                                         $price_usd=0;
                                         if ($suppl_cash_id==2){$price_usd=$suppl_price;}
                                         if ($suppl_cash_id==1){$price_usd=round($suppl_price/$kours_usd,2);}
@@ -544,7 +543,7 @@ class suppl {
                                     }
                                 }
                             }
-                            if ($pkg!=""){ $dbt->query("insert into T2_SUPPL_IMPORT (`suppl_id`,`suppl_index`,`brand`,`price_suppl`, `cash_id`, `kours_usd`, `price_usd`, `client_storage_id`, `stock_suppl`,`data_update`) values $pkg;");$pkg="";$pkg_k=0;}
+                            if ($pkg!=""){ $dbt->query("insert into T2_SUPPL_IMPORT (`suppl_id`,`suppl_index`,`brand`,`price_suppl`, `cash_id`, `kours_usd`, `price_usd`, `client_storage_id`, `stock_suppl`,`data_update`) values $pkg;");}
                             fclose($handle);
                         }
                         if (file_exists(RD."/cdn/suppl_files/price/$suppl_id/$file_name")){unlink(RD."/cdn/suppl_files/price/$suppl_id/$file_name");}
@@ -573,7 +572,7 @@ class suppl {
 //            left outer join A_CLIENTS_CATEGORY cc on cc.client_id=c.id
 //            left outer join A_CATEGORY ac on ac.id=cc.category_id
 //        where c.status=1 and ac.id=3 ;");$n=$db->num_rows($r);$list="";
-        $r=$db->query("select c.*,ot.name as org_type_name, t2cn.COUNTRY_NAME, t2st.STATE_NAME, t2rg.REGION_NAME, t2ct.CITY_NAME  from A_CLIENTS c 
+        $r=$db->query("select c.*,ot.name as org_type_name, t2cn.COUNTRY_NAME, t2st.STATE_NAME, t2rg.REGION_NAME, t2ct.CITY_NAME from A_CLIENTS c 
             left outer join A_ORG_TYPE ot on ot.id=c.org_type 
             left outer join T2_COUNTRIES t2cn on t2cn.COUNTRY_ID=c.country 
             left outer join T2_STATE t2st on t2st.STATE_ID=c.state

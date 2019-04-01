@@ -57,18 +57,18 @@ class module {
 
 	function get_module_caption($module){$db=DbSingleton::getDb();
 		$r=$db->query("select caption from module where id='$module';");$n=$db->num_rows($r);
-		if ($n>0){ return $db->result($r,0,"caption");}	if ($n==0){ return "";}
+		if ($n>0){ return $db->result($r,0,"caption");}	else { return "";}
 	}
 
-	function get_module_file($file,$var){$db=DbSingleton::getDb();
+	function get_module_file($file,$var){$db=DbSingleton::getDb();$r="";
 		if ($var==1){ $r=$db->query("select file from module_files where id='$file';");}
 		if ($var==2){ $r=$db->query("select file from module_files where file='$file';");}
-		$n=$db->num_rows($r);if ($n>0){ return $db->result($r,0,"file");}if ($n==0){ return "";}
+		$n=$db->num_rows($r);if ($n>0){ return $db->result($r,0,"file");} else { return "";}
 	}
 
 	function get_module_file_cap($file){$db=DbSingleton::getDb();
 		$r=$db->query("select caption from module_files where id='$file';");$n=$db->num_rows($r);
-		if ($n>0){ return $db->result($r,0,"caption");}if ($n==0){ return "";}
+		if ($n>0){ return $db->result($r,0,"caption");}else { return "";}
 	}
 
 	function show_file_form($file){$db=DbSingleton::getDb();

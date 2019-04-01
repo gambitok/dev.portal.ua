@@ -528,7 +528,7 @@ class storsel {
     }
 
     function makesJmovingStorageSelect($jmoving_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="";
-        $jmoving_id=$slave->qq($jmoving_id);
+        $jmoving_id=$slave->qq($jmoving_id);$storage_id_from=0;
         $r=$db->query("select oper_status,status_select,storage_id_to from J_MOVING where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){
             $oper_status=$db->result($r,0,"oper_status");
@@ -593,8 +593,7 @@ class storsel {
                             $rsc2=$dbt->query("select * from `T2_ARTICLES_STRORAGE` where `ART_ID`='$art_id' and `STORAGE_ID`='$storage_id_from' limit 0,1;");$nsc2=$dbt->num_rows($rsc2);
                             if ($nsc2==1){
                                 $amount_sc=$dbt->result($rsc2,0,"AMOUNT");
-                                $reserv_amount_sc=$dbt->result($rsc2,0,"RESERV_AMOUNT");
-
+                                //$reserv_amount_sc=$dbt->result($rsc2,0,"RESERV_AMOUNT");
                                 if ($amount_sc>=$amount && $amount_sc>0){
                                     //$amount_sc-=$amount;
                                     //$reserv_amount_sc+=$amount;
@@ -614,7 +613,7 @@ class storsel {
     }
 
     function makesJmovingStorageSelectLocal($jmoving_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="";
-        $jmoving_id=$slave->qq($jmoving_id);
+        $jmoving_id=$slave->qq($jmoving_id);$storage_id_from=$cell_id_from=0;
         $r=$db->query("select oper_status,status_select,storage_id_to from J_MOVING where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){
             $oper_status=$db->result($r,0,"oper_status");
@@ -915,7 +914,7 @@ class storsel {
     }
 
     function viewJmovingStorageSelectLocal($jmoving_id,$select_id,$jmoving_status){$db=DbSingleton::getDb();$cat=new catalogue;$list="";
-        $form_htm=RD."/tpl/jmoving_local_storage_select_view.htm";
+        $form="";$form_htm=RD."/tpl/jmoving_local_storage_select_view.htm";
         $tmp="J_MOVING_SELECT_STR";if ($jmoving_status==44){$tmp="J_MOVING_LOCAL_SELECT_STR_TEMP";}
         $disabled46=" disabled";$disabled47=" disabled";$disabled48=" disabled";
 
@@ -934,7 +933,7 @@ class storsel {
                 $article_nr_displ=$db->result($r,$i-1,"article_nr_displ");
                 $brand_id=$db->result($r,$i-1,"brand_id");$brand_name=$cat->getBrandName($brand_id);
                 $amount=$db->result($r,$i-1,"amount");
-                $storage_id_from=$db->result($r,$i-1,"storage_id_from");$storage_name_from=$this->getStorageName($storage_id_from);
+                //$storage_id_from=$db->result($r,$i-1,"storage_id_from");//$storage_name_from=$this->getStorageName($storage_id_from);
                 $cell_id_from=$db->result($r,$i-1,"cell_id_from");$cell_name_from=$this->getStorageCellName($cell_id_from);
                 $cell_id_to=$db->result($r,$i-1,"cell_id_to");$cell_name_to=$this->getStorageCellName($cell_id_to);
                 $list47="";
@@ -1065,6 +1064,7 @@ class storsel {
     }
 
     function printStorselView($select_id){$db=DbSingleton::getDb();$cat=new catalogue;$dp=new dp; $slave=new slave;session_start();$user_name=$_SESSION["user_name"];
+        $dp_name=$jmoving_name=$client_name="";
         $form="";$form_htm=RD."/tpl/storsel_select_print.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);} $list="";
         $rstr=$db->query("select storage_id from J_SELECT where id='$select_id';");
         $storage_id=$db->result($rstr,0,"storage_id");
@@ -1072,7 +1072,6 @@ class storsel {
 
         $r=$db->query("select * from J_SELECT_STR where select_id='$select_id' $order_by;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
-            //$id=$db->result($r,$i-1,"id");
             $art_id=$db->result($r,$i-1,"art_id");
             $article_nr_displ=$db->result($r,$i-1,"article_nr_displ"); $article_name=$this->getArticleName($art_id);
             $brand_id=$db->result($r,$i-1,"brand_id");$brand_name=$cat->getBrandName($brand_id);
@@ -1107,10 +1106,8 @@ class storsel {
         }
         if ($parrent_doc_type_id==2){ // DP
             $dp_name=$dp->getDpName($parrent_doc_id); $client_name=$dp->getDpClientName($parrent_doc_id);
-            //$tpoint_address="";
             $tpoint_name="---";
         }
-
         $tpoint_address=$this->getTpointAddress($tpoint_id);
         $form=str_replace("{select_nom}",$select_nom,$form);
         $form=str_replace("{data_create}",$data_create,$form);
@@ -1235,7 +1232,6 @@ class storsel {
         for ($i=1;$i<=$n;$i++){
             $status_select=$db->result($r,$i-1,"status_select");
             $datatime=$db->result($r,$i-1,"datatime");
-            //$user_id=$db->result($r,$i-1,"user_id");
             $data[$status_select]=$datatime;
         }
         return $data;
@@ -1279,8 +1275,8 @@ class storsel {
                 <td align='center' id='amr_$id'>$amount_barcodes</td>
                 <td align='center' id='amrd_$id'>$dif_amount_barcodes</td>
                 <td align='center' id='amrns_$id'>$amount_barcodes_noscan</td>
-                <td align='center'><button class='btn btn-xs btn-default' onclick='showStorselNoscanForm(\"$select_id\",\"$art_id\",\"$id\");' title='Фіксація без сканування' alt='Фіксація без сканування'><i class='fa fa-cube'></i></button></td>
-                <td align='center'><button class='btn btn-xs btn-danger' onclick='showStorselBugForm(\"$select_id\",\"$id\");' title='відхилення/брак/недостача' alt='відхилення/брак/недостача'><i class='fa fa-bug'></i></button></td>
+                <td align='center'><button class='btn btn-xs btn-default' onclick='showStorselNoscanForm(\"$select_id\",\"$art_id\",\"$id\");' title='Фіксація без сканування'><i class='fa fa-cube'></i></button></td>
+                <td align='center'><button class='btn btn-xs btn-danger' onclick='showStorselBugForm(\"$select_id\",\"$id\");' title='відхилення/брак/недостача'><i class='fa fa-bug'></i></button></td>
                 <td align='center' id='ambg_$id'>$amount_bug</td>
                 <td id='ssbug_$id'>$storage_select_list</td>
             </tr>";
@@ -1302,7 +1298,7 @@ class storsel {
     }
 
     function saveStorselBarcodeForm($select_id,$barcode){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка індексу!!";
-        $select_id=$slave->qq($select_id);$barcode=$slave->qq($barcode);
+        $select_id=$slave->qq($select_id);$barcode=$slave->qq($barcode);$id=$amount_barcodes=$dif_amount_barcodes=0;
         if ($select_id>0 && $barcode!=""){
             $art_id=$this->getArtIdByBarcode($barcode);
             $r=$db->query("select * from J_SELECT_STR where select_id='$select_id' and art_id='$art_id' and amount>amount_barcodes order by id asc;");$n=$db->num_rows($r);$ex=0;
@@ -1420,7 +1416,6 @@ class storsel {
         $form="";$form_htm=RD."/tpl/storsel_bug_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from J_SELECT_STR where select_id='$select_id' and id='$str_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){
-            //$id=$db->result($r,0,"id");
             $art_id=$db->result($r,0,"art_id");
             $article_nr_displ=$db->result($r,0,"article_nr_displ"); $article_name=$this->getArticleName($art_id);
             $brand_id=$db->result($r,0,"brand_id");$brand_name=$cat->getBrandName($brand_id);
@@ -1442,6 +1437,7 @@ class storsel {
 
     function saveStorselBugForm($select_id,$str_id,$storage_select_bug,$amount_bug){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка індексу!!";
         $select_id=$slave->qq($select_id);$str_id=$slave->qq($str_id);$storage_select_bug=$slave->qq($storage_select_bug);$amount_bug=$slave->qq($amount_bug);
+        $id=$dif_amount_barcodes=$new_amount_bug=$amount_barcodes=$amount_barcodes_noscan=0;$storage_select_bug_list="";
         if ($select_id>0 && $str_id>0 && $storage_select_bug>0 && $amount_bug>0){
             $r=$db->query("select * from J_SELECT_STR where select_id='$select_id' and id='$str_id' limit 0,1;");$n=$db->num_rows($r);
             if ($n==1){
@@ -1496,7 +1492,6 @@ class storsel {
                 }
             }
         }else{ $answer=0;$err="Помилка штрих-коду";}
-        //print "return data: $dif_amount_barcodes,$new_amount_bug,$amount_barcodes,$amount_barcodes_noscan";
         return array($answer,$err,$id,$storage_select_bug_list,$dif_amount_barcodes,$new_amount_bug,$amount_barcodes,$amount_barcodes_noscan);
     }
 
@@ -1542,7 +1537,6 @@ class storsel {
         $form="";$form_htm=RD."/tpl/storsel_noscan_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from J_SELECT_STR where select_id='$select_id' and id='$str_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){
-            //$id=$db->result($r,0,"id");
             $art_id=$db->result($r,0,"art_id");
             $article_nr_displ=$db->result($r,0,"article_nr_displ"); $article_name=$this->getArticleName($art_id);
             $brand_id=$db->result($r,0,"brand_id");$brand_name=$cat->getBrandName($brand_id);
@@ -1565,6 +1559,7 @@ class storsel {
 
     function saveStorselNoscanForm($select_id,$art_id,$str_id,$amount_barcode_noscan){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка індексу!!";
         $select_id=$slave->qq($select_id);$art_id=$slave->qq($art_id);$str_id=$slave->qq($str_id);$amount_barcode_noscan=$slave->qq($amount_barcode_noscan);
+        $id=$dif_amount_barcodes=$new_amount_barcode_noscan=0;
         if ($select_id>0 && $art_id>0 && $str_id>0 && $amount_barcode_noscan>0){
             $r=$db->query("select * from J_SELECT_STR where select_id='$select_id' and art_id='$art_id' and id='$str_id' limit 0,1;");$n=$db->num_rows($r);
             if ($n==1){
