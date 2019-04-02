@@ -14,6 +14,22 @@ require_once (RD."/lib/jmoving_class.php");
 require_once (RD."/lib/dp_class.php");
 require_once (RD."/lib/storsel_class.php");
 require_once (RD."/lib/money_format.php");
+require_once (RD."/lib/money_spend_class.php");
+require_once (RD."/lib/money_move_class.php");
+require_once (RD."/lib/sale_invoice_class.php");
+require_once (RD."/lib/users_class.php");
+require_once (RD."/lib/suppl_class.php");
+require_once (RD."/lib/storage_class.php");
+require_once (RD."/lib/paybox_class.php");
+require_once (RD."/lib/kours_class.php");
+require_once (RD."/lib/jpay_class.php");
+require_once (RD."/lib/country_class.php");
+require_once (RD."/lib/brands_class.php");
+require_once (RD."/lib/back_clients_class.php");
+require_once (RD."/lib/buh_back_class.php");
+require_once (RD."/lib/buh_invoice_class.php");
+require_once (RD."/lib/tax_invoice_class.php");
+require_once (RD."/lib/tpoint_class.php");
 
 $config=new config;list($title,$title_short,$keywords,$descr,$site_address)=$config->get_meta_head();
 define('gnLink',$config->get_link());
@@ -27,9 +43,7 @@ if ($rl_id==5 || $rl_id==6 || $rl_id==1){
 	$mh_htm=RD."/tpl/menu_hidden.htm";if (file_exists("$mh_htm")){ $menu_hidden = file_get_contents($mh_htm);}
 }
 
-$dp=new dp; 
-
-$access=new access; 
+$dp=new dp; $access=new access;
 
 $mf1="report_overdraft"; 		list($accss1,$acc_lvl)=$access->check_user_access($mf1);
 $mf2="clients"; 				list($accss2,$acc_lvl)=$access->check_user_access($mf2);
@@ -53,7 +67,6 @@ $content=str_replace("{kilk_suppl_back}", $dp->countSupplCoopSite()[1], $content
 $content=str_replace("{kilk_overdraft}", $dp->countReportOverdrafts()[0], $content);
 $content=str_replace("{kilk_overdraft_back}", $dp->countReportOverdrafts()[1], $content);
 		
-
 $content=str_replace("{windowState}", $_SESSION["windowState"], $content);
 $content=str_replace("{title}", $module_caption.$title, $content);
 $content=str_replace("{title_short}", $title_short, $content);

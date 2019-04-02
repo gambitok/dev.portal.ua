@@ -1,6 +1,4 @@
 
-//=Language====================================================================
-
 function loadLanguageList() {
 	JsHttpRequest.query($rcapi,{ 'w': 'loadLanguageList' }, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -26,7 +24,7 @@ function newLanguageCard(){
 }
 
 function showLanguageCard(id){
-	if (id<=0 || id==""){toastr["error"](errs[0]);}
+	if (id<=0 || id===""){toastr["error"](errs[0]);}
 	if (id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'showLanguageCard', 'id':id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -93,7 +91,6 @@ function dropLanguage(id) {
 	});
 }
 
-
 //=Contacts====================================================================
 
 function loadContactsList() {
@@ -103,7 +100,6 @@ function loadContactsList() {
 		}
 	}, true);
 }
-
 
 function newContactsCard(){
 	var lang =$("#lang_select option:selected").val();
@@ -115,7 +111,7 @@ function newContactsCard(){
 }
 
 function showContactsCard(id){
-	if (id<=0 || id==""){toastr["error"](errs[0]);}
+	if (id<=0 || id===""){toastr["error"](errs[0]);}
 	if (id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'showContactsCard', 'id':id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -192,7 +188,6 @@ function loadContactsBotList() {
 	}, true);
 }
 
-
 function newContactsBotCard(){
 	JsHttpRequest.query($rcapi,{ 'w': 'newContactsBotCard'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -202,7 +197,7 @@ function newContactsBotCard(){
 }
 
 function showContactsBotCard(id){
-	if (id<=0 || id==""){toastr["error"](errs[0]);}
+	if (id<=0 || id===""){toastr["error"](errs[0]);}
 	if (id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'showContactsBotCard', 'id':id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -327,7 +322,6 @@ function loadNewsList() {
 	}, true);
 }
 
-
 function newNewsCard(){
 	var lang =$("#lang_select option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'newNewsCard', 'lang':lang}, 
@@ -339,7 +333,7 @@ function newNewsCard(){
 }
 
 function showNewsCard(id){
-	if (id<=0 || id==""){toastr["error"](errs[0]);}
+	if (id<=0 || id===""){toastr["error"](errs[0]);}
 	if (id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'showNewsCard', 'id':id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  

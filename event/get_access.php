@@ -16,4 +16,3 @@ if ($media_user_id==""){
 	$content=str_replace("{keywords}", $keywords, $content);
 	$content=str_replace("{site_address}", $address, $content);
 }
-?>

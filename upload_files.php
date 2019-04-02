@@ -4,7 +4,6 @@ if ($user_id!=""){
 	define('RD', dirname (__FILE__));$op=$_REQUEST["op"];
 	require_once (RD."/lib/mysql_class.php");$db=DbSingleton::getDb();
 	require_once (RD."/lib/slave_class.php");$slave=new slave;
-
 	/*$headers = apache_request_headers();
 	foreach ($headers as $name => $value) {
 //		if ($name=='Content-Type' and $value=="image/jpeg"){ $filename=time()."-".rand()."-".rand()."-".rand().".jpg"; }
@@ -34,8 +33,6 @@ if ($user_id!=""){
 		$r=$db->query("select max(id) as mid from docs_files;");$photo_id=$db->result($r,0,"mid")+1;
 		$db->query("insert into docs_files (id,doc_id,file_name,ison) values ('$photo_id','$doc_id','$filename','1');");
 	}
-	
-	
 	$bidId=$_REQUEST["bidId"];$estateId=$_REQUEST["estateId"];$fileId=$_REQUEST["fileId"];$filename=$_REQUEST["file_name"];
 	if ($fileId!=""){$prPath=RD."/uploads/bidFiles";
 		if(!is_dir($prPath."/$bidId")){mkdir($prPath."/$bidId",0777);}
@@ -45,4 +42,3 @@ if ($user_id!=""){
 	if ($op=="save_bid_files" && $fileId!="undefined"){ $db->query("update bids_files set file_name='$filename' where id='$fileId' and ison='1';"); }
 	if ($op=="save_bid_files" && $fileId=="undefined"){ $db->query("insert into bids_files (`bid_id`,`estate_id`,`file_name`,`ison`) values ('$bidId','$estateId','$filename','1');"); }
 }
-?>

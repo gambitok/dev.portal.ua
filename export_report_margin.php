@@ -5,6 +5,7 @@ error_reporting(E_ERROR);
 define('RD', dirname (__FILE__));
 $content=null;
 require_once (RD."/lib/mysql_class.php");
+require_once (RD."/lib/DbSingleton.php");
 require_once (RD."/lib/slave_class.php");
 require_once (RD."/lib/manual_class.php");
 require_once (RD."/lib/gmanual_class.php");
@@ -25,18 +26,14 @@ $doc_status=$_REQUEST["doc_status"];
 $cash_id=$_REQUEST["cash_id"];
 
 if ($w=="Export"){ 
-	require_once 'lib/excel/Classes/PHPExcel.php';
-	
-	$arr=$report_margin->getReportMarginDataSales($date_start,$date_end,$doc_type_id,$client_status,$doc_status,$cash_id);
-	$objPHPExcel = new PHPExcel(); 
-	
+	require_once 'lib/excel/Classes/PHPExcel.php'; $objPHPExcel = new PHPExcel();
+    $arr=$report_margin->getReportMarginDataSales($date_start,$date_end,$doc_type_id,$client_status,$doc_status,$cash_id);
 	$objPHPExcel->getActiveSheet()->setCellValue('A1','Document type'); cellColor('A1', "90ee90");
 	$objPHPExcel->getActiveSheet()->setCellValue('B1','OS'); cellColor('B1', "90ee90");
 	$objPHPExcel->getActiveSheet()->setCellValue('C1','Cost'); cellColor('C1', "90ee90");
 	$objPHPExcel->getActiveSheet()->setCellValue('D1','SB'); cellColor('D1', "90ee90");
 	$objPHPExcel->getActiveSheet()->setCellValue('E1','SU'); cellColor('E1', "90ee90");
 	$objPHPExcel->getActiveSheet()->setCellValue('F1','Selling'); cellColor('F1', "90ee90");
-//	$objPHPExcel->getActiveSheet()->setCellValue('G1','Color'); cellColor('G1', "90ee90");
 	$objPHPExcel->getActiveSheet()->setTitle('Mark-up');
 	$row=2;$ch='A';  
 	
@@ -71,4 +68,3 @@ function cellColor($cells,$color){
     ));
 }
 
-?>

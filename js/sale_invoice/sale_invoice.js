@@ -33,13 +33,13 @@ function filterInvoiceList(){
 function filterBuhInvoiceList(){
 	var date_start=$("#date_start").val();
 	var date_end=$("#date_end").val();
-		JsHttpRequest.query($rcapi,{ 'w': 'filterBuhInvoiceList', 'date_start':date_start, 'date_end':date_end}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			$('#datatable').DataTable().destroy();
-			$("#sale_invoice_range").html(result.content[0]);
-			$("#sale_invoice_summ").html(result.content[1]);
-			$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
-		}}, true);
+	JsHttpRequest.query($rcapi,{ 'w': 'filterBuhInvoiceList', 'date_start':date_start, 'date_end':date_end},
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+		$('#datatable').DataTable().destroy();
+		$("#sale_invoice_range").html(result.content[0]);
+		$("#sale_invoice_summ").html(result.content[1]);
+		$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+	}}, true);
 } 
 
 function show_sale_invoice_search(inf){
@@ -416,11 +416,11 @@ function updateDpStrPrice(rId,discount,cash_id,price_end,summ){
 function calculateDpSumm(){
 	var dp_summ=0;
 	var kol_row=$("#kol_row").val();
-	var sum_str=0;
 	for (var i=1;i<=kol_row;i++){
 		summ_str=parseFloat($("#summStr_"+i).val());
 		dp_summ=dp_summ+summ_str;
-	}dp_summ=parseFloat(dp_summ).toFixed(2);
+	}
+	dp_summ=parseFloat(dp_summ).toFixed(2);
 	$("#dp_summ").val(dp_summ);
 }
 

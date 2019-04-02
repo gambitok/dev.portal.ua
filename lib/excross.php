@@ -159,7 +159,7 @@ function exportDocsForm() {
 
 // export Cross -----------------------------------------------------------------------------------------------------------------------------------
 
-function ExportCross($br) { $db=DbSingleton::getTokoDb();						
+function ExportCross($br) { $db=DbSingleton::getTokoDb(); $list=[];
 	$br2="'".implode("','", $br)."'"; 
 	$r=$db->query("
 	SELECT b3.BRAND_NAME, tarez.ARTICLE_NR_DISPL, t2c.DISPLAY_NR, b2.BRAND_NAME
@@ -178,7 +178,7 @@ function ExportCross($br) { $db=DbSingleton::getTokoDb();
 	INNER JOIN T2_BRANDS b2 ON b2.BRAND_ID = t2c.BRAND_ID
 	LEFT JOIN T2_BRANDS b3 ON b3.BRAND_ID = tarez.BRAND_ID
 	");
-	$n=$db->num_rows($r); $list="";
+	$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$article=$db->result($r,$i-1,"tarez.ARTICLE_NR_DISPL");
 		$name=$db->result($r,$i-1,"b3.BRAND_NAME");

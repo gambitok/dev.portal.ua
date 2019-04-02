@@ -39,7 +39,6 @@ function showClientGeneralSaldoForm(client_id){
 		document.getElementById("FormModalLabel").innerHTML=result["header"];
 		$('#saldo_data_start').datepicker({format: "yyyy-mm-dd",autoclose:true})
 		$('#saldo_data_end').datepicker({format: "yyyy-mm-dd",autoclose:true})
-
 	}}, true);
 }
 
@@ -54,7 +53,6 @@ function filterClientGeneralSaldoForm(client_id){
 			document.getElementById("client_saldo_end").innerHTML=result["saldo_end"];
 			document.getElementById("client_saldo_data_start").innerHTML=result["saldo_data_start"];
 			document.getElementById("client_saldo_data_end").innerHTML=result["saldo_data_end"];
-			
 		}}, true);
 	}
 }

@@ -2,8 +2,7 @@
 class brands{
 
     function show_brands_list(){ $db=DbSingleton::getTokoDb();$manual=new manual;
-        $r=$db->query("select b.*, t2cn.COUNTRY_NAME, t2k.CAPTION
-        from T2_BRANDS b
+        $r=$db->query("select b.*, t2cn.COUNTRY_NAME, t2k.CAPTION from T2_BRANDS b
             left outer join T2_COUNTRIES t2cn on t2cn.COUNTRY_ID=b.COUNTRY_ID
             left outer join T2_BRANDS_KIND t2k on t2k.KIND_ID=b.KIND;"); $n=$db->num_rows($r); $list="";
         for ($i=1;$i<=$n;$i++){
@@ -55,8 +54,7 @@ class brands{
         return $form;
     }
 
-    function saveBrandsGeneralInfo($brands_id, $brands_name, $brands_type, $brands_kind, $brands_country, $brands_visible) {$dbt=DbSingleton::getTokoDb(); $slave=new slave;
-        $answer=0; $err="Помилка збереження даних!";
+    function saveBrandsGeneralInfo($brands_id, $brands_name, $brands_type, $brands_kind, $brands_country, $brands_visible) {$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0; $err="Помилка збереження даних!";
         $brands_id=$slave->qq($brands_id);$brands_name=$slave->qq($brands_name);$brands_type=$slave->qq($brands_type);$brands_kind=$slave->qq($brands_kind);$brands_country=$slave->qq($brands_country);$brands_visible=$slave->qq($brands_visible);
         if ($brands_id>0){
             $dbt->query("update T2_BRANDS set `BRAND_NAME`='$brands_name',`BRAND_TYPE`='$brands_type', `KIND`='$brands_kind', `COUNTRY_ID`='$brands_country', `VISIBLE`='$brands_visible' where `BRAND_ID`='$brands_id';");
@@ -65,8 +63,7 @@ class brands{
         return array($answer,$err);
     }
 
-    function saveBrandsDetails($brands_id, $descr, $link){$dbt=DbSingleton::getTokoDb();$slave=new slave;
-        $answer=0;$err="Помилка збереження даних!";
+    function saveBrandsDetails($brands_id, $descr, $link){$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
         $brands_id=$slave->qq($brands_id);$descr=$slave->qq($descr);$link=$slave->qq($link);
         if ($brands_id>0){
             $dbt->query("update T2_BRAND_LINK set `descr`='$descr',`link`='$link' where `brand_id`='$brands_id';");
@@ -193,15 +190,7 @@ function finishBrandsIndexImport($start_row,$kol_cols,$cols){$db=DbSingleton::ge
         $file_name=$db->result($r,0,"FILE_NAME");
         $file_path=RD."/cdn/brands_files/index/$file_name";
         if (file_exists($file_path)){
-//            for ($i=1;$i<=$kol_cols;$i++){
-//                if ($cols[$i]==1){$bid=$i;}
-//                if ($cols[$i]==2){$bname=$i;}
-//                if ($cols[$i]==3){$btype=$i;}
-//                if ($cols[$i]==4){$bcountry=$i;}
-//                if ($cols[$i]==5){$bvisible=$i;}
-//            }
             $fna=explode(".",$file_name);$ft=count($fna);$file_type=$fna[$ft-1];$krs=0;
-
             $handle2 = @fopen($file_path, "r");
                 if ($handle2) {
                     $listUn = array();
@@ -212,9 +201,7 @@ function finishBrandsIndexImport($start_row,$kol_cols,$cols){$db=DbSingleton::ge
                         $brands_id2=trim($buf2[0]);
                         array_push($listUn, $brands_id2);
                     }
-
                     if (isUnique($listUn)) {
-
                         return array($answer,$err2);
                     }
                     fclose($handle2);
@@ -222,9 +209,7 @@ function finishBrandsIndexImport($start_row,$kol_cols,$cols){$db=DbSingleton::ge
 
             if ($file_type=="csv"){
                 $handle = @fopen($file_path, "r");
-                if ($handle) { set_time_limit(0);//$max_cols=0;
-                    //$dbt->query("delete from T2_BRANDS_IMPORT where BRAND_ID in (1,2,3);");
-
+                if ($handle) { set_time_limit(0);
                     $pkg_k=0;$max_pkg=500;$pkg="";
                     while (($buffer = fgets($handle, 4096)) !== false) {$krs+=1;
                         $buf=explode(";",$buffer);
@@ -237,7 +222,6 @@ function finishBrandsIndexImport($start_row,$kol_cols,$cols){$db=DbSingleton::ge
                                 $brands_type=trim($buf[2]);
                                 $brands_country=trim($buf[3]);
                                 $brands_visible=trim($buf[4]);
-                                //[$brand-1]
                                 if ($pkg!=""){$pkg.=",";}
 
                                 //$r=$dbt->query("select max(BRAND_ID) as mid from T2_BRANDS_IMPORT;");
@@ -250,7 +234,6 @@ function finishBrandsIndexImport($start_row,$kol_cols,$cols){$db=DbSingleton::ge
                                     $db->query("insert into T2_BRANDS (`BRAND_ID`,`BRAND_NAME`,`KIND`,`COUNTRY_ID`,`VISIBLE`) values $pkg;");
                                     $dbt->query("insert into T2_BRANDS (`BRAND_ID`,`BRAND_NAME`,`KIND`,`COUNTRY_ID`,`VISIBLE`) values $pkg;");
                                     $pkg="";$pkg_k=0;
-
                                     //$dbt->query("update T2_BRANDS_IMPORT set `BRAND_ID`='$index' where `BRAND_ID`='$brands_id';");
                                 }
                             }

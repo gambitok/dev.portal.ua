@@ -5,6 +5,7 @@ error_reporting(E_ERROR);
 define('RD', dirname (__FILE__));
 $content=null;
 require_once (RD."/lib/mysql_class.php");
+require_once (RD."/lib/DbSingleton.php");
 require_once (RD."/lib/slave_class.php");
 require_once (RD."/lib/manual_class.php");
 require_once (RD."/lib/gmanual_class.php");
@@ -19,20 +20,10 @@ require_once (RD."/lib/storage_reports_class.php"); $storage_reports=new storage
 $w=$_REQUEST["w"];
 $storages=$_REQUEST["storages"];
 
-//var_dump($storage_reports->showSeoReports($date_start,$date_end,$storages));
-if ($w=="Export"){ 
-	$csv_content=$storage_reports->exportStorageReports($storages);
-	require_once 'lib/excel/Classes/PHPExcel.php';
-	
-	$objPHPExcel = new PHPExcel(); 
-
-//	$objPHPExcel->getActiveSheet()->setCellValue('A1',"Index");
-//	$objPHPExcel->getActiveSheet()->setCellValue('B1','Brand');
-//	$objPHPExcel->getActiveSheet()->setCellValue('C1','ART_ID');
-//	$objPHPExcel->getActiveSheet()->setCellValue('D1','Stock');
-//	$objPHPExcel->getActiveSheet()->setCellValue('E1','Reserv');
-//	$objPHPExcel->getActiveSheet()->setTitle('Storage reports');
-	$row=1;$ch='A';  
+if ($w=="Export"){
+	require_once 'lib/excel/Classes/PHPExcel.php'; $objPHPExcel = new PHPExcel();
+    $csv_content=$storage_reports->exportStorageReports($storages);
+    $row=1;$ch='A';
 	
 	for ($i=0;$i<=count($csv_content);$i++) {
 		for ($j=0;$j<13;$j++) {
@@ -52,7 +43,6 @@ if ($w=="Export"){
 
 function cellColor($cells,$color){
     global $objPHPExcel;
-
     $objPHPExcel->getActiveSheet()->getStyle($cells)->getFill()->applyFromArray(array(
         'type' => PHPExcel_Style_Fill::FILL_SOLID,
         'startcolor' => array(
@@ -61,4 +51,3 @@ function cellColor($cells,$color){
     ));
 }
 
-?>

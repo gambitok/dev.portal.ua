@@ -7,8 +7,8 @@ $(document).ready(function() {
 		var  select_id=$("#select_id").val();
 		var  storsel_type_id=$("#storsel_type_id").val();
 		if (select_id>0){
-			if (storsel_type_id==0){addNewRowLocal();}
-			if (storsel_type_id==1){addNewRow();}
+			if (storsel_type_id===0){addNewRowLocal();}
+			if (storsel_type_id===1){addNewRow();}
 		}
 	});
 	setTimeout(function(){updateStorselRange();},15*1000);
@@ -44,7 +44,7 @@ function show_storsel_search(inf){
 		JsHttpRequest.query($rcapi,{ 'w': 'show_storsel_search'}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			document.getElementById("storsel_range").innerHTML=result["content"];
-			if (inf==1){toastr["info"]("Виконано!");}
+			if (inf===1){toastr["info"]("Виконано!");}
 		}}, true);
 	//}
 }
@@ -71,8 +71,8 @@ function updateStorselRange(press_btn){
 		$("#storsel_range").html(result.content[0]);		
 		$("#storsel_count").val(result.content[1]);
 		console.log('оновлено');
-		if (pred!=result.content[1]){
-			if (pred!=0) { console.log("був звук"); document.getElementById('alert_ok').play();}
+		if (pred!==result.content[1]){
+			if (pred!==0) { console.log("був звук"); document.getElementById('alert_ok').play();}
 		} 
 		setTimeout(function(){updateStorselRange();},15*1000);
 	}}, true);
@@ -289,6 +289,7 @@ function saveStorselBarcodeForm(select_id){
 			else{ 
 				swal("Помилка!", result["error"], "error");
 				document.getElementById('no_art_id').play();
+                $("#BarCodeInput").val("");
 			}
 		}}, true);
 	}

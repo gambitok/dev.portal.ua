@@ -57,7 +57,7 @@ function setDpNote(dp_id) {
 }
 
 function dropDpNote(dp_id) {
-	var text=$("#dp_note_field").val();
+	//var text=$("#dp_note_field").val();
 	JsHttpRequest.query($rcapi,{ 'w':'dropDpNote','dp_id':dp_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		if (result["answer"]==1){ swal("Видалено!", "Усі дані успішно видалені!", "success"); $("#dp_note_field").val("");}
@@ -68,14 +68,12 @@ function dropDpNote(dp_id) {
 function autoUpdateDp(press_btn){
 	var status=$('#update_status').val();
 	if (press_btn) {
-		if (status=="true") status=true; else status=false;
+        status==="true" ? status=true : status=false;
 		if (status){
-				console.log("Нажав STOP");
 			$('#update_status').val('false');
 			$('#toggle_update').html("<i class='fa fa-play'></i>");		
 		}
-		else  {
-				console.log("Нажав PLAY");
+		else{
 			$('#update_status').val('true');
 			$('#toggle_update').html("<i class='fa fa-stop-circle'></i>");
 		}	
@@ -99,7 +97,7 @@ function filterDpsList() {
 function updateDpRange(press_btn){
 	var status=$('#input_done').val();
 	if (press_btn) {
-		if (status=="true") status=true; else status=false;
+		status==="true" ? status=true : status=false;
 		if (status){
 			$('#input_done').val('false');
 			$('#toggle_done').html("<i class='fa fa-eye-slash'></i>");		
@@ -109,30 +107,28 @@ function updateDpRange(press_btn){
 			$('#toggle_done').html("<i class='fa fa-eye'></i>");
 		}	
 	} else {
-		if (status=="true") status=false; else status=true;
+		status==="true" ? status=false : status=true;
 	}
 	var prevRange=$("#dp_range").html();
 	JsHttpRequest.query($rcapi,{ 'w': 'show_dp_search', 'status':status}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){
 		if (prevRange.length != result["content"].length){
-		
 			$('#datatable').DataTable().destroy();
 			$("#dp_range").html(result["content"]);
 			$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
 		}
-	var status=$('#update_status').val();
-	if (status==="true") {
-		  setTimeout(function(){updateDpRange();},15*1000);}
+		status=$('#update_status').val();
+		if (status==="true") {setTimeout(function(){updateDpRange();},15*1000);}
 	}}, true);
 }
 
 function ShowModalAll() {
-	var pos=0;var id='';var max = 0;var list='';
+	var pos=0;var max = 0;var list='';
 	$('.check_dp').each(function() {max = Math.max(this.id, max);});
 	for (pos=1; pos<=max; pos++) {
 		if ($('#' + pos).is(":checked")) {list=list+pos;}
 	}
-	if(list=='') swal("Помилка", "Спочатку виберіть хоч одне значення!", "error");
+	if(list==="") swal("Помилка", "Спочатку виберіть хоч одне значення!", "error");
 	else {$('#FormModalWindowAll').modal('show');}
 }
 
@@ -147,29 +143,30 @@ function show_dp_search(inf){
 	JsHttpRequest.query($rcapi,{ 'w': 'show_dp_search'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		document.getElementById("dp_range").innerHTML=result["content"];
-		if (inf==1){toastr["info"]("Виконано!");}
+		if (inf===1 || inf==="1"){toastr["info"]("Виконано!");}
 	}}, true);
 } 
 
 function fixDeliveryCarrier(){
 	var delivery_id=$("#delivery_type_id option:selected").val();
-	if(delivery_id==58) {
+	var delivery_address=$("#delivery_address");
+	if(delivery_id===58) {
 		$("#delivery_type_storage").removeClass("disabled").removeClass("hidden");
-		$("#delivery_address").addClass("disabled").addClass("hidden");
+        delivery_address.addClass("disabled").addClass("hidden");
 		var text = $("#delivery_type_storage option:selected").text();
-		$("#delivery_address").val(text);
+        delivery_address.val(text);
 	} else {
-		$("#delivery_address").removeClass("disabled").removeClass("hidden");
+        delivery_address.removeClass("disabled").removeClass("hidden");
 		$("#delivery_type_storage").addClass("disabled").addClass("hidden");
-		$("#delivery_address").val("");
+        delivery_address.val("");
 	}
 		
-	if (delivery_id!=60){ $("#carrier_id").addClass("disabled").addClass("hidden"); }
+	if (delivery_id!==60){ $("#carrier_id").addClass("disabled").addClass("hidden"); }
 	else{ $("#carrier_id").removeClass("disabled").removeClass("hidden"); }
 }
 
 function setDeliveryAddress() {
-	var text = $("#delivery_type_storage option:selected").text();
+	var text=$("#delivery_type_storage option:selected").text();
 	$("#delivery_address").val(text);
 }
 
@@ -193,7 +190,7 @@ function newDpCard(){
 }
 
 function showDpCard(dp_id){
-	if (dp_id<=0 || dp_id==""){toastr["error"](errs[0]);}
+	if (dp_id<=0 || dp_id===""){toastr["error"](errs[0]);}
 	if (dp_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'showDpCard', 'dp_id':dp_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){
@@ -238,7 +235,7 @@ function closeDpCard(){
 
 function addNewRow(){
 	var client_id=$("#client_id").val();
-	if (client_id==0 || client_id.length==0){ 
+	if (client_id===0 || client_id.length===0){
 		swal("Помилка!", "Оберіть спочатку клієнта", "error");
 	} else {
 		var row=$("#dpStrNewRow").html();
@@ -263,7 +260,7 @@ function addNewRow(){
 			//var dtable=$('#dp_str').DataTable(); dtable.destroy();
 			$('#dp_str').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}, "dom": '<"top">frt<"bottom"lpi><"clear">'});},500);
 	}
-	return;
+	return true;
 }
 
 function saveDpCard(){
@@ -385,7 +382,7 @@ function setDocumentToForm(document_id,document_name){
 }
 
 function loadDpCDN(dp_id){
-	if (dp_id<=0 || dp_id==""){toastr["error"](errs[0]);}
+	if (dp_id<=0 || dp_id===""){toastr["error"](errs[0]);}
 	if (dp_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadDpCDN', 'dp_id':dp_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -407,7 +404,7 @@ function showDpCDNUploadForm(dp_id){
 }
 
 function showDpCDNDropConfirmForm(dp_id,file_id,file_name){
-	if (dp_id<=0 || dp_id==""){toastr["error"](errs[0]);}
+	if (dp_id<=0 || dp_id===""){toastr["error"](errs[0]);}
 	if (dp_id>0){
 		if(confirm('Видалити файл '+file_name+'?')){ 
 			JsHttpRequest.query($rcapi,{ 'w': 'dpCDNDropFile', 'dp_id':dp_id, 'file_id':file_id}, 
@@ -420,7 +417,7 @@ function showDpCDNDropConfirmForm(dp_id,file_id,file_name){
 }
 
 function loadDpCommetsLabel(dp_id){
-	if (dp_id<=0 || dp_id==""){toastr["error"](errs[0]);}
+	if (dp_id<=0 || dp_id===""){toastr["error"](errs[0]);}
 	if (dp_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadDpCommetsLabel', 'dp_id':dp_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -430,7 +427,7 @@ function loadDpCommetsLabel(dp_id){
 }
 
 function loadDpCommets(dp_id){
-	if (dp_id<=0 || dp_id==""){toastr["error"](errs[0]);}
+	if (dp_id<=0 || dp_id===""){toastr["error"](errs[0]);}
 	if (dp_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadDpCommets', 'dp_id':dp_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -440,7 +437,7 @@ function loadDpCommets(dp_id){
 }
 
 function saveDpComment(dp_id){
-	if (dp_id<=0 || dp_id==""){toastr["error"](errs[0]);}
+	if (dp_id<=0 || dp_id===""){toastr["error"](errs[0]);}
 	if (dp_id>0){
 		var comment=$("#dp_comment_field").val();
 		if (comment.length<=0){toastr["error"]("Напишіть коментар спочатку");}
@@ -459,7 +456,7 @@ function saveDpComment(dp_id){
 }
 
 function dropDpComment(dp_id,cmt_id){
-	if (dp_id<=0 || dp_id==""){toastr["error"](errs[0]);}
+	if (dp_id<=0 || dp_id===""){toastr["error"](errs[0]);}
 	if (dp_id>0){
 		if(confirm('Видалити запис?')){ 
 			JsHttpRequest.query($rcapi,{ 'w': 'dropDpComment', 'dp_id':dp_id, 'cmt_id':cmt_id}, 
@@ -520,7 +517,7 @@ function setDpClient(id,name,tpoint_id,tpoint_name){
 	name = name.replace("`", '"');
 	$('#client_name').val(name);
 	setDpTpoint(tpoint_id,tpoint_name);
-	if (dp_id<=0 || dp_id==""){toastr["error"](errs[0]);}
+	if (dp_id<=0 || dp_id===""){toastr["error"](errs[0]);}
 	if (dp_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'setDpClient', 'dp_id':dp_id, 'client_id':id,'tpoint_id':tpoint_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -535,12 +532,12 @@ function setDpClient(id,name,tpoint_id,tpoint_name){
 
 function getDpTpointInfo() {
 	var client_id=$("#client_id_input").val(); 
-	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
+	if (client_id<=0 || client_id==="" || client_id===undefined){toastr["error"](errs[0]);}
 	if (client_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'getDpTpointInfo', 'client_id':client_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){
 			setDpClient(client_id,result.content[0],result.content[1],result.content[2]);
-		} else console.log('error');}, true);
+		}}, true);
 	}
 }
 
@@ -911,14 +908,13 @@ function updateDpStrPrice(rId,discount,cash_id,price_end,summ){
 
 function calculateDpSumm(){
 	var dp_summ=0;
-	var kol_row=$("#kol_str_row").val();// console.log("kol_row="+kol_row);
-	var sum_str=0;
+	var kol_row=$("#kol_str_row").val();
+	var summ_str=0;
 	for (var i=1;i<=kol_row;i++){
 		summ_str=parseFloat($("#summStr_"+i).val());
-		//console.log("summ_str="+summ_str);
 		dp_summ=dp_summ+summ_str;
-		//console.log("dp_summ="+dp_summ);
-	}dp_summ=parseFloat(dp_summ).toFixed(2);
+	}
+	dp_summ=parseFloat(dp_summ).toFixed(2);
 	$("#dp_summ").val(dp_summ);
 }
 
@@ -940,13 +936,11 @@ function setArticleToDp(art_id){
 				JsHttpRequest.query($rcapi,{ 'w':'setArticleToDp','dp_id':dp_id,'tpoint_id':tpoint_id,'artIdStr':artIdStr,'article_nr_displStr':article_nr_displStr,'brandIdStr':brandIdStr,'storageIdStr':storageIdStr,'amountStr':amountStr},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){
-                        console.log('load setDP');
 						document.getElementById("dp_weight").innerHTML=result["weight"];
 						document.getElementById("dp_volume").innerHTML=result["volume"];
 						document.getElementById("dp_summ").value=result["dp_summ"];
 						JsHttpRequest.query($rcapi,{ 'w': 'showDpCardStr', 'dp_id':dp_id},
 						function (result, errors){ if (errors) {alert(errors);} if (result){
-                            console.log('load showDP');
 							document.getElementById("dp_doc_range").innerHTML=result["content"];
 							numberOnly();
 							setTimeout(function (){
@@ -957,7 +951,6 @@ function setArticleToDp(art_id){
 						$("#FormModalWindow3").modal('hide');document.getElementById("FormModalBody3").innerHTML="";document.getElementById("FormModalLabel3").innerHTML="";
 						formCatalogueModalLabel();
 						setArticleToSelectAmountDp(art_id,article_nr_displStr,brandIdStr,brand_nameS2,dp_id);
-                        console.log('func end');
 					}
 					else{ 
 						swal("Помилка!", result["error"], "error"); 
@@ -1395,7 +1388,6 @@ function showSupplToLocalChangeForm(pos,art_id,brand_id,article_nr_displ,dp_id,d
 }
 
 function saveDpSupplToLocalChangeForm(dp_id,dp_str_id,art_id){
-	alert(art_id);
 	if (art_id.length>0 && dp_id.length>0 && dp_str_id.length>0){
 		var stock_n=$("#stock_n").val();
 		var price=0; var storage_id=0; var cell_id=0; var max_value=0; var amount=0;
@@ -1408,7 +1400,6 @@ function saveDpSupplToLocalChangeForm(dp_id,dp_str_id,art_id){
 				max_value=parseFloat($("#stlca_"+i).attr("data-maxvalue"));
 				console.log(amount+";"+price+";"+storage_id+";"+cell_id+";"+max_value+";");
 				if (amount<=max_value && price>0 && storage_id>0){
-					console.log("in ajax");
 					JsHttpRequest.query($rcapi,{ 'w': 'saveDpSupplToLocalChangeForm', 'dp_id':dp_id, 'dp_str_id':dp_str_id, 'art_id':art_id, 'amount':amount, 'price':price, 'storage_id':storage_id, 'cell_id':cell_id}, 
 					function (result, errors){ if (errors) {alert(errors);} if (result){  
 						if (result["answer"]==1){

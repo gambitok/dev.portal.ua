@@ -2,6 +2,9 @@
 cron/
 fonts/
 images/
+vendor/
+vendors/
+uploads/
 .htaccess
 favicon.png
 docker/*

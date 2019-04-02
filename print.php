@@ -12,10 +12,7 @@ require_once (RD."/lib/module_class.php");
 require_once (RD."/lib/access_class.php");
 require_once (RD."/lib/manual_class.php");
 
-$w=$_REQUEST["w"];$id=$_REQUEST["id"];$file=$_REQUEST["file"];$tOp=$_REQUEST["tOp"];if ($tOp==""){$tOp="I";}$tOpPath="";if ($tOp=="F"){$tOpPath=RD."/uploads/print/";}
-
-$html="";
-
+$w=$_REQUEST["w"];$id=$_REQUEST["id"];$file=$_REQUEST["file"];$tOp=$_REQUEST["tOp"];if ($tOp==""){$tOp="I";}$tOpPath="";if ($tOp=="F"){$tOpPath=RD."/uploads/print/";} $html="";
 
 if ($w=="bidEmpty"){ $form_htm=RD."/uploads/blanks/bid_blank.htm";if (file_exists("$form_htm")){ $html = file_get_contents($form_htm);}}
 if ($w=="bidForm" && $id!="" && is_numeric($id)){ require_once (RD."/lib/bids_class.php");$bids=new bid; $html=$bids->printBidForm($id);}
@@ -23,8 +20,6 @@ if ($w=="bidBill" && $id!="" && is_numeric($id)){ require_once (RD."/lib/bids_cl
 if ($w=="bidDoc" && $id!="" && is_numeric($id)){ require_once (RD."/lib/bids_class.php");$bids=new bid; $html=$bids->printBidDocForm($id,$_REQUEST["sign"]);}
 if ($w=="bidAct" && $id!="" && is_numeric($id)){ require_once (RD."/lib/bids_class.php");$bids=new bid; $html=$bids->printBidActForm($id);}
 if ($w=="printEstreportFinal" && $id!="" && is_numeric($id)){ require_once (RD."/lib/estreport_class.php");$estreport=new estreport; $html=$estreport->printEstreportFinal($id);}
-
-
 
 if ($w=="bidClient"){ $form_htm=RD."/uploads/blanks/bid_blank.htm";if (file_exists("$form_htm")){ $html = file_get_contents($form_htm);} }
 if ($w=="bidsBlankPrint"){ $form_htm=RD."/uploads/blanks/bid_blank.htm";if (file_exists("$form_htm")){ $html = file_get_contents($form_htm);} }
@@ -53,9 +48,5 @@ $mpdf->list_indent_first_level = 0;
 $mpdf->setFooter('www.nazaret-ltd.com.ua||{PAGENO}');
 $mpdf->WriteHTML($html, 2); /*формируем pdf*/
 
-
-
 $mpdf->Output($tOpPath.'mpdf-'.date("Y-m-d-H-i-s").'.pdf', $tOp);
 
-
-?>

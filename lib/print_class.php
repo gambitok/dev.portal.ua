@@ -38,6 +38,12 @@ class media_print {
 		session_start();
 		//$mpdf->setFooter('abc.helios-therm.com.ua - '.iconv("windows-1251","utf-8",$_SESSION["user_name"]).', '.iconv("windows-1251","utf-8",$_SESSION["user_post"]).'||{PAGENO}');
 		$mpdf->Output($tOpPath.'MypartsPDF-'.date("Y-m-d-H-i-s").'.pdf', $tOp);
+
+//        require_once __DIR__ . '/vendor/autoload.php';
+//
+//        $mpdf = new \Mpdf\Mpdf();
+//        $mpdf->WriteHTML('<h1>Hello world!</h1>');
+//        $mpdf->Output();
 		exit;
 	}
 

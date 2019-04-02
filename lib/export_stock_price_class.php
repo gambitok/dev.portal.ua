@@ -52,7 +52,7 @@ class export_stock_price {
 	}
 	
 	function getArticlesPriceData() {$db=DbSingleton::getTokoDb(); $array=[];
-		$r=$db->query("SELECT `T2_ARTICLES`.*, `T2_BRANDS`.`BRAND_NAME`, `T2_ARTICLES_PRICE_RATING`.`price_3` 
+		$r=$db->query("SELECT `T2_ARTICLES`.*, `T2_BRANDS`.`BRAND_NAME`, `T2_ARTICLES_PRICE_RATING`.`price_1` 
 		FROM `T2_ARTICLES_PRICE_RATING` 
 			LEFT JOIN `T2_ARTICLES` ON `T2_ARTICLES_PRICE_RATING`.`art_id`=`T2_ARTICLES`.`art_id` 
 			LEFT JOIN `T2_BRANDS` ON `T2_ARTICLES`.`BRAND_ID`=`T2_BRANDS`.`BRAND_ID`
@@ -64,7 +64,9 @@ class export_stock_price {
 			$art_search=$db->result($r,$i-1,"ARTICLE_NR_SEARCH");
 			$brand_id=$db->result($r,$i-1,"BRAND_ID");
 			$brand=$db->result($r,$i-1,"BRAND_NAME");
-			$price=$db->result($r,$i-1,"price_3");
+			$price=$db->result($r,$i-1,"price_1");
+			$price=str_replace(".",",",$price);
+
 			$array[$i]=array($art_id,$art_displ,$art_search,$brand_id,$brand,$price);
 		}
 		return $array;
