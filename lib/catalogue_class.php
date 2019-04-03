@@ -2323,7 +2323,8 @@ class catalogue {
             $answer=1;$err="";
         }
         if ($id=="" && $name!=""){
-            $db->query("insert into T2_COUNTRIES (`COUNTRY_ID`,`COUNTRY_NAME`,`ALFA2`,`ALFA3`,`DUTY`,`RISK`) values ('$id','$name','$alfa2','$alfa3','$duty','$risk');"); $answer=1;$err="";
+            $db->query("insert into T2_COUNTRIES (`COUNTRY_ID`,`COUNTRY_NAME`,`ALFA2`,`ALFA3`,`DUTY`,`RISK`) values ('$id','$name','$alfa2','$alfa3','$duty','$risk');");
+            $answer=1;$err="";
         }
         return array($answer,$err);
     }
@@ -2439,7 +2440,8 @@ class catalogue {
             $answer=1;$err="";
         }
         if ($id=="" && $name!=""){
-            $db->query("insert into T2_COSTUMS (`COSTUMS_ID`,`COSTUMS_CODE`,`COSTUMS_NAME`,`PREFERENTIAL_RATE`,`FULL_RATE`,`SERTIFICATION`,`GOS_STANDART`,`TYPE_DECLARATION`) values ('$id','$code','$name','$preferential_rate','$full_rate','$sertification','$gos_standart','$type_declaration');"); $answer=1;$err="";
+            $db->query("insert into T2_COSTUMS (`COSTUMS_ID`,`COSTUMS_CODE`,`COSTUMS_NAME`,`PREFERENTIAL_RATE`,`FULL_RATE`,`SERTIFICATION`,`GOS_STANDART`,`TYPE_DECLARATION`) values ('$id','$code','$name','$preferential_rate','$full_rate','$sertification','$gos_standart','$type_declaration');");
+            $answer=1;$err="";
         }
         return array($answer,$err);
     }

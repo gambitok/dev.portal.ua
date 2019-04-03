@@ -27,13 +27,14 @@ if ($accss=="1"){
 	
 	if ($w=="printJmSTP"){ 
 		$jmoving_id=$links[2];$select_id=$links[3];
-	//	$form=$jmoving->printJmovingStorageSelectTruckList($jmoving_id,$select_id);
+	    // $form=$jmoving->printJmovingStorageSelectTruckList($jmoving_id,$select_id);
 		$form=$jmoving->printJmovingTruckList($jmoving_id);
 	}
 
 	if ($w=="printPdf"){
-        require_once RD . '/vendor/autoload.php';
-        $mpdf = new \Mpdf\Mpdf();
+        require_once RD.'/vendor/autoload.php';
+        //$mpdf = new \Mpdf\Mpdf();
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => RD.'/']);
         $mpdf->WriteHTML('<h1>Hello world!</h1>');
         $mpdf->Output();
     }
