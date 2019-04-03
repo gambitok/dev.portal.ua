@@ -3,6 +3,7 @@ $access=new access; $mf="money_spend";
 list($accss,$acc_lvl)=$access->check_user_access($mf);$alg_u=0;
 
 if ($accss=="1"){
+    require_once (RD."/lib/money_spend_class.php");
 	$money_spend=new money_spend;
 	$form_htm=RD."/tpl/money_spend.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$content=str_replace("{work_window}", $form, $content);

@@ -371,7 +371,7 @@ function showJmovingArticleSearchForm(i,art_id,brand_id,article_nr_displ,jmoving
 	var jmoving_id=$("#jmoving_id").val();
 	if (storage_id_to=="" || storage_id_to==0){storage_id_to=$("#storage_id_to option:selected").val();}
 	if (storage_id_to=="" || storage_id_to==0){ swal("Помилка!", "Оберіть склад переміщення", "error"); } else{
-		JsHttpRequest.query($rcapi,{ 'w': 'showJmovingArticleSearchForm', 'art_id':art_id,'brand_id':brand_id,'article_nr_displ':article_nr_displ,'jmoving_id':jmoving_id,'storage_id_to':storage_id_to}, 
+		JsHttpRequest.query($rcapi,{ 'w': 'showJmovingArticleSearchForm', 'brand_id':brand_id,'article_nr_displ':article_nr_displ,'jmoving_id':jmoving_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow").modal('show');document.getElementById("FormModalBody").innerHTML=result["content"];document.getElementById("FormModalLabel").innerHTML="Номенклатура";
 			$("#row_pos").val(i);
@@ -381,7 +381,7 @@ function showJmovingArticleSearchForm(i,art_id,brand_id,article_nr_displ,jmoving
 }
 
 function showJmovingArticleLocalSearchForm(i,art_id,brand_id,article_nr_displ,jmoving_id,storage_id_from){
-	JsHttpRequest.query($rcapi,{ 'w': 'showJmovingArticleLocalSearchForm', 'art_id':art_id,'brand_id':brand_id,'article_nr_displ':article_nr_displ,'jmoving_id':jmoving_id,'storage_id_from':storage_id_from}, 
+	JsHttpRequest.query($rcapi,{ 'w': 'showJmovingArticleLocalSearchForm','brand_id':brand_id,'article_nr_displ':article_nr_displ,'jmoving_id':jmoving_id,'storage_id_from':storage_id_from},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow").modal('show');document.getElementById("FormModalBody").innerHTML=result["content"];document.getElementById("FormModalLabel").innerHTML="Номенклатура";
 		$("#row_pos").val(i);
@@ -450,7 +450,7 @@ function setArticleToSelectAmountJmoving(art_id,article_nr_displ,brand_id,brand_
 	//var jmoving_type_id=$("#jmoving_type_id").val();
 	//var j_storage=0; if (jmoving_type_id==0){j_storage=$("#storage_id_to option:selected").val();}
 	var j_storage=$("#storage_id_to option:selected").val();
-	JsHttpRequest.query($rcapi,{ 'w': 'setArticleToSelectAmountJmoving','art_id':art_id,'j_storage':j_storage,'storage_id':j_storage}, 
+	JsHttpRequest.query($rcapi,{ 'w': 'setArticleToSelectAmountJmoving','art_id':art_id,'j_storage':j_storage},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow2").modal('show');
 		document.getElementById("FormModalBody2").innerHTML=result["content"];
@@ -756,7 +756,7 @@ function showJmovingArticleAmountChange(pos,str_id,art_id,amount){
 	var jmoving_id=$("#jmoving_id").val();
 	if (jmoving_id<=0 || jmoving_id==""){toastr["error"](errs[0]);}
 	if (jmoving_id>0 && str_id>0){
-		JsHttpRequest.query($rcapi,{ 'w': 'showJmovingArticleAmountChange','art_id':art_id,'str_id':str_id,'amount':amount}, 
+		JsHttpRequest.query($rcapi,{ 'w': 'showJmovingArticleAmountChange','art_id':art_id,'str_id':str_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow2").modal('show');
 			document.getElementById("FormModalBody2").innerHTML=result["content"];
@@ -770,7 +770,7 @@ function showJmovingArticleAmountLocalChange(pos,str_id,art_id,amount){
 	var jmoving_id=$("#jmoving_id").val();
 	if (jmoving_id<=0 || jmoving_id==""){toastr["error"](errs[0]);}
 	if (jmoving_id>0 && str_id>0){
-		JsHttpRequest.query($rcapi,{ 'w': 'showJmovingArticleAmountLocalChange','art_id':art_id,'str_id':str_id,'amount':amount}, 
+		JsHttpRequest.query($rcapi,{ 'w': 'showJmovingArticleAmountLocalChange','art_id':art_id,'str_id':str_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow2").modal('show');
 			document.getElementById("FormModalBody2").innerHTML=result["content"];
@@ -1809,7 +1809,7 @@ function finishJmovingLocalAcceptForm(jmoving_id){
 
 function showJmovingStorageSelectNoscanForm(jmoving_id,select_id,art_id,str_id){
 	if (jmoving_id.length>0 && select_id.length>0 && art_id.length>0 && str_id.length>0){
-		JsHttpRequest.query($rcapi,{ 'w':'showJmovingStorageSelectNoscanForm','jmoving_id':jmoving_id,'select_id':select_id,'art_id':art_id,'str_id':str_id},
+		JsHttpRequest.query($rcapi,{ 'w':'showJmovingStorageSelectNoscanForm','jmoving_id':jmoving_id,'select_id':select_id,'str_id':str_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			if (result["answer"]==1){ 
 				$("#FormModalWindow5").modal('show');
@@ -1857,7 +1857,7 @@ function saveJmovingStorageSelectNoscanForm(jmoving_id,select_id,art_id,str_id){
 
 function showJmovingAcceptNoscanForm(jmoving_id,art_id,str_id){
 	if (jmoving_id.length>0 && art_id.length>0 && str_id.length>0){
-		JsHttpRequest.query($rcapi,{ 'w':'showJmovingAcceptNoscanForm','jmoving_id':jmoving_id,'art_id':art_id,'str_id':str_id},
+		JsHttpRequest.query($rcapi,{ 'w':'showJmovingAcceptNoscanForm','jmoving_id':jmoving_id,'str_id':str_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			if (result["answer"]==1){ 
 				$("#FormModalWindow5").modal('show');

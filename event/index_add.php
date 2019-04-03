@@ -3,6 +3,7 @@ $access=new access; $mf="index_add";
 list($accss,$acc_lvl)=$access->check_user_access($mf);$alg_u=0;
 
 if ($accss=="1"){
+    require_once (RD."/lib/catalogue_class.php");
 	$cat=new catalogue;
 	$content=str_replace("{work_window}", $cat->showIndexAddForm(), $content);
 

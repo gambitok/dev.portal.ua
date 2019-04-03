@@ -23,19 +23,13 @@ class buh_invoice {
 
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id"); array_push($sales,$id);
-            //$dp_id=$db->result($r,$i-1,"dp_id");
             $dp_nom=$db->result($r,$i-1,"dp_prefix").$db->result($r,$i-1,"dp_nom");
             $prefix=$db->result($r,$i-1,"prefix");
             $doc_nom=$db->result($r,$i-1,"doc_nom");
-            //$data_create=$db->result($r,$i-1,"data_create");
             $time_stamp=$db->result($r,$i-1,"time_stamp");
-            //$tpoint_id=$db->result($r,$i-1,"tpoint_id");
             $tpoint_name=$db->result($r,$i-1,"tpoint_name");
-            //$seller_id=$db->result($r,$i-1,"seller_id");
             $seller_name=$db->result($r,$i-1,"seller_name");
-            //$client_id=$db->result($r,$i-1,"client_id");
             $client_name=$db->result($r,$i-1,"client_name");
-            //$doc_type_id=$db->result($r,$i-1,"doc_type_id");
             $doc_type_name=$db->result($r,$i-1,"doc_type_name");
             $summ=$db->result($r,$i-1,"summ");
             $summ_debit=$db->result($r,$i-1,"summ_debit");
@@ -88,19 +82,13 @@ class buh_invoice {
 
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
-            //$dp_id=$db->result($r,$i-1,"dp_id");
             $dp_nom=$db->result($r,$i-1,"dp_prefix").$db->result($r,$i-1,"dp_nom");
             $prefix=$db->result($r,$i-1,"prefix");
             $doc_nom=$db->result($r,$i-1,"doc_nom");
-            //$data_create=$db->result($r,$i-1,"data_create");
             $time_stamp=$db->result($r,$i-1,"time_stamp");
-            //$tpoint_id=$db->result($r,$i-1,"tpoint_id");
             $tpoint_name=$db->result($r,$i-1,"tpoint_name");
-            //$seller_id=$db->result($r,$i-1,"seller_id");
             $seller_name=$db->result($r,$i-1,"seller_name");
-            //$client_id=$db->result($r,$i-1,"client_id");
             $client_name=$db->result($r,$i-1,"client_name");
-            //$doc_type_id=$db->result($r,$i-1,"doc_type_id");
             $doc_type_name=$db->result($r,$i-1,"doc_type_name");
             $summ=$db->result($r,$i-1,"summ");
             $summ_debit=$db->result($r,$i-1,"summ_debit");

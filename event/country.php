@@ -3,6 +3,7 @@ $access=new access; $mf="country";
 list($accss,$acc_lvl)=$access->check_user_access($mf);$alg_u=0;
 
 if ($accss=="1"){
+    require_once (RD."/lib/country_class.php");
     $country=new country;
 	$form_htm=RD."/tpl/country.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$content=str_replace("{work_window}", $form, $content);

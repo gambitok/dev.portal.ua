@@ -31,14 +31,6 @@ if ($accss=="1"){
 		$form=$jmoving->printJmovingTruckList($jmoving_id);
 	}
 
-	if ($w=="printPdf"){
-        require_once RD.'/vendor/autoload.php';
-        //$mpdf = new \Mpdf\Mpdf();
-        $mpdf = new \Mpdf\Mpdf(['tempDir' => RD.'/']);
-        $mpdf->WriteHTML('<h1>Hello world!</h1>');
-        $mpdf->Output();
-    }
-
 	if ($alg_u==0){ //не надано права на операціїї з розділом
 		$content=str_replace("{work_window}", $access->show_access_deny($mf), $content);
 	}

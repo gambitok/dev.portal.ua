@@ -73,10 +73,11 @@ class buh_back {
         return $back_id;
     }
 
-    function show_back_clients_list(){$db=DbSingleton::getDb();$gmanual=new gmanual;
-        //$media_user_id=$_SESSION["media_user_id"]; if ($media_user_id==1 || $media_user_id==2 || $media_user_id==7){$where=" and j.status_back!=0";}
+    function show_back_clients_list(){$db=DbSingleton::getDb();$gmanual=new gmanual;$summ_uah=0;
+        $form="";$form_htm=RD."/tpl/buh_back_range.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $data_cur=date("Y-m-d"); $data_old = date('Y-m-d', strtotime('-7 day', strtotime($data_cur)));
         $where_date=" and j.data>='$data_old 00:00:00' and j.data<='$data_cur 23:59:59'";
+
         $r=$db->query("select j.*, t.name as tpoint_name, CASH.name as cash_name, c.name as client_name, si.prefix as sale_prefix, si.doc_nom as sale_doc_nom from J_BACK_CLIENTS j
             left outer join T_POINT t on t.id=j.tpoint_id
             left outer join A_CLIENTS c on c.id=j.client_id
@@ -98,6 +99,8 @@ class buh_back {
             $status_back_name=$gmanual->get_gmanual_caption($status_back);
             $summ_pdv=round($summ/6,2);
             $function="showBackClientsCard(\"$id\")";
+            $summ_uah+=$summ;
+
             $list.="<tr style='cursor:pointer' onClick='$function'>
                 <td>$prefix - $doc_nom</td>
                 <td align='center'>$data</td>
@@ -110,16 +113,17 @@ class buh_back {
                 <td>$status_back_name</td>
             </tr>";
         }
-        return $list;
+        $form=str_replace("{buh_back_range}",$list,$form);
+        $form=str_replace("{buh_back_summ}","$summ_uah UAH",$form);
+        return $form;
     }
 
-    function show_back_clients_list_filter($data_start,$data_end){$db=DbSingleton::getDb();$gmanual=new gmanual;session_start();
-        //$media_user_id=$_SESSION["media_user_id"]; if ($media_user_id==1 || $media_user_id==2 || $media_user_id==2){$where=" and j.status_back!=0";}
-        $data_cur=date("Y-m-d");
+    function show_back_clients_list_filter($data_start,$data_end){$db=DbSingleton::getDb();$gmanual=new gmanual;
+        $data_cur=date("Y-m-d");$summ_uah=0;
         if ($data_start!='' && $data_end!='') $where_date="and j.data>='$data_start 00:00:00' and j.data<='$data_end 23:59:59'"; else
             $where_date=" and j.data>='$data_cur 00:00:00' and j.data<='$data_cur 23:59:59'";
-        $r=$db->query("select j.*, t.name as tpoint_name, CASH.name as cash_name, c.name as client_name, si.prefix as sale_prefix, si.doc_nom as sale_doc_nom 
-        from J_BACK_CLIENTS j
+
+        $r=$db->query("select j.*, t.name as tpoint_name, CASH.name as cash_name, c.name as client_name, si.prefix as sale_prefix, si.doc_nom as sale_doc_nom from J_BACK_CLIENTS j
             left outer join T_POINT t on t.id=j.tpoint_id
             left outer join A_CLIENTS c on c.id=j.client_id
             left outer join CASH on CASH.id=j.cash_id
@@ -140,6 +144,8 @@ class buh_back {
             $status_back_name=$gmanual->get_gmanual_caption($status_back);
             $summ_pdv=round($summ/6,2);
             $function="showBackClientsCard(\"$id\")";
+            $summ_uah+=$summ;
+
             $list.="<tr style='cursor:pointer' onClick='$function'>
                 <td>$prefix - $doc_nom</td>
                 <td align='center'>$data</td>
@@ -152,7 +158,7 @@ class buh_back {
                 <td>$status_back_name</td>
             </tr>";
         }
-        return $list;
+        return array($list,"$summ_uah UAH");
     }
 
     function getKoursData(){$db=DbSingleton::getDb();$slave=new slave;$usd_to_uah=0;$eur_to_uah=0;

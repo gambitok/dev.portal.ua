@@ -1,7 +1,7 @@
 <?php
 $access=new access; $mf="export_doc";
 list($accss,$acc_lvl)=$access->check_user_access($mf);$alg_u=0;
-include_once 'lib/excross.php';
+require_once (RD."/lib/excross.php");
 
 if ($accss=="1"){
 	$link=gnLink; if (substr($link,-1)=="/"){$link=substr($link,0,strlen($link)-1);} $links=explode("/", $link);

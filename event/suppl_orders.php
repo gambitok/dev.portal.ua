@@ -3,7 +3,8 @@ $access=new access; $mf="suppl_orders";
 list($accss,$acc_lvl)=$access->check_user_access($mf);$alg_u=0;
 
 if ($accss=="1"){
-	require_once (RD."/lib/suppl_orders_class.php");$suppl_orders=new suppl_orders;
+	require_once (RD."/lib/suppl_orders_class.php");
+	$suppl_orders=new suppl_orders;
 	$form_htm=RD."/tpl/suppl_orders.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$content=str_replace("{work_window}", $form, $content);
 	$link=gnLink; if (substr($link,-1)=="/"){$link=substr($link,0,strlen($link)-1);} $links=explode("/", $link);$w=$links[1];

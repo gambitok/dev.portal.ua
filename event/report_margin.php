@@ -3,11 +3,10 @@ $access=new access; $mf="report_margin";
 list($accss,$acc_lvl)=$access->check_user_access($mf);$alg_u=0;
 
 if ($accss=="1"){
-	require_once (RD."/lib/report_margin_class.php");$report_margin=new report_margin;$gmanual=new gmanual;
+	require_once (RD."/lib/report_margin_class.php");
+	$report_margin=new report_margin;$gmanual=new gmanual;
 	$form_htm=RD."/tpl/report_margin.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-	
 	$link=gnLink; if (substr($link,-1)=="/"){$link=substr($link,0,strlen($link)-1);} $links=explode("/", $link);
-	
 	$w=$links[1]; $date_from=$links[2]; $date_to=$links[3]; $doc_type_id=$links[4]; $client_status=$links[5];  $doc_status=$links[6]; 
 
 	if ($w=="") {

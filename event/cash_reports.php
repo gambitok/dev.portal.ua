@@ -3,7 +3,7 @@ $access=new access; $mf="cash_reports";
 list($accss,$acc_lvl)=$access->check_user_access($mf);$alg_u=0;
 
 if ($accss=="1"){
-	include_once 'lib/cash_reports_class.php';
+    require_once (RD."/lib/cash_reports_class.php");
 	$cash_reports=new cash_reports;
 	$content=str_replace("{work_window}", $cash_reports->getCashReportsFilters(), $content);
 	

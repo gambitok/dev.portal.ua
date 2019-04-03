@@ -59,7 +59,7 @@ class jmoving {
         return $result;
     }
 
-    function statusStorage($user_id,$storage_id,$status_jmoving,$jmoving_id) {$db=DbSingleton::getDb();require_once RD.'/lib/users_class.php'; $users=new users; $super_user=$users->getSuperUser($user_id);
+    function statusStorage($user_id,$storage_id,$jmoving_id) {$db=DbSingleton::getDb();$users=new users;$super_user=$users->getSuperUser($user_id);
         //склад призначення
         $r=$db->query("select * from media_users_storage where user_id='$user_id' and storage_id='$storage_id';"); $n=$db->num_rows($r);
         $n>0 ? $status=true : $status=false;
@@ -110,7 +110,7 @@ class jmoving {
             if ($type_id==0){$function="showJmovingCardLocal(\"$id\")";}
             if (!$press) $statud=$this->checkJmovingStructure($id); else $statud=true;
             if ($statud) {
-                if ($this->statusStorage($media_user_id,$storage_id_to,$status,$id)) {
+                if ($this->statusStorage($media_user_id,$storage_id_to,$id)) {
                     $list.="<tr style='cursor:pointer' onClick='$function'>
                         <td>$id</td>
                         <td>$type_name</td>
@@ -274,9 +274,9 @@ class jmoving {
                 $form=str_replace("{my_user_id}",$user_id,$form);
                 $form=str_replace("{my_user_name}",$user_name,$form);
 
-                list($kol_comments,$label_comments)=$this->labelCommentsCount($jmoving_id);
+                $label_comments=$this->labelCommentsCount($jmoving_id);
                 $form=str_replace("{labelCommentsCount}",$label_comments,$form);
-                list($kol_art_unknown,$label_art_unknown)=$this->labelArtEmptyCount($jmoving_id,0);
+                list(,$label_art_unknown)=$this->labelArtEmptyCount($jmoving_id,0);
                 $form=str_replace("{labelArticlesUnKnownCount}",$label_art_unknown,$form);
                 //$storage_count=0;
                 $storage_count=$this->loadJmovingStorageCount($jmoving_id);
@@ -407,9 +407,9 @@ class jmoving {
                 $form=str_replace("{my_user_id}",$user_id,$form);
                 $form=str_replace("{my_user_name}",$user_name,$form);
 
-                list($kol_comments,$label_comments)=$this->labelCommentsCount($jmoving_id);
+                $label_comments=$this->labelCommentsCount($jmoving_id);
                 $form=str_replace("{labelCommentsCount}",$label_comments,$form);
-                list($kol_art_unknown,$label_art_unknown)=$this->labelArtEmptyCount($jmoving_id,0);
+                list(,$label_art_unknown)=$this->labelArtEmptyCount($jmoving_id,0);
                 $form=str_replace("{labelArticlesUnKnownCount}",$label_art_unknown,$form);
                 $disabled48="disabled"; if ($this->checkJmovingSelectAllStatus($jmoving_id,47)==1 && $status_jmoving!=57){$disabled48="";}
                 $form=str_replace("{disabled48}",$disabled48,$form);
@@ -565,7 +565,7 @@ class jmoving {
                     </td>
                     <td></td>
                     <td></td>
-                    <td><button class='btn btn-xs btn-default' onClick='dropIncomStr(\"i_0\",\"0\");'><i class='fa fa-times'></i></button></td>
+                    <td><button class='btn btn-xs btn-default' onClick='dropJmovingStr(\"i_0\",\"0\");'><i class='fa fa-times'></i></button></td>
                 </tr>".$list;
         }
         if ($sum_weight!=0 && $sum_volume!=0 && $oper_status=='30'){
@@ -574,9 +574,9 @@ class jmoving {
         return array($list,$n);
     }
 
-    function saveJmovingCard($jmoving_id,$jmoving_op_id,$data,$storage_id_to,$cell_id_to,$comment,$kol_row,$idStr,$artIdStr,$article_nr_displStr,$brandIdStr,$storageIdFromStr,$cellIdFromStr,$amountStr){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка збереження даних!";
-        $jmoving_id=$slave->qq($jmoving_id);$jmoving_op_id=$slave->qq($jmoving_op_id);$data=$slave->qq($data);$storage_id_to=$slave->qq($storage_id_to);$cell_id_to=$slave->qq($cell_id_to);
-        $comment=$slave->qq($comment);
+    function saveJmovingCard($jmoving_id,$jmoving_op_id,$data,$storage_id_to,$cell_id_to,$comment){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка збереження даних!";
+        //,$kol_row,$idStr,$artIdStr,$article_nr_displStr,$brandIdStr,$storageIdFromStr,$cellIdFromStr,$amountStr
+        $jmoving_id=$slave->qq($jmoving_id);$jmoving_op_id=$slave->qq($jmoving_op_id);$data=$slave->qq($data);$storage_id_to=$slave->qq($storage_id_to);$cell_id_to=$slave->qq($cell_id_to);$comment=$slave->qq($comment);
         if ($jmoving_id==0 || $jmoving_id==""){
             $r=$db->query("select max(id) as mid from J_MOVING;");$jmoving_id=0+$db->result($r,0,"mid")+1;
             $db->query("insert into J_MOVING (`id`,`jmoving_op_id`,`user_id`) values ('$jmoving_id','$jmoving_op_id','$user_id');");
@@ -625,7 +625,7 @@ class jmoving {
                 $storage_id_from=$db->result($r,$i-1,"storage_id_from");
                 $cell_id_from=$db->result($r,$i-1,"cell_id_from");$cell_name_from=$this->getStorageCellName($cell_id_from);
                 $cell_id_to=$db->result($r,$i-1,"cell_id_to");
-                list($cell_to_select_list,$cs)=$this->showStorageCellsSelectList($storage_id_from,$cell_id_to);
+                list($cell_to_select_list,)=$this->showStorageCellsSelectList($storage_id_from,$cell_id_to);
                 $cell_name_to=$this->getStorageCellName($cell_id_to);
                 $status_jmoving=$db->result($r,$i-1,"status_jmoving");
             }
@@ -717,7 +717,7 @@ class jmoving {
         $jmoving_id=$slave->qq($jmoving_id); $rr_amount=$rr_reserv=$empty_kol=$idS=$weight=$volume=0;$label_empty="";
         if ($jmoving_id>0){
             $idS=$slave->qq($idStr);$artIdS=$slave->qq($artIdStr);$article_nr_displS=$slave->qq($article_nr_displStr);$brandIdS=$slave->qq($brandIdStr);$amountS=$slave->qq($amountStr);$storageIdFromS=$slave->qq($storageIdFromStr);$cellIdFromS=$slave->qq($cellIdFromStr);
-            list($info,$max_moving,$rest_amount)=$this->showArticleRestStorageSelectText($artIdS,$jmoving_id,$amountS,$storageIdFromS);
+            list(,$max_moving,$rest_amount)=$this->showArticleRestStorageSelectText($artIdS,$amountS,$storageIdFromS);
             if ($amountS<=$max_moving && $rest_amount==0){$answer=0;$err="Змінилася кількість. Закрийте вікно введення даних і повторіть ще раз!";}
             if ($amountS>$max_moving && $rest_amount<=0){$answer=0;$err="Змінилася кількість. Закрийте вікно введення даних і повторіть ще раз!";}
             if ($amountS<=$max_moving && $rest_amount>0){
@@ -759,7 +759,7 @@ class jmoving {
         $jmoving_id=$slave->qq($jmoving_id); $rr_amount=$rr_reserv=$empty_kol=$idS=$weight=$volume=0;$label_empty="";
         if ($jmoving_id>0){
             $idS=$slave->qq($idStr);$artIdS=$slave->qq($artIdStr);$article_nr_displS=$slave->qq($article_nr_displStr);$brandIdS=$slave->qq($brandIdStr);$amountS=$slave->qq($amountStr);$storageIdS=$slave->qq($storageId);$cell_from_moveS=$slave->qq($cell_from_move);$cell_to_moveS=$slave->qq($cell_to_move);
-            list($info,$max_moving,$rest_amount)=$this->showArticleRestStorageCellSelectText($artIdS,$jmoving_id,$amountS,$cell_from_moveS,$storageIdS);
+            list(,$max_moving,$rest_amount)=$this->showArticleRestStorageCellSelectText($artIdS,$amountS,$cell_from_moveS);
             if ($amountS<=$max_moving && $rest_amount==0){$answer=0;$err="Змінилася кількість. Закрийте вікно введення даних і повторіть ще раз!";}
             if ($amountS>$max_moving && $rest_amount<=0){$answer=0;$err="Змінилася кількість. Закрийте вікно введення даних і повторіть ще раз!";}
             if ($amountS<=$max_moving && $rest_amount>0){
@@ -818,12 +818,12 @@ class jmoving {
                 $art_id=$db->result($r,0,"art_id");
                 $storage_id_from=$db->result($r,0,"storage_id_from");
                 $amountS=$amount_change;
-                list($info,$max_moving,$rest_amount)=$this->showArticleRestStorageSelectText($art_id,$jmoving_id,$amountS);
+                list(,$max_moving,$rest_amount)=$this->showArticleRestStorageSelectText($art_id,$amountS);
                 if ($amountS<=$max_moving && $rest_amount==0){$answer=0;$err="Кількість для переміщення вже більша за залишок!";}
                 if ($amountS>$max_moving && $rest_amount<=0){$answer=0;$err="Кількість для переміщення вже більша за залишок!";}
                 if ($amountS<=($max_moving+$amountEx)){
                     $db->query("update J_MOVING_STR set `amount`='$amount_change' where id='$jmoving_str_id' and jmoving_id='$jmoving_id' limit 1;");
-                    list($weight,$volume,$empty_kol)=$this->updateJmovingWeightVolume($jmoving_id);
+                    list($weight,$volume,)=$this->updateJmovingWeightVolume($jmoving_id);
                     $rr=$dbt->query("select * from T2_ARTICLES_STRORAGE where ART_ID='$art_id' and STORAGE_ID ='$storage_id_from' limit 0,1;");$nr=$dbt->num_rows($rr);
                     if ($nr==1){
                         $rr_amount=$dbt->result($rr,0,"AMOUNT");
@@ -850,13 +850,13 @@ class jmoving {
                 $storage_id_from=$db->result($r,0,"storage_id_from");
                 $cell_id_from=$db->result($r,0,"cell_id_from");
 
-                list($info,$max_moving,$rest_amount)=$this->showArticleRestStorageCellSelectText($art_id,$jmoving_id,$amount_change,$cell_id_from,$storage_id_from);
+                list(,$max_moving,$rest_amount)=$this->showArticleRestStorageCellSelectText($art_id,$amount_change,$cell_id_from);
 
                 if ($amount_change<=$max_moving && $rest_amount<0){$answer=0;$err="Змінилася кількість. Закрийте вікно введення даних і повторіть ще раз!";}
                 if ($amount_change>$max_moving && $rest_amount<=0){$answer=0;$err="Змінилася кількість. Закрийте вікно введення даних і повторіть ще раз!";}
                 if ($amount_change<=$max_moving && $rest_amount>=0){
                     $db->query("update J_MOVING_STR set `amount`='$amount_change' where id='$jmoving_str_id' and jmoving_id='$jmoving_id' limit 1;");
-                    list($weight,$volume,$empty_kol)=$this->updateJmovingWeightVolume($jmoving_id);
+                    list($weight,$volume,)=$this->updateJmovingWeightVolume($jmoving_id);
                     $rr=$dbt->query("select * from T2_ARTICLES_STRORAGE where ART_ID='$art_id' and STORAGE_ID ='$storage_id_from' limit 0,1;");$nr=$dbt->num_rows($rr);
                     if ($nr==1){
                         $rr_amount=$dbt->result($rr,0,"AMOUNT");
@@ -978,7 +978,7 @@ class jmoving {
         return array($sum_weight,$sum_volume,$empty_kol);
     }
 
-    function makeJmovingCardFinish($jmoving_id){$answer=0;$err="";
+    function makeJmovingCardFinish(){$answer=0;$err="";//$jmoving_id
         //$db=DbSingleton::getDb();$slave=new slave;$cat=new catalogue;
         //$jmoving_id=$slave->qq($jmoving_id);
         /*$r=$db->query("select oper_status,storage_id,storage_cells_id from J_INCOME where id='$jmoving_id' limit 0,1;");$n=$db->num_rows($r);
@@ -1012,8 +1012,8 @@ class jmoving {
     function showJmovingLocalAutoCellForm($jmoving_id,$storage_id_to){
         $form="";$form_htm=RD."/tpl/jmoving_local_auto_cell_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $form=str_replace("{jmoving_id}",$jmoving_id,$form);
-        list($cells_list,$cs)=$this->showStorageCellsSelectList($storage_id_to,0);
-        list($cells_list_to,$cs_to)=$this->showStorageCellsSelectList($storage_id_to,0);
+        list($cells_list,)=$this->showStorageCellsSelectList($storage_id_to,0);
+        list($cells_list_to,)=$this->showStorageCellsSelectList($storage_id_to,0);
         $form=str_replace("{cells_list_from}",$cells_list,$form);
         $form=str_replace("{cells_list_to}",$cells_list_to,$form);
         $form=str_replace("{storage_name_to}",$this->getStorageName($storage_id_to),$form);
@@ -1031,7 +1031,7 @@ class jmoving {
             for ($ic=1;$ic<=$nc;$ic++){
                 $art_id=$dbt->result($rc,$ic-1,"ART_ID");
                 $amountS=$dbt->result($rc,$ic-1,"AMOUNT");
-                list($article_nr_displ,$brand_id,$brand_name)=$catalogue->getArticleNrDisplBrand($art_id); $idS="";
+                list($article_nr_displ,$brand_id,)=$catalogue->getArticleNrDisplBrand($art_id); $idS="";
                 $r=$db->query("select id,amount from J_MOVING_STR where jmoving_id='$jmoving_id' and art_id='$art_id' and `storage_id_from`='$storage_id_to' and status_jmoving='44' limit 0,1;");$n=$db->num_rows($r);
                 if ($n==1){
                     $idS=$db->result($r,0,"id");
@@ -1048,7 +1048,7 @@ class jmoving {
                         $db->query("update J_MOVING_STR set `art_id`='$art_id', `article_nr_displ`='$article_nr_displ', `brand_id`='$brand_id', `amount`='$amountEx', `storage_id_from`='$storage_id_to', `cell_id_from`='$cell_id_from', `cell_id_to`='$cell_id_to' where id='$idS' and jmoving_id='$jmoving_id' limit 1;");
                         $db->query("update J_MOVING set status_jmoving='44' where id='$jmoving_id' limit 1;");
 
-                        list($weight,$volume,$empty_kol)=$this->updateJmovingWeightVolume($jmoving_id);
+                        $this->updateJmovingWeightVolume($jmoving_id);
 
                         $rr=$dbt->query("select * from T2_ARTICLES_STRORAGE_CELLS where ART_ID='$art_id' and STORAGE_ID ='$storage_id_to' and STORAGE_CELLS_ID='$cell_id_from' limit 0,1;");$nr=$dbt->num_rows($rr);
                         if ($nr==1){
@@ -1116,16 +1116,16 @@ class jmoving {
         return array($answer,$err);
     }
 
-    function showJmovingArticleSearchForm($art_id,$brand_id,$article_nr_display,$jmoving_id,$storage_id_to){
+    function showJmovingArticleSearchForm($brand_id,$article_nr_display,$jmoving_id){
         $form="";$form_htm=RD."/tpl/jmoving_artilce_search_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        list($range_list,$list_brand_select)=$this->showArticlesSearchDocumentList($article_nr_display,$brand_id,0,$jmoving_id,$storage_id_to);
+        list($range_list,$list_brand_select)=$this->showArticlesSearchDocumentList($article_nr_display,$brand_id,0,$jmoving_id);//$storage_id_to, art_id
         $form=str_replace("{article_nr_display}",$article_nr_display,$form);
         $form=str_replace("{range_list}",$range_list,$form);
         $form=str_replace("{list_brand_select}",$list_brand_select,$form);
         return $form;
     }
 
-    function showJmovingArticleLocalSearchForm($art_id,$brand_id,$article_nr_display,$jmoving_id,$storage_id_from){
+    function showJmovingArticleLocalSearchForm($brand_id,$article_nr_display,$jmoving_id,$storage_id_from){
         $form="";$form_htm=RD."/tpl/jmoving_artilce_local_search_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         list($range_list,$list_brand_select)=$this->showArticlesLocalSearchDocumentList($article_nr_display,$brand_id,0,$jmoving_id,$storage_id_from);
         $form=str_replace("{article_nr_display}",$article_nr_display,$form);
@@ -1134,7 +1134,7 @@ class jmoving {
         return $form;
     }
 
-    function showArticlesSearchDocumentList($art,$brand_id,$search_type,$jmoving_id,$storage_id_to){$db=DbSingleton::getTokoDb();$cat=new catalogue;$n=0;$list2="";$r="";$query="";
+    function showArticlesSearchDocumentList($art,$brand_id,$search_type,$jmoving_id){$db=DbSingleton::getTokoDb();$cat=new catalogue;$n=0;$list2="";$r="";$query="";
         if ($search_type==""){$search_type=1;}
         if ($search_type==0){
             $art=$cat->clearArticle($art);
@@ -1183,7 +1183,7 @@ class jmoving {
         }
         if ($search_type==1){
             $query="select t2a.ART_ID,t2a.BRAND_ID,t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, gg.NAME as goods_group_name, SUM(`t2asc`.`AMOUNT`) as stock, SUM(`t2asc`.`RESERV_AMOUNT`) as reserv, s.name as storage_name, s.id as storage_id
-            from T2_ARTICLES t2a 
+		    from T2_ARTICLES t2a 
                 left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
                 left outer join T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID 
                 left outer join T2_BARCODES t2bc on t2bc.ART_ID=t2a.ART_ID 
@@ -1356,9 +1356,9 @@ class jmoving {
         return $amount;
     }
 
-    function setArticleToSelectAmountJmoving($art_id,$storage_id,$storage_id_to){
+    function setArticleToSelectAmountJmoving($art_id,$storage_id){
         $form=""; $form_htm=RD."/tpl/jmoving_select_amount_article_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $form=str_replace("{storage_list}",$this->showArticleRestStorageSelectList($art_id,$storage_id,$storage_id_to),$form);
+        $form=str_replace("{storage_list}",$this->showArticleRestStorageSelectList($art_id,$storage_id),$form);
         return $form;
     }
 
@@ -1369,15 +1369,15 @@ class jmoving {
         return $form;
     }
 
-    function showJmovingArticleAmountChange($art_id,$jmoving_str_id,$amount){$db=DbSingleton::getDb();
+    function showJmovingArticleAmountChange($art_id,$jmoving_str_id){$db=DbSingleton::getDb();
         $form="";$form_htm=RD."/tpl/jmoving_select_amount_article_change_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from J_MOVING_STR where id='$jmoving_str_id' and status_jmoving='44' limit 0,1");
-        $jmoving_id=$db->result($r,0,"jmoving_id");
+        //$jmoving_id=$db->result($r,0,"jmoving_id");
         $article_nr_displ=$db->result($r,0,"article_nr_displ");
         $brand_id=$db->result($r,0,"brand_id");$brand_name=$this->getBrandName($brand_id);
         $amount=$db->result($r,0,"amount");
         $storage_id=$db->result($r,0,"storage_id_from");
-        list($info,$max_moving)=$this->showArticleRestStorageSelectText($art_id,$jmoving_id,$amount);
+        list($info,$max_moving)=$this->showArticleRestStorageSelectText($art_id,$amount);
         $form=str_replace("{storage_name}",$this->getStorageName($storage_id),$form);
         $form=str_replace("{amountRestText}",$info,$form);
         $form=str_replace("{max_moving}",$max_moving,$form);
@@ -1386,16 +1386,16 @@ class jmoving {
         return array($form,$article_nr_displ,$brand_name);
     }
 
-    function showJmovingArticleAmountLocalChange($art_id,$jmoving_str_id,$amount){$db=DbSingleton::getDb();
+    function showJmovingArticleAmountLocalChange($art_id,$jmoving_str_id){$db=DbSingleton::getDb();
         $form="";$form_htm=RD."/tpl/jmoving_local_select_amount_article_change_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from J_MOVING_STR where id='$jmoving_str_id' and status_jmoving='44' limit 0,1");
-        $jmoving_id=$db->result($r,0,"jmoving_id");
+        //$jmoving_id=$db->result($r,0,"jmoving_id");
         $article_nr_displ=$db->result($r,0,"article_nr_displ");
         $brand_id=$db->result($r,0,"brand_id");$brand_name=$this->getBrandName($brand_id);
         $amount=$db->result($r,0,"amount");
         $storage_id=$db->result($r,0,"storage_id_from");
-        $cell_id=$db->result($r,0,"cell_id_from");$storage_id_from=0;
-        list($info,$max_moving)=$this->showArticleRestStorageCellSelectText($art_id,$jmoving_id,$amount,$cell_id,$storage_id_from);
+        $cell_id=$db->result($r,0,"cell_id_from");//$storage_id_from=0;
+        list($info,$max_moving)=$this->showArticleRestStorageCellSelectText($art_id,$amount,$cell_id);
         $form=str_replace("{storage_name}",$this->getStorageName($storage_id),$form);
         $form=str_replace("{cell_name}",$this->getStorageCellName($cell_id),$form);
         $form=str_replace("{storage_id_from}",$storage_id,$form);
@@ -1407,7 +1407,7 @@ class jmoving {
         return array($form,$article_nr_displ,$brand_name);
     }
 
-    function showArticleRestStorageSelectText($art_id,$jmoving_id,$cur_amount,$storage_id=null){$db=DbSingleton::getTokoDb();$info="";
+    function showArticleRestStorageSelectText($art_id,$cur_amount,$storage_id=null){$db=DbSingleton::getTokoDb();$info="";
         $reserv_amount=$reserv_amount_storage=0;$max_moving=$amount=0;
         if ($storage_id=="" || $storage_id==0) $where_storage=""; else $where_storage=" and t2as.STORAGE_ID='$storage_id' ";
         $r=$db->query("select s.id, s.name, t2as.AMOUNT, t2as.RESERV_AMOUNT from STORAGE s 
@@ -1423,7 +1423,7 @@ class jmoving {
         return array($info,$max_moving,$amount);
     }
 
-    function showArticleRestStorageCellSelectText($art_id,$jmoving_id,$cur_amount,$cell_id,$storage_id_from){$db=DbSingleton::getTokoDb();$info="";
+    function showArticleRestStorageCellSelectText($art_id,$cur_amount,$cell_id){$db=DbSingleton::getTokoDb();$info="";
         $reserv_amount=$reserv_amount_storage=0;$max_moving=$amount=0;
         $query="select sc.id, sc.cell_value, t2asc.AMOUNT, t2asc.RESERV_AMOUNT, t2as.AMOUNT as AMOUNT_STORAGE, t2as.RESERV_AMOUNT as RESERV_AMOUNT_STORAGE 
         from STORAGE_CELLS sc 
@@ -1443,7 +1443,7 @@ class jmoving {
         return array($info,$max_moving,$amount);
     }
 
-    function showArticleRestStorageSelectList($art_id,$storage_id,$storage_id_to){$db=DbSingleton::getTokoDb();$list="<option value='0'>-- Оберіть зі списку --</option>";
+    function showArticleRestStorageSelectList($art_id,$storage_id){$db=DbSingleton::getTokoDb();$list="<option value='0'>-- Оберіть зі списку --</option>";$t="";
         $where="";//if($storage_id>0){$where=" and t2as.STORAGE_ID!='$storage_id'";}
         //if ($storage_id_to>0){$where=" and t2as.STORAGE_ID!='$storage_id'";}
         $query="select s.id, s.name, t2as.AMOUNT, t2as.RESERV_AMOUNT from STORAGE s 
@@ -1775,8 +1775,8 @@ class jmoving {
         return $list;
     }
 
-    function showJmovingDocumentList($jmoving_id,$jmoving_op_id,$document_id){$income=new income;
-        $form=""; $document_list="";
+    function showJmovingDocumentList($jmoving_id,$jmoving_op_id){$income=new income;
+        $form=""; $document_list="";//,$document_id
         if ($jmoving_op_id==1){
             $form_htm=RD."/tpl/jmoving_documents_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
             $document_list=$income->search_documents_income_list("");
@@ -1787,7 +1787,7 @@ class jmoving {
         return array($form,"Реєстр документів основи");
     }
 
-    function findJmovingDocumentsSearch($jmoving_id,$jmoving_op_id,$s_nom){$income=new income;
+    function findJmovingDocumentsSearch($jmoving_op_id,$s_nom){$income=new income;//$jmoving_id,
         $jmoving_op_id==1 ? $document_list=$income->search_documents_income_list($s_nom) : $document_list="";
         return $document_list;
     }
@@ -1841,7 +1841,7 @@ class jmoving {
 
     function labelArtEmptyCount($jmoving_id,$kol){$label="";
         if ($kol==0 || $kol==""){
-            list($weight,$volume,$kol)=$this->updateJmovingWeightVolume($jmoving_id);
+            list(,,$kol)=$this->updateJmovingWeightVolume($jmoving_id);
         }
         if ($kol>0){$label="<span class='label label-tab label-info'>$kol</span>";}
         return array($kol,$label);
@@ -1850,7 +1850,7 @@ class jmoving {
     function labelCommentsCount($jmoving_id){$db=DbSingleton::getDb();$label="";
         $r=$db->query("select count(id) as kol from J_MOVING_COMMENTS where jmoving_id='$jmoving_id';");$kol=0+$db->result($r,0,"kol");
         if ($kol>0){$label="<span class='label label-tab label-info'>$kol</span>";}
-        return array($kol,$label);
+        return $label;
     }
 
     function loadJmovingUnknownArticles($jmoving_id){$db=DbSingleton::getDb();
@@ -1978,7 +1978,7 @@ class jmoving {
                     for ($i=1;$i<=$n1;$i++){
                         $storage_id_from=$db->result($r1,$i-1,"storage_id_from");
                         $cell_id_from=$db->result($r1,$i-1,"cell_id_from");
-                        list($tpoint_id,$loc_type_id)=$this->getTpointDataByStorage($storage_id_from);$loc_type_id=1;
+                        list($tpoint_id,)=$this->getTpointDataByStorage($storage_id_from);$loc_type_id=1;
                         $sum_art_amount=0;$sum_amount=0;$sum_volume=0;$sum_weight_netto=0;$sum_weight_brutto=0;
 
                         $rm=$db->query("select max(id) as mid from J_MOVING_LOCAL_SELECT_TEMP;");$select_id=0+$db->result($rm,0,"mid")+1;
@@ -2556,7 +2556,7 @@ class jmoving {
                         $list47
                     </tr>";
             }
-            list($select_nom,$select_data,$storage_id,$storage_name,$storage_name_to,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$jmoving_comment,$select_datatime)=$this->getJmovingSkladStorageSelectInfo($jmoving_id,$select_id);
+            list(,,,,,,,,,,,$select_datatime)=$this->getJmovingSkladStorageSelectInfo($jmoving_id,$select_id);
             $form=str_replace("{select_start}",$select_datatime,$form);
             $form=str_replace("{ArticlesList}",$list,$form);
             $form=str_replace("{select_id}",$select_id,$form);
@@ -2600,7 +2600,7 @@ class jmoving {
                     <td>$select_bug_list</td>
                 </tr>";
             }
-            list($select_nom,$data_create,$data_start,$data_collect,$storage_id,$storage_name,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto)=$storsel->getStorselInfo($select_id);
+            list(,$data_create,$data_start,$data_collect,,,,,$volume,$weight_netto,$weight_brutto)=$storsel->getStorselInfo($select_id);
             $form=str_replace("{select_id}",$select_id,$form);
             $form=str_replace("{data_create}",$data_create,$form);
             $form=str_replace("{data_start}",$data_start,$form);
@@ -2654,7 +2654,7 @@ class jmoving {
                     $list47
                 </tr>";
         }
-        list($select_nom,$select_data,$storage_id,$storage_name,$storage_name_to,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$jmoving_comment,$select_datatime)=$this->getJmovingSkladStorageSelectInfoLocal($jmoving_id,$select_id);
+        list(,,,,,,,,,,,$select_datatime)=$this->getJmovingSkladStorageSelectInfoLocal($jmoving_id,$select_id);
         $form=str_replace("{select_start}",$select_datatime,$form);
         $form=str_replace("{ArticlesList}",$list,$form);
         $form=str_replace("{select_id}",$select_id,$form);
@@ -2898,7 +2898,7 @@ class jmoving {
         $form=str_replace("{ArticlesList}",$list,$form);
         $form=str_replace("{select_id}",$select_id,$form);
         $form=str_replace("{jmoving_id}",$jmoving_id,$form);
-        list($select_nom,$select_data,$storage_id,$storage_name,$storage_name_to,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$jmoving_comment,$select_datatime)=$this->getJmovingSkladStorageSelectInfo($jmoving_id,$select_id);
+        list($select_nom,$select_data,,$storage_name,$storage_name_to,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$jmoving_comment,)=$this->getJmovingSkladStorageSelectInfo($jmoving_id,$select_id);
         $form=str_replace("{select_nom}",$select_nom,$form);
         $form=str_replace("{select_data}",$select_data,$form);
         $form=str_replace("{storage_from}",$storage_name,$form);
@@ -2945,7 +2945,7 @@ class jmoving {
         $form=str_replace("{ArticlesList}",$list,$form);
         $form=str_replace("{select_id}",$select_id,$form);
         $form=str_replace("{jmoving_id}",$jmoving_id,$form);
-        list($select_nom,$select_data,$storage_id,$storage_name,$storage_name_to,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$jmoving_comment,$select_datatime)=$this->getJmovingSkladStorageSelectInfo($jmoving_id,$select_id);
+        list($select_nom,$select_data,,$storage_name,$storage_name_to,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$jmoving_comment,)=$this->getJmovingSkladStorageSelectInfo($jmoving_id,$select_id);
         $form=str_replace("{select_nom}",$select_nom,$form);
         $form=str_replace("{select_data}",$select_data,$form);
         $form=str_replace("{storage_from}",$storage_name,$form);
@@ -2969,7 +2969,7 @@ class jmoving {
     }
 
     function addJuornalRecord($jmoving_id,$select_id,$status_jmoving){$db=DbSingleton::getDb();session_start();$user_id=$_SESSION["media_user_id"];
-        $db->query("insert into J_MOVING_SELECT_JOURNAL (`jmoving_id`,`select_id`,`user_id`,`status_jmoving`) values ('$jmoving_id','$select_id','$user_id','$jmoving_id');"); return;
+        $db->query("insert into J_MOVING_SELECT_JOURNAL (`jmoving_id`,`select_id`,`user_id`,`status_jmoving`,`status_moving`) values ('$jmoving_id','$select_id','$user_id','$jmoving_id','$status_jmoving');"); return;
     }
 
     function getJmovingSelectJournalRecords($jmoving_id,$select_id){$db=DbSingleton::getDb();$data=array();
@@ -3007,8 +3007,8 @@ class jmoving {
                 <td align='center' id='amr_$id'>$amount_barcodes</td>
                 <td align='center' id='amrd_$id'>$dif_amount_barcodes</td>
                 <td align='center' id='amrns_$id'>$amount_barcodes_noscan</td>
-                <td align='center'><button class='btn btn-xs btn-default' onclick='showJmovingStorageSelectNoscanForm(\"$jmoving_id\",\"$select_id\",\"$art_id\",\"$id\");' title='Фіксація без сканування' alt='Фіксація без сканування'><i class='fa fa-cube'></i></button></td>
-                <td align='center'><button class='btn btn-xs btn-danger' onclick='showJmovingStorageSelectBugForm(\"$jmoving_id\",\"$select_id\",\"$id\");' title='відхилення/брак/недостача' alt='відхилення/брак/недостача'><i class='fa fa-bug'></i></button></td>
+                <td align='center'><button class='btn btn-xs btn-default' onclick='showJmovingStorageSelectNoscanForm(\"$jmoving_id\",\"$select_id\",\"$art_id\",\"$id\");' title='Фіксація без сканування'><i class='fa fa-cube'></i></button></td>
+                <td align='center'><button class='btn btn-xs btn-danger' onclick='showJmovingStorageSelectBugForm(\"$jmoving_id\",\"$select_id\",\"$id\");' title='відхилення/брак/недостача'><i class='fa fa-bug'></i></button></td>
                 <td align='center' id='ambg_$id'>$amount_bug</td>
                 <td id='ssbug_$id'>$storage_select_list</td>
             </tr>";
@@ -3016,7 +3016,7 @@ class jmoving {
         $form=str_replace("{ArticlesList}",$list,$form);
         $form=str_replace("{select_id}",$select_id,$form);
         $form=str_replace("{jmoving_id}",$jmoving_id,$form);
-        list($select_nom,$select_data,$storage_id,$storage_name,$storage_name_to,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$jmoving_comment,$select_datatime)=$this->getJmovingSkladStorageSelectInfo($jmoving_id,$select_id);
+        list($select_nom,$select_data,,,,,,,,,$jmoving_comment,)=$this->getJmovingSkladStorageSelectInfo($jmoving_id,$select_id);
         $form=str_replace("{select_nom}",$select_nom,$form);
         $form=str_replace("{select_data}",$select_data,$form);
         $form=str_replace("{jmoving_comment}",$jmoving_comment,$form);$user_name="";
@@ -3162,11 +3162,11 @@ class jmoving {
         $form=str_replace("{ArticlesList}",$list,$form);
         $form=str_replace("{jmoving_id}",$jmoving_id,$form);
 
-        list($prefix,$doc_nom,$data,$storage_id_to,$storage_name_to,$comment,$parrent_type_id,$parrent_doc_id)=$this->getJmovingInfo($jmoving_id);
+        list($prefix,$doc_nom,$data,$storage_id_to,$storage_name_to,,$parrent_type_id,$parrent_doc_id)=$this->getJmovingInfo($jmoving_id);
         $dp_info="Без замовлення";
 
         if ($parrent_type_id==1){
-            list($dp_prefix,$dp_doc_nom,$dp_data,$s,$s,$s)=$dp->getdpInfo($parrent_doc_id);
+            list($dp_prefix,$dp_doc_nom,$dp_data,,,)=$dp->getdpInfo($parrent_doc_id);
             $dp_info="$dp_prefix-$dp_doc_nom/$dp_data";
             $tpoint_id=$dp->getDpTpoint($parrent_doc_id);
             $tpoint_name=$dp->getTpointName($tpoint_id);
@@ -3230,7 +3230,7 @@ class jmoving {
         $form=str_replace("{ArticlesList}",$list,$form);
         $form=str_replace("{select_id}",$select_id,$form);
         $form=str_replace("{jmoving_id}",$jmoving_id,$form);
-        list($select_nom,$select_data,$storage_id,$storage_name,$storage_name_to,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$jmoving_comment,$select_datatime)=$this->getJmovingSkladStorageSelectInfo($jmoving_id,$select_id);
+        list($select_nom,$select_data,,,$storage_name_to,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$jmoving_comment,)=$this->getJmovingSkladStorageSelectInfo($jmoving_id,$select_id);
         $form=str_replace("{select_nom}",$select_nom,$form);
         $form=str_replace("{select_data}",$select_data,$form);
         $form=str_replace("{storage_to}",$storage_name_to,$form);
@@ -3404,8 +3404,8 @@ class jmoving {
                 <td align='center' id='amr_$id'>$amount_barcodes</td>
                 <td align='center' id='amrd_$id'>$dif_amount_barcodes</td>
                 <td align='center' id='amrns_$id'>$amount_barcodes_noscan</td>
-                <td id='amrd_$id' align='center'><button class='btn btn-xs btn-default' onclick='showJmovingAcceptNoscanForm(\"$jmoving_id\",\"$art_id\",\"$id\");' title='Фіксація без сканування' alt='Фіксація без сканування'><i class='fa fa-cube'></i></button></td>
-                <td id='amrd_$id' align='center'><button class='btn btn-xs btn-danger' onclick='showJmovingAcceptBugForm(\"$jmoving_id\",\"$id\");' title='відхилення/брак/недостача' alt='відхилення/брак/недостача'><i class='fa fa-bug'></i></button></td>
+                <td id='amrd_$id' align='center'><button class='btn btn-xs btn-default' onclick='showJmovingAcceptNoscanForm(\"$jmoving_id\",\"$art_id\",\"$id\");' title='Фіксація без сканування'><i class='fa fa-cube'></i></button></td>
+                <td id='amrd_$id' align='center'><button class='btn btn-xs btn-danger' onclick='showJmovingAcceptBugForm(\"$jmoving_id\",\"$id\");' title='відхилення/брак/недостача'><i class='fa fa-bug'></i></button></td>
                 <td align='center' id='ambg_$id'>$amount_bug</td>
                 <td id='ssbug_$id'>$bug_list</td>
             </tr>";
@@ -3461,7 +3461,7 @@ class jmoving {
         return array($answer,$err,$id,$amount_barcodes,$dif_amount_barcodes);
     }
 
-    function showJmovingStorageSelectNoscanForm($jmoving_id,$select_id,$art_id,$str_id){$db=DbSingleton::getDb();$cat=new catalogue;$answer=0;$err="Помилка індексу";
+    function showJmovingStorageSelectNoscanForm($jmoving_id,$select_id,$str_id){$db=DbSingleton::getDb();$cat=new catalogue;$answer=0;$err="Помилка індексу";
         $form="";$form_htm=RD."/tpl/jmoving_storage_select_noscan_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from J_MOVING_SELECT_STR where jmoving_id='$jmoving_id' and select_id='$select_id' and id='$str_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){
@@ -3512,7 +3512,7 @@ class jmoving {
         return array($answer,$err,$id,$dif_amount_barcodes,$new_amount_barcode_noscan);
     }
 
-    function showJmovingAcceptNoscanForm($jmoving_id,$art_id,$str_id){$db=DbSingleton::getDb();$cat=new catalogue;$answer=0;$err="Помилка індексу";
+    function showJmovingAcceptNoscanForm($jmoving_id,$str_id){$db=DbSingleton::getDb();$cat=new catalogue;$answer=0;$err="Помилка індексу";
         $form="";$form_htm=RD."/tpl/jmoving_accept_noscan_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from J_MOVING_STR where jmoving_id='$jmoving_id' and id='$str_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){
@@ -3961,10 +3961,10 @@ class jmoving {
             if ($bug4>0) {$comment="`Відмова клієнта` згідно переміщення $prefix-$doc_nom"; $jmoving4=$this->insertIntoJmoving($type_id,$storage_id_from,$cell_id_to,$comment);}
 
             for ($i=1; $i<=$n; $i++){
-                if ($bugs[$i]["storage_select_bug"]==1) {$this->insertIntoJmovingStr($jmoving1,$bugs[$i]["art_id"],$bugs[$i]["article_nr_displ"],$bugs[$i]["brand_id"],0,$bugs[$i]["storage_id_to"],$bugs[$i]["cell_id_to"],$bugs[$i]["amount_bug"]);}
-                if ($bugs[$i]["storage_select_bug"]==2) {$this->insertIntoJmovingStr($jmoving2,$bugs[$i]["art_id"],$bugs[$i]["article_nr_displ"],$bugs[$i]["brand_id"],0,$bugs[$i]["storage_id_to"],$bugs[$i]["cell_id_to"],$bugs[$i]["amount_bug"]);}
-                if ($bugs[$i]["storage_select_bug"]==3) {$this->insertIntoJmovingStr($jmoving3,$bugs[$i]["art_id"],$bugs[$i]["article_nr_displ"],$bugs[$i]["brand_id"],0,$bugs[$i]["storage_id_to"],$bugs[$i]["cell_id_to"],$bugs[$i]["amount_bug"]);}
-                if ($bugs[$i]["storage_select_bug"]==4) {$this->insertIntoJmovingStr($jmoving4,$bugs[$i]["art_id"],$bugs[$i]["article_nr_displ"],$bugs[$i]["brand_id"],0,$bugs[$i]["storage_id_to"],$bugs[$i]["cell_id_to"],$bugs[$i]["amount_bug"]);}
+                if ($bugs[$i]["storage_select_bug"]==1) {$this->insertIntoJmovingStr($jmoving1,$bugs[$i]["art_id"],$bugs[$i]["article_nr_displ"],$bugs[$i]["brand_id"],$bugs[$i]["storage_id_to"],$bugs[$i]["cell_id_to"],$bugs[$i]["amount_bug"]);}
+                if ($bugs[$i]["storage_select_bug"]==2) {$this->insertIntoJmovingStr($jmoving2,$bugs[$i]["art_id"],$bugs[$i]["article_nr_displ"],$bugs[$i]["brand_id"],$bugs[$i]["storage_id_to"],$bugs[$i]["cell_id_to"],$bugs[$i]["amount_bug"]);}
+                if ($bugs[$i]["storage_select_bug"]==3) {$this->insertIntoJmovingStr($jmoving3,$bugs[$i]["art_id"],$bugs[$i]["article_nr_displ"],$bugs[$i]["brand_id"],$bugs[$i]["storage_id_to"],$bugs[$i]["cell_id_to"],$bugs[$i]["amount_bug"]);}
+                if ($bugs[$i]["storage_select_bug"]==4) {$this->insertIntoJmovingStr($jmoving4,$bugs[$i]["art_id"],$bugs[$i]["article_nr_displ"],$bugs[$i]["brand_id"],$bugs[$i]["storage_id_to"],$bugs[$i]["cell_id_to"],$bugs[$i]["amount_bug"]);}
             }
             $db->query("update J_MOVING set status_jmoving=57 where id='$jmoving_id';");
             $answer=1; $err="";
@@ -3979,7 +3979,7 @@ class jmoving {
         return $jmoving_id;
     }
 
-    function insertIntoJmovingStr($jmoving_id,$art_id,$article_nr_displ,$brand_id,$amount,$storage_id_to,$cell_id_from,$amount_bug) { $db=DbSingleton::getDb(); session_start(); $user_id=$_SESSION["media_user_id"];
+    function insertIntoJmovingStr($jmoving_id,$art_id,$article_nr_displ,$brand_id,$storage_id_to,$cell_id_from,$amount_bug) { $db=DbSingleton::getDb(); session_start(); $user_id=$_SESSION["media_user_id"];
         $rstr=$db->query("select * from J_MOVING_STR where jmoving_id='$jmoving_id' and art_id='$art_id';"); $nstr=$db->num_rows($rstr); $old_amount_bug=$db->result($rstr,0,"amount_bug"); $id=0;
         if ($nstr>0){
             $new_amount_bug=intval($old_amount_bug)+intval($amount_bug);
@@ -3994,7 +3994,6 @@ class jmoving {
 
     function storageJmovingDefect($art_id,$storage_to_id,$storage_from_id,$reserv) { $dbt=DbSingleton::getTokoDb();
         $r1=$dbt->query("select * from T2_ARTICLES_STRORAGE where ART_ID='$art_id' and STORAGE_ID='$storage_from_id' limit 1;");
-        //$amount1=floatval($dbt->result($r1,0,"AMOUNT"));
         $reserv_amount1=floatval($dbt->result($r1,0,"RESERV_AMOUNT"));
         $nerezerv=$reserv_amount1-floatval($reserv);
 
@@ -4018,7 +4017,6 @@ class jmoving {
 
     function cellsJmovingDefect($art_id,$storage_to_id,$storage_from_id,$cell_to_id,$cell_from_id,$reserv) { $dbt=DbSingleton::getTokoDb();
         $r1=$dbt->query("select * from T2_ARTICLES_STRORAGE_CELLS where ART_ID='$art_id' and STORAGE_ID='$storage_from_id' and STORAGE_CELLS_ID='$cell_from_id' limit 1;");
-        //$amount1=floatval($dbt->result($r1,0,"AMOUNT"));
         $reserv_amount1=floatval($dbt->result($r1,0,"RESERV_AMOUNT"));
         $nerezerv=$reserv_amount1-floatval($reserv);
 

@@ -1,7 +1,8 @@
 <?php
 $access=new access; $mf="users";
 list($accss,$acc_lvl)=$access->check_user_access($mf);$alg_u=0;
-include_once 'lib/excross.php';
+
+require_once (RD."/lib/excross.php");
 
 if ($accss=="1"){
 	$form_htm=RD."/tpl/excross.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}

@@ -3,6 +3,7 @@ $access=new access; $mf="back_clients";
 list($accss,$acc_lvl)=$access->check_user_access($mf);$alg_u=0;
 
 if ($accss=="1"){
+    require_once (RD."/lib/back_clients_class.php");
 	$back_clients=new back_clients;
 	$form_htm=RD."/tpl/back_clients.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$content=str_replace("{work_window}", $form, $content);

@@ -3,6 +3,7 @@ $access=new access; $mf="income";
 list($accss,$acc_lvl)=$access->check_user_access($mf);$alg_u=0;
 
 if ($accss=="1"){
+    require_once (RD."/lib/income_class.php");
 	$income=new income;
 	$form_htm=RD."/tpl/income.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$content=str_replace("{work_window}", $form, $content);

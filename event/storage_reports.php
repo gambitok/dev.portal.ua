@@ -3,7 +3,8 @@ $access=new access; $mf="storage_reports";
 list($accss,$acc_lvl)=$access->check_user_access($mf);$alg_u=0;
 
 if ($accss=="1"){
-	require_once (RD."/lib/storage_reports_class.php");$storage_reports=new storage_reports;
+	require_once (RD."/lib/storage_reports_class.php");
+	$storage_reports=new storage_reports;
 	$form_htm=RD."/tpl/storage_reports.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 
 	if ($w=="") {

@@ -48,8 +48,12 @@ function filterBuhBackClientsList(){
 	var date_end=$("#date_end").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'filterBuhBackClientsList', 'date_start':date_start, 'date_end':date_end},
 	function (result, errors){ if (errors) {alert(errors);} if (result){
+        $("#buh_back_range").empty();
 		$('#datatable').DataTable().destroy();
-		$("#back_clients_range").html(result["content"]);
+		$("#buh_back_range").html(result.content[0]);
+		$("#buh_back_summ").html(result.content[1]);
+		console.log(result.content[0]);
+		console.log(result.content[1]);
 		$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
 	}}, true);
 } 
@@ -60,7 +64,7 @@ function updateBackClientsRange(){
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		if (prevRange.length!=result["content"].length){
 			$("#back_clients_range").empty();
-			document.getElementById("back_clients_range").innerHTML=result["content"];
+			document.getElementById("back_clients_range").innerHTML=result.content;
 		}
 		setTimeout(function(){updateBackClientsRange();},30*1000);
 	}}, true);

@@ -381,7 +381,8 @@ class catalogue {
             $link=gnLink;
             if (substr($link,-1)=="/"){$link=substr($link,0,strlen($link)-1);}
             $links=explode("/", $link);
-            $art=$this->clearArticle($art);$brand_id=$links[2];
+            $art=$this->clearArticle($art);
+            $brand_id=$links[2];
 
             $where_brand="";$group_brand="group by t2c.BRAND_ID"; if ($brand_id!="" && $brand_id>0){$where_brand=" and t2c.BRAND_ID='$brand_id'"; $group_brand="";}
             if ($art!=""){
