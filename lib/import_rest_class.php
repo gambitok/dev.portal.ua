@@ -4,7 +4,7 @@ class import_rest {
 
     function show_import_rest_form(){
         $form=""; $form_htm=RD."/tpl/import_rest_str_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        list($csv_exist,$csv_file_name,$pre_table)=$this->showCsvPreview();
+        list(,,$pre_table)=$this->showCsvPreview();
         $form=str_replace("{records_list}","<tr><td colspan=10 align='center'>Записи не завантажено</td></tr>",$form);
         $form=str_replace("{import_file_name}","Оберіть файл",$form);
         $form=str_replace("{csv_str_file}",$pre_table,$form);
@@ -56,9 +56,9 @@ class import_rest {
             $file_path=RD."/cdn/import_rest_files/$user_id/$file_name";
             if (file_exists($file_path)){
                 //$form_htm=RD."/tpl/csv_rest_str_file.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-                require_once(RD."/lib/income_class.php");$income=new income;
+                $income=new income;
                 $income_id=0;$prev_income_name="";$cash_id=1;$firm_id=0;$cours_to_uah=0;$storage_id=0;$prev_brand="";$prev_tam_code="";$invoice_summ=0;
-                list($usd_to_uah,$eur_to_uah)=$this->loadIncomeKours(1,date("Y-m-d"));
+                list($usd_to_uah,$eur_to_uah)=$this->loadIncomeKours(date("Y-m-d"));
                 $handle = @fopen($file_path, "r");
                 if ($handle) { //$db->query("delete from catalogue_price where provider='$provider';");
                     set_time_limit(0);
@@ -70,7 +70,7 @@ class import_rest {
                                 $income_name=trim($buf[0]);
                                 if ($income_name!=$prev_income_name){
                                     if ($prev_income_name!=""){
-                                        list($prefix,$doc_nom)=$income->getIncomeClientPrefixDocument($income_id,$firm_id);
+                                        list($prefix,$doc_nom)=$income->getIncomeClientPrefixDocument($firm_id);
                                         $db->query("update J_INCOME set invoice_summ='$invoice_summ', summ_end='$invoice_summ', oper_status='31', `prefix`='$prefix', `doc_nom`='$doc_nom' where id='$income_id';");
                                         $this->recalculatePrice($income_id,$invoice_summ,$cours_to_uah,$cash_id,$usd_to_uah,$eur_to_uah,$storage_id);
                                         $invoice_summ=0;
@@ -120,7 +120,7 @@ class import_rest {
                             //if ($fn==30){break;}
                         }
                     }
-                    list($prefix,$doc_nom)=$income->getIncomeClientPrefixDocument($income_id,$firm_id);
+                    list($prefix,$doc_nom)=$income->getIncomeClientPrefixDocument($firm_id);
                     $db->query("update J_INCOME set invoice_summ='$invoice_summ', summ_end='$invoice_summ', oper_status='31', `prefix`='$prefix', `doc_nom`='$doc_nom' where id='$income_id';");
                     $this->recalculatePrice($income_id,$invoice_summ,$cours_to_uah,$cash_id,$usd_to_uah,$eur_to_uah,$storage_id);
                     fclose($handle);
@@ -140,7 +140,7 @@ class import_rest {
         return $kours;
     }
 
-    function loadIncomeKours($cash_id,$data){
+    function loadIncomeKours($data){
         $usd_to_uah=$this->getKourForDate(1,2,$data);
         $eur_to_uah=$this->getKourForDate(1,3,$data);
         return array($usd_to_uah,$eur_to_uah);
@@ -196,8 +196,7 @@ class import_rest {
         return ;
     }
 
-    function recalculatePrice($income_id,$invoice_summ,$cours_to_uah,$cash_id,$usd_to_uah,$eur_to_uah,$storage_id){$db=DbSingleton::getDb(); $dbt=DbSingleton::getTokoDb();
-        require_once(RD."/lib/catalogue_class.php");$cat=new catalogue;
+    function recalculatePrice($income_id,$invoice_summ,$cours_to_uah,$cash_id,$usd_to_uah,$eur_to_uah,$storage_id){$db=DbSingleton::getDb(); $dbt=DbSingleton::getTokoDb();$cat=new catalogue;
         $tl=0;	$rb=0;	$ro=0;
         $r=$db->query("select * from J_INCOME_STR where income_id='$income_id';");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){

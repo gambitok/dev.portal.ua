@@ -238,7 +238,7 @@ function closeTaxBackCard(){
 
 function findTaxStr(pos,tax_id,str_id,tax_str_id){
 	var tax_to_back_id=$("#tax_to_back_id").val();
-	JsHttpRequest.query($rcapi,{ 'w': 'findTaxStr', 'tax_id':tax_id,'tax_to_back_id':tax_to_back_id}, 
+	JsHttpRequest.query($rcapi,{ 'w': 'findTaxStr', 'tax_to_back_id':tax_to_back_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow").modal('show');
 		document.getElementById("FormModalBody").innerHTML=result["content"];

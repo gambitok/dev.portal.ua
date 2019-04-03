@@ -127,7 +127,7 @@ class catalogue {
                 </tr>";
             }
             $form=str_replace("{list}",$list,$form);
-            list($article_nr_displ,$brand_id,$brand_name)=$this->getArticleNrDisplBrand($art_id);
+            list($article_nr_displ,,$brand_name)=$this->getArticleNrDisplBrand($art_id);
             $form=str_replace("{article_nr_displ}",$article_nr_displ." ".$brand_name,$form);
         }
         return array($form,"Історія переміщення");
@@ -170,7 +170,7 @@ class catalogue {
         return array($answer,$err);
     }
 
-    function saveCatalogueNewArt($num,$art_id,$brand,$group,$sub_group,$manuf){$db=DbSingleton::getTokoDb();$new_art_id="";$answer=0;$err="Помилка обробки данних!";
+    function saveCatalogueNewArt($num,$art_id,$brand,$sub_group){$db=DbSingleton::getTokoDb();$new_art_id="";$answer=0;$err="Помилка обробки данних!";
         $brand=explode("-",$brand);$brand_id=$brand[0];//$brand_key=$brand[1];
         //$group=explode("-",$group);$group_key=$group[1];$group_id=$group[0];
         $sub_group=explode("-",$sub_group);$sub_group_id=$sub_group[0];//$sub_group_key=$sub_group[1];
@@ -334,8 +334,8 @@ class catalogue {
         return array($lst,$n);
     }
 
-    function showCatalogueBrandSelectList($r,$code_search){$db=DbSingleton::getDb();$slave=new slave;$list="";
-        $n=$db->num_rows($r);$tkey=time();
+    function showCatalogueBrandSelectList($r){$db=DbSingleton::getDb();$slave=new slave;$list="";
+        $n=$db->num_rows($r);$tkey=time();//$code_search
         $db->query("CREATE TEMPORARY TABLE IF NOT EXISTS `NBRAND_RESULT_$tkey` (`art_id` INT NOT NULL ,`display_nr` VARCHAR( 100 ) NOT NULL ,`name` VARCHAR( 255 ) NOT NULL ,`brand_id` INT NOT NULL ,`brand_name` VARCHAR( 100 ) NOT NULL ,`kol_res` TINYINT NOT NULL) ENGINE = MYISAM ;");
         for ($i=1;$i<=$n;$i++){
             $art_id=$db->result($r,$i-1,"ART_ID");
@@ -395,7 +395,7 @@ class catalogue {
             }
             $one_result=0;
             if ($n>1 && $brand_id==""){ $where_brand="";
-                $list2=$this->showCatalogueBrandSelectList($r,$art);
+                $list2=$this->showCatalogueBrandSelectList($r);
             }
             if ($n==1){
                 $query="select t2b.BRAND_NAME, t2n.NAME, t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION 
@@ -515,7 +515,7 @@ class catalogue {
                 if (($kind_id==3 || $kind_id==4) && $relation==2){ $kind_name="артикул включає в себе"; }
                 if ($kind_id=="" || $relation==""){$kind_name="інше";}
                 */
-                $check_photo=$this->checkPhotoEmpty($art_id,$article_nr_displ);
+                $check_photo=$this->checkPhotoEmpty($art_id);
                 if ($check_photo>0) {
                 $lst[$i]["data"]="<tr style='cursor:pointer'>
                     <td class='text-center'><button class='btn btn-sm btn-default' onclick='showArtilceGallery(\"$art_id\",\"$article_nr_displ\")'><i class='fa fa-image'></i></button></td>
@@ -579,7 +579,7 @@ class catalogue {
         return $list;
     }
 
-    function showArticlesFil4SearchList($suppl_id,$brand_id,$goods_group_id,$top,$stok_to,$stok_from){
+    function showArticlesFil4SearchList($brand_id,$goods_group_id){
         $where_brand="";
         if ($brand_id!=""){
             foreach($brand_id as $brnd_id){
@@ -614,11 +614,8 @@ class catalogue {
         return array($header_list,$list,$list_brand_select);
     }
 
-    function showArticlesFil2SearchList($mfa_id,$mod_id,$typ_id,$str_id,$art_ids){
-        $where_artds="";
-        if ($art_ids!=""){
-            $where_artds=" and t2a.ART_ID in (".$art_ids.") ";
-        }
+    function showArticlesFil2SearchList($art_ids){$where_artds="";
+        if ($art_ids!=""){$where_artds=" and t2a.ART_ID in (".$art_ids.") ";}
         $query="select t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as inner_cross, gg.NAME as goods_group_name, u.name as unit_name, cs.COSTUMS_CODE, cc.COUNTRY_NAME
         from T2_ARTICLES t2a 
             left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
@@ -745,7 +742,7 @@ class catalogue {
         $r=$db->query("select `ART_ID` from `T2_INNER_CROSS` where `CROSS`='$cross';"); $n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $art_id=$db->result($r,$i-1,"ART_ID");
-            list($article_nr_displ,$brand_id,$brand_name)=$this->getArticleNrDisplBrand($art_id);
+            list($article_nr_displ,,$brand_name)=$this->getArticleNrDisplBrand($art_id);
             list($amount, $reserv_amount)=$this->getArticlesStorage($art_id);
             $list.="<tr>
                 <td>$i</td>
@@ -1207,7 +1204,7 @@ class catalogue {
         return $kol;
     }
 
-    function createTDtree($mfa_id, $mod_id, $typ_id, $level, $parent_id, $tree) {$db = DbSingleton::getTokoDb(); $dbp=DbSingleton::getTokoDb();
+    function createTDtree($typ_id) {$db = DbSingleton::getTokoDb(); $dbp=DbSingleton::getTokoDb();
         $query="SELECT ART_ID,LA_ID FROM T2_LINKS where TYP_ID ='$typ_id' GROUP BY ART_ID;";
         $r=$dbp->query($query);$n=$dbp->num_rows($r);$art_id_str="0";
         for ($i=1;$i<=$n;$i++){
@@ -1265,12 +1262,11 @@ class catalogue {
         return $tree;
     }
 
-    function createTDtree_universal($art_id,$level, $parent_id, $tree) {$db = DbSingleton::getTokoDb(); $dbp=DbSingleton::getTokoDb();
+    function createTDtree_universal($art_id) {$db = DbSingleton::getTokoDb(); $dbp=DbSingleton::getTokoDb();
         $query="SELECT * FROM T2_TREE where `ART_ID` in ($art_id);";
         $r=$dbp->query($query);$n=$dbp->num_rows($r);$str_id_str="0";$str_id_a=array();
         for ($i=1;$i<=$n;$i++){
             $str_id=$dbp->result($r,$i-1,"STR_ID");$str_id_str.=",$str_id";
-            //$art_id=$dbp->result($r,$i-1,"ART_ID");$str_id_a[]=$str_id;
         }
         $td_array = array();
         $query="SELECT * FROM `T2_GROUP_TREE` where `LNG_ID` = '16';";
@@ -1315,18 +1311,18 @@ class catalogue {
         return array($tree,$kol_elem);
     }
 
-    function loadFilterGroupTreeList($mfa_id, $mod_id, $typ_id,$sel_id){$level=$parent_id=0;
+    function loadFilterGroupTreeList($typ_id){
         $form="";$form_htm=RD."/tpl/catalogue_tecdoc_group_tree.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $form = str_replace("{menu}", $this->createTDtree($mfa_id, $mod_id, $typ_id, $level, $parent_id, ""), $form);
+        $form = str_replace("{menu}", $this->createTDtree($typ_id), $form);
         return array($form,"Оберіть групу запчастин");
     }
 
-    function loadFilterGroupTreeListSide($mfa_id, $mod_id, $typ_id,$sel_id){$level=$parent_id=0;
+    function loadFilterGroupTreeListSide($typ_id){
         $form="";$form_htm=RD."/tpl/catalogue_tecdoc_tree_result_form.htm";if (file_exists("$form_htm")){ $form= file_get_contents($form_htm);}
         $form_tree="";$form_htm=RD."/tpl/catalogue_tecdoc_group_tree.htm";if (file_exists("$form_htm")){ $form_tree = file_get_contents($form_htm);}
-        $form_tree = str_replace("{menu}", $this->createTDtree($mfa_id, $mod_id, $typ_id, $level, $parent_id, ""), $form_tree);
+        $form_tree = str_replace("{menu}", $this->createTDtree($typ_id), $form_tree);
         $form_result="";$form_htm=RD."/tpl/catalogue_search_result_table.htm";if (file_exists("$form_htm")){ $form_result = file_get_contents($form_htm);}
-        list($header_list,$range_list,$list_brand_select)=$this->showArticlesSearchList("","",0);
+        list($header_list,$range_list,)=$this->showArticlesSearchList("","",0);
         $form_result=str_replace("{header_list}",$header_list,$form_result);
         $form_result=str_replace("{range_list}",$range_list,$form_result);
         return array($form,$form_tree,$form_result);
@@ -1402,7 +1398,6 @@ class catalogue {
         for ($i=1;$i<=$n;$i++){
             $name=$db->result($r,$i-1,"NAME");
             $key=$db->result($r,$i-1,"KEY");
-            //$sel="";if ($sel_id==$id){$sel="selected='selected'";}
             $list.="<option value='$key'>$i. $name</option>";
         }
         return $list;
@@ -1414,7 +1409,6 @@ class catalogue {
             $id=$db->result($r,$i-1,"ID");
             $name=$db->result($r,$i-1,"NAME");
             $key=$db->result($r,$i-1,"KEY");
-           // $sel="";if ($sel_id==$id){$sel="selected='selected'";}
             $list.="<option value='$id-$key'>$i. $name</option>";
         }
         return $list;
@@ -1451,14 +1445,14 @@ class catalogue {
         return array($answer,$err);
     }
 
-    function showGoodGroupTree($art_id,$sel_id){$db=DbSingleton::getTokoDb();$tree="";
+    function showGoodGroupTree($sel_id){$db=DbSingleton::getTokoDb();$tree="";
         $form="";$form_htm=RD."/tpl/catalogue_goods_group_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from GOODS_GROUP where PARRENT_ID='0'  order by `KEY`,`ID` asc;");$n=$db->num_rows($r);
+        $r=$db->query("select * from GOODS_GROUP where PARRENT_ID='0' order by `KEY`,`ID` asc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"ID");
             $name=$db->result($r,$i-1,"NAME");
             $sel="";if ($sel_id==$id){$sel=" data-jstree='{\"selected\":true}'";}
-            $tree.="<li id='$id'$sel>$name".$this->showGoodGroupSubLevel($id,$sel_id)."</li>";
+            $tree.="<li id='$id' $sel>$name".$this->showGoodGroupSubLevel($id,$sel_id)."</li>";
         }
         $form=str_replace("{tree}",$tree,$form);
         $form=str_replace("{goods_group_id}",$sel_id,$form);
@@ -1472,7 +1466,7 @@ class catalogue {
                 $id=$db->result($r,$i-1,"ID");
                 $name=$db->result($r,$i-1,"NAME");
                 $sel="";if ($sel_id==$id){$sel=" data-jstree='{\"selected\":true}'";}
-                $tree.="<li id='$id'$sel>$name".$this->showGoodGroupSubLevel($id,$sel_id)."</li>";
+                $tree.="<li id='$id' $sel>$name".$this->showGoodGroupSubLevel($id,$sel_id)."</li>";
             }
             $tree.="</ul>";
         }
@@ -1558,7 +1552,7 @@ class catalogue {
         return $list;
     }
 
-    function showGoodsGroupParamsNameList($art_id,$template_id){$db=DbSingleton::getTokoDb();$manual=new manual;$type=0;
+    function showGoodsGroupParamsNameList($template_id){$db=DbSingleton::getTokoDb();$manual=new manual;$type=0;
         $r=$db->query("select * from GOODS_GROUP_TEMPLATE_PARAMS where TEMPLATE_ID='$template_id' order by PARAM_ID asc;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n+15;$i++){ $param_name=""; $param_id=0;$field_type="";
             if ($i<=$n){
@@ -1588,7 +1582,7 @@ class catalogue {
         list($goods_group_id,$goods_group_caption)=$this->getArticleGoodsGroup($art_id);
         $form=str_replace("{goods_group_id}",$goods_group_id,$form);
         $form=str_replace("{goods_group_caption}",$goods_group_caption,$form);
-        $form=str_replace("{params_list}",$this->showGoodsGroupParamsNameList($art_id,$template_id),$form);
+        $form=str_replace("{params_list}",$this->showGoodsGroupParamsNameList($template_id),$form);
         $form=str_replace("{scheme_list}",$this->loadArticleScheme($template_id,0),$form);
         return array($form,"Редагування шаблону");
     }
@@ -2026,20 +2020,20 @@ class catalogue {
         return $answer;
     }
 
-    function loadArticleAplicabilityNew($art_id,$index){$level=$parent_id=0;$form="";
+    function loadArticleAplicabilityNew($art_id,$index){$form="";
         if ($art_id>0){
             $form_htm=RD."/tpl/catalogue_aplicability_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
             $form=str_replace("{art_id}",$art_id,$form);
             $form=str_replace("{display_number}",$index,$form);
-            $form=str_replace("{mfa_list}",$this->loadManufList(0),$form);
-            list($menu,$menu_kol_elem)=$this->createTDtree_universal($art_id,$level, $parent_id, "");
+            $form=str_replace("{mfa_list}",$this->loadManufList(),$form);
+            list($menu,$menu_kol_elem)=$this->createTDtree_universal($art_id);
             $form = str_replace("{menu}", $menu, $form);
             $form=str_replace("{kol_elem}",$menu_kol_elem,$form);
         }
         return array($form,"Привязка до авто");
     }
 
-    function saveCatalogueAplicabilityForm($art_id,$display_number,$comment,$typ_array,$str_array){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
+    function saveCatalogueAplicabilityForm($art_id,$comment,$typ_array,$str_array){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
         $art_id=$slave->qq($art_id);$comment=$slave->qq($comment);$typ_array=$slave->qq($typ_array);
         if ($art_id>0){
             //$brand_id=$this->getBrandId($art_id);
@@ -2142,7 +2136,7 @@ class catalogue {
         return array($answer,$err);
     }
 
-    function loadManufList($sel_id){$db=DbSingleton::getTokoDb();$list="";
+    function loadManufList(){$db=DbSingleton::getTokoDb();$list="";
         $r=$db->query("select MFA_ID, MFA_BRAND from T_manufacturers order by MFA_BRAND asc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $mfa_id=$db->result($r,$i-1,"MFA_ID");
@@ -2152,7 +2146,7 @@ class catalogue {
         return $list;
     }
 
-    function loadAplicabilityModelList($mfa_id,$sel_id){$db=DbSingleton::getTokoDb();$list="";
+    function loadAplicabilityModelList($mfa_id){$db=DbSingleton::getTokoDb();$list="";
         $r=$db->query("select MOD_ID, TEX_TEXT from T_models where MOD_MFA_ID='$mfa_id' order by TEX_TEXT asc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $mod_id=$db->result($r,$i-1,"MOD_ID");
@@ -2162,7 +2156,7 @@ class catalogue {
         return $list;
     }
 
-    function loadAplicabilityModificationList($mfa_id,$mod_id,$sel_id){$db=DbSingleton::getTokoDb();$list="";
+    function loadAplicabilityModificationList($mod_id){$db=DbSingleton::getTokoDb();$list="";
         $r=$db->query("select * from T_types where TYP_MOD_ID='$mod_id' order by TYP_MMT_TEXT asc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $typ_id=$db->result($r,$i-1,"TYP_ID");
@@ -2506,7 +2500,7 @@ class catalogue {
         $rating_ar=$this->getPriceRatingArray();$kol_rating=0;
         foreach ($rating_ar as $rar){$kol_rating+=1; $list_price_rating.="<th class='text-center' title='".$rar["name"]."'>Прайс<br>".$rar["abr"]."</th>"; }
         $form=str_replace("{list_price_rating}",$list_price_rating,$form);
-        list($article_nr_displ,$brand_id,$brand_name,$article_nr_search)=$this->getArticleNrDisplBrand($art_id);
+        list(,,,$article_nr_search)=$this->getArticleNrDisplBrand($art_id);
 
         $r=$db->query("select t2c.ART_ID, t2c.KIND, t2c.RELATION from T2_CROSS t2c 
             left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2c.BRAND_ID 
@@ -2624,8 +2618,7 @@ class catalogue {
         return $form;
     }
 
-    function loadPriceRatingTemplateStr($art_id,$sel_id){$db=DbSingleton::getTokoDb();$min_markup=0;$kol_val=$this->kol_price_rating;$rating=[];
-        $answer=0;$err="Помилка!";
+    function loadPriceRatingTemplateStr($sel_id){$db=DbSingleton::getTokoDb();$min_markup=0;$kol_val=$this->kol_price_rating;$rating=[];$answer=0;$err="Помилка!";
         $r=$db->query("select * from price_rating_template_str where template_id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){
             $min_markup=$db->result($r,0,"min_markup");
@@ -2665,7 +2658,7 @@ class catalogue {
         return array($answer,$err,$form,"Історія ціноутворення");
     }
 
-    function getTpointName($tpoint_id){$db=DbSingleton::getDb(); $name="";
+    function getTpointName($tpoint_id){$db=DbSingleton::getDb();$name="";
         $r=$db->query("select * from T_POINT where id='$tpoint_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){$name=$db->result($r,0,"full_name");}
         return $name;
@@ -2688,7 +2681,7 @@ class catalogue {
     function showArticleSales($art_id){$db=DbSingleton::getTokoDb();$answer=0;$err="Помилка індексу";$list="";$m=0;$article_displ_nomber="";
         $block="";$block_htm=RD."/tpl/catalogue_article_sales.htm";if (file_exists("$block_htm")){ $block = file_get_contents($block_htm);}
         if ($art_id!=""){
-            list($article_displ_nomber,$brand_id)=$this->getArticleNrDisplBrand($art_id);
+            list($article_displ_nomber,)=$this->getArticleNrDisplBrand($art_id);
             $r1=$db->query("select * from T_POINT where status='1' order by position asc;");$n1=$db->num_rows($r1);
             for ($t=1;$t<=$n1;$t++){
                 $tpoint_id=$db->result($r1,$t-1,"id");
@@ -2760,8 +2753,7 @@ class catalogue {
         return array($answer,$err);
     }
 
-    function showCatalogueBrandSelectDocumentList($r,$code_search){session_start();$db=DbSingleton::getTokoDb();$list="";
-        $n=$db->num_rows($r); $tkey=time();
+    function showCatalogueBrandSelectDocumentList($r){$db=DbSingleton::getTokoDb();$list="";$n=$db->num_rows($r); $tkey=time();
         $db->query("CREATE TEMPORARY TABLE IF NOT EXISTS `NBRAND_RESULT_$tkey` (`art_id` INT NOT NULL ,`display_nr` VARCHAR( 100 ) NOT NULL ,`name` VARCHAR( 255 ) NOT NULL ,`brand_id` INT NOT NULL ,`brand_name` VARCHAR( 100 ) NOT NULL ,`kol_res` TINYINT NOT NULL) ENGINE = MYISAM ;");
         for ($i=1;$i<=$n;$i++){
             $art_id=$db->result($r,$i-1,"ART_ID");
@@ -2785,7 +2777,8 @@ class catalogue {
                 <td>$brand_name</td>
                 <td>$name</td>
             </tr>";
-        }$form="";
+        }
+        $form="";
         if ($n>0){
             $form_htm=RD."/tpl/catalogue_brand_select_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
             $form=str_replace("{list}",$list,$form);
@@ -2807,7 +2800,7 @@ class catalogue {
             }
             $one_result=0;
             if ($n>1 && ($brand_id=="" || $brand_id==0)){ $where_brand="";
-                $list2=$this->showCatalogueBrandSelectDocumentList($r,$art);
+                $list2=$this->showCatalogueBrandSelectDocumentList($r);
             }
             if ($n==1){
                 $query="select t2b.BRAND_NAME, t2n.NAME,t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION from T2_CROSS t2c 
@@ -2933,7 +2926,7 @@ class catalogue {
                 </tr>";
             }
             $form=str_replace("{list}",$list,$form);
-            list($article_nr_displ,$brand_id,$brand_name)=$this->getArticleNrDisplBrand($art_id);
+            list($article_nr_displ,,$brand_name)=$this->getArticleNrDisplBrand($art_id);
             $form=str_replace("{article_nr_displ}",$article_nr_displ." ".$brand_name,$form);
         }
         return array($form,"Наявність на складах");
@@ -2970,7 +2963,7 @@ class catalogue {
             }
             if ($n==0){$list="<tr><td colspan='8' align='center'>Записи відсутні</td></tr>";}
             $form=str_replace("{list}",$list,$form);
-            list($article_nr_displ,$brand_id,$brand_name)=$this->getArticleNrDisplBrand($art_id);
+            list($article_nr_displ,,$brand_name)=$this->getArticleNrDisplBrand($art_id);
             $form=str_replace("{article_nr_displ}",$article_nr_displ." ".$brand_name,$form);
         }
         return array($form,"Наявність по партіям");
@@ -2985,7 +2978,7 @@ class catalogue {
     function viewArticleReservDocs($art_id,$storage_id){ $db=DbSingleton::getDb();$answer=0;$err="Помилка";$form="";$list="";
         if ($art_id>0){
             $form_htm=RD."/tpl/catalogue_storage_reserv_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-            list($article_nr_displ,$brand_id,$brand_name)=$this->getArticleNrDisplBrand($art_id);
+            list($article_nr_displ,,$brand_name)=$this->getArticleNrDisplBrand($art_id);
             $form=str_replace("{article_nr_displ}",$article_nr_displ." ".$brand_name,$form);
             $r=$db->query("select j.id, j.prefix, j.doc_nom, j.type_id, j.data,SUM(js.amount) as amount, j.user_id from J_MOVING_STR js 
                 left outer join J_MOVING j on (j.id=js.jmoving_id) 
@@ -3128,7 +3121,7 @@ class catalogue {
     function viewArticleCellsRest($art_id,$storage_id){ $db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$answer=0;$err="Помилка";$list="";$form="";
         if ($art_id>0){
             $form_htm=RD."/tpl/catalogue_storage_cells_rest_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-            list($article_nr_displ,$brand_id,$brand_name)=$this->getArticleNrDisplBrand($art_id);
+            list($article_nr_displ,,$brand_name)=$this->getArticleNrDisplBrand($art_id);
             $form=str_replace("{article_nr_displ}",$article_nr_displ." ".$brand_name,$form);
             $r=$dbt->query("select t2sc.AMOUNT, t2sc.RESERV_AMOUNT, sc.cell_value from T2_ARTICLES_STRORAGE_CELLS t2sc 
                 left outer join STORAGE_CELLS sc on (sc.id=t2sc.STORAGE_CELLS_ID) 
@@ -3166,7 +3159,7 @@ class catalogue {
     function showCatalogueDonorForm($art_id){$form="";$kind_name="";
         $form_htm=RD."/tpl/catalogue_donor_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $form=str_replace("{art_id}",$art_id,$form);
-        list($search_number,$d,$d)=$this->getArticleNrDisplBrand($art_id);
+        list($search_number,,)=$this->getArticleNrDisplBrand($art_id);
         $form=str_replace("{search_number}",$search_number,$form);
         $form=str_replace("{display_nr}","",$form);
         return array($form,"Імпорт інформації від донора".$kind_name);
@@ -3202,7 +3195,7 @@ class catalogue {
         return $list;
     }
 
-    function saveCatalogueDonorForm($art_id,$search_number,$display_nr,$art_id2,$ch){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
+    function saveCatalogueDonorForm($art_id,$display_nr,$art_id2,$ch){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
         $art_id=$slave->qq($art_id);$art_id2=$slave->qq($art_id2);$ch=$slave->qq($ch);
         if ($art_id>0 && $display_nr!="" && $art_id2>0){
             if ($ch[1]==1){
@@ -3314,7 +3307,7 @@ class catalogue {
 
     //showArticleSearchDocumentForm---------------------------------------------
 
-    function showArticleSearchDocumentForm($art_id,$brand_id,$article_nr_display,$doc_type,$doc_id){$form="";
+    function showArticleSearchDocumentForm($brand_id,$article_nr_display,$doc_type,$doc_id){$form="";
         $form_htm=RD."/tpl/catalogue_document.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $form=str_replace("{art}",$article_nr_display,$form);
         $form=str_replace("{brand_id}",$brand_id,$form);
@@ -3347,8 +3340,7 @@ class catalogue {
         return $list;
     }
 
-    function showArticlesSearchListDoc($art,$brand_id,$query_2,$search_type,$doc_type,$doc_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];
-        require_once RD.'/lib/dp_class.php';$dp=new dp;
+    function showArticlesSearchListDoc($art,$brand_id,$query_2,$search_type,$doc_type,$doc_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$dp=new dp;
         $art=$this->clearArticle($art); if ($brand_id==0){$brand_id="";} $ak=$rk=[]; $margin_price_lvl=$tpoint_id=$margin_price_suppl_lvl=$client_vat=$price_suppl_lvl=0;$r="";$query="";
         $cash_id=1;$price=0;$usd_to_uah=$euro_to_uah=1;
         $storage_id=$dp_id=0;$function_select_article=$reserv_type_color="";
@@ -3384,7 +3376,7 @@ class catalogue {
             }
             $one_result=0;
             if ($n>1 && $brand_id==""){ $where_brand="";
-                $list2=$this->showCatalogueBrandSelectListDoc($r,$art);
+                $list2=$this->showCatalogueBrandSelectListDoc($r);
             }
             if ($n==1){
                 $query="select t2b.BRAND_NAME, t2n.NAME, t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION from T2_CROSS t2c 
@@ -3424,7 +3416,8 @@ class catalogue {
             for ($i=1;$i<=$kol_f;$i++){
                 $header_list.="<th>".$fldcnf[$i]["field_name"]."</th>";
                 $range_list.="<td onClick=\"{function_select_article}\">{".$fldcnf[$i]["field_key"]."}</td>";
-            }$header_list="<tr align='center'><th data-sortable=\"false\">Фото</th><th data-sortable=\"false\">Тип артикула</th>".$header_list."</tr>";
+            }
+            $header_list="<tr align='center'><th data-sortable=\"false\">Фото</th><th data-sortable=\"false\">Тип артикула</th>".$header_list."</tr>";
 
             $sch_table="search_cat_$user_id";
             $sch_table_result="search_cat_$user_id"."_result";
@@ -3568,7 +3561,7 @@ class catalogue {
                 $lst[$i]["kind"]=$kind_id;
                 $lst[$i]["relation"]=$relation;
 
-                $check_photo=$this->checkPhotoEmpty($art_id,$article_nr_displ);$img_b="";
+                $check_photo=$this->checkPhotoEmpty($art_id);$img_b="";
                 if ($check_photo>0) { $img_b="<button class='btn btn-sm btn-default' onclick='showArtilceGallery(\"$art_id\",\"$article_nr_displ\")'><i class='fa fa-image'></i></button>";}
                 $suppl_storage_code=0;
                 $lst[$i]["data"]="<tr style='cursor:pointer'><td class='text-center'>$img_b</td><td class='text-center'>{kind_name}</td>".$range_list."</tr>";
@@ -3632,25 +3625,23 @@ class catalogue {
         return $allow;
     }
 
-    function showSupplStorageSelectWindow($art_id,$article_nr_displ,$brand_id,$doc_type,$doc_id){$form="";
+    function showSupplStorageSelectWindow($art_id,$article_nr_displ,$doc_type,$doc_id){$form="";
         $form_htm=RD."/tpl/catalogue_select_suppl_storage_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $list=$this->showArticleSupplStorageRestList($art_id,$article_nr_displ,$brand_id,$doc_type,$doc_id);
+        $list=$this->showArticleSupplStorageRestList($art_id,$doc_type,$doc_id);
         $form=str_replace("{list}",$list,$form);
         $form=str_replace("{art_id}",$art_id,$form);
         $form=str_replace("{article_nr_displ}",$article_nr_displ,$form);
         return $form;
     }
 
-    function showArticleSupplStorageRestList($art_id,$article_nr_displ,$brand_id,$doc_type,$doc_id){$db=DbSingleton::getTokoDb();$slave=new slave;
-        require_once RD.'/lib/dp_class.php';$dp=new dp;
+    function showArticleSupplStorageRestList($art_id,$doc_type,$doc_id){$db=DbSingleton::getTokoDb();$slave=new slave;$dp=new dp;$price_suppl_lvl=0;
         $doc_type=$slave->qq($doc_type);$doc_id=$slave->qq($doc_id);$tpoint_id=0;
         $price_lvl=$margin_price_lvl=$margin_price_suppl_lvl=$client_vat=0;
         $cash_id=$usd_to_uah=$euro_to_uah=1;$suppl_id=$suppl_stock=$dp_id=$suppl_storage_id=0;
         $suppl_storage_code=$amountRestNotTpoint=0; $delivery_info=$return_delay=$warranty_info="";
         if ($doc_type=="dp"){$dp_id=$doc_id;
             list($price_lvl,$margin_price_lvl,$price_suppl_lvl,$margin_price_suppl_lvl,$client_vat)=$dp->getDpClientPriceLevels($dp_id);
-            $tpoint_id=$dp->getDpTpoint($dp_id); //$tpoint_name=$this->getTpointName($tpoint_id);
-            //$tpoint_storage_list=$this->getTpointStorageList($tpoint_id);
+            $tpoint_id=$dp->getDpTpoint($dp_id);
             $cash_id=$dp->getDpCashId($dp_id);list($usd_to_uah,$euro_to_uah)=$dp->getKoursData();
         }
         $query="select t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, gg.NAME as goods_group_name, t2sai.suppl_id, t2sai.return_delay, t2sai.warranty_info , t2si.price_usd, t2si.client_storage_id, t2si.stock_suppl
@@ -3667,7 +3658,6 @@ class catalogue {
         $r=$db->query($query);$n=$db->num_rows($r);	$list="";
         
         for ($i=1;$i<=$n;$i++){
-            //$tpoint_suppl_name="";
             $del_row=0;
             $art_id=$db->result($r,$i-1,"ART_ID");
             //$kind_id=$ak[$art_id];
@@ -3732,7 +3722,7 @@ class catalogue {
                                     //$price=$price+$price*20/100;
                                 //}
                                 //if ($price_in_vat==0){
-    //									$price=0;$sh_vat=0;$del_row=1;
+                                    //	$price=0;$sh_vat=0;$del_row=1;
                                 //}
                             //}
                             if ($client_vat==1){
@@ -3780,7 +3770,7 @@ class catalogue {
         return $name;
     }
 
-    function showCatalogueBrandSelectListDoc($r,$code_search){$db=DbSingleton::getDb(); $list="";
+    function showCatalogueBrandSelectListDoc($r){$db=DbSingleton::getDb(); $list="";
         $n=$db->num_rows($r);$tkey=time();
         $db->query("CREATE TEMPORARY TABLE IF NOT EXISTS `NBRAND_RESULT_$tkey` (`art_id` INT NOT NULL ,`display_nr` VARCHAR( 100 ) NOT NULL ,`name` VARCHAR( 255 ) NOT NULL ,`brand_id` INT NOT NULL ,`brand_name` VARCHAR( 100 ) NOT NULL ,`kol_res` TINYINT NOT NULL) ENGINE = MYISAM ;");
         for ($i=1;$i<=$n;$i++){
@@ -3813,7 +3803,7 @@ class catalogue {
         return $form;
     }
 
-    function checkPhotoEmpty($art_id,$disp_nomber){ $db=DbSingleton::getTokoDb();
+    function checkPhotoEmpty($art_id){ $db=DbSingleton::getTokoDb();
         $r=$db->query("select count(t2af.ID) as kol from T2_PHOTOS t2af where t2af.ART_ID='$art_id';"); $n=$db->result($r,0,"kol")+0;
         return $n;
     }
@@ -3848,7 +3838,7 @@ class catalogue {
         return $list;
     }
 
-    function saveIndexArticle($art_id,$suppl_status,$article_nr_displ,$brand_id,$article_name,$article_name_ukr,$article_info) { $db=DbSingleton::getTokoDb();
+    function saveIndexArticle($art_id,$article_nr_displ,$brand_id,$article_name,$article_name_ukr,$article_info) { $db=DbSingleton::getTokoDb();
         $r=$db->query("select ART_ID from T2_ARTICLES where ART_ID=$art_id;"); $n=$db->num_rows($r);
         $article_nr_search=str_replace(str_split('\\/:*?"<>|+-()[]., '), '', $article_nr_displ);
         if ($art_id>0 && $art_id!="" && $n==0) {

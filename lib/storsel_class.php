@@ -36,8 +36,7 @@ class storsel {
         return $status_invoice;
     }
 
-    function statusStorage($user_id,$storage_id) {$db=DbSingleton::getDb();
-        require_once RD.'/lib/users_class.php';$users= new users;
+    function statusStorage($user_id,$storage_id) {$db=DbSingleton::getDb();$users= new users;
         $r=$db->query("select * from media_users_storage where user_id='$user_id' and storage_id='$storage_id';");
         $n=$db->num_rows($r);
         $super_user = $users->getSuperUser($user_id);
@@ -47,7 +46,7 @@ class storsel {
 
     function show_storsel_list($status = null){$db=DbSingleton::getDb();$gmanual=new gmanual;$jmoving=new jmoving;$dp=new dp;session_start();$ses_tpoint_id=$_SESSION["media_tpoint_id"];$media_user_id=$_SESSION["media_user_id"];
         $count=0;$parrent_doc_status=0;$where=" and sel.tpoint_id='$ses_tpoint_id'";$list="";
-        require_once RD.'/lib/users_class.php';$users= new users; $super_user = $users->getSuperUser($media_user_id);
+        $users= new users; $super_user = $users->getSuperUser($media_user_id);
         if (($media_user_id==1) || ($media_user_id==7) || ($super_user)){$where="";}
         $r=$db->query("select sel.*, s.name as storage_name, t.name as tpoint_name from J_SELECT sel
             left outer join T_POINT t on t.id=sel.tpoint_id
@@ -223,11 +222,6 @@ class storsel {
                 $weight_netto=$db->result($r,0,"weight_netto");
                 $weight_brutto=$db->result($r,0,"weight_brutto");
                 $volume=$db->result($r,0,"volume");
-                //$articles_amount=$db->result($r,0,"articles_amount");
-                //$amount=$db->result($r,0,"amount");
-                //$storage_id=$db->result($r,0,"storage_id");
-                //$tpoint_id=$db->result($r,0,"tpoint_id");
-                //$data=$db->result($r,0,"data");if ($data=="0000-00-00"){$data="";}
                 $status_select=$db->result($r,0,"status_select");
                 $status_select_name=$gmanual->get_gmanual_caption($status_select);
 
@@ -276,7 +270,7 @@ class storsel {
                 $form=str_replace("{my_user_id}",$user_id,$form);
                 $form=str_replace("{my_user_name}",$user_name,$form);
 
-                list($kol_comments,$label_comments)=$this->labelCommentsCount($select_id);
+                list(,$label_comments)=$this->labelCommentsCount($select_id);
                 $form=str_replace("{labelCommentsCount}",$label_comments,$form);
                 $disabled48="disabled"; if ($status_select==47){$disabled48="";}
                 $form=str_replace("{disabled48}",$disabled48,$form);
@@ -882,7 +876,7 @@ class storsel {
                 $list47
             </tr>";
         }
-        list($select_nom,$select_data,$storage_id,$storage_name,$storage_name_to,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$jmoving_comment,$select_datatime)=$this->getJmovingSkladStorageSelectInfo($jmoving_id,$select_id);
+        list(,,,,,,,,,,,$select_datatime)=$jmoving->getJmovingSkladStorageSelectInfo($jmoving_id,$select_id);
         $form=str_replace("{select_start}",$select_datatime,$form);
         $form=str_replace("{ArticlesList}",$list,$form);
         $form=str_replace("{select_id}",$select_id,$form);
@@ -942,7 +936,7 @@ class storsel {
                 $list47
             </tr>";
         }
-        list($select_nom,$select_data,$storage_id,$storage_name,$storage_name_to,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$jmoving_comment,$select_datatime)=$this->getJmovingSkladStorageSelectInfoLocal($jmoving_id,$select_id);
+        list(,,,,,,,,,,,$select_datatime)=$jmoving->getJmovingSkladStorageSelectInfoLocal($jmoving_id,$select_id);
         $form=str_replace("{select_start}",$select_datatime,$form);
         $form=str_replace("{ArticlesList}",$list,$form);
         $form=str_replace("{select_id}",$select_id,$form);
@@ -1075,14 +1069,14 @@ class storsel {
         $form=str_replace("{ArticlesList}",$list,$form);
         $form=str_replace("{select_id}",$select_id,$form);
 
-        list($select_nom,$data_create,$data_start,$data_collect,$storage_id,$storage_name,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$tpoint_id,$tpoint_name,$parrent_doc_type_id,$parrent_doc_id)=$this->getStorselInfo($select_id);
+        list($select_nom,$data_create,,,,$storage_name,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$tpoint_id,$tpoint_name,$parrent_doc_type_id,$parrent_doc_id)=$this->getStorselInfo($select_id);
         if ($tpoint_name==""){$tpoint_name="-------------";}
 
         if ($parrent_doc_type_id==1){ // Jmoving
             $jmoving=new jmoving; $jmoving_name=$jmoving->getJmovingName($parrent_doc_id);
 
-            list($prefix,$doc_nom,$data,$storage_id_to,$storage_name_to,$comment,$parrent_type_id,$parrent_doc_id2)=$jmoving->getJmovingInfo($parrent_doc_id);
-            list($tpoint_id,$loc_type_id)=$jmoving->getTpointDataByStorage($storage_id_to);
+            list(,,,$storage_id_to,,,,)=$jmoving->getJmovingInfo($parrent_doc_id);
+            list($tpoint_id,)=$jmoving->getTpointDataByStorage($storage_id_to);
 
             $tpoint_name=$this->getTpointName($tpoint_id);
         }
@@ -1158,13 +1152,13 @@ class storsel {
         }
         $form=str_replace("{ArticlesList}",$list,$form);
         $form=str_replace("{select_id}",$select_id,$form);
-        list($select_nom,$data_create,$data_start,$data_collect,$storage_id,$storage_name,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$tpoint_id,$tpoint_name,$parrent_doc_type_id,$parrent_doc_id)=$this->getStorselInfo($select_id);
+        list($select_nom,$data_create,,,,$storage_name,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto,$tpoint_id,$tpoint_name,$parrent_doc_type_id,$parrent_doc_id)=$this->getStorselInfo($select_id);
         if ($tpoint_name==""){$tpoint_name="-------------";}
 
         if ($parrent_doc_type_id==1){ // Jmoving
             $jmoving=new jmoving; $jmoving_name=$jmoving->getJmovingName($parrent_doc_id);
-            list($prefix,$doc_nom,$data,$storage_id_to,$storage_name_to,$comment,$parrent_type_id,$parrent_doc_id2)=$jmoving->getJmovingInfo($parrent_doc_id);
-            list($tpoint_id,$loc_type_id)=$jmoving->getTpointDataByStorage($storage_id_to);
+            list(,,,$storage_id_to,,,,)=$jmoving->getJmovingInfo($parrent_doc_id);
+            list($tpoint_id,)=$jmoving->getTpointDataByStorage($storage_id_to);
             $tpoint_name=$this->getTpointName($tpoint_id);
         }
         if ($parrent_doc_type_id==2){ // DP
@@ -1261,7 +1255,7 @@ class storsel {
         $form=str_replace("{ArticlesList}",$list,$form);
         $form=str_replace("{select_id}",$select_id,$form);
 
-        list($select_nom,$data_create,$data_start,$data_collect,$storage_id,$storage_name,$articles_amount,$amount,$volume,$weight_netto,$weight_brutto)=$this->getStorselInfo($select_id);
+        list($select_nom,,,,,,,,,,)=$this->getStorselInfo($select_id);
         $select_data=$user_name="";
         $form=str_replace("{select_nom}",$select_nom,$form);
         $form=str_replace("{select_data}",$select_data,$form);
@@ -1364,7 +1358,7 @@ class storsel {
                                     $amount_dp=$db->result($r2,0,"amount");$amount_dp_bug=0;
                                     $amount_dp_collect=$db->result($r2,0,"amount_collect"); $ers=0;
                                     if ($amount_dp_collect>0){ $amount_dp_bug=$amount_dp-$amount_dp_collect;$ers=1;}
-                                    if ($storsel_amount_bug>0 && $ers==0){ $amount_dp_bug=$storsel_amount_bug;$ers=1;}
+                                    if ($storsel_amount_bug>0 && $ers==0){ $amount_dp_bug=$storsel_amount_bug;}//$ers=1;
                                     $price_dp=$db->result($r2,0,"price_end");
                                     $summ_dp=$db->result($r2,0,"summ");
                                     if ($amount_dp!=$new_amount_select){
@@ -1509,7 +1503,7 @@ class storsel {
         return $list;
     }
 
-    function showStorselNoscanForm($select_id,$art_id,$str_id){$db=DbSingleton::getDb();$cat=new catalogue;$answer=0;$err="Помилка індексу";
+    function showStorselNoscanForm($select_id,$str_id){$db=DbSingleton::getDb();$cat=new catalogue;$answer=0;$err="Помилка індексу";
         $form="";$form_htm=RD."/tpl/storsel_noscan_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from J_SELECT_STR where select_id='$select_id' and id='$str_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){

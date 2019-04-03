@@ -123,7 +123,7 @@ class seo_reports {
 				$user_id=$value["user_id"]; if(is_array($user_id)) $user_id=array_shift($user_id);
 				if ($user_id==$user) {
 					$doc_type_id=$value["doc_type_id"]; if(is_array($doc_type_id)) $doc_type_id=array_shift($doc_type_id); 
-					$cash=$value["cash"]; if(is_array($cash)) $cash=array_shift($cash); 
+					//$cash=$value["cash"]; if(is_array($cash)) $cash=array_shift($cash);
 					$user_name=$this->getMediaUserName($user_id); 
 					$summ=$value["summ"]; $usumm+=$summ;
 					$summ_deb=$value["summ_deb"]; $usumm_deb+=$summ_deb;
@@ -148,7 +148,7 @@ class seo_reports {
 							$summ_deb=$value["summ_deb"]; $dsumm_deb+=$summ_deb;
 							$summ_all=$summ-$summ_deb; $dsumm_all+=$summ_all;
 							$doc_name=$this->getManuaType($doc_type_id);
-							$cash=$value["cash"]; if(is_array($cash)) $cash=array_shift($cash);
+							//$cash=$value["cash"]; if(is_array($cash)) $cash=array_shift($cash);
 						}
 					}
 				}
@@ -224,7 +224,7 @@ class seo_reports {
 				$user_id=$value["user_id"]; if(is_array($user_id)) $user_id=array_shift($user_id);
 				if ($user_id==$user) {
 					$doc_type_id=$value["doc_type_id"]; if(is_array($doc_type_id)) $doc_type_id=array_shift($doc_type_id); 
-					$cash=$value["cash"]; if(is_array($cash)) $cash=array_shift($cash); 
+					//$cash=$value["cash"]; if(is_array($cash)) $cash=array_shift($cash);
 					$user_name=$this->getMediaUserName($user_id); 
 					$summ=$value["summ"]; $usumm+=$summ;
 					$summ_deb=$value["summ_deb"]; $usumm_deb+=$summ_deb;
@@ -254,7 +254,7 @@ class seo_reports {
 								$summ_deb=$value["summ_deb"]; $dsumm_deb+=$summ_deb;
 								$summ_all=$summ-$summ_deb; $dsumm_all+=$summ_all;
 								$doc_name=$this->getManuaType($doc_type_id);
-								$cash=$value["cash"]; if(is_array($cash)) $cash=array_shift($cash);
+								//$cash=$value["cash"]; if(is_array($cash)) $cash=array_shift($cash);
 							}
 						}
 					}
@@ -297,7 +297,7 @@ class seo_reports {
 		return $form;
 	}
 		
-	function getSeoReportsSumm($date_start,$date_end,$managers,$cash_id,$client_status,$user_id) { $db=DbSingleton::getDb(); $list="";
+	function getSeoReportsSumm($date_start,$date_end,$cash_id,$client_status,$user_id) { $db=DbSingleton::getDb(); $list="";
 	    $r=$db->query("select j.id, j.usd_to_uah, j.eur_to_uah, j.user_id, j.doc_type_id, j.summ as prodaga, jb.summ as vosvrat 
 	    from J_SALE_INVOICE j
 		    cross join J_BACK_CLIENTS jb 
@@ -319,12 +319,12 @@ class seo_reports {
 				<td>$full_summ</td>
 			</tr>";
 			if ($client_status)
-			$list.=$this->getSeoReportsSummClient($date_start,$date_end,$managers,$cash_id,$client_status,$user_id,$doc_type_id);
+			$list.=$this->getSeoReportsSummClient($date_start,$date_end,$cash_id,$user_id,$doc_type_id);
 		}
 		return $list;
 	}
 	
-	function getSeoReportsSummClient($date_start,$date_end,$managers,$cash_id,$client_status,$user_id,$doc_type_id) { $db=DbSingleton::getDb(); $list=""; $clients=new clients;
+	function getSeoReportsSummClient($date_start,$date_end,$cash_id,$user_id,$doc_type_id) { $db=DbSingleton::getDb(); $list=""; $clients=new clients;
 	    $r=$db->query("select j.id,j.user_id,j.client_id,j.doc_type_id,sum(j.summ) as prodaga 
 	    from J_SALE_INVOICE j
 		where j.user_id='$user_id' 
@@ -334,7 +334,6 @@ class seo_reports {
 		group by j.client_id;"); $n=$db->num_rows($r);																	  
 		for ($i=1;$i<=$n;$i++){
 			$client_id=$db->result($r,$i-1,"client_id"); $client_name=$clients->getClientNameById($client_id,"name");
-			//$doc_type_id=$db->result($r,$i-1,"doc_type_id"); $doc_name=$this->getManuaType($doc_type_id);
 			$prodaga=$db->result($r,$i-1,"prodaga"); 
 			$vosvrat=$db->result($r,$i-1,"vosvrat"); 
 			$list.="<tr>

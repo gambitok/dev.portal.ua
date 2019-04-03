@@ -46,8 +46,8 @@ class income {
         return;
     }
 
-    function getIncomeClientPrefixDocument($income_id,$client_id){$slave=new slave;;
-        $client_id=$slave->qq($client_id);//$income_id=$slave->qq($income_id);
+    function getIncomeClientPrefixDocument($client_id){$slave=new slave;;
+        $client_id=$slave->qq($client_id);
         $prefix_id=$this->get_doc_client_prefix($client_id);
         $prefix=$this->get_doc_prefix($client_id,$prefix_id);
         $prefix=str_replace("{year}",date("Y"),$prefix);
@@ -226,6 +226,7 @@ class income {
         if ($n==1){$prefix=$db->result($r,0,"prefix");$doc_nom=$db->result($r,0,"doc_nom");if ($doc_nom==0){$doc_nom="-";}}
         return $prefix.$doc_nom;
     }
+
     function getIncomeSupplDocNom($income_id){$db=DbSingleton::getDb();session_start();$invoice_income="";
         $r=$db->query("select invoice_income from J_INCOME j where j.id='$income_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){$invoice_income=$db->result($r,0,"invoice_income");}
@@ -242,7 +243,7 @@ class income {
         return $kours;
     }
 
-    function loadIncomeKours($cash_id,$data){
+    function loadIncomeKours($data){
         $usd_to_uah=$this->getKourForDate(1,2,$data);
         $eur_to_uah=$this->getKourForDate(1,3,$data);
         return array($usd_to_uah,$eur_to_uah);
@@ -337,9 +338,9 @@ class income {
             $form=str_replace("{incomeChildsList}",$incomeChildsList,$form);
             $form=str_replace("{my_user_id}",$user_id,$form);
             $form=str_replace("{my_user_name}",$user_name,$form);
-            list($kol_comments,$label_comments)=$this->labelCommentsCount($income_id);
+            list(,$label_comments)=$this->labelCommentsCount($income_id);
             $form=str_replace("{labelCommentsCount}",$label_comments,$form);
-            list($kol_art_unknown,$label_art_unknown)=$this->labelArtUnknownCount($income_id);
+            list(,$label_art_unknown)=$this->labelArtUnknownCount($income_id);
             $form=str_replace("{labelArticlesUnKnownCount}",$label_art_unknown,$form);
         }
         return array($form,$prefix."-".$doc_nom);
@@ -625,7 +626,7 @@ class income {
         }
 
         $form=str_replace("{ArticlesList}",$list,$form);
-        list($prefix,$doc_nom,$data,$client_seller,$storage_id,$invoice_income)=$this->getIncomeInfo($income_id);
+        list($prefix,$doc_nom,$data,,$storage_id,$invoice_income)=$this->getIncomeInfo($income_id);
         $form=str_replace("{prefix}",$prefix,$form);
         $form=str_replace("{doc_nom}",$doc_nom,$form);
         $form=str_replace("{data}",$data,$form);
@@ -644,7 +645,7 @@ class income {
         return $form;
     }
 
-    function saveIncomeCard($income_id,$type_id,$document_prefix,$data,$client_seller,$invoice_income,$cash_id,$client_id,$invoice_data,$cours_to_uah,$cours_to_uah_nbu,$invoice_summ,$comment,$usd_to_uah,$eur_to_uah,$costums_pd_uah,$costums_pp_uah,$costums_summ_uah){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка збереження даних!";
+    function saveIncomeCard($income_id,$data,$client_seller,$invoice_income,$cash_id,$client_id,$invoice_data,$cours_to_uah,$cours_to_uah_nbu,$invoice_summ,$usd_to_uah,$eur_to_uah,$costums_pd_uah,$costums_pp_uah,$costums_summ_uah){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка збереження даних!";
         $income_id=$slave->qq($income_id);$data=$slave->qq($data);$client_seller=$slave->qq($client_seller);$invoice_income=$slave->qq($invoice_income);$cash_id=$slave->qq($cash_id);$client_id=$slave->qq($client_id);$invoice_data=$slave->qq($invoice_data);$cours_to_uah=$slave->qq($cours_to_uah);$cours_to_uah_nbu=$slave->qq($cours_to_uah_nbu);$invoice_summ=$slave->qq($invoice_summ);$usd_to_uah=$slave->qq($usd_to_uah);$eur_to_uah=$slave->qq($eur_to_uah);$costums_pd_uah=$slave->qq($costums_pd_uah);$costums_pp_uah=$slave->qq($costums_pp_uah);$costums_summ_uah=$slave->qq($costums_summ_uah);
         //$type_id=$slave->qq($type_id);$document_prefix=$slave->qq($document_prefix);$comment=$slave->qq($comment);
         //if ($income_id==0 || $income_id==""){
@@ -670,8 +671,8 @@ class income {
         return array($answer,$err);
     }
 
-    function saveIncomeCardData($income_id,$type_id,$frm,$tto,$idStr,$artIdStr,$article_nr_displStr,$brandIdStr,$countryIdStr,$costumsIdStr,$amountStr,$price_buh_cashinStr,$weightNettoStr,$rateStr,$typeDeclarationIdStr,$price_man_cashinStr,$price_man_usdStr,$price_buh_uahStr,$price_man_uahStr){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
-        $income_id=$slave->qq($income_id);$frm=$slave->qq($frm);$tto=$slave->qq($tto);//$type_id=$slave->qq($type_id);
+    function saveIncomeCardData($income_id,$frm,$tto,$idStr,$artIdStr,$article_nr_displStr,$brandIdStr,$countryIdStr,$costumsIdStr,$amountStr,$price_buh_cashinStr,$weightNettoStr,$rateStr,$typeDeclarationIdStr,$price_man_cashinStr,$price_man_usdStr,$price_buh_uahStr,$price_man_uahStr){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
+        $income_id=$slave->qq($income_id);$frm=$slave->qq($frm);$tto=$slave->qq($tto);//$type_id
         if ($income_id>0){
             $idStr=$slave->qq($idStr);$artIdStr=$slave->qq($artIdStr);$article_nr_displStr=$slave->qq($article_nr_displStr);$brandIdStr=$slave->qq($brandIdStr);$countryIdStr=$slave->qq($countryIdStr);$costumsIdStr=$slave->qq($costumsIdStr);$amountStr=$slave->qq($amountStr);$price_buh_cashinStr=$slave->qq($price_buh_cashinStr);$weightNettoStr=$slave->qq($weightNettoStr);$rateStr=$slave->qq($rateStr);$typeDeclarationIdStr=$slave->qq($typeDeclarationIdStr);$price_man_cashinStr=$slave->qq($price_man_cashinStr);$price_man_usdStr=$slave->qq($price_man_usdStr);$price_buh_uahStr=$slave->qq($price_buh_uahStr);$price_man_uahStr=$slave->qq($price_man_uahStr);
             for($i=$frm;$i<=$tto;$i++){
@@ -708,7 +709,7 @@ class income {
             if ($storage_id==0 || $storage_cells_id==0){$answer=0;$err="Не вказано \"Склад зберігання\" або \"Комірка зберігання\". Накладну не проведено!";}
             if ($storage_id>0 && $storage_cells_id>0){
                 if ($oper_status==30) {
-                    list($prefix,$doc_nom)=$this->getIncomeClientPrefixDocument($income_id,$client_id);
+                    list($prefix,$doc_nom)=$this->getIncomeClientPrefixDocument($client_id);
                     $db->query("update J_INCOME set oper_status='31', `prefix`='$prefix', `doc_nom`='$doc_nom' where id='$income_id';");
                     /* 	make calculation income  */
                     $r1=$db->query("select * from J_INCOME_STR where income_id='$income_id' order by id asc;");$n1=$db->num_rows($r1);
@@ -946,11 +947,10 @@ class income {
             $state=$db->result($r,$i-1,"STATE_NAME");
             $region=$db->result($r,$i-1,"REGION_NAME");
             $city=$db->result($r,$i-1,"CITY_NAME");
-            //$address=$db->result($r,$i-1,"address");
-            $cur="";//$fn="<i class='fa fa-thumb-tack'></i>";
-            //if ($id==$prnt_id){$cur="background-color:#FFFF00";}
+            $cur="";
             if ($id==$sel_id){$cur="background-color:#0CF;";}
-            $list.="<tr style='cursor:pointer;$cur'  onClick='setIncomeClient(\"$id\", \"".base64_encode(iconv("windows-1251","utf-8",$name))."\");'>
+            $base_name=base64_encode(iconv("windows-1251","utf-8",$name));
+            $list.="<tr style='cursor:pointer;$cur'  onClick='setIncomeClient(\"$id\", \"$base_name\");'>
                 <td></td>
                 <td>$id</td>
                 <td>$org_type_name</td>
@@ -1001,7 +1001,8 @@ class income {
             $cur="";$fn="<i class='fa fa-thumb-tack'></i>";
             //if ($id==$prnt_id){$cur="background-color:#FFFF00";}
             if ($id==$sel_id){$cur="background-color:#0CF;";}
-            $list.="<tr style='cursor:pointer; $cur' onClick='setIncomeClientSeller(\"$id\", \"".base64_encode(iconv("windows-1251","utf-8",$name))."\")'>
+            $base_name=base64_encode(iconv("windows-1251","utf-8",$name));
+            $list.="<tr style='cursor:pointer; $cur' onClick='setIncomeClientSeller(\"$id\", \"$base_name\")'>
                 <td>$fn</td>
                 <td>$id</td>
                 <td>$org_type_name</td>
@@ -1027,7 +1028,7 @@ class income {
         return array($answer,$err);
     }
 
-    function showIncomeArticleSearchForm($art_id,$brand_id,$article_nr_display){$cat=new catalogue;
+    function showIncomeArticleSearchForm($brand_id,$article_nr_display){$cat=new catalogue;
         $form="";$form_htm=RD."/tpl/income_artilce_search_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         list($range_list,$list_brand_select)=$cat->showArticlesSearchDocumentList($article_nr_display,$brand_id,0);
         $form=str_replace("{article_nr_display}",$article_nr_display,$form);
@@ -1205,8 +1206,8 @@ class income {
         return array($answer,$err);
     }
 
-    function dropIncomeSpendItemRow($income_id,$spend_item_id,$str_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
-        $income_id=$slave->qq($income_id);$str_id=$slave->qq($str_id);//$spend_item_id=$slave->qq($spend_item_id);
+    function dropIncomeSpendItemRow($income_id,$str_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
+        $income_id=$slave->qq($income_id);$str_id=$slave->qq($str_id);//$spend_item_id
         if ($income_id>0 && $str_id>0){
             $db->query("update J_INCOME_SPEND_STR set status='0' where id='$str_id' and income_id='$income_id';");
             $answer=1;$err="";
@@ -1217,7 +1218,6 @@ class income {
     function showIncomeSpendItemFiles($income_id,$str_id){$db=DbSingleton::getDb();$list="<button class='btn btn-sm btn-default' onClick=\"showIncomeSpendItemFileUpload('$income_id','$str_id');\"><i class='fa fa-upload'></i></button>";
         $r=$db->query("select * from J_INCOME_SPEND_FILES where str_id='$str_id' and status='1' order by id asc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
-            //$id=$db->result($r,$i-1,"id");
             $name=$db->result($r,$i-1,"name");
             $file_name=$db->result($r,$i-1,"file_name");
             $list.="<a class='btn btn-default btn-sm' href='http://cdn.myparts.pro/incomeSpendFiles/$str_id/$file_name' target='_blank'>$name</a> &nbsp;";
@@ -1331,14 +1331,11 @@ class income {
 
     function loadIncomeDetailsFile($income_id,$file_type){$db=DbSingleton::getDb();
         $form="";$form_htm=RD."/tpl/income_details_file.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select cd.*,u.name as user_name 
-        from A_CLIENTS_DTLS `cd` 
+        $r=$db->query("select cd.*, u.name as user_name from A_CLIENTS_DTLS `cd` 
             left outer join media_users u on u.id=`cd`.USER_ID 
         where cd.CLIENT_ID='$income_id' and cd.FILE_TYPE='$file_type' and cd.STATUS='1' order by cd.FILE_NAME asc;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $file_id=$db->result($r,$i-1,"ID");
-            //$user_id=$db->result($r,$i-1,"USER_ID");
-            //$file_key=$db->result($r,$i-1,"FILE_KEY");
             $file_name=$db->result($r,$i-1,"FILE_NAME");
             $name=$db->result($r,$i-1,"NAME");
             $data=$db->result($r,$i-1,"DATA");
@@ -1379,18 +1376,14 @@ class income {
 
     function loadIncomeCDN($income_id){$db=DbSingleton::getDb();
         $form="";$form_htm=RD."/tpl/income_cdn_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select cc.*,u.name as user_name 
-        from J_INCOME_CDN cc 
+        $r=$db->query("select cc.*,u.name as user_name from J_INCOME_CDN cc 
             left outer join media_users u on u.id=cc.USER_ID 
         where cc.income_id='$income_id' and cc.status='1' order by cc.file_name asc;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $file_id=$db->result($r,$i-1,"id");
-            //$user_id=$db->result($r,$i-1,"user_id");
-            //$file_key=$db->result($r,$i-1,"file_key");
             $file_name=$db->result($r,$i-1,"file_name");
             $name=$db->result($r,$i-1,"name");
             $data=$db->result($r,$i-1,"data");
-            //$comment=$db->result($r,$i-1,"comment");
             $user_name=$db->result($r,$i-1,"user_name");
             $link="http://cdn.myparts.pro/income_files/$income_id/$file_name";
             $file_view="<div class=\"icon\"><i class=\"fa fa-file\"></i></div>";
@@ -1432,7 +1425,6 @@ class income {
         where t2af.ART_ID='$income_id' order by t2af.PHOTO_NAME asc;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $file_id=$db->result($r,$i-1,"ID");
-            //$user_id=$db->result($r,$i-1,"USER_ID");
             $file_name=$db->result($r,$i-1,"PHOTO_NAME");
             $data=$db->result($r,$i-1,"DATA");
             $user_name=$db->result($r,$i-1,"user_name");
@@ -1566,14 +1558,14 @@ class income {
         return $list;
     }
 
-    function showGoodGroupTree($income_id,$sel_id){$db=DbSingleton::getDb();$tree="";
+    function showGoodGroupTree($sel_id){$db=DbSingleton::getDb();$tree="";
         $form="";$form_htm=RD."/tpl/income_goods_group_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from GOODS_GROUP where PARRENT_ID='0' order by NAME asc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"ID");
             $name=$db->result($r,$i-1,"NAME");
             $sel="";if ($sel_id==$id){$sel=" data-jstree='{\"selected\":true}'";}
-            $tree.="<li id='$id'$sel>$name".$this->showGoodGroupSubLevel($id,$sel_id)."</li>";
+            $tree.="<li id='$id' $sel>$name".$this->showGoodGroupSubLevel($id,$sel_id)."</li>";
         }
         $form=str_replace("{tree}",$tree,$form);
         $form=str_replace("{goods_group_id}",$sel_id,$form);
@@ -1587,7 +1579,7 @@ class income {
                 $id=$db->result($r,$i-1,"ID");
                 $name=$db->result($r,$i-1,"NAME");
                 $sel="";if ($sel_id==$id){$sel=" data-jstree='{\"selected\":true}'";}
-                $tree.="<li id='$id'$sel>$name".$this->showGoodGroupSubLevel($id,$sel_id)."</li>";
+                $tree.="<li id='$id' $sel>$name".$this->showGoodGroupSubLevel($id,$sel_id)."</li>";
             }
             $tree.="</ul>";
         }
@@ -1596,7 +1588,7 @@ class income {
 
     function showImportIncomeStrCSVform($income_id){
         $form="";$form_htm=RD."/tpl/income_import_str_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        list($csv_exist,$csv_file_name,$pre_table)=$this->showCsvPreview($income_id);
+        list(,,$pre_table)=$this->showCsvPreview($income_id);
         $form=str_replace("{records_list}","<tr><td colspan=10 align='center'>Записи не завантажено</td></tr>",$form);
         $form=str_replace("{import_file_name}","Оберіть файл",$form);
         $form=str_replace("{income_id}",$income_id,$form);
@@ -1682,7 +1674,7 @@ class income {
                                     $country_id=$this->getCountryId($cntr);
                                     $brand_id=$this->getBrandId($brnd);
                                     $art_id=$this->getArtId($ind,$brand_id);
-                                    list($rate,$type_declaration,$type_declaration_id)=$this->getRateTypeDeclarationdocumentPos($costum_id,$country_id);
+                                    list($rate,,$type_declaration_id)=$this->getRateTypeDeclarationdocumentPos($costum_id,$country_id);
                                     $unknown_id=0;
                                     if ($art_id==0 || $art_id=="" || $brand_id==0 || $brand_id=="" || $country_id==0 || $country_id=="" || $costum_id=="" || $costum_id==0){
                                         $r2=$db->query("select max(id) as mid from J_INCOME_STR_UNKNOWN;");$unknown_id=0+$db->result($r2,0,"mid")+1;

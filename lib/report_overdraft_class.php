@@ -35,7 +35,7 @@ class report_overdraft {
 			$id=$db->result($r,$i-1,"id");
 			$name=$db->result($r,$i-1,"name");
 			$caption=$db->result($r,$i-1,"full_name");
-			if ($id==$tpoint) $selected="selected"; $selected="";
+			if ($id==$tpoint) $selected="selected"; else $selected="";
 			$list.="<option value='$id' $selected>$caption ($name)</option>";
 		}
 		return $list;	

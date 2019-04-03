@@ -80,7 +80,7 @@ class undistribcells {
 
     function showStorageCellSelectForm($art_id,$income_id,$storage_id,$amount){$cat=new catalogue;
         $form="";$form_htm=RD."/tpl/undistribcells_storage_cells_select_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        list($article_nr_displ,$brand_id,$brand_name)=$cat->getArticleNrDisplBrand($art_id);
+        list($article_nr_displ,,$brand_name)=$cat->getArticleNrDisplBrand($art_id);
         $form=str_replace("{art_id}",$art_id,$form);
         $form=str_replace("{article_nr_displ}",$article_nr_displ." ".$brand_name,$form);
         $form=str_replace("{income_id}",$income_id,$form);

@@ -393,7 +393,7 @@ function saveStorselBugForm(select_id,str_id){
 
 function showStorselNoscanForm(select_id,art_id,str_id){
 	if (select_id.length>0 && art_id.length>0 && str_id.length>0){
-		JsHttpRequest.query($rcapi,{ 'w':'showStorselNoscanForm','select_id':select_id,'art_id':art_id,'str_id':str_id},
+		JsHttpRequest.query($rcapi,{ 'w':'showStorselNoscanForm','select_id':select_id,'str_id':str_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			if (result["answer"]==1){ 
 				$("#FormModalWindow5").modal('show');

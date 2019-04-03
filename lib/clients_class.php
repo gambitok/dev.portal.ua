@@ -175,14 +175,14 @@ class clients {
         return array($answer,$err);
     }
 
-    function showCategoryTree($client_id=null,$sel_id=null){$db=DbSingleton::getDb();$tree="";//$form="";
+    function showCategoryTree($sel_id=null){$db=DbSingleton::getDb();$tree="";//$form="";
         //$form="";$form_htm=RD."/tpl/clients_category_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from A_CATEGORY where parrent_id='0' order by id asc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $name=$db->result($r,$i-1,"name");
             $sel="";if ($sel_id==$id){$sel=" data-jstree='{\"selected\":true}'";}
-            $tree.="<li id='$id'$sel>$name".$this->showCategoryTreeSubLevel($id,$sel_id)."</li>";
+            $tree.="<li id='$id' $sel>$name".$this->showCategoryTreeSubLevel($id,$sel_id)."</li>";
         }
         //$form=str_replace("{tree}",$tree,$form);
         //$form=str_replace("{category_id}",$sel_id,$form);
@@ -196,7 +196,7 @@ class clients {
                 $id=$db->result($r,$i-1,"id");
                 $name=$db->result($r,$i-1,"name");
                 $sel="";if ($sel_id==$id){$sel=" data-jstree='{\"selected\":true}'";}
-                $tree.="<li id='$id'$sel>$name".$this->showCategoryTreeSubLevel($id,$sel_id)."</li>";
+                $tree.="<li id='$id' $sel>$name".$this->showCategoryTreeSubLevel($id,$sel_id)."</li>";
             }
             $tree.="</ul>";
         }
@@ -232,6 +232,8 @@ class clients {
     }
 
     function showClientCard($client_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+        $country=$state=$region=$city="";
+        $org_type=$parrent_id=0;$full_name=$name=$email=$phone=$client_category_list=$childsTable=$clds_disabled=$chlds_hidden=$parrent_main_active="";
         $form="";$form_htm=RD."/tpl/clients_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select c.*, ot.full_name as ot_full_name from A_CLIENTS c  
             left outer join A_ORG_TYPE ot on ot.id=c.org_type
@@ -242,13 +244,12 @@ class clients {
         if ($n==1){
             $client_id=$db->result($r,0,"id");
             $org_type=$db->result($r,0,"org_type");
-            //$org_type_full_name=$db->result($r,0,"ot_full_name");
             $full_name=$db->result($r,0,"full_name");
             $name=$db->result($r,0,"name");
             $email=$db->result($r,0,"email");
             $phone=$db->result($r,0,"phone");
             $parrent_id=$db->result($r,0,"parrent_id");
-            list($hasChilds,$arChilds,$childsTable)=$this->checkClientSubclients($client_id);
+            list($hasChilds,,$childsTable)=$this->checkClientSubclients($client_id);
             $parrent_main_active="";$chlds_hidden="hidden";$clds_disabled="disabled";if ($hasChilds>0){$parrent_main_active=" disabled";$chlds_hidden="";$clds_disabled="";}
             $country=$db->result($r,0,"country");
             $state=$db->result($r,0,"state");
@@ -392,7 +393,7 @@ class clients {
         return $user_id;
     }
 
-    function saveClientRetailGeneralInfo($user_id,$user_name,$client_id,$country_id,$state_id,$region_id,$city_id,$user_category,$user_phone,$user_email,$user_pass,$user_status,$user_data){$db=DbSingleton::getDb();$answer=0;$err="Помилка збереження даних!";
+    function saveClientRetailGeneralInfo($user_id,$user_name,$country_id,$state_id,$region_id,$city_id,$user_category,$user_phone,$user_email,$user_status){$db=DbSingleton::getDb();$answer=0;$err="Помилка збереження даних!";
         if ($user_id>0){
             $db->query("update A_CLIENTS_USERS_RETAIL set `name`='$user_name',`country_id`='$country_id',`state_id`='$state_id',`region_id`='$region_id',`city_id`='$city_id',`client_category`='$user_category',`phone`='$user_phone',`email`='$user_email',`status`='$user_status' where `id`='$user_id';");
             $answer=1;$err="";
@@ -1041,14 +1042,14 @@ class clients {
         return $dat;
     }
 
-    function showGoodGroupTree($client_id,$sel_id){$db=DbSingleton::getDb();$tree="";
+    function showGoodGroupTree($sel_id){$db=DbSingleton::getDb();$tree="";
         $form="";$form_htm=RD."/tpl/clients_goods_group_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from GOODS_GROUP where PARRENT_ID='0' order by NAME asc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"ID");
             $name=$db->result($r,$i-1,"NAME");
             $sel="";if ($sel_id==$id){$sel=" data-jstree='{\"selected\":true}'";}
-            $tree.="<li id='$id'$sel>$name".$this->showGoodGroupSubLevel($id,$sel_id)."</li>";
+            $tree.="<li id='$id' $sel>$name".$this->showGoodGroupSubLevel($id,$sel_id)."</li>";
         }
         $form=str_replace("{tree}",$tree,$form);
         $form=str_replace("{goods_group_id}",$sel_id,$form);
@@ -1062,7 +1063,7 @@ class clients {
                 $id=$db->result($r,$i-1,"ID");
                 $name=$db->result($r,$i-1,"NAME");
                 $sel="";if ($sel_id==$id){$sel=" data-jstree='{\"selected\":true}'";}
-                $tree.="<li id='$id'$sel>$name".$this->showGoodGroupSubLevel($id,$sel_id)."</li>";
+                $tree.="<li id='$id' $sel>$name".$this->showGoodGroupSubLevel($id,$sel_id)."</li>";
             }
             $tree.="</ul>";
         }
@@ -1547,11 +1548,11 @@ class clients {
             $region=$db->result($r,$i-1,"REGION_NAME");
             $city=$db->result($r,$i-1,"CITY_NAME");
             $vis=$db->result($r,$i-1,"visible");
-            if ($vis==1){$vis=" checked=''";} else $vis="";
+            if ($vis==1){$vis=" checked=''";} else $vis=""; // onClick='dropClientStorage(\"$client_id\",\"$id\",\"$city\");' ???
             $list.="<tr>
                 <td>
                     <button class='btn btn-sm btn-default' onClick='showClientStorageForm(\"$client_id\",\"$id\");'><i class='fa fa-edit'></i></button>
-                    <button class='btn btn-sm btn-default' onClick='dropClientStorage(\"$client_id\",\"$id\",\"$city\");'><i class='fa fa-times'></i></button>
+                    <button class='btn btn-sm btn-default'><i class='fa fa-times'></i></button>
                 </td>
                 <td>$id</td>
                 <td>$name</td>
@@ -1652,7 +1653,7 @@ class clients {
     }
 
     function loadClientBasis($client_id){$db=DbSingleton::getDb();
-        $form_htm=RD."/tpl/clients_basis_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        $form="";$form_htm=RD."/tpl/clients_basis_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from A_CLIENTS_BASIS where client_id='$client_id' and status='1';");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
@@ -1773,13 +1774,14 @@ class clients {
         return $cash_id;
     }
 
-    function showClientGeneralSaldoForm($client_id){$db=DbSingleton::getDb(); $form="";$balans_after=0;
-        if ($client_id>0){  $data_from=date("Y-m-01");$data_to=date("Y-m-t"); //current_month
+    function showClientGeneralSaldoForm($client_id){$db=DbSingleton::getDb();$form="";$balans_after=0;
+        if ($client_id>0){
+            $data_from=date("Y-m-01");$data_to=date("Y-m-t"); //current_month
             $form_htm=RD."/tpl/client_general_saldo_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
             //$saldo_start=0;
             $saldo_end=0; //default value
             $client_cash_id=$this->getClientCash($client_id);
-            list($saldo_start,$saldo_cash_id,$saldo_data_start)=$this->getClientBalansPeriodStart($client_id,$client_cash_id,$data_from,0);
+            list($saldo_start,$saldo_cash_id,)=$this->getClientBalansPeriodStart($client_id,$client_cash_id,$data_from,0);
 
             $saldo_data_start=date("Y-m-01");
             $form=str_replace("{saldo_start}",$saldo_start."".$this->getCashAbr($saldo_cash_id),$form);
@@ -1791,9 +1793,7 @@ class clients {
             where b.client_id='$client_id' and b.data>='$data_from 00:00:00' and b.data<='$data_to 23:59:59' group by b.doc_type_id,b.doc_id order by b.id asc;");$n=$db->num_rows($r);$list="";
             if ($n>0){ $sale_invoice=new sale_invoice; $back_clients=new back_clients;//$pay=new pay;
                 for ($i=1;$i<=$n;$i++){
-                    //$id=$db->result($r,$i-1,"id");
                     $data=$db->result($r,$i-1,"data");
-                    //$cash_id=$db->result($r,$i-1,"cash_id");
                     $cash_name=$db->result($r,$i-1,"cash_name");
                     $summ=round($db->result($r,$i-1,"summ"),2);
                     $deb_kre=$db->result($r,$i-1,"deb_kre");
@@ -1809,7 +1809,7 @@ class clients {
                         list($jpay_doc_type_id,$document_name)=$sale_invoice->getJPayName($doc_id); $function="viewJpayMoneyPay(\"$doc_id\")";
                         if ($jpay_doc_type_id==99) {$summ="";}
                     }
-                    if ($doc_type_id==3){ list($jpay_doc_type_id,$document_name)=$sale_invoice->getJPayName($doc_id); }
+                    if ($doc_type_id==3){ list(,$document_name)=$sale_invoice->getJPayName($doc_id); }
                     if ($doc_type_id==5){ $document_name=$back_clients->getBackClientsName($doc_id); }
 
                     $debit="";$kredit="";
@@ -1854,7 +1854,7 @@ class clients {
             //$saldo_start=0;
             $saldo_end=0;
             $client_cash_id=$this->getClientCash($client_id);
-            list($saldo_start,$saldo_cash_id,$saldo_data_start)=$this->getClientBalansPeriodStart($client_id,$client_cash_id,$data_from,0);
+            list($saldo_start,$saldo_cash_id,)=$this->getClientBalansPeriodStart($client_id,$client_cash_id,$data_from,0);
 
             $r=$db->query("select b.*, mc.abr as cash_name, pmc.abr from B_CLIENT_BALANS_JOURNAL b 
                 left outer join CASH mc on mc.id=b.cash_id 
@@ -1878,7 +1878,7 @@ class clients {
                     //$document_name="";$function="";
                    // if ($doc_type_id==1){ $document_name=$sale_invoice->getSaleInvoiceName($doc_id);/*$function="showSaleInvoiceCard(\"$doc_id\");";*/ }
                     if ($doc_type_id==2){
-                        list($jpay_doc_type_id,$document_name)=$sale_invoice->getJPayName($doc_id); //$function="viewJpayMoneyPay(\"$doc_id\")";
+                        list($jpay_doc_type_id,)=$sale_invoice->getJPayName($doc_id); //$function="viewJpayMoneyPay(\"$doc_id\")";
                         if ($jpay_doc_type_id==99) {$summ="";}
                     }
                     //if ($doc_type_id==3){ list($jpay_doc_type_id,$document_name)=$sale_invoice->getJPayName($doc_id); }
@@ -1915,7 +1915,7 @@ class clients {
             $saldo_data_end=$data_to;$saldo_end=0; //default value
             $client_cash_id=$this->getClientCash($client_id);
 
-            list($saldo_start,$saldo_cash_id,$saldo_data_start)=$this->getClientBalansPeriodStart($client_id,$client_cash_id,$data_from,0);
+            list($saldo_start,$saldo_cash_id,)=$this->getClientBalansPeriodStart($client_id,$client_cash_id,$data_from,0);
 
             $client_saldo_data_start=$data_from;
             $client_saldo_data_end=$saldo_data_end;
@@ -1946,7 +1946,7 @@ class clients {
                         list($jpay_doc_type_id,$document_name)=$sale_invoice->getJPayName($doc_id); $function="viewJpayMoneyPay(\"$doc_id\")";
                         if ($jpay_doc_type_id==99) {$summ="";}
                     }
-                    if ($doc_type_id==3){ list($jpay_doc_type_id,$document_name)=$sale_invoice->getJPayName($doc_id); }
+                    if ($doc_type_id==3){ list(,$document_name)=$sale_invoice->getJPayName($doc_id); }
                     if ($doc_type_id==5){ $document_name=$back_clients->getBackClientsName($doc_id); }
 
                     $debit="";$kredit="";
@@ -2000,22 +2000,21 @@ class clients {
             $recursion+=1;
             if ($recursion<12){
                 $data_from=date("Y-m-01",strtotime("$data_from -1 month"));
-                list($saldo_start,$saldo_cash_id,$saldo_data_start)=$this->getClientBalansPeriodStart($client_id,$cash_id,$data_from,$recursion);
+                list($saldo_start,,$saldo_data_start)=$this->getClientBalansPeriodStart($client_id,$cash_id,$data_from,$recursion);
             }
             else{ $data_main_start=date("Y-m-01",strtotime("$data_from"));
                 $db->query("insert into B_CLIENT_BALANS_PERIOD (`client_id`,`cash_id`,`saldo_start`,`data_start`,`active`) values ('$client_id','$cash_id','0','$data_main_start','1');");
                 $data_plus_month=date("Y-m-d", strtotime("$data_main_start +1 month"));
                 $data_from=date("Y-m-01",strtotime("$data_plus_month"));
                  $recursion-=2;
-                list($saldo_start,$saldo_cash_id,$saldo_data_start)=$this->getClientBalansPeriodStart($client_id,$cash_id,$data_from,$recursion);
+                list($saldo_start,,$saldo_data_start)=$this->getClientBalansPeriodStart($client_id,$cash_id,$data_from,$recursion);
             }
         }
         return array($saldo_start,$cash_id,$saldo_data_start);
     }
 
     function getSaleInvoceProlog($client_id,$date_search) { $db=DbSingleton::getDb();$list="";$today=date("Y-m-d");session_start();$user_id=$_SESSION["media_user_id"];
-        if ($date_search=="" || $date_search==0) $date_search=$today;
-        require_once RD.'/lib/users_class.php';$users=new users;
+        if ($date_search=="" || $date_search==0) $date_search=$today; $users=new users;
         $users_credit=$users->getUsersAccessCredit($user_id);
         $r=$db->query("select * from J_SALE_INVOICE where client_conto_id='$client_id' and data_pay<='$date_search' and summ_debit!=0;"); $n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
@@ -2041,7 +2040,7 @@ class clients {
         return $form;
     }
 
-    function getSaleInvocePrologHistory($client_id) { $db=DbSingleton::getDb();$list="";require_once RD.'/lib/users_class.php';$users=new users;
+    function getSaleInvocePrologHistory($client_id) { $db=DbSingleton::getDb();$list="";$users=new users;
         $r=$db->query("select jp.*,j.prefix,j.doc_nom from J_SALE_INVOICE_PROLONGATION jp
             left outer join J_SALE_INVOICE j on (j.id=jp.invoice_id)
         where jp.client_id='$client_id';"); $n=$db->num_rows($r);
@@ -2066,8 +2065,7 @@ class clients {
         return $form;
     }
 
-    function checkSaleInvoceProlog($client_id,$date_start,$date_new) { $db=DbSingleton::getDb();$list="";session_start();$user_id=$_SESSION["media_user_id"];
-        require_once RD.'/lib/users_class.php';$users=new users;
+    function checkSaleInvoceProlog($client_id,$date_start,$date_new) { $db=DbSingleton::getDb();$list="";session_start();$user_id=$_SESSION["media_user_id"];$users=new users;
         $users_credit=$users->getUsersAccessCredit($user_id);
 
         $r=$db->query("select * from J_SALE_INVOICE where client_id='$client_id' and data_pay<='$date_start' and summ_debit!=0;"); $n=$db->num_rows($r);
@@ -2102,15 +2100,13 @@ class clients {
         return $form;
     }
 
-    function editSaleInvoceProlog($client_id,$date_start,$date_new) { $db=DbSingleton::getDb();$answer=0;$err="Помилка збереження даних!";session_start();$user_id=$_SESSION["media_user_id"];
-        require_once RD.'/lib/users_class.php';$users=new users;
+    function editSaleInvoceProlog($client_id,$date_start,$date_new) { $db=DbSingleton::getDb();$answer=0;$err="Помилка збереження даних!";session_start();$user_id=$_SESSION["media_user_id"];$users=new users;
         $users_credit=$users->getUsersAccessCredit($user_id);
         if ($client_id>0) {
             $r=$db->query("select * from J_SALE_INVOICE where client_id='$client_id' and data_pay<='$date_start' and summ_debit!=0;"); $n=$db->num_rows($r);
             for ($i=1;$i<=$n;$i++){
                 $id=$db->result($r,$i-1,"id");
                 $date_pay_start=$db->result($r,$i-1,"data_pay_start");
-               // $data_create=$db->result($r,$i-1,"data_create");
                 $data_pay=$db->result($r,$i-1,"data_pay");
 
                 if ($date_pay_start=="" || $date_pay_start=="0000-00-00") $datetime1 = new DateTime($data_pay); else $datetime1 = new DateTime($date_pay_start);
@@ -2146,10 +2142,9 @@ class clients {
     function printGeneralSaldoList($client_id,$data_from,$data_to) {$db=DbSingleton::getDb();$form="";$balans_after=0;
         if ($client_id>0){ // $data_from=date("Y-m-01");$data_to=date("Y-m-t"); //current_month
             $form_htm=RD."/tpl/clients_print_saldo.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-            //$saldo_start=0;
             $saldo_end=0; //default value
             $client_cash_id=$this->getClientCash($client_id);
-            list($saldo_start,$saldo_cash_id,$saldo_data_start)=$this->getClientBalansPeriodStart($client_id,$client_cash_id,$data_from,0);
+            list($saldo_start,$saldo_cash_id,)=$this->getClientBalansPeriodStart($client_id,$client_cash_id,$data_from,0);
 
             $saldo_data_start=$data_from;
             $form=str_replace("{saldo_start}",$saldo_start."".$this->getCashAbr($saldo_cash_id),$form);
@@ -2180,7 +2175,7 @@ class clients {
                         list($jpay_doc_type_id,$document_name)=$sale_invoice->getJPayName($doc_id);/* $function="viewJpayMoneyPay(\"$doc_id\")";*/
                         if ($jpay_doc_type_id==99) {$summ="";}
                     }
-                    if ($doc_type_id==3){ list($jpay_doc_type_id,$document_name)=$sale_invoice->getJPayName($doc_id); }
+                    if ($doc_type_id==3){ list(,$document_name)=$sale_invoice->getJPayName($doc_id); }
                     if ($doc_type_id==5){ $document_name=$back_clients->getBackClientsName($doc_id); }
 
                     $debit="";$kredit="";

@@ -38,10 +38,10 @@ class tax_invoice {
             $user_name=$this->getMediaUserName($db->result($r,$i-1,"user_id"));
             $status_tax=$db->result($r,$i-1,"status_tax");
             $status_tax_cap=$gmanual->get_gmanual_caption($status_tax);
-            $function="showTaxInvoiceCard";$prefix="ออ";
+            $function="showTaxInvoiceCard(\"$id\");";$prefix="ออ";
             if ($tax_type_id==161){$function="showTaxInvoiceBackCard";$prefix="สออ";}
 
-            $list.="<tr id='strStsRow_$i' style='cursor:pointer' align='center' onClick='$function(\"$id\");'>
+            $list.="<tr id='strStsRow_$i' style='cursor:pointer' align='center' onClick='$function'>
                 <td>$i</td>
                 <td>$prefix-$doc_nom</td>
                 <td align='center'>$data_create</td>
@@ -176,7 +176,7 @@ class tax_invoice {
             $user_id=$db->result($r,0,"user_id");//$user_name=$this->getMediaUserName($user_id);
             //$status_xml_tax=$db->result($r,0,"status_xml_tax");
             $status_tax=$db->result($r,0,"status_tax");
-            list($tb_doc_nom,$tb_seller_id,$tb_seller_name,$tb_tax_type_id,$tb_cash_id,$tb_cash_name,$tb_summ,$tb_data_create)=$this->getTaxInvoceHeader($tax_to_back_id);
+            list($tb_doc_nom,,,,,,,$tb_data_create)=$this->getTaxInvoceHeader($tax_to_back_id);
             $tax_to_back_document="ออ-$tb_doc_nom $tb_data_create";
         }
         $form=str_replace("{tax_id}",$tax_id,$form);
@@ -518,7 +518,7 @@ class tax_invoice {
             //$cash_id=$db->result($r,0,"cash_id");
             //$cash_abr=$db->result($r,0,"cash_abr");
             //$user_name=$this->getMediaUserName($db->result($r,0,"user_id"));
-            list($tb_doc_nom,$tb_seller_id,$tb_seller_name,$tb_tax_type_id,$tb_cash_id,$tb_cash_name,$tb_summ,$tb_data_create)=$this->getTaxInvoceHeader($tax_to_back_id);
+            list($tb_doc_nom,,,,,,,$tb_data_create)=$this->getTaxInvoceHeader($tax_to_back_id);
 
             $list="";
             $r=$db->query("select * from J_TAX_INVOICE_STR where tax_id='$tax_id' order by id asc;");$n=$db->num_rows($r);
@@ -693,22 +693,17 @@ class tax_invoice {
         return $list;
     }
 
-    function findTaxStr($tax_id,$tax_to_back_id){$db=DbSingleton::getDb();
+    function findTaxStr($tax_to_back_id){$db=DbSingleton::getDb();
         $form="";$form_htm=RD."/tpl/tax_back_article_tree.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from J_TAX_INVOICE_STR where status=1 and tax_id='$tax_to_back_id' order by id asc;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $zed=$db->result($r,$i-1,"zed");
-            //$tax_str_id=$db->result($r,$i-1,"tax_str_id");
-            //$tax_str_nom=$db->result($r,$i-1,"tax_str_nom");
-            //$art_id=$db->result($r,$i-1,"art_id");
             $goods_name=$db->result($r,$i-1,"goods_name");
             $amount=$db->result($r,$i-1,"amount");
             $price=$db->result($r,$i-1,"price");
             $summ=$db->result($r,$i-1,"summ");
             $cur="";$fn=" onClick='setTaxBackArticle(\"$id\", \"$i\", \"$zed\", \"".base64_encode(iconv("windows-1251","utf-8","$goods_name"))."\",\"$amount\",\"$price\",\"$summ\")'";
-            //if ($id==$prnt_id){$cur="background-color:#FFFF00;";}
-            //if ($id==$sel_id){$cur="background-color:#0CF;";}
             $list.="<tr style='$cur cursor:pointer;' $fn>
                 <td>$i</td>
                 <td align='center'>$zed</td>

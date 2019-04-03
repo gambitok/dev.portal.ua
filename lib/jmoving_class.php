@@ -1149,7 +1149,7 @@ class jmoving {
             }
             $one_result=0;
             if ($n>1 && ($brand_id=="" || $brand_id==0)){ $where_brand="";
-                $list2=$cat->showCatalogueBrandSelectDocumentList($r,$art);
+                $list2=$cat->showCatalogueBrandSelectDocumentList($r);
             }
             if ($n==1){
                 $query="select t2b.BRAND_NAME, t2n.NAME,t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION 
@@ -1258,7 +1258,7 @@ class jmoving {
             }
             $one_result=0;
             if ($n>1 && ($brand_id=="" || $brand_id==0)){ $where_brand="";
-                $list2=$cat->showCatalogueBrandSelectDocumentList($r,$art);
+                $list2=$cat->showCatalogueBrandSelectDocumentList($r);
             }
             if ($n==1){
                 $query="select t2b.BRAND_NAME, t2n.NAME, t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION 

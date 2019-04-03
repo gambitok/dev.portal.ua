@@ -47,8 +47,8 @@ var barcode_settings = {barWidth: 1,barHeight: 50,moduleSize: 5,showHRI: true,ad
 
 function loadIncomeKours(){
 	var data=$("#income_data").val();
-	var cash_id=$("#cash_id option:selected").val();
-	JsHttpRequest.query($rcapi,{ 'w': 'loadIncomeKours','cash_id':cash_id,'data':data}, 
+	//var cash_id=$("#cash_id option:selected").val();
+	JsHttpRequest.query($rcapi,{ 'w': 'loadIncomeKours','data':data},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		if ($("#usd_to_uah")){$("#usd_to_uah").val(result["usd_to_uah"]);}
 		if ($("#eur_to_uah")){$("#eur_to_uah").val(result["eur_to_uah"]);}
@@ -155,7 +155,7 @@ function saveIncomeCard(){
 			if (income_id.length>0){
 				//console.log('w: saveIncomeCard; income_id='+income_id+'; type_id='+type_id+'; data='+data+'; client_seller='+client_seller+'; invoice_income='+invoice_income+'; cash_id='+cash_id+'; client_id='+client_id+'; invoice_data='+invoice_data+'; cours_to_uah='+cours_to_uah+'; cours_to_uah_nbu='+cours_to_uah_nbu+'; invoice_summ='+invoice_summ+'; comment='+comment+'; usd_to_uah='+usd_to_uah+'; eur_to_uah='+eur_to_uah+'; costums_pd_uah='+costums_pd_uah+'; costums_pp_uah='+costums_pp_uah+'; costums_summ_uah='+costums_summ_uah+'; kol_row='+ikr+'; ');
 				//console.log('idStr='+idStr+'; \nartIdStr='+artIdStr+'; \narticle_nr_displStr='+article_nr_displStr+'; \nbrandIdStr='+brandIdStr+'; \ncountryIdStr='+countryIdStr+'; \ncostumsIdStr='+costumsIdStr+'; \namountStr='+amountStr+'; \nprice_buh_cashinStr='+price_buh_cashinStr+'; \nweightNettoStr='+weightNettoStr+'; \nrateStr='+rateStr+'; \ntypeDeclarationIdStr='+typeDeclarationIdStr+'; \nprice_man_cashinStr='+price_man_cashinStr+'; \nprice_man_usdStr='+price_man_usdStr+'; \nprice_buh_uahStr='+price_buh_uahStr+'; \nprice_man_uahStr='+price_man_uahStr);
-				JsHttpRequest.query($rcapi,{ 'w':'saveIncomeCard','income_id':income_id,'type_id':type_id,'document_prefix':document_prefix,'data':data,'client_seller':client_seller,'invoice_income':invoice_income,'cash_id':cash_id,'client_id':client_id,'invoice_data':invoice_data,'cours_to_uah':cours_to_uah,'cours_to_uah_nbu':cours_to_uah_nbu,'invoice_summ':invoice_summ,'comment':comment,'usd_to_uah':usd_to_uah,'eur_to_uah':eur_to_uah,'costums_pd_uah':costums_pd_uah,'costums_pp_uah':costums_pp_uah,'costums_summ_uah':costums_summ_uah},
+				JsHttpRequest.query($rcapi,{ 'w':'saveIncomeCard','income_id':income_id,'data':data,'client_seller':client_seller,'invoice_income':invoice_income,'cash_id':cash_id,'client_id':client_id,'invoice_data':invoice_data,'cours_to_uah':cours_to_uah,'cours_to_uah_nbu':cours_to_uah_nbu,'invoice_summ':invoice_summ,'usd_to_uah':usd_to_uah,'eur_to_uah':eur_to_uah,'costums_pd_uah':costums_pd_uah,'costums_pp_uah':costums_pp_uah,'costums_summ_uah':costums_summ_uah},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						for(var p=1;p<=ikr_p;p++){
@@ -175,7 +175,7 @@ function saveIncomeCard(){
 							console.log(art_empty_count+" - "+tto);
 							
 							if (art_empty_count==tto) {swal("Помилка!", "Не заповнена таблиця!", "error"); stop=true; break; } else {
-								JsHttpRequest.query($rcapi,{ 'w':'saveIncomeCardData','income_id':income_id,'type_id':type_id,'frm':frm,'tto':tto,'idStr':idStr,'artIdStr':artIdStr,'article_nr_displStr':article_nr_displStr,'brandIdStr':brandIdStr,'countryIdStr':countryIdStr,'costumsIdStr':costumsIdStr,'amountStr':amountStr,'price_buh_cashinStr':price_buh_cashinStr,'weightNettoStr':weightNettoStr,'rateStr':rateStr,'typeDeclarationIdStr':typeDeclarationIdStr,'price_man_cashinStr':price_man_cashinStr,'price_man_usdStr':price_man_usdStr,'price_buh_uahStr':price_buh_uahStr,'price_man_uahStr':price_man_uahStr},
+								JsHttpRequest.query($rcapi,{ 'w':'saveIncomeCardData','income_id':income_id,'frm':frm,'tto':tto,'idStr':idStr,'artIdStr':artIdStr,'article_nr_displStr':article_nr_displStr,'brandIdStr':brandIdStr,'countryIdStr':countryIdStr,'costumsIdStr':costumsIdStr,'amountStr':amountStr,'price_buh_cashinStr':price_buh_cashinStr,'weightNettoStr':weightNettoStr,'rateStr':rateStr,'typeDeclarationIdStr':typeDeclarationIdStr,'price_man_cashinStr':price_man_cashinStr,'price_man_usdStr':price_man_usdStr,'price_buh_uahStr':price_buh_uahStr,'price_man_uahStr':price_man_uahStr},
 								function (result1, errors1){ if (errors1) {alert(errors1);} if (result1){  
 									if (result1["answer"]==1){showIncomeStrList(); }
 									else{ swal("Помилка!", result1["error"], "error");}
@@ -588,7 +588,7 @@ function dropIncomeSpendItemRow(income_id,spend_item_id,str_id){
 	function (isConfirm) {
 		if (isConfirm) {
 			if (income_id.length>0){
-				JsHttpRequest.query($rcapi,{ 'w':'dropIncomeSpendItemRow','income_id':income_id,'spend_item_id':spend_item_id,'str_id':str_id},
+				JsHttpRequest.query($rcapi,{ 'w':'dropIncomeSpendItemRow','income_id':income_id,'str_id':str_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						swal("Видалено!", "", "success");
@@ -1259,7 +1259,7 @@ function unlinkIncomeClientSeller(income_id){
 }
 
 function showIncomeArticleSearchForm(i,art_id,brand_id,article_nr_displ){
-	JsHttpRequest.query($rcapi,{ 'w': 'showIncomeArticleSearchForm', 'art_id':art_id,'brand_id':brand_id,'article_nr_displ':article_nr_displ}, 
+	JsHttpRequest.query($rcapi,{ 'w': 'showIncomeArticleSearchForm', 'brand_id':brand_id,'article_nr_displ':article_nr_displ},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow").modal('show');
 		document.getElementById("FormModalBody").innerHTML=result["content"];

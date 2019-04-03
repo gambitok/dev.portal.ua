@@ -27,7 +27,7 @@ $cash_id=$_REQUEST["cash_id"];
 
 if ($w=="Export"){ 
 	require_once 'lib/excel/Classes/PHPExcel.php'; $objPHPExcel = new PHPExcel();
-    $arr=$report_margin->getReportMarginDataSales($date_start,$date_end,$doc_type_id,$client_status,$doc_status,$cash_id);
+    $arr=$report_margin->getReportMarginDataSales($date_start,$date_end,$doc_type_id,$cash_id);
 	$objPHPExcel->getActiveSheet()->setCellValue('A1','Document type'); cellColor('A1', "90ee90");
 	$objPHPExcel->getActiveSheet()->setCellValue('B1','OS'); cellColor('B1', "90ee90");
 	$objPHPExcel->getActiveSheet()->setCellValue('C1','Cost'); cellColor('C1', "90ee90");

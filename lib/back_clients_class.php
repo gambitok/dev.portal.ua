@@ -298,7 +298,7 @@ class back_clients {
                 $form=str_replace("{my_user_id}",$user_id,$form);
                 $form=str_replace("{my_user_name}",$user_name,$form);
 
-                list($kol_comments,$label_comments)=$this->labelCommentsCount($back_id);
+                list(,$label_comments)=$this->labelCommentsCount($back_id);
                 $form=str_replace("{labelCommentsCount}",$label_comments,$form);$label_art_unknown="";//???
                 $form=str_replace("{labelArticlesUnKnownCount}",$label_art_unknown,$form);
 
@@ -393,7 +393,6 @@ class back_clients {
             $region=$db->result($r,$i-1,"REGION_NAME");
             $city=$db->result($r,$i-1,"CITY_NAME");
             $cur="";$fn=" onClick='setBackClientsClient(\"$id\",\"$user_tpoint_id\",\"$user_tpoint_name\")'";
-            //if ($id==$prnt_id){$cur="background-color:#FFFF00;";}
             if ($id==$sel_id){$cur="background-color:#0CF;";}
             $list.="<tr style='$cur cursor:pointer;' $fn>
                 <td></td>
@@ -427,9 +426,6 @@ class back_clients {
             $cash_id=$db->result($r,0,"cash_id");
             $usd_to_uah=$db->result($r,0,"usd_to_uah");
             $eur_to_uah=$db->result($r,0,"eur_to_uah");
-            //if ($usd_to_uah==0 || $eur_to_uah==0){
-                //list($usd_to_uah_new,$eur_to_uah_new)=$this->getKoursData('');
-            //}
         }
         return array($cash_id,$usd_to_uah,$eur_to_uah);
     }
@@ -445,11 +441,10 @@ class back_clients {
         return array($back_amount,$back_price,$back_summ);
     }
 
-    function showSaleInvoiceArticleSearchForm($back_id,$si_id,$si_str_id,$art_id){$db=DbSingleton::getDb();$list="";
+    function showSaleInvoiceArticleSearchForm($si_id,$si_str_id){$db=DbSingleton::getDb();$list="";
         $form="";$form_htm=RD."/tpl/back_clients_articles_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select sis.* from J_SALE_INVOICE_STR sis where sis.status=1 and sis.invoice_id='$si_id' order by sis.id asc;");$n=$db->num_rows($r);
         if ($n>0){
-            //list($cash_id,$usd_to_uah,$eur_to_uah)=$this->getSaleInvoiceCashData($si_id);
             for ($i=1;$i<=$n;$i++){
                 $sis_id=$db->result($r,$i-1,"id");
                 $art_id=$db->result($r,$i-1,"art_id");
@@ -458,19 +453,8 @@ class back_clients {
                 $amount=$db->result($r,$i-1,"amount");
                 $price=$db->result($r,$i-1,"price_end");
                 $summ=$db->result($r,$i-1,"summ");
-                list($back_amount,$back_price,$back_summ)=$this->getBackClientSaleInvoiceStr($sis_id,$art_id);
-                /*$back_amount=$db->result($r,$i-1,"back_amount");
-                $back_price=$db->result($r,$i-1,"back_price");
-                $back_summ=$db->result($r,$i-1,"back_summ");
-                */
+                list($back_amount,,$back_summ)=$this->getBackClientSaleInvoiceStr($sis_id,$art_id);
                 $max_back=$amount-$back_amount;
-                /*
-                if ($cash_id==1){
-                    $price=round($price*$usd_to_uah,2); $summ=round($summ*$usd_to_uah,2);
-                }
-                if ($cash_id==3){
-                    $price=round($price*$usd_to_uah/$euro_to_uah,2); $summ=round($summ*$usd_to_uah/$euro_to_uah,2);
-                }*/
 
                 $cur="";$fn=" onClick='showBackClientsArticleAmountWindow(\"$art_id\", \"$article_nr_displ\", \"$brand_name\", \"$amount\", \"$price\", \"$summ\",\"$sis_id\",\"$max_back\")'";
                 if ($si_str_id==$sis_id){$cur="background-color:#FFFF00;";}
@@ -727,7 +711,7 @@ class back_clients {
         return array($answer,$err);
     }
 
-    function saveBackClientsCardData($back_id,$cash_id,$frm,$tto,$idStr,$artIdStr,$article_nr_displStr,$brandIdStr,$amountStr,$priceStr,$priceEndStr,$discountStr,$summStr){$slave=new slave;$answer=0;$err="Помилка збереження даних!";
+    function saveBackClientsCardData($back_id){$slave=new slave;$answer=0;$err="Помилка збереження даних!";
         $back_id=$slave->qq($back_id);//$frm=$slave->qq($frm);$tto=$slave->qq($tto);$cash_id=$slave->qq($cash_id);
         if ($back_id>0){
             /*$idStr=$slave->qq($idStr);$artIdStr=$slave->qq($artIdStr);$article_nr_displStr=$slave->qq($article_nr_displStr);$brandIdStr=$slave->qq($brandIdStr);$amountStr=$slave->qq($amountStr);$priceStr=$slave->qq($priceStr);$discountStr=$slave->qq($discountStr);
@@ -845,7 +829,7 @@ class back_clients {
                 if ($oper_status==30) {
                     $client_conto_id=$db->result($r,0,"client_conto_id");
                     $org_type=$this->getClientOrgType($client_conto_id);
-                    list($client_cash_id,$credit_cash_id)=$this->getClientCashConditions($client_conto_id);
+                    list($client_cash_id,)=$this->getClientCashConditions($client_conto_id);
                     if ($client_cash_id==$cash_id || $org_type==0 || $org_type==1){
                         $db->query("update J_BACK_CLIENTS set cash_id='$cash_id' where id='$back_id';");
                         $this->updateBackClientsPriceCash($back_id);
@@ -887,7 +871,7 @@ class back_clients {
 
     function getArticlePrice($art_id,$back_id){$dbt=DbSingleton::getTokoDb();$price=0;$dp=new dp;
         if ($back_id>0 && $art_id!=""){
-            list($price_lvl,$margin_price_lvl,$price_suppl_lvl,$margin_price_suppl_lvl,$client_vat)=$dp->getDpClientPriceLevels($back_id);//getBackClientsClientPriceLevels
+            list($price_lvl,$margin_price_lvl,,,)=$dp->getDpClientPriceLevels($back_id);//getBackClientsClientPriceLevels
             $query="select t2apr.price_".$price_lvl.", t2si.price_usd as suppl_price_usd from T2_ARTICLES t2a 
                 left outer join T2_ARTICLES_PRICE_RATING t2apr on (t2apr.art_id=t2a.ART_ID)
                 left outer join T2_SUPPL_IMPORT t2si on (t2si.art_id=t2a.ART_ID)
@@ -905,7 +889,7 @@ class back_clients {
 
     function getArticleSupplPrice($art_id,$back_id,$suppl_id,$suppl_storage_id){$dbt=DbSingleton::getTokoDb();$price=0;$dp=new dp;
         if ($back_id>0 && $art_id!=""){
-            list($price_lvl,$margin_price_lvl,$price_suppl_lvl,$margin_price_suppl_lvl,$client_vat)=$dp->getDpClientPriceLevels($back_id);//getBackClientsClientPriceLevels
+            list(,,$price_suppl_lvl,$margin_price_suppl_lvl,$client_vat)=$dp->getDpClientPriceLevels($back_id);//getBackClientsClientPriceLevels
             $query="select t2si.price_usd from T2_ARTICLES t2a 
                 left outer join T2_SUPPL_ARTICLES_IMPORT t2sai on (t2sai.art_id=t2a.ART_ID)
                 left outer join T2_SUPPL_IMPORT t2si on (t2si.art_id=t2sai.art_id and t2si.suppl_id=t2sai.suppl_id and t2si.status=1)
@@ -988,7 +972,7 @@ class back_clients {
         return $sum;
     }
 
-    function makeBackClientsCardFinish($back_id){$answer=0;$err="";
+    function makeBackClientsCardFinish(){$answer=0;$err="";
         //$back_id=$slave->qq($back_id);
         /*$r=$db->query("select oper_status,storage_id,storage_cells_id from J_INCOME where id='$back_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){
@@ -1058,7 +1042,7 @@ class back_clients {
         return $form;
     }
 
-    function showBackClientsArticleAmountChange($art_id,$back_clients_str_id,$amount){$db=DbSingleton::getDb();$dp=new dp;
+    function showBackClientsArticleAmountChange($art_id,$back_clients_str_id){$db=DbSingleton::getDb();$dp=new dp;
         $form="";$form_htm=RD."/tpl/back_clients_select_amount_article_change_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from J_BACK_CLIENTS_STR where id='$back_clients_str_id' and status_back='93' limit 0,1");
         $article_nr_displ=$db->result($r,0,"article_nr_displ");
@@ -1110,7 +1094,7 @@ class back_clients {
             $reserv_amount_rest=$reserv_amount-$cur_amount;
             $delivery_info=$dp->getTpointDeliveryInfo($tpoint_id,$id);
             if ($amount!=0 || $cur_amount!=0 || $reserv_amount_rest!=0){
-                $list.="<tr onClick=\"showBackClientsAmountInputWindow('$art_id','$id');\" style='cursor:pointer'>
+                $list.="<tr onClick=\"showBackClientsArticleAmountWindow('$art_id','$id');\" style='cursor:pointer'>
                     <td>$i <input type='hidden' id='storage_amount_id' value='$id'></td>
                     <td>$name</td>
                     <td>$amount</td>
@@ -1118,7 +1102,7 @@ class back_clients {
                     <td>$reserv_amount_rest</td>
                     <td>$delivery_info</td>
                 </tr>";
-            }
+            }//showBackClientsAmountInputWindow
         }
         return $list;
     }
@@ -1131,11 +1115,10 @@ class back_clients {
         return $form;
     }
 
-    function showBackClientsSupplAmountInputWindow($art_id,$article_nr_displ,$brand_id,$back_id,$suppl_id,$suppl_storage_id,$price){$dp=new dp;
+    function showBackClientsSupplAmountInputWindow($art_id,$article_nr_displ,$brand_id,$back_id,$suppl_id,$suppl_storage_id,$price){$dp=new dp;$cat=new catalogue;
         $form="";$form_htm=RD."/tpl/back_clients_amount_suppl_window.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $form=str_replace("{art_id}",$art_id,$form);
         $amount=$this->getArticleSupplStorageAmountBackClients($art_id,$back_id,$suppl_id,$suppl_storage_id);
-        require_once RD."/lib/catalogue_class.php";$cat=new catalogue;
         $form=str_replace("{amount}",$amount,$form);
         $form=str_replace("{price}",$price,$form);
         $summ=$amount*$price;
@@ -1731,7 +1714,7 @@ class back_clients {
                     $db->query("update J_BACK_CLIENTS set status_back='103', prefix='$prefix".$sale_invoice_prefix."', data='$data_now' where id='$back_id' and status='1' and status_back=102 limit 1;");
 
                     //возвращаем финансы
-                    list($summ_invoice,$summ_debit)=$this->getSaleInvoiceSumm2($sale_invoice_id);
+                    list(,$summ_debit)=$this->getSaleInvoiceSumm2($sale_invoice_id);
                     $summ_avans=$summ_debit-$summ_back;
 
                     list($balans_before,$balans_before_cash_id)=$jpay->getClientGeneralSaldo($client_id);

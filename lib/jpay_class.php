@@ -407,7 +407,7 @@ protected $prefix_new = 'ÄÏ';
         return $list;
     }
 
-    function closeJpayCard($jpay_id){
+    function closeJpayCard(){
         $answer=1;
         return $answer;
     }
@@ -570,7 +570,7 @@ protected $prefix_new = 'ÄÏ';
 
     function loadJpayClientSaleInvoiceUnpayedList($client_id){$db=DbSingleton::getDb();$list="";$summ_balans=0;$tpoint_id=$doc_type_id=0;
         list($cash_id,$cash_name)=$this->getJpayClientDocCashId($client_id);
-        list($client_balans_avans,$client_balans_cash_id)=$this->getClientBalansAvans($client_id);
+        list($client_balans_avans,)=$this->getClientBalansAvans($client_id);
         $r=$db->query("select sv.*, t.name as tpoint_name, sl.name as seller_name, cl.name as client_name, dt.mvalue as doc_type_name from J_SALE_INVOICE sv
             left outer join T_POINT t on t.id=sv.tpoint_id
             left outer join A_CLIENTS sl on sl.id=sv.seller_id
@@ -646,7 +646,7 @@ protected $prefix_new = 'ÄÏ';
             }
 
             if ($pay_id>0 && $kredit>0 && $pay_type_id==89 && $paybox_id>0){
-                list($balans_before,$balans_before_cash_id)=$this->getClientGeneralSaldo($invoice_client_id);
+                list($balans_before,)=$this->getClientGeneralSaldo($invoice_client_id);
                 $doc_sum_pay=0;
                 if ($doc_cash_id==$cash_id){$doc_sum_pay=$kredit;}
 
@@ -745,7 +745,7 @@ protected $prefix_new = 'ÄÏ';
             $avans_debit=$slave->qq(str_replace(",",".",$avans_debit));$pay_type_id=$slave->qq($pay_type_id);$paybox_id=$slave->qq($paybox_id);
             $cash_id=$slave->qq($cash_id);$cash_kours=$slave->qq($cash_kours);$doc_cash_id=$slave->qq($doc_cash_id);
 
-            list($avans_balans,$avans_cash_id)=$this->getClientBalansAvans($client_id);
+            list($avans_balans,)=$this->getClientBalansAvans($client_id);
             $doc_sum_back=0;
             if ($doc_cash_id==$cash_id){$doc_sum_back=$avans_debit;}
             if ($doc_cash_id!=$cash_id){
@@ -771,7 +771,7 @@ protected $prefix_new = 'ÄÏ';
 
                     $this->updatePayboxBalans($paybox_id,2,$cash_id,$avans_debit,$user_id,$pay_id);
                     $this->updateClientAvans($client_id,$doc_cash_id,"-$doc_sum_back");
-                    list($balans_before,$balans_before_cash_id)=$this->getClientGeneralSaldo($client_id);
+                    list($balans_before,)=$this->getClientGeneralSaldo($client_id);
 
                     $balans_after=$balans_before-$doc_sum_back;
                     $db->query("insert into B_CLIENT_BALANS_JOURNAL (`client_id`,`cash_id`,`balans_before`,`deb_kre`,`summ`,`balans_after`,`doc_type_id`,`doc_id`,`pay_cash_id`,`pay_summ`) values ('$client_id','$doc_cash_id','$balans_before','1','$doc_sum_back','$balans_after','2','$pay_id','$cash_id','$avans_debit');");
@@ -794,7 +794,7 @@ protected $prefix_new = 'ÄÏ';
         return array($saldo,$cash_id);
     }
 
-    function getClientGeneralSaldo($sel_id){$db=DbSingleton::getDb();$saldo="0";list($cash_id,$c,$c)=$this->getJpayClientDocCashId($sel_id);
+    function getClientGeneralSaldo($sel_id){$db=DbSingleton::getDb();$saldo="0";list($cash_id,,)=$this->getJpayClientDocCashId($sel_id);
         $r=$db->query("select `saldo`,cash_id from B_CLIENT_BALANS where client_id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){
             $saldo=$db->result($r,0,"saldo");
@@ -853,7 +853,7 @@ protected $prefix_new = 'ÄÏ';
                         if ($doc_cash_id==3 && $cash_id==2){$doc_sum_pay=round($kredit_gbl/$cash_kours,2);}
                     }
                     if ($doc_sum_pay>0){
-                        list($balans_before,$balans_before_cash_id)=$this->getClientGeneralSaldo($client_id);
+                        list($balans_before,)=$this->getClientGeneralSaldo($client_id);
                         $balans_after=$balans_before+$doc_sum_pay;
                         $db->query("insert into B_CLIENT_BALANS_JOURNAL (`client_id`,`cash_id`,`balans_before`,`deb_kre`,`summ`,`balans_after`,`doc_type_id`,`doc_id`,`pay_cash_id`,`pay_summ`) values ('$client_id','$doc_cash_id','$balans_before','2','$doc_sum_pay','$balans_after','2','$pay_id','$cash_id','$kredit_gbl');");
                         $db->query("update B_CLIENT_BALANS set saldo=`saldo`+$doc_sum_pay, last_update=NOW() where client_id='$client_id';");
@@ -922,7 +922,7 @@ protected $prefix_new = 'ÄÏ';
             $err="Íå âêàçàíî êë³ºíòà äëÿ àâàíñó";$answer=0;
         }
         if ($client_id>0 && $kredit_gbl>0){ $pay_type_id=$slave->qq($pay_type_id);$paybox_id=$slave->qq($paybox_id);
-            list($balans_before,$balans_before_cash_id)=$this->getClientGeneralSaldo($client_id);
+            list($balans_before,)=$this->getClientGeneralSaldo($client_id);
 
             $r=$db->query("select max(id) as mid from J_PAY;");$pay_id=$db->result($r,0,"mid")+1;
             $r=$db->query("select max(doc_nom) as doc_nom from J_PAY where paybox_id='$paybox_id';");$doc_nom=$db->result($r,0,"doc_nom")+1;
@@ -972,7 +972,7 @@ protected $prefix_new = 'ÄÏ';
 
             $db->query("insert into J_PAY (`id`,`pay_type_id`,`doc_nom`,`client_id`,`cash_id`,`summ`,`user_id`) values ('$pay_id','$pay_type_id','$doc_nom','$client_id','$doc_cash_id','$kredit_gbl','$user_id');");
 
-            list($balans_before,$balans_before_cash_id)=$this->getClientGeneralSaldo($client_id);
+            list($balans_before,)=$this->getClientGeneralSaldo($client_id);
             $ra=$db->query("select * from J_SALE_INVOICE where client_conto_id='$client_id' and summ_debit>0 and status='1' order by data_pay asc;");$na=$db->num_rows($ra);
             for ($ia=1;$ia<=$na;$ia++){
                 $invoice_id=$db->result($ra,$ia-1,"id");

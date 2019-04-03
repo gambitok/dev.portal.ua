@@ -131,7 +131,7 @@ function ExportBrands() {$db=DbSingleton::getDb();$list=array();
 //Brands IMPORT
 function ImportBrands() {
     $form="";$form_htm=RD."/tpl/brands_import.htm"; if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-	list($csv_exist,$csv_file_name,$pre_table)=showCsvPreviewIndex();
+	list(,,$pre_table)=showCsvPreviewIndex();
 	$form=str_replace("{records_list}","<tr><td colspan=10 align='center'>Записи не завантажено</td></tr>",$form);
 	$form=str_replace("{import_file_name}","Оберіть файл",$form);
 	$form=str_replace("{csv_str_file}",$pre_table,$form);
@@ -182,7 +182,7 @@ function showCsvPreviewIndex(){$db=DbSingleton::getDb(); $csv_exist=$fn=$kol_col
 	return array($csv_exist,$csv_file_name,$pre_table);
 }
 	
-function finishBrandsIndexImport($start_row,$kol_cols,$cols){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;
+function finishBrandsIndexImport($start_row){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;
     $err="Помилка збереження даних!";$err2 = "Файл з дуплікатами індексів!";
 	$start_row=$slave->qq($start_row);//$kol_cols=$slave->qq($kol_cols);$cols=$slave->qq($cols);
     $r=$db->query("select * from T2_BRANDS_CSV limit 0,1;"); $n=$db->num_rows($r);

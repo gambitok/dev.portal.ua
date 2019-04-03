@@ -41,6 +41,7 @@ class media_users {
 					$db->query("insert into media_users_cookies (`user_id`,`cookie`,`data_to`) values ('$media_user_id','$key','$data_to');");
 				}
 			}
+
 			if ($n==0) {$this->addJournalAuth(0,"3");session_start();session_unset();session_destroy(); $answer="Помилка авторизації!\n\tКористувача не знайдено.";}
 		}
 		return $answer;

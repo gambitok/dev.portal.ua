@@ -152,7 +152,7 @@ if ($_REQUEST["w"]=="showBrandsCard"){ $GLOBALS['_RESULT'] = array("content"=>$b
 
 if ($_REQUEST["w"]=="ImportBrands"){ $GLOBALS['_RESULT'] = array("content"=>ImportBrands());}
 
-if ($_REQUEST["w"]=="finishBrandsIndexImport"){ list($answer,$err)=finishBrandsIndexImport($_REQUEST["start_row"],$_REQUEST["kol_cols"],$_REQUEST["cols"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
+if ($_REQUEST["w"]=="finishBrandsIndexImport"){ list($answer,$err)=finishBrandsIndexImport($_REQUEST["start_row"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
 
 if ($_REQUEST["w"]=="saveBrandsGeneralInfo")
 { 
@@ -247,7 +247,7 @@ if ($_REQUEST["w"]=="showClientRetailCard"){ $GLOBALS['_RESULT'] = array("conten
  
 if ($_REQUEST["w"]=="newClientRetailCard"){ $GLOBALS['_RESULT'] = array("user_id"=>$cl->newClientRetailCard());}
 
-if ($_REQUEST["w"]=="saveClientRetailGeneralInfo"){ list($answer,$err)=$cl->saveClientRetailGeneralInfo($_REQUEST["user_id"],$_REQUEST["user_name"],$_REQUEST["client_id"],$_REQUEST["country_id"],$_REQUEST["state_id"],$_REQUEST["region_id"],$_REQUEST["city_id"],$_REQUEST["user_category"],$_REQUEST["user_phone"],$_REQUEST["user_email"],$_REQUEST["user_pass"],$_REQUEST["user_status"],$_REQUEST["user_data"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+if ($_REQUEST["w"]=="saveClientRetailGeneralInfo"){ list($answer,$err)=$cl->saveClientRetailGeneralInfo($_REQUEST["user_id"],$_REQUEST["user_name"],$_REQUEST["country_id"],$_REQUEST["state_id"],$_REQUEST["region_id"],$_REQUEST["city_id"],$_REQUEST["user_category"],$_REQUEST["user_phone"],$_REQUEST["user_email"],$_REQUEST["user_status"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
 if ($_REQUEST["w"]=="moveClientsRetail"){ list($answer,$err)=$cl->moveClientsRetail($_REQUEST["user_id"],$_REQUEST["client_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
@@ -269,7 +269,7 @@ if ($_REQUEST["w"]=="getMaxIndex"){ $GLOBALS['_RESULT'] = array("content"=>$cata
 
 if ($_REQUEST["w"]=="getMaxSupplIndex"){ $GLOBALS['_RESULT'] = array("content"=>$catalogue->getMaxSupplIndex());}
 
-if ($_REQUEST["w"]=="saveIndexArticle"){ $GLOBALS['_RESULT'] = array("content"=>$catalogue->saveIndexArticle($_REQUEST["art_id"],$_REQUEST["suppl_status"],$_REQUEST["article_nr_displ"],$_REQUEST["brand_id"],$_REQUEST["article_name"],$_REQUEST["article_name_ukr"],$_REQUEST["article_info"]));}
+if ($_REQUEST["w"]=="saveIndexArticle"){ $GLOBALS['_RESULT'] = array("content"=>$catalogue->saveIndexArticle($_REQUEST["art_id"],$_REQUEST["article_nr_displ"],$_REQUEST["brand_id"],$_REQUEST["article_name"],$_REQUEST["article_name_ukr"],$_REQUEST["article_info"]));}
 
 
 if ($_REQUEST["w"]=="showArticleJDocs"){ list($content,$header)=$catalogue->showArticleJDocs($_REQUEST["art_id"]); $GLOBALS['_RESULT'] = array("content"=>$content, "header"=>$header);}

@@ -199,7 +199,7 @@ class storage {
         $param_id=$db->result($r,0,"param_id");
         $form=str_replace("{storage_id}",$storage_id,$form);
         $form=str_replace("{storage_str_id}",$str_id,$form);
-        $form=str_replace("{param_type_list}",$this->showStorageParamTypeSelectList($storage_id,$param_id),$form);
+        $form=str_replace("{param_type_list}",$this->showStorageParamTypeSelectList($param_id),$form);
         return $form;
     }
 
@@ -218,7 +218,7 @@ class storage {
         return $name;
     }
 
-    function showStorageParamTypeSelectList($storage_id,$sel_id){$db=DbSingleton::getTokoDb();$list="";;
+    function showStorageParamTypeSelectList($sel_id){$db=DbSingleton::getTokoDb();$list="";;
         $r=$db->query("select * from STORAGE_PARAMS order by id asc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $param_id=$db->result($r,$i-1,"id");
@@ -290,11 +290,11 @@ class storage {
     function showStorageCellsForm($storage_id,$cells_id){$db=DbSingleton::getTokoDb();
         $form="";$form_htm=RD."/tpl/storage_cells_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from STORAGE_CELLS where id='$cells_id' and storage_id='$storage_id' limit 0,1;");
-        $str_arr=$db->result($r,0,"str_arr");
+        //$str_arr=$db->result($r,0,"str_arr");
         $cell_value=$db->result($r,0,"cell_value");
         $default=$db->result($r,0,"default");
         $def_ch="";if ($default==1){$def_ch="checked";}
-        list($str_arr_str,$str_arr,$str_kol)=$this->showStorageStrArr($storage_id,$str_arr,$cell_value);
+        list($str_arr_str,$str_arr,$str_kol)=$this->showStorageStrArr($storage_id,$cell_value);
         $form=str_replace("{storage_id}",$storage_id,$form);
         $form=str_replace("{cells_id}",$cells_id,$form);
         $form=str_replace("{str_arr_str}",$str_arr_str,$form);
@@ -304,14 +304,13 @@ class storage {
         return $form;
     }
 
-    function showStorageStrArr($storage_id,$str_arr,$cell_value){$db=DbSingleton::getTokoDb();$str_arr_str=$arr="";$cell_value=explode("|",$cell_value);
+    function showStorageStrArr($storage_id,$cell_value){$db=DbSingleton::getTokoDb();$str_arr_str=$arr="";$cell_value=explode("|",$cell_value);
         $r=$db->query("select * from STORAGE_STR where storage_id='$storage_id' and status='1' order by param_id asc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $str_id=$db->result($r,$i-1,"id");
             $param_id=$db->result($r,$i-1,"param_id");
-            list($param_name,$param_type,$field_key,$code_length)=$this->getStorageParamData($param_id);
+            list($param_name,$param_type,,$code_length)=$this->getStorageParamData($param_id);
             $str_arr_str.="<span class='btn btn-primary dim' disabled type='button' style='margin-right: 5px;'>$param_name</span>";
-            //$ftype="text";if ($field_key=="n"){$ftype="number";}
             $arr.="<div class='col-sm-2'>
                 <input type='hidden' id='cell_str_id_$i' value='$str_id'>
                 <input type='hidden' id='cell_param_id_$i' value='$param_id'>
@@ -322,10 +321,8 @@ class storage {
         return array($str_arr_str,$arr,$kol);
     }
 
-    function saveStorageCellsForm($storage_id,$cells_id,$str_kol,$cell_str_ids,$cell_param_ids,$cell_vls,$def_ch){ $db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;
-        $answer=0;$err="Помилка збереження даних!";
-        $storage_id=$slave->qq($storage_id);$cells_id=$slave->qq($cells_id);$str_kol=$slave->qq($str_kol);$cell_param_ids=$slave->qq($cell_param_ids);$cell_vls=$slave->qq($cell_vls);
-        $def_ch=$slave->qq($def_ch);
+    function saveStorageCellsForm($storage_id,$cells_id,$str_kol,$cell_param_ids,$cell_vls,$def_ch){ $db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave; $answer=0;$err="Помилка збереження даних!";
+        $storage_id=$slave->qq($storage_id);$cells_id=$slave->qq($cells_id);$str_kol=$slave->qq($str_kol);$cell_param_ids=$slave->qq($cell_param_ids);$cell_vls=$slave->qq($cell_vls);$def_ch=$slave->qq($def_ch);
         if ($storage_id>0){
             if ($cells_id==0 || $cells_id==""){
                 $r=$db->query("select max(id) as mid from STORAGE_CELLS;");$cells_id=0+$db->result($r,0,"mid")+1;

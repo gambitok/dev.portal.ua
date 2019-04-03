@@ -268,7 +268,7 @@ class buh_back {
                 $form=str_replace("{my_user_id}",$user_id,$form);
                 $form=str_replace("{my_user_name}",$user_name,$form);
 
-                list($kol_comments,$label_comments)=$this->labelCommentsCount($back_id);
+                list(,$label_comments)=$this->labelCommentsCount($back_id);
                 $form=str_replace("{labelCommentsCount}",$label_comments,$form);$label_art_unknown="";
                 $form=str_replace("{labelArticlesUnKnownCount}",$label_art_unknown,$form);
 
@@ -428,7 +428,7 @@ class buh_back {
                 $amount=$db->result($r,$i-1,"amount");
                 $price=$db->result($r,$i-1,"price_end");
                 $summ=$db->result($r,$i-1,"summ");
-                list($back_amount,$back_price,$back_summ)=$this->getBackClientSaleInvoiceStr($sis_id,$art_id);
+                list($back_amount,,$back_summ)=$this->getBackClientSaleInvoiceStr($sis_id,$art_id);
                 /*$back_amount=$db->result($r,$i-1,"back_amount");
                 $back_price=$db->result($r,$i-1,"back_price");
                 $back_summ=$db->result($r,$i-1,"back_summ");
@@ -805,7 +805,7 @@ class buh_back {
                 if ($oper_status==30) {
                     $client_conto_id=$db->result($r,0,"client_conto_id");
                     $org_type=$this->getClientOrgType($client_conto_id);
-                    list($client_cash_id,$credit_cash_id)=$this->getClientCashConditions($client_conto_id);
+                    list($client_cash_id,)=$this->getClientCashConditions($client_conto_id);
                     if ($client_cash_id==$cash_id || $org_type==0 || $org_type==1){
                         $db->query("update J_BACK_CLIENTS set cash_id='$cash_id' where id='$back_id';");
                         $this->updateBackClientsPriceCash($back_id);
@@ -869,7 +869,7 @@ class buh_back {
 
     function getArticleSupplPrice($art_id,$back_id,$suppl_id,$suppl_storage_id){$dbt=DbSingleton::getTokoDb();$price=0;$dp=new dp;
         if ($back_id>0 && $art_id!=""){
-            list($price_lvl,$margin_price_lvl,$price_suppl_lvl,$margin_price_suppl_lvl,$client_vat)=$dp->getDpClientPriceLevels($back_id);
+            list(,,$price_suppl_lvl,$margin_price_suppl_lvl,$client_vat)=$dp->getDpClientPriceLevels($back_id);
             $query="select t2si.price_usd from T2_ARTICLES t2a 
                 left outer join T2_SUPPL_ARTICLES_IMPORT t2sai on (t2sai.art_id=t2a.ART_ID)
                 left outer join T2_SUPPL_IMPORT t2si on (t2si.art_id=t2sai.art_id and t2si.suppl_id=t2sai.suppl_id and t2si.status=1)
@@ -951,7 +951,7 @@ class buh_back {
         return $sum;
     }
 
-    function makeBackClientsCardFinish($back_id){$answer=0;$err="";
+    function makeBackClientsCardFinish(){$answer=0;$err="";
         /*$r=$db->query("select oper_status,storage_id,storage_cells_id from J_INCOME where id='$back_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){
             $oper_status=$db->result($r,0,"oper_status");
@@ -1093,11 +1093,10 @@ class buh_back {
         return $form;
     }
 
-    function showBackClientsSupplAmountInputWindow($art_id,$article_nr_displ,$brand_id,$back_id,$suppl_id,$suppl_storage_id,$price){$dp=new dp;
+    function showBackClientsSupplAmountInputWindow($art_id,$article_nr_displ,$brand_id,$back_id,$suppl_id,$suppl_storage_id,$price){$dp=new dp;$cat=new catalogue;
         $form="";$form_htm=RD."/tpl/back_clients_amount_suppl_window.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $form=str_replace("{art_id}",$art_id,$form);
         $amount=$this->getArticleSupplStorageAmountBackClients($art_id,$back_id,$suppl_id,$suppl_storage_id);
-        require_once RD."/lib/catalogue_class.php";$cat=new catalogue;
         $form=str_replace("{amount}",$amount,$form);
         $form=str_replace("{price}",$price,$form);
         $summ=$amount*$price;
@@ -1652,7 +1651,7 @@ class buh_back {
                     $db->query("update J_BACK_CLIENTS set status_back='103',prefix='$prefix".$sale_invoice_prefix."' where id='$back_id' and status='1' and status_back=102 limit 1;");
 
                     //возвращаем финансы
-                    list($summ_invoice,$summ_debit)=$this->getSaleInvoiceSumm2($sale_invoice_id);
+                    list(,$summ_debit)=$this->getSaleInvoiceSumm2($sale_invoice_id);
                     $summ_avans=$summ_debit-$summ_back;
 
                     $jpay=new jpay;

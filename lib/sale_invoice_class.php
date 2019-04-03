@@ -342,7 +342,7 @@ class sale_invoice {
         return $list;
     }
 
-    function showdpDocumentList($dp_id,$dp_op_id,$document_id){$income=new income;$document_list="";$form="";
+    function showdpDocumentList($dp_id,$dp_op_id){$income=new income;$document_list="";$form="";
         if ($dp_op_id==1){
             $form_htm=RD."/tpl/dp_documents_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
             $document_list=$income->search_documents_income_list("");
@@ -353,7 +353,7 @@ class sale_invoice {
         return array($form,"Реєстр документів основи");
     }
 
-    function finddpDocumentsSearch($dp_id,$dp_op_id,$s_nom){$income=new income;$document_list="";
+    function finddpDocumentsSearch($dp_op_id,$s_nom){$income=new income;$document_list="";
         if ($dp_op_id==1){$document_list=$income->search_documents_income_list($s_nom);}
         return $document_list;
     }
@@ -423,9 +423,9 @@ class sale_invoice {
         return $list;
     }
 
-    function labelArtEmptyCount($dp_id,$kol){$label="";
+    function labelArtEmptyCount($dp_id,$kol){$label="";$dp=new dp;
         if ($kol==0 || $kol==""){
-            list($weight,$volume,$kol)=$this->updateDpWeightVolume($dp_id);
+            list(,,$kol)=$dp->updateDpWeightVolume($dp_id);
         }
         if ($kol>0){$label="<span class='label label-tab label-info'>$kol</span>";}
         return array($kol,$label);
@@ -437,12 +437,12 @@ class sale_invoice {
         return array($kol,$label);
     }
 
-    function loaddpUnknownArticles($dp_id){$db=DbSingleton::getDb();
+    function loaddpUnknownArticles($dp_id){$db=DbSingleton::getDb();$dp=new dp;
         $form="";$form_htm=RD."/tpl/dp_unknown_articles_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from J_DP j where j.id='$dp_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==0){$form_htm=RD."/tpl/access_deny.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);} }
         if ($n==1){
-            list($list,$kol_rows)=$this->showdpUnknownStrList($dp_id);
+            list($list,$kol_rows)=$dp->showdpUnknownStrList($dp_id);
             $form=str_replace("{UnknownArticlesList}",$list,$form);
             $form=str_replace("{kol_rows}",$kol_rows,$form);
             $form=str_replace("{dp_id}",$dp_id,$form);
@@ -764,7 +764,7 @@ class sale_invoice {
                 }
             }
             if ($pay_id>0 && $kredit>0 && $pay_type_id==89 && $paybox_id>0){
-                list($balans_before,$balans_before_cash_id)=$this->getClientGeneralSaldo($invoice_client_id);
+                list($balans_before,)=$this->getClientGeneralSaldo($invoice_client_id);
                 $doc_sum_pay=0;
                 if ($doc_cash_id==$cash_id){$doc_sum_pay=$kredit;}
                 if ($doc_cash_id!=$cash_id){

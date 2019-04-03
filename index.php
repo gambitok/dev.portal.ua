@@ -16,6 +16,7 @@ require_once (RD."/lib/module_class.php");
 require_once (RD."/lib/access_class.php");
 require_once (RD."/lib/alerts_class.php");
 require_once (RD."/lib/print_class.php");
+require_once (RD."/lib/media_users_class.php");
 
 if ($content==null){require_once (RD."/out.php");}
 echo $content;

@@ -289,7 +289,7 @@ function saveStorageCellsForm(storage_id,cells_id){
 					var cell_param_id=$("#cell_param_id_"+i).val();cell_param_ids[i]=cell_param_id;
 					var cell_vl=$("#cell_vl_"+i).val();cell_vls[i]=cell_vl;
 				}
-				JsHttpRequest.query($rcapi,{ 'w':'saveStorageCellsForm','storage_id':storage_id,'cells_id':cells_id,'str_kol':str_kol,'cell_str_ids':cell_str_ids,'cell_param_ids':cell_param_ids,'cell_vls':cell_vls,'def_ch':def_ch},
+				JsHttpRequest.query($rcapi,{ 'w':'saveStorageCellsForm','storage_id':storage_id,'cells_id':cells_id,'str_kol':str_kol,'cell_param_ids':cell_param_ids,'cell_vls':cell_vls,'def_ch':def_ch},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");

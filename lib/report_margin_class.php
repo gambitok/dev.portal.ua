@@ -77,7 +77,7 @@ class report_margin {
 		}
 	}
 	
-	function getClientMarginReportData($type_id,$doc_status,$doc_type_id,$date_start,$date_end,$cash_id) { $db=DbSingleton::getDb(); $clients=new clients;
+	function getClientMarginReportData($type_id,$doc_type_id,$date_start,$date_end,$cash_id) { $db=DbSingleton::getDb(); $clients=new clients;
         $salesc=$backsc=[]; $slave=new slave;
 		if ($type_id==0) {
 			$r=$db->query("select j.*, jsp.invoice_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah,jsp.price_invoice 
@@ -172,7 +172,7 @@ class report_margin {
 		}
 	}
 
-	function getReportMarginDataSales($date_start,$date_end,$doc_type_id,$client_status,$doc_status,$cash_id) { $db=DbSingleton::getDb(); $gmanual=new gmanual; $slave=new slave;
+	function getReportMarginDataSales($date_start,$date_end,$doc_type_id,$cash_id) { $db=DbSingleton::getDb(); $gmanual=new gmanual; $slave=new slave;
 		$where=$list=""; $sales=$backs=[];
 		if($doc_type_id>0) {$where.=" and j.doc_type_id='$doc_type_id'";}	
 		$r=$db->query("select j.*, jsp.invoice_amount, jsp.oper_price_partition, jsp.price_partition, jsp.price_buh_uah, jsp.price_man_uah, jsp.price_invoice 
@@ -211,7 +211,7 @@ class report_margin {
 		$sales_cl=[];																							   
 	   	foreach ($sales as $arr_key=>$arr_val) {
 			$sales_cl[$arr_key]=$arr_val;
-			$clients=$this->getClientMarginReportData(0,$doc_status,$arr_key,$date_start,$date_end,$cash_id);
+			$clients=$this->getClientMarginReportData(0,$arr_key,$date_start,$date_end,$cash_id);
 			foreach ($clients as $cl_key=>$cl_val) {
 				$sales_cl[$arr_key.$cl_key]=$cl_val;
 			}
@@ -253,7 +253,7 @@ class report_margin {
 			$backs_cl=[];																							   
 			foreach ($backs as $arr_key=>$arr_val) {
 				$backs_cl[$arr_key]=$arr_val;
-				$clients=$this->getClientMarginReportData(1,$doc_status,$arr_key,$date_start,$date_end,$cash_id);
+				$clients=$this->getClientMarginReportData(1,$arr_key,$date_start,$date_end,$cash_id);
 				foreach ($clients as $cl_key=>$cl_val) {
 					$backs_cl[$arr_key.$cl_key]=$cl_val;
 				}

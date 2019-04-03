@@ -9,7 +9,7 @@ class non_priced {
    		if ($n>0) {
 			for ($i=1;$i<=$n;$i++){
 				$art_id=$db->result($r,$i-1,"art_id");
-				list($article_nr_displ,$brand_id,$brand_name,$article_nr_search)=$this->getArticleNrDisplBrand($art_id);
+				list($article_nr_displ,,$brand_name,)=$this->getArticleNrDisplBrand($art_id);
 				$list.="<tr>
 					<td>$i</td>
 					<td>$art_id</td>
@@ -23,7 +23,7 @@ class non_priced {
 	    if ($n>0) {
 			for ($i=1;$i<=$n;$i++){$maxi++;
 				$art_id=$db->result($r,$i-1,"art_id");
-				list($article_nr_displ,$brand_id,$brand_name,$article_nr_search)=$this->getArticleNrDisplBrand($art_id);
+				list($article_nr_displ,,$brand_name,)=$this->getArticleNrDisplBrand($art_id);
 				$list.="<tr>
 					<td>$maxi</td>
 					<td>$art_id</td>

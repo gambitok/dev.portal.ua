@@ -173,7 +173,7 @@ function saveClientRetailGeneralInfo(){
 	function (isConfirm) {
 		if (isConfirm) {
 			if (user_id.length>0){
-				JsHttpRequest.query($rcapi,{ 'w':'saveClientRetailGeneralInfo','user_id':user_id, 'user_name':user_name, 'client_id':client_id, 'country_id':country_id, 'state_id':state_id, 'region_id':region_id, 'city_id':city_id, 'user_category':user_category, 'user_phone':user_phone, 'user_email':user_email, 'user_pass':user_pass, 'user_status':user_status, 'user_data':user_data},
+				JsHttpRequest.query($rcapi,{ 'w':'saveClientRetailGeneralInfo','user_id':user_id, 'user_name':user_name, 'country_id':country_id, 'state_id':state_id, 'region_id':region_id, 'city_id':city_id, 'user_category':user_category, 'user_phone':user_phone, 'user_email':user_email, 'user_status':user_status},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");

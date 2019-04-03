@@ -574,7 +574,7 @@ function acceptBackClients(){
 }
 
 function showArticleSearchDocumentForm(i,art_id,brand_id,article_nr_displ,doc_type,back_id){
-	JsHttpRequest.query($rcapi,{ 'w': 'showArticleSearchDocumentForm', 'art_id':art_id,'brand_id':brand_id,'article_nr_displ':article_nr_displ,'doc_type':doc_type,'doc_id':back_id}, 
+	JsHttpRequest.query($rcapi,{ 'w': 'showArticleSearchDocumentForm', 'brand_id':brand_id,'article_nr_displ':article_nr_displ,'doc_type':doc_type,'doc_id':back_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#CatalogueModalWindow").modal('show');
 		document.getElementById("CatalogueModalLabel").innerHTML="";
@@ -588,7 +588,7 @@ function showArticleSearchDocumentForm(i,art_id,brand_id,article_nr_displ,doc_ty
 function showSaleInvoiceArticleSearchForm(i,si_str_id,art_id,back_id,si_id){
 	var back_id=$("#back_id").val();
 	if (back_id>0 && back_id.length>0){
-		JsHttpRequest.query($rcapi,{ 'w': 'showSaleInvoiceArticleSearchForm', 'back_id':back_id,'si_id':si_id,'si_str_id':si_str_id,'art_id':art_id}, 
+		JsHttpRequest.query($rcapi,{ 'w': 'showSaleInvoiceArticleSearchForm', 'si_id':si_id,'si_str_id':si_str_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow").modal('show');document.getElementById("FormModalBody").innerHTML=result["content"];document.getElementById("FormModalLabel").innerHTML="Товари документа основи";
 			$("#row_pos").val(i);

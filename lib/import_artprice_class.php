@@ -18,7 +18,7 @@ class import_artprice {
         return $kours;
     }
 
-    function loadIncomeKours($cash_id,$data){
+    function loadIncomeKours($data){
         $usd_to_uah=$this->getKourForDate(1,2,$data);
         $eur_to_uah=$this->getKourForDate(1,3,$data);
         return array($usd_to_uah,$eur_to_uah);
@@ -26,7 +26,7 @@ class import_artprice {
 
     function show_import_artprice_form(){
         $form="";$form_htm=RD."/tpl/import_artprice_str_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        list($csv_exist,$csv_file_name,$pre_table)=$this->showCsvPreview();
+        list(,,$pre_table)=$this->showCsvPreview();
         $form=str_replace("{records_list}","<tr><td colspan=10 align='center'>Записи не завантажено</td></tr>",$form);
         $form=str_replace("{import_file_name}","Оберіть файл",$form);
         $form=str_replace("{csv_str_file}",$pre_table,$form);
