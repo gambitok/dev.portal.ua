@@ -13,7 +13,7 @@ function showReportClients() {
 	var cash_id=$("#cash_select option:selected").val();
 	var tpoint_id=$("#tpoint_select option:selected").val();
 	
-	JsHttpRequest.query($rcapi,{ 'w': 'showReportClients', 'date_start':date_start, 'date_end':date_end, 'clients':clients, 'cash_id':cash_id, 'tpoint_id':tpoint_id}, 
+	JsHttpRequest.query($rcapi,{ 'w': 'showReportClients', 'date_start':date_start, 'date_end':date_end, 'clients':clients, 'cash_id':cash_id, 'tpoint_id_report':tpoint_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){ 
 			$('#datatable').DataTable().destroy();
 			$("#report_clients_range").html(result["content"]);

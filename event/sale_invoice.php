@@ -32,8 +32,8 @@ if ($accss=="1"){
 	}
 
 	if ($w=="exportExcelSlIv"){
-		$invoice_id=$links[2];
-		$form=$sale_invoice->exportSaleInvoiceExcel($invoice_id);
+		$invoice_id=$links[2];$separator=$links[3];
+		$form=$sale_invoice->exportSaleInvoiceExcel($invoice_id,$separator);
 	}
 
 	if ($alg_u==0){

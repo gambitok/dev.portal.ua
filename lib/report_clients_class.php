@@ -89,9 +89,8 @@ class report_clients {
 	    return $summary;
 	}
 	
-	function showReportClients($date_start,$date_end,$clients,$cash_id,$tpoint_id) { $db=DbSingleton::getDb(); $list=""; $sales=$backs=[]; $client=new clients;
-		$form="";$form_htm=RD."/tpl/report_clients_table.htm";if (file_exists("$form_htm")){ $form=file_get_contents($form_htm);} $summ_list=0;
-																					  
+	function showReportClients($date_start,$date_end,$clients,$cash_id,$tpoint_id) {$db=DbSingleton::getDb();$client=new clients;$summ_list=0;$list="";$sales=$backs=[];
+		$form="";$form_htm=RD."/tpl/report_clients_table.htm";if (file_exists("$form_htm")){ $form=file_get_contents($form_htm);}
 		if($clients=="") $where=""; else $where="j.client_conto_id in ($clients) and ";	 			
 		if($tpoint_id=="0") $where_tpoint=""; else $where_tpoint="and cc.tpoint_id=$tpoint_id";	
 																					

@@ -147,7 +147,7 @@ class dp {
 
     function show_dp_list($status=null){$db=DbSingleton::getDb();$gmanual=new gmanual;session_start(); $ses_tpoint_id=$_SESSION["media_tpoint_id"]; $media_user_id=$_SESSION["media_user_id"];$media_role_id=$_SESSION["media_role_id"];
         $where=" and (j.tpoint_id='$ses_tpoint_id' or j.user_id='$media_user_id') and ((j.status_dp!=0 and j.summ>0) || (j.status_dp=81)) "; $limit="limit 0,500";
-        if (!$status) $where_status=" and status_dp!=81 "; else $where_status=""; $percent=0;
+        if (!$status) $where_status=" and status_dp!=81 "; else $where_status=""; $percent="";
         if ($media_user_id==1){$where=" and j.status_dp!=0";$limit="";} if ($media_role_id==1){$where=" and ((j.status_dp!=0 and j.summ>0) || (j.status_dp=81)) "; $limit="";}
         $r=$db->query("select j.*, t.name as tpoint_name, dt.mvalue as doc_type_name, CASH.name as cash_name, c.name as client_name, dlv.mcaption as delivery_type_name 
         from J_DP j
@@ -215,7 +215,7 @@ class dp {
         $where=" and (j.tpoint_id='$ses_tpoint_id' or j.user_id='$media_user_id') and j.status_dp!=0 and j.summ>0 ";
         if (!$status) $where_status=" and status_dp!=81 "; else $where_status="";
         if ($media_user_id==1){$where=" and j.status_dp!=0";}if ($media_role_id==1){$where=" and j.status_dp!=0 and j.summ>0 ";}
-        $where_filter="";$percent=0;
+        $where_filter="";$percent="";
 
         if ($filstatus!="0")
             if ($filstatus>"81") {$where_filter.=" and jstr.status_dps='$filstatus'";}

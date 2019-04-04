@@ -14,7 +14,7 @@ class db {
 
     private function load_auth_param()
     {
-        $this->host = 'localhost';
+        $this->host = '172.17.0.1';
         $this->dbname = 'myparts_dba';
         $this->username = 'myparts_usr';
         $this->password = 'sdF98723KJef82';
@@ -84,7 +84,7 @@ class dbt {
 
     private function load_auth_param()
     {
-        $this->host = 'localhost';
+        $this->host = '172.17.0.1';
         $this->dbname = 'toko_dba';
         $this->username = 'toko_usr';
         $this->password = 'Xm53R9H4znZda4YH';

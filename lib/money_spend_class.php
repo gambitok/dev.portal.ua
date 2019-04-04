@@ -9,7 +9,7 @@ class money_spend {
     }
 
     function show_money_spend_list(){$db=DbSingleton::getDb();$where="";$limit ="limit 0,300"; if ($where!=""){$limit="";}
-        $r=$db->query("select j.*, CASH.name as cash_name, pf.name as name_from, pf.full_name as full_name_from, muf.name, m.mcaption as spend_type_caption
+        $r=$db->query("select j.*, CASH.name as cash_name, pf.name as name_from, pf.full_name as full_name_from, muf.name as user_name_from, m.mcaption as spend_type_caption
         from J_MONEY_SPEND j
             left outer join CASH on CASH.id=j.cash_id
             left outer join PAY_BOX pf on pf.id=j.paybox_id_from
@@ -24,7 +24,7 @@ class money_spend {
             $comment=$db->result($r,$i-1,"comment");
             $paybox_name_from=$db->result($r,$i-1,"name_from");
             if ($paybox_name_from==""){$paybox_name_from=$db->result($r,$i-1,"full_name_from");}
-            $user_name_from=$db->result($r,$i-1,"muf.name");
+            $user_name_from=$db->result($r,$i-1,"user_name_from");
             $spend_type_caption=$db->result($r,$i-1,"spend_type_caption");
 
             $function="viewMoneySpend(\"$id\")";
@@ -60,7 +60,7 @@ class money_spend {
 
     function viewMoneySpend($spend_id){$db=DbSingleton::getDb();session_start();$user_id=$_SESSION["media_user_id"];$slave=new slave;$data_time=date("Y-m-d H:i:s");
         $form="";$form_htm=RD."/tpl/money_spend_view.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select j.*, CASH.name as cash_name, pf.name as name_from, pf.full_name as full_name_from, muf.name, m.mcaption as spend_type_caption
+        $r=$db->query("select j.*, CASH.name as cash_name, pf.name as name_from, pf.full_name as full_name_from, muf.name as user_name_from, m.mcaption as spend_type_caption
         from J_MONEY_SPEND j
             left outer join CASH on CASH.id=j.cash_id
             left outer join PAY_BOX pf on pf.id=j.paybox_id_from
@@ -71,7 +71,7 @@ class money_spend {
         $summ=$db->result($r,0,"summ");
         $comment=$db->result($r,0,"comment");
         $paybox_name_from=$db->result($r,0,"name_from");if ($paybox_name_from==""){$paybox_name_from=$db->result($r,0,"full_name_from");}
-        $user_name_from=$db->result($r,0,"muf.name");
+        $user_name_from=$db->result($r,0,"user_name_from");
         $spend_type_caption=$db->result($r,0,"spend_type_caption");
         if ($spend_id==0){$form_htm=RD."/tpl/access_deny.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);} }
         $form=str_replace("{spend_id}",$spend_id,$form);

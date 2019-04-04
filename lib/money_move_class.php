@@ -9,8 +9,8 @@ class money_move {
     }
 
     function show_money_move_list(){$db=DbSingleton::getDb();$where="";$limit ="limit 0,300"; if ($where!=""){$limit="";}
-        $r=$db->query("select j.*, CASH.name as cash_name, pf.name as name_from, pf.full_name as full_name_from, muf.name,
-        pt.name as name_to, pt.full_name as full_name_to, mut.name, msm.mcaption as status_move_name 
+        $r=$db->query("select j.*, CASH.name as cash_name, pf.name as name_from, pf.full_name as full_name_from, muf.name as user_name_from,
+        pt.name as name_to, pt.full_name as full_name_to, mut.name as user_name_to, msm.mcaption as status_move_name 
         from J_MONEY_MOVE j
             left outer join CASH on CASH.id=j.cash_id
             left outer join PAY_BOX pf on pf.id=j.paybox_id_from
@@ -27,9 +27,9 @@ class money_move {
             $cash_name=$db->result($r,$i-1,"cash_name");
             $summ=$db->result($r,$i-1,"summ");
             $paybox_name_from=$db->result($r,$i-1,"name_from");if ($paybox_name_from==""){$paybox_name_from=$db->result($r,$i-1,"full_name_from");}
-            $user_name_from=$db->result($r,$i-1,"muf.name");
+            $user_name_from=$db->result($r,$i-1,"user_name_from");
             $paybox_name_to=$db->result($r,$i-1,"name_to");if ($paybox_name_to==""){$paybox_name_to=$db->result($r,$i-1,"full_name_to");}
-            $user_name_to=$db->result($r,$i-1,"mut.name");
+            $user_name_to=$db->result($r,$i-1,"user_name_to");
             $status_move_name=$db->result($r,$i-1,"status_move_name");
 
             if ($data!=null) {
@@ -73,9 +73,9 @@ class money_move {
     }
 
     function viewMoneyMove($move_id){$db=DbSingleton::getDb();$slave=new slave;
-        $form="";$form_htm=RD."/tpl/money_move_accept_view.htm";	if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select j.*, CASH.name as cash_name, pf.name as name_from, pf.full_name as full_name_from, muf.name,
-        pt.name as name_to, pt.full_name as full_name_to, mut.name from J_MONEY_MOVE j
+        $form="";$form_htm=RD."/tpl/money_move_accept_view.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        $r=$db->query("select j.*, CASH.name as cash_name, pf.name as name_from, pf.full_name as full_name_from, muf.name as user_name_from,
+        pt.name as name_to, pt.full_name as full_name_to, mut.name as user_name_to from J_MONEY_MOVE j
             left outer join CASH on CASH.id=j.cash_id
             left outer join PAY_BOX pf on pf.id=j.paybox_id_from
             left outer join media_users muf on muf.id=j.user_id_from
@@ -88,9 +88,9 @@ class money_move {
         $status_money_move=$db->result($r,0,"status_money_move");
         $dis_accept=""; if ($status_money_move==126){$dis_accept="disabled";}
         $paybox_name_from=$db->result($r,0,"name_from");if ($paybox_name_from==""){$paybox_name_from=$db->result($r,0,"full_name_from");}
-        $user_name_from=$db->result($r,0,"muf.name");
+        $user_name_from=$db->result($r,0,"user_name_from");
         $paybox_name_to=$db->result($r,0,"name_to");if ($paybox_name_to==""){$paybox_name_to=$db->result($r,0,"full_name_to");}
-        $user_name_to=$db->result($r,0,"mut.name");
+        $user_name_to=$db->result($r,0,"user_name_to");
 
         if ($move_id==0){$form_htm=RD."/tpl/access_deny.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);} }
         $form=str_replace("{move_id}",$move_id,$form);

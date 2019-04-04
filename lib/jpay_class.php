@@ -39,7 +39,7 @@ protected $prefix_new = '南';
         if ($data_start!='' && $data_end!='') $where_date="and j.data_time>='$data_start 00:00:00' and j.data_time<='$data_end 23:59:59'"; else
             $where_date=" and j.data_time>='$data_cur 00:00:00' and j.data_time<='$data_cur 23:59:59'";
 
-        $r=$db->query("select j.*, CASH.name as cash_name, m.mcaption as pay_type_name, p.name, p.full_name, mu.name, j.client_id, cl.full_name as client_name from J_PAY j
+        $r=$db->query("select j.*, CASH.name as cash_name, m.mcaption as pay_type_name, p.name as paybox_name, p.full_name as paybox_full_name, mu.name as user_name, j.client_id, cl.full_name as client_name from J_PAY j
             left outer join CASH on CASH.id=j.cash_id
             left outer join manual m on (m.id=j.pay_type_id and m.`key`='pay_type_id')
             left outer join PAY_BOX p on p.id=j.paybox_id
@@ -48,16 +48,13 @@ protected $prefix_new = '南';
         where j.status=1 $where $where_doc $where_pay $where_date order by j.id desc $limit;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
-            //$pay_type_id=$db->result($r,$i-1,"pay_type_id");
             $pay_type_name=$db->result($r,$i-1,"pay_type_name");
-            //$paybox_id=$db->result($r,$i-1,"paybox_id");
-            $paybox_name=$db->result($r,$i-1,"p.name");if ($paybox_name==""){$paybox_name=$db->result($r,$i-1,"p.full_name");}
+            $paybox_name=$db->result($r,$i-1,"paybox_name");if ($paybox_name==""){$paybox_name=$db->result($r,$i-1,"paybox_full_name");}
             $data_time=$db->result($r,$i-1,"data_time");
             $doc_nom=$db->result($r,$i-1,"doc_nom");
-            //$cash_id=$db->result($r,$i-1,"cash_id");
             $cash_name=$db->result($r,$i-1,"cash_name");
             $summ=$db->result($r,$i-1,"summ");
-            $user_name=$db->result($r,$i-1,"mu.name");
+            $user_name=$db->result($r,$i-1,"user_name");
             $client_id=$db->result($r,$i-1,"client_id");
             $client_name=$db->result($r,$i-1,"client_name");
             $parrent_doc_name=$this->getJpayParrentDocName($id,$doc_nom);
@@ -84,7 +81,8 @@ protected $prefix_new = '南';
     }
 
     function show_jpay_list(){$db=DbSingleton::getDb();$where="";$limit ="limit 0,300"; if ($where!=""){$limit="";}
-        $r=$db->query("select j.*, CASH.name as cash_name, m.mcaption as pay_type_name, p.name, p.full_name, mu.name, j.client_id, cl.full_name as client_name from J_PAY j
+        $r=$db->query("select j.*, CASH.name as cash_name, m.mcaption as pay_type_name, p.name as paybox_name, p.full_name as paybox_full_name, mu.name as user_name, j.client_id, cl.full_name as client_name 
+        from J_PAY j
             left outer join CASH on CASH.id=j.cash_id
             left outer join manual m on (m.id=j.pay_type_id and m.`key`='pay_type_id')
             left outer join PAY_BOX p on p.id=j.paybox_id
@@ -94,16 +92,13 @@ protected $prefix_new = '南';
 
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
-            //$pay_type_id=$db->result($r,$i-1,"pay_type_id");
             $pay_type_name=$db->result($r,$i-1,"pay_type_name");
-            //$paybox_id=$db->result($r,$i-1,"paybox_id");
-            $paybox_name=$db->result($r,$i-1,"p.name");if ($paybox_name==""){$paybox_name=$db->result($r,$i-1,"p.full_name");}
+            $paybox_name=$db->result($r,$i-1,"paybox_name");if ($paybox_name==""){$paybox_name=$db->result($r,$i-1,"paybox_full_name");}
             $data_time=$db->result($r,$i-1,"data_time");
             $doc_nom=$db->result($r,$i-1,"doc_nom");
-            //$cash_id=$db->result($r,$i-1,"cash_id");
             $cash_name=$db->result($r,$i-1,"cash_name");
             $summ=$db->result($r,$i-1,"summ");
-            $user_name=$db->result($r,$i-1,"mu.name");
+            $user_name=$db->result($r,$i-1,"user_name");
             $client_id=$db->result($r,$i-1,"client_id");
             $client_name=$db->result($r,$i-1,"client_name");
             $parrent_doc_name=$this->getJpayParrentDocName($id,$doc_nom);
@@ -165,8 +160,6 @@ protected $prefix_new = '南';
 
     function showJpayAvansMoneyPayForm(){$gmanual=new gmanual;
         $form="";$form_htm=RD."/tpl/jpay_avans_money_pay_form.htm";	if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        //$tpoint_id=1;/* user loged tpoint*/
-        //$seller_id=$this->getSellerId($tpoint_id,64);
         $summ=$summ_debit=$summ_kredit=$client_balans_avans=0;
         $print_pay_disabled="disabled"; $cash_kours="1";$cash_id=1;$cash_name=$this->getCashName($cash_id);
         $form=str_replace("{doc_cash_id}",$cash_id,$form);
@@ -186,8 +179,6 @@ protected $prefix_new = '南';
 
     function showJpayAutoMoneyPayForm(){$gmanual=new gmanual;
         $form="";$form_htm=RD."/tpl/jpay_auto_money_pay_form.htm";	if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        //$tpoint_id=1;/* user loged tpoint*/
-        //$seller_id=$this->getSellerId($tpoint_id,64);
         $summ=$summ_debit=$summ_kredit=$client_balans_avans=0;
         $print_pay_disabled="disabled"; $cash_kours="1";$cash_id=1;$cash_name=$this->getCashName($cash_id);
         $form=str_replace("{doc_cash_id}",$cash_id,$form);
@@ -206,8 +197,6 @@ protected $prefix_new = '南';
 
     function showJpayMoneyPayForm(){$gmanual=new gmanual;
         $form="";$form_htm=RD."/tpl/jpay_money_pay_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        //$tpoint_id=1;/* user loged tpoint*/
-        //$seller_id=$this->getSellerId($tpoint_id,64);
         $summ=$summ_debit=$summ_kredit=$client_balans_avans=0;
         $invoice_id=$pay_id=0;
         $print_pay_disabled="disabled"; $cash_kours="1";$cash_id=1;$cash_name=$this->getCashName($cash_id);
@@ -235,16 +224,13 @@ protected $prefix_new = '南';
             left outer join manual pt on pt.id=jp.pay_type_id
             left outer join PAY_BOX tpb on tpb.id=jp.paybox_id
         where jp.id='$pay_id' limit 0,1;");
-        //$pay_type_id=$db->result($r,0,"pay_type_id");
         $pay_type_name=$db->result($r,0,"pay_type_name");
-        //$paybox_id=$db->result($r,0,"paybox_id");
         $paybox_name=$db->result($r,0,"paybox_name");
         $data_time=$db->result($r,0,"data_time");
         $doc_nom=$db->result($r,0,"doc_nom");
         $client_id=$db->result($r,0,"client_id");$client_name=$this->getClientName($client_id);
         $cash_id=$db->result($r,0,"cash_id");$cash_name=$this->getCashAbr($cash_id);
         $summ=$db->result($r,0,"summ");
-        //$user_id=$db->result($r,0,"user_id");
         $user_name=$db->result($r,0,"user_name");
 
         $r1=$db->query("select * from J_PAY_STR where pay_id='$pay_id' order by id asc;");$n1=$db->num_rows($r1);$str_list="";
@@ -293,8 +279,6 @@ protected $prefix_new = '南';
 
     function showJpayAvansForm(){$gmanual=new gmanual;
         $form="";$form_htm=RD."/tpl/jpay_avans_pay_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        // tpoint_id=1;/* user loged tpoint*/
-        //$seller_id=$this->getSellerId($tpoint_id,64);
         $print_pay_disabled="disabled"; $cash_kours="1";$cash_id=1;$cash_name=$this->getCashName($cash_id);
         $form=str_replace("{doc_cash_id}",$cash_id,$form);
         $form=str_replace("{cash_name}",$cash_name,$form);
@@ -310,8 +294,6 @@ protected $prefix_new = '南';
 
     function showJpayMoneyBackForm(){$gmanual=new gmanual;
         $form="";$form_htm=RD."/tpl/jpay_money_back_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        //$tpoint_id=1;/* user loged tpoint*/ //$seller_id=$this->getSellerId($tpoint_id,64);
-        //$tpoint_id=1;/* user loged tpoint*/ //$seller_id=$this->getSellerId($tpoint_id,64);
         $summ=$summ_debit=$summ_kredit=$client_balans_avans=0;
         $invoice_id=$pay_id=0;
         $print_pay_disabled="disabled"; $cash_kours="1";$cash_id=1;$cash_name=$this->getCashName($cash_id);

@@ -29,8 +29,7 @@ if ($rl_id==5 || $rl_id==6 || $rl_id==1){
 }
 
 $dp=new dp; 
-
-$access=new access; 
+$access=new access;
 
 $mf1="report_overdraft"; 		list($accss1,$acc_lvl)=$access->check_user_access($mf1);
 $mf2="clients"; 				list($accss2,$acc_lvl)=$access->check_user_access($mf2);
@@ -53,7 +52,6 @@ $content=str_replace("{kilk_suppl_back}", $dp->countSupplCoopSite()[1], $content
 
 $content=str_replace("{kilk_overdraft}", $dp->countReportOverdrafts()[0], $content);
 $content=str_replace("{kilk_overdraft_back}", $dp->countReportOverdrafts()[1], $content);
-		
 
 $content=str_replace("{windowState}", $_SESSION["windowState"], $content);
 $content=str_replace("{title}", $module_caption.$title, $content);

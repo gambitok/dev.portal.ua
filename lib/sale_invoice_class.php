@@ -1150,7 +1150,7 @@ class sale_invoice {
         return $form;
     }
 
-    function exportSaleInvoiceExcel($invoice_id){$db=DbSingleton::getDb();$cat=new catalogue;$invoice_summ=0;
+    function exportSaleInvoiceExcel($invoice_id,$separator){$db=DbSingleton::getDb();$cat=new catalogue;$invoice_summ=0;
         $r=$db->query("select sv.*, t.name as tpoint_name, sl.name as seller_name, sld.edrpou, ot.name as org_type_abr, cl.name as client_name, dt.mcaption as doc_type_name, dt.mvalue as doc_type_abr,ch.abr2 as cash_abr,dp.delivery_address 
         from J_SALE_INVOICE sv
             left outer join CASH ch on ch.id=sv.cash_id
@@ -1167,40 +1167,26 @@ class sale_invoice {
             $prefix=$db->result($r,0,"prefix");
             $doc_nom=$db->result($r,0,"doc_nom");
             $data_create=$db->result($r,0,"data_create");
-            //$tpoint_id=$db->result($r,0,"tpoint_id");
-            //$tpoint_name=$db->result($r,0,"tpoint_name");
-            //$seller_id=$db->result($r,0,"seller_id");
             $seller_name=$db->result($r,0,"seller_name");
-            //$edrpou=$db->result($r,0,"edrpou");
-            //$org_type_abr=$db->result($r,0,"org_type_abr");
-            //$client_id=$db->result($r,0,"client_id");
             $client_name=$db->result($r,0,"client_name");
-            //$doc_type_id=$db->result($r,0,"doc_type_id");
-            //$doc_type_name=$db->result($r,0,"doc_type_name");
-            //$doc_type_abr=$db->result($r,0,"doc_type_abr");
-            //$summ=$db->result($r,0,"summ");
-            //$cash_id=$db->result($r,0,"cash_id");
-            //$cash_abr=$db->result($r,0,"cash_abr");
-            //$data_pay=$db->result($r,0,"data_pay");
-            //$user_name=$this->getMediaUserName($db->result($r,0,"user_id"));
-            //$status_invoice=$db->result($r,0,"status_invoice");
-            //$status_invoice_cap=$gmanual->get_gmanual_caption($status_invoice);
-            //$delivery_address=$db->result($r,0,"delivery_address");
-
             $list=array();
             $r=$db->query("select * from J_SALE_INVOICE_STR where invoice_id='$invoice_id' order by id asc;");$n=$db->num_rows($r);
             for ($i=1;$i<=$n;$i++){
-                //$id=$db->result($r,$i-1,"id");
                 $art_id=$db->result($r,$i-1,"art_id");
                 $article_nr_displ=$db->result($r,$i-1,"article_nr_displ"); $article_name=$cat->getArticleNameLang($art_id);
                 $brand_id=$db->result($r,$i-1,"brand_id"); $brand_name=$cat->getBrandName($brand_id);
                 $amount=$db->result($r,$i-1,"amount");
-                //$price=$db->result($r,$i-1,"price");
                 $price_end=$db->result($r,$i-1,"price_end");
-                //$discount=$db->result($r,$i-1,"discount");
                 $summ=$db->result($r,$i-1,"summ");
                 $invoice_summ+=$summ;
-                array_push($list,"$i;$article_nr_displ;$brand_name;$article_name;$amount;$price_end;$summ\n");
+                if ($separator=="comma") {
+                    $price_format=str_replace(".",",",$price_end);
+                    $summ_format=str_replace(".",",",$summ);
+                } else {
+                    $price_format=$price_end;
+                    $summ_format=$summ;
+                }
+                array_push($list,"$i;$article_nr_displ;$brand_name;$article_name;$amount;$price_format;$summ_format\n");
             }
 
             $filename="$client_name"."_"."$prefix-$doc_nom"."_"."$data_create";
@@ -1216,7 +1202,6 @@ class sale_invoice {
             $filename=str_replace("'","",$filename);
 
             $header = "№п/п;Індекс;Бренд;Найменування;К-сть;Ціна;Сума\n";
-
             header('Content-Type: text/csv; charset=utf-8');
             header("Content-Disposition: attachment; filename=$filename.csv");
             $output = fopen('php://output', 'w'); $nakladna="Видакова накладна №$prefix-$doc_nom-$client_name від $data_create\n";

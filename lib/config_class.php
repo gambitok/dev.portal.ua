@@ -11,6 +11,7 @@ class config {
 			$keywords=$db->result($r,0,"key_words");
 			$descr=$db->result($r,0,"descr");
 			$address=$db->result($r,0,"address");
+            $address="http://78.152.183.126:8001";
 			define('SITE_NAME', $address);
 		}
 		return array($title,$title_short,$keywords,$descr,$address);

@@ -85,10 +85,18 @@ function printSaleInvoceBuh(invoice_id){
 }
 
 function exportSaleInvoceExcel(invoice_id){
-	if (invoice_id=="" || invoice_id==0){toastr["error"](errs[0]);}
-	if (invoice_id>0){
-		window.open("/SaleInvoice/exportExcelSlIv/"+invoice_id,"_blank","printWindow");
-	} 
+    swal({
+		title: "Виберіть спосіб вигрузки",text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",confirmButtonText: "Крапка", cancelButtonText: "Кома", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
+	},
+	function (isConfirm) {
+		if (isConfirm) {
+			swal.close();
+			window.open("/SaleInvoice/exportExcelSlIv/"+invoice_id+"/point","_blank","printWindow");
+		} else {
+			swal.close();
+			window.open("/SaleInvoice/exportExcelSlIv/"+invoice_id+"/comma","_blank","printWindow");
+		}
+	});
 }
 
 function showSaleInvoiceCard(invoice_id){

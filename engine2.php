@@ -27,7 +27,7 @@ require_once RD.'/lib/group_tree_class.php';$group_tree=new group_tree;
 
 // ---- REPORT CLIENTS ---- //
 
-if ($_REQUEST["w"]=="showReportClients"){ $GLOBALS['_RESULT'] = array("content"=>$report_clients->showReportClients($_REQUEST["date_start"],$_REQUEST["date_end"],$_REQUEST["clients"],$_REQUEST["cash_id"],$_REQUEST["tpoint_id"]));}
+if ($_REQUEST["w"]=="showReportClients"){ $GLOBALS['_RESULT'] = array("content"=>$report_clients->showReportClients($_REQUEST["date_start"],$_REQUEST["date_end"],$_REQUEST["clients"],$_REQUEST["cash_id"],$_REQUEST["tpoint_id_report"]));}
 
 // ---- UNKNOWN NUMBERS ---- //
 
@@ -314,7 +314,7 @@ if ($_REQUEST["w"]=="showSupplCoopCard"){ $GLOBALS['_RESULT'] = array("content"=
 
 // report_overdraft
 
-if ($_REQUEST["w"]=="filterReportOverdraftList"){ $GLOBALS['_RESULT'] = array("content"=>$report_overdraft->showReportOverdraftList($_REQUEST["data"],$_REQUEST["client_id"],$_REQUEST["tpoint_id"]));}
+if ($_REQUEST["w"]=="filterReportOverdraftList"){ $GLOBALS['_RESULT'] = array("content"=>$report_overdraft->showReportOverdraftList($_REQUEST["data"],$_REQUEST["client_id_cur"],$_REQUEST["tpoint_id_cur"]));}
 
 if ($_REQUEST["w"]=="getClientOverdraftList"){ $GLOBALS['_RESULT'] = array("content"=>$report_overdraft->getClientOverdraftList($_REQUEST["data"],$_REQUEST["tpoint_id"]));}
 
