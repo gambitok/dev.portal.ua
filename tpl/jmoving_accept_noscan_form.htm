@@ -1,30 +1,30 @@
-        <form method="get" class="form-horizontal">
-        	<h3 align="center">Фіксація приймання надходження без сканування штрихкоду</h3>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">Артикул</label>
-                <div class="col-sm-8">
-                    {article_nr_displ} {brand_name}
-                </div>
-			</div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">Найменування</label>
-                <div class="col-sm-8">
-                    {article_name}
-                </div>
-			</div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">Кількість</label>
-                <div class="col-sm-8">
-	                <input type="hidden" id="dif_amount_barcode" value="{dif_amount_barcode}">
-                    <input type="text" class="form-control numberOnly" id="amount_barcode_noscan" value="{amount_barcode_noscan}">
-                </div>
-            </div>
-            
-            <div class="hr-line-dashed"></div>
-            <div class="form-group">
-                <div class="col-sm-10 text-right col-sm-offset-2">
-                    <button class="btn btn-primary" type="button" onClick="saveJmovingAcceptNoscanForm('{jmoving_id}','{art_id}','{str_id}');">Зберегти</button>
-                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
-                </div>
-            </div>
-        </form>
+<form method="get" class="form-horizontal">
+    <h3 align="center">Фіксація приймання надходження без сканування штрихкоду</h3>
+    <div class="form-group">
+        <label class="col-sm-4 control-label">Артикул</label>
+        <div class="col-sm-8">
+            {article_nr_displ} {brand_name}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label">Найменування</label>
+        <div class="col-sm-8">
+            {article_name}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label">Кількість</label>
+        <div class="col-sm-8">
+            <input type="hidden" id="dif_amount_barcode" value="{dif_amount_barcode}">
+            <input title="Кількість не просканованих" type="text" class="form-control numberOnly" id="amount_barcode_noscan" value="{amount_barcode_noscan}">
+        </div>
+    </div>
+
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        <div class="col-sm-10 text-right col-sm-offset-2">
+            <button class="btn btn-primary" type="button" onClick="saveJmovingAcceptNoscanForm('{jmoving_id}','{art_id}','{str_id}');">Зберегти</button>
+            <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+        </div>
+    </div>
+</form>

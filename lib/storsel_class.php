@@ -1041,7 +1041,7 @@ class storsel {
         return $order_cap;
     }
 
-    function printStorselView($select_id){$db=DbSingleton::getDb();$cat=new catalogue;$dp=new dp; $slave=new slave;session_start();$user_name=$_SESSION["user_name"];
+    function printStorselView($select_id){$db=DbSingleton::getDb();$cat=new catalogue;$dp=new dp;$jmoving=new jmoving;$slave=new slave;session_start();$user_name=$_SESSION["user_name"];
         $dp_name=$jmoving_name=$client_name="";
         $form="";$form_htm=RD."/tpl/storsel_select_print.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);} $list="";
         $rstr=$db->query("select storage_id from J_SELECT where id='$select_id';");
@@ -1073,15 +1073,14 @@ class storsel {
         if ($tpoint_name==""){$tpoint_name="-------------";}
 
         if ($parrent_doc_type_id==1){ // Jmoving
-            $jmoving=new jmoving; $jmoving_name=$jmoving->getJmovingName($parrent_doc_id);
-
+            $jmoving_name=$jmoving->getJmovingName($parrent_doc_id);
             list(,,,$storage_id_to,,,,)=$jmoving->getJmovingInfo($parrent_doc_id);
             list($tpoint_id,)=$jmoving->getTpointDataByStorage($storage_id_to);
-
             $tpoint_name=$this->getTpointName($tpoint_id);
         }
         if ($parrent_doc_type_id==2){ // DP
-            $dp_name=$dp->getDpName($parrent_doc_id); $client_name=$dp->getDpClientName($parrent_doc_id);
+            $dp_name=$dp->getDpName($parrent_doc_id);
+            $client_name=$dp->getDpClientName($parrent_doc_id);
             $tpoint_name="---";
         }
         $tpoint_address=$this->getTpointAddress($tpoint_id);

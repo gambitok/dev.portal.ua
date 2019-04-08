@@ -112,7 +112,7 @@ function newJmovingCard(type_id){
 }
 
 function showJmovingCard(jmoving_id){
-	if (jmoving_id<=0 || jmoving_id==""){toastr["error"](errs[0]);}
+	if (jmoving_id<=0 || jmoving_id===""){toastr["error"](errs[0]);}
 	if (jmoving_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'showJmovingCard', 'jmoving_id':jmoving_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){
@@ -121,7 +121,7 @@ function showJmovingCard(jmoving_id){
 			document.getElementById("JmovingCardLabel").innerHTML=result["doc_prefix_nom"];
 			$('#jmoving_tabs').tab();
 			$("#cash_id").select2({placeholder: "Виберіть валюту",dropdownParent: $("#JmovingCard")});
-			$('#jmoving_data').datepicker({format: "yyyy-mm-dd",autoclose:true})
+			$('#jmoving_data').datepicker({format: "yyyy-mm-dd",autoclose:true});
 			$('.i-checks').iCheck({checkboxClass: 'icheckbox_square-green',radioClass: 'iradio_square-green',});
 //			$("#storage_id_to").select2({placeholder: "Виберіть склад",dropdownParent: $("#JmovingCard")});
 //			$("#cell_id_to").select2({placeholder: "Виберіть комірку",dropdownParent: $("#JmovingCard")});
@@ -130,7 +130,7 @@ function showJmovingCard(jmoving_id){
 	}
 }
 function showJmovingCardLocal(jmoving_id){
-	if (jmoving_id<=0 || jmoving_id==""){toastr["error"](errs[0]);}
+	if (jmoving_id<=0 || jmoving_id===""){toastr["error"](errs[0]);}
 	if (jmoving_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'showJmovingCardLocal', 'jmoving_id':jmoving_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -139,7 +139,7 @@ function showJmovingCardLocal(jmoving_id){
 			document.getElementById("JmovingCardLabel").innerHTML=result["doc_prefix_nom"];
 			$('#jmoving_tabs').tab();
 			$("#cash_id").select2({placeholder: "Виберіть валюту",dropdownParent: $("#JmovingCard")});
-			$('#jmoving_data').datepicker({format: "yyyy-mm-dd",autoclose:true})
+			$('#jmoving_data').datepicker({format: "yyyy-mm-dd",autoclose:true});
 			$('.i-checks').iCheck({checkboxClass: 'icheckbox_square-green',radioClass: 'iradio_square-green',});
 //			$("#storage_id_to").select2({placeholder: "Виберіть склад",dropdownParent: $("#JmovingCard")});
 //			$("#cell_id_to").select2({placeholder: "Виберіть комірку",dropdownParent: $("#JmovingCard")});
@@ -520,7 +520,7 @@ function setArticleToJmoving(){
 	var pos=$("#row_pos").val();
 	var max_value=parseFloat($("#amountMaxValue").val());
 	if (max_value<amount_move){swal("Помилка!", "Кількість для переміщення більша за залишок!", "error");}
-	if (jmoving_id.length>0 && pos>0 && parseFloat(amount_move)>0 && amount_move<=max_value){
+	if (jmoving_id.length>0 && pos>0 && amount_move>0 && amount_move<=max_value){
 		var idStr=$("#idStr_"+pos).val();
 		var artIdStr=$('#art_idS2').val();
 		var article_nr_displStr=$('#article_nr_displS2').val();
@@ -534,9 +534,12 @@ function setArticleToJmoving(){
 				document.getElementById("jmoving_weight").innerHTML=result["weight"];
 				document.getElementById("jmoving_volume").innerHTML=result["volume"];
 				document.getElementById("label_un_articles").innerHTML=result["label_empty"];
+				console.log("answer = 1");
 
-				JsHttpRequest.query($rcapi,{ 'w': 'showJmovingCardStr', 'jmoving_id':jmoving_id},
-				function (result, errors){ if (errors) {alert(errors);} if (result){  
+                var storage_id_to=$('#storage_id_to').val();
+				JsHttpRequest.query($rcapi,{ 'w': 'showJmovingCardStr', 'jmoving_id':jmoving_id, 'storage_id_to':storage_id_to},
+				function (result, errors){ if (errors) {alert(errors);} if (result){
+					console.log("updated range");
 					document.getElementById("jmoving_сhild_range").innerHTML=result["content"];
 					numberOnly();
 				}}, true);
@@ -553,7 +556,6 @@ function setArticleToJmoving(){
 					$("#storage_id_to").attr("disabled","");
 					$("#storage_id_to").removeClass("disabled");
 				}
-				
 			}
 			else{ swal("Помилка!", result["error"], "error"); }
 		}}, true);

@@ -227,7 +227,7 @@ if ($_REQUEST["w"]=="showJmovingCard"){ list($content,$doc_prefix_nom)=$jmoving-
 if ($_REQUEST["w"]=="showJmovingCardLocal"){ list($content,$doc_prefix_nom)=$jmoving->showJmovingCardLocal($_REQUEST["jmoving_id"]);  $GLOBALS['_RESULT'] = array("content"=>$content,"doc_prefix_nom"=>$doc_prefix_nom);}
 if ($_REQUEST["w"]=="closeJmovingCard"){ $answer=$jmoving->closeJmovingCard($_REQUEST["jmoving_id"]);  $GLOBALS['_RESULT'] = array("answer"=>$answer);}
 
-if ($_REQUEST["w"]=="showJmovingCardStr"){ list($content,$kol_art)=$jmoving->showJmovingStrList($_REQUEST["jmoving_id"],""); $GLOBALS['_RESULT'] = array("content"=>$content);}
+if ($_REQUEST["w"]=="showJmovingCardStr"){ list($content,$kol_art)=$jmoving->showJmovingStrList($_REQUEST["jmoving_id"],"",$_REQUEST["storage_id_to"]); $GLOBALS['_RESULT'] = array("content"=>$content);}
 if ($_REQUEST["w"]=="showJmovingLocalCardStr"){ list($content,$kol_art)=$jmoving->showJmovingStrLocalList($_REQUEST["jmoving_id"],""); $GLOBALS['_RESULT'] = array("content"=>$content);}
 
 if ($_REQUEST["w"]=="showJmovingDocumentList"){list($content,$header)=$jmoving->showJmovingDocumentList($_REQUEST["jmoving_id"],$_REQUEST["jmoving_op_id"],$_REQUEST["document_id"]); $GLOBALS['_RESULT'] = array("content"=>$content,"header"=>$header); }
@@ -322,16 +322,17 @@ if ($_REQUEST["w"]=="saveJmovingStorageSelectBugForm"){
 	$GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$error,"row_id"=>$row_id,"storage_select_bug_name"=>$storage_select_bug_name,"dif_amount_barcode"=>$dif_amount_barcode,"amount_bug"=>$amount_bug,"amount_barcode"=>$amount_barcodes,"amount_barcode_noscan"=>$amount_barcodes_noscan);}
 
 if ($_REQUEST["w"]=="showJmovingStorageAcceptForm"){ list($answer,$error,$content,$header)=$jmoving->showJmovingStorageAcceptForm($_REQUEST["jmoving_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$error,"content"=>$content,"header"=>$header);}
-if ($_REQUEST["w"]=="saveJmovingAcceptBarcodeForm"){ list($answer,$error,$row_id,$amount_barcode,$dif_amount_barcode)=$jmoving->saveJmovingAcceptBarcodeForm($_REQUEST["jmoving_id"],$_REQUEST["barcode"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$error,"row_id"=>$row_id,"amount_barcode"=>$amount_barcode,"dif_amount_barcode"=>$dif_amount_barcode);}
-if ($_REQUEST["w"]=="finishJmovingAcceptForm"){ list($answer,$error)=$jmoving->finishJmovingAcceptForm($_REQUEST["jmoving_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$error);}
-if ($_REQUEST["w"]=="finishJmovingLocalAcceptForm"){ list($answer,$error)=$jmoving->finishJmovingLocalAcceptForm($_REQUEST["jmoving_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$error);}
 
+if ($_REQUEST["w"]=="saveJmovingAcceptBarcodeForm"){ list($answer,$error,$row_id,$amount_barcode,$dif_amount_barcode)=$jmoving->saveJmovingAcceptBarcodeForm($_REQUEST["jmoving_id"],$_REQUEST["barcode"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$error,"row_id"=>$row_id,"amount_barcode"=>$amount_barcode,"dif_amount_barcode"=>$dif_amount_barcode);}
+
+if ($_REQUEST["w"]=="finishJmovingAcceptForm"){ list($answer,$error)=$jmoving->finishJmovingAcceptForm($_REQUEST["jmoving_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$error);}
+
+if ($_REQUEST["w"]=="finishJmovingLocalAcceptForm"){ list($answer,$error)=$jmoving->finishJmovingLocalAcceptForm($_REQUEST["jmoving_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$error);}
 
 if ($_REQUEST["w"]=="showJmovingAcceptBugForm"){ list($answer,$error,$content,$header)=$jmoving->showJmovingAcceptBugForm($_REQUEST["jmoving_id"],$_REQUEST["str_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$error,"content"=>$content,"header"=>$header);}
 if ($_REQUEST["w"]=="saveJmovingAcceptBugForm"){ 
 	list($answer,$error,$row_id,$storage_bug_name,$dif_amount_barcode,$amount_bug)=$jmoving->saveJmovingAcceptBugForm($_REQUEST["jmoving_id"],$_REQUEST["str_id"],$_REQUEST["storage_select_bug"],$_REQUEST["dif_amount_barcode"]); 
 	$GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$error,"row_id"=>$row_id,"storage_bug_name"=>$storage_bug_name,"dif_amount_barcode"=>$dif_amount_barcode,"amount_bug"=>$amount_bug);}
-
 
 if ($_REQUEST["w"]=="showJmovingAcceptNoscanForm"){ list($answer,$error,$content,$header)=$jmoving->showJmovingAcceptNoscanForm($_REQUEST["jmoving_id"],$_REQUEST["str_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$error,"content"=>$content,"header"=>$header);}
 if ($_REQUEST["w"]=="saveJmovingAcceptNoscanForm"){ 

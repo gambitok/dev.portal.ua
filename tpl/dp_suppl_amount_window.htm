@@ -1,17 +1,17 @@
-        <form method="get" class="form-horizontal" onSubmit="setArticleSupplToDp('{art_id}'); return false;" enctype="multipart/form-data">
-        	<input type="hidden" id="" value="">
-        	<div class="form-group">
-                <label class="col-md-6 col-sm-12 control-label">Кількість для замовлення</label>
-                <div class="col-md-6 col-sm-12">
-                    <input type="text" id="amount_move" class="form-control amount_move_numbers" value='{amount}' min='1' max="">
-                    <input type="hidden" id="amount_storage_id" value="">
-                </div>
-            </div>
-            <div class="hr-line-dashed"></div>
-            <div class="form-group">
-                <div class="col-sm-12 text-right">
-                    <button class="btn btn-primary" type="button" onClick="setArticleToDp('{art_id}');">Зберегти</button>
-                    <button class="btn btn-white" type="button" data-dismiss="modal" onClick="closeAmountInputWindow('{art_id}');">Закрити</button>
-                </div>
-            </div>
-        </form>
+<form method="get" class="form-horizontal" onSubmit="setArticleSupplToDp('{art_id}'); return false;" enctype="multipart/form-data">
+    <input type="hidden" id="" value="">
+    <div class="form-group">
+        <label class="col-md-6 col-sm-12 control-label">Кількість для замовлення</label>
+        <div class="col-md-6 col-sm-12">
+            <input title="Кількість" type="text" id="amount_move" class="form-control amount_move_numbers" value='{amount}' min='1' max="">
+            <input type="hidden" id="amount_storage_id" value="">
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        <div class="col-sm-12 text-right">
+            <button class="btn btn-primary" type="button" onClick="setArticleToDp('{art_id}');">Зберегти</button>
+            <button class="btn btn-white" type="button" data-dismiss="modal" onClick="closeAmountInputWindow('{art_id}');">Закрити</button>
+        </div>
+    </div>
+</form>

@@ -1,35 +1,41 @@
 <div style="font-size:12px;">
-<p></p>
-<table width="100%" border="0"><tr>
-	<td><small>Дата видруку: {curtime}</small></td>
-    <td align="right"><img src="http://portal.myparts.pro/images/logo/logo-myparts.pro.png" height="30"></td>
-</tr></table>
-<h4 align="center">Складський відбір №{select_nom} від {select_data}</h4>
-<p>
-Склад відбору: {storage_from}<br>
-Склад переміщення: {storage_to}<br>
-Примітка: {jmoving_comment}</p>
-<table border="1" class="table table-condensed table-striped table-hover table-bordered" width="100%" style='font-size:12px;'>
-    <thead>
-        <tr align="center">
-            <th width="50" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">№ п/п</th>
-            <th width="80" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Місце</th>
-            <th width="100" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Індекс</th>
-            <th width="100" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Бренд</th>
-            <th width="80" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">К-сть</th>
-            <th width="80" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Місце признацення</th>
-            <th width="150" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Найменування</th>
-            <th width="140" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Примітка</th>
-        </tr>
-    </thead>
-    <tbody id="sklad_storage_view_range">
-        {ArticlesList}
-    </tbody>
-</table><br><br>
-<table width="100%" border="0"><tr>
-	<td>Підібрав: ____________________ {user_name}</td>
-    <td align="right">{qrImage}</td>
-</tr></table>
-<p></p>
-<hr>
+    <p></p>
+
+    <table width="100%" border="0"><tr>
+        <td><small>Дата видруку: {curtime}</small></td>
+        <td align="right"><img src="http://portal.myparts.pro/images/logo/logo-myparts.pro.png" height="30"></td>
+    </tr></table>
+
+    <h4 align="center">Складський відбір №{select_nom} від {select_data}</h4>
+
+    <p>Склад відбору: {storage_from}<br>
+    Склад переміщення: {storage_to}<br>
+    Примітка: {jmoving_comment}</p>
+
+    <table border="1" class="table table-condensed table-striped table-hover table-bordered" width="100%" style='font-size:12px;'>
+        <thead>
+            <tr align="center">
+                <th width="50" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">№ п/п</th>
+                <th width="80" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Місце</th>
+                <th width="100" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Індекс</th>
+                <th width="100" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Бренд</th>
+                <th width="80" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">К-сть</th>
+                <th width="80" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Місце признацення</th>
+                <th width="150" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Найменування</th>
+                <th width="140" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Примітка</th>
+            </tr>
+        </thead>
+
+        <tbody id="sklad_storage_view_range">
+            {ArticlesList}
+        </tbody>
+    </table><br><br>
+
+    <table width="100%" border="0"><tr>
+        <td>Підібрав: ____________________ {user_name}</td>
+        <td align="right">{qrImage}</td>
+    </tr></table>
+
+    <p></p>
+    <hr>
 </div>

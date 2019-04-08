@@ -1938,7 +1938,7 @@ class back_clients {
             $sale_invoice_name=$this->getSaleInvoiceName($sale_invoice_id);
             $doc_type_id=$this->getSaleInvoiceDocType($sale_invoice_id);
             $form="";
-            if ($doc_type_id==61) $form_htm=RD."/tpl/back_clients_print_n1.htm"; //амо
+            if ($doc_type_id==61) $form_htm=RD."/tpl/back_clients_print_n1.htm"; //ам
             if ($doc_type_id==63) $form_htm=RD."/tpl/back_clients_print_n2.htm"; //рв
             if ($doc_type_id==64) $form_htm=RD."/tpl/back_clients_print_n3.htm"; //ай
             if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}

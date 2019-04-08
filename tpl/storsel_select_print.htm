@@ -1,46 +1,54 @@
 <div style="font-size:12px; padding: 30px;">
-<p></p>
-<table width="100%" border="0"><tr>
-	<td><small>Дата видруку: {curtime}</small></td>
-    <td align="right"><img src="http://portal.myparts.pro/images/logo/logo-tokogroup.png" height="30"></td>
-</tr></table>
-<h4 align="center">Складський відбір №{select_nom} від {data_create}</h4>
-<p>
-<table width="100%" border="0" style="font-size:12px;">
-<tr>
-	<td width="50%">Склад відбору: {storage_name};</td>
-    <td>Переміщення у TT: {tpoint_name} {tpoint_address}</td>
-</tr>
-<tr>
-	<td width="50%">Клієнт: {client_name};</td>
-    <td>Основа: {dp_name}{jmoving_name}</td>
-</tr>
-</table>
-Примітка: <u>{dp_note}</u></p><br>
+    <p></p>
 
-<table width="100%" border="0" style="font-size:10px;"><tr>
-	<td>К-сть артикулів: {articles_amount}</td>
-    <td>К-сть товарів: {amount}</td>
-    <td>об'єм: {volume}м3; вага нето: {weight_netto}кг; вага бруто: {weight_brutto}кг;</td>
-</tr></table>
-<table border="1" class="table table-condensed table-striped table-hover table-bordered" width="100%" style='font-size:12px;'>
-    <thead>
-        <tr align="center">
-            <th width="50" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">№ п/п</th>
-            <th width="80" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Місце</th>
-            <th width="100" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Індекс</th>
-            <th width="100" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Бренд</th>
-            <th width="80" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">К-сть</th>
-            <th width="150" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Найменування</th>
-            <th width="140" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Примітка</th>
-        </tr>
-    </thead>
-    <tbody id="sklad_storage_view_range">
-        {ArticlesList}
-    </tbody>
-</table>
-<table width="100%" border="0"><tr>
-	<td>Підібрав: ____________________</td>
-</tr></table>
-<hr>
+    <table width="100%" border="0"><tr>
+        <td><small>Дата видруку: {curtime}</small></td>
+        <td align="right"><img src="http://portal.myparts.pro/images/logo/logo-tokogroup.png" height="30"></td>
+    </tr></table>
+
+    <h4 align="center">Складський відбір №{select_nom} від {data_create}</h4>
+
+    <p>
+        <table width="100%" border="0" style="font-size:12px;">
+            <tr>
+                <td width="50%">Склад відбору: {storage_name};</td>
+                <td>Переміщення у TT: {tpoint_name} {tpoint_address}</td>
+            </tr>
+            <tr>
+                <td width="50%">Клієнт: {client_name};</td>
+                <td>Основа: {dp_name}{jmoving_name}</td>
+            </tr>
+        </table>
+        Примітка: <u>{dp_note}</u>
+    </p><br>
+
+    <table width="100%" border="0" style="font-size:10px;"><tr>
+        <td>К-сть артикулів: {articles_amount}</td>
+        <td>К-сть товарів: {amount}</td>
+        <td>об'єм: {volume}м3; вага нето: {weight_netto}кг; вага бруто: {weight_brutto}кг;</td>
+    </tr></table>
+
+    <table border="1" class="table table-condensed table-striped table-hover table-bordered" width="100%" style='font-size:12px;'>
+        <thead>
+            <tr align="center">
+                <th width="50" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">№ п/п</th>
+                <th width="80" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Місце</th>
+                <th width="100" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Індекс</th>
+                <th width="100" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Бренд</th>
+                <th width="80" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">К-сть</th>
+                <th width="150" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Найменування</th>
+                <th width="140" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Примітка</th>
+            </tr>
+        </thead>
+
+        <tbody id="sklad_storage_view_range">
+            {ArticlesList}
+        </tbody>
+    </table>
+
+    <table width="100%" border="0"><tr>
+        <td>Підібрав: ____________________</td>
+    </tr></table>
+
+    <hr>
 </div>

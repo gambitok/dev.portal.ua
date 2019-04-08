@@ -8,35 +8,35 @@ class sale_invoice {
         return $name;
     }
 
-    function show_sale_invoice_list(){$db=DbSingleton::getDb();session_start(); $ses_tpoint_id=$_SESSION["media_tpoint_id"];$media_user_id=$_SESSION["media_user_id"];$media_role_id=$_SESSION["media_role_id"];
-        $where_tpoint=" and (sv.tpoint_id='$ses_tpoint_id' or sv.user_id='$media_user_id')"; if ($media_role_id==1 || $media_role_id==7){$where_tpoint="";}
+    function show_sale_invoice_list(){$db=DbSingleton::getDb();$gmanual=new gmanual;session_start();$ses_tpoint_id=$_SESSION["media_tpoint_id"];$media_user_id=$_SESSION["media_user_id"];$media_role_id=$_SESSION["media_role_id"];
         $form="";$form_htm=RD."/tpl/sale_invoice_range.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $data_cur=date("Y-m-d"); $summ_uah=$summ_usd=$summ_eur=0; $list="";
+
+        $where_tpoint=" and (sv.tpoint_id='$ses_tpoint_id' or sv.user_id='$media_user_id' or clc.tpoint_id='$ses_tpoint_id')";
+        if ($media_role_id==1 || $media_role_id==7){$where_tpoint="";}
+
         $where=" and sv.time_stamp>='$data_cur 00:00:00' and sv.time_stamp<='$data_cur 23:59:59'";
-        $r=$db->query("select sv.*, dp.prefix as dp_prefix, dp.doc_nom as dp_nom, t.name as tpoint_name, sl.name as seller_name, cl.name as client_name, dt.mvalue as doc_type_name,ch.abr2 as cash_abr from J_SALE_INVOICE sv
+
+        $r=$db->query("select sv.*, dp.prefix as dp_prefix, dp.doc_nom as dp_nom, t.name as tpoint_name, sl.name as seller_name, cl.name as client_name, dt.mvalue as doc_type_name, ch.abr2 as cash_abr 
+        from J_SALE_INVOICE sv
             left outer join J_DP dp on dp.id=sv.dp_id
             left outer join CASH ch on ch.id=sv.cash_id
             left outer join T_POINT t on t.id=sv.tpoint_id
             left outer join A_CLIENTS sl on sl.id=sv.seller_id
             left outer join A_CLIENTS cl on cl.id=sv.client_conto_id
+            left outer join A_CLIENTS_CONDITIONS clc on clc.client_id=sv.client_conto_id
             left outer join manual dt on dt.key='client_sale_type' and dt.id=sv.doc_type_id
         where sv.status=1 $where $where_tpoint order by sv.time_stamp desc, sv.status_invoice asc, sv.data_create desc, sv.prefix asc, sv.id desc;");$n=$db->num_rows($r);
 
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
-            //$dp_id=$db->result($r,$i-1,"dp_id");
             $dp_nom=$db->result($r,$i-1,"dp_prefix").$db->result($r,$i-1,"dp_nom");
             $prefix=$db->result($r,$i-1,"prefix");
             $doc_nom=$db->result($r,$i-1,"doc_nom");
-            //$data_create=$db->result($r,$i-1,"data_create");
             $time_stamp=$db->result($r,$i-1,"time_stamp");
-            //$tpoint_id=$db->result($r,$i-1,"tpoint_id");
             $tpoint_name=$db->result($r,$i-1,"tpoint_name");
-            //$seller_id=$db->result($r,$i-1,"seller_id");
             $seller_name=$db->result($r,$i-1,"seller_name");
-            //$client_id=$db->result($r,$i-1,"client_id");
             $client_name=$db->result($r,$i-1,"client_name");
-            //$doc_type_id=$db->result($r,$i-1,"doc_type_id");
             $doc_type_name=$db->result($r,$i-1,"doc_type_name");
             $summ=$db->result($r,$i-1,"summ");
             $summ_debit=$db->result($r,$i-1,"summ_debit");
@@ -44,11 +44,11 @@ class sale_invoice {
             $cash_abr=$db->result($r,$i-1,"cash_abr");
             $data_pay=$db->result($r,$i-1,"data_pay");
             $user_name=$this->getMediaUserName($db->result($r,$i-1,"user_id"));
-            //$status_select=$db->result($r,$i-1,"status_select");
-            //$status_select_cap=$gmanual->get_gmanual_caption($status_select);
+            $status_select=$db->result($r,$i-1,"status_select");
+            $status_select_cap=$gmanual->get_gmanual_caption($status_select);
+
             if ($cash_id==1) $summ_uah+=$summ; if ($cash_id==2) $summ_usd+=$summ; if ($cash_id==3) $summ_eur+=$summ;
             if ($summ_debit==0) $summ_cap=""; else $summ_cap="$summ_debit $cash_abr";
-            $status="";//???
 
             $list.="<tr id='strStsRow_$i' style='cursor:pointer' align='center' onClick='showSaleInvoiceCard(\"$id\");'>
                 <td>$i</td>
@@ -63,21 +63,23 @@ class sale_invoice {
                 <td align='right'>$summ_cap</td>
                 <td align='right'>$data_pay</td>
                 <td align='left'>$user_name</td>
-                <td align='center'>$status</td>
+                <td align='center'>$status_select_cap</td>
             </tr>";
         }
-    //	if ($n==0){$list="<tr><td colspan=11 align='center'>Накладні відсутні</td></tr>";}
-    //	$list.="<tr><td colspan=13 align='center'>Сума - $summ_price $cash_abr</td></tr>";
         $form=str_replace("{sale_invoice_range}",$list,$form);
         $form=str_replace("{sale_invoice_summ}","$summ_uah UAH / $summ_usd USD / $summ_eur EUR",$form);
         return $form;
     }
 
-    function show_sale_invoice_list_filter($data_start,$data_end){$db=DbSingleton::getDb();session_start();$ses_tpoint_id=$_SESSION["media_tpoint_id"];$media_user_id=$_SESSION["media_user_id"];$media_role_id=$_SESSION["media_role_id"];
-        $where_tpoint=" and (sv.tpoint_id='$ses_tpoint_id' or sv.user_id='$media_user_id')"; if ($media_role_id==1 || $media_role_id==7){$where_tpoint="";}
-        $data_cur=date("Y-m-d"); $summ_uah=$summ_usd=$summ_eur=0; $list=""; $status="";
+    function show_sale_invoice_list_filter($data_start,$data_end){$db=DbSingleton::getDb();$gmanual=new gmanual;session_start();$ses_tpoint_id=$_SESSION["media_tpoint_id"];$media_user_id=$_SESSION["media_user_id"];$media_role_id=$_SESSION["media_role_id"];
+        $data_cur=date("Y-m-d"); $summ_uah=$summ_usd=$summ_eur=0; $list="";
+
+        $where_tpoint=" and (sv.tpoint_id='$ses_tpoint_id' or sv.user_id='$media_user_id' or clc.tpoint_id='$ses_tpoint_id')";
+        if ($media_role_id==1 || $media_role_id==7){$where_tpoint="";}
+
         if ($data_start!='' && $data_end!='') $where=" and sv.time_stamp>='$data_start 00:00:00' and sv.time_stamp<='$data_end 23:59:59'"; else
-        $where=" and sv.time_stamp>='$data_cur 00:00:00' and sv.time_stamp<='$data_cur 23:59:59'";
+            $where=" and sv.time_stamp>='$data_cur 00:00:00' and sv.time_stamp<='$data_cur 23:59:59'";
+
         $r=$db->query("select sv.*, dp.prefix as dp_prefix, dp.doc_nom as dp_nom, t.name as tpoint_name, sl.name as seller_name, cl.name as client_name, dt.mvalue as doc_type_name,ch.abr2 as cash_abr 
         from J_SALE_INVOICE sv
             left outer join J_DP dp on dp.id=sv.dp_id
@@ -85,25 +87,19 @@ class sale_invoice {
             left outer join T_POINT t on t.id=sv.tpoint_id
             left outer join A_CLIENTS sl on sl.id=sv.seller_id
             left outer join A_CLIENTS cl on cl.id=sv.client_conto_id
+            left outer join A_CLIENTS_CONDITIONS clc on clc.client_id=sv.client_conto_id
             left outer join manual dt on dt.key='client_sale_type' and dt.id=sv.doc_type_id
-        where sv.status=1 $where $where_tpoint order by sv.time_stamp desc, sv.status_invoice asc, sv.data_create desc, sv.prefix asc, sv.id desc;");
+        where sv.status=1 $where $where_tpoint order by sv.time_stamp desc, sv.status_invoice asc, sv.data_create desc, sv.prefix asc, sv.id desc;"); $n=$db->num_rows($r);
 
-        $n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
-            //$dp_id=$db->result($r,$i-1,"dp_id");
             $dp_nom=$db->result($r,$i-1,"dp_prefix").$db->result($r,$i-1,"dp_nom");
             $prefix=$db->result($r,$i-1,"prefix");
             $doc_nom=$db->result($r,$i-1,"doc_nom");
-            //$data_create=$db->result($r,$i-1,"data_create");
             $time_stamp=$db->result($r,$i-1,"time_stamp");
-            //$tpoint_id=$db->result($r,$i-1,"tpoint_id");
             $tpoint_name=$db->result($r,$i-1,"tpoint_name");
-            //$seller_id=$db->result($r,$i-1,"seller_id");
             $seller_name=$db->result($r,$i-1,"seller_name");
-            //$client_id=$db->result($r,$i-1,"client_id");
             $client_name=$db->result($r,$i-1,"client_name");
-            //$doc_type_id=$db->result($r,$i-1,"doc_type_id");
             $doc_type_name=$db->result($r,$i-1,"doc_type_name");
             $summ=$db->result($r,$i-1,"summ");
             $summ_debit=$db->result($r,$i-1,"summ_debit");
@@ -111,8 +107,8 @@ class sale_invoice {
             $cash_abr=$db->result($r,$i-1,"cash_abr");
             $data_pay=$db->result($r,$i-1,"data_pay");
             $user_name=$this->getMediaUserName($db->result($r,$i-1,"user_id"));
-            //$status_select=$db->result($r,$i-1,"status_select");
-            //$status_select_cap=$gmanual->get_gmanual_caption($status_select);
+            $status_select=$db->result($r,$i-1,"status_select");
+            $status_select_cap=$gmanual->get_gmanual_caption($status_select);
             if ($cash_id==1) $summ_uah+=$summ; if ($cash_id==2) $summ_usd+=$summ; if ($cash_id==3) $summ_eur+=$summ;
 
             $list.="<tr id='strStsRow_$i' style='cursor:pointer' align='center' onClick='showSaleInvoiceCard(\"$id\");'>
@@ -128,11 +124,9 @@ class sale_invoice {
                 <td align='right'>$summ_debit$cash_abr</td>
                 <td align='right'>$data_pay</td>
                 <td align='left'>$user_name</td>
-                <td align='center'>$status</td>
+                <td align='center'>$status_select_cap</td>
             </tr>";
         }
-    //	if ($n==0){$list="<tr><td colspan=11 align='center'>Накладні відсутні</td></tr>";}
-    //    $list.="<tr><td colspan=13 align='center'>Сума - $summ_price $cash_abr</td></tr>";
         $summ_price="$summ_uah UAH / $summ_usd USD / $summ_eur EUR";
         return array($list,$summ_price);
     }
@@ -169,7 +163,6 @@ class sale_invoice {
             $seller_id=$db->result($r,0,"seller_id");
             $client_id=$db->result($r,0,"client_conto_id");
             $tpoint_id=$db->result($r,0,"tpoint_id");
-            //$data_create=$db->result($r,0,"data_create");
             $cash_id=$db->result($r,0,"cash_id");
             $summ=$db->result($r,0,"summ");
 
@@ -179,9 +172,7 @@ class sale_invoice {
 
             $r1=$db->query("select * from J_SALE_INVOICE_STR where invoice_id='$invoice_id' order by id asc;");$n1=$db->num_rows($r1);
             for ($i=1;$i<=$n1;$i++){
-                //$id=$db->result($r1,$i-1,"id");
                 $art_id=$db->result($r1,$i-1,"art_id");
-                //$article_nr_displ=$db->result($r1,$i-1,"article_nr_displ");
                 $amount=$db->result($r1,$i-1,"amount");
                 $price=$db->result($r1,$i-1,"price_end");
                 $summ=$db->result($r1,$i-1,"summ");
@@ -209,34 +200,25 @@ class sale_invoice {
             left outer join A_CLIENTS cl on cl.id=sv.client_conto_id
             left outer join manual dt on dt.key='client_sale_type' and dt.id=sv.doc_type_id
         where sv.status=1 and sv.id='$invoice_id' limit 0,1;");$n=$db->num_rows($r);
+
         if ($n==0){$form_htm=RD."/tpl/access_deny.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);} }
         if ($n==1){
             $dp_id=$db->result($r,0,"dp_id"); $dp_note=$this->getDpNote($dp_id);
             $prefix=$db->result($r,0,"prefix");
             $doc_nom=$db->result($r,0,"doc_nom");
             $data_create=$db->result($r,0,"data_create");
-            //$tpoint_id=$db->result($r,0,"tpoint_id");
             $tpoint_name=$db->result($r,0,"tpoint_name");
-            //$seller_id=$db->result($r,0,"seller_id");
             $seller_name=$db->result($r,0,"seller_name");
-            //$client_id=$db->result($r,0,"client_id");
             $client_name=$db->result($r,0,"client_name");
             $doc_type_id=$db->result($r,0,"doc_type_id");
             $doc_type_name=$db->result($r,0,"doc_type_name");
-            //$doc_type_abr=$db->result($r,0,"doc_type_abr");
             $summ=$db->result($r,0,"summ");
-            //$cash_id=$db->result($r,0,"cash_id");
             $cash_abr=$db->result($r,0,"cash_abr");
             $data_pay=$db->result($r,0,"data_pay");
-            //$user_name=$this->getMediaUserName($db->result($r,0,"user_id"));
-            //$status_invoice=$db->result($r,0,"status_invoice");
-            //$status_invoice_cap=$gmanual->get_gmanual_caption($status_invoice);
             $usd_to_uah=$db->result($r,0,"usd_to_uah");
             $eur_to_uah=$db->result($r,0,"eur_to_uah");
 
             list($usd_to_uah_new,$eur_to_uah_new)=$this->getKoursData();
-    //		if($usd_to_uah!=$usd_to_uah_new){$usd_to_uah=$usd_to_uah_new;}
-    //		if($eur_to_uah!=$eur_to_uah_new){$eur_to_uah=$eur_to_uah_new;}
             if($usd_to_uah==0){$usd_to_uah=$usd_to_uah_new;}
             if($eur_to_uah==0){$eur_to_uah=$eur_to_uah_new;}
 
@@ -259,7 +241,8 @@ class sale_invoice {
             $tax_hidden=" hidden";
             if ($doc_type_id=="61") {
                 $form=str_replace("{oper_visible}","",$form);
-                $tax_hidden=""; if ($this->checkTaxExist($invoice_id)>0){
+                $tax_hidden="";
+                if ($this->checkTaxExist($invoice_id)>0){
                     $tax_hidden=" hidden";
                 }
             }
@@ -271,8 +254,6 @@ class sale_invoice {
 
             $r=$db->query("select * from J_SALE_INVOICE_STR where invoice_id='$invoice_id' order by id asc;");$n=$db->num_rows($r);
             for ($i=1;$i<=$n;$i++){
-                //$id=$db->result($r,$i-1,"id");
-                //$art_id=$db->result($r,$i-1,"art_id");
                 $article_nr_displ=$db->result($r,$i-1,"article_nr_displ");
                 $brand_id=$db->result($r,$i-1,"brand_id");$brand_name=$cat->getBrandName($brand_id);
                 $amount=$db->result($r,$i-1,"amount");
@@ -454,7 +435,6 @@ class sale_invoice {
 
     function getSellerId($tpoint_id,$doc_type_id){$db=DbSingleton::getDb();$seller_id=0;
         //$sale_type=array(61=>86, 62=>87, 63=>87, 64=>88);
-        //print "tpoint_id=$tpoint_id; doc_type_id=".$doc_type_id."; \n sale_type=".$sale_type[$doc_type_id];
         $r=$db->query("select `client_id` from T_POINT_CLIENTS where tpoint_id='$tpoint_id' and sale_type='$doc_type_id' and in_use='1' and status='1' order by id asc limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){$seller_id=$db->result($r,0,"client_id");}
         return $seller_id;
@@ -464,7 +444,6 @@ class sale_invoice {
         $sale_type=array(61=>86, 62=>87, 63=>87, 64=>88);$sale_type_id=$sale_type[$doc_type_id];
         $r=$db->query("select `prefix` from A_CLIENTS_DOCUMENT_PREFIX where client_id='$seller_id' and doc_type_id='$sale_type_id' and status='1' order by id asc limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){$prefix=$db->result($r,0,"prefix");}
-        //print "prefix=$prefix";
         $prefix=str_replace("{year}",date("Y"),$prefix);
         $prefix=str_replace("{month}",date("m"),$prefix);
         $prefix=str_replace("{day}",date("d"),$prefix);
@@ -571,13 +550,13 @@ class sale_invoice {
             $price_buh_uah=$db->result($r,$i-1,"price_buh_uah");
             $price_man_uah=$db->result($r,$i-1,"price_man_uah");
             $price_invoice=$db->result($r,$i-1,"price_invoice");
-
             if ($parrent_type_id==1){
                 if ($parrent_doc_id!=$prev_doc_id){
                     $doc_name="".$income->getIncomeDocNom($parrent_doc_id);
                     $prev_doc_id=$parrent_doc_id;
                 }
             }
+
             $list.="<tr id='strStsRow_$i' onclick='getPartitionsInvoiceAmount($id)' style='cursor:pointer;'>
                 <td align='center'>$i</td>
                 <td align='center'>$doc_name</td>
@@ -611,13 +590,11 @@ class sale_invoice {
         where pay.status=1 and pst.parrent_doc_id='$invoice_id' group by pay.id order by pay.data_time desc, pay.id desc;");$n=$db->num_rows($r);
 
         for ($i=1;$i<=$n;$i++){
-            //$id=$db->result($r,$i-1,"id");
             $data_time=$db->result($r,$i-1,"data_time");
             $pay_type_caption=$db->result($r,$i-1,"pay_type_caption");
             $paybox_name=$db->result($r,$i-1,"paybox_name");
             $doc_nom=$db->result($r,$i-1,"doc_nom");
             $summ=$db->result($r,$i-1,"summ");
-            //$cash_id=$db->result($r,$i-1,"cash_id");
             $cash_name=$db->result($r,$i-1,"abr");
             $user_name=$this->getMediaUserName($db->result($r,$i-1,"user_id"));
             // onClick='viewDpMoneyPay(\"$dp_id\",\"$id\");'
@@ -640,7 +617,6 @@ class sale_invoice {
     function showSaleInvoceMoneyPayForm($invoice_id,$pay_id){$db=DbSingleton::getDb();$gmanual=new gmanual;$cash_kours="";
         $form="";$form_htm=RD."/tpl/sale_invoice_money_pay_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from J_SALE_INVOICE where id='$invoice_id' limit 0,1;");
-        //$id=$db->result($r,0,"id");
         $cash_id=$db->result($r,0,"cash_id");$cash_name=$this->getCashAbr($cash_id);
         $tpoint_id=$db->result($r,0,"tpoint_id");
         $seller_id=$db->result($r,0,"seller_id");
@@ -719,9 +695,9 @@ class sale_invoice {
         if ($cash_id>0){
             if ($doc_cash_id==$cash_id){ $kours_value=1; $answer=1;$err="";}
             if ($doc_cash_id!=$cash_id){
-                //1- UAH 2- USD  3- UER
                 $r=$db->query("select kours_value from J_KOURS where cash_id='2' and in_use='1' limit 0,1;");$n=$db->num_rows($r);
                 if ($n==1){ $kours_usd=$db->result($r,0,"kours_value");}
+
                 $r=$db->query("select kours_value from J_KOURS where cash_id='3' and in_use='1' limit 0,1;");$n=$db->num_rows($r);
                 if ($n==1){ $kours_eur=$db->result($r,0,"kours_value");}
 
@@ -763,12 +739,13 @@ class sale_invoice {
                     $invoice_client_id=$db->result($r,0,"client_id");
                 }
             }
+
             if ($pay_id>0 && $kredit>0 && $pay_type_id==89 && $paybox_id>0){
                 list($balans_before,)=$this->getClientGeneralSaldo($invoice_client_id);
                 $doc_sum_pay=0;
                 if ($doc_cash_id==$cash_id){$doc_sum_pay=$kredit;}
-                if ($doc_cash_id!=$cash_id){
 
+                if ($doc_cash_id!=$cash_id){
                     if ($doc_cash_id==1 && $cash_id==2){$doc_sum_pay=$cash_kours*$kredit;}
                     if ($doc_cash_id==1 && $cash_id==3){$doc_sum_pay=$cash_kours*$kredit;}
 
@@ -778,12 +755,12 @@ class sale_invoice {
                     if ($doc_cash_id==3 && $cash_id==1){$doc_sum_pay=round($kredit/$cash_kours,2);}
                     if ($doc_cash_id==3 && $cash_id==2){$doc_sum_pay=round($kredit/$cash_kours,2);}
                 }
-    /*			$db->query("insert into J_PAY (`id`,`pay_type_id`,`paybox_id`,`doc_nom`,`cash_id`,`summ`,`user_id`) values ('$pay_id','$pay_type_id','$paybox_id','$doc_nom','$cash_id','$kredit','$user_id');");
+                /*$db->query("insert into J_PAY (`id`,`pay_type_id`,`paybox_id`,`doc_nom`,`cash_id`,`summ`,`user_id`) values ('$pay_id','$pay_type_id','$paybox_id','$doc_nom','$cash_id','$kredit','$user_id');");
                 $db->query("insert into J_PAY_STR (`pay_id`,`parrent_doc_type_id`,`parrent_doc_id`,`summ_doc`,`doc_cash_id`,`summ_pay`,`pay_cash_id`,`pay_cash_kours`,`pay_cash_summ`) values ('$pay_id','$invoice_doc_type_id','$invoice_id','$invoice_summ','$doc_cash_id','$doc_sum_pay','$cash_id','$cash_kours','$kredit');");
                 $new_summ_debit=$invoice_summ_debit-$doc_sum_pay;
                 if ($new_summ_debit<0){$new_summ_debit=0;}
-                $db->query("update J_SALE_INVOICE set summ_debit='$new_summ_debit' where id='$invoice_id' limit 1;");
-    */
+                $db->query("update J_SALE_INVOICE set summ_debit='$new_summ_debit' where id='$invoice_id' limit 1;");*/
+
                 if ($invoice_summ_debit>=$doc_sum_pay){ // if sum pay less then invoice summ
                     $db->query("insert into J_PAY (`id`,`pay_type_id`,`paybox_id`,`doc_nom`,`cash_id`,`summ`,`user_id`) values ('$pay_id','$pay_type_id','$paybox_id','$doc_nom','$cash_id','$kredit','$user_id');");
                     $db->query("insert into J_PAY_STR (`pay_id`,`parrent_doc_type_id`,`parrent_doc_id`,`summ_doc`,`doc_cash_id`,`summ_pay`,`pay_cash_id`,`pay_cash_kours`,`pay_cash_summ`) values ('$pay_id','$invoice_doc_type_id','$invoice_id','$invoice_summ','$doc_cash_id','$doc_sum_pay','$cash_id','$cash_kours','$kredit');");
@@ -795,8 +772,8 @@ class sale_invoice {
                     $db->query("insert into B_CLIENT_BALANS_JOURNAL (`client_id`,`cash_id`,`balans_before`,`deb_kre`,`summ`,`balans_after`,`doc_type_id`,`doc_id`) values ('$invoice_client_id','$doc_cash_id','$balans_before','2','$doc_sum_pay','$balans_after','2','$pay_id');");
                     $db->query("update B_CLIENT_BALANS set saldo=`saldo`+$doc_sum_pay, last_update=NOW() where client_id='$invoice_client_id';");
                 }
-                if ($invoice_summ_debit<$doc_sum_pay){ // if sum pay more then invoice summ
 
+                if ($invoice_summ_debit<$doc_sum_pay){ // if sum pay more then invoice summ
                     $avans_summ=$doc_sum_pay-$invoice_summ_debit;
                     $kredit2=$invoice_summ_debit;
 
@@ -841,7 +818,7 @@ class sale_invoice {
     }
 
     function getClientGeneralSaldo($sel_id){$db=DbSingleton::getDb();$saldo="0";$cash_id=1;
-        $r=$db->query("select `saldo`,cash_id from B_CLIENT_BALANS where client_id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
+        $r=$db->query("select `saldo`, 'cash_id' from B_CLIENT_BALANS where client_id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){
             $saldo=$db->result($r,0,"saldo");
             $cash_id=$db->result($r,0,"cash_id");
@@ -851,7 +828,7 @@ class sale_invoice {
 
     //===============			MONEY PAY 		==================================
 
-    function printSaleInvoice($invoice_id){$db=DbSingleton::getDb();$cat=new catalogue;$slave=new slave;$money=new toMoney;$invoice_summ=0;$form="";$invoice_summ_bez=0;$list="";$form_htm="";
+    function printSaleInvoice($invoice_id){$db=DbSingleton::getDb();session_start();$ses_tpoint_id=$_SESSION["media_tpoint_id"];$cat=new catalogue;$slave=new slave;$money=new toMoney;$invoice_summ=0;$form="";$invoice_summ_bez=0;$list="";$form_htm="";
         $r=$db->query("select sv.*, t.name as tpoint_name, sl.full_name as seller_name, sld.vytjag, sld.edrpou, sld.account, sld.bank, sld.mfo, ot.name as org_type_abr, cl.name as client_name, dt.mcaption as doc_type_name, dp.prefix, ss.select_id, sv.dp_id, dt.mvalue as doc_type_abr,ch.abr2 as cash_abr,dp.delivery_address 
         from J_SALE_INVOICE sv
             left outer join CASH ch on ch.id=sv.cash_id
@@ -869,9 +846,7 @@ class sale_invoice {
             $prefix=$db->result($r,0,"prefix");
             $doc_nom=$db->result($r,0,"doc_nom");
             $data_create=$db->result($r,0,"data_create");
-            //$tpoint_id=$db->result($r,0,"tpoint_id");
             $tpoint_name=$db->result($r,0,"tpoint_name");
-            //$seller_id=$db->result($r,0,"seller_id");
             $seller_name=$db->result($r,0,"seller_name");
             $edrpou=$db->result($r,0,"edrpou");
             $account=$db->result($r,0,"account");
@@ -885,31 +860,21 @@ class sale_invoice {
             $doc_type_id=$db->result($r,0,"doc_type_id");
             $dp_id=$db->result($r,0,"dp_id");
             $doc_type_name=$db->result($r,0,"doc_type_name");
-            //$doc_type_abr=$db->result($r,0,"doc_type_abr");
             $select_id=$db->result($r,0,"select_id");
             $dp_name="ДП-$dp_id";
             $sel_ar[$select_id]=$select_id;
-            //$summ=$db->result($r,0,"summ");
-            //$cash_id=$db->result($r,0,"cash_id");
             $cash_abr=$db->result($r,0,"cash_abr");
             $data_pay=$db->result($r,0,"data_pay");
-            //$user_name=$this->getMediaUserName($db->result($r,0,"user_id"));
-            //$status_invoice=$db->result($r,0,"status_invoice");
-            //$status_invoice_cap=$gmanual->get_gmanual_caption($status_invoice);
             $delivery_address=$db->result($r,0,"delivery_address");
 
             $r=$db->query("select * from J_SALE_INVOICE_STR where invoice_id='$invoice_id' order by id asc;");$n=$db->num_rows($r);
             for ($i=1;$i<=$n;$i++){
-                //$id=$db->result($r,$i-1,"id");
                 $art_id=$db->result($r,$i-1,"art_id"); $article_name=$cat->getArticleNameLang($art_id);
                 $article_nr_displ=$db->result($r,$i-1,"article_nr_displ");
                 $brand_id=$db->result($r,$i-1,"brand_id");$brand_name=$cat->getBrandName($brand_id);
                 $amount=$db->result($r,$i-1,"amount");
-                $unit=$this->getUnitArticle($art_id); //if ($unit=="") $unit="шт.";
-                //$price=$db->result($r,$i-1,"price");
-                //$price_summ=$price*$amount;
+                $unit=$this->getUnitArticle($art_id);
                 $price_end=$db->result($r,$i-1,"price_end");
-                //$discount=$db->result($r,$i-1,"discount");
                 $summ=$db->result($r,$i-1,"summ");
                 $zed=$this->getZedArticle($art_id);
 
@@ -938,16 +903,12 @@ class sale_invoice {
                 $storsel_list.="$slr ";
             }
 
-            $form=""; $max_row=40;
+            $form=""; $max_row=40; $ses_tpoint_name=$this->getTpointFullName($ses_tpoint_id);
             if ($doc_type_id==64){$form_htm=RD."/tpl/dp_sale_invoice_print_64.htm";}
             if ($doc_type_id==63){$form_htm=RD."/tpl/dp_sale_invoice_print_63.htm";}
             if ($doc_type_id==61){$form_htm=RD."/tpl/dp_sale_invoice_print_61.htm";}
 
-            $ses_tpoint_id=$_SESSION["media_tpoint_id"];
-            $ses_tpoint_name=$this->getTpointFullName($ses_tpoint_id);
-
             if ($n>$max_row && $doc_type_id==64) {$form_htm=RD."/tpl/dp_sale_invoice_print_64_a4.htm";}
-
             if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 
             list($mandate_nomber,$mandate_person,$mandate_data,$mandate_seria)=$this->getMandateData($client_id,$data_create);
@@ -984,13 +945,11 @@ class sale_invoice {
             $form=str_replace("{invoice_summ}",$slave->to_money($invoice_summ),$form);
             $form=str_replace("{invoice_summ_word}",$money->num2str($slave->to_money($invoice_summ)),$form);
             $form=str_replace("{vat_summ}",$slave->to_money($vat_summ),$form);
-            $form=str_replace("{cash_name}",$cash_abr,$form);$address_send="";//???
-            $form=str_replace("{address_send}",$address_send,$form);
+            $form=str_replace("{cash_name}",$cash_abr,$form);
             $form=str_replace("{edrpou}",$edrpou,$form);
             $form=str_replace("{ipn_nom}",$vat,$form);
             $form=str_replace("{org_type_abr}",$org_type_abr,$form);
-            $form=str_replace("{cash_abr}",$cash_abr,$form);$volume="";//???
-            $form=str_replace("{volume}",$volume,$form);
+            $form=str_replace("{cash_abr}",$cash_abr,$form);
             $form=str_replace("{delivery_address}",$delivery_address,$form);
             $form=str_replace("{sale_invoice_str_list}",$list,$form);
             $form=str_replace("{ses_tpoint_name}",$ses_tpoint_name,$form);
@@ -1007,7 +966,7 @@ class sale_invoice {
 
     function getUnitArticle($art_id) {$db=DbSingleton::getTokoDb(); $abr="";
         $r=$db->query("select t2u.abr from T2_PACKAGING t2p 
-        left outer join units t2u on t2u.id=t2p.UNITS_ID
+            left outer join units t2u on t2u.id=t2p.UNITS_ID
         where t2p.ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){
             $abr=$db->result($r,0,"abr");
@@ -1017,7 +976,7 @@ class sale_invoice {
 
     function getZedArticle($art_id){$db=DbSingleton::getTokoDb(); $costums_code="";
         $r=$db->query("select t2s.COSTUMS_CODE from T2_ZED t2z 
-        left outer join T2_COSTUMS t2s on t2s.COSTUMS_ID=t2z.COSTUMS_ID
+            left outer join T2_COSTUMS t2s on t2s.COSTUMS_ID=t2z.COSTUMS_ID
         where t2z.ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){
             $costums_code=$db->result($r,0,"COSTUMS_CODE");
@@ -1038,8 +997,7 @@ class sale_invoice {
         return array($number,$receiver,$data_from,$seria);
     }
 
-    function getBasisData($client_id,$data) { $db=DbSingleton::getDb();
-        $number=$data_from="";
+    function getBasisData($client_id,$data) {$db=DbSingleton::getDb();$number=$data_from="";
         $r=$db->query("select * from `A_CLIENTS_BASIS` where status='1' and client_id='$client_id' and data_from<='$data' and data_to>='$data' limit 0,1;");
         $n=$db->num_rows($r);
         if ($n==1){
@@ -1072,36 +1030,23 @@ class sale_invoice {
             $prefix=$db->result($r,0,"prefix");
             $doc_nom=$db->result($r,0,"doc_nom");
             $data_create=$db->result($r,0,"data_create");
-            //$tpoint_id=$db->result($r,0,"tpoint_id");
             $tpoint_name=$db->result($r,0,"tpoint_name");
-            //$seller_id=$db->result($r,0,"seller_id");
             $seller_name=$db->result($r,0,"seller_name");
             $edrpou=$db->result($r,0,"edrpou");
             $org_type_abr=$db->result($r,0,"org_type_abr");
-            //$client_id=$db->result($r,0,"client_id");
             $client_name=$db->result($r,0,"client_name");
             $doc_type_id=$db->result($r,0,"doc_type_id");
             $doc_type_name=$db->result($r,0,"doc_type_name");
-            //$doc_type_abr=$db->result($r,0,"doc_type_abr");
-            //$summ=$db->result($r,0,"summ");
-            //$cash_id=$db->result($r,0,"cash_id");
             $cash_abr=$db->result($r,0,"cash_abr");
             $data_pay=$db->result($r,0,"data_pay");
-            //$user_name=$this->getMediaUserName($db->result($r,0,"user_id"));
-            //$status_invoice=$db->result($r,0,"status_invoice");
-            //$status_invoice_cap=$gmanual->get_gmanual_caption($status_invoice);
             $delivery_address=$db->result($r,0,"delivery_address");
 
             $r=$db->query("select * from J_SALE_INVOICE_STR where invoice_id='$invoice_id' order by id asc;");$n=$db->num_rows($r);
             for ($i=1;$i<=$n;$i++){
-                //$id=$db->result($r,$i-1,"id");
-                //$art_id=$db->result($r,$i-1,"art_id");
                 $article_nr_displ=$db->result($r,$i-1,"article_nr_displ");
                 $brand_id=$db->result($r,$i-1,"brand_id");$brand_name=$cat->getBrandName($brand_id);
                 $amount=$db->result($r,$i-1,"amount");
-                //$price=$db->result($r,$i-1,"price");
                 $price_end=$db->result($r,$i-1,"price_end");
-                //$discount=$db->result($r,$i-1,"discount");
                 $summ=$db->result($r,$i-1,"summ");
                 $invoice_summ+=$summ;
                 $list.="<tr>
@@ -1116,9 +1061,9 @@ class sale_invoice {
             }
 
             $form="";
-            if ($doc_type_id==64){$form_htm=RD."/tpl/dp_sale_invoice_print_64.htm";}
-            if ($doc_type_id==63){$form_htm=RD."/tpl/dp_sale_invoice_print_63.htm";}
-            if ($doc_type_id==61){$form_htm=RD."/tpl/dp_sale_invoice_print_61.htm";}
+            if ($doc_type_id==64){$form_htm=RD."/tpl/dp_sale_invoice_print_64.htm";} //БК
+            if ($doc_type_id==63){$form_htm=RD."/tpl/dp_sale_invoice_print_63.htm";} //ТЧ
+            if ($doc_type_id==61){$form_htm=RD."/tpl/dp_sale_invoice_print_61.htm";} //БН
             if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 
             $form=str_replace("{curtime}",date("d/m/Y H:i:s"),$form);
@@ -1133,18 +1078,16 @@ class sale_invoice {
             $form=str_replace("{doc_type_name}",$doc_type_name,$form);
             $form=str_replace("{invoice_summ}",$slave->to_money($invoice_summ),$form);
             $form=str_replace("{invoice_summ_word}",$money->num2str($slave->to_money($invoice_summ)),$form);
-            $form=str_replace("{cash_name}",$cash_abr,$form);$address_send="";//???
-            $form=str_replace("{address_send}",$address_send,$form);
+            $form=str_replace("{cash_name}",$cash_abr,$form);
             $form=str_replace("{edrpou}",$edrpou,$form);
             $form=str_replace("{org_type_abr}",$org_type_abr,$form);
-            $form=str_replace("{cash_abr}",$cash_abr,$form);$volume="";//???
-            $form=str_replace("{volume}",$volume,$form);
+            $form=str_replace("{cash_abr}",$cash_abr,$form);
             $form=str_replace("{delivery_address}",$delivery_address,$form);
             $form=str_replace("{sale_invoice_str_list}",$list,$form);
 
             $mp=new media_print;
-            if ($doc_type_id==63){$mp->print_document($form,array(210,280));}
-            if ($doc_type_id==64){$mp->print_document($form,array(210,280));}
+            if ($doc_type_id==63){$mp->print_document($form,"A4-L");}
+            if ($doc_type_id==64){$mp->print_document($form,"A4-L");}
             if ($doc_type_id==61){$mp->print_document($form,"A4-L");}
         }
         return $form;
@@ -1190,16 +1133,9 @@ class sale_invoice {
             }
 
             $filename="$client_name"."_"."$prefix-$doc_nom"."_"."$data_create";
-            $filename=str_replace(" ","_",$filename);
-            $filename=str_replace(".","_",$filename);
-            $filename=str_replace(",","_",$filename);
-            $filename=str_replace("/","_",$filename);
-            $filename=str_replace("'","",$filename);
-            $filename=str_replace('"',"",$filename);
-            $filename=str_replace("«","",$filename);
-            $filename=str_replace("»","",$filename);
-            $filename=str_replace('"',"",$filename);
-            $filename=str_replace("'","",$filename);
+            $filename=str_replace(str_split('"«»'), '', $filename);
+            $filename=str_replace("'", "", $filename);
+            $filename=str_replace(str_split(" .,/"), "_", $filename);
 
             $header = "№п/п;Індекс;Бренд;Найменування;К-сть;Ціна;Сума\n";
             header('Content-Type: text/csv; charset=utf-8');

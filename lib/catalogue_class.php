@@ -3369,8 +3369,8 @@ class catalogue {
             $where_brand="";$group_brand="group by t2c.BRAND_ID"; if ($brand_id!="" && $brand_id>0){$where_brand=" and t2c.BRAND_ID='$brand_id'"; $group_brand="";}
             if ($art!=""){
                 $query="select t2b.BRAND_NAME, t2n.NAME, t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION from T2_CROSS t2c 
-                     inner join T2_BRANDS t2b on t2b.BRAND_ID=t2c.BRAND_ID
-                     left outer join T2_NAMES t2n on t2n.ART_ID=t2c.ART_ID
+                    inner join T2_BRANDS t2b on t2b.BRAND_ID=t2c.BRAND_ID
+                    left outer join T2_NAMES t2n on t2n.ART_ID=t2c.ART_ID
                  where t2c.SEARCH_NUMBER = '$art' $where_brand $group_brand order by t2n.NAME asc;";
                  $r=$db->query($query);$n=$db->num_rows($r);
             }

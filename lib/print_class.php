@@ -3,8 +3,13 @@
 class media_print {
 
 	function print_doc($data,$size){ $tOp=$_REQUEST["tOp"];if ($tOp==""){$tOp="I";}$tOpPath="";if ($tOp=="F"){$tOpPath=RD."/uploads/print/";}
-		include("MPDF56/mpdf.php"); if ($size==""){$size="A4";}
-		$mpdf = new mPDF('windows-1251', $size , '12', '', 10, 5, 5, 5, 0, 3);
+		//include("MPDF56/mpdf.php"); if ($size==""){$size="A4";}
+        require_once RD.'/vendor/autoload.php';
+        $mpdf = new \Mpdf\Mpdf([
+            'tempDir' => RD.'/uploads/mpdf-temp',
+            'format' => $size
+        ]);
+        //$mpdf = new mPDF('windows-1251', $size , '12', '', 10, 5, 5, 5, 0, 3);
 		$mpdf->charset_in = 'windows-1251'; /*не забываем про русский*/
 		$stylesheet = file_get_contents(RD.'/css/bootstrap.css');$mpdf->WriteHTML($stylesheet, 1);
 		$stylesheet = file_get_contents(RD.'/css/sb-admin-print.css');$mpdf->WriteHTML($stylesheet, 1);
@@ -40,7 +45,7 @@ class media_print {
         $tOp=$_REQUEST["tOp"];if ($tOp==""){$tOp="I";}$tOpPath="";if ($tOp=="F"){$tOpPath=RD."/uploads/print/";}
         require_once RD.'/vendor/autoload.php';
         $mpdf = new \Mpdf\Mpdf([
-            'tempDir' => RD.'/',
+            'tempDir' => RD.'/uploads/mpdf-temp',
             'format' => $size
         ]);
         $mpdf->charset_in = 'windows-1251';
