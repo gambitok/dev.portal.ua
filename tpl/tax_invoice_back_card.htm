@@ -1,19 +1,22 @@
 <div class="tabs-container">
+
     <ul class="nav nav-tabs" id="tax_tabs">
         <li class="active"><a data-toggle="tab" href="#tax_tab1" onClick="showTaxInvoiceCard('{tax_id}');"><i class="fa fa-bars"></i> <span class="hidden-sm-down">Структура</span></a></li>
         <li><a data-toggle="tab" href="#tax_tab2" onClick="loadTaxInvoiceView('{tax_id}');"><i class="fa fa-list"></i> <span class="hidden-sm-down">Податкова накладна</span></a></li>
 		<li><a data-toggle="tab" href="#tax_tab5" onClick="loadTaxBackSuppl('{tax_id}');"><i class="fa fa-list"></i> <span class="hidden-sm-down">Накладна повернення</span></a></li>
         <li class="tab-count-info"><a data-toggle="tab" class="tab-count-info" href="#tax_tab3" onClick="loadTaxBackCommets('{tax_id}');"><i class="fa fa-edit"></i> Замітки</a></li>
         <li><a data-toggle="tab" href="#tax_tab4" onClick="loadTaxBackCDN('{tax_id}');"><i class="fa fa-cloud"></i> <span class="hidden-sm-down">CDN Файли</span></a></li>
-		
     </ul>
+
     <div class="tab-content">
         <div id="tax_tab1" class="tab-pane active">
             <div class="panel-body">
                 <div class="ibox float-e-margins">
                     <div class="ibox-content">
                         <form method="get" class="form-horizontal" onSubmit="return false;">
+
 							<input type="hidden" id="tax_id" value="{tax_id}">
+
                             <div class="form-group">
                             	<label class="col-sm-1 control-label">Дата</label>
                                 <div class="col-sm-2"><input class="form-control" disabled type="text" id="data_create" value="{data_create}" placeholder="РРРР-ММ-ДД"></div>
@@ -27,22 +30,22 @@
                                     </div>
                                 </div>
                                 <label class="col-sm-2 control-label">Вид документу</label>
-                                <div class="col-sm-2"><select class="form-control" disabled size="1" id="tax_type_id" style="width:100%;">{tax_type_list}</select></div>
+                                <div class="col-sm-2"><select title="Вид документу" class="form-control" disabled size="1" id="tax_type_id" style="width:100%;">{tax_type_list}</select></div>
                             </div>
+
                             <div class="form-group">
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">Торгова точка</label>
-                                <div class="col-lg-2 col-md-2 col-sm-8"><select class="form-control" {oper_disabled} size="1" id="tpoint_id" style="width:100%;">{tpoint_list}</select></div>
+                                <div class="col-lg-2 col-md-2 col-sm-8"><select title="Торгова точка" class="form-control" {oper_disabled} size="1" id="tpoint_id" style="width:100%;">{tpoint_list}</select></div>
                                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Продавець</label>
-                                <div class="col-lg-3 col-md-2 col-sm-7"><select class="form-control {oper_disabled}" id="seller_id" style="width:100%;">{seller_list}</select></div>
-                                
+                                <div class="col-lg-3 col-md-2 col-sm-7"><select title="Продавець" class="form-control {oper_disabled}" id="seller_id" style="width:100%;">{seller_list}</select></div>
 								<label class="col-sm-2 control-label">Дата реєстраціїї</label>
                                 <div class="col-sm-2"><input class="form-control" type="text" {oper_disabled} id="data_send" value="{data_send}" placeholder="РРРР-ММ-ДД"></div>
-                                
                             </div>
+
                             <div class="form-group">
 								<label class="col-lg-1 col-md-2 col-sm-4 control-label">Валюта</label>
                                 <input type="hidden" id="cash_id" value="{cash_id}">
-                                <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" readonly type="text" id="cash_name" value="{cash_name}"></div>
+                                <div class="col-lg-2 col-md-2 col-sm-8"><input title="Валюта" class="form-control" readonly type="text" id="cash_name" value="{cash_name}"></div>
 								<label class="col-lg-2 col-md-2 col-sm-4 control-label">Клієнт</label>
                                 <div class="col-lg-3 col-md-2 col-sm-7">
                                     <input type="hidden" id="client_id" name="client_id" value="{client_id}">
@@ -53,27 +56,26 @@
                                     </div>
                                 </div>
 								<label class="col-sm-2 control-label">Податковий статус</label>
-                                <div class="col-sm-2"><select class="form-control" {oper_disabled} size="1" id="status_tax" style="width:100%;">{status_tax_list}</select></div>
-             					
+                                <div class="col-sm-2"><select title="Податковий статус" class="form-control" {oper_disabled} size="1" id="status_tax" style="width:100%;">{status_tax_list}</select></div>
                             </div>
+
 							<div class="form-group">
 								<label class="col-lg-3 col-md-4 col-sm-0 control-label"></label>
 								<label class="col-lg-2 col-md-2 col-sm-4 control-label">Сума документу</label>
-                                <div class="col-lg-3 col-md-2 col-sm-7"><input type="text" class="form-control" id="tax_summ" value="{tax_summ}"></div>
+                                <div class="col-lg-3 col-md-2 col-sm-7"><input title="Сума" type="text" class="form-control" id="tax_summ" value="{tax_summ}"></div>
 								<label class="col-lg-2 col-md-2 col-sm-4 control-label">Податковий номер</label>
-								<div class="col-lg-2 col-md-6 col-sm-8"><input type="text" {oper_disabled} class="form-control" id="doc_xml_nom" value="{doc_xml_nom}"></div>
+								<div class="col-lg-2 col-md-6 col-sm-8"><input title="Податковий номер" type="text" {oper_disabled} class="form-control" id="doc_xml_nom" value="{doc_xml_nom}"></div>
 							</div>
                             	
 							<div class="row">
                                 <div class="col-sm-12">
-                                	<span class="buttons-inline pull-left">
-                                        
-                                    </span>
+                                	<span class="buttons-inline pull-left"></span>
                                     <span class="buttons-inline pull-right">
                                         <button type="button" class="btn btn-xs btn-primary" {hide_new_row_button} onClick="addNewRowBack();"><i class="fa fa-plus"></i> Новий ряд</button>
                                      </span>
                                  </div>
                             </div>
+
                             <div class="form-group">
                             	<div id="taxChildsList">
 	                                <h4 align="center">Структура документу</h4>
@@ -100,29 +102,32 @@
                                     </div>
                                 </div>
                             </div>
+
 							<div class="hr-line-dashed"></div>
+
                             <div class="form-group">
                                 <div class="col-sm-6 text-left">
                                     <button class="btn btn-info" type="button" {oper_visible} onClick="printTaxBackInvoce('{tax_id}');"><i class="fa fa-print"></i> Друкувати</button>
 									<button class="btn btn-info" type="button" {oper_visible} onClick="exportTaxBackInvoceXML('{tax_id}');"><i class="fa fa-file-code-o"></i> Експорт XML</button>
                                 </div>
                                 <div class="col-sm-6 text-right">
-                                    <button class="btn btn-primary" type="button" {oper_disabled} onClick="saveTaxBackCard();">Зберігти</button>
+                                    <button class="btn btn-primary" type="button" {oper_disabled} onClick="saveTaxBackCard();">Зберегти</button>
                                     <button class="btn btn-white" type="button" data-dismiss="modal" onClick="closeTaxBackCard();" >Закрити</button>
                                 </div>
                             </div>
+
                         </form>
                     </div>
                 </div>
-                
-                
             </div>
         </div>
+
         <div id="tax_tab2" class="tab-pane">
             <div class="panel-body" id="unknown_articles_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
         <div id="tax_tab3" class="tab-pane">
             <div class="panel-body">
                 <div class="social-footer">
@@ -147,6 +152,7 @@
                 </div>
             </div>
         </div>
+
         <div id="tax_tab4" class="tab-pane">
             <div class="panel-body">
             <!--   PHOTO TAB BLOCK   -->
@@ -168,6 +174,5 @@
         </div>
 		
     </div>
-
 
 </div>

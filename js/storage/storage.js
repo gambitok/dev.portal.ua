@@ -238,6 +238,7 @@ function saveStorageGeneralInfo(){
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
+                        $("#StorageCard").modal('hide');
 						loadStorageList();
 					}
 					else{ swal("Помилка!", result["error"], "error");}

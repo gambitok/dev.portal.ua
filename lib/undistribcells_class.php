@@ -8,7 +8,7 @@ class undistribcells {
             left outer join J_INCOME i on i.id=t2asc.INCOME_ID
             left outer join STORAGE s on s.id=t2asc.STORAGE_ID
             left outer join STORAGE_CELLS sc on sc.id=t2asc.STORAGE_CELLS_ID
-        where sc.default='1' and i.status='1' and i.oper_status='31' group by t2asc.STORAGE_CELLS_ID,INCOME_ID;");$n=$db->num_rows($r);$list="";
+        where sc.default='1' and i.status='1' and i.oper_status='31' group by t2asc.STORAGE_CELLS_ID, t2asc.INCOME_ID;");$n=$db->num_rows($r);$list="";
 
         for ($i=1;$i<=$n;$i++){
             $prefix=$db->result($r,$i-1,"prefix");
@@ -42,13 +42,14 @@ class undistribcells {
     function showUndistribCellsCard($storage_cells_id,$income_id){$db=DbSingleton::getDb();$cat=new catalogue;
         $prefix=$data=$storage_name=$cell_value="";$doc_nom=0;
         $form="";$form_htm=RD."/tpl/undistribcells_list_articles.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $query="select t2asc.*,ist.article_nr_displ,ist.brand_id, i.prefix, i.doc_nom, i.data, s.name as storage_name, sc.cell_value  from T2_ARTICLES_STRORAGE_CELLS t2asc
+        $query="select t2asc.*, ist.article_nr_displ, ist.brand_id, i.prefix, i.doc_nom, i.data, s.name as storage_name, sc.cell_value from T2_ARTICLES_STRORAGE_CELLS t2asc
             left outer join J_INCOME i on i.id=t2asc.INCOME_ID
             left outer join J_INCOME_STR ist on ist.income_id=t2asc.INCOME_ID and ist.art_id=t2asc.ART_ID
             left outer join STORAGE s on s.id=t2asc.STORAGE_ID
             left outer join STORAGE_CELLS sc on sc.id=t2asc.STORAGE_CELLS_ID
         where sc.default='1' and i.status='1' and i.oper_status='31' and t2asc.STORAGE_CELLS_ID='$storage_cells_id' and t2asc.INCOME_ID='$income_id';";
         $r=$db->query($query);$n=$db->num_rows($r);$list="";
+
         for ($i=1;$i<=$n;$i++){
             $art_id=$db->result($r,$i-1,"art_id");
             $amount=$db->result($r,$i-1,"amount");
@@ -127,16 +128,16 @@ class undistribcells {
                     if ($new_amount==0){
                         $db->query("delete from T2_ARTICLES_STRORAGE_CELLS where  `ART_ID`='$art_id' and `INCOME_ID`='$income_id' and `STORAGE_ID`='$storage_id' and `STORAGE_CELLS_ID`='$doc_storage_cells_id';");$op=1;
                     }
-//                    if ($new_amount<0){
-//                        $answer=0;$err="Кількість переміщеного товару перевищує фактичну наявну!";
-//                    }
+                    // if ($new_amount<0){
+                    //    $answer=0;$err="Кількість переміщеного товару перевищує фактичну наявну!";
+                    // }
                     if ($op==1){
                         $db->query("insert into T2_ARTICLES_STRORAGE_CELLS (`ART_ID`,`AMOUNT`,`INCOME_ID`,`STORAGE_ID`,`STORAGE_CELLS_ID`) values ('$art_id','$amount','$income_id','$storage_id','$storage_cells_id');");
                     }
                 }
-//                if ($doc_storage_cells_id==$storage_cells_id){
-//                     $answer=0;$err="Оберіть комірку для переміщення товару відмінну від поточної!";
-//                }
+                // if ($doc_storage_cells_id==$storage_cells_id){
+                //     $answer=0;$err="Оберіть комірку для переміщення товару відмінну від поточної!";
+                // }
             }
             $answer=1;$err="";
         }
@@ -268,8 +269,7 @@ class undistribcells {
 
     function saveundistribcellsZED($undistribcells_id,$country_id,$costums_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
         $undistribcells_id=$slave->qq($undistribcells_id);$country_id=$slave->qq($country_id);$costums_id=$slave->qq($slave->point_valid($costums_id));
-        if ($undistribcells_id>0){
-            //T2_ZED UPDATE
+        if ($undistribcells_id>0){//T2_ZED UPDATE
             $r=$db->query("select * from `T2_ZED` where `ART_ID`='$undistribcells_id' limit 0,1;");$n=$db->num_rows($r);
             if ($n==0){
                 $db->query("insert into T2_ZED (`ART_ID`,`COUNTRY_ID`,`COSTUMS_ID`) values ('$undistribcells_id','$country_id','$costums_id');");

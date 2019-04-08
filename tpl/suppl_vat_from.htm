@@ -7,19 +7,19 @@
                     <label class="col-sm-2 control-label">Ціна включає ПДВ</label>
                     <div class="col-sm-2">
                     	<span class="buttons-inline pull-left">
-                            <input type="checkbox" class="js-switch" data-size="small" id="price_in_vat" {price_in_vat_checked}  onChange="changePriceInVat();" />
+                            <input title="ПДВ" type="checkbox" class="js-switch" data-size="small" id="price_in_vat" {price_in_vat_checked}  onChange="changePriceInVat();" />
                         </span>
 					</div>
                     <label class="col-sm-2 control-label">Показувати клієнтам ціни з ПДВ</label>
                     <div class="col-sm-2">
                     	<span class="buttons-inline pull-left">
-                            <input type="checkbox" class="js-switch" data-size="small" id="show_in_vat" {show_in_vat_checked} />
+                            <input title="ПДВ" type="checkbox" class="js-switch" data-size="small" id="show_in_vat" {show_in_vat_checked} />
                         </span>
 					</div>
                     <label class="col-sm-2 control-label">Додавати ПДВ зверху до ціни</label>
                     <div class="col-sm-2">
                     	<span class="buttons-inline pull-left">
-                            <input type="checkbox" class="js-switch" data-size="small" id="price_add_vat" {price_add_vat_checked} />
+                            <input title="ПДВ" type="checkbox" class="js-switch" data-size="small" id="price_add_vat" {price_add_vat_checked} />
                         </span>
 					</div>
                 </div>
@@ -27,7 +27,7 @@
             <div class="hr-line-dashed"></div>
             <div class="form-group">
                 <div class="col-sm-10 text-right col-sm-offset-2">
-                    <button class="btn btn-primary" type="button" onClick="saveSupplVat('{suppl_id}');">Зберігти зміни</button>
+                    <button class="btn btn-primary" type="button" onClick="saveSupplVat('{suppl_id}');">Зберегти зміни</button>
                     <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
                 </div>
             </div>

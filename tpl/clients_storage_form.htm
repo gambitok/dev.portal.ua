@@ -11,19 +11,19 @@
                 <div class="hr-line-dashed"></div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Країна</label>
-                    <div class="col-sm-10"><select class="form-control" id="storage_country_id" placeholder="Країна" onChange="loadStorageStateSelectList();" style="width:100%;"><option value="0"></option>{country_list}</select></div>
+                    <div class="col-sm-10"><select class="form-control" id="storage_country_id" title="Країна" onChange="loadStorageStateSelectList();" style="width:100%;"><option value="0"></option>{country_list}</select></div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Область</label>
-                    <div class="col-sm-10"><select class="form-control" id="storage_state_id" placeholder="Область" onChange="loadStorageRegionSelectList();" style="width:100%;"><option value="0"></option>{state_list}</select></div>
+                    <div class="col-sm-10"><select class="form-control" id="storage_state_id" title="Область" onChange="loadStorageRegionSelectList();" style="width:100%;"><option value="0"></option>{state_list}</select></div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Район</label>
-                    <div class="col-sm-10"><select class="form-control" id="storage_region_id"  placeholder="Район" onChange="loadStorageCitySelectList();" style="width:100%;"><option value="0"></option>{region_list}</select></div>
+                    <div class="col-sm-10"><select class="form-control" id="storage_region_id"  title="Район" onChange="loadStorageCitySelectList();" style="width:100%;"><option value="0"></option>{region_list}</select></div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Населений пункт</label>
-                    <div class="col-sm-10"><select class="form-control" id="storage_city_id" placeholder="Місто, село, смт" style="width:100%;"><option value="0"></option>{city_list}</select></div>
+                    <div class="col-sm-10"><select class="form-control" id="storage_city_id" title="Місто, село, смт" style="width:100%;"><option value="0"></option>{city_list}</select></div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Email</label>
@@ -39,14 +39,14 @@
                 </div>
 				<div class="form-group">
                     <label class="col-sm-2 control-label">Видимість</label>
-                    <div class="col-sm-10"><input id="client_visible" name="client_visible" class="check_id_cl" {client_checked} type="checkbox"></div>
+                    <div class="col-sm-10"><input title="Видимість" id="client_visible" name="client_visible" class="check_id_cl" {client_checked} type="checkbox"></div>
                 </div>
 
             </div>
             <div class="hr-line-dashed"></div>
             <div class="form-group">
                 <div class="col-sm-10 text-right col-sm-offset-2">
-                    <button class="btn btn-primary" type="button" onClick="saveClientStorageForm('{client_id}','{storage_id}');">Зберігти</button>
+                    <button class="btn btn-primary" type="button" onClick="saveClientStorageForm('{client_id}','{storage_id}');">Зберегти</button>
                     <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
                 </div>
             </div>

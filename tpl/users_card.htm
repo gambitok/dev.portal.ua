@@ -1,10 +1,12 @@
 <div class="tabs-container">
+
     <ul class="nav nav-tabs" id="users_tabs">
         <li class="active"><a data-toggle="tab" href="#us_tab1"><i class="fa fa-bars"></i> <span class="hidden-sm-down not-visible">Загальна інформація</span></a></li>
         <li><a data-toggle="tab" href="#us_tab2" onClick="loadUsersAccess('{users_id}');"><i class="fa fa-lock"></i> <span class="hidden-sm-down not-visible">Права доступу</span></a></li>
 		<li><a data-toggle="tab" href="#us_tab3" onClick="loadUsersAccessCredit('{users_id}');"><i class="fa fa-credit-card"></i> <span class="hidden-sm-down not-visible">Кредити</span></a></li>
 		<li><a data-toggle="tab" href="#us_tab4" onClick="loadUsersAccessTime('{users_id}');"><i class="fa fa-calendar"></i> <span class="hidden-sm-down not-visible">Час доступу</span></a></li>
     </ul>
+
     <div class="tab-content">
         <div id="us_tab1" class="tab-pane active">
             <div class="panel-body">
@@ -20,7 +22,9 @@
                                 <label class="col-sm-2 control-label">Посада</label>
                                 <div class="col-sm-2"><input class="form-control" type="text" name="users_post" id="users_post" value="{post}" placeholder=""></div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
+
                             <div class="form-group">
 	                            <label class="col-sm-2 control-label">Торгова точка</label>
                                 <div class="col-sm-2"><select class="form-control" id="users_tpoint_id" name="users_tpoint_id" placeholder="Торгова точка" style="width:100%;">{tpoints_list}</select></div>
@@ -29,6 +33,7 @@
                                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Телефон</label>
                                 <div class="col-sm-2"><input class="form-control" type="text" name="users_phone2" id="users_phone2" value="{phone2}" placeholder=""></div>
                             </div>
+
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Логін користувача</label>
                                 <div class="col-sm-2"><input class="form-control" type="text" name="users_login" id="users_login" value="{phone}" placeholder=""></div>
@@ -37,39 +42,45 @@
 								<label class="col-sm-2 control-label">Статус</label>
                                 <div class="col-sm-2"><select class="form-control" id="users_status" name="users_status" placeholder="Статус" style="width:100%;">{status_list}</select></div>
                             </div>
+
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Email</label>
                                 <div class="col-sm-2"><input class="form-control" type="text" name="users_email" id="users_email" value="{email}" placeholder=""></div>
                             </div>
                             
                             <div class="hr-line-dashed"></div>
+
                             <div class="form-group">
                                 <div class="col-sm-10 text-right col-sm-offset-2">
-                                    <button class="btn btn-primary" type="button" onClick="saveUsersGeneralInfo();">Зберігти зміни</button>
+                                    <button class="btn btn-primary" type="button" onClick="saveUsersGeneralInfo();">Зберегти зміни</button>
                                     <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
                                 </div>
                             </div>
+
                         </form>
                     </div>
                 </div>
-                
-                
             </div>
         </div>
+
         <div id="us_tab2" class="tab-pane">
             <div class="panel-body" id="user_access_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
         <div id="us_tab3" class="tab-pane">
             <div class="panel-body" id="user_access_credit">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
 		<div id="us_tab4" class="tab-pane">
             <div class="panel-body" id="user_access_time">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
     </div>
+
 </div>

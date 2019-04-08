@@ -27,19 +27,19 @@
 								
 								<div class="row">
 									<label class="col-sm-2 control-label">ART_ID</label>
-									<div class="col-sm-2"><input class="form-control" type="text" readonly name="art_id" id="art_id" value="{art_id}"></div>
+									<div class="col-sm-2"><input title="ART_ID" class="form-control" type="text" readonly name="art_id" id="art_id" value="{art_id}"></div>
 									<label class="col-sm-2 control-label">Індекс постачальника</label>
-									<div class="col-sm-2"><input class="form-control" type="checkbox" name="suppl_status" id="suppl_status" onChange="changeArtId();"></div>
+									<div class="col-sm-2"><input title="Постачальник" class="form-control" type="checkbox" name="suppl_status" id="suppl_status" onChange="changeArtId();"></div>
 								</div>
 
 								<div class="hr-line-dashed"></div>
 
 								<div class="row">
-									<label class="col-sm-2 control-label">Номенклатурний номер </label>
-									<div class="col-sm-4"><input class="form-control" type="text" name="article_nr_displ" id="article_nr_displ"></div>
+									<label class="col-sm-2 control-label">Номенклатурний номер</label>
+									<div class="col-sm-4"><input title="Номенклатурний номер" class="form-control" type="text" name="article_nr_displ" id="article_nr_displ"></div>
 									<label class="col-sm-2 control-label">Бренд</label>
 									<div class="col-sm-4">
-										<select class="form-control" id="brand_id" name="brand_id" style="width:100%;">
+										<select title="Список брендів" class="form-control" id="brand_id" name="brand_id" style="width:100%;">
 											{brand_list}
 										</select>
 									</div>
@@ -49,24 +49,23 @@
 
 								<div class="row">
 									<label class="col-sm-2 control-label">Найменування</label>
-									<div class="col-sm-4"><input class="form-control" type="text" name="article_name" id="article_name"></div>
+									<div class="col-sm-4"><input title="Найменування" class="form-control" type="text" name="article_name" id="article_name"></div>
 									<label class="col-sm-2 control-label">Найменування Укр</label>
-									<div class="col-sm-4"><input class="form-control" type="text" name="article_name_ukr" id="article_name_ukr"></div>
+									<div class="col-sm-4"><input title="Найменування" class="form-control" type="text" name="article_name_ukr" id="article_name_ukr"></div>
 								</div>
 
 								<div class="hr-line-dashed"></div>
 
 								<div class="row">
 									<label class="col-sm-2 control-label">Опис товару</label>
-<!--									data-provide="markdown" -->
-									<div class="col-sm-10"><textarea class="form-control" name="article_info" id="article_info" rows="5"></textarea></div>
+									<div class="col-sm-10"><textarea title="Інформація" class="form-control" name="article_info" id="article_info" rows="5"></textarea></div>
 								</div>
 								
 								<hr>
 
 								<div class="row">
 									<div class="col-sm-10 text-right col-sm-offset-2">
-										<button class="btn btn-primary" type="button" onClick="saveIndexArticle();">Зберігти зміни</button>
+										<button class="btn btn-primary" type="button" onClick="saveIndexArticle();">Зберегти зміни</button>
 									</div>
 								</div>
 								
@@ -99,8 +98,8 @@
 <script src="/js/seo_reports/seo_reports.js"></script>
 
 <script type="text/javascript">
-//Disabling autoDiscover
-Dropzone.autoDiscover = false;
+	//Disabling autoDiscover
+	Dropzone.autoDiscover = false;
 </script>
 <script src="/js/plugins/jsTree/jstree.min.js"></script>
 <style>.jstree-open > .jstree-anchor > .fa-folder:before {content: "\f07c";}.jstree-default .jstree-icon.none {width: 0;}</style>

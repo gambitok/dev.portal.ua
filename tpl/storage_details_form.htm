@@ -6,13 +6,18 @@
             	<h2>Оберіть метод зберігання на складі</h2>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Тип зберігання</label>
-                    <div class="col-sm-10"><select class="form-control" size="1" name="param_type_id" id="param_type_id" required><option value='0'> -- Оберіть тип зберігання -- </option>{param_type_list}</select></div>
+                    <div class="col-sm-10">
+                        <select title="Оберіть тип зберігання" class="form-control" size="1" name="param_type_id" id="param_type_id" required>
+                            <option value='0'> -- Оберіть тип зберігання -- </option>
+                            {param_type_list}
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="hr-line-dashed"></div>
             <div class="form-group">
                 <div class="col-sm-10 text-right col-sm-offset-2">
-                    <button class="btn btn-primary" type="button" onClick="saveStorageDetailsForm('{storage_id}','{storage_str_id}');">Зберігти</button>
+                    <button class="btn btn-primary" type="button" onClick="saveStorageDetailsForm('{storage_id}','{storage_str_id}');">Зберегти</button>
                     <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
                 </div>
             </div>

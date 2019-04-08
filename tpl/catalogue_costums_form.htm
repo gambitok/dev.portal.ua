@@ -1,5 +1,5 @@
 <form method="get" class="form-horizontal">
-<input type="hidden" id="form_costums_id" value="{id}">
+    <input type="hidden" id="form_costums_id" value="{id}">
     <div class="col-md-12">
         <div class="form-group">
             <label class="col-sm-2 control-label">Код</label>
@@ -23,7 +23,7 @@
             <div class="col-sm-2">
                 <input id="form_costums_type_declaration" name="form_costums_type_declaration" value="{type_declaration}" type="hidden">
                 <div class="input-group">
-                    <input class="form-control" name="form_costums_type_declaration_caption" id="form_costums_type_declaration_caption" value="{type_declaration_caption}" readonly type="text">
+                    <input title="Тип декларації" class="form-control" name="form_costums_type_declaration_caption" id="form_costums_type_declaration_caption" value="{type_declaration_caption}" readonly type="text">
                     <span class="input-group-btn"><button type="button" class="btn btn-primary" onclick="showManual('costums_type_declaration','form_costums_type_declaration','form_costums_type_declaration_caption');"><i class="fa fa-tasks"></i></button></span>
                 </div>
             </div>
@@ -31,7 +31,7 @@
             <div class="col-sm-2">
 	            <input id="form_costums_sertification" name="form_costums_sertification" value="{sertification}" type="hidden">
                 <div class="input-group">
-                    <input class="form-control" name="form_costums_sertification_caption" id="form_costums_sertification_caption" value="{sertification_caption}" readonly type="text">
+                    <input title="Специфікація" class="form-control" name="form_costums_sertification_caption" id="form_costums_sertification_caption" value="{sertification_caption}" readonly type="text">
                     <span class="input-group-btn"><button type="button" class="btn btn-primary" onclick="showManual('costums_sertification','form_costums_sertification','form_costums_sertification_caption');"><i class="fa fa-tasks"></i></button></span>
                 </div>
             </div>
@@ -39,7 +39,7 @@
             <div class="col-sm-2">
             	<input id="form_costums_gos_standart" name="form_costums_gos_standart" value="{gos_standart}" type="hidden">
                 <div class="input-group">
-                    <input class="form-control" name="form_costums_gos_standart_caption" id="form_costums_gos_standart_caption" value="{gos_standart_caption}" readonly type="text">
+                    <input title="Довідка держ.стандарт" class="form-control" name="form_costums_gos_standart_caption" id="form_costums_gos_standart_caption" value="{gos_standart_caption}" readonly type="text">
                     <span class="input-group-btn"><button type="button" class="btn btn-primary" onclick="showManual('costums_gos_standart','form_costums_gos_standart','form_costums_gos_standart_caption');"><i class="fa fa-tasks"></i></button></span>
                 </div>
 			</div>
@@ -48,7 +48,7 @@
     <div class="hr-line-dashed"></div>
     <div class="form-group">
         <div class="col-sm-10 text-right col-sm-offset-2">
-            <button class="btn btn-primary" type="button" onClick="saveCatalogueCostumsForm();">Зберігти зміни</button>
+            <button class="btn btn-primary" type="button" onClick="saveCatalogueCostumsForm();">Зберегти зміни</button>
             <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
         </div>
     </div>

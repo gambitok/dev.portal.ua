@@ -1,4 +1,5 @@
 <div class="tabs-container">
+
     <ul class="nav nav-tabs" id="catalogue_tabs">
         <li class="active"><a data-toggle="tab" href="#cat_tab1"><i class="fa fa-bars"></i> <span class="hidden-sm-down not-visible">Загальна інформація</span></a></li>
         <li><a data-toggle="tab" href="#cat_tab2" onClick="loadArticleFoto('{art_id}');"><i class="fa fa-picture-o"></i> <span class="hidden-sm-down">Фото</span></a></li>
@@ -11,10 +12,10 @@
         <li><a data-toggle="tab" href="#cat_tab10"><i class="glyphicon glyphicon-globe"></i> <span class="hidden-sm-down">Постачальники</span></a></li>
         <li><a data-toggle="tab" href="#cat_tab8" onClick="loadArticleCommets('{art_id}');"><i class="fa fa-edit"></i> <span class="hidden-sm-down">Замітки</span></a></li>
         <li><a data-toggle="tab" href="#cat_tab9" onClick="loadArticleCDN('{art_id}');"><i class="fa fa-cloud"></i> <span class="hidden-sm-down">Різне</span></a></li>
-		
         <li><a data-toggle="tab" href="#cat_tab12" onClick="loadArticleInfo('{art_id}');"><i class="fa fa-cloud"></i> <span class="hidden-sm-down">T2_INFO</span></a></li>
         <li><a data-toggle="tab" href="#cat_tab13" onClick="loadArticleShortInfo('{art_id}');"><i class="fa fa-cloud"></i> <span class="hidden-sm-down">T2_SHORT_INFO</span></a></li>
     </ul>
+
     <div class="tab-content">
         <div id="cat_tab1" class="tab-pane active">
             <div class="panel-body">
@@ -28,16 +29,18 @@
                                 <label class="col-sm-2 control-label">ART_ID</label>
                                 <div class="col-sm-2"><input class="form-control" type="text" readonly name="art_id" id="art_id" value="{art_id}" placeholder=""></div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
+
                             <div class="form-group"><label class="col-sm-2 control-label">Штрих-код </label>
                                 <div class="col-sm-4">
                                 	<div class="input-group"><input class="form-control" type="text" id="barcode" name="barcode" value="{barcode}" placeholder="Код у форматі CODE39"> <span class="input-group-btn"> <button type="button" class="btn btn-primary" onClick="generateBarcodeIncart();"><i class="fa fa-barcode"></i></button> </span></div>
 								</div>
-                                 
                                 <div class="col-sm-3" id="barcode-visual"></div>
                             </div>
                             
                             <div class="hr-line-dashed"></div>
+
                             <div class="form-group">
                             	<label class="col-sm-2 control-label">Крос-ключ</label>
                                 <div class="col-sm-4"><input class="form-control" type="text" name="inner_cross" id="inner_cross" value="{inner_cross}" placeholder=""></div>
@@ -48,9 +51,10 @@
                                     </select>
                                 </div>
                             </div>
+
 							<div class="hr-line-dashed"></div>
+
                             <div class="form-group">
-                            	
                                 <label class="col-sm-2 control-label">Товарна група</label>
                                 <div class="col-sm-4">
                                 	<input type="hidden" id="goods_group_id" name="goods_group_id" value="{goods_group_id}">
@@ -62,10 +66,8 @@
                                         </span>
                                        </div>
                                 </div>
-                                
                                 <label class="col-sm-2 control-label">Найменування</label>
                                 <div class="col-sm-4"><input class="form-control" type="text" name="article_name" id="article_name" value="{article_name}" placeholder=""></div>
-                                
                             </div>
 							
 							<div class="form-group">
@@ -74,38 +76,41 @@
 							    <label class="col-sm-2 control-label">Найменування Укр</label>
                                 <div class="col-sm-4"><input class="form-control" type="text" name="article_name_ukr" id="article_name_ukr" value="{article_name_ukr}" placeholder=""></div>
 							</div>
+
 							<br>
                             
 							<div class="form-group">
                                 <label class="col-sm-2 control-label">Опис товару</label>
                                 <div class="col-sm-10"><textarea class="form-control" name="article_info" id="article_info" data-provide="markdown" rows="5">{article_info}</textarea></div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
-                             <div class="form-group">
-                            	<label class="col-sm-2 control-label">Загальна наявність</label>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Загальна наявність</label>
                                 <div class="col-sm-2">
-                                	
                                     <div class="input-group">
                                     <input class="form-control" type="number" readonly name="general_stock" id="general_stock" value="{general_stock}" placeholder="">
                                     <span class="input-group-btn">
-                                        <button type="button" class="btn btn-primary" onClick="showArticleStorageCellsRestForm('{art_id}');"><i class="fa fa-cubes" title="Наявність по складам"></i></button> 
+                                        <button type="button" class="btn btn-primary" onClick="showArticleStorageCellsRestForm('{art_id}');"><i class="fa fa-cubes" title="Наявність по складам"></i></button>
                                     </span>
-									</div>
-								</div>
+                                    </div>
+                                </div>
                                 <label class="col-sm-2 control-label">Партії</label>
                                 <div class="col-sm-2">
-                                	
                                     <div class="input-group">
                                     <input class="form-control" type="number" readonly name="general_stock" id="general_stock" value="{general_stock}" placeholder="">
                                     <span class="input-group-btn">
-                                        <button type="button" class="btn btn-primary" onClick="showArticlePartitionsRestForm('{art_id}');"><i class="fa fa-list" title="Наявність по партіям"></i></button> 
+                                        <button type="button" class="btn btn-primary" onClick="showArticlePartitionsRestForm('{art_id}');"><i class="fa fa-list" title="Наявність по партіям"></i></button>
                                     </span>
-									</div>
-								</div>
+                                    </div>
+                                </div>
                                 <label class="col-sm-2 control-label">Операційна собівартість</label>
                                 <div class="col-sm-2"><input class="form-control" type="text" readonly name="oper_price" id="oper_price" value="{oper_price}" placeholder=""></div>
                             </div>
+
 							<div class="hr-line-dashed"></div>
+
                             <div class="form-group">
                                 <div class="col-sm-10 text-right col-sm-offset-2">
                                     <button class="btn btn-warning" type="button" onClick="showArticleCross('{art_id}');">Наявність по кросам</button>
@@ -116,17 +121,17 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-10 text-right col-sm-offset-2">
-                                    <button class="btn btn-primary" type="button" onClick="preconfirmCatalogueGeneralInfo();">Зберігти зміни</button>
+                                    <button class="btn btn-primary" type="button" onClick="preconfirmCatalogueGeneralInfo();">Зберегти зміни</button>
                                     <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
-                
-                
+
             </div>
         </div>
+
         <div id="cat_tab2" class="tab-pane">
             <div class="panel-body">
                 <!--   PHOTO TAB BLOCK   -->
@@ -144,34 +149,39 @@
                         </span>
                     </div></div>
                 </div>
-                
             </div>
         </div>
+
         <div id="cat_tab3" class="tab-pane">
             <div class="panel-body" id="params_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
         <div id="cat_tab4" class="tab-pane">
             <div class="panel-body" id="logistic_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
         <div id="cat_tab5" class="tab-pane">
             <div class="panel-body gray-bg" id="analog_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
         <div id="cat_tab6" class="tab-pane">
             <div class="panel-body" id="aplicability_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
         <div id="cat_tab7" class="tab-pane">
         	<div class="panel-body" id="zed_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
         <div id="cat_tab8" class="tab-pane">
             <div class="panel-body">
                 <div class="social-footer">
@@ -196,6 +206,7 @@
                 </div>
             </div>
         </div>
+
         <div id="cat_tab9" class="tab-pane">
             <div class="panel-body">
             <!--   PHOTO TAB BLOCK   -->
@@ -215,11 +226,13 @@
                 </div></div>
             </div>
         </div>
+
         <div id="cat_tab10" class="tab-pane">
             <div class="panel-body" id="supll_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
         <div id="cat_tab11" class="tab-pane">
             <div class="panel-body" id="pricing_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
@@ -239,6 +252,5 @@
         </div>
 		
     </div>
-
 
 </div>
