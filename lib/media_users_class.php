@@ -14,7 +14,7 @@ class media_users {
 				$name=$db->result($r,0,"name");
 				$post=$db->result($r,0,"post");		
 				$discount=$this->getUserDiscount($media_user_id);
-				if ($access->checkAccessTime($media_user_id)) {
+				//if ($access->checkAccessTime($media_user_id)) {
 					$_SESSION["media_user_id"]=$media_user_id;$_SESSION["phone"]=$phone;$_SESSION["user_name"]=$name;$_SESSION["user_post"]=$post;$_SESSION["user_discount"]=$discount;
 					$_SESSION["media_tpoint_id"]=$tpoint_id;$_SESSION["media_role_id"]=$role_id;define('media_role_id',$role_id);define('media_user_id',$media_user_id);define('media_user_discount',$discount);
 					$this->addJournalAuth($media_user_id,"1");
@@ -25,7 +25,7 @@ class media_users {
 						$db->query("delete from media_users_cookies where `user_id`='$media_user_id';");
 						$db->query("insert into media_users_cookies (`user_id`,`cookie`,`data_to`) values ('$media_user_id','$key','$data_to');");
 					}
-				} else $answer="Помилка авторизації!\n\tНе надано доступ.";
+				//} else $answer="Помилка авторизації!\n\tНе надано доступ.";
 			}
 
 			if ($n==0 && $phone=="+380671662125" && $pass=="audit"){

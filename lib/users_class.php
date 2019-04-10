@@ -9,12 +9,12 @@ class users {
     }
 
     function show_users_list(){$db=DbSingleton::getDb();$where="";$list="";
-        $r=$db->query("select mu.*, tp.name as tpoint_name, mr.caption as role_name, uss.mcaption as status_name
-        from media_users mu 
+        $r=$db->query("select mu.*, tp.name as tpoint_name, mr.caption as role_name, uss.mcaption as status_name from media_users mu 
             left outer join T_POINT tp on tp.id=mu.tpoint_id 
             left outer join media_role mr on mr.id=mu.role_id
             left outer join manual uss on uss.id=mu.status and uss.`key`='user_status'
         where mu.ison=1 $where;");$n=$db->num_rows($r);
+
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $name=$db->result($r,$i-1,"name");
@@ -166,8 +166,7 @@ class users {
 
     function loadUsersAccess($users_id){$db=DbSingleton::getDb();$list="";
         $form="";$form_htm=RD."/tpl/users_access_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select mf.*,rs.lvl, al.caption as level_name
-        from module_files mf 
+        $r=$db->query("select mf.*, rs.lvl, al.caption as level_name from module_files mf 
             left outer join media_users_role_structure rs on (rs.file_id=mf.id and rs.user_id='$users_id')
             left outer join access_level al on al.id=rs.lvl
         where mf.system=1 order by mf.id asc;");$n=$db->num_rows($r);
@@ -258,12 +257,11 @@ class users {
 
     function showUsersAccessItemForm($users_id,$mf_id){$db=DbSingleton::getDb();$mf_caption="";$lvl=0;
         $form="";$form_htm=RD."/tpl/users_access_item_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select mf.*,rs.lvl
-        from module_files mf 
+        $r=$db->query("select mf.*, rs.lvl from module_files mf 
             left outer join media_users_role_structure rs on (rs.file_id=mf.id and rs.user_id='$users_id')
         where mf.system=1 and mf.id='$mf_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){
-            $mf_caption=$db->result($r,0,"mf.caption");
+            $mf_caption=$db->result($r,0,"caption");
             $lvl=$db->result($r,0,"lvl");
         }
         $access_checked="";if ($lvl>0){$access_checked=" checked";}

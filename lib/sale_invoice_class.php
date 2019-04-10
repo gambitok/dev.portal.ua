@@ -829,7 +829,8 @@ class sale_invoice {
     //===============			MONEY PAY 		==================================
 
     function printSaleInvoice($invoice_id){$db=DbSingleton::getDb();session_start();$ses_tpoint_id=$_SESSION["media_tpoint_id"];$cat=new catalogue;$slave=new slave;$money=new toMoney;$invoice_summ=0;$form="";$invoice_summ_bez=0;$list="";$form_htm="";
-        $r=$db->query("select sv.*, t.name as tpoint_name, sl.full_name as seller_name, sld.vytjag, sld.edrpou, sld.account, sld.bank, sld.mfo, ot.name as org_type_abr, cl.name as client_name, dt.mcaption as doc_type_name, dp.prefix, ss.select_id, sv.dp_id, dt.mvalue as doc_type_abr,ch.abr2 as cash_abr,dp.delivery_address 
+        $r=$db->query("select sv.*, t.name as tpoint_name, sl.full_name as seller_name, sld.vytjag, sld.edrpou, sld.account, sld.bank, sld.mfo, ot.name as org_type_abr, 
+        cl.name as client_name, dt.mcaption as doc_type_name, dp.prefix as dp_prefix, ss.select_id, sv.dp_id, dt.mvalue as doc_type_abr, ch.abr2 as cash_abr, dp.delivery_address 
         from J_SALE_INVOICE sv
             left outer join CASH ch on ch.id=sv.cash_id
             left outer join T_POINT t on t.id=sv.tpoint_id
@@ -1014,7 +1015,8 @@ class sale_invoice {
     }
 
     function printSaleInvoiceBuh($invoice_id){$db=DbSingleton::getDb();$cat=new catalogue;$slave=new slave;$money=new toMoney;$invoice_summ=0;$list="";$form="";$form_htm="";$storage_id=0;
-        $r=$db->query("select sv.*, t.name as tpoint_name, sl.name as seller_name, sld.edrpou, ot.name as org_type_abr, cl.name as client_name, dt.mcaption as doc_type_name, dt.mvalue as doc_type_abr,ch.abr2 as cash_abr,dp.delivery_address 
+        $r=$db->query("select sv.*, t.name as tpoint_name, sl.name as seller_name, sld.edrpou, ot.name as org_type_abr, 
+        cl.name as client_name, dt.mcaption as doc_type_name, dt.mvalue as doc_type_abr, ch.abr2 as cash_abr, dp.delivery_address 
         from J_SALE_INVOICE sv
             left outer join CASH ch on ch.id=sv.cash_id
             left outer join T_POINT t on t.id=sv.tpoint_id
@@ -1094,7 +1096,8 @@ class sale_invoice {
     }
 
     function exportSaleInvoiceExcel($invoice_id,$separator){$db=DbSingleton::getDb();$cat=new catalogue;$invoice_summ=0;
-        $r=$db->query("select sv.*, t.name as tpoint_name, sl.name as seller_name, sld.edrpou, ot.name as org_type_abr, cl.name as client_name, dt.mcaption as doc_type_name, dt.mvalue as doc_type_abr,ch.abr2 as cash_abr,dp.delivery_address 
+        $r=$db->query("select sv.*, t.name as tpoint_name, sl.name as seller_name, sld.edrpou, ot.name as org_type_abr, 
+        cl.name as client_name, dt.mcaption as doc_type_name, dt.mvalue as doc_type_abr,ch.abr2 as cash_abr,dp.delivery_address 
         from J_SALE_INVOICE sv
             left outer join CASH ch on ch.id=sv.cash_id
             left outer join T_POINT t on t.id=sv.tpoint_id

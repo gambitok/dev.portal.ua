@@ -5,8 +5,7 @@ class access {
 	function check_user_access($file){$db=DbSingleton::getDb(); session_start(); $media_user_id=$_SESSION["media_user_id"];
         $access="0"; $acc_lvl="0";
         if ($media_user_id!=1){
-            $r=$db->query("select rs.lvl 
-            from media_users_role_structure rs 
+            $r=$db->query("select rs.lvl from media_users_role_structure rs 
                 inner join module_files mf on mf.id=rs.file_id 
             where rs.user_id='$media_user_id' and mf.file='$file' limit 0,1;"); $n=$db->num_rows($r);
             if ($n==1){

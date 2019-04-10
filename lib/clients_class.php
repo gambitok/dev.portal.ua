@@ -31,7 +31,7 @@ class clients {
         if ($state_id>0 && $state_id!=""){$where=" and c.state='$state_id'";}
         if ($client_id>0 && $client_id!=""){$where=" and c.id='$client_id'";}
 
-        $r=$db->query("select c.*,ot.name as org_type_name, t2cn.COUNTRY_NAME, t2st.STATE_NAME, t2rg.REGION_NAME, t2ct.CITY_NAME  
+        $r=$db->query("select c.*, ot.name as org_type_name, t2cn.COUNTRY_NAME, t2st.STATE_NAME, t2rg.REGION_NAME, t2ct.CITY_NAME  
         from A_CLIENTS c 
             left outer join A_ORG_TYPE ot on ot.id=c.org_type 
             left outer join T2_COUNTRIES t2cn on t2cn.COUNTRY_ID=c.country 
@@ -66,14 +66,14 @@ class clients {
 
     function showClientsParrentTree($sel_id,$prnt_id){$db=DbSingleton::getDb();
         $form="";$form_htm=RD."/tpl/clients_parrent_tree.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select c.*,ot.name as org_type_name, t2cn.COUNTRY_NAME, t2st.STATE_NAME, t2rg.REGION_NAME, t2ct.CITY_NAME  
+        $r=$db->query("select c.*, ot.name as org_type_name, t2cn.COUNTRY_NAME, t2st.STATE_NAME, t2rg.REGION_NAME, t2ct.CITY_NAME  
         from A_CLIENTS c 
             left outer join A_ORG_TYPE ot on ot.id=c.org_type 
             left outer join T2_COUNTRIES t2cn on t2cn.COUNTRY_ID=c.country 
             left outer join T2_STATE t2st on t2st.STATE_ID=c.state
             left outer join T2_REGION t2rg on t2rg.REGION_ID=c.region
             left outer join T2_CITY t2ct on t2ct.CITY_ID=c.city
-        where c.status=1 and parrent_id=0;");$n=$db->num_rows($r);$list="";
+        where c.status=1 and c.parrent_id=0;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $name=$db->result($r,$i-1,"name");
@@ -152,7 +152,8 @@ class clients {
             $tpoint_id=$db->result($r,0,"tpoint_id");
             $client_vat=$db->result($r,0,"client_vat");
             $doc_type_id=$db->result($r,0,"doc_type_id");
-            $db->query("insert into A_CLIENTS_CONDITIONS (`client_id`, `cash_id`, `country_cash_id`, `credit_cash_id`, `payment_delay`, `credit_limit`, `credit_return`, `price_lvl`, `margin_price_lvl`, `price_suppl_lvl`, `margin_price_suppl_lvl`, `tpoint_id`, `client_vat`, `doc_type_id`) values ('$client_id','$cash_id','$country_cash_id','$credit_cash_id','$payment_delay','$credit_limit','$credit_return','$price_lvl','$margin_price_lvl','$price_suppl_lvl','$margin_price_suppl_lvl','$tpoint_id','$client_vat','$doc_type_id');");
+            $db->query("insert into A_CLIENTS_CONDITIONS (`client_id`, `cash_id`, `country_cash_id`, `credit_cash_id`, `payment_delay`, `credit_limit`, `credit_return`, `price_lvl`, `margin_price_lvl`, `price_suppl_lvl`, `margin_price_suppl_lvl`, `tpoint_id`, `client_vat`, `doc_type_id`) 
+            values ('$client_id','$cash_id','$country_cash_id','$credit_cash_id','$payment_delay','$credit_limit','$credit_return','$price_lvl','$margin_price_lvl','$price_suppl_lvl','$margin_price_suppl_lvl','$tpoint_id','$client_vat','$doc_type_id');");
         }
         return;
     }
@@ -204,8 +205,9 @@ class clients {
     }
 
     function checkClientSubclients($sel_id){$db=DbSingleton::getDb();$ar=array();$kol_childs=0;$list="";
-        $r=$db->query("select c.*,ot.name as org_type_name from A_CLIENTS c 
-            left outer join A_ORG_TYPE ot on ot.id=c.org_type where c.parrent_id='$sel_id' and c.status='1' order by c.id asc;");$n=$db->num_rows($r);
+        $r=$db->query("select c.*, ot.name as org_type_name from A_CLIENTS c 
+            left outer join A_ORG_TYPE ot on ot.id=c.org_type 
+        where c.parrent_id='$sel_id' and c.status='1' order by c.id asc;");$n=$db->num_rows($r);
         if ($n>0){$kol_childs=$n;
             for ($i=1;$i<=$n;$i++){
                 $id=$db->result($r,$i-1,"id");
@@ -402,7 +404,7 @@ class clients {
     }
 
     function showUserStatusSelectList($sel_id){$db=DbSingleton::getDb();$list="";
-        $r=$db->query("select * from manual where `key`='user_retail_status' and ison=1 order by mcaption,id asc;");$n=$db->num_rows($r);
+        $r=$db->query("select * from manual where `key`='user_retail_status' and ison=1 order by mcaption, id asc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $name=$db->result($r,$i-1,"mcaption");
@@ -543,7 +545,8 @@ class clients {
 
     function loadClientUsers($client_id){$db=DbSingleton::getDb();
         $form="";$form_htm=RD."/tpl/clients_users_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select cc.* from A_CLIENTS_USERS cc where cc.client_id='$client_id' and cc.status='1' order by name asc;");$n=$db->num_rows($r);$list="";
+        $r=$db->query("select cc.* from A_CLIENTS_USERS cc 
+        where cc.client_id='$client_id' and cc.status='1' order by cc.name asc;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $name=$db->result($r,$i-1,"name");
@@ -626,7 +629,8 @@ class clients {
 
     function loadClientContacts($client_id){$db=DbSingleton::getDb();
         $form="";$form_htm=RD."/tpl/clients_contacts_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select cc.* from A_CLIENTS_CONTACTS cc where cc.client_id='$client_id' order by name asc;");$n=$db->num_rows($r);$list="";
+        $r=$db->query("select cc.* from A_CLIENTS_CONTACTS cc 
+        where cc.client_id='$client_id' order by cc.name asc;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $name=$db->result($r,$i-1,"name");
@@ -649,9 +653,9 @@ class clients {
     }
 
     function getContactCon($contact_id){$db=DbSingleton::getDb();$manual=new manual;
-        $r=$db->query("select cc.* from A_CLIENTS_CONTACTS_CON cc where cc.contact_id='$contact_id' order by id asc;");$n=$db->num_rows($r);$list="<ul>";
+        $r=$db->query("select cc.* from A_CLIENTS_CONTACTS_CON cc 
+        where cc.contact_id='$contact_id' order by cc.id asc;");$n=$db->num_rows($r);$list="<ul>";
         for ($i=1;$i<=$n;$i++){
-            //$id=$db->result($r,$i-1,"id");
             $sotc_cont=$manual->getManualMCaption("sotc_cont",$db->result($r,$i-1,"sotc_cont"));
             $contact_value=$db->result($r,$i-1,"contact_value");
             $list.="<li>$sotc_cont : $contact_value</li>";
@@ -660,7 +664,8 @@ class clients {
     }
 
     function getContactConForm($contact_id){$db=DbSingleton::getDb();$manual=new manual;
-        $r=$db->query("select cc.* from A_CLIENTS_CONTACTS_CON cc where cc.contact_id='$contact_id' order by id asc;");$n=$db->num_rows($r);$list="";
+        $r=$db->query("select cc.* from A_CLIENTS_CONTACTS_CON cc 
+        where cc.contact_id='$contact_id' order by cc.id asc;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $sotc_cont=$db->result($r,$i-1,"sotc_cont");
@@ -729,9 +734,10 @@ class clients {
 
     function loadClientCommets($client_id){$db=DbSingleton::getDb();
         $form="";$form_htm=RD."/tpl/clients_comment_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select cc.*,u.name from A_CLIENTS_COMMENTS cc 
+        $r=$db->query("select cc.*, u.name from A_CLIENTS_COMMENTS cc 
             left outer join media_users u on u.id=cc.USER_ID 
-        where cc.CLIENT_ID='$client_id' order by id desc;");$n=$db->num_rows($r);$list="";
+        where cc.CLIENT_ID='$client_id' order by cc.id desc;");$n=$db->num_rows($r);$list="";
+
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"ID");
             $user_id=$db->result($r,$i-1,"USER_ID");
@@ -774,7 +780,7 @@ class clients {
 
     function loadClientsDetailsFile($client_id,$file_type){$db=DbSingleton::getDb();
         $form="";$form_htm=RD."/tpl/clients_details_file.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select cd.*,u.name as user_name from A_CLIENTS_DTLS `cd` 
+        $r=$db->query("select cd.*, u.name as user_name from A_CLIENTS_DTLS `cd` 
             left outer join media_users u on u.id=`cd`.USER_ID 
         where cd.CLIENT_ID='$client_id' and cd.FILE_TYPE='$file_type' and cd.STATUS='1' order by cd.FILE_NAME asc;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
@@ -807,7 +813,8 @@ class clients {
     function clientsDetailsDropFile($client_id,$file_type,$file_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка видалення файлу!";
         $client_id=$slave->qq($client_id);$file_id=$slave->qq($file_id);
         if ($client_id>0 && $file_id>0 && $file_type!=""){
-            $r=$db->query("select FILE_NAME from A_CLIENTS_DTLS where CLIENT_ID='$client_id' and FILE_TYPE='$file_type' and ID='$file_id' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("select FILE_NAME from A_CLIENTS_DTLS 
+            where CLIENT_ID='$client_id' and FILE_TYPE='$file_type' and ID='$file_id' limit 0,1;");$n=$db->num_rows($r);
             if ($n==1){
                 unlink(RD.'/cdn/clfiles/$client_id/$file_name');
                 $db->query("delete from A_CLIENTS_DTLS where CLIENT_ID='$client_id' and FILE_TYPE='$file_type' and ID='$file_id';");
@@ -819,9 +826,10 @@ class clients {
 
     function loadClientCDN($client_id){$db=DbSingleton::getDb();
         $form="";$form_htm=RD."/tpl/clients_cdn_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select cc.*,u.name as user_name from A_CLIENTS_CDN cc 
+        $r=$db->query("select cc.*, u.name as user_name from A_CLIENTS_CDN cc 
             left outer join media_users u on u.id=cc.USER_ID 
         where cc.CLIENT_ID='$client_id' and cc.STATUS='1' order by cc.FILE_NAME asc;");$n=$db->num_rows($r);$list="";
+
         for ($i=1;$i<=$n;$i++){
             $file_id=$db->result($r,$i-1,"ID");
             $file_name=$db->result($r,$i-1,"FILE_NAME");
@@ -863,9 +871,10 @@ class clients {
 
     function loadArticleFoto($client_id){$db=DbSingleton::getDb();
         $form="";$form_htm=RD."/tpl/clients_foto_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select t2af.*,u.name as user_name from T2_PHOTOS t2af
+        $r=$db->query("select t2af.*, u.name as user_name from T2_PHOTOS t2af
             left outer join media_users u on u.id=t2af.USER_ID 
         where t2af.ART_ID='$client_id' order by t2af.PHOTO_NAME asc;");$n=$db->num_rows($r);$list="";
+
         for ($i=1;$i<=$n;$i++){
             $file_id=$db->result($r,$i-1,"ID");
             $file_name=$db->result($r,$i-1,"PHOTO_NAME");
@@ -914,7 +923,7 @@ class clients {
     }
 
     function getClientGeneralSaldo($sel_id){$db=DbSingleton::getDb();$saldo="0 грн";
-        $r=$db->query("select `saldo`,cash_id from B_CLIENT_BALANS where client_id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
+        $r=$db->query("select `saldo`, cash_id from B_CLIENT_BALANS where client_id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){
             $saldo=$db->result($r,0,"saldo");
             $cash_id=$db->result($r,0,"cash_id");
@@ -981,7 +990,7 @@ class clients {
     }
 
     function showCategoryCheckList($client_id){$db=DbSingleton::getDb();$list="";
-        $r=$db->query("select  * from A_CATEGORY where parrent_id=0 order by id asc;");$n=$db->num_rows($r);
+        $r=$db->query("select * from A_CATEGORY where parrent_id=0 order by id asc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){ $client_disabled="";
             $id=$db->result($r,$i-1,"id");
             $name=$db->result($r,$i-1,"name");
@@ -1094,10 +1103,10 @@ class clients {
         if ($client_id>0){
             $r=$db->query("select * from `A_CLIENTS_SUPPL_CONDITIONS` where `client_id`='$client_id' limit 0,1;");$n=$db->num_rows($r);
             if ($n==0){
-                $db->query("insert into A_CLIENTS_SUPPL_CONDITIONS (`client_id`,`prepayment`,`prepay_all`,`prepay_summ`,`prepay_type`,`prepay_persent`) values ('$client_id', '$prepayment','$prepay_all','$prepay_summ','$prepay_type','$prepay_persent');");
+                $db->query("insert into `A_CLIENTS_SUPPL_CONDITIONS` (`client_id`,`prepayment`,`prepay_all`,`prepay_summ`,`prepay_type`,`prepay_persent`) values ('$client_id', '$prepayment','$prepay_all','$prepay_summ','$prepay_type','$prepay_persent');");
             }
             if ($n==1){
-                $db->query("update A_CLIENTS_SUPPL_CONDITIONS set `prepayment`='$prepayment', `prepay_all`='$prepay_all', `prepay_summ`='$prepay_summ', `prepay_type`='$prepay_type', `prepay_persent`='$prepay_persent' where `client_id`='$client_id';");
+                $db->query("update `A_CLIENTS_SUPPL_CONDITIONS` set `prepayment`='$prepayment', `prepay_all`='$prepay_all', `prepay_summ`='$prepay_summ', `prepay_type`='$prepay_type', `prepay_persent`='$prepay_persent' where `client_id`='$client_id';");
             }
             $answer=1;$err="";
         }
@@ -1105,7 +1114,7 @@ class clients {
     }
 
     function getDocTypeSelectList($sel_id){$db=DbSingleton::getDb();$list="<option value=0>Оберіть зі списку</option>";
-        $r=$db->query("select id,mcaption from `manual` where ison='1' and `key`='client_sale_type' order by mid,id asc;");$n=$db->num_rows($r);
+        $r=$db->query("select id, mcaption from `manual` where ison='1' and `key`='client_sale_type' order by mid, id asc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $name=$db->result($r,$i-1,"mcaption");
@@ -1117,7 +1126,8 @@ class clients {
 
     function loadClientConditions($client_id){$db=DbSingleton::getDb();
         $form="";$form_htm=RD."/tpl/clients_conditions.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from A_CLIENTS_CONDITIONS where client_id='$client_id' limit 0,1;");
+        $r=$db->query("select * from A_CLIENTS_CONDITIONS where client_id='$client_id' limit 0,1;"); $n=$db->num_rows($r);
+
         $cash_id=$db->result($r,0,"cash_id");
         $country_cash_id=$db->result($r,0,"country_cash_id");
         $credit_cash_id=$db->result($r,0,"credit_cash_id");
@@ -1153,17 +1163,21 @@ class clients {
 
 
     function saveClientConditions($client_id,$cash_id,$country_cash_id,$price_lvl,$margin_price_lvl,$price_suppl_lvl,$margin_price_suppl_lvl,$tpoint_id,$client_vat,$payment_delay,$credit_limit,$credit_cash_id,$credit_return,$doc_type_id){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка збереження даних!";
-        $client_id=$slave->qq($client_id);$cash_id=$slave->qq($cash_id);$country_cash_id=$slave->qq($country_cash_id);$price_lvl=$slave->qq($price_lvl);$margin_price_lvl=$slave->qq($margin_price_lvl);$price_suppl_lvl=$slave->qq($price_suppl_lvl);$margin_price_suppl_lvl=$slave->qq($margin_price_suppl_lvl);$tpoint_id=$slave->qq($tpoint_id);$client_vat=$slave->qq($client_vat);$payment_delay=$slave->qq($payment_delay);$credit_limit=$slave->qq($slave->point_valid($credit_limit));$credit_cash_id=$slave->qq($credit_cash_id);$credit_return=$slave->qq($credit_return);$doc_type_id=$slave->qq($doc_type_id);
+        $client_id=$slave->qq($client_id);$cash_id=$slave->qq($cash_id);$country_cash_id=$slave->qq($country_cash_id);$price_lvl=$slave->qq($price_lvl);
+        $margin_price_lvl=$slave->qq($margin_price_lvl);$price_suppl_lvl=$slave->qq($price_suppl_lvl);$margin_price_suppl_lvl=$slave->qq($margin_price_suppl_lvl);
+        $tpoint_id=$slave->qq($tpoint_id);$client_vat=$slave->qq($client_vat);$payment_delay=$slave->qq($payment_delay);$credit_limit=$slave->qq($slave->point_valid($credit_limit));
+        $credit_cash_id=$slave->qq($credit_cash_id);$credit_return=$slave->qq($credit_return);$doc_type_id=$slave->qq($doc_type_id);
+
         if ($client_id>0){
             //T2_PACKAGING UPDATE
             $r=$db->query("select * from `A_CLIENTS_CONDITIONS` where `client_id`='$client_id' limit 0,1;");$n=$db->num_rows($r);
             if ($n==0){
-                $db->query("insert into A_CLIENTS_CONDITIONS (`client_id`,`cash_id`,`country_cash_id`,`price_lvl`,`margin_price_lvl`,`price_suppl_lvl`,`margin_price_suppl_lvl`,`tpoint_id`,`client_vat`,`payment_delay`,`credit_limit`,`credit_cash_id`,`credit_return`,`doc_type_id`) values ('$client_id','$cash_id','$country_cash_id','$price_lvl','$margin_price_lvl','$price_suppl_lvl','$margin_price_suppl_lvl','$tpoint_id','$client_vat','$payment_delay','$credit_limit','$credit_cash_id','$credit_return','$doc_type_id');");
+                $db->query("insert into `A_CLIENTS_CONDITIONS` (`client_id`,`cash_id`,`country_cash_id`,`price_lvl`,`margin_price_lvl`,`price_suppl_lvl`,`margin_price_suppl_lvl`,`tpoint_id`,`client_vat`,`payment_delay`,`credit_limit`,`credit_cash_id`,`credit_return`,`doc_type_id`) values ('$client_id','$cash_id','$country_cash_id','$price_lvl','$margin_price_lvl','$price_suppl_lvl','$margin_price_suppl_lvl','$tpoint_id','$client_vat','$payment_delay','$credit_limit','$credit_cash_id','$credit_return','$doc_type_id');");
             }
             if ($n==1){
-                $db->query("update A_CLIENTS_CONDITIONS set `cash_id`='$cash_id', `country_cash_id`='$country_cash_id', `price_lvl`='$price_lvl', `margin_price_lvl`='$margin_price_lvl',  `price_suppl_lvl`='$price_suppl_lvl', `margin_price_suppl_lvl`='$margin_price_suppl_lvl', `tpoint_id`='$tpoint_id', `client_vat`='$client_vat',`payment_delay`='$payment_delay', `credit_limit`='$credit_limit', `credit_cash_id`='$credit_cash_id', `credit_return`='$credit_return', `doc_type_id`='$doc_type_id' where `client_id`='$client_id';");
+                $db->query("update `A_CLIENTS_CONDITIONS` set `cash_id`='$cash_id', `country_cash_id`='$country_cash_id', `price_lvl`='$price_lvl', `margin_price_lvl`='$margin_price_lvl', `price_suppl_lvl`='$price_suppl_lvl', `margin_price_suppl_lvl`='$margin_price_suppl_lvl', `tpoint_id`='$tpoint_id', `client_vat`='$client_vat',`payment_delay`='$payment_delay', `credit_limit`='$credit_limit', `credit_cash_id`='$credit_cash_id', `credit_return`='$credit_return', `doc_type_id`='$doc_type_id' where `client_id`='$client_id';");
 
-                $db->query("insert into A_CLIENTS_CONDITIONS_HISTORY (`client_id`,`cash_id`,`country_cash_id`,`price_lvl`,`margin_price_lvl`,`price_suppl_lvl`,`margin_price_suppl_lvl`,`tpoint_id`,`client_vat`,`payment_delay`,`credit_limit`,`credit_cash_id`,`credit_return`,`doc_type_id`,`user_id`) values ('$client_id','$cash_id','$country_cash_id','$price_lvl','$margin_price_lvl','$price_suppl_lvl','$margin_price_suppl_lvl','$tpoint_id','$client_vat','$payment_delay','$credit_limit','$credit_cash_id','$credit_return','$doc_type_id','$user_id');");
+                $db->query("insert into `A_CLIENTS_CONDITIONS_HISTORY` (`client_id`,`cash_id`,`country_cash_id`,`price_lvl`,`margin_price_lvl`,`price_suppl_lvl`,`margin_price_suppl_lvl`,`tpoint_id`,`client_vat`,`payment_delay`,`credit_limit`,`credit_cash_id`,`credit_return`,`doc_type_id`,`user_id`) values ('$client_id','$cash_id','$country_cash_id','$price_lvl','$margin_price_lvl','$price_suppl_lvl','$margin_price_suppl_lvl','$tpoint_id','$client_vat','$payment_delay','$credit_limit','$credit_cash_id','$credit_return','$doc_type_id','$user_id');");
             }
             $answer=1;$err="";
         }
@@ -1173,7 +1187,6 @@ class clients {
     function showClientConditionsHistory($client_id) {$db=DbSingleton::getDb(); $list="";
         $r=$db->query("select * from A_CLIENTS_CONDITIONS where client_id='$client_id';");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
-            //$id=$db->result($r,$i-1,"id");
             $cash_id=$db->result($r,$i-1,"cash_id"); $cash_id=$this->getCashName($cash_id);
             $country_cash_id=$db->result($r,$i-1,"country_cash_id"); $country_cash_id=$this->getCashName($country_cash_id);
             $credit_cash_id=$db->result($r,$i-1,"credit_cash_id"); $credit_cash_id=$this->getCashName($credit_cash_id);
@@ -1209,7 +1222,6 @@ class clients {
 
         $r=$db->query("select * from A_CLIENTS_CONDITIONS_HISTORY where client_id='$client_id' order by data desc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
-            //$id=$db->result($r,$i-1,"id");
             $data=$db->result($r,$i-1,"data");
             $user_id=$db->result($r,$i-1,"user_id"); $user_id=$this->getMediaUserName($user_id);
             $cash_id=$db->result($r,$i-1,"cash_id"); $cash_id=$this->getCashName($cash_id);
@@ -1333,7 +1345,8 @@ class clients {
             $pair_index="";
             if ($i<=$n){$pair_index=$db->result($r,$i-1,"PAIR_INDEX");}
             $list.="<tr><td><input type='text' id='work_pair_$i' value='$pair_index' class='form-control'></td></tr>";
-        }$list.="<input type='hidden' id='work_pair_n' value='".($n+3)."'>";
+        }
+        $list.="<input type='hidden' id='work_pair_n' value='".($n+3)."'>";
         return $list;
     }
 
@@ -1498,10 +1511,11 @@ class clients {
 
     function loadArticleZED($client_id){$db=DbSingleton::getDb();
         $form="";$form_htm=RD."/tpl/clients_zed.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select t2z.*,t2c.COUNTRY_NAME, t2s.COSTUMS_NAME from T2_ZED t2z 
+        $r=$db->query("select t2z.*, t2c.COUNTRY_NAME, t2s.COSTUMS_NAME from T2_ZED t2z 
             left outer join T2_COUNTRIES t2c on t2c.COUNTRY_ID=t2z.COUNTRY_ID
             left outer join T2_COSTUMS t2s on t2s.COSTUMS_ID=t2z.COSTUMS_ID
         where t2z.ART_ID='$client_id' limit 0,1;");;
+
         $country_id=$db->result($r,0,"COUNTRY_ID");
         $country_name=$db->result($r,0,"COUNTRY_NAME");
         $costums_id=$db->result($r,0,"COSTUMS_ID");
@@ -1537,6 +1551,7 @@ class clients {
             left outer join T2_REGION t2rg on t2rg.REGION_ID=cc.region
             left outer join T2_CITY t2ct on t2ct.CITY_ID=cc.city
         where cc.client_id='$client_id' and cc.status='1';");$n=$db->num_rows($r);$list="";
+
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $name=$db->result($r,$i-1,"name");
@@ -1681,8 +1696,6 @@ class clients {
         $form="";$form_htm=RD."/tpl/clients_basis_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from A_CLIENTS_BASIS where id='$basis_id' limit 0,1;");
         $number=$db->result($r,0,"number");
-        //$seria=$db->result($r,0,"seria");
-        //$receiver=$db->result($r,0,"receiver");
         $data_from=$db->result($r,0,"data_from");
         $data_to=$db->result($r,0,"data_to");
         $form=str_replace("{client_id}",$client_id,$form);
@@ -1790,7 +1803,8 @@ class clients {
             $r=$db->query("select b.*, mc.abr as cash_name, pmc.abr from B_CLIENT_BALANS_JOURNAL b 
                 left outer join CASH mc on mc.id=b.cash_id 
                 left outer join CASH pmc on pmc.id=b.pay_cash_id 
-            where b.client_id='$client_id' and b.data>='$data_from 00:00:00' and b.data<='$data_to 23:59:59' group by b.doc_type_id,b.doc_id order by b.id asc;");$n=$db->num_rows($r);$list="";
+            where b.client_id='$client_id' and b.data>='$data_from 00:00:00' and b.data<='$data_to 23:59:59' group by b.doc_type_id, b.doc_id order by b.id asc;");$n=$db->num_rows($r);$list="";
+
             if ($n>0){ $sale_invoice=new sale_invoice; $back_clients=new back_clients;//$pay=new pay;
                 for ($i=1;$i<=$n;$i++){
                     $data=$db->result($r,$i-1,"data");
@@ -1859,7 +1873,7 @@ class clients {
             $r=$db->query("select b.*, mc.abr as cash_name, pmc.abr from B_CLIENT_BALANS_JOURNAL b 
                 left outer join CASH mc on mc.id=b.cash_id 
                 left outer join CASH pmc on pmc.id=b.pay_cash_id 
-            where b.client_id='$client_id' and b.data>='$data_from 00:00:00' and b.data<='$data_to 23:59:59' group by b.doc_type_id,b.doc_id order by b.id asc;");$n=$db->num_rows($r);
+            where b.client_id='$client_id' and b.data>='$data_from 00:00:00' and b.data<='$data_to 23:59:59' group by b.doc_type_id, b.doc_id order by b.id asc;");$n=$db->num_rows($r);
             if ($n>0){
                 $sale_invoice=new sale_invoice; //$back_clients=new back_clients;
                 for ($i=1;$i<=$n;$i++){
@@ -1923,7 +1937,7 @@ class clients {
             $r=$db->query("select b.*, mc.abr as cash_name, pmc.abr from B_CLIENT_BALANS_JOURNAL b 
                 left outer join CASH mc on mc.id=b.cash_id 
                 left outer join CASH pmc on pmc.id=b.pay_cash_id 
-            where b.client_id='$client_id' and b.data>='$data_from 00:00:00' and b.data<='$data_to 23:59:59' group by b.doc_type_id,b.doc_id order by b.id asc;");$n=$db->num_rows($r);$list="";
+            where b.client_id='$client_id' and b.data>='$data_from 00:00:00' and b.data<='$data_to 23:59:59' group by b.doc_type_id, b.doc_id order by b.id asc;");$n=$db->num_rows($r);$list="";
 
             if ($n>0){
                 $sale_invoice=new sale_invoice; $back_clients=new back_clients;//$pay=new pay;
@@ -2041,7 +2055,7 @@ class clients {
     }
 
     function getSaleInvocePrologHistory($client_id) { $db=DbSingleton::getDb();$list="";$users=new users;
-        $r=$db->query("select jp.*,j.prefix,j.doc_nom from J_SALE_INVOICE_PROLONGATION jp
+        $r=$db->query("select jp.*, j.prefix, j.doc_nom from J_SALE_INVOICE_PROLONGATION jp
             left outer join J_SALE_INVOICE j on (j.id=jp.invoice_id)
         where jp.client_id='$client_id';"); $n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
@@ -2100,7 +2114,7 @@ class clients {
         return $form;
     }
 
-    function editSaleInvoceProlog($client_id,$date_start,$date_new) { $db=DbSingleton::getDb();$answer=0;$err="Помилка збереження даних!";session_start();$user_id=$_SESSION["media_user_id"];$users=new users;
+    function editSaleInvoceProlog($client_id,$date_start,$date_new) {$db=DbSingleton::getDb();$answer=0;$err="Помилка збереження даних!";session_start();$user_id=$_SESSION["media_user_id"];$users=new users;
         $users_credit=$users->getUsersAccessCredit($user_id);
         if ($client_id>0) {
             $r=$db->query("select * from J_SALE_INVOICE where client_id='$client_id' and data_pay<='$date_start' and summ_debit!=0;"); $n=$db->num_rows($r);
@@ -2115,7 +2129,7 @@ class clients {
                 $dec = $interval->format('%a');
 
                 if($users_credit>=$dec) {
-                    if ($date_pay_start=="" || $date_pay_start=="0000-00-00") {$set=",data_pay_start='$data_pay' "; $date_pay_start=$data_pay;} else $set="";
+                    if ($date_pay_start=="" || $date_pay_start=="0000-00-00") {$set=", data_pay_start='$data_pay' "; $date_pay_start=$data_pay;} else $set="";
                     $db->query("update J_SALE_INVOICE set data_pay='$date_new' $set where id='$id';");
                     $db->query("insert into J_SALE_INVOICE_PROLONGATION (invoice_id,client_id,user_id,date_pay_start,date_pay_new) values ('$id','$client_id','$user_id','$date_pay_start','$date_new');");
                 }
@@ -2153,7 +2167,7 @@ class clients {
             $r=$db->query("select b.*, mc.abr as cash_name, pmc.abr from B_CLIENT_BALANS_JOURNAL b 
                 left outer join CASH mc on mc.id=b.cash_id 
                 left outer join CASH pmc on pmc.id=b.pay_cash_id 
-            where b.client_id='$client_id' and b.data>='$data_from 00:00:00' and b.data<='$data_to 23:59:59' group by b.doc_type_id,b.doc_id order by b.id asc;");$n=$db->num_rows($r);$list="";
+            where b.client_id='$client_id' and b.data>='$data_from 00:00:00' and b.data<='$data_to 23:59:59' group by b.doc_type_id, b.doc_id order by b.id asc;");$n=$db->num_rows($r);$list="";
             if ($n>0){
                 $sale_invoice=new sale_invoice; $back_clients=new back_clients;//$pay=new pay;
                 for ($i=1;$i<=$n;$i++){

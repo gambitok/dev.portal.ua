@@ -601,11 +601,13 @@ function saveClientConditions(client_id){
 	var credit_return=$("#credit_return").val();
 	var client_vat=0; if (document.getElementById("client_vat").checked){client_vat=1;}
 	var doc_type_id=$("#doc_type_id option:selected").val();
+
 	if (client_id.length>0){
 		JsHttpRequest.query($rcapi,{ 'w':'saveClientConditions','client_id':client_id,'cash_id':cash_id,'country_cash_id':country_cash_id,'price_lvl':price_lvl,'margin_price_lvl':margin_price_lvl,'price_suppl_lvl':price_suppl_lvl,'margin_price_suppl_lvl':margin_price_suppl_lvl,'tpoint_id':tpoint_id,'client_vat':client_vat,'payment_delay':payment_delay,'credit_limit':credit_limit,'credit_cash_id':credit_cash_id,'credit_return':credit_return,'doc_type_id':doc_type_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			if (result["answer"]==1){ 
 				swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
+                loadClientConditions(client_id);
 			}
 			else{ swal("Помилка!", result["error"], "error");}
 		}}, true);

@@ -42,9 +42,9 @@ function runScript(e) {
 
 function getDpNote(dp_id) {
 	JsHttpRequest.query($rcapi,{ 'w': 'getDpNote', 'dp_id':dp_id}, 
-	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		document.getElementById("dp_note_place").innerHTML=result["content"];
-	}}, true);
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+        $("#dp_note_place").html(result["content"]);
+    }}, true);
 }
 
 function setDpNote(dp_id) {
@@ -123,7 +123,7 @@ function updateDpRange(press_btn){
 }
 
 function ShowModalAll() {
-	var pos=0;var max = 0;var list='';
+	var pos=0; var max=0; var list="";
 	$('.check_dp').each(function() {max = Math.max(this.id, max);});
 	for (pos=1; pos<=max; pos++) {
 		if ($('#' + pos).is(":checked")) {list=list+pos;}
@@ -141,9 +141,9 @@ function check_all_storsel() {$('#all_strosel').change(function () {$('input:che
 function show_dp_search(inf){
 	$("#dp_range").empty();
 	JsHttpRequest.query($rcapi,{ 'w': 'show_dp_search'}, 
-	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		document.getElementById("dp_range").innerHTML=result["content"];
-		if (inf===1 || inf==="1"){toastr["info"]("Виконано!");}
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+        $("#dp_range").html(result["content"]);
+        if (inf===1 || inf==="1"){toastr["info"]("Виконано!");}
 	}}, true);
 } 
 
@@ -160,7 +160,6 @@ function fixDeliveryCarrier(){
 		$("#delivery_type_storage").addClass("disabled").addClass("hidden");
         delivery_address.val("");
 	}
-		
 	if (delivery_id!==60){ $("#carrier_id").addClass("disabled").addClass("hidden"); }
 	else{ $("#carrier_id").removeClass("disabled").removeClass("hidden"); }
 }
@@ -173,9 +172,9 @@ function setDeliveryAddress() {
 function preNewDpCard(){
 	$("#FormModalWindow3").modal("show");
 	JsHttpRequest.query($rcapi,{ 'w': 'preNewDpCard'}, 
-	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		document.getElementById("FormModalBody3").innerHTML=result["content"];
-		document.getElementById("FormModalLabel3").innerHTML="Оберіть тип накладної";
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+        $("#FormModalBody3").html(result["content"]);
+        $("#FormModalLabel3").html("Оберіть тип накладної");
 	}}, true);
 }
 
@@ -195,8 +194,8 @@ function showDpCard(dp_id){
 		JsHttpRequest.query($rcapi,{ 'w': 'showDpCard', 'dp_id':dp_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){
 			$("#DpCard").modal('show');
-			document.getElementById("DpCardBody").innerHTML=result["content"];
-			document.getElementById("DpCardLabel").innerHTML=result["doc_prefix_nom"];
+            $("#DpCardBody").html(result["content"]);
+            $("#DpCardLabel").html(result["doc_prefix_nom"]);
 			$('#dp_tabs').tab();
 			//$("#cash_id").select2({placeholder: "Виберіть валюту",dropdownParent: $("#DpCard")});
 			$('#data_pay').datepicker({format: "yyyy-mm-dd",autoclose:true})
@@ -214,10 +213,14 @@ function unlockDpCard(dp_id){
 	if (dp_id){
 		JsHttpRequest.query($rcapi,{ 'w': 'unlockDpCard', 'dp_id':dp_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			$("#DpCard").modal('hide');document.getElementById("DpCardBody").innerHTML="";document.getElementById("DpCardLabel").innerHTML="";
+			$("#DpCard").modal('hide');
+            $("#DpCardBody").html("");
+            $("#DpCardLabel").html("");
 		}}, true);
 	}else{
-		$("#DpCard").modal('hide');document.getElementById("DpCardBody").innerHTML="";document.getElementById("DpCardLabel").innerHTML="";
+		$("#DpCard").modal('hide');
+        $("#DpCardBody").html("");
+        $("#DpCardLabel").html("");
 	}
 }
 
@@ -226,10 +229,14 @@ function closeDpCard(){
 		var dp_id=$("#dp_id").val();
 		JsHttpRequest.query($rcapi,{ 'w': 'closeDpCard', 'dp_id':dp_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			$("#DpCard").modal('hide');document.getElementById("DpCardBody").innerHTML="";document.getElementById("DpCardLabel").innerHTML="";
+			$("#DpCard").modal('hide');
+            $("#DpCardBody").html("");
+            $("#DpCardLabel").html("");
 		}}, true);
 	}else{
-		$("#DpCard").modal('hide');document.getElementById("DpCardBody").innerHTML="";document.getElementById("DpCardLabel").innerHTML="";
+		$("#DpCard").modal('hide');
+        $("#DpCardBody").html("");
+        $("#DpCardLabel").html("");
 	}
 }
 
@@ -359,35 +366,35 @@ function showDpDocumentList(dp_id){
 	var document_id=$("#document_id").val();
 	$("#FormModalWindow").modal("show");
 	JsHttpRequest.query($rcapi,{ 'w': 'showDpDocumentList', 'dp_id':dp_id, 'jmoving_op_id':jmoving_op_id, 'document_id':document_id}, 
-	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		document.getElementById("FormModalBody").innerHTML=result["content"];
-		document.getElementById("FormModalLabel").innerHTML=result["header"];
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+        $("#FormModalBody").html(result["content"]);
+        $("#FormModalLabel").html(result["header"]);
 	}}, true);
 }
 
 function findDpDocumentsSearch(dp_id,jmoving_op_id){
 	var s_nom=$("#form_document_search").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'findDpDocumentsSearch', 'dp_id':dp_id, 'jmoving_op_id':jmoving_op_id, 's_nom':s_nom}, 
-	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		document.getElementById("documents_search_result").innerHTML=result["content"];
-	}}, true);
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+        $("#documents_search_result").html(result["content"]);
+    }}, true);
 }
 
 function setDocumentToForm(document_id,document_name){
 	$("#document_id").val(document_id);
 	$("#document_name").val(document_name);
 	$("#FormModalWindow").modal("hide");
-	document.getElementById("FormModalBody").innerHTML="";
-	document.getElementById("FormModalLabel").innerHTML="";
+    $("#FormModalBody").html("");
+    $("#FormModalLabel").html("");
 }
 
 function loadDpCDN(dp_id){
 	if (dp_id<=0 || dp_id===""){toastr["error"](errs[0]);}
 	if (dp_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadDpCDN', 'dp_id':dp_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("dp_cdn_place").innerHTML=result["content"];
-		}}, true);
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#dp_cdn_place").html(result["content"]);
+        }}, true);
 	}
 }
 
@@ -420,8 +427,8 @@ function loadDpCommetsLabel(dp_id){
 	if (dp_id<=0 || dp_id===""){toastr["error"](errs[0]);}
 	if (dp_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadDpCommetsLabel', 'dp_id':dp_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("label_comments").innerHTML=result["label"];
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+			$("#label_comments").html(result["label"]);
 		}}, true);
 	}
 }
@@ -430,9 +437,9 @@ function loadDpCommets(dp_id){
 	if (dp_id<=0 || dp_id===""){toastr["error"](errs[0]);}
 	if (dp_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadDpCommets', 'dp_id':dp_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("dp_commets_place").innerHTML=result["content"];
-		}}, true);
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#dp_commets_place").html(result["content"]);
+        }}, true);
 	}
 }
 
@@ -461,7 +468,11 @@ function dropDpComment(dp_id,cmt_id){
 		if(confirm('Видалити запис?')){ 
 			JsHttpRequest.query($rcapi,{ 'w': 'dropDpComment', 'dp_id':dp_id, 'cmt_id':cmt_id}, 
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
-				if (result["answer"]==1){ loadDpCommets(dp_id); toastr["info"]("Запис успішно видалено");loadDpCommetsLabel(dp_id);}
+				if (result["answer"]==1){
+					loadDpCommets(dp_id);
+					toastr["info"]("Запис успішно видалено");
+					loadDpCommetsLabel(dp_id);
+				}
 				else{ toastr["error"](result["error"]); }
 			}}, true);
 		}
@@ -470,8 +481,8 @@ function dropDpComment(dp_id,cmt_id){
 
 function loadDpClientContoList(client_id){
 	JsHttpRequest.query($rcapi,{ 'w': 'loadDpClientContoList', 'client_id':client_id}, 
-	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		document.getElementById("client_conto_id").innerHTML=result["content"];
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+		$("#client_conto_id").html(result["content"]);
 		getClientContoCash();
 		getClientDocType();
 	}}, true);
@@ -481,8 +492,8 @@ function showDpClientList(client_id){
 	JsHttpRequest.query($rcapi,{ 'w': 'showDpClientList', 'client_id':client_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow").modal('show');
-		document.getElementById("FormModalBody").innerHTML=result["content"];
-		document.getElementById("FormModalLabel").innerHTML="Контрагенти";
+        $("#FormModalBody").html(result["content"]);
+        $("#FormModalLabel").html("Контрагенти");
 		setTimeout(function() { $('#datatable_parrent').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}}); }, 500);
 	}}, true);
 }
@@ -543,7 +554,7 @@ function getDpTpointInfo() {
 
 function unlinkDpClient(dp_id){
 	swal({
-		title: "Відвязати клієнта від накладної?",text: "Внесені Вами зміни вплинуть на роботу Контагента",
+		title: "Відв`язати клієнта від накладної?",text: "Внесені Вами зміни вплинуть на роботу Контрагента",
 		type: "warning",allowOutsideClick:true,	allowEscapeKey:true,showCancelButton: true,confirmButtonColor: "#1ab394",
 		confirmButtonText: "Так!",cancelButtonText: "Відмінити!",closeOnConfirm: false,closeOnCancel: false,showLoaderOnConfirm: true
 	},
@@ -552,9 +563,9 @@ function unlinkDpClient(dp_id){
 			JsHttpRequest.query($rcapi,{ 'w': 'unlinkDpClient', 'dp_id':dp_id}, 
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
 				if (result["answer"]==1){ 
-					$('#client_id').val("0");
-					$('#client_name').val("");
-					document.getElementById("client_conto_id").innerHTML="<option value='0'>-- оберіть зі списку --</option>";
+					$("#client_id").val("0");
+					$("#client_name").val("");
+					$("#client_conto_id").html("<option value='0'>-- оберіть зі списку --</option>");
 					swal("Виконано!", "Внесені Вами зміни успішно збережені.", "success");
 				}
 				else{ toastr["error"](result["error"]); }
@@ -567,8 +578,8 @@ function showDpTpointList(tpoint_id){
 	JsHttpRequest.query($rcapi,{ 'w': 'showDpTpointList', 'tpoint_id':tpoint_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow").modal('show');
-		document.getElementById("FormModalBody").innerHTML=result["content"];
-		document.getElementById("FormModalLabel").innerHTML="Торгові точки";
+		$("#FormModalBody").html(result["content"]);
+		$("#FormModalLabel").html("Торгові точки");
 		setTimeout(function() { $('#datatable_parrent').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}}); }, 500);
 	}}, true);
 }
@@ -576,7 +587,9 @@ function showDpTpointList(tpoint_id){
 function setDpTpoint(id,name){
 	$('#tpoint_id').val(id);
 	$('#tpoint_name').val(name);
-	$("#FormModalWindow").modal('hide');document.getElementById("FormModalBody").innerHTML="";document.getElementById("FormModalLabel").innerHTML="";
+	$("#FormModalWindow").modal('hide');
+    $("#FormModalBody").html("");
+    $("#FormModalLabel").html("");
 	saveDpCard();
 }
 
@@ -631,43 +644,43 @@ function clearDpStr(dp_id){
 function dropDpStr(pos,dp_id,dp_str_id){
 	if (dp_id<=0 || dp_id==""){toastr["error"](errs[0]);}
 	if (dp_id>0 && dp_str_id>0){
-	swal({
-		title: "Видалити артикул з замовлення?",
-		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
-		confirmButtonText: "Так, видалити", cancelButtonText: "Відмінити", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
-	},
-	function (isConfirm) {
-		if (isConfirm) {
-			if (dp_id.length>0){
-				JsHttpRequest.query($rcapi,{ 'w':'dropDpStr','dp_id':dp_id,'dp_str_id':dp_str_id},
-				function (result, errors){ if (errors) {alert(errors);} if (result){  
-					if (result["answer"]==1){ 
-						swal("Видалено!", "", "success");
-						$("#strRow_"+pos).html("");
-						$("#strRow_"+pos).attr('visibility','hidden');
-						document.getElementById("dp_summ").value=result["dp_summ"];
-					}
-					else{ swal("Помилка!", result["error"], "error");}
-				}}, true);
+		swal({
+			title: "Видалити артикул з замовлення?",
+			text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
+			confirmButtonText: "Так, видалити", cancelButtonText: "Відмінити", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
+		},
+		function (isConfirm) {
+			if (isConfirm) {
+				if (dp_id.length>0){
+					JsHttpRequest.query($rcapi,{ 'w':'dropDpStr','dp_id':dp_id,'dp_str_id':dp_str_id},
+					function (result, errors){ if (errors) {alert(errors);} if (result){
+						if (result["answer"]==1){
+							swal("Видалено!", "", "success");
+							$("#strRow_"+pos).html("");
+							$("#strRow_"+pos).attr('visibility','hidden');
+							document.getElementById("dp_summ").value=result["dp_summ"];
+						}
+						else{ swal("Помилка!", result["error"], "error");}
+					}}, true);
+				}
+			} else {
+				swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
 			}
-		} else {
-			swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
-		}
-	});
+		});
 	}
 }
 
 function formCatalogueModalLabel(){
 	document.getElementById("CatalogueModalLabel").innerHTML="Номенклатура| клієнт: "+$("#client_conto_id option:selected").html()+"; документ: "+$("#DpCardLabel").html()+"; Сумма: "+$("#dp_summ").val()+"; валюта: "+$("#cash_id option:selected").html();
-	return;
+	return true;
 }
 
 function showArticleSearchDocumentForm(i,art_id,brand_id,article_nr_displ,doc_type,dp_id){
 	JsHttpRequest.query($rcapi,{ 'w': 'showArticleSearchDocumentForm', 'art_id':art_id,'brand_id':brand_id,'article_nr_displ':article_nr_displ,'doc_type':doc_type,'doc_id':dp_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#CatalogueModalWindow").modal('show');
-		document.getElementById("CatalogueModalLabel").innerHTML="";
-		document.getElementById("CatalogueModalBody").innerHTML=result["content"];
+        $("#CatalogueModalBody").html(result["content"]);
+        $("#CatalogueModalLabel").html("");
 		formCatalogueModalLabel();
 		$("#row_pos").val(i);
 		$('#datatable_parrent').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
@@ -677,10 +690,12 @@ function showArticleSearchDocumentForm(i,art_id,brand_id,article_nr_displ,doc_ty
 function showDpArticleSearchForm(i,art_id,brand_id,article_nr_displ,dp_id,tpoint_id){
 	var dp_id=$("#dp_id").val();
 	if (tpoint_id=="" || tpoint_id==0){tpoint_id=$("#tpoint_id").val();}
-	if (tpoint_id=="" || tpoint_id==0){ swal("Помилка!", "Оберіть Торгову точку переміщення", "error"); } else{
+	if (tpoint_id=="" || tpoint_id==0){ swal("Помилка!", "Оберіть Торгову точку переміщення", "error"); } else {
 		JsHttpRequest.query($rcapi,{ 'w': 'showDpArticleSearchForm', 'art_id':art_id,'brand_id':brand_id,'article_nr_displ':article_nr_displ,'dp_id':dp_id,'tpoint_id':tpoint_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			$("#FormModalWindow").modal('show');document.getElementById("FormModalBody").innerHTML=result["content"];document.getElementById("FormModalLabel").innerHTML="Номенклатура";
+			$("#FormModalWindow").modal('show');
+            $("#FormModalBody").html(result["content"]);
+            $("#FormModalLabel").html("Номенклатура");
 			$("#row_pos").val(i);
 			$('#datatable_parrent').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
 		}}, true);
@@ -691,8 +706,8 @@ function setArticleToSelectAmountDp(art_id,article_nr_displ,brand_id,brand_name,
 	JsHttpRequest.query($rcapi,{ 'w': 'setArticleToSelectAmountDp','art_id':art_id,'dp_id':dp_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow2").modal('show');
-		document.getElementById("FormModalBody2").innerHTML=result["content"];
-		document.getElementById("FormModalLabel2").innerHTML="Вкажіть кількість: "+article_nr_displ+" "+brand_name;
+        $("#FormModalBody2").html(result["content"]);
+        $("#FormModalLabel2").html("Вкажіть кількість: "+article_nr_displ+" "+brand_name);
 		$('#art_idS2').val(art_id);
 		$('#article_nr_displS2').val(article_nr_displ);
 		$('#brand_idS2').val(brand_id);
@@ -705,8 +720,8 @@ function showDpAmountInputWindow(art_id,storage_id){
 	JsHttpRequest.query($rcapi,{ 'w': 'showDpAmountInputWindow','art_id':art_id,'dp_id':dp_id,'storage_id':storage_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow3").modal('show');
-		document.getElementById("FormModalBody3").innerHTML=result["content"];
-		document.getElementById("FormModalLabel3").innerHTML="Вкажіть кількість";
+        $("#FormModalBody3").html(result["content"]);
+        $("#FormModalLabel3").html("Вкажіть кількість");
 		numberOnlyPlace("amount_move_numbers");
 		$("#amount_storage_id").val(storage_id);
 		setTimeout(function (){$('#amount_select_storage_str').DataTable({keys: true,"aaSorting": [],"order": [[ 3, "asc" ]],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});},500);
@@ -717,8 +732,8 @@ function showDpSupplAmountInputWindow(art_id,article_nr_displ,brand_id,brand_nam
 	JsHttpRequest.query($rcapi,{ 'w': 'showDpSupplAmountInputWindow','art_id':art_id,'article_nr_displ':article_nr_displ,'brand_id':brand_id,'dp_id':dp_id,'suppl_id':suppl_id,'suppl_storage_id':suppl_storage_id,'price':price}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow3").modal('show');
-		document.getElementById("FormModalBody3").innerHTML=result["content"];
-		document.getElementById("FormModalLabel3").innerHTML="Вкажіть кількість: "+article_nr_displ+" "+brand_name;
+        $("#FormModalBody3").html(result["content"]);
+        $("#FormModalLabel3").html("Вкажіть кількість: "+article_nr_displ+" "+brand_name);
 		numberOnlyPlace("amount_move_numbers");
 	}}, true);
 }
@@ -735,16 +750,16 @@ function closeAmountInputWindow(art_id){
 
 function closeAmountSupplInputWindow(){
 	$("#FormModalWindow3").modal('hide');
-	document.getElementById("FormModalBody3").innerHTML="";document.getElementById("FormModalLabel3").innerHTML="";
+    $("#FormModalBody3").html("");
+    $("#FormModalLabel3").html("");
 }
 
 function countSumm(pf1,pf2,rf){
 	var p1=parseFloat($("#"+pf1).val().replace(',', '.'));
 	var p2=parseFloat($("#"+pf2).val().replace(',', '.'));
-	var summ=0;
-	summ=parseFloat(p1*p2).toFixed(2);
+	var summ=parseFloat(p1*p2).toFixed(2);
 	$("#"+rf).val(summ);
-	return;
+	return true;
 }
 
 function calculateDiscountPrice(pos){
@@ -816,7 +831,6 @@ function calculateDiscountPriceAll(){
 					$("#discountStr_"+pos).val(max_discount_persent);
 					$("#priceEndStr_"+pos).val(price_end);
 				}
-
 			}else{
 				price_end2=parseFloat(price-price*max_discount_persent/100).toFixed(2);
 				list2=list2+"#"+pos+" зі знижкою - "+discount2+" і ціною - "+price+"\n";
@@ -932,23 +946,24 @@ function setArticleToDp(art_id){
 		
 		if (amountStr>0){
 			if (storageIdStr>0 && art_id.length>0){
-				console.log('load func');
 				JsHttpRequest.query($rcapi,{ 'w':'setArticleToDp','dp_id':dp_id,'tpoint_id':tpoint_id,'artIdStr':artIdStr,'article_nr_displStr':article_nr_displStr,'brandIdStr':brandIdStr,'storageIdStr':storageIdStr,'amountStr':amountStr},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){
-						document.getElementById("dp_weight").innerHTML=result["weight"];
-						document.getElementById("dp_volume").innerHTML=result["volume"];
-						document.getElementById("dp_summ").value=result["dp_summ"];
+                        $("#dp_weight").html(result["weight"]);
+                        $("#dp_volume").html(result["volume"]);
+                        $("#dp_summ").val(result["dp_summ"]);
 						JsHttpRequest.query($rcapi,{ 'w': 'showDpCardStr', 'dp_id':dp_id},
 						function (result, errors){ if (errors) {alert(errors);} if (result){
 							document.getElementById("dp_doc_range").innerHTML=result["content"];
 							numberOnly();
-							setTimeout(function (){
-								//var dtable=$('#dp_str').DataTable(); dtable.destroy();
-								$('#dp_str').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}, "dom": '<"top">frt<"bottom"lpi><"clear">'});},500);
+							setTimeout(function (){//var dtable=$('#dp_str').DataTable(); dtable.destroy();
+								$('#dp_str').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}, "dom": '<"top">frt<"bottom"lpi><"clear">'});
+							},500);
 						}}, true);
-						
-						$("#FormModalWindow3").modal('hide');document.getElementById("FormModalBody3").innerHTML="";document.getElementById("FormModalLabel3").innerHTML="";
+                        showDpCard(dp_id);
+						$("#FormModalWindow3").modal('hide');
+						$("#FormModalBody3").html("");
+						$("#FormModalLabel3").html("");
 						formCatalogueModalLabel();
 						setArticleToSelectAmountDp(art_id,article_nr_displStr,brandIdStr,brand_nameS2,dp_id);
 					}
@@ -977,18 +992,19 @@ function setArticleSupplToDp(art_id){
 				JsHttpRequest.query($rcapi,{ 'w':'setArticleSupplToDp','dp_id':dp_id,'tpoint_id':tpoint_id,'art_id':art_id,'article_nr_displ':article_nr_displ,'brandId':brandId,'supplId':supplId,'supplStorageId':supplStorageId,'amountStr':amountStr},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){
-						document.getElementById("dp_weight").innerHTML=result["weight"];
-						document.getElementById("dp_volume").innerHTML=result["volume"];
-						document.getElementById("dp_summ").value=result["dp_summ"];
+                        $("#dp_weight").html(result["weight"]);
+                        $("#dp_volume").html(result["volume"]);
+                        $("#dp_summ").val(result["dp_summ"]);
 //						document.getElementById("label_un_articles").innerHTML=result["label_empty"];
-		
 						JsHttpRequest.query($rcapi,{ 'w': 'showDpCardStr', 'dp_id':dp_id},
-						function (result, errors){ if (errors) {alert(errors);} if (result){  
-							document.getElementById("dp_doc_range").innerHTML=result["content"];
+						function (result, errors){ if (errors) {alert(errors);} if (result){
+							$("#dp_doc_range").html(result["content"]);
 							numberOnly();
 						}}, true);
 						
-						$("#FormModalWindow3").modal('hide');document.getElementById("FormModalBody3").innerHTML="";document.getElementById("FormModalLabel3").innerHTML="";
+						$("#FormModalWindow3").modal('hide');
+                        $("#FormModalBody3").html("");
+                        $("#FormModalLabel3").html("");
 						formCatalogueModalLabel();
 						setArticleToSelectAmountDp(art_id,article_nr_displStr,brandIdStr,brand_nameS2,dp_id);
 					}
@@ -1018,8 +1034,8 @@ function catalogue_article_storage_rest_search(search_type){
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			if (result["brand_list"]!="" && result["brand_list"]!=null && search_type==0){
 				$("#FormModalWindow2").modal('show');
-				document.getElementById("FormModalBody2").innerHTML=result["brand_list"];
-				document.getElementById("FormModalLabel2").innerHTML=mess[0];
+                $("#FormModalBody2").html(result["brand_list"]);
+                $("#FormModalLabel2").html(mess[0]);
 			}
 			if (result["brand_list"]=="" || result["brand_list"]==null || search_type>0){
 				$("#catalogue_range").html(result["content"]);
@@ -1081,8 +1097,8 @@ function loadDpJmoving(dp_id){
 	if (dp_id<=0 || dp_id==""){toastr["error"](errs[0]);}
 	if (dp_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadDpJmoving', 'dp_id':dp_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("dp_jmoving_place").innerHTML=result["content"];
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+			$("#dp_jmoving_place").html(result["content"]);
 		}}, true);
 	}
 }
@@ -1091,9 +1107,9 @@ function loadDpStorsel(dp_id){
 	if (dp_id<=0 || dp_id==""){toastr["error"](errs[0]);}
 	if (dp_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadDpStorsel', 'dp_id':dp_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("dp_storsel_place").innerHTML=result["content"];
-		}}, true);
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#dp_storsel_place").html(result["content"]);
+        }}, true);
 	}
 }
 
@@ -1103,8 +1119,8 @@ function viewDpStorageSelect(dp_id,select_id,select_status){
 		JsHttpRequest.query($rcapi,{ 'w': 'viewDpStorageSelect', 'dp_id':dp_id,'select_id':select_id,'select_status':select_status}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow2").modal('show');
-			document.getElementById("FormModalBody2").innerHTML=result["content"];
-			document.getElementById("FormModalLabel2").innerHTML=result["header"];
+			$("#FormModalBody2").html(result["content"]);
+			$("#FormModalLabel2").html(result["header"]);
 			$('#dp_tabs').tab();
 		}}, true);
 	}
@@ -1114,8 +1130,8 @@ function loadDpSaleInvoice(dp_id){
 	if (dp_id<=0 || dp_id==""){toastr["error"](errs[0]);}
 	if (dp_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadDpSaleInvoice', 'dp_id':dp_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("dp_sale_invoice_place").innerHTML=result["content"];
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#dp_sale_invoice_place").html(result["content"]);
 		}}, true);
 	}
 }
@@ -1126,14 +1142,14 @@ function showDpStorselForSaleInvoice(dp_id){
 		JsHttpRequest.query($rcapi,{ 'w': 'showDpStorselForSaleInvoice', 'dp_id':dp_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow").modal('show');
-			document.getElementById("FormModalBody").innerHTML=result["content"];
-			document.getElementById("FormModalLabel").innerHTML="Оберіть відбори для формування видаткової накладної";
+            $("#FormModalBody").html(result["content"]);
+            $("#FormModalLabel").html("Оберіть відбори для формування видаткової накладної");
 		}}, true);
 	}
 }
 
 function sendDpStorselToSaleInvoice(dp_id){
-	var dp_id=$("#dp_id").val();
+	//var dp_id=$("#dp_id").val();
 	if (dp_id.length>0){
 	$("#send_dp").attr("disabled", true); //disable button
 		var kol_storsel=$('#kol_storsel').val();
@@ -1147,8 +1163,9 @@ function sendDpStorselToSaleInvoice(dp_id){
 			JsHttpRequest.query($rcapi,{ 'w':'sendDpStorselToSaleInvoice','dp_id':dp_id,'kol_storsel':kol_storsel,'ar_storsel':ar_storsel},
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
 				if (result["answer"]==1){
-					$("#FormModalWindow").modal('hide');document.getElementById("FormModalBody").innerHTML="";document.getElementById("FormModalLabel").innerHTML="";
-					
+					$("#FormModalWindow").modal('hide');
+					$("#FormModalBody").html("");
+					$("#FormModalLabel").html("");
 					swal({
 						title: "Документ сформовано!", text: "Номер накладної: "+result["sale_invoice_prefix"], type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",confirmButtonText: "Готово", cancelButtonText: "Друкувати документ", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
 					},
@@ -1175,10 +1192,9 @@ function sendDpStorselToSaleInvoice(dp_id){
 							JsHttpRequest.query($rcapi,{ 'w':'viewDpDatapayLimitSaleInvoice','dp_id':dp_id},
 							function (result, errors){ if (errors) {alert(errors);} if (result){  
 								swal.close();
-								
 								$("#FormModalWindow2").modal('show');
-								document.getElementById("FormModalBody2").innerHTML=result["content"];
-								document.getElementById("FormModalLabel2").innerHTML=result["header"];
+                                $("#FormModalBody2").html(result["content"]);
+                                $("#FormModalLabel2").html(result["header"]);
 								setTimeout(function(){
 									$('#dp_sale_invoice_data_pay_list').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": false,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
 								},500);
@@ -1190,7 +1206,7 @@ function sendDpStorselToSaleInvoice(dp_id){
 					swal("Помилка!", result["error"], "error"); 
 				}
 			}}, true);
-		}else{swal("Помилка!", "Для формування накладної оберіть хоча б один відбір", "error"); }
+		} else {swal("Помилка!", "Для формування накладної оберіть хоча б один відбір", "error"); }
 	}
 }
 
@@ -1200,8 +1216,8 @@ function viewDpSaleInvoice(dp_id,invoice_id){
 		JsHttpRequest.query($rcapi,{ 'w': 'viewDpSaleInvoice', 'dp_id':dp_id,'invoice_id':invoice_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow2").modal('show');
-			document.getElementById("FormModalBody2").innerHTML=result["content"];
-			document.getElementById("FormModalLabel2").innerHTML=result["header"];
+            $("#FormModalBody2").html(result["content"]);
+            $("#FormModalLabel2").html(result["header"]);
 			$('#dp_tabs').tab();
 		}}, true);
 	}
@@ -1246,8 +1262,8 @@ function loadDpMoneyPay(dp_id){
 	if (dp_id<=0 || dp_id==""){toastr["error"](errs[0]);}
 	if (dp_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadDpMoneyPay', 'dp_id':dp_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("dp_money_pay_place").innerHTML=result["content"];
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+			$("#dp_money_pay_place").html(result["content"]);
 		}}, true);
 	}
 }
@@ -1262,19 +1278,18 @@ function showOrdersSite(){
 	JsHttpRequest.query($rcapi,{ 'w': 'showOrdersSite'}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow").modal('show');
-			document.getElementById("FormModalBody").innerHTML=result["content"];
-//			document.getElementById("FormModalLabel").innerHTML=result["header"];
-			document.getElementById("FormModalLabel").innerHTML="Не оброблені замовлення з сайту";
+            $("#FormModalBody").html(result["content"]);
+            $("#FormModalLabel").html("Не оброблені замовлення з сайту");
 			$('#orders_site_range').DataTable({"language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
-			$('#data_start').datepicker({format: "yyyy-mm-dd",autoclose:true})
-			$('#data_end').datepicker({format: "yyyy-mm-dd",autoclose:true})
+			$('#data_start').datepicker({format: "yyyy-mm-dd",autoclose:true});
+			$('#data_end').datepicker({format: "yyyy-mm-dd",autoclose:true});
 		}}, true);
 }
 
 function showOrderSiteRange(press_btn) {
 	var status=$('#input_done1').val();
 	if (press_btn) {
-		if (status=="true") status=true; else status=false;
+        status==="true" ? status=true : status=false;
 		if (status){
 			$('#input_done1').val('false');
 			$('#toggle_done1').html("<i class='fa fa-eye-slash'></i>");		
@@ -1284,7 +1299,7 @@ function showOrderSiteRange(press_btn) {
 			$('#toggle_done1').html("<i class='fa fa-eye'></i>");
 		}	
 	} else {
-		if (status=="true") status=false; else status=true;
+        status==="true" ? status=false : status=true;
 	}
 	JsHttpRequest.query($rcapi,{ 'w': 'showOrderSiteRange', 'status':status}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -1311,8 +1326,8 @@ function showOrdersSiteCard(order_id){
 	JsHttpRequest.query($rcapi,{ 'w': 'showOrdersSiteCard', 'order_id':order_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow2").modal('show');
-		document.getElementById("FormModalBody2").innerHTML=result["content"];
-		document.getElementById("FormModalLabel2").innerHTML=result["header"];
+        $("#FormModalBody2").html(result["content"]);
+        $("#FormModalLabel2").html(result["header"]);
 	}}, true);
 }
 
@@ -1367,12 +1382,12 @@ function createDpFromOrder(order_id){
 }
 
 function loadDpSiteOrder(dp_id){ 
-	if (dp_id<=0 || dp_id==""){toastr["error"](errs[0]);}
+	if (dp_id<=0 || dp_id===""){toastr["error"](errs[0]);}
 	if (dp_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadDpSiteOrder', 'dp_id':dp_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("dp_order_place").innerHTML=result["content"];
-		}}, true);
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#dp_order_place").html(result["content"]);
+        }}, true);
 	}
 }
 
@@ -1381,8 +1396,8 @@ function showSupplToLocalChangeForm(pos,art_id,brand_id,article_nr_displ,dp_id,d
 		JsHttpRequest.query($rcapi,{ 'w': 'showSupplToLocalChangeForm', 'art_id':art_id, 'brand_id':brand_id, 'dp_id':dp_id, 'dp_str_id':dp_str_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow2").modal('show');
-			document.getElementById("FormModalBody2").innerHTML=result["content"];
-			document.getElementById("FormModalLabel2").innerHTML=result["header"];
+            $("#FormModalBody2").html(result["content"]);
+            $("#FormModalLabel2").html(result["header"]);
 		}}, true);
 	}
 }
@@ -1403,13 +1418,12 @@ function saveDpSupplToLocalChangeForm(dp_id,dp_str_id,art_id){
 					JsHttpRequest.query($rcapi,{ 'w': 'saveDpSupplToLocalChangeForm', 'dp_id':dp_id, 'dp_str_id':dp_str_id, 'art_id':art_id, 'amount':amount, 'price':price, 'storage_id':storage_id, 'cell_id':cell_id}, 
 					function (result, errors){ if (errors) {alert(errors);} if (result){  
 						if (result["answer"]==1){
-							document.getElementById("FormModalBody2").innerHTML="";
-							document.getElementById("FormModalLabel2").innerHTML="";
+                            $("#FormModalBody2").html("");
+                            $("#FormModalLabel2").html("");
 							$("#FormModalWindow2").modal('hide');
 							swal("Збережено!", "Артикул передано у роботу!", "success");
 							startDpExecute();
-						}
-						else{ swal("Помилка!", result["error"], "error"); }
+						} else { swal("Помилка!", result["error"], "error"); }
 					}}, true);
 				}
 			}

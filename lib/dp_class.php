@@ -213,7 +213,7 @@ class dp {
 
     function show_dp_list_filter($status,$filstatus,$filauthor,$filtpoint){$db=DbSingleton::getDb();$gmanual=new gmanual;session_start();$ses_tpoint_id=$_SESSION["media_tpoint_id"];$media_user_id=$_SESSION["media_user_id"];$media_role_id=$_SESSION["media_role_id"];
         $where=" and (j.tpoint_id='$ses_tpoint_id' or j.user_id='$media_user_id') and j.status_dp!=0 and j.summ>0 ";
-        if (!$status) $where_status=" and status_dp!=81 "; else $where_status="";
+        if (!$status) $where_status=" and j.status_dp!=81 "; else $where_status="";
         if ($media_user_id==1){$where=" and j.status_dp!=0";}if ($media_role_id==1){$where=" and j.status_dp!=0 and j.summ>0 ";}
         $where_filter="";$percent="";
 
@@ -286,7 +286,7 @@ class dp {
     function showDpCard($dp_id){$db=DbSingleton::getDb();$gmanual=new gmanual;session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$client=new clients;
         $form="";$form_htm=RD."/tpl/dp_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);} $comment=""; $cells_show=""; $type_name=""; $label_art_unknown="";
         $prefix=""; $doc_nom=0;
-        $r=$db->query("select * from J_DP j where j.id='$dp_id' limit 0,1;");$n=$db->num_rows($r);
+        $r=$db->query("select j.* from J_DP j where j.id='$dp_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==0){$form_htm=RD."/tpl/access_deny.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);} }
         if ($n==1){ $this->updateDpSumm($dp_id);
             $doc_type_id =$db->result($r,0,"doc_type_id");$doc_type_list=$this->getDocTypeSelectList($doc_type_id);
@@ -496,7 +496,7 @@ class dp {
 
     function showDpClientList($sel_id){$db=DbSingleton::getDb();
         $form="";$form_htm=RD."/tpl/clients_parrent_tree.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select c.*,ot.name as org_type_name, t2cn.COUNTRY_NAME, t2st.STATE_NAME, t2rg.REGION_NAME, t2ct.CITY_NAME,acc.tpoint_id, tp.name as tpoint_name   
+        $r=$db->query("select c.*, ot.name as org_type_name, t2cn.COUNTRY_NAME, t2st.STATE_NAME, t2rg.REGION_NAME, t2ct.CITY_NAME, acc.tpoint_id, tp.name as tpoint_name   
         from A_CLIENTS c 
             left outer join A_ORG_TYPE ot on ot.id=c.org_type 
             left outer join T2_COUNTRIES t2cn on t2cn.COUNTRY_ID=c.country 
@@ -613,8 +613,7 @@ class dp {
 
     function showDpTpointList($sel_id){$db=DbSingleton::getDb();
         $form="";$form_htm=RD."/tpl/tpoint_tree.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select t.*, t2cn.COUNTRY_NAME, t2st.STATE_NAME, t2rg.REGION_NAME, t2ct.CITY_NAME
-        from T_POINT t 
+        $r=$db->query("select t.*, t2cn.COUNTRY_NAME, t2st.STATE_NAME, t2rg.REGION_NAME, t2ct.CITY_NAME from T_POINT t 
             left outer join T2_COUNTRIES t2cn on t2cn.COUNTRY_ID=t.country 
             left outer join T2_STATE t2st on t2st.STATE_ID=t.state
             left outer join T2_REGION t2rg on t2rg.REGION_ID=t.region
@@ -671,10 +670,9 @@ class dp {
     }
 
     function getClientArticleMaxDiscount($art_id,$client_id,$price){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();session_start();$max_manager_discount=$_SESSION["user_discount"];$max_discount_persent=0;$max_discount_price=0;
-        $r=$dbt->query("select t2aps.OPER_PRICE, t2apr.minMarkup 
-        from T2_ARTICLES_PRICE_STOCK t2aps 
+        $r=$dbt->query("select t2aps.OPER_PRICE, t2apr.minMarkup from T2_ARTICLES_PRICE_STOCK t2aps 
             left outer join T2_ARTICLES_PRICE_RATING t2apr on (t2apr.art_id=t2aps.ART_ID)
-        where t2aps.ART_ID='$art_id' and in_use='1' limit 0,1;");$n=$dbt->num_rows($r);
+        where t2aps.ART_ID='$art_id' and t2apr.in_use='1' limit 0,1;");$n=$dbt->num_rows($r);
         if ($n==1){
             $oper_price=$db->result($r,0,"OPER_PRICE");
             $minMarkup=$db->result($r,0,"minMarkup");
@@ -976,7 +974,8 @@ class dp {
 
         if ($dp_id>0){
             $artIdS=$slave->qq($artIdStr);$article_nr_displS=$slave->qq($article_nr_displStr);$brandIdS=$slave->qq($brandIdStr);$amountS=$slave->qq($amountStr);$storageIdS=$slave->qq($storageIdStr);
-            $r=$db->query("select id,amount,discount from J_DP_STR where dp_id='$dp_id' and art_id='$artIdS' and `storage_id_from`='$storageIdS' and status_dps='93' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("select id, amount, discount from J_DP_STR 
+            where dp_id='$dp_id' and art_id='$artIdS' and `storage_id_from`='$storageIdS' and status_dps='93' limit 0,1;");$n=$db->num_rows($r);
             if ($n==1){
                 $idS=$db->result($r,0,"id");
                 $amountEx=$db->result($r,0,"amount");
@@ -1033,7 +1032,8 @@ class dp {
         if ($dp_id>0){
             $artIdS=$slave->qq($artIdStr);$article_nr_displS=$slave->qq($article_nr_displStr);$brandIdS=$slave->qq($brandIdStr);$amountS=$slave->qq($amountStr);$supplIdS=$slave->qq($supplIdStr);$supplStorageIdS=$slave->qq($supplStorageIdStr);
             $amountEx=0;
-            $r=$db->query("select id,amount,discount from J_DP_STR where dp_id='$dp_id' and art_id='$artIdS' and `suppl_id`='$supplIdS' and `suppl_storage_id`='$supplStorageIdS' and status_dps='93' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("select id, amount, discount from J_DP_STR 
+            where dp_id='$dp_id' and art_id='$artIdS' and `suppl_id`='$supplIdS' and `suppl_storage_id`='$supplStorageIdS' and status_dps='93' limit 0,1;");$n=$db->num_rows($r);
             if ($n==1){
                 $idS=$db->result($r,0,"id");
                 $amountEx=$db->result($r,0,"amount");
@@ -1123,7 +1123,7 @@ class dp {
     function changeDpCash($dp_id,$cash_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
         $dp_id=$slave->qq($dp_id);$cash_id=$slave->qq($cash_id);
         if ($dp_id>0){
-            $r=$db->query("select oper_status,client_conto_id from J_DP where id='$dp_id' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("select oper_status, client_conto_id from J_DP where id='$dp_id' limit 0,1;");$n=$db->num_rows($r);
             if ($n==1){
                 $oper_status=$db->result($r,0,"oper_status");
                 if ($oper_status==30){
@@ -1236,7 +1236,7 @@ class dp {
         $dp_id=$slave->qq($dp_id);$weight=$volume=0;
         if ($dp_id>0){
             $dp_str_id=$slave->qq($dp_str_id);$amount_change=$slave->qq($amount_change);
-            $r=$db->query("select amount,art_id, storage_id_from from J_DP_STR where dp_id='$dp_id' and id='$dp_str_id' and status_dps='93' limit 0,1;");
+            $r=$db->query("select amount, art_id, storage_id_from from J_DP_STR where dp_id='$dp_id' and id='$dp_str_id' and status_dps='93' limit 0,1;");
             $amountEx=$db->result($r,0,"amount");
             $art_id=$db->result($r,0,"art_id");
             $storage_id_from=$db->result($r,0,"storage_id_from");
@@ -1404,7 +1404,7 @@ class dp {
                 $amountS=$dbt->result($rc,$ic-1,"AMOUNT");
                 list($article_nr_displ,$brand_id,)=$catalogue->getArticleNrDisplBrand($art_id);
                 $idS="";
-                $r=$db->query("select id,amount from J_DP_STR where dp_id='$dp_id' and art_id='$art_id' and `storage_id_from`='$storage_id_to' and status_dps='93' limit 0,1;");$n=$db->num_rows($r);
+                $r=$db->query("select id, amount from J_DP_STR where dp_id='$dp_id' and art_id='$art_id' and `storage_id_from`='$storage_id_to' and status_dps='93' limit 0,1;");$n=$db->num_rows($r);
                 if ($n==1){
                     $idS=$db->result($r,0,"id");
                     $amountEx=$db->result($r,0,"amount");
@@ -1447,7 +1447,7 @@ class dp {
 
     function clearDpLocalAutoCellForm($dp_id){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка індексу";
         $dp_id=$slave->qq($dp_id);
-        $r=$db->query("select oper_status,status_dp from J_DP where id='$dp_id' limit 0,1;");$n=$db->num_rows($r);
+        $r=$db->query("select oper_status, status_dp from J_DP where id='$dp_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){
             $status_dp=$db->result($r,0,"status_dp");
             $oper_status=$db->result($r,0,"oper_status");
@@ -1524,7 +1524,7 @@ class dp {
     }
 
     function getDpClientPriceLevels($dp_id){$db=DbSingleton::getDb();$price_lvl=0;$margin_price_lvl=0;$price_suppl_lvl=0;$margin_price_suppl_lvl=0;$client_vat=0;
-        $r=$db->query("select client_id,client_conto_id  from J_DP where id='$dp_id' limit 0,1;"); $n=$db->num_rows($r);
+        $r=$db->query("select client_id, client_conto_id from J_DP where id='$dp_id' limit 0,1;"); $n=$db->num_rows($r);
         if ($n==1){
             $client_id=$db->result($r,0,"client_id");
             $client_conto_id=$db->result($r,0,"client_conto_id");
@@ -1550,10 +1550,10 @@ class dp {
             $art=$cat->clearArticle($art);
             $where_brand="";$group_brand="group by t2c.BRAND_ID"; if ($brand_id!="" && $brand_id>0){$where_brand=" and t2c.BRAND_ID='$brand_id'"; $group_brand="";}
             if ($art!=""){
-                $query="select t2b.BRAND_NAME, t2n.NAME,t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION from T2_CROSS t2c 
+                $query="select t2b.BRAND_NAME, t2n.NAME, t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION from T2_CROSS t2c 
                      inner join T2_BRANDS t2b on t2b.BRAND_ID=t2c.BRAND_ID
                      left outer join T2_NAMES t2n on t2n.ART_ID=t2c.ART_ID
-                 where  t2c.SEARCH_NUMBER = '$art' $where_brand $group_brand order by t2n.NAME asc;";
+                 where t2c.SEARCH_NUMBER='$art' $where_brand $group_brand order by t2n.NAME asc;";
                  $r=$db->query($query);$n=$db->num_rows($r);
             }
             $one_result=0;
@@ -1561,10 +1561,10 @@ class dp {
                 $list2=$cat->showCatalogueBrandSelectDocumentList($r);
             }
             if ($n==1){
-                $query="select t2b.BRAND_NAME, t2n.NAME,t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION from T2_CROSS t2c 
+                $query="select t2b.BRAND_NAME, t2n.NAME, t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION from T2_CROSS t2c 
                      inner join T2_BRANDS t2b on t2b.BRAND_ID=t2c.BRAND_ID
                      left outer join T2_NAMES t2n on t2n.ART_ID=t2c.ART_ID
-                 where  t2c.SEARCH_NUMBER = '$art' $where_brand order by t2n.NAME asc;";
+                 where t2c.SEARCH_NUMBER='$art' $where_brand order by t2n.NAME asc;";
                 $r=$db->query($query);$n=$db->num_rows($r);$one_result=1;
             }
             if (($n>1 && $brand_id!="") || $one_result==1){$ak=array();$rk=array();
@@ -1577,7 +1577,7 @@ class dp {
                     if (($ak[$ART_ID]=="") || $KIND==0){$ak[$ART_ID]=$KIND;}
                     if (($rk[$ART_ID]=="") || $RELATION==0){$rk[$ART_ID]=$RELATION;}
                 }
-                $query="select t2a.ART_ID,t2a.BRAND_ID,t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, gg.NAME as goods_group_name, SUM(`t2asc`.`AMOUNT`) as stock, SUM(`t2asc`.`RESERV_AMOUNT`) as reserv, s.name as storage_name,s.id as storage_id, t2apr.price_".$price_lvl.", t2sai.suppl_id, t2sai.return_delay, t2sai.warranty_info , t2si.price_usd, t2si.client_storage_id, t2si.stock_suppl
+                $query="select t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, gg.NAME as goods_group_name, SUM(`t2asc`.`AMOUNT`) as stock, SUM(`t2asc`.`RESERV_AMOUNT`) as reserv, s.name as storage_name,s.id as storage_id, t2apr.price_".$price_lvl.", t2sai.suppl_id, t2sai.return_delay, t2sai.warranty_info , t2si.price_usd, t2si.client_storage_id, t2si.stock_suppl
                 from T2_ARTICLES t2a 
                     left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
                     left outer join T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID 
@@ -1593,7 +1593,7 @@ class dp {
             }
         }
         if ($search_type==1){
-            $query="select t2a.ART_ID,t2a.BRAND_ID,t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, gg.NAME as goods_group_name, t2apr.price_".$price_lvl.", t2sai.suppl_id, t2sai.return_delay, t2sai.warranty_info, t2si.price_usd, t2si.client_storage_id, t2si.stock_suppl
+            $query="select t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, gg.NAME as goods_group_name, t2apr.price_".$price_lvl.", t2sai.suppl_id, t2sai.return_delay, t2sai.warranty_info, t2si.price_usd, t2si.client_storage_id, t2si.stock_suppl
             from T2_ARTICLES t2a 
                 left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
                 left outer join T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID 
@@ -1606,7 +1606,7 @@ class dp {
             where t2a.ARTICLE_NR_SEARCH='$art' or t2a.ARTICLE_NR_DISPL='$art' and t2b.`VISIBLE`='1';";
         }
         if ($search_type==2){
-            $query="select t2a.ART_ID,t2a.BRAND_ID,t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, gg.NAME as goods_group_name, SUM(`t2asc`.`AMOUNT`) as stock, SUM(`t2asc`.`RESERV_AMOUNT`) as reserv, s.name as storage_name, s.id as storage_id, t2apr.price_".$price_lvl.", t2sai.suppl_id, t2sai.return_delay, t2sai.warranty_info, t2si.price_usd, t2si.client_storage_id, t2si.stock_suppl
+            $query="select t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, gg.NAME as goods_group_name, SUM(`t2asc`.`AMOUNT`) as stock, SUM(`t2asc`.`RESERV_AMOUNT`) as reserv, s.name as storage_name, s.id as storage_id, t2apr.price_".$price_lvl.", t2sai.suppl_id, t2sai.return_delay, t2sai.warranty_info, t2si.price_usd, t2si.client_storage_id, t2si.stock_suppl
             from T2_ARTICLES t2a 
                 left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
                 left outer join T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID 
@@ -1846,9 +1846,9 @@ class dp {
     }
 
     function getArticleTpointSupplPriceUsdDeliveryInfo($tpoint_id,$art_id){$db=DbSingleton::getTokoDb(); $price=0; $info="Не вказано"; $week_day=date("N");$cur_time=date("H:i:s"); $slave=new slave;
-        $query="select t2si.price_usd,dt.* from T_POINT_SUPPL_DELIVERY_TIME dt 
+        $query="select t2si.price_usd, dt.* from T_POINT_SUPPL_DELIVERY_TIME dt 
             left outer join T2_SUPPL_IMPORT t2si on (t2si.suppl_id=dt.suppl_id and t2si.client_storage_id=dt.suppl_storage_id)
-        where dt.status='1' and dt.tpoint_id='$tpoint_id' and t2si.art_id='$art_id' and t2si.status=1 and t2si.price_usd>0 and dt.week_day='$week_day' and dt.time_from<='$cur_time' and dt.time_to>='$cur_time' order by t2si.price_usd,dt.delivery_days,dt.giveout_time asc limit 0,1;";
+        where dt.status='1' and dt.tpoint_id='$tpoint_id' and t2si.art_id='$art_id' and t2si.status=1 and t2si.price_usd>0 and dt.week_day='$week_day' and dt.time_from<='$cur_time' and dt.time_to>='$cur_time' order by t2si.price_usd, dt.delivery_days, dt.giveout_time asc limit 0,1;";
         $r=$db->query($query);$n=$db->num_rows($r);
         if ($n==1){
             $price=$db->result($r,0,"price_usd");
@@ -1897,22 +1897,24 @@ class dp {
     }
 
     function getArticleStorageAmountDp($art_id,$dp_id,$storage_id){$db=DbSingleton::getDb();$amount=0;
-        $r=$db->query("select amount from J_DP_STR where dp_id='$dp_id' and status_dps='93' and storage_id_from='$storage_id' and art_id='$art_id' limit 0,1");$n=$db->num_rows($r);
+        $r=$db->query("select amount from J_DP_STR 
+        where dp_id='$dp_id' and status_dps='93' and storage_id_from='$storage_id' and art_id='$art_id' limit 0,1");$n=$db->num_rows($r);
         if ($n==1){ $amount=$db->result($r,0,"amount"); }
         return $amount;
     }
 
     function getArticleSupplStorageAmountDp($art_id,$dp_id,$suppl_id,$suppl_storage_id){$db=DbSingleton::getDb();$amount=0;
-        $r=$db->query("select amount from J_DP_STR where dp_id='$dp_id' and status_dps='93' and suppl_id='$suppl_id' and suppl_storage_id='$suppl_storage_id' and art_id='$art_id' limit 0,1");$n=$db->num_rows($r);
+        $r=$db->query("select amount from J_DP_STR 
+        where dp_id='$dp_id' and status_dps='93' and suppl_id='$suppl_id' and suppl_storage_id='$suppl_storage_id' and art_id='$art_id' limit 0,1");$n=$db->num_rows($r);
         if ($n==1){ $amount=$db->result($r,0,"amount"); }
         return $amount;
     }
 
     function showArticleRestStorageSelectList($art_id,$dp_id){$db=DbSingleton::getTokoDb();$list="";
         $tpoint_id=$this->getDpTpoint($dp_id);
-        $query="select s.id,s.name, t2as.AMOUNT, t2as.RESERV_AMOUNT from STORAGE s 
+        $query="select s.id, s.name, t2as.AMOUNT, t2as.RESERV_AMOUNT from STORAGE s 
             left outer join T2_ARTICLES_STRORAGE t2as on t2as.STORAGE_ID=s.id 
-        where s.status='1' and t2as.ART_ID='$art_id' order by s.name asc,s.id asc;";
+        where s.status='1' and t2as.ART_ID='$art_id' order by s.name asc, s.id asc;";
         $r=$db->query($query);$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
@@ -1921,13 +1923,14 @@ class dp {
             $reserv_amount=$db->result($r,$i-1,"RESERV_AMOUNT");
             $cur_amount=$this->getArticleStorageAmountDp($art_id,$dp_id,$id);
             $reserv_amount_rest=$reserv_amount-$cur_amount;
+            $cur_amount>0 ? $style="style='background:pink;'" : $style="";
             $delivery_info=$this->getTpointDeliveryInfo($tpoint_id,$id);
             if ($amount!=0 || $cur_amount!=0 || $reserv_amount_rest!=0){
                 $list.="<tr onClick=\"showDpAmountInputWindow('$art_id','$id');\" style='cursor:pointer'>
                     <td>$i <input type='hidden' id='storage_amount_id' value='$id'></td>
                     <td>$name</td>
                     <td>$amount</td>
-                    <td>$cur_amount</td>
+                    <td $style>$cur_amount</td>
                     <td>$reserv_amount_rest</td>
                     <td>$delivery_info</td>
                 </tr>";
@@ -1968,7 +1971,7 @@ class dp {
         FROM STORAGE_CELLS sc
             LEFT OUTER JOIN T2_ARTICLES_STRORAGE_CELLS t2asc ON ( t2asc.STORAGE_CELLS_ID = sc.id )
             LEFT OUTER JOIN T2_ARTICLES_STRORAGE t2as ON ( t2as.STORAGE_ID = sc.storage_id )
-        WHERE sc.status = '1' AND t2asc.ART_ID = '$art_id' AND t2as.ART_ID = '$art_id' AND sc.storage_id='$storage_id' ORDER BY sc.cell_value ASC , sc.id ASC;";
+        WHERE sc.status = '1' AND t2asc.ART_ID = '$art_id' AND t2as.ART_ID = '$art_id' AND sc.storage_id='$storage_id' ORDER BY sc.cell_value ASC, sc.id ASC;";
         $r=$db->query($query);$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
@@ -2020,7 +2023,8 @@ class dp {
     }
 
     function getArticleReservType($tpoint_id,$storage_id){$db=DbSingleton::getTokoDb();$reserv_type_id=68;
-        $r=$db->query("select * from T_POINT_STORAGE where `tpoint_id`='$tpoint_id' and status='1' and `storage_id`='$storage_id' limit 0,1;");$n=$db->num_rows($r);
+        $r=$db->query("select * from T_POINT_STORAGE 
+        where `tpoint_id`='$tpoint_id' and status='1' and `storage_id`='$storage_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){
             $local=$db->result($r,0,"local");
             if ($local==41){$reserv_type_id=67;}
@@ -2078,7 +2082,7 @@ class dp {
 
     function loaddpStorage($dp_id){$db=DbSingleton::getDb();
         $form="";$form_htm=RD."/tpl/dp_storage_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select storage_id,storage_cells_id from J_INCOME where `id`='$dp_id' limit 0,1;");
+        $r=$db->query("select storage_id, storage_cells_id from J_INCOME where `id`='$dp_id' limit 0,1;");
         $storage_id=$db->result($r,0,"storage_id");
         $storage_cells_id=$db->result($r,0,"storage_cells_id");
         $form=str_replace("{dp_id}",$dp_id,$form);
@@ -2096,7 +2100,9 @@ class dp {
     function showStorageSelectList($sel_id,$cells_only=0){$db=DbSingleton::getTokoDb();$list="<option value=0>Оберіть зі списку</option>";
         $query="select * from `STORAGE` where status='1' order by name, id asc;";
         if ($cells_only==1){
-            $query="select s.* from `STORAGE` s inner join STORAGE_STR ss on ss.storage_id=s.id where s.status='1' group by ss.storage_id order by s.name, s.id asc;";
+            $query="select s.* from `STORAGE` s 
+                inner join STORAGE_STR ss on ss.storage_id=s.id 
+            where s.status='1' group by ss.storage_id order by s.name, s.id asc;";
         }
         $r=$db->query($query);$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
@@ -2182,7 +2188,7 @@ class dp {
     function saveDpStorage($dp_id,$storage_id,$storage_cells_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
         $dp_id=$slave->qq($dp_id);$storage_id=$slave->qq($storage_id);$storage_cells_id=$slave->qq($storage_cells_id);
         if ($dp_id>0 && $storage_id>0 && $storage_cells_id>0){
-            $db->query("update J_INCOME set storage_id='$storage_id', `storage_cells_id`='$storage_cells_id' where id='$dp_id';");
+            $db->query("update J_INCOME set `storage_id`='$storage_id', `storage_cells_id`='$storage_cells_id' where id='$dp_id';");
             $answer=1;$err="";
         }
         return array($answer,$err);
@@ -2193,7 +2199,7 @@ class dp {
         if ($n==1){
             $duty=$db->result($r,0,"DUTY");
         }
-        $r=$db->query("select PREFERENTIAL_RATE,FULL_RATE,TYPE_DECLARATION from T2_COSTUMS where costums_id='$costums_id' limit 0,1;");$n=$db->num_rows($r);
+        $r=$db->query("select PREFERENTIAL_RATE, FULL_RATE, TYPE_DECLARATION from T2_COSTUMS where costums_id='$costums_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){
             $preferential_rate=$db->result($r,0,"PREFERENTIAL_RATE");
             $full_rate=$db->result($r,0,"FULL_RATE");
@@ -2206,9 +2212,9 @@ class dp {
 
     function loadDpCommets($dp_id){$db=DbSingleton::getDb();
         $form="";$form_htm=RD."/tpl/dp_comment_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select cc.*,u.name from J_DP_COMMENTS cc 
+        $r=$db->query("select cc.*, u.name from J_DP_COMMENTS cc 
             left outer join media_users u on u.id=cc.USER_ID 
-        where cc.dp_id='$dp_id' order by id desc;");$n=$db->num_rows($r);$list="";
+        where cc.dp_id='$dp_id' order by cc.id desc;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $user_id=$db->result($r,$i-1,"user_id");
@@ -2428,7 +2434,7 @@ class dp {
 
     function loaddpUnknownArticles($dp_id){$db=DbSingleton::getDb();
         $form="";$form_htm=RD."/tpl/dp_unknown_articles_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from J_DP j where j.id='$dp_id' limit 0,1;");$n=$db->num_rows($r);
+        $r=$db->query("select j.* from J_DP j where j.id='$dp_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==0){$form_htm=RD."/tpl/access_deny.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);} }
         if ($n==1){
             list($list,$kol_rows)=$this->showdpUnknownStrList($dp_id);
@@ -2515,7 +2521,7 @@ class dp {
     function startDpExecute($dp_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка індексу!";$suppl_ex=0;
         $dp_id=$slave->qq($dp_id);
         if ($dp_id>0){
-            $r=$db->query("select tpoint_id,status_dp from J_DP where id='$dp_id' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("select tpoint_id, status_dp from J_DP where id='$dp_id' limit 0,1;");$n=$db->num_rows($r);
             if ($n==1){
                 $status_dp=$db->result($r,0,"status_dp");
                 $tpoint_id=$db->result($r,0,"tpoint_id");
@@ -2540,8 +2546,9 @@ class dp {
     }
 
     function checkRemoteStorage($dp_id,$tpoint_id){$db=DbSingleton::getDb();$suppl_ex=0;
-        $r=$db->query("select COUNT(ds.id) as kol from J_DP_STR ds left outer join T_POINT_STORAGE ps on ps.storage_id=ds.storage_id_from 
-        where ds.dp_id='$dp_id' and ((ps.tpoint_id='$tpoint_id' and `local`='42') or (ps.tpoint_id!='$tpoint_id')) ;");
+        $r=$db->query("select COUNT(ds.id) as kol from J_DP_STR ds 
+            left outer join T_POINT_STORAGE ps on ps.storage_id=ds.storage_id_from 
+        where ds.dp_id='$dp_id' and ((ps.tpoint_id='$tpoint_id' and ps.`local`='42') or (ps.tpoint_id!='$tpoint_id')) ;");
         $kol_rem_str=$db->result($r,0,"kol");
         if ($kol_rem_str>0){$suppl_ex=1;}
         return $suppl_ex;
@@ -2563,13 +2570,13 @@ class dp {
 
     function makeDpJmovingStorselPreorder($dp_id,$local){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$jmoving=new jmoving;session_start();$user_id=$_SESSION["media_user_id"];
         $tpoint_id=$this->getDpTpoint($dp_id);$cell_use=0;
-        $r=$db->query("select storage_id_from from J_DP_STR ds where ds.dp_id='$dp_id' and status_dps='93' group by storage_id_from;");$n=$db->num_rows($r);
+        $r=$db->query("select ds.storage_id_from from J_DP_STR ds where ds.dp_id='$dp_id' and ds.status_dps='93' group by ds.storage_id_from;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $storage_id_from=$db->result($r,$i-1,"storage_id_from");
             if ($storage_id_from>0){
                 $storage_local=$this->getStorageToTpointLocal($tpoint_id,$storage_id_from);
                 if ($storage_local==41){
-                    $r1=$db->query("select * from J_DP_STR ds where ds.dp_id='$dp_id' and status_dps='93' and storage_id_from='$storage_id_from';");$n1=$db->num_rows($r1);
+                    $r1=$db->query("select ds.* from J_DP_STR ds where ds.dp_id='$dp_id' and ds.status_dps='93' and ds.storage_id_from='$storage_id_from';");$n1=$db->num_rows($r1);
                     if ($n1>0){//create storsel;
                         $select_id=$this->createStorsel($dp_id,$tpoint_id,$storage_id_from);$s_volume=0;$s_weight_netto=0;$s_amount=0;$s_articles_amount=0;
                         for ($i1=1;$i1<=$n1;$i1++){
@@ -2621,7 +2628,7 @@ class dp {
                     }
                 }
                 if ($storage_local==42 && $local==41){
-                    $r1=$db->query("select * from J_DP_STR ds where ds.dp_id='$dp_id' and status_dps='93' and storage_id_from='$storage_id_from';");$n1=$db->num_rows($r1);
+                    $r1=$db->query("select ds.* from J_DP_STR ds where ds.dp_id='$dp_id' and ds.status_dps='93' and ds.storage_id_from='$storage_id_from';");$n1=$db->num_rows($r1);
                     if ($n1>0){
                         //create jmoving;
                         $jmoving_id=$jmoving->newJmovingCard(1);$s_volume=0;$s_weight_netto=0;
@@ -2651,7 +2658,7 @@ class dp {
                 }
                 if ($storage_local==42 && $local==42){
                     //$r11=$db->query("select * from J_DP_STR where dp_id='$dp_id';");
-                    $r1=$db->query("select * from J_DP_STR ds where ds.dp_id='$dp_id' and status_dps='93' and storage_id_from='$storage_id_from';");$n1=$db->num_rows($r1);
+                    $r1=$db->query("select ds.* from J_DP_STR ds where ds.dp_id='$dp_id' and ds.status_dps='93' and ds.storage_id_from='$storage_id_from';");$n1=$db->num_rows($r1);
                     if ($n1>0){
                         //get storage tpoint_id
                         list($storage_tpoint_id,)=$this->getTpointDataByStorage($storage_id_from);
@@ -2669,7 +2676,7 @@ class dp {
                         list($usd_to_uah,$eur_to_uah)=$this->getKoursData();
                         $db->query("update `J_DP` set `usd_to_uah`='$usd_to_uah', `eur_to_uah`='$eur_to_uah' where `id`='$dp_id' limit 1;");
                         /* create local storsel */
-                        $r2=$db->query("select * from J_DP_STR ds where ds.dp_id='$storage_dp_id' and status_dps='93' and storage_id_from='$storage_id_from';");$n2=$db->num_rows($r2);
+                        $r2=$db->query("select ds.* from J_DP_STR ds where ds.dp_id='$storage_dp_id' and ds.status_dps='93' and ds.storage_id_from='$storage_id_from';");$n2=$db->num_rows($r2);
                         if ($n2>0){
                             $select_id=$this->createStorsel($storage_dp_id,$storage_tpoint_id,$storage_id_from);$s_volume=0;$s_weight_netto=0;$s_amount=0;$s_articles_amount=0;
                             for ($i2=1;$i2<=$n2;$i2++){
@@ -2727,7 +2734,7 @@ class dp {
                 }
             }
             if($storage_id_from==0){ $dp_cash_id=$this->getDpCashId($dp_id);
-                $r1=$db->query("select * from J_DP_STR ds where ds.dp_id='$dp_id' and status_dps='93' and storage_id_from='$storage_id_from' and suppl_id>0;");$n1=$db->num_rows($r1);
+                $r1=$db->query("select ds.* from J_DP_STR ds where ds.dp_id='$dp_id' and ds.status_dps='93' and ds.storage_id_from='$storage_id_from' and ds.suppl_id>0;");$n1=$db->num_rows($r1);
                 if ($n1>0){
                     for ($i1=1;$i1<=$n1;$i1++){
                         $id=$db->result($r1,$i1-1,"id");
@@ -3133,9 +3140,9 @@ class dp {
     }
 
     function sendDpStorselToSaleInvoice($dp_id,$kol_storsel,$ar_storsel){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();session_start();$user_id=$_SESSION["media_user_id"];
-        $slave=new slave;$cat=new catalogue;$answer=0;$err="Помилка індексу!";$sale_invoice_nom=0;$dp_id=$slave->qq($dp_id);
+        $slave=new slave;$answer=0;$err="Помилка індексу!";$sale_invoice_nom=0;$dp_id=$slave->qq($dp_id);$kol_storsel=$slave->qq($kol_storsel);
+        $price2_cash=$discount2_cash=$summ2_cash=$price_end2_cash=0;
         if ($dp_id>0){
-            $kol_storsel=$slave->qq($kol_storsel);
             if ($kol_storsel>0){
                 list($client_saldo,$client_credit_limit,$sale_storsell_summ,$datapay_limit)=$this->checkClientCreditLimitBeforeSaleInvoice($dp_id,$kol_storsel,$ar_storsel);
 
@@ -3197,7 +3204,8 @@ class dp {
 
                         $db->query("update J_SALE_INVOICE set `prefix`='$seller_prefix', `doc_nom`='$seller_doc_nom', `tpoint_id`='$tpoint_id', `seller_id`='$seller_id', `client_id`='$client_id', `client_conto_id`='$client_conto_id', `doc_type_id`='$doc_type_id', `data_create`='$data_create', `data_create`='$data_create', `data_pay`='$data_pay', `cash_id`='$cash_id', `usd_to_uah`='$usd_to_uah', `eur_to_uah`='$eur_to_uah',  `vat_use`='$vat_use', `delivery_type_id`='$delivery_type_id', `carrier_id`='$carrier_id', `delivery_address`='$delivery_address', `user_id`='$user_id' where id='$invoice_id' limit 1;");
 
-                        $r3=$db->query("select * from J_SALE_INVOICE_STORSEL sis where sis.invoice_id='$invoice_id' and sis.dp_id='$dp_id' and sis.status='1' order by id asc;"); $n3=$db->num_rows($r3);$select_str="0";
+                        $r3=$db->query("select sis.* from J_SALE_INVOICE_STORSEL sis 
+                        where sis.invoice_id='$invoice_id' and sis.dp_id='$dp_id' and sis.status='1' order by sis.id asc;"); $n3=$db->num_rows($r3);$select_str="0";
                         for ($i3=1;$i3<=$n3;$i3++){
                             $select_str.=",".$db->result($r3,$i3-1,"select_id");
                         }
@@ -3206,7 +3214,8 @@ class dp {
                         if ($doc_type_id==61){
                             $rt=$db->query("select max(id) as mid from J_TAX_INVOICE;");$tax_id=0+$db->result($rt,0,"mid")+1;
                             $rt=$db->query("select max(doc_nom) as mid from J_TAX_INVOICE where seller_id='$seller_id';");$tax_nom=0+$db->result($rt,0,"mid")+1;
-                            $db->query("insert into J_TAX_INVOICE (`id`,`tax_type_id`,`doc_nom`,`data_create`,`sale_invoice_id`,`tpoint_id`,`seller_id`,`client_id`,`cash_id`,`summ`,`user_id`) values ('$tax_id','160','$tax_nom',CURDATE(),'$invoice_id','$tpoint_id','$seller_id','$client_conto_id','$cash_id','$summ','$user_id');");
+                            $db->query("insert into J_TAX_INVOICE (`id`,`tax_type_id`,`doc_nom`,`data_create`,`sale_invoice_id`,`tpoint_id`,`seller_id`,`client_id`,`cash_id`,`summ`,`user_id`) 
+                            values ('$tax_id','160','$tax_nom',CURDATE(),'$invoice_id','$tpoint_id','$seller_id','$client_conto_id','$cash_id','$summ','$user_id');");
                         }
 
                         $r2=$db->query("select jss.amount_collect, jds.*, jss.storage_id_from as storage_id_from2, jss.cell_id_from as cell_id_from2
@@ -3214,7 +3223,7 @@ class dp {
                             left outer join J_SELECT js on js.id=jss.select_id 
                             left outer join J_DP jd on (jd.id=js.parrent_doc_id and js.parrent_doc_type_id=2)
                             left outer join J_DP_STR jds on jds.dp_id=jd.id 
-                        where jss.select_id in ($select_str) and jds.art_id=jss.art_id and jds.status_dps!=97 GROUP BY jds.art_id, storage_id_from2, cell_id_from2;");
+                        where jss.select_id in ($select_str) and jds.art_id=jss.art_id and jds.status_dps!=97 GROUP BY jds.art_id, jss.storage_id_from, jss.cell_id_from;");
                         $n2=$db->num_rows($r2);$summ_all=0;
 
                         $db->query("update J_SELECT set status_select='127' where id in ($select_str);");
@@ -3230,7 +3239,7 @@ class dp {
                             //$summ2=$amount2*$price_end2;
                             $storage_id_from2=$db->result($r2,$i2-1,"storage_id_from2");
                             $cell_id_from2=$db->result($r2,$i2-1,"cell_id_from2");
-                            $dp_str_id=$db->result($r2,$i2-1,"jds.id");
+                            $dp_str_id=$db->result($r2,$i2-1,"id");
 
                             $db->query("update J_DP_STR set status_dps='97' where id='$dp_str_id' limit 1;");
                             if ($amount2>0){
@@ -3256,11 +3265,13 @@ class dp {
                                     $discount2_cash=$discount2;
                                 }
                                 $rsi=$db->query("select max(id) as mid from J_SALE_INVOICE_STR;");$invoice_str_id=0+$db->result($rsi,0,"mid")+1;
-                                $db->query("insert into J_SALE_INVOICE_STR (`id`,`invoice_id`,`art_id`,`article_nr_displ`,`brand_id`,`amount`,`price`,`price_end`,`discount`,`summ`,`storage_id_from`,`cell_id_from`) values ('$invoice_str_id','$invoice_id','$art_id2','$article_nr_displ2','$brand_id2','$amount2','$price2_cash','$price_end2_cash','$discount2_cash','$summ2_cash','$storage_id_from2','$cell_id_from2');");
+                                $db->query("insert into J_SALE_INVOICE_STR (`id`,`invoice_id`,`art_id`,`article_nr_displ`,`brand_id`,`amount`,`price`,`price_end`,`discount`,`summ`,`storage_id_from`,`cell_id_from`) 
+                                values ('$invoice_str_id','$invoice_id','$art_id2','$article_nr_displ2','$brand_id2','$amount2','$price2_cash','$price_end2_cash','$discount2_cash','$summ2_cash','$storage_id_from2','$cell_id_from2');");
 
                                 if ($tax_id>0){
-                                    $zed=$cat->getArticleZED($art_id2);$art_name=$cat->getArticleNameLang($art_id2);
-                                    $db->query("insert into J_TAX_INVOICE_STR (`tax_id`,`zed`,`art_id`,`goods_name`,`amount`,`price`,`summ`) values ('$tax_id','$zed','$art_id2','$art_name','$amount2','$price_end2_cash','$summ2_cash');");
+                                    $zed=$this->getArticleZED($art_id2);$art_name=$this->getArticleNameLang($art_id2);
+                                    $db->query("insert into J_TAX_INVOICE_STR (`tax_id`,`zed`,`art_id`,`goods_name`,`amount`,`price`,`summ`) 
+                                    values ('$tax_id','$zed','$art_id2','$art_name','$amount2','$price_end2_cash','$summ2_cash');");
                                 }
 
                                 $slave->addJuornalArtDocs(3,$invoice_id,$art_id2,$amount2);
@@ -3269,13 +3280,13 @@ class dp {
 
                                 $rr=$dbt->query("select * from T2_ARTICLES_STRORAGE where ART_ID='$art_id2' and STORAGE_ID ='$storage_id_from2' limit 0,1;");$nr=$dbt->num_rows($rr);
                                 if ($nr==1){
-                                    $rr_reserv=$dbt->result($rr,0,"RESERV_AMOUNT");  $rr_reserv-=$amount2;
+                                    $rr_reserv=$dbt->result($rr,0,"RESERV_AMOUNT"); $rr_reserv-=$amount2;
                                     $dbt->query("update T2_ARTICLES_STRORAGE set `RESERV_AMOUNT`='$rr_reserv' where ART_ID='$art_id2' and STORAGE_ID ='$storage_id_from2';");
                                 }
 
                                 $rr=$dbt->query("select * from T2_ARTICLES_STRORAGE_CELLS where ART_ID='$art_id2' and STORAGE_ID ='$storage_id_from2' and STORAGE_CELLS_ID='$cell_id_from2' limit 0,1;");$nr=$dbt->num_rows($rr);
                                 if ($nr==1){
-                                    $rr_reserv=$dbt->result($rr,0,"RESERV_AMOUNT");  	$rr_reserv-=$amount2;
+                                    $rr_reserv=$dbt->result($rr,0,"RESERV_AMOUNT"); $rr_reserv-=$amount2;
                                     $dbt->query("update T2_ARTICLES_STRORAGE_CELLS set `RESERV_AMOUNT`='$rr_reserv' where ART_ID='$art_id2' and STORAGE_ID ='$storage_id_from2' and STORAGE_CELLS_ID='$cell_id_from2';");
                                 }
                                 $dbt->query("update T2_ARTICLES_PRICE_STOCK set `GENERAL_STOCK`=(`GENERAL_STOCK`-'$amount2') where ART_ID='$art_id2' limit 1;");
@@ -3295,7 +3306,8 @@ class dp {
 
                         list($balans_before,)=$this->getClientGeneralSaldo($client_conto_id);
                         $balans_after=$balans_before-$summ_all;
-                        $db->query("insert into B_CLIENT_BALANS_JOURNAL (`client_id`,`cash_id`,`balans_before`,`deb_kre`,`summ`,`balans_after`,`doc_type_id`,`doc_id`) values ('$client_conto_id','$cash_id','$balans_before','1','$summ_all','$balans_after','1','$invoice_id');");
+                        $db->query("insert into B_CLIENT_BALANS_JOURNAL (`client_id`,`cash_id`,`balans_before`,`deb_kre`,`summ`,`balans_after`,`doc_type_id`,`doc_id`) 
+                        values ('$client_conto_id','$cash_id','$balans_before','1','$summ_all','$balans_after','1','$invoice_id');");
 
                         $this->updateClientBalans($client_conto_id,$cash_id,$summ_all);
                         $answer=1;$err="";
@@ -3312,7 +3324,7 @@ class dp {
                 }
             }
         }
-        $rsel=$db->query("select prefix,doc_nom from J_SALE_INVOICE where id='$sale_invoice_nom' limit 0,1;"); $nsel=$db->num_rows($rsel); $sale_invoice_prefix=0;
+        $rsel=$db->query("select prefix, doc_nom from J_SALE_INVOICE where id='$sale_invoice_nom' limit 0,1;"); $nsel=$db->num_rows($rsel); $sale_invoice_prefix=0;
         if ($nsel>0) {
             $prefix=$db->result($rsel,0,"prefix");
             $doc_nom=$db->result($rsel,0,"doc_nom");
@@ -3390,7 +3402,7 @@ class dp {
     function viewDpSaleInvoice($dp_id,$invoice_id){$db=DbSingleton::getDb();$gmanual=new gmanual;
         $prefix=$doc_type_name=$status_invoice_cap="";$doc_nom=0;$volume=0;$list="";
         $form="";$form_htm=RD."/tpl/dp_sale_invoice_view.htm";	if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select sv.*, t.name as tpoint_name, sl.name as seller_name, cl.name as client_name, dt.mcaption as doc_type_name, dt.mvalue as doc_type_abr,ch.abr2 as cash_abr 
+        $r=$db->query("select sv.*, t.name as tpoint_name, sl.name as seller_name, cl.name as client_name, dt.mcaption as doc_type_name, dt.mvalue as doc_type_abr, ch.abr2 as cash_abr 
         from J_SALE_INVOICE sv
             left outer join CASH ch on ch.id=sv.cash_id
             left outer join T_POINT t on t.id=sv.tpoint_id
@@ -3539,16 +3551,17 @@ class dp {
         return $form;
     }
 
-    function printDpSaleInvoice($dp_id) {$db=DbSingleton::getDb();$money=new toMoney;$slave=new slave;
-        $invoice_summ=0; $list="";
-        $form=""; $form_htm=RD."/tpl/dp_sale_invoice_print_non_cash.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select dp.*, cl.full_name as client_name, sl.full_name as seller_name, sl.phone, sld.edrpou, sld.account, sld.bank, sld.mfo, sld.vytjag, sld.address_fakt as seller_address, cld.address_fakt as client_address 
+    function printDpSaleInvoice($dp_id) {$db=DbSingleton::getDb();$money=new toMoney;$slave=new slave;$invoice_summ=0;$list="";
+        $form="";$form_htm=RD."/tpl/dp_sale_invoice_print_non_cash.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        $r=$db->query("select dp.*, cl.full_name as client_name, sl.full_name as seller_name, 
+        sl.phone, sld.edrpou, sld.account, sld.bank, sld.mfo, sld.vytjag, sld.address_fakt as seller_address, cld.address_fakt as client_address 
         from J_SALE_INVOICE dp
             left outer join A_CLIENTS cl on cl.id=dp.client_id
             left outer join A_CLIENT_DETAILS cld on cld.client_id=dp.client_id
             left outer join A_CLIENTS sl on sl.id=dp.seller_id
             left outer join A_CLIENT_DETAILS sld on sld.client_id=dp.seller_id
         where dp.id='$dp_id' limit 0,1;");
+
         $prefix=$db->result($r,0,"prefix");
         $doc_nom=$db->result($r,0,"doc_nom");
         $client_name=$db->result($r,0,"client_name");
@@ -3610,7 +3623,7 @@ class dp {
 
     function getUnitArticle($art_id) {$db=DbSingleton::getTokoDb(); $abr="";
         $r=$db->query("select t2u.abr from T2_PACKAGING t2p 
-        left outer join units t2u on t2u.id=t2p.UNITS_ID
+            left outer join units t2u on t2u.id=t2p.UNITS_ID
         where t2p.ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){
             $abr=$db->result($r,0,"abr");
@@ -3620,7 +3633,8 @@ class dp {
 
     function printSaleInvoice($invoice_id){$db=DbSingleton::getDb();$slave=new slave;$money=new toMoney;
         $list="";$sel_ar=[];$form="";$address_send="";$volume=0;$invoice_summ=0;
-        $r=$db->query("select sv.*, t.name as tpoint_name, sl.name as seller_name, sld.edrpou, ot.name as org_type_abr, cl.name as client_name, dt.mcaption as doc_type_name, dt.mvalue as doc_type_abr,ch.abr2 as cash_abr 
+        $r=$db->query("select sv.*, t.name as tpoint_name, sl.name as seller_name, sld.edrpou, ot.name as org_type_abr, 
+        cl.name as client_name, dt.mcaption as doc_type_name, dt.mvalue as doc_type_abr, ch.abr2 as cash_abr 
         from J_SALE_INVOICE sv
             left outer join CASH ch on ch.id=sv.cash_id
             left outer join T_POINT t on t.id=sv.tpoint_id
@@ -3920,7 +3934,7 @@ class dp {
             if ($data_start!='' && $data_end!='') $where="and o.data>='$data_start 00:00:00' and o.data<='$data_end 23:59:59'";
             else $where=" and o.data>='$data_cur 00:00:00' and o.data<='$data_cur 23:59:59'";
         }
-        $r=$db->query("select o.*, t.name as tpoint_name, c.name as client_name, cr.name as retail_name, cit.CITY_NAME as region_name, csh.abr, dt.mcaption as delivery_type_caption 
+        $r=$db->query("select o.*, t.name as tpoint_name, c.name as client_name, cr.name as retail_name, cit.CITY_NAME as region_name, csh.abr as cash_abr, dt.mcaption as delivery_type_caption 
         from orders_new o
            left outer join T_POINT t on (t.id=o.tpoint_id)
            left outer join A_CLIENTS c on (c.id=o.client_id)
@@ -3939,7 +3953,7 @@ class dp {
             $client_user_id=$db->result($r,$i-1,"client_user_id");
             $retail_name=$this->getClientUserName($client_id,$client_user_id);
             $tpoint_name=$db->result($r,$i-1,"tpoint_name");
-            $cash_id=$db->result($r,$i-1,"cash_id");$cash_abr=$db->result($r,$i-1,"csh.abr");
+            $cash_id=$db->result($r,$i-1,"cash_id");$cash_abr=$db->result($r,$i-1,"cash_abr");
             $name=$db->result($r,$i-1,"name");
             $email=$db->result($r,$i-1,"email");
             $phone=$db->result($r,$i-1,"phone");
@@ -3948,8 +3962,8 @@ class dp {
             $delivery=$db->result($r,$i-1,"delivery");
             $delivery_type=$db->result($r,$i-1,"delivery_type_caption");
             $price_summ=$db->result($r,$i-1,"price_summ"); $price_summ=$this->getKoursFromUAH($price_summ,$cash_id);
-            $color='';
-            if ($dp_id!='') $color='background:lightgreen;';
+            $color="";
+            if ($dp_id!="") $color='background:lightgreen;';
             if ($status==0) $color='background:pink;';
             if ($name!="") $name="($name)"; else $name="";
 
@@ -3997,7 +4011,7 @@ class dp {
     function showOrdersSiteCard($order_id){$db=DbSingleton::getDb();$slave=new slave;$gmanual=new gmanual;
         $order_id=$slave->qq($order_id);$list="";$data="";
         $form="";$form_htm=RD."/tpl/dp_orders_site_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select o.*, t.name as tpoint_name, c.name as client_name, cr.name as retail_name, cit.CITY_NAME as region_name, csh.abr, dt.mcaption as delivery_type_caption
+        $r=$db->query("select o.*, t.name as tpoint_name, c.name as client_name, cr.name as retail_name, cit.CITY_NAME as region_name, csh.abr as cash_abr, dt.mcaption as delivery_type_caption
         from orders_new o
             left outer join T_POINT t on (t.id=o.tpoint_id)
             left outer join A_CLIENTS c on (c.id=o.client_id)
@@ -4015,7 +4029,7 @@ class dp {
             $client_user_id=$db->result($r,0,"client_user_id");
             $retail_name=$this->getClientUserName($client_id,$client_user_id);
             $tpoint_id=$db->result($r,0,"tpoint_id");
-            $cash_abr=$db->result($r,0,"csh.abr");
+            $cash_abr=$db->result($r,0,"cash_abr");
             $name=$db->result($r,0,"name");
             $delivery_type=$db->result($r,0,"delivery_type_caption");
             $delivery_info=$db->result($r,0,"delivery_info");
@@ -4073,7 +4087,7 @@ class dp {
     function createDpFromOrder($order_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка!";$dp_id=0;
         $order_id=$slave->qq($order_id);
         if ($order_id>0){
-            $r=$db->query("select o.*, t.name as tpoint_name, c.name as client_name, cr.name as retail_name, cit.CITY_NAME as region_name, csh.abr, dt.mcaption as delivery_type_caption
+            $r=$db->query("select o.*, t.name as tpoint_name, c.name as client_name, cr.name as retail_name, cit.CITY_NAME as region_name, csh.abr as cash_abr, dt.mcaption as delivery_type_caption
             from orders_new o
                 left outer join T_POINT t on (t.id=o.tpoint_id)
                 left outer join A_CLIENTS c on (c.id=o.client_id)
@@ -4137,7 +4151,7 @@ class dp {
         if ($dp_id==0){$form="<h2 align='center'>Замволення відсутнє або ще не передано в роботу</h2>";}
         if ($dp_id>0){
             $form_htm=RD."/tpl/dp_orders_site_view.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-            $r=$db->query("select o.*, t.name as tpoint_name, c.name as client_name, cr.name as retail_name, cit.CITY_NAME as region_name, csh.abr, dt.mcaption as delivery_type_caption
+            $r=$db->query("select o.*, t.name as tpoint_name, c.name as client_name, cr.name as retail_name, cit.CITY_NAME as region_name, csh.abr as cash_abr, dt.mcaption as delivery_type_caption
             from orders_new o
                 left outer join T_POINT t on (t.id=o.tpoint_id)
                 left outer join A_CLIENTS c on (c.id=o.client_id)
@@ -4153,7 +4167,7 @@ class dp {
                 $data=$db->result($r,0,"data");$client_name=$db->result($r,0,"client_name");
                 $retail_name=$db->result($r,0,"retail_name");
                 $tpoint_id=$db->result($r,0,"tpoint_id");
-                $cash_abr=$db->result($r,0,"csh.abr");
+                $cash_abr=$db->result($r,0,"cash_abr");
                 $name=$db->result($r,0,"name");
                 $delivery_type=$db->result($r,0,"delivery_type_caption");
                 $delivery_info=$db->result($r,0,"delivery_info");
@@ -4302,6 +4316,23 @@ class dp {
             }
         }
         return array($answer,$err);
+    }
+
+    function getArticleZED($art_id){$db=DbSingleton::getTokoDb();$zed=0;
+        $r=$db->query("select t2s.COSTUMS_CODE from T2_ZED t2z 
+            left outer join T2_COSTUMS t2s on t2s.COSTUMS_ID=t2z.COSTUMS_ID
+        where t2z.ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
+        if ($n==1){$zed=$db->result($r,0,"COSTUMS_CODE");}
+        return $zed;
+    }
+
+    function getArticleNameLang($art_id){$db=DbSingleton::getTokoDb();$name="";
+        $r=$db->query("select NAME from T2_NAMES where ART_ID='$art_id' and LANG_ID='41' limit 0,1;");$n=$db->num_rows($r);
+        if ($n==1){ $name=$db->result($r,0,"NAME"); } else {
+            $r=$db->query("select NAME from T2_NAMES where ART_ID='$art_id' and LANG_ID='16' limit 0,1;");$n=$db->num_rows($r);
+            if ($n==1){ $name=$db->result($r,0,"NAME"); }
+        }
+        return $name;
     }
 
 }
