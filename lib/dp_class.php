@@ -3141,7 +3141,6 @@ class dp {
 
     function sendDpStorselToSaleInvoice($dp_id,$kol_storsel,$ar_storsel){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();session_start();$user_id=$_SESSION["media_user_id"];
         $slave=new slave;$answer=0;$err="Помилка індексу!";$sale_invoice_nom=0;$dp_id=$slave->qq($dp_id);$kol_storsel=$slave->qq($kol_storsel);
-        $price2_cash=$discount2_cash=$summ2_cash=$price_end2_cash=0;
         if ($dp_id>0){
             if ($kol_storsel>0){
                 list($client_saldo,$client_credit_limit,$sale_storsell_summ,$datapay_limit)=$this->checkClientCreditLimitBeforeSaleInvoice($dp_id,$kol_storsel,$ar_storsel);
@@ -3205,7 +3204,7 @@ class dp {
                         $db->query("update J_SALE_INVOICE set `prefix`='$seller_prefix', `doc_nom`='$seller_doc_nom', `tpoint_id`='$tpoint_id', `seller_id`='$seller_id', `client_id`='$client_id', `client_conto_id`='$client_conto_id', `doc_type_id`='$doc_type_id', `data_create`='$data_create', `data_create`='$data_create', `data_pay`='$data_pay', `cash_id`='$cash_id', `usd_to_uah`='$usd_to_uah', `eur_to_uah`='$eur_to_uah',  `vat_use`='$vat_use', `delivery_type_id`='$delivery_type_id', `carrier_id`='$carrier_id', `delivery_address`='$delivery_address', `user_id`='$user_id' where id='$invoice_id' limit 1;");
 
                         $r3=$db->query("select sis.* from J_SALE_INVOICE_STORSEL sis 
-                        where sis.invoice_id='$invoice_id' and sis.dp_id='$dp_id' and sis.status='1' order by sis.id asc;"); $n3=$db->num_rows($r3);$select_str="0";
+                        where sis.invoice_id='$invoice_id' and sis.dp_id='$dp_id' and sis.status='1' order by id asc;"); $n3=$db->num_rows($r3);$select_str="0";
                         for ($i3=1;$i3<=$n3;$i3++){
                             $select_str.=",".$db->result($r3,$i3-1,"select_id");
                         }
@@ -3223,7 +3222,7 @@ class dp {
                             left outer join J_SELECT js on js.id=jss.select_id 
                             left outer join J_DP jd on (jd.id=js.parrent_doc_id and js.parrent_doc_type_id=2)
                             left outer join J_DP_STR jds on jds.dp_id=jd.id 
-                        where jss.select_id in ($select_str) and jds.art_id=jss.art_id and jds.status_dps!=97 GROUP BY jds.art_id, jss.storage_id_from, jss.cell_id_from;");
+                        where jss.select_id in ($select_str) and jds.art_id=jss.art_id and jds.status_dps!=97 GROUP BY jds.art_id, storage_id_from2, cell_id_from2;");
                         $n2=$db->num_rows($r2);$summ_all=0;
 
                         $db->query("update J_SELECT set status_select='127' where id in ($select_str);");
@@ -4336,4 +4335,3 @@ class dp {
     }
 
 }
-

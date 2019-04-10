@@ -1155,5 +1155,4 @@ class sale_invoice {
         }
         return true;
     }
-
-}
+    }

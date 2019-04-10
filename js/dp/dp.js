@@ -1430,4 +1430,3 @@ function saveDpSupplToLocalChangeForm(dp_id,dp_str_id,art_id){
 		}
 	}
 }
-

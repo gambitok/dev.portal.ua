@@ -4091,5 +4091,4 @@ class jmoving {
         $db->query("DROP TEMPORARY TABLE IF EXISTS `NBRAND_RESULT_$tkey`;");
         return $form;
     }
-
 }

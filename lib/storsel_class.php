@@ -1679,4 +1679,3 @@ function myCmp($a, $b) {
    if ($a["cell_name_clear"] == $b["cell_name_clear"]) return 0;
    return $a["cell_name_clear"] > $b["cell_name_clear"] ? 1 : -1;
 }
-
