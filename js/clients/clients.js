@@ -1233,6 +1233,7 @@ function editSaleInvoceProlog() {
 					if (result["answer"]==1){ 
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						getSaleInvoceProlog();
+						console.log(result["error"]);
 					}
 					else{ swal("Помилка!", result["error"], "error");}			
 				}}, true);

@@ -3130,7 +3130,7 @@ class dp {
                 <td align='left'>$seller_name</td>
                 <td align='left'>$client_name</td>
                 <td>$doc_type_name</td>
-                <td align='center' style='min-width:80px;'>$summ$cash_abr</td>
+                <td align='center' style='min-width:80px;'>$summ $cash_abr</td>
                 <td align='right'>$data_pay</td>
             </tr>";
         }
@@ -3140,7 +3140,7 @@ class dp {
     }
 
     function sendDpStorselToSaleInvoice($dp_id,$kol_storsel,$ar_storsel){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();session_start();$user_id=$_SESSION["media_user_id"];
-        $slave=new slave;$answer=0;$err="Помилка індексу!";$sale_invoice_nom=0;$dp_id=$slave->qq($dp_id);$kol_storsel=$slave->qq($kol_storsel);
+        $slave=new slave;$answer=0;$err="Помилка індексу!";$sale_invoice_nom=0;$dp_id=$slave->qq($dp_id);$kol_storsel=$slave->qq($kol_storsel);//
         if ($dp_id>0){
             if ($kol_storsel>0){
                 list($client_saldo,$client_credit_limit,$sale_storsell_summ,$datapay_limit)=$this->checkClientCreditLimitBeforeSaleInvoice($dp_id,$kol_storsel,$ar_storsel);

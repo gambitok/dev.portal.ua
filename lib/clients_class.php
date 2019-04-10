@@ -2053,7 +2053,7 @@ class clients {
         return $form;
     }
 
-    function getSaleInvocePrologHistory($client_id) { $db=DbSingleton::getDb();$list="";$users=new users;
+    function getSaleInvocePrologHistory($client_id) { $db=DbSingleton::getDb();$list="";$users=new users;//
         $r=$db->query("select jp.*, j.prefix, j.doc_nom from J_SALE_INVOICE_PROLONGATION jp
             left outer join J_SALE_INVOICE j on (j.id=jp.invoice_id)
         where jp.client_id='$client_id';"); $n=$db->num_rows($r);
@@ -2113,8 +2113,14 @@ class clients {
         return $form;
     }
 
-    function editSaleInvoceProlog($client_id,$date_start,$date_new) { $db=DbSingleton::getDb();$answer=0;$err="Помилка збереження даних!";session_start();$user_id=$_SESSION["media_user_id"];$users=new users;
-        $users_credit=$users->getUsersAccessCredit($user_id);
+    function getUsersAccessCredit($users_id) {$db=DbSingleton::getDb();
+        $r=$db->query("select * from media_users where id='$users_id' limit 1;");
+        $access_credit=$db->result($r,0,"access_credit");
+        return $access_credit;
+    }
+
+    function editSaleInvoceProlog($client_id,$date_start,$date_new) { $db=DbSingleton::getDb();$answer=0;$err="Помилка збереження даних!";session_start();$user_id=$_SESSION["media_user_id"];
+        $users_credit=$this->getUsersAccessCredit($user_id);
         if ($client_id>0) {
             $r=$db->query("select * from J_SALE_INVOICE where client_id='$client_id' and data_pay<='$date_start' and summ_debit!=0;"); $n=$db->num_rows($r);
             for ($i=1;$i<=$n;$i++){
