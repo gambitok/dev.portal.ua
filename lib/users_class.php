@@ -8,12 +8,12 @@ class users {
         return $users_id;
     }
 
-    function show_users_list(){$db=DbSingleton::getDb();$list="";
+    function show_users_list(){$db=DbSingleton::getDb();$where="";$list="";
         $r=$db->query("select mu.*, tp.name as tpoint_name, mr.caption as role_name, uss.mcaption as status_name from media_users mu 
             left outer join T_POINT tp on tp.id=mu.tpoint_id 
             left outer join media_role mr on mr.id=mu.role_id
             left outer join manual uss on uss.id=mu.status and uss.`key`='user_status'
-        where mu.ison=1;");$n=$db->num_rows($r);
+        where mu.ison=1 $where;");$n=$db->num_rows($r);
 
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
@@ -133,7 +133,7 @@ class users {
         if ($users_id>0){
             $r=$db->query("select * from media_users where ison='1' and phone='$login' and id!='$users_id' limit 0,1;");$n=$db->num_rows($r);
             if ($n==0){
-                $db->query("update media_users set `name`='$name', status='$status', `post`='$post', `tpoint_id`='$tpoint_id', `role_id`='$role_id', `email`='$email', `phone2`='$phone2', `phone`='$login', `pass`='$pass' where `id`='$users_id';");
+                $db->query("update media_users set `name`='$name',status='$status', `post`='$post', `tpoint_id`='$tpoint_id', `role_id`='$role_id', `email`='$email', `phone2`='$phone2', `phone`='$login', `pass`='$pass' where `id`='$users_id';");
                 $answer=1;$err="";
             }if ($n==1){
                 $answer=0;$err="Користувач із вказаним логіном вже існує у системі";
@@ -143,7 +143,7 @@ class users {
     }
 
     function showTpointSelectList($sel_id){$db=DbSingleton::getDb();$list="";;
-        $r=$db->query("select * from T_POINT where status=1 order by name, id asc;");$n=$db->num_rows($r);
+        $r=$db->query("select * from T_POINT where status=1 order by name,id asc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $name=$db->result($r,$i-1,"name");
@@ -154,7 +154,7 @@ class users {
     }
 
     function showRoleSelectList($sel_id){$db=DbSingleton::getDb();$list="";;
-        $r=$db->query("select * from media_role where status=1 order by caption, id asc;");$n=$db->num_rows($r);
+        $r=$db->query("select * from media_role where status=1 order by caption,id asc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $name=$db->result($r,$i-1,"caption");
@@ -260,7 +260,6 @@ class users {
         $r=$db->query("select mf.*, rs.lvl from module_files mf 
             left outer join media_users_role_structure rs on (rs.file_id=mf.id and rs.user_id='$users_id')
         where mf.system=1 and mf.id='$mf_id' limit 0,1;");$n=$db->num_rows($r);
-
         if ($n==1){
             $mf_caption=$db->result($r,0,"caption");
             $lvl=$db->result($r,0,"lvl");
@@ -309,7 +308,7 @@ class users {
     }
 
     function showUserStatusSelectList($sel_id){$db=DbSingleton::getDb();$list="";
-        $r=$db->query("select * from manual where `key`='user_status' and ison=1 order by mcaption,id asc;");$n=$db->num_rows($r);
+        $r=$db->query("select * from manual where `key`='user_status' and  ison=1 order by mcaption,id asc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $name=$db->result($r,$i-1,"mcaption");
