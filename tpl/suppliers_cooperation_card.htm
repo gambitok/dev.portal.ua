@@ -23,22 +23,22 @@
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">E-mail</label>
                                 <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" id="suppl_email" value="{suppl_email}" placeholder="Контактний e-mail"></div>
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">Статус</label>
-							    <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="suppl_status" placeholder="Статус" style="width:100%;">{status_list}</select></div>
+							    <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="suppl_status" title="Статус" style="width:100%;">{status_list}</select></div>
                             </div>
 							<div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">Країна</label>
-                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="country_id" placeholder="Країна" onChange="loadStateSelectList();" style="width:100%;"><option value="0"></option>{country_list}</select></div>
+                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="country_id" title="Країна" onChange="loadStateSelectList();" style="width:100%;"><option value="0"></option>{country_list}</select></div>
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">Область</label>
-                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="state_id" placeholder="Область" onChange="loadRegionSelectList();" style="width:100%;">{state_list}</select></div>
+                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="state_id" title="Область" onChange="loadRegionSelectList();" style="width:100%;">{state_list}</select></div>
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">Район</label>
-                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="region_id" placeholder="Район" onChange="loadCitySelectList();" style="width:100%;">{region_list}</select></div>
+                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="region_id" title="Район" onChange="loadCitySelectList();" style="width:100%;">{region_list}</select></div>
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">Населений пункт</label>
-                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="city_id" placeholder="Місто, село, смт" style="width:100%;">{city_list}</select></div>
+                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="city_id" title="Місто, село, смт" style="width:100%;">{city_list}</select></div>
 							</div>
 							<div class="form-group">
                             	<label class="col-lg-1 col-md-2 col-sm-4 control-label">Коментар</label>
-                                <div class="col-lg-2 col-md-4 col-sm-8"><textarea class="form-control" type="text" id="suppl_comment">{suppl_comment}</textarea></div>
+                                <div class="col-lg-2 col-md-4 col-sm-8"><textarea title="Коментар" class="form-control" type="text" id="suppl_comment">{suppl_comment}</textarea></div>
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">Файл</label>
                                 <div class="col-lg-2 col-md-4 col-sm-8"><a class="btn btn-info" href="https://toko.ua/uploads/suppliers/{suppl_file}" target="_blank"><i class="fa fa-save"> </i> Скачати</a></div>
                             </div>
@@ -46,7 +46,7 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-12 text-right">
-                                    <button class="btn btn-primary" type="button" onClick="saveSupplCoop('{suppl_id}');">Зберігти зміни</button>
+                                    <button class="btn btn-primary" type="button" onClick="saveSupplCoop('{suppl_id}');">Зберегти зміни</button>
                                     <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
                                 </div>
                             </div>

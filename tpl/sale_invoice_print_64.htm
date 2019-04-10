@@ -1,12 +1,17 @@
-<table width="100%" border="0"><tr>
-	<td><small>Дата: {curtime}</small></td>
-    <td></td>
-</tr></table>
-<table width="100%" border="0"><tr>
-	<td align="left"><strong>Накладна №{prefix}-{doc_nom} від {data}</strong></td>
-	<td width="50%" align="right">Клієнт: {client_id}/{client_name}<br>
-      Адреса доставки:_____________________________________ </td>
-</tr></table>
+<table width="100%" border="0">
+    <tr>
+	    <td><small>Дата: {curtime}</small></td>
+        <td></td>
+    </tr>
+</table>
+
+<table width="100%" border="0">
+    <tr>
+        <td align="left"><strong>Накладна №{prefix}-{doc_nom} від {data}</strong></td>
+        <td width="50%" align="right">Клієнт: {client_id}/{client_name}<br>
+        Адреса доставки:_____________________________________ </td>
+    </tr>
+</table>
 
 <table border="1" class="table table-condensed table-striped table-hover table-bordered" width="100%" style='font-size:12px;'>
     <thead>
@@ -21,12 +26,13 @@
             <th width="150" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Ціна продажу, {cash_abr}</th>
             <th width="140" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Сумма, {cash_abr}</th>
         </tr>
-  </thead>
-  <tbody id="sklad_storage_view_range">
-    {sale_invoice_str_list}
-    <tr align="center">
-        <td colspan=8 align="right">Всього, {cash_abr}:</td>
-        <td style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">{invoice_summ}</td>
-    </tr>
-  </tbody>
-</table><br>
+    </thead>
+
+    <tbody id="sklad_storage_view_range">
+        {sale_invoice_str_list}
+        <tr align="center">
+            <td colspan=8 align="right">Всього, {cash_abr}:</td>
+            <td style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">{invoice_summ}</td>
+        </tr>
+    </tbody>
+</table>

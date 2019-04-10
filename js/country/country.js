@@ -2,8 +2,6 @@ var errs=[];
 errs[0]="Помилка індексу";
 errs[1]="Занадто короткий запит для пошуку";
 
-$(document).ready(function() {});
-//download and show countrylist
 function loadCountryList(){
 	JsHttpRequest.query($rcapi,{ 'w': 'showCountryList'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -11,16 +9,16 @@ function loadCountryList(){
 		$("#country_range").html(result["content"]);
 	}}, true);
 }
-//create country-card
+
 function newCountryCard(){
 	JsHttpRequest.query($rcapi,{ 'w': 'newCountryCard'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		var country_id=result["country_id"];
-		showCountryCard(country_id);
+			var country_id=result["country_id"];
+			showCountryCard(country_id);
 		}
 	}, true);
 }
-//display country-card
+
 function showCountryCard(country_id){
 	if (country_id<=0 || country_id==""){toastr["error"](errs[0]);}
 	if (country_id>0){
@@ -33,7 +31,7 @@ function showCountryCard(country_id){
 		}}, true);
 	}
 }
-//save all
+
 function saveCountryGeneralInfo(){
 	swal({
 		title: "Зберегти зміни у розділі \"Загальна інформація\"?",
@@ -48,7 +46,6 @@ function saveCountryGeneralInfo(){
 			var country_alfa3=$("#country_alfa3").val();
 			var country_duty=$("#country_duty").val();
 			var country_risk=$("#country_risk").val();
-			
 			if (country_id.length>0){
 				JsHttpRequest.query($rcapi,{'w':'saveCountryGeneralInfo','country_id':country_id, 'country_name':country_name, 'country_alfa2':country_alfa2, 'country_alfa3':country_alfa3, 'country_duty':country_duty, 'country_risk':country_risk},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -65,7 +62,7 @@ function saveCountryGeneralInfo(){
 		}
 	});	
 }
-//delete
+
 function DeleteCountry(country_id){
 	swal({
 		title: "Видалити країну?",
@@ -74,8 +71,6 @@ function DeleteCountry(country_id){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			//var country_id=$("#country_id").val();
-			
 			if (country_id.length>0){
 				JsHttpRequest.query($rcapi,{'w':'DeleteCountry','country_id':country_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  

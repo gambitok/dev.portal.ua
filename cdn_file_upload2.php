@@ -14,15 +14,14 @@ if(!empty($_FILES)){
 	$fileName = "myparts_brands_index_".time().".".pathinfo($fileName, PATHINFO_EXTENSION);
 	$targetFile = $targetDir.$fileName; 
 		
-		if(move_uploaded_file($_FILES['file']['tmp_name'],$targetFile)){session_start(); 
-			$r=$db->query("select FILE_NAME from T2_BRANDS_CSV limit 0,1;");$n=$db->num_rows($r);
-			if ($n==1){
-				$e_file_name=$db->result($r,0,"FILE_NAME");
-				if (file_exists(RD."/cdn/brands_files/index/$e_file_name")){unlink(RD."/cdn/brands_files/index/$e_file_name");}
-				$db->query("delete from T2_BRANDS_CSV where ID = 0;");
-			}
-			$db->query("insert into T2_BRANDS_CSV (`USER_ID`,`FILE_NAME`,`NAME`) values ('$user_id','$fileName','$real_file_name');");
-		}
-	
+    if(move_uploaded_file($_FILES['file']['tmp_name'],$targetFile)){session_start();
+        $r=$db->query("select FILE_NAME from T2_BRANDS_CSV limit 0,1;");$n=$db->num_rows($r);
+        if ($n==1){
+            $e_file_name=$db->result($r,0,"FILE_NAME");
+            if (file_exists(RD."/cdn/brands_files/index/$e_file_name")){unlink(RD."/cdn/brands_files/index/$e_file_name");}
+            $db->query("delete from T2_BRANDS_CSV where ID = 0;");
+        }
+        $db->query("insert into T2_BRANDS_CSV (`USER_ID`,`FILE_NAME`,`NAME`) values ('$user_id','$fileName','$real_file_name');");
+    }
+
 }
-?>

@@ -5,15 +5,14 @@ errs[1]="Занадто короткий запит для пошуку";
 function filterIncomesList(){
 	var date_start=$("#date_start").val();
 	var date_end=$("#date_end").val();
-		//$("#catalogue_range").empty();
-		JsHttpRequest.query($rcapi,{ 'w': 'filterIncomeList', 'date_start':date_start, 'date_end':date_end}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			
-			$('#datatable').DataTable().destroy();
-			$("#income_range").html(result["content"]);
-			$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
-			//toastr["info"]("Виконано!");
-		}}, true);
+	//$("#catalogue_range").empty();
+	JsHttpRequest.query($rcapi,{ 'w': 'filterIncomeList', 'date_start':date_start, 'date_end':date_end},
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+		$('#datatable').DataTable().destroy();
+		$("#income_range").html(result["content"]);
+		$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+		//toastr["info"]("Виконано!");
+	}}, true);
 } 
 
 function getKoursNbu(place,data_place,val_place){
@@ -23,7 +22,7 @@ function getKoursNbu(place,data_place,val_place){
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#"+place).val(result["content"]);
 	}}, true);
-	return;
+	return true;
 }
 
 function preNewIncomeCard(){
@@ -43,12 +42,13 @@ function newIncomeCard(type_id){
 		showIncomeCard(income_id);
 	}}, true);
 }
+
 var barcode_settings = {barWidth: 1,barHeight: 50,moduleSize: 5,showHRI: true,addQuietZone: true,marginHRI: 5,bgColor: "#FFFFFF",color: "#000000",fontSize: 14,output: "css",posX: 0,posY: 0};
 
 function loadIncomeKours(){
 	var data=$("#income_data").val();
-	var cash_id=$("#cash_id option:selected").val();
-	JsHttpRequest.query($rcapi,{ 'w': 'loadIncomeKours','cash_id':cash_id,'data':data}, 
+	//var cash_id=$("#cash_id option:selected").val();
+	JsHttpRequest.query($rcapi,{ 'w': 'loadIncomeKours','data':data},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		if ($("#usd_to_uah")){$("#usd_to_uah").val(result["usd_to_uah"]);}
 		if ($("#eur_to_uah")){$("#eur_to_uah").val(result["eur_to_uah"]);}
@@ -73,7 +73,6 @@ function showIncomeCard(income_id){
 //			$('#income_data').datepicker({format: "yyyy-mm-dd",autoclose:true})
 			$('#invoice_data').datepicker({format: "yyyy-mm-dd",autoclose:true})
 			$('.i-checks').iCheck({checkboxClass: 'icheckbox_square-green',radioClass: 'iradio_square-green',});
-			
 			var elem = document.querySelector('#vat_use');
 			if (elem){
 	            var vat_use = new Switchery(elem, { color: '#1AB394' });
@@ -87,7 +86,6 @@ function addNewRow(){
 	var row=$("#incomeStrNewRow").html();
 	var kol_row=parseInt($("#kol_row").val());
 	kol_row+=1;$("#kol_row").val(kol_row);
-	
 	row=row.replace('nom_i', ''+kol_row);
 	row=row.replace('idStr_', 'idStr_'+kol_row);
 	row=row.replace('spendingStrId_', 'spendingStrId_'+kol_row);
@@ -95,14 +93,13 @@ function addNewRow(){
 	row=row.replace('summStr_', 'summStr_'+kol_row);
 	row=row.replace("id='bids1StrNewRow' class='hidden'", '');
 	var tbody=$("#income_str tbody").append("<tr>"+row+"</tr>");
-	return;
+	return true;
 }
 
 function addNewRowLocal(){
 	var row=$("#incomeStrNewRow").html();
 	var kol_row=parseInt($("#kol_row").val());
 	kol_row+=1;$("#kol_row").val(kol_row);
-	
 	row=row.replace('nom_i', ''+kol_row);
 	row=row.replace('idStr_', 'idStr_'+kol_row);
 	row=row.replace('spendingStrId_', 'spendingStrId_'+kol_row);
@@ -110,13 +107,11 @@ function addNewRowLocal(){
 	row=row.replace('summStr_', 'summStr_'+kol_row);
 	row=row.replace("id='bids1StrNewRow' class='hidden'", '');
 	var tbody=$("#income_str tbody").append("<tr>"+row+"</tr>");
-	return;
+	return true;
 }
 
 function saveIncomeCard(){
-	
 	var caption=$("#IncomeCardLabel").html(); var stop=false;
-	
 	swal({
 		title: "Зберегти накладну \""+caption+"\"?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -160,8 +155,7 @@ function saveIncomeCard(){
 			if (income_id.length>0){
 				//console.log('w: saveIncomeCard; income_id='+income_id+'; type_id='+type_id+'; data='+data+'; client_seller='+client_seller+'; invoice_income='+invoice_income+'; cash_id='+cash_id+'; client_id='+client_id+'; invoice_data='+invoice_data+'; cours_to_uah='+cours_to_uah+'; cours_to_uah_nbu='+cours_to_uah_nbu+'; invoice_summ='+invoice_summ+'; comment='+comment+'; usd_to_uah='+usd_to_uah+'; eur_to_uah='+eur_to_uah+'; costums_pd_uah='+costums_pd_uah+'; costums_pp_uah='+costums_pp_uah+'; costums_summ_uah='+costums_summ_uah+'; kol_row='+ikr+'; ');
 				//console.log('idStr='+idStr+'; \nartIdStr='+artIdStr+'; \narticle_nr_displStr='+article_nr_displStr+'; \nbrandIdStr='+brandIdStr+'; \ncountryIdStr='+countryIdStr+'; \ncostumsIdStr='+costumsIdStr+'; \namountStr='+amountStr+'; \nprice_buh_cashinStr='+price_buh_cashinStr+'; \nweightNettoStr='+weightNettoStr+'; \nrateStr='+rateStr+'; \ntypeDeclarationIdStr='+typeDeclarationIdStr+'; \nprice_man_cashinStr='+price_man_cashinStr+'; \nprice_man_usdStr='+price_man_usdStr+'; \nprice_buh_uahStr='+price_buh_uahStr+'; \nprice_man_uahStr='+price_man_uahStr);
-				
-				JsHttpRequest.query($rcapi,{ 'w':'saveIncomeCard','income_id':income_id,'type_id':type_id,'document_prefix':document_prefix,'data':data,'client_seller':client_seller,'invoice_income':invoice_income,'cash_id':cash_id,'client_id':client_id,'invoice_data':invoice_data,'cours_to_uah':cours_to_uah,'cours_to_uah_nbu':cours_to_uah_nbu,'invoice_summ':invoice_summ,'comment':comment,'usd_to_uah':usd_to_uah,'eur_to_uah':eur_to_uah,'costums_pd_uah':costums_pd_uah,'costums_pp_uah':costums_pp_uah,'costums_summ_uah':costums_summ_uah},
+				JsHttpRequest.query($rcapi,{ 'w':'saveIncomeCard','income_id':income_id,'data':data,'client_seller':client_seller,'invoice_income':invoice_income,'cash_id':cash_id,'client_id':client_id,'invoice_data':invoice_data,'cours_to_uah':cours_to_uah,'cours_to_uah_nbu':cours_to_uah_nbu,'invoice_summ':invoice_summ,'usd_to_uah':usd_to_uah,'eur_to_uah':eur_to_uah,'costums_pd_uah':costums_pd_uah,'costums_pp_uah':costums_pp_uah,'costums_summ_uah':costums_summ_uah},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						for(var p=1;p<=ikr_p;p++){
@@ -181,7 +175,7 @@ function saveIncomeCard(){
 							console.log(art_empty_count+" - "+tto);
 							
 							if (art_empty_count==tto) {swal("Помилка!", "Не заповнена таблиця!", "error"); stop=true; break; } else {
-								JsHttpRequest.query($rcapi,{ 'w':'saveIncomeCardData','income_id':income_id,'type_id':type_id,'frm':frm,'tto':tto,'idStr':idStr,'artIdStr':artIdStr,'article_nr_displStr':article_nr_displStr,'brandIdStr':brandIdStr,'countryIdStr':countryIdStr,'costumsIdStr':costumsIdStr,'amountStr':amountStr,'price_buh_cashinStr':price_buh_cashinStr,'weightNettoStr':weightNettoStr,'rateStr':rateStr,'typeDeclarationIdStr':typeDeclarationIdStr,'price_man_cashinStr':price_man_cashinStr,'price_man_usdStr':price_man_usdStr,'price_buh_uahStr':price_buh_uahStr,'price_man_uahStr':price_man_uahStr},
+								JsHttpRequest.query($rcapi,{ 'w':'saveIncomeCardData','income_id':income_id,'frm':frm,'tto':tto,'idStr':idStr,'artIdStr':artIdStr,'article_nr_displStr':article_nr_displStr,'brandIdStr':brandIdStr,'countryIdStr':countryIdStr,'costumsIdStr':costumsIdStr,'amountStr':amountStr,'price_buh_cashinStr':price_buh_cashinStr,'weightNettoStr':weightNettoStr,'rateStr':rateStr,'typeDeclarationIdStr':typeDeclarationIdStr,'price_man_cashinStr':price_man_cashinStr,'price_man_usdStr':price_man_usdStr,'price_buh_uahStr':price_buh_uahStr,'price_man_uahStr':price_man_uahStr},
 								function (result1, errors1){ if (errors1) {alert(errors1);} if (result1){  
 									if (result1["answer"]==1){showIncomeStrList(); }
 									else{ swal("Помилка!", result1["error"], "error");}
@@ -191,7 +185,7 @@ function saveIncomeCard(){
 						}
 						if (!stop) {
 							swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
-	//						$("#IncomeCard").modal("hide");
+							//$("#IncomeCard").modal("hide");
 							filterIncomesList();
 						}
 						else{ swal("Помилка!",  "Не заповнена таблиця!", "error");}
@@ -327,7 +321,6 @@ function checkIncomeUnStrAll(income_id){
 function checkIncomUnStr(income_id,pos,unknown_id,inf){
 	if (income_id<=0 || income_id==""){toastr["error"](errs[0]);}
 	if (income_id>0 && unknown_id>0){
-		
 		var art_id=$("#artIdUnStr_"+pos).val();
 		var brand_id=$("#brandIdUnStr_"+pos).val();
 		var country_id=$("#countryIdStr_"+pos).val();
@@ -335,8 +328,7 @@ function checkIncomUnStr(income_id,pos,unknown_id,inf){
 		var amount=$("#amountUnStr_"+pos).val();
 		var price=$("#price_buh_cashinUnStr_"+pos).val();
 		var weight=$("#weightNettoUnStr_"+pos).val();
-		var article_nr_displ=$("#article_nr_displUnStr_"+pos).val();		
-		
+		var article_nr_displ=$("#article_nr_displUnStr_"+pos).val();
 		if (art_id>0 && amount>0 && price>0){
 			JsHttpRequest.query($rcapi,{ 'w': 'checkIncomUnStr', 'income_id':income_id,'unknown_id':unknown_id,'art_id':art_id,'article_nr_displ':article_nr_displ,'brand_id':brand_id,'country_id':country_id,'costums_id':costums_id,'amount':amount,'price':price,'weight':weight}, 
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -403,7 +395,7 @@ function dropIncomeStr(pos,income_id,art_id){
 							$("#strRow_"+pos).html("");
 							$("#strRow_"+pos).attr('visibility','hidden');
 							showIncomeStrList();
-//							updateInformerUnknownArticles(income_id);
+							//updateInformerUnknownArticles(income_id);
 						}
 						else{ swal("Помилка!", result["error"], "error");}
 					}}, true);
@@ -492,7 +484,6 @@ function saveIncomeStorage(income_id){
 		if (isConfirm) {
 			var storage_id=$("#storage_id option:selected").val();
 			var storage_cells_id=$("#storage_cells_id option:selected").val();
-
 			if (income_id.length>0 && storage_id.length>0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveIncomeStorage','income_id':income_id,'storage_id':storage_id,'storage_cells_id':storage_cells_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -558,7 +549,6 @@ function saveIncomeSpendStrForm(income_id,spend_item_id,str_id){
 			var summ_cash=$("#str_summ_cash").val();
 			var kours=$("#str_kours").val();
 			var summ_uah=$("#str_summ_uah").val();
-
 			if (income_id.length>0 && spend_item_id.length>0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveIncomeSpendStrForm','income_id':income_id,'spend_item_id':spend_item_id,'str_id':str_id,'caption':caption,'data':data,'cash_id':cash_id,'summ_cash':summ_cash,'kours':kours,'summ_uah':summ_uah},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -598,7 +588,7 @@ function dropIncomeSpendItemRow(income_id,spend_item_id,str_id){
 	function (isConfirm) {
 		if (isConfirm) {
 			if (income_id.length>0){
-				JsHttpRequest.query($rcapi,{ 'w':'dropIncomeSpendItemRow','income_id':income_id,'spend_item_id':spend_item_id,'str_id':str_id},
+				JsHttpRequest.query($rcapi,{ 'w':'dropIncomeSpendItemRow','income_id':income_id,'str_id':str_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						swal("Видалено!", "", "success");
@@ -612,7 +602,6 @@ function dropIncomeSpendItemRow(income_id,spend_item_id,str_id){
 		}
 	});
 }
-
 
 function showIncomeCountrySearchForm(pos, art_id, country_id){
 	$("#FormModalWindow").modal("show");
@@ -628,9 +617,7 @@ function showIncomeCountrySearchForm(pos, art_id, country_id){
 
 function selectCountryDocument(id,name){
 	var pos=$("#doc_pos").val();var un="";
-	
 	if($('#cat_tab7').attr('class')=="tab-pane active"){un="Un";}
-	
 	$("#countryId"+un+"Str_"+pos).val(id);
 	$("#countryAbr"+un+"Str_"+pos).val(name);
 	$("#FormModalWindow").modal('hide');
@@ -651,14 +638,11 @@ function showIncomeCostumsSearchForm(pos, art_id, costums_id){
 
 function selectCostumsDocument(id,name){
 	var pos=$("#doc_pos").val();var un="";
-	
 	if($('#cat_tab7').attr('class')=="tab-pane active"){un="Un";}
-	
 	$("#costumsId"+un+"Str_"+pos).val(id);
 	$("#costums"+un+"Str_"+pos).val(name);
 	$("#FormModalWindow").modal('hide');
 	getRateTypeDeclarationdocumentPos(pos);
-	
 	var art_id=$("#artIdStr_"+pos).val();
 	var costums_id=$("#costumsIdStr_"+pos).val();
 	var article=$("#article_nr_displStr_"+pos).val();
@@ -705,7 +689,6 @@ function getRateTypeDeclarationdocumentPos(pos){
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		var un="";
 		if($('#cat_tab7').attr('class')=="tab-pane active"){un="Un";}
-	
 		$("#rate"+un+"Str_"+pos).val(result["rate"]);
 		$("#typeDeclaration"+un+"Str_"+pos).val(result["type_declaration"]);
 		$("#typeDeclarationId"+un+"Str_"+pos).val(result["type_declaration_id"]);
@@ -728,16 +711,16 @@ function setIncomeVat(){
 }
 
 function round(value, exp) {
-  if (typeof exp === 'undefined' || +exp === 0)
-    return Math.round(value);
-  value = +value;
-  exp = +exp;
-  if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0))
-    return NaN;
-  value = value.toString().split('e');
-  value = Math.round(+(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp)));
-  value = value.toString().split('e');
-  return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
+	if (typeof exp === 'undefined' || +exp === 0)
+	return Math.round(value);
+	value = +value;
+	exp = +exp;
+	if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0))
+	return NaN;
+	value = value.toString().split('e');
+	value = Math.round(+(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp)));
+	value = value.toString().split('e');
+	return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
 }
 
 function getPWeight(ikr,weight_netto){ var w=ws=0; 
@@ -864,20 +847,17 @@ function recalculateIncomeStr(){
 //			if (i<4){alert(alrt);}
 		}
 	}
-	
 	$("#costums_pd_uah").val(costums_pd_uah.toFixed(2));
 	$("#costums_pp_uah").val(costums_pp_uah.toFixed(2));
-	
+
 	costums_summ_uah=parseFloat(costums_pd_uah)+parseFloat(costums_pp_uah);
 	$("#costums_summ_uah").val(costums_summ_uah.toFixed(2));
-	
 }
 
 function showIncomeStrList() {
 	var income_id=$("#income_id").val();
 	var type_id=$("#income_type_id").val();
 	var oper_status=$("#income_oper_status").val();
-	
 	JsHttpRequest.query($rcapi,{ 'w':'showIncomeStrList','income_id':income_id, 'type_id':type_id, 'oper_status':oper_status},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#income_shild_range").html(result.content);
@@ -995,7 +975,6 @@ function saveIncomeDetails(){
 	var account=$("#account").val();
 	var nr_details=$("#nr_details").val();
 	var not_resident=0; if (document.getElementById("not_resident").checked){not_resident=1;}else{nr_details="";}
-
 	if (income_id.length>0){
 		JsHttpRequest.query($rcapi,{ 'w':'saveIncomeDetails','income_id':income_id,'address_jur':address_jur,'address_fakt':address_fakt,'edrpou':edrpou,'svidotctvo':svidotctvo,'vytjag':vytjag,'vat':vat,'mfo':mfo, 'bank':bank,'account':account,'not_resident':not_resident,'nr_details':nr_details},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -1120,7 +1099,6 @@ function saveIncomeGeneralInfo(){
 	var c_category_kol=$("#c_category_kol").val();
 	var c_category=[]; var cc="";
 	for (var i=1;i<=c_category_kol;i++){var cc=0;if(document.getElementById("c_category_"+i).checked) { cc=$("#c_category_"+i).val(); }c_category[i]=cc;}
-
 	if (income_id.length>0){
 		JsHttpRequest.query($rcapi,{ 'w':'saveIncomeGeneralInfo','income_id':income_id,'org_type':org_type,'name':income_name,'full_name':income_full_name,'phone':phone,'email':email, 'parrent_id':parrent_id, 'country_id':country_id, 'state_id':state_id, 'region_id':region_id, 'city_id':city_id, 'c_category_kol':c_category_kol, 'c_category':c_category},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -1159,15 +1137,15 @@ function saveIncomeConditions(income_id){
 	var credit_limit=$("#credit_limit").val();
 	var credit_cash_id=$("#credit_cash_id option:selected").val();
 	var credit_return=$("#credit_return").val();
-
 	if (income_id.length>0){
 		JsHttpRequest.query($rcapi,{ 'w':'saveIncomeConditions','income_id':income_id,'cash_id':cash_id,'country_cash_id':country_cash_id,'price_lvl':price_lvl,'payment_delay':payment_delay,'credit_limit':credit_limit,'credit_cash_id':credit_cash_id,'credit_return':credit_return},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			if (result["answer"]==1){ 
 				swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 			}
-			else{ swal("Помилка!", result["error"], "error");}
-			
+			else{
+				swal("Помилка!", result["error"], "error");
+			}
 		}}, true);
 	}
 }
@@ -1281,7 +1259,7 @@ function unlinkIncomeClientSeller(income_id){
 }
 
 function showIncomeArticleSearchForm(i,art_id,brand_id,article_nr_displ){
-	JsHttpRequest.query($rcapi,{ 'w': 'showIncomeArticleSearchForm', 'art_id':art_id,'brand_id':brand_id,'article_nr_displ':article_nr_displ}, 
+	JsHttpRequest.query($rcapi,{ 'w': 'showIncomeArticleSearchForm', 'brand_id':brand_id,'article_nr_displ':article_nr_displ},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow").modal('show');
 		document.getElementById("FormModalBody").innerHTML=result["content"];
@@ -1293,9 +1271,7 @@ function showIncomeArticleSearchForm(i,art_id,brand_id,article_nr_displ){
 
 function setArticleToDoc(art_id,article_nr_displ,brand_id,brand_name,costums_id,costums_code,country_id,country_name){
 	var pos=$("#row_pos").val(); var un="";
-	
 	if($('#cat_tab7').attr('class')=="tab-pane active"){un="Un";}
-	
 	$('#artId'+un+'Str_'+pos).val(art_id);
 	$('#article_nr_displ'+un+'Str_'+pos).val(article_nr_displ);
 	$('#brandId'+un+'Str_'+pos).val(brand_id);
@@ -1334,15 +1310,15 @@ function showIncomeUserForm(income_id, user_id){
 }
 
 function randString(id){
-  var dataSet = $(id).attr('data-character-set').split(',');  
-  var possible = '';  var text = '';
-  if($.inArray('a-z', dataSet) >= 0){possible += 'abcdefghijklmnopqrstuvwxyz';}
-  if($.inArray('A-Z', dataSet) >= 0){possible += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';}
-  if($.inArray('0-9', dataSet) >= 0){possible += '0123456789';}
-  if($.inArray('#', dataSet) >= 0){possible += '![]{}()%&*$#^<>~@|';}
-  for(var i=0; i < $(id).attr('data-size'); i++) {text += possible.charAt(Math.floor(Math.random() * possible.length));}
-  $(id).val(""+text);
-  return text;
+	var dataSet = $(id).attr('data-character-set').split(',');
+	var possible = '';  var text = '';
+	if($.inArray('a-z', dataSet) >= 0){possible += 'abcdefghijklmnopqrstuvwxyz';}
+	if($.inArray('A-Z', dataSet) >= 0){possible += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';}
+	if($.inArray('0-9', dataSet) >= 0){possible += '0123456789';}
+	if($.inArray('#', dataSet) >= 0){possible += '![]{}()%&*$#^<>~@|';}
+	for(var i=0; i < $(id).attr('data-size'); i++) {text += possible.charAt(Math.floor(Math.random() * possible.length));}
+	$(id).val(""+text);
+	return text;
 }
 
 function dropIncomeUser(income_id,user_id,user_name){
@@ -1383,7 +1359,6 @@ function saveIncomeUserForm(income_id,user_id){
 			var user_phone=$("#user_phone").val();
 			var user_pass=$("#user_pass").val();
 			var user_main=0; if(document.getElementById("user_main").checked) { user_main=1;}
-
 			if (income_id.length>0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveIncomeUserForm','income_id':income_id,'user_id':user_id,'user_name':user_name,'user_email':user_email,'user_phone':user_phone,'user_pass':user_pass,'user_main':user_main},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -1443,7 +1418,6 @@ function saveIncomeComment(income_id){
 function dropIncomeComment(income_id,cmt_id){
 	if (income_id<=0 || income_id==""){toastr["error"](errs[0]);}
 	if (income_id>0){
-		
 		if(confirm('Видалити запис?')){ 
 			JsHttpRequest.query($rcapi,{ 'w': 'dropIncomeComment', 'income_id':income_id, 'cmt_id':cmt_id}, 
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -1561,7 +1535,6 @@ function saveIncomeCountryForm(){
 	var alfa3=$("#form_country_alfa3").val();
 	var duty=$("#form_country_duty").val();
 	var risk=$("#form_country_risk").val();
-	
 	JsHttpRequest.query($rcapi,{ 'w':'saveIncomeCountryForm','id':id,'name':name,'alfa2':alfa2,'alfa3':alfa3,'duty':duty,'risk':risk},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		if (result["answer"]==1){ 
@@ -1582,7 +1555,6 @@ function showCostumsManual(){
 		setTimeout(function(){
 		  $('#datatable_costums').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [10, 20, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
 		}, 500);
-		
 	}}, true);
 }
 
@@ -1609,7 +1581,6 @@ function saveIncomeCostumsForm(){
 	var type_declaration=$("#form_costums_type_declaration").val();
 	var sertification=$("#form_costums_sertification").val();
 	var gos_standart=$("#form_costums_gos_standart").val();
-	
 	JsHttpRequest.query($rcapi,{ 'w':'saveIncomeCostumsForm','id':id,'name':name,'preferential_rate':preferential_rate,'full_rate':full_rate,'type_declaration':type_declaration,'sertification':sertification,'gos_standart':gos_standart},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		if (result["answer"]==1){ 
@@ -1618,7 +1589,6 @@ function saveIncomeCostumsForm(){
 			showCostumsManual();
 		}
 		else{ swal("Помилка!", result["error"], "error");}
-		
 	}}, true);
 }
 
@@ -1687,14 +1657,10 @@ function makeIncomeCardFinish(){
 	}	
 	var invoice_income=$("#invoice_income").val();
 	var date=$("#invoice_data").val();
-	
 	var status=$("#income_price_status").val();
-	
 	if (status==="1") alert("error"); else {
-	
 		JsHttpRequest.query($rcapi,{ 'w':'checkInvoiceIncome','invoice_income':invoice_income, 'seller':seller, 'date':date},
-			function (result, errors){ if (errors) {alert(errors);} if (result){ 
-
+			function (result, errors){ if (errors) {alert(errors);} if (result){
 				if (parseInt($("#income_type_id").val())>0) {
 					recalculateIncomeStr();
 				} 
@@ -1726,6 +1692,6 @@ function getTableRows() {
 		for (i=1;i<rows;i++) {
 			if ($('#article_nr_displStr_'+i).val()!=="") {empty_row++;}
 		}
-		if (empty_row==0) console.log("pusto"); else console.log("vse ok");
+		//if (empty_row==0) console.log("pusto"); else console.log("vse ok");
 	}	
 }

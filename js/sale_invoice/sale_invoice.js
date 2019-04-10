@@ -2,14 +2,12 @@ var errs=[];
 errs[0]="Помилка індексу";
 errs[1]="Занадто короткий запит для пошуку";
 
-
 $(document).ready(function() {
 	$(document).bind('keydown', 'ctrl+a', function(){ ShowCheckAll2();});
 	$(document).bind('keydown', 'a', function(){ ShowCheckAll2();});
 	$(document).bind('keydown', 'p', function(){ ShowModalAll(); });
-	$(document).bind('keydown', 'f2', function(){ document.getElementById("discountStr").focus()});			
-	
-//	setTimeout(function(){updateSaleInvoiceRange();},15*1000);
+	$(document).bind('keydown', 'f2', function(){ document.getElementById("discountStr").focus()});
+	//setTimeout(function(){updateSaleInvoiceRange();},15*1000);
 });
 
 $(window).bind('beforeunload', function(e){
@@ -23,25 +21,25 @@ $(window).bind('beforeunload', function(e){
 function filterInvoiceList(){
 	var date_start=$("#date_start").val();
 	var date_end=$("#date_end").val();
-		JsHttpRequest.query($rcapi,{ 'w': 'filterInvoiceList', 'date_start':date_start, 'date_end':date_end}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			$('#datatable').DataTable().destroy();
-			$("#sale_invoice_range").html(result.content[0]);
-			$("#sale_invoice_summ").html(result.content[1]);
-			$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
-		}}, true);
+	JsHttpRequest.query($rcapi,{ 'w': 'filterInvoiceList', 'date_start':date_start, 'date_end':date_end},
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+		$('#datatable').DataTable().destroy();
+		$("#sale_invoice_range").html(result.content[0]);
+		$("#sale_invoice_summ").html(result.content[1]);
+		$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+	}}, true);
 } 
 
 function filterBuhInvoiceList(){
 	var date_start=$("#date_start").val();
 	var date_end=$("#date_end").val();
-		JsHttpRequest.query($rcapi,{ 'w': 'filterBuhInvoiceList', 'date_start':date_start, 'date_end':date_end}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			$('#datatable').DataTable().destroy();
-			$("#sale_invoice_range").html(result.content[0]);
-			$("#sale_invoice_summ").html(result.content[1]);
-			$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
-		}}, true);
+	JsHttpRequest.query($rcapi,{ 'w': 'filterBuhInvoiceList', 'date_start':date_start, 'date_end':date_end},
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+		$('#datatable').DataTable().destroy();
+		$("#sale_invoice_range").html(result.content[0]);
+		$("#sale_invoice_summ").html(result.content[1]);
+		$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+	}}, true);
 } 
 
 function show_sale_invoice_search(inf){
@@ -51,7 +49,8 @@ function show_sale_invoice_search(inf){
 		document.getElementById("sale_invoice_range").innerHTML=result["content"];
 		if (inf==1){toastr["info"]("Виконано!");}
 	}}, true);
-} 
+}
+
 function updateSaleInvoiceRange(){
 	var prevRange=$("#sale_invoice_range").html();
 	JsHttpRequest.query($rcapi,{ 'w': 'show_sale_invoice_search'}, 
@@ -59,11 +58,11 @@ function updateSaleInvoiceRange(){
 		if (prevRange.length!=result["content"].length){
 			$("#sale_invoice_range").empty();
 			document.getElementById("sale_invoice_range").innerHTML=result["content"];
-			
 		}
-//		setTimeout(function(){updateSaleInvoiceRange();},15*1000); 
+		//setTimeout(function(){updateSaleInvoiceRange();},15*1000);
 	}}, true);
 }
+
 function printSaleInvoce(invoice_id){
 	if (invoice_id=="" || invoice_id==0){toastr["error"](errs[0]);}
 	if (invoice_id>0){
@@ -86,10 +85,18 @@ function printSaleInvoceBuh(invoice_id){
 }
 
 function exportSaleInvoceExcel(invoice_id){
-	if (invoice_id=="" || invoice_id==0){toastr["error"](errs[0]);}
-	if (invoice_id>0){
-		window.open("/SaleInvoice/exportExcelSlIv/"+invoice_id,"_blank","printWindow");
-	} 
+    swal({
+		title: "Виберіть спосіб вигрузки",text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",confirmButtonText: "Крапка", cancelButtonText: "Кома", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
+	},
+	function (isConfirm) {
+		if (isConfirm) {
+			swal.close();
+			window.open("/SaleInvoice/exportExcelSlIv/"+invoice_id+"/point","_blank","printWindow");
+		} else {
+			swal.close();
+			window.open("/SaleInvoice/exportExcelSlIv/"+invoice_id+"/comma","_blank","printWindow");
+		}
+	});
 }
 
 function showSaleInvoiceCard(invoice_id){
@@ -107,6 +114,7 @@ function showSaleInvoiceCard(invoice_id){
 		}}, true);
 	}
 }
+
 function closeSaleInvoiceCard(){
 	if ($("#dp_id")){
 		var dp_id=$("#dp_id").val();
@@ -126,6 +134,7 @@ function loadSaleInvoiceMoneyPay(invoice_id){
 		$('#sale_invoice_tabs').tab();
 	}}, true);
 }
+
 function showSaleInvoceMoneyPayForm(invoice_id,pay_id){
 	JsHttpRequest.query($rcapi,{ 'w': 'showSaleInvoceMoneyPayForm', 'invoice_id':invoice_id,'pay_id':pay_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -146,7 +155,6 @@ function saveSaleInvoiceMoneyPay(){
 	var doc_cash_id=$("#doc_cash_id").val();
 	var cash_id=$("#cash_id option:selected").val();
 	var cash_kours=$("#cash_kours").val();
-	
 	if (invoice_id<=0 || invoice_id==""){toastr["error"](errs[0]);}
 	if (invoice_id>0){
 		if (kredit<=0){toastr["error"]("Введіть суму оплати");}
@@ -163,10 +171,10 @@ function saveSaleInvoiceMoneyPay(){
 		}
 	}
 }
+
 function unlockKours(id){
 	var invoice_id=$("#pay_invoice_id").val();
 	var pay_id=$("#pay_id").val();
-	
 	if (invoice_id<=0 || invoice_id==""){toastr["error"](errs[0]);}
 	if (invoice_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'unlockSaleInvoiceMoneyPayKours', 'invoice_id':invoice_id, 'pay_id':pay_id}, 
@@ -179,7 +187,6 @@ function unlockKours(id){
 		}}, true);
 	}
 }
-
 
 function getCashKours(){
 	var cash_id=$("#cash_id").val();
@@ -204,14 +211,13 @@ function loadSaleInvoicePartitions(invoice_id){
 	}}, true);
 }
 
-
 function formCatalogueModalLabel(){
 	document.getElementById("CatalogueModalLabel").innerHTML="Номенклатура| клієнт: "+$("#client_conto_id option:selected").html()+"; документ: "+$("#DpCardLabel").html()+"; Сумма: "+$("#dp_summ").val()+"; валюта: "+$("#cash_id option:selected").html();
-	return;
+	return true;
 }
 
 function showArticleSearchDocumentForm(i,art_id,brand_id,article_nr_displ,doc_type,dp_id){
-	JsHttpRequest.query($rcapi,{ 'w': 'showArticleSearchDocumentForm', 'art_id':art_id,'brand_id':brand_id,'article_nr_displ':article_nr_displ,'doc_type':doc_type,'doc_id':dp_id}, 
+	JsHttpRequest.query($rcapi,{ 'w': 'showArticleSearchDocumentForm', 'brand_id':brand_id,'article_nr_displ':article_nr_displ,'doc_type':doc_type,'doc_id':dp_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#CatalogueModalWindow").modal('show');
 		document.getElementById("CatalogueModalLabel").innerHTML="";
@@ -241,15 +247,13 @@ function setArticleToSelectAmountDp(art_id,article_nr_displ,brand_id,brand_name,
 		$("#FormModalWindow2").modal('show');
 		document.getElementById("FormModalBody2").innerHTML=result["content"];
 		document.getElementById("FormModalLabel2").innerHTML="Вкажіть кількість: "+article_nr_displ+" "+brand_name;
-		
 		$('#art_idS2').val(art_id);
 		$('#article_nr_displS2').val(article_nr_displ);
 		$('#brand_idS2').val(brand_id);
 		$('#brand_nameS2').val(brand_name);
-		
-		
 	}}, true);
 }
+
 function showDpAmountInputWindow(art_id,storage_id){
 	var dp_id=$("#dp_id").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'showDpAmountInputWindow','art_id':art_id,'dp_id':dp_id,'storage_id':storage_id}, 
@@ -259,23 +263,20 @@ function showDpAmountInputWindow(art_id,storage_id){
 		document.getElementById("FormModalLabel3").innerHTML="Вкажіть кількість";
 		numberOnlyPlace("amount_move_numbers");
 		$("#amount_storage_id").val(storage_id);
-		
 		setTimeout(function (){$('#amount_select_storage_str').DataTable({keys: true,"aaSorting": [],"order": [[ 3, "asc" ]],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});},500);
 	}}, true);
 }
 
 function showDpSupplAmountInputWindow(art_id,article_nr_displ,brand_id,brand_name,dp_id,suppl_id,suppl_storage_id,price){
-
-	JsHttpRequest.query($rcapi,{ 'w': 'showDpSupplAmountInputWindow','art_id':art_id,'article_nr_displ':article_nr_displ,'brand_id':brand_id,'dp_id':dp_id,'suppl_id':suppl_id,'suppl_storage_id':suppl_storage_id,'price':price}, 
+	JsHttpRequest.query($rcapi,{ 'w': 'showDpSupplAmountInputWindow','art_id':art_id,'article_nr_displ':article_nr_displ,'brand_id':brand_id,'dp_id':dp_id,'suppl_id':suppl_id,'suppl_storage_id':suppl_storage_id,'price':price},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow3").modal('show');
 		document.getElementById("FormModalBody3").innerHTML=result["content"];
 		document.getElementById("FormModalLabel3").innerHTML="Вкажіть кількість: "+article_nr_displ+" "+brand_name;
 		numberOnlyPlace("amount_move_numbers");
-//		$("#amount_storage_id").val(suppl_storage_id);
+		//$("#amount_storage_id").val(suppl_storage_id);
 	}}, true);
 }
-
 
 function closeAmountInputWindow(art_id){
 	var dp_id=$("#dp_id").val();
@@ -286,6 +287,7 @@ function closeAmountInputWindow(art_id){
 		setArticleToSelectAmountDp(art_id,article_nr_displStr,brandIdStr,brand_nameS2,dp_id);
 	}
 }
+
 function closeAmountSupplInputWindow(){
 	$("#FormModalWindow3").modal('hide');
 	document.getElementById("FormModalBody3").innerHTML="";document.getElementById("FormModalLabel3").innerHTML="";
@@ -294,8 +296,7 @@ function closeAmountSupplInputWindow(){
 function countSumm(pf1,pf2,rf){
 	var p1=parseFloat($("#"+pf1).val().replace(',', '.'));
 	var p2=parseFloat($("#"+pf2).val().replace(',', '.'));
-	var summ=0;
-	summ=parseFloat(p1*p2).toFixed(2);
+	var summ=parseFloat(p1*p2).toFixed(2);
 	$("#"+rf).val(summ);
 	return;
 }
@@ -377,7 +378,6 @@ function calculateDiscountPriceAll(){
 	}
 	if (list2 == '') {swal("Операцію виконано!", "Знижка "+discount+" була встановлена для усіх помічених позицій!", "success");} 
 	else {swal("Увага", "Знижка "+discount+"% не була встановлена для усіх помічених позицій. Товар відсортований згідно встановленої додаткової знижки, будь ласка ознайомтесь з результатом.", "error");}
-	list2='';
 	$("#discountStr").val('');
 }
 
@@ -404,13 +404,11 @@ function calculateDiscountPersent(pos){
 			$("#discountStr_"+pos).val(max_discount_persent);
 			setTimeout(function() { calculateDiscountPrice(pos);}, 1000);
 		}
-		
 	}else{
 		toastr["warning"]("Не можливо призначити таку знижку");
 		price_end=max_discount_price;
 		$("#priceEndStr_"+pos).val(price_end);
 		setTimeout(function() { calculateDiscountPersent(pos);}, 1000);
-		
 	}
 }
 
@@ -423,15 +421,14 @@ function updateDpStrPrice(rId,discount,cash_id,price_end,summ){
 	}
 }
 
-
 function calculateDpSumm(){
 	var dp_summ=0;
 	var kol_row=$("#kol_row").val();
-	var sum_str=0;
 	for (var i=1;i<=kol_row;i++){
 		summ_str=parseFloat($("#summStr_"+i).val());
 		dp_summ=dp_summ+summ_str;
-	}dp_summ=parseFloat(dp_summ).toFixed(2);
+	}
+	dp_summ=parseFloat(dp_summ).toFixed(2);
 	$("#dp_summ").val(dp_summ);
 }
 
@@ -473,6 +470,7 @@ function setArticleToDp(art_id){
 		}else{swal("Помилка!", "Кількість для замовлення має бути більша 0", "error"); }
 	}
 }
+
 function setArticleSupplToDp(art_id){
 	var dp_id=$("#dp_id").val();
 	if (dp_id.length>0){
@@ -491,7 +489,7 @@ function setArticleSupplToDp(art_id){
 						document.getElementById("dp_weight").innerHTML=result["weight"];
 						document.getElementById("dp_volume").innerHTML=result["volume"];
 						document.getElementById("dp_summ").value=result["dp_summ"];
-//						document.getElementById("label_un_articles").innerHTML=result["label_empty"];
+						//document.getElementById("label_un_articles").innerHTML=result["label_empty"];
 		
 						JsHttpRequest.query($rcapi,{ 'w': 'showDpCardStr', 'dp_id':dp_id},
 						function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -519,7 +517,6 @@ function catalogue_article_storage_rest_search(search_type){
 		art=$("#list2_art").val();$("#list2_art").val("");
 		brand_id=$("#list2_brand_id").val();$("#list2_brand_id").val("");
 	}
-	
 	if (art.length<=2){ $("#srchInG").addClass("has-error");/*	toastr["warning"](errs[1]);*/}
 	if (art.length>2){$("#srchInG").removeClass("has-error");
 		$("#waveSpinnerCat_place").html(waveSpinner);
@@ -542,7 +539,6 @@ function catalogue_article_storage_rest_search(search_type){
 	}
 }
 
-
 function createTaxInvoice(invoice_id){
 	var invoice_id=$("#invoice_id").val();
 	if (invoice_id.length>0){
@@ -563,7 +559,6 @@ function createTaxInvoice(invoice_id){
 		});
 	}
 }
-
 
 function loadDpStorsel(dp_id){
 	if (dp_id<=0 || dp_id==""){toastr["error"](errs[0]);}
@@ -610,7 +605,6 @@ function showDpStorselForSaleInvoice(dp_id){
 	}
 }
 
-
 function sendDpStorselToSaleInvoice(dp_id){
 	var dp_id=$("#dp_id").val();
 	if (dp_id.length>0){
@@ -623,7 +617,6 @@ function sendDpStorselToSaleInvoice(dp_id){
 			JsHttpRequest.query($rcapi,{ 'w':'sendDpStorselToSaleInvoice','dp_id':dp_id,'kol_storsel':kol_storsel,'ar_storsel':ar_storsel},
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
 				if (result["answer"]==1){
-
 					$("#FormModalWindow").modal('hide');document.getElementById("FormModalBody").innerHTML="";document.getElementById("FormModalLabel").innerHTML="";
 					swal("Документ сформовано!", "Номер накладної: "+result["sale_invoice_nom"], "success"); 
 				}
@@ -647,12 +640,14 @@ function viewDpSaleInvoice(dp_id,invoice_id){
 		}}, true);
 	}
 }
+
 function openSaleInvoice(invoice_id){
 	if (invoice_id=="" || invoice_id==0){toastr["error"](errs[0]);}
 	if (invoice_id>0){
 		window.open("/SaleInvoice/view/"+invoice_id,"_blank");
 	}
 }
+
 //function printSaleInvoce1(invoice_id){
 //	if (invoice_id=="" || invoice_id==0){toastr["error"](errs[0]);}
 //	if (invoice_id>0){
@@ -677,9 +672,6 @@ function getPartitionsInvoiceAmount(partition_id) {
 		$("#partition_id").val(result.content[0]);
 		$("#invoice_amount").val(result.content[1]);
 		$("#invoice_id_tab").val(result.content[2]);
-		console.log(result.content[0]);
-		console.log(result.content[1]);
-		console.log(result.content[2]);
 	}}, true);
 }
 

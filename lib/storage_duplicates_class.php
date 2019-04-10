@@ -23,8 +23,7 @@ class storage_duplicates {
 	}
 	
 	function showStorageDuplicates() { $db=DbSingleton::getTokoDb(); $list=$list2=$list3=$list4="";
-		$form_htm=RD."/tpl/storage_duplicates.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}		
-									  
+		$form_htm=RD."/tpl/storage_duplicates.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$r=$db->query("SELECT ART_ID, STORAGE_ID, COUNT(ART_ID) as COUNT_ART FROM T2_ARTICLES_STRORAGE GROUP BY ART_ID, STORAGE_ID HAVING COUNT(ART_ID)>1;"); 
 		$n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
@@ -68,8 +67,7 @@ class storage_duplicates {
 
 			WHERE (st.AMOUNT+st.RESERV_AMOUNT)!=(SELECT sum(cl.AMOUNT+cl.RESERV_AMOUNT)
 			 									FROM T2_ARTICLES_STRORAGE_CELLS cl 
-			 									WHERE cl.ART_ID=st.ART_ID and cl.STORAGE_ID=st.STORAGE_ID)
-		"); $n=$db->num_rows($r);
+			 									WHERE cl.ART_ID=st.ART_ID and cl.STORAGE_ID=st.STORAGE_ID)"); $n=$db->num_rows($r);
 								 
 		for ($i=1;$i<=$n;$i++){
 			$ART_ID=$db->result($r,$i-1,"ART_ID"); $ARTICLE_NR_DISPL=$this->getArtDispl($ART_ID);
@@ -97,12 +95,10 @@ class storage_duplicates {
 
 			WHERE ps.GENERAL_STOCK!=(SELECT sum(st.AMOUNT+st.RESERV_AMOUNT)
 			 						FROM T2_ARTICLES_STRORAGE st
-			 						WHERE st.ART_ID=ps.ART_ID)
-		"); $n=$db->num_rows($r);
+			 						WHERE st.ART_ID=ps.ART_ID)"); $n=$db->num_rows($r);
 								 
 		for ($i=1;$i<=$n;$i++){
 			$ART_ID=$db->result($r,$i-1,"ART_ID"); $ARTICLE_NR_DISPL=$this->getArtDispl($ART_ID);
-			$STORAGE_ID=$db->result($r,$i-1,"STORAGE_ID"); $STORAGE_NAME=$this->getStorageName($STORAGE_ID);
 			$GENERAL_STOCK=$db->result($r,$i-1,"GENERAL_STOCK");
 			$SUMM_STORAGE=$db->result($r,$i-1,"SUMM_STORAGE");
 			$list4.="<tr>
@@ -112,13 +108,11 @@ class storage_duplicates {
 				<td>$GENERAL_STOCK</td>
 				<td>$SUMM_STORAGE</td>
 			</tr>";
-		}							  
-									  
+		}
 		$form=str_replace("{storage_duplicates_range}",$list,$form);							  
 		$form=str_replace("{storage_duplicates_cells_range}",$list2,$form);	
 		$form=str_replace("{storage_stock_range}",$list3,$form);								  
 		$form=str_replace("{storage_stock_general_range}",$list4,$form);
-									  
 		return $form;
 	}
 	

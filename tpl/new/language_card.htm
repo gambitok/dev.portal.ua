@@ -1,12 +1,15 @@
 <div class="tabs-container">
+
     <ul class="nav nav-tabs" id="lang_tabs">
         <li class="active"><a data-toggle="tab" href="#us_tab1"><i class="fa fa-bars"></i> <span class="hidden-sm-down not-visible">Загальна інформація</span></a></li>
     </ul>
+
     <div class="tab-content">
         <div id="us_tab1" class="tab-pane active">
             <div class="panel-body">
                 <div class="ibox float-e-margins">
                     <div class="ibox-content">
+
                         <form method="get" class="form-horizontal">
 							
 							<input type="hidden" id="lang_id" value="{id}">
@@ -31,16 +34,18 @@
 							
                             <div class="form-group">
                                 <div class="col-sm-10 text-right col-sm-offset-2">
-                                    <button class="btn btn-primary" type="button" onClick="saveLanguage('{id}');">Зберігти зміни</button>
+                                    <button class="btn btn-primary" type="button" onClick="saveLanguage('{id}');">Зберегти зміни</button>
                                     <button class="btn btn-danger" type="button" onClick="dropLanguage('{id}');">Видалити</button>
                                     <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
                                 </div>
                             </div>
 							
                         </form>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 </div>

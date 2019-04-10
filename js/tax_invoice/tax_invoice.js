@@ -2,7 +2,6 @@ var errs=[];
 errs[0]="Помилка індексу";
 errs[1]="Занадто короткий запит для пошуку";
 
-
 $(document).ready(function() {
 	$(document).bind('keydown', 'ctrl+a', function(){ ShowCheckAll2();});
 	$(document).bind('keydown', 'a', function(){ ShowCheckAll2();});
@@ -37,6 +36,7 @@ function showTaxInvoiceBackCard(tax_id){
 		$('#data_send').datepicker({format: "yyyy-mm-dd",autoclose:true})
 	}}, true);
 }
+
 function showTaxInvoiceCard(tax_id){
 	JsHttpRequest.query($rcapi,{ 'w': 'showTaxInvoiceCard','tax_id':tax_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -79,6 +79,7 @@ function dropTaxStr(pos,tax_id,tax_str_id){
 	});
 	}
 }
+
 function saveTaxCard(){
 	var tax_id=$("#tax_id").val();
 	var data_create=$("#data_create").val();
@@ -120,7 +121,6 @@ function saveTaxCard(){
 		}}, true);
 	}
 }
-
 
 function saveTaxBackCard(){
 	var tax_id=$("#tax_id").val();
@@ -164,6 +164,7 @@ function saveTaxBackCard(){
 		}}, true);
 	}
 }
+
 function addNewRow(){
 	var client_id=$("#client_id").val();
 	if (client_id==0 || client_id.length==0){ 
@@ -229,15 +230,15 @@ function closeTaxCard(){
 	}
 	else{ $("#TaxCard").modal('hide'); document.getElementById("TaxCardBody").innerHTML=""; document.getElementById("TaxCardLabel").innerHTML=""; }
 }
+
 function closeTaxBackCard(){
 	$("#TaxBackCard").modal('hide'); document.getElementById("TaxBackCardBody").innerHTML="";
 	document.getElementById("TaxBackCardLabel").innerHTML="";
 }
 
-
 function findTaxStr(pos,tax_id,str_id,tax_str_id){
 	var tax_to_back_id=$("#tax_to_back_id").val();
-	JsHttpRequest.query($rcapi,{ 'w': 'findTaxStr', 'tax_id':tax_id,'tax_to_back_id':tax_to_back_id}, 
+	JsHttpRequest.query($rcapi,{ 'w': 'findTaxStr', 'tax_to_back_id':tax_to_back_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow").modal('show');
 		document.getElementById("FormModalBody").innerHTML=result["content"];
@@ -249,11 +250,11 @@ function findTaxStr(pos,tax_id,str_id,tax_str_id){
 		setTimeout(function() { $('#datatable_parrent').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}}); }, 500);
 	}}, true);
 }
+
 function setTaxBackArticle(id,nom,zed,goods_name,amount,price,summ){
 	var str_id=$("#find_str_id").val();
 	var tax_str_id=$("#find_tax_str_id").val();
 	var pos=$("#find_pos").val();
-	
 	$('#idStr_'+pos).val(str_id);console.log("str_id="+str_id);
 	$('#nomStr_'+pos).val(nom); console.log("nom="+nom);
 	$('#tax_str_idStr_'+pos).val(id);console.log("id="+id);
@@ -324,6 +325,7 @@ function showTaxClientList(client_id){
 		setTimeout(function() { $('#datatable_parrent').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}}); }, 500);
 	}}, true);
 }
+
 function filterMdlClientsList(){
 	var sel_id=$('#client_id').val();
 	var client_id=$("#filMdlClientId").val();
@@ -331,13 +333,13 @@ function filterMdlClientsList(){
 	var phone=$("#filMdlPhone").val();
 	var email=$("#filMdlEmail").val();
 	var state_id=$("#filMdlState option:selected").val();
-	
 	$("#client_range").empty();
 	JsHttpRequest.query($rcapi,{ 'w': 'filterDpClientsList', 'sel_id':sel_id, 'client_id':client_id, 'client_name':client_name, 'phone':phone, 'email':email, 'state_id':state_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#client_range").html(result["content"]);
 	}}, true);
 }
+
 function ClearMdlClientSearch(){
 	$("#filMdlClientId").val("");
 	$("#filMdlClientName").val("");
@@ -356,6 +358,7 @@ function setDpClient(id,name,tpoint_id,$tpoint_name){
 	$('#client_name').val(name);
 	$("#FormModalWindow").modal('hide'); document.getElementById("FormModalBody").innerHTML=""; document.getElementById("FormModalLabel").innerHTML="";
 }
+
 function unlinkTaxClient(tax_id){
 	swal({
 		title: "Відвязати клієнта від накладної?",text: "Внесені Вами зміни вплинуть на Ваше майбутнє",

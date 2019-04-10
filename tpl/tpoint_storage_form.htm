@@ -6,17 +6,17 @@
             	<h2>Інформація про склад</h2>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Склад</label>
-                    <div class="col-sm-10"><select class="form-control" size="1" name="storage_id" id="storage_id" required><option value='0'> -- Оберіть склад -- </option>{storage_list}</select></div>
+                    <div class="col-sm-10"><select title="Склад" class="form-control" size="1" name="storage_id" id="storage_id" required><option value='0'> -- Оберіть склад -- </option>{storage_list}</select></div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Локальність складу</label>
-                    <div class="col-sm-10"><select class="form-control" size="1" name="local" id="local" required><option value='0'> -- Локальність складу -- </option>{local_list}</select></div>
+                    <div class="col-sm-10"><select title="Локальність складу" class="form-control" size="1" name="local" id="local" required><option value='0'> -- Локальність складу -- </option>{local_list}</select></div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-6 control-label">По замовчуванню (для автопереміщень та передпродажу)</label>
                     <div class="col-sm-2">
                     	<span class="buttons-inline pull-left">
-                            <input type="checkbox" class="js-switch" data-size="small" id="default" value="1" {default_ch} />
+                            <input title="По замовчуванню" type="checkbox" class="js-switch" data-size="small" id="default" value="1" {default_ch} />
                         </span>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
             <div class="hr-line-dashed"></div>
             <div class="form-group">
                 <div class="col-sm-10 text-right col-sm-offset-2">
-                    <button class="btn btn-primary" type="button" onClick="saveTpointStorageForm('{tpoint_id}','{s_id}');">Зберігти</button>
+                    <button class="btn btn-primary" type="button" onClick="saveTpointStorageForm('{tpoint_id}','{s_id}');">Зберегти</button>
                     <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
                 </div>
             </div>

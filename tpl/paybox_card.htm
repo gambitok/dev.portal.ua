@@ -1,23 +1,24 @@
 <div class="tabs-container">
+
     <ul class="nav nav-tabs" id="tpoint_tabs">
         <li class="active"><a data-toggle="tab" href="#pb_tab1"><i class="fa fa-bars"></i> <span class="hidden-sm-down not-visible">Загальна інформація</span></a></li>
 		<li><a data-toggle="tab" href="#pb_tab3" onClick="loadPayboxWorkersSaldo('{paybox_id}');"><i class="fa fa-money"></i> <span class="hidden-sm-down">Сальдо по працівникам</span></a></li>
         <li><a data-toggle="tab" href="#pb_tab2" onClick="loadPayboxWorkers('{paybox_id}');"><i class="fa fa-users"></i> <span class="hidden-sm-down">Працівники</span></a></li>
     </ul>
+
     <div class="tab-content">
         <div id="pb_tab1" class="tab-pane active">
             <div class="panel-body">
                 <div class="ibox float-e-margins">
                     <div class="ibox-content">
                         <form method="get" class="form-horizontal">
-
                             <div class="form-group">
                             	<label class="col-sm-2 control-label">Код каси</label>
                                 <div class="col-sm-1"><input class="form-control" type="text" readonly name="paybox_id" id="paybox_id" value="{paybox_id}" placeholder=""></div>
                                 <label class="col-sm-2 control-label">Коротка назва каси</label>
                                 <div class="col-sm-3"><input class="form-control" type="text" name="paybox_name" id="paybox_name" value="{paybox_name}" placeholder=""></div>
                                 <label class="col-sm-2 control-label">Вид документів</label>
-                                <div class="col-sm-2"><select class="form-control" id="doc_type_id" style="width:100%;">{doc_type_list}</select></div>
+                                <div class="col-sm-2"><select title="Вид документів" class="form-control" id="doc_type_id" style="width:100%;">{doc_type_list}</select></div>
                             </div>
                             <div class="form-group">
                             	<label class="col-sm-2 control-label">Повна назва каси</label>
@@ -36,14 +37,14 @@
 								<label class="col-sm-2 control-label">Активність</label>
 								<div class="col-sm-2">
 									<span class="buttons-inline pull-left">
-										<input type="checkbox" class="js-switch" data-size="small" id="in_use" {inuse_checked} />
+										<input title="Активність" type="checkbox" class="js-switch" data-size="small" id="in_use" {inuse_checked} />
 									</span>
 								</div>
 							</div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-10 text-right col-sm-offset-2">
-                                    <button class="btn btn-primary" type="button" onClick="savePayboxGeneralInfo();">Зберігти зміни</button>
+                                    <button class="btn btn-primary" type="button" onClick="savePayboxGeneralInfo();">Зберегти зміни</button>
                                     <button class="btn btn-danger" type="button" {oper_visible} onClick="dropPaybox('{paybox_id}');">Видалити</button>
                                     <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
                                 </div>
@@ -51,19 +52,20 @@
                         </form>
                     </div>
                 </div>
-                
-                
             </div>
         </div>
+
         <div id="pb_tab2" class="tab-pane">
             <div class="panel-body" id="paybox_workers_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
         <div id="pb_tab3" class="tab-pane">
             <div class="panel-body" id="paybox_saldo_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
     </div>
 </div>

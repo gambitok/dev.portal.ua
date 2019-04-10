@@ -4,7 +4,9 @@ error_reporting(1);
 define('RD', dirname (__FILE__));
 date_default_timezone_set("Europe/Kiev");
 require_once (RD."/lib/mysql_class.php");$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();
+
 if(!empty($_FILES)){
+
 	$art_id=$_REQUEST["cdn_art_id"];
 	$client_id=$_REQUEST["cdn_client_id"];
 	session_start(); $user_id=$_SESSION["media_user_id"];
@@ -19,6 +21,7 @@ if(!empty($_FILES)){
 			$dbt->query("insert into T2_ARTICLES_CDN (`ART_ID`,`USER_ID`,`FILE_NAME`,`NAME`) values ('$art_id','$user_id','$fileName','$real_file_name');");
 		}
 	}
+
 	if ($user_id>0 && $client_id!="" && $client_id>0){
 		$targetDir = RD."/cdn/clfiles/$client_id/"; if (!is_dir($targetDir)){mkdir($targetDir,0777);}
 		$fileName = $_FILES['file']['name']; $real_file_name=iconv("utf-8","windows-1251",$fileName);
@@ -29,6 +32,7 @@ if(!empty($_FILES)){
 			$db->query("insert into A_CLIENTS_CDN (`CLIENT_ID`,`USER_ID`,`FILE_NAME`,`NAME`) values ('$client_id','$user_id','$fileName','$real_file_name');");
 		}
 	}
+
 	$client_id=$_REQUEST["dtls_client_id"];
 	$file_type=$_REQUEST["dtls_file_type"];
 	if ($user_id>0 && $client_id!="" && $client_id>0 && $file_type!=""){
@@ -53,6 +57,7 @@ if(!empty($_FILES)){
 			$db->query("insert into J_INCOME_CDN (`income_id`,`user_id`,`file_name`,`name`) values ('$income_id','$user_id','$fileName','$real_file_name');");
 		}
 	}
+
 	$import_artprice=$_REQUEST["import_artprice"];
 	if ($user_id>0 && $import_artprice!="" && $import_artprice==1){
 		$targetDir = RD."/cdn/import_artprice_files/$user_id/"; if (!is_dir($targetDir)){mkdir($targetDir,0777);}
@@ -61,10 +66,11 @@ if(!empty($_FILES)){
 		$targetFile = $targetDir.$fileName;
 		
 		if(move_uploaded_file($_FILES['file']['tmp_name'],$targetFile)){session_start(); 
-			$db->queryP("update J_IMPORT_ARTPRICE_CSV set status=0 where user_id='$user_id';");
+			$db->query("update J_IMPORT_ARTPRICE_CSV set status=0 where user_id='$user_id';");
 			$db->query("insert into J_IMPORT_ARTPRICE_CSV (`user_id`,`file_name`,`name`) values ('$user_id','$fileName','$real_file_name');");
 		}
 	}
+
 	$import_rest=$_REQUEST["import_rest"];
 	if ($user_id>0 && $import_rest!="" && $import_rest==1){
 		$targetDir = RD."/cdn/import_rest_files/$user_id/"; if (!is_dir($targetDir)){mkdir($targetDir,0777);}
@@ -73,12 +79,11 @@ if(!empty($_FILES)){
 		$targetFile = $targetDir.$fileName;
 		
 		if(move_uploaded_file($_FILES['file']['tmp_name'],$targetFile)){session_start(); 
-			$db->queryP("update J_IMPORT_REST_CSV set status=0 where user_id='$user_id';");
+			$db->query("update J_IMPORT_REST_CSV set status=0 where user_id='$user_id';");
 			$db->query("insert into J_IMPORT_REST_CSV (`user_id`,`file_name`,`name`) values ('$user_id','$fileName','$real_file_name');");
 		}
 	}
-	
-	
+
 	$jmoving_id=$_REQUEST["cdn_jmoving_id"];
 	if ($user_id>0 && $jmoving_id!="" && $jmoving_id>0){
 		$targetDir = RD."/cdn/jmoving_files/$jmoving_id/"; if (!is_dir($targetDir)){mkdir($targetDir,0777);}
@@ -90,6 +95,7 @@ if(!empty($_FILES)){
 			$db->query("insert into J_MOVING_CDN (`jmoving_id`,`user_id`,`file_name`,`name`) values ('$jmoving_id','$user_id','$fileName','$real_file_name');");
 		}
 	}
+
 	$spend_id=$_REQUEST["cdn_spend_id"];
 	if ($user_id>0 && $spend_id!="" && $spend_id>0){
 		$targetDir = RD."/cdn/money_spend_files/$spend_id/"; if (!is_dir($targetDir)){mkdir($targetDir,0777);}
@@ -139,7 +145,6 @@ if(!empty($_FILES)){
 		}
 	}
 	
-	
 	$csv_income_id=$_REQUEST["csv_income_id"];
 	if ($user_id>0 && $csv_income_id!="" && $csv_income_id>0){
 		$targetDir = RD."/cdn/income_files/csv/$csv_income_id/"; if (!is_dir($targetDir)){mkdir($targetDir,0777);}
@@ -175,6 +180,7 @@ if(!empty($_FILES)){
 			$db->query("insert into T2_SUPPL_CSV (`suppl_id`,`ftype`,`user_id`,`file_name`,`name`) values ('$csv_suppl_id','price','$user_id','$fileName','$real_file_name');");
 		}
 	}
+
 	if ($user_id>0 && $csv_suppl_id!="" && $csv_suppl_id>0 && $csv_suppl_type=="index"){
 		$targetDir = RD."/cdn/suppl_files/index/$csv_suppl_id/"; if (!is_dir($targetDir)){mkdir($targetDir,0777);}
 		$fileName = $_FILES['file']['name']; $real_file_name=iconv("utf-8","windows-1251",$fileName);
@@ -192,8 +198,4 @@ if(!empty($_FILES)){
 		}
 	}
 	
-	
-	
-	
 }
-?>

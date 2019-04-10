@@ -1,4 +1,5 @@
 <div class="tabs-container">
+
     <ul class="nav nav-tabs" id="tpoint_tabs">
         <li class="active"><a data-toggle="tab" href="#tp_tab1"><i class="fa fa-bars"></i> <span class="hidden-sm-down not-visible">Загальна інформація</span></a></li>
         <li><a data-toggle="tab" href="#tp_tab2" onClick="loadTpointStorage('{tpoint_id}');"><i class="fa fa-cubes"></i> <span class="hidden-sm-down">Склади</span></a></li>
@@ -8,20 +9,20 @@
         <li><a data-toggle="tab" href="#tp_tab6" onClick="loadTpointSupplFm('{tpoint_id}');"><i class="fa fa-users"></i> <span class="hidden-sm-down">Ціно-утворення</span></a></li>
         <li><a data-toggle="tab" href="#tp_tab7" onClick="loadTpointPayBox('{tpoint_id}');"><i class="fa fa-money"></i> <span class="hidden-sm-down">Каса</span></a></li>
     </ul>
+
     <div class="tab-content">
         <div id="tp_tab1" class="tab-pane active">
             <div class="panel-body">
                 <div class="ibox float-e-margins">
                     <div class="ibox-content">
                         <form method="get" class="form-horizontal">
-
                             <div class="form-group">
                             	<label class="col-sm-2 control-label">Код складу</label>
                                 <div class="col-sm-1"><input class="form-control" type="text" readonly name="tpoint_id" id="tpoint_id" value="{tpoint_id}" placeholder=""></div>
                                 <label class="col-sm-2 control-label">Коротка назва торгової точки</label>
                                 <div class="col-sm-3"><input class="form-control" type="text" name="tpoint_name" id="tpoint_name" value="{tpoint_name}" placeholder=""></div>
                                 <label class="col-sm-2 control-label">Керівник</label>
-                                <div class="col-sm-2"><select class="form-control" id="chief" name="chief" placeholder="Керівник" style="width:100%;">{workers_list}</select></div>
+                                <div class="col-sm-2"><select class="form-control" id="chief" name="chief" title="Керівник" style="width:100%;">{workers_list}</select></div>
                             </div>
                             <div class="form-group">
                             	<label class="col-sm-2 control-label">Повна назва торгової точки</label>
@@ -30,13 +31,13 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">Країна</label>
-                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="country_id" name="country_id" placeholder="Країна" onChange="loadStateSelectList();" style="width:100%;"><option value="0"></option>{country_list}</select></div>
+                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="country_id" name="country_id" title="Країна" onChange="loadStateSelectList();" style="width:100%;"><option value="0"></option>{country_list}</select></div>
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">Область</label>
-                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="state_id" name="state_id" placeholder="Область" onChange="loadRegionSelectList();" style="width:100%;">{state_list}</select></div>
+                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="state_id" name="state_id" title="Область" onChange="loadRegionSelectList();" style="width:100%;">{state_list}</select></div>
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">Район</label>
-                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="region_id" name="region_id" placeholder="Район" onChange="loadCitySelectList();" style="width:100%;">{region_list}</select></div>
+                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="region_id" name="region_id" title="Район" onChange="loadCitySelectList();" style="width:100%;">{region_list}</select></div>
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">Населений пункт</label>
-                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="city_id" name="city_id" placeholder="Місто, село, смт" style="width:100%;">{city_list}</select></div>
+                                <div class="col-lg-2 col-md-4 col-sm-8"><select class="form-control" id="city_id" name="city_id" title="Місто, село, смт" style="width:100%;">{city_list}</select></div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-1 control-label">Адреса</label>
@@ -48,46 +49,51 @@
 									<button class="btn btn-danger" type="button" onClick="deleteTpoint();">Видалити</button>
 								</div>
                                 <div class="col-sm-10 text-right">
-                                    <button class="btn btn-primary" type="button" onClick="saveTpointGeneralInfo();">Зберігти зміни</button>
+                                    <button class="btn btn-primary" type="button" onClick="saveTpointGeneralInfo();">Зберегти зміни</button>
                                     <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
-                
-                
             </div>
         </div>
+
         <div id="tp_tab2" class="tab-pane">
             <div class="panel-body" id="storage_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
         <div id="tp_tab3" class="tab-pane">
             <div class="panel-body" id="clients_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
         <div id="tp_tab4" class="tab-pane">
             <div class="panel-body" id="workers_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
         <div id="tp_tab5" class="tab-pane">
             <div class="panel-body" id="delivery_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
         <div id="tp_tab6" class="tab-pane">
             <div class="panel-body" id="fm_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
         <div id="tp_tab7" class="tab-pane">
             <div class="panel-body" id="pay_box_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
     </div>
 </div>

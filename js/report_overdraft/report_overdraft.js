@@ -3,8 +3,8 @@ function filterReportOverdraftList() {
 	var data=$("#date_start").val();
 	var client_id=$("#client_select option:selected").val();
 	var tpoint_id=$("#tpoint_select option:selected").val();
-	JsHttpRequest.query($rcapi,{ 'w': 'filterReportOverdraftList', 'data':data, 'client_id':client_id, 'tpoint_id':tpoint_id}, 
-	function (result, errors){ if (errors) {alert(errors);} if (result){ 
+	JsHttpRequest.query($rcapi,{ 'w': 'filterReportOverdraftList', 'data':data, 'client_id_cur':client_id, 'tpoint_id_cur':tpoint_id},
+	function (result, errors){ if (errors) {alert(errors);} if (result){
 		$('#datatable').DataTable().destroy();
 		$("#report_overdraft_range").html(result.content[0]);
 		$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
@@ -14,8 +14,8 @@ function filterReportOverdraftList() {
 
 function getClientOverdraftList() {
 	var data=$("#date_start").val();
-	var tpoint_id=$("#tpoint_select option:selected").val(); 
-	JsHttpRequest.query($rcapi,{ 'w': 'getClientOverdraftList', 'data':data, 'tpoint_id':tpoint_id}, 
+	var tpoint_id=$("#tpoint_select option:selected").val();
+	JsHttpRequest.query($rcapi,{ 'w': 'getClientOverdraftList', 'data':data, 'tpoint_id':tpoint_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#client_select").html(result.content);
 		filterReportOverdraftList();
@@ -39,7 +39,6 @@ function showClientGeneralSaldoForm(client_id){
 		document.getElementById("FormModalLabel").innerHTML=result["header"];
 		$('#saldo_data_start').datepicker({format: "yyyy-mm-dd",autoclose:true})
 		$('#saldo_data_end').datepicker({format: "yyyy-mm-dd",autoclose:true})
-
 	}}, true);
 }
 
@@ -54,7 +53,6 @@ function filterClientGeneralSaldoForm(client_id){
 			document.getElementById("client_saldo_end").innerHTML=result["saldo_end"];
 			document.getElementById("client_saldo_data_start").innerHTML=result["saldo_data_start"];
 			document.getElementById("client_saldo_data_end").innerHTML=result["saldo_data_end"];
-			
 		}}, true);
 	}
 }
@@ -75,7 +73,7 @@ function showSaleInvoiceCard(invoice_id){
 			document.getElementById("SaleInvoiceCardBody").innerHTML=result["content"];
 			document.getElementById("SaleInvoiceCardLabel").innerHTML=result["doc_prefix_nom"];
 			$('#sale_invoice_tabs').tab();
-			$('#data_pay').datepicker({format: "yyyy-mm-dd",autoclose:true})
+			$('#data_pay').datepicker({format: "yyyy-mm-dd",autoclose:true});
 			$('.i-checks').iCheck({checkboxClass: 'icheckbox_square-green',radioClass: 'iradio_square-green',});
 		}}, true);
 	}

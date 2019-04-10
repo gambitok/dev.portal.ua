@@ -2,19 +2,15 @@ var errs=[];
 errs[0]="Помилка індексу";
 errs[1]="Занадто короткий запит для пошуку";
 
-//download and show brand-list
 function loadBrandsList(){
-	
 	JsHttpRequest.query($rcapi,{ 'w': 'showBrandsList'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){ 
 		$("#brands_range").empty();
 		$("#brands_range").html(result["content"]);
-		
 		$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
 	}}, true);
 }
 
-//create brand
 function newBrandsCard(){
 	JsHttpRequest.query($rcapi,{ 'w': 'newBrandsCard'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -23,7 +19,7 @@ function newBrandsCard(){
 		}
 	}, true);
 }
-//display brand-card
+
 function showBrandsCard(brands_id){
 	if (brands_id<=0 || brands_id==""){toastr["error"](errs[0]);}
 	if (brands_id>0){
@@ -39,7 +35,7 @@ function showBrandsCard(brands_id){
 		}}, true);
 	}
 }
-//save all
+
 function saveBrandsGeneralInfo(){
 	swal({
 		title: "Зберегти зміни у розділі \"Загальна інформація\"?",
@@ -55,7 +51,6 @@ function saveBrandsGeneralInfo(){
 			var brands_country=$("#brands_country option:selected").val();
 			var brands_visible=$("#brands_visible").val();
 			var brands_visible=0;if (document.getElementById("brands_visible").checked){brands_visible=1;}
-			
 			if (brands_id.length>0){
 				JsHttpRequest.query($rcapi,{'w':'saveBrandsGeneralInfo','brands_id':brands_id, 'brands_name':brands_name, 'brands_type':brands_type, 'brands_kind':brands_kind, 'brands_country':brands_country, 'brands_visible':brands_visible},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -73,7 +68,6 @@ function saveBrandsGeneralInfo(){
 		}
 	});	
 }
-
 
 function loadBrandsDetails(brands_id){
 	if (brands_id<=0 || brands_id==""){toastr["error"](errs[0]);}
@@ -97,7 +91,6 @@ function saveBrandsDetails(){
 			var brands_id=$("#brands_id").val();
 			var descr=$("#descr").val();
 			var link=$("#link").val();
-			
 			if (brands_id.length>0){
 				JsHttpRequest.query($rcapi,{'w':'saveBrandsDetails','brands_id':brands_id, 'descr':descr, 'link':link},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -113,12 +106,12 @@ function saveBrandsDetails(){
 		}
 	});	
 }
-//export brands
+
 function ExportBrands() {
 	var url = "/export2.php?w=ExportBrands";
 	window.open(url, '_blank');
 }
-//import brands
+
 function ImportBrands() {
 	JsHttpRequest.query($rcapi,{ 'w': 'ImportBrands'}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){
@@ -126,7 +119,7 @@ function ImportBrands() {
 			$("#BrandsImportCard").modal('show');
 	}}, true);
 }
-//display upload form
+
 function showIndexUploadForm(){
 	$("#fileBrandsIndexUploadForm").modal('show');
 	var myDropzoneBrands = new Dropzone("#myDropzone4",{ dictDefaultMessage: "Натисніть для вибору файлів або перетягніть їх це поле!" });
@@ -174,23 +167,20 @@ function showBrandsUploadLogoForm(brands_id){
 		loadBrandsPhoto(brands_id);
 	});
 }
-//////////////////////////////////////////
+
 function loadBrandsPhoto(brands_id){
 	if (brands_id<=0 || brands_id==""){toastr["error"](errs[0]);}
 	if (brands_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadBrandsPhoto', 'brands_id':brands_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-
+		function (result, errors){ if (errors) {alert(errors);} if (result){
 			document.getElementById("brands_photo_place").innerHTML=result["content"];
 		}}, true);
 	}
-
 }
-//save import file info to table
+
 function finishBrandsIndexImport(){
 	var start_row=parseInt($("#start_row").val());
 	var kol_cols=parseInt($("#kol_cols").val());
-	//var cls_kol=3; 
 	if (start_row<0 || start_row.length<=0){ swal("Помилка!", "Не вказано початковий ряд зчитування", "error");}
 	if (start_row>=0){ 
 		var cols=[];var cl=0; var cls_sel=0;

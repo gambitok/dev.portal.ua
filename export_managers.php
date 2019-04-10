@@ -5,6 +5,7 @@ error_reporting(E_ERROR);
 define('RD', dirname (__FILE__));
 $content=null;
 require_once (RD."/lib/mysql_class.php");
+require_once (RD."/lib/DbSingleton.php");
 require_once (RD."/lib/slave_class.php");
 require_once (RD."/lib/manual_class.php");
 require_once (RD."/lib/gmanual_class.php");
@@ -23,41 +24,26 @@ $managers=$_REQUEST["managers"];
 $cash_id=$_REQUEST["cash_id"];
 $client_status=$_REQUEST["client_status"];
 
-if ($w=="Export"){ 
-//	$csv_content=$seo_reports->getSeoReportsData($date_start,$date_end,$managers,$cash_id,$client_status);
-	require_once 'lib/excel/Classes/PHPExcel.php';
-	
-	$objPHPExcel = new PHPExcel(); $managers_cap="Менеджери"; 
-//	$managers_cap = mb_convert_encoding($managers_cap, "cp-1251"); 
-//	$managers_cap = iconv("SJIS", "cp-1251", $managers_cap);
-	
+if ($w=="Export"){
+	require_once 'lib/excel/Classes/PHPExcel.php'; $objPHPExcel = new PHPExcel();
+    $managers_cap="Менеджери";
 	$objPHPExcel->getActiveSheet()->setCellValue('A1',$managers_cap);
 	$objPHPExcel->getActiveSheet()->setCellValue('B1','Sales');
 	$objPHPExcel->getActiveSheet()->setCellValue('C1','Backs');
 	$objPHPExcel->getActiveSheet()->setCellValue('D1','Summ');
 	$objPHPExcel->getActiveSheet()->setTitle('Sales ');
-	$row=2;$ch='A';  
-	//cellColor('A1', 'F28A8C');
-	
-//		for ($i=1;$i<=count($csv_content);$i++) {
-//			for ($j=0;$j<4;$j++) {
-//				$objPHPExcel->getActiveSheet()->setCellValue($ch.$row,$csv_content[$i][$j]);
-//				$ch++;
-//			}
-//			$ch='A';$row++;
-//		}	
+	$row=2;$ch='A';
+
 	header('Content-Disposition: attachment; filename=export.xlsx');
 	header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 	header('Cache-Control: max-age=0');
 	ob_end_clean();
 	$objWritter= PHPExcel_IOFactory::createWriter($objPHPExcel,'Excel2007');
 	$objWritter->save('php://output');
-
 }
 
 function cellColor($cells,$color){
     global $objPHPExcel;
-
     $objPHPExcel->getActiveSheet()->getStyle($cells)->getFill()->applyFromArray(array(
         'type' => PHPExcel_Style_Fill::FILL_SOLID,
         'startcolor' => array(
@@ -67,5 +53,3 @@ function cellColor($cells,$color){
 }
 
 
-
-?>

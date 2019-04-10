@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="/css/plugins/chosen-1.8.3/chosen.css">
 
 
-<h2 class=" border-bottom white-bg dashboard-header">Експорт залишків та прайс 2</h2>
+<h2 class=" border-bottom white-bg dashboard-header">Експорт залишків та прайсів</h2>
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -21,9 +21,16 @@
 									<div class="col-sm-2 col-lg-2">
 										<button class="btn btn-primary" onClick="exportStocks();">Експорт залишків</button>	
 									</div>
+
+									<div class="col-sm-2 col-lg-2">
+										<select title="Виберіть прайс" name="price_list" id="price_list" class="form-control">
+											<option value="0">Виберіть прайс</option>
+											{price_list}
+										</select>
+									</div>
 									
 									<div class="col-sm-2 col-lg-2">
-										<button class="btn btn-primary" onClick="exportPrices();">Експорт прайс2</button>	
+										<button class="btn btn-primary" onClick="exportPrices();">Експорт прайс</button>
 									</div>
 								</div>
 								

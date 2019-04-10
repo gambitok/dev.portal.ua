@@ -2,10 +2,6 @@ var errs=[];
 errs[0]="Помилка індексу";
 errs[1]="Занадто короткий запит для пошуку";
 
-
-$(document).ready(function() {
-});
-
 function loadSupplList(){
 	JsHttpRequest.query($rcapi,{ 'w': 'showSupplList'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -28,6 +24,7 @@ function showSupplCard(suppl_id){
 		}}, true);
 	}
 }
+
 function saveSupplGeneralInfo(){
 	swal({
 		title: "Зберегти зміни у розділі \"Загальна інформація\"?",
@@ -61,6 +58,7 @@ function saveSupplGeneralInfo(){
 		}
 	});	
 }
+
 function loadStateSelectList(){
 	var country_id=$("#country_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientStateSelectList', 'country_id':country_id}, 
@@ -69,6 +67,7 @@ function loadStateSelectList(){
 		$("#state_id").select2({placeholder: "Виберіть область",dropdownParent: $("#SupplCard")});
 	}}, true);
 }
+
 function loadRegionSelectList(){
 	var state_id=$("#state_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientRegionSelectList', 'state_id':state_id}, 
@@ -77,6 +76,7 @@ function loadRegionSelectList(){
 		$("#region_id").select2({placeholder: "Виберіть район",dropdownParent: $("#SupplCard")});
 	}}, true);
 }
+
 function loadCitySelectList(){
 	var region_id=$("#region_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientCitySelectList', 'region_id':region_id}, 
@@ -159,6 +159,7 @@ function loadSupplPrice(suppl_id){
 		}}, true);
 	}
 }
+
 function showPriceUploadForm(suppl_id){
 	$("#fileSupplCsvUploadForm").modal('show');
 	$("#csv_suppl_id").val(suppl_id);
@@ -172,17 +173,13 @@ function showPriceUploadForm(suppl_id){
 	});
 }
 
-
-
 function finishSupplPriceImport(suppl_id){
 	var start_row=parseInt($("#start_row").val());
 	var kol_cols=parseInt($("#kol_cols").val());
 	var cash=parseInt($("#import_cash option:selected").val());
 	var kours_usd=parseFloat($("#import_kours_usd").val().replace(",", "."));
 	var kours_eur=parseFloat($("#import_kours_eur").val().replace(",", "."));
-	
-	
-	var cls_kol=3; 
+	//var cls_kol=3;
 	if (start_row<0 || start_row.length<=0){ swal("Помилка!", "Не вказано початковий ряд зчитування", "error");}
 	if (start_row>=0){ 
 		var cols=[];var cl=0; var cls_sel=0;
@@ -204,6 +201,7 @@ function finishSupplPriceImport(suppl_id){
 		}
 	}
 }
+
 function loadSupplIndex(suppl_id){
 	if (suppl_id<=0 || suppl_id==""){toastr["error"](errs[0]);}
 	if (suppl_id>0){
@@ -228,12 +226,10 @@ function showIndexUploadForm(suppl_id){
 	});
 }
 
-
 function finishSupplIndexImport(suppl_id){
 	var start_row=parseInt($("#start_row").val());
 	var kol_cols=parseInt($("#kol_cols").val());
-	
-	var cls_kol=3; 
+	//var cls_kol=3;
 	if (start_row<0 || start_row.length<=0){ swal("Помилка!", "Не вказано початковий ряд зчитування", "error");}
 	if (start_row>=0){ 
 		var cols=[];var cl=0; var cls_sel=0;
@@ -268,6 +264,7 @@ function loadSupplOrderInfo(suppl_id){
 		}}, true);
 	}
 }
+
 function saveSupplOrderInfo(suppl_id){
 	swal({
 		title: "Зберегти зміни у розділі \"Алгоритм роботи\"?",text: "Внесені Вами зміни вподальшому вплинуть на роботу магазину і ваше життя :)",
@@ -301,7 +298,7 @@ function loadSupplCoopList() {
 			$("#suppl_range").html(result["content"]);
 			$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
 		}}, true);
-	}
+}
 
 function showSupplCoopCard(suppl_id){
 	if (suppl_id<=0 || suppl_id==""){toastr["error"](errs[0]);}
@@ -309,10 +306,8 @@ function showSupplCoopCard(suppl_id){
 		JsHttpRequest.query($rcapi,{ 'w': 'showSupplCoopCard', 'suppl_id':suppl_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#SupplCard").modal('show');
-			
 			document.getElementById("SupplCardBody").innerHTML=result["content"];
 			document.getElementById("SupplCardLabel").innerHTML=result["header"];
-			
 			$("#country_id").select2({placeholder: "Виберіть країну",dropdownParent: $("#SupplCard")});
 			$("#state_id").select2({placeholder: "Виберіть область",dropdownParent: $("#SupplCard")});
 			$("#region_id").select2({placeholder: "Виберіть район",dropdownParent: $("#SupplCard")});
@@ -331,15 +326,14 @@ function saveSupplCoop(suppl_id) {
 	function (isConfirm) {
 		if (isConfirm) {
 			if (suppl_id.length>0){
-				
 				var company=$("#suppl_company").val();
 				var name=$("#suppl_name").val();
 				var phone=$("#suppl_phone").val();
 				var email=$("#suppl_email").val();
 				var city_id=$("#city_id option:selected").val(); 
 				var comment=$("#suppl_comment").val();
-				var status=$("#suppl_status option:selected").val(); 
-				
+				var status=$("#suppl_status option:selected").val();
+
 				JsHttpRequest.query($rcapi,{ 'w':'saveSupplCoop','suppl_id':suppl_id,'company':company,'name':name,'phone':phone,'email':email,'city_id':city_id,'comment':comment,'status':status},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
@@ -348,7 +342,6 @@ function saveSupplCoop(suppl_id) {
 						loadSupplCoopList();
 					}
 					else{ swal("Помилка!", result["error"], "error");}
-					
 				}}, true);
 			}
 		} else {

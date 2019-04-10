@@ -65,7 +65,7 @@ function fil4Search(){
 	$("#waveSpinner_place").html(waveSpinner);
 	$("#catalogue_range").empty();
 	$("#catalogue_header").empty();
-	JsHttpRequest.query($rcapi,{ 'w': 'catalogue_fil4_search', 'suppl_id':suppl_id, 'brand_id':brand_id, 'goods_group_id':goods_group_id, 'top':top, 'stok_to':stok_to, 'stok_from':stok_from}, 
+	JsHttpRequest.query($rcapi,{ 'w': 'catalogue_fil4_search', 'brand_id':brand_id, 'goods_group_id':goods_group_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		//var table = $('#datatable').DataTable();
 		//table.destroy();
@@ -86,7 +86,7 @@ function fil2Search(){
 		$("#waveSpinner_place").html(waveSpinner);
 		$("#catalogue_range").empty();
 		$("#catalogue_header").empty();
-		JsHttpRequest.query($rcapi,{ 'w': 'catalogue_fil2_search', 'mfa_id':mfa_id, 'mod_id':mod_id, 'typ_id':typ_id, 'str_id':str_id,'art_ids':art_ids}, 
+		JsHttpRequest.query($rcapi,{ 'w': 'catalogue_fil2_search', 'art_ids':art_ids},
 		function (result, errors){ if (errors) {alert(errors);} if (result){
 			$("#catalogue_range").html(result["content"]);
 			$("#catalogue_header").html(result["header"]);
@@ -124,7 +124,7 @@ function loadFilterGroupTreeListSide(){
 	var typ_id=$("#fil2Modification option:selected").val();
 	if (typ_id>0){
 	$("#waveSpinner_place").html(waveSpinner);
-	JsHttpRequest.query($rcapi,{ 'w': 'loadFilterGroupTreeListSide', 'mfa_id':mfa_id, 'mod_id':mod_id, 'typ_id':typ_id}, 
+	JsHttpRequest.query($rcapi,{ 'w': 'loadFilterGroupTreeListSide', 'typ_id':typ_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			document.getElementById("filter_range_place").innerHTML=result["content"];
 			document.getElementById("catalogue_side_tree_place").innerHTML=result["tree"];
@@ -148,7 +148,7 @@ function loadFilterGroupTreeList(){
 	var typ_id=$("#fil2Modification option:selected").val();
 	if (typ_id>0){
 	$("#waveSpinner_place").html(waveSpinner);
-	JsHttpRequest.query($rcapi,{ 'w': 'loadFilterGroupTreeList', 'mfa_id':mfa_id, 'mod_id':mod_id, 'typ_id':typ_id}, 
+	JsHttpRequest.query($rcapi,{ 'w': 'loadFilterGroupTreeList', 'typ_id':typ_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow").modal('show');
 			document.getElementById("FormModalBody").innerHTML=result["content"];
@@ -394,7 +394,7 @@ function showGoodGroupTree(art_id){
 	if (art_id<=0 || art_id==""){toastr["error"](errs[0]);}
 	if (art_id>0){
 		var goods_group_id=$("#goods_group_id").val();
-		JsHttpRequest.query($rcapi,{ 'w': 'showGoodGroupTree', 'art_id':art_id, 'goods_group_id':goods_group_id}, 
+		JsHttpRequest.query($rcapi,{ 'w': 'showGoodGroupTree', 'goods_group_id':goods_group_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#GoodsGroupModalWindow").modal('show');
 			document.getElementById("GoodsGroupBody").innerHTML=result["content"];
@@ -709,7 +709,7 @@ function loadAplicabilityModelList(mfa_id){
 function loadAplicabilityModificationList(mfa_id,mod_id){
 	if (mfa_id<=0 || mod_id<=0 || mfa_id==""){toastr["error"](errs[0]);}
 	if (mfa_id>0 && mod_id>0){
-		JsHttpRequest.query($rcapi,{ 'w': 'loadAplicabilityModificationList', 'mfa_id':mfa_id, 'mod_id':mod_id}, 
+		JsHttpRequest.query($rcapi,{ 'w': 'loadAplicabilityModificationList', 'mod_id':mod_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#na_typ_id").html(result["content"]);
 		}}, true);
@@ -745,7 +745,7 @@ function saveCatalogueAplicabilityForm(art_id,display_number){
 	}
 
 	if (art_id.length>0 && typ_array!=""){
-		JsHttpRequest.query($rcapi,{ 'w':'saveCatalogueAplicabilityForm','art_id':art_id,'display_number':display_number,'comment':comment,'typ_array':typ_array,'str_array':str_array},
+		JsHttpRequest.query($rcapi,{ 'w':'saveCatalogueAplicabilityForm','art_id':art_id,'comment':comment,'typ_array':typ_array,'str_array':str_array},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			if (result["answer"]==1){ 
 				swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
@@ -1289,7 +1289,7 @@ function saveCatalogueNewArt(){
 		},
 		function (isConfirm) {
 			if (isConfirm) {
-				JsHttpRequest.query($rcapi,{ 'w':'saveCatalogueNewArt', 'num':num, 'art_id':art_id, 'brand':brand,'group':group,'sub_group':sub_group,'manuf':manuf},
+				JsHttpRequest.query($rcapi,{ 'w':'saveCatalogueNewArt', 'num':num, 'art_id':art_id, 'brand':brand, 'sub_group':sub_group},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){
 						$("#FormModalWindow").modal('hide');
@@ -1414,7 +1414,7 @@ function saveCatalogueDonorForm(art_id){
 			swal({title: "Виконати підключення інформації для індексу "+search_number+" від донора "+display_nr+"?", text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394", confirmButtonText: "Так", cancelButtonText: "Ні",  closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true},
 			function (isConfirm) {
 				if (isConfirm) {
-					JsHttpRequest.query($rcapi,{ 'w':'saveCatalogueDonorForm', 'art_id':art_id, 'search_number':search_number,'display_nr':display_nr,'art_id2':art_id2,'ch':ch},
+					JsHttpRequest.query($rcapi,{ 'w':'saveCatalogueDonorForm', 'art_id':art_id,'display_nr':display_nr,'art_id2':art_id2,'ch':ch},
 					function (result, errors){ if (errors) {alert(errors);} if (result){  
 						if (result["answer"]==1){
 							swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
@@ -1472,7 +1472,7 @@ function loadArticlePricing(art_id){
 function loadPriceRatingTemplate(art_id){
 	if (art_id.length>0){
 		var template_id=$("#priceRatingTemplate_"+art_id+" option:selected").val();
-		JsHttpRequest.query($rcapi,{ 'w':'loadPriceRatingTemplate', 'art_id':art_id, 'template_id':template_id},
+		JsHttpRequest.query($rcapi,{ 'w':'loadPriceRatingTemplate', 'template_id':template_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			if (result["answer"]==1){
 				$("#artMinMarkUp_"+art_id).val(result["min_markup"]);
@@ -1604,7 +1604,7 @@ function saveIndexArticle() {
 	var article_name_ukr=$("#article_name_ukr").val();
 	var article_info=$("#article_info").val();
 	if (art_id>0 && art_id!="") {
-		JsHttpRequest.query($rcapi,{ 'w':'saveIndexArticle', 'art_id':art_id, 'suppl_status':suppl_status, 'article_nr_displ':article_nr_displ, 'brand_id':brand_id, 'article_name':article_name, 'article_name_ukr':article_name_ukr, 'article_info':article_info},
+		JsHttpRequest.query($rcapi,{ 'w':'saveIndexArticle', 'art_id':art_id, 'article_nr_displ':article_nr_displ, 'brand_id':brand_id, 'article_name':article_name, 'article_name_ukr':article_name_ukr, 'article_info':article_info},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			if (result.content) {
 				changeArtId();

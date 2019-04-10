@@ -9,12 +9,13 @@ class report_overdraft {
 		return $tpoint;
 	}
 	
-	function getClientOverdraftList($date_cur,$tpoint_id = null) { $db=DbSingleton::getDb(); $clients=[]; $list="<option value='0'>пїЅпїЅ пїЅлієпїЅпїЅпїЅ</option>";
+	function getClientOverdraftList($date_cur,$tpoint_id=null) {$db=DbSingleton::getDb();$clients=[];$list="<option value='0' selected>Всі клієнти</option>";
 		$where=" and sv.data_pay<'$date_cur'";
 		if ($tpoint_id!="0" && $tpoint_id!=NULL) $where_tpoint=" and cc.tpoint_id=$tpoint_id "; else $where_tpoint="";
 		$r=$db->query("select cc.client_id from J_SALE_INVOICE sv 
-		left outer join A_CLIENTS_CONDITIONS cc on cc.client_id=sv.client_id
+		    left outer join A_CLIENTS_CONDITIONS cc on cc.client_id=sv.client_id
 		where sv.status=1 and sv.summ_debit>0 $where_tpoint $where;"); $n=$db->num_rows($r);
+
 		for ($i=1;$i<=$n;$i++){
 			$client_id=$db->result($r,$i-1,"client_id");
 			array_push($clients,$client_id);
@@ -29,13 +30,13 @@ class report_overdraft {
 		return $list;
 	}
 	
-	function getTpointList() { $db=DbSingleton::getDb(); $list=""; $tpoint=$this->getTpointbyUser(); $list="<option value='0'>Всі торгові точки</option>";
+	function getTpointList() { $db=DbSingleton::getDb(); $tpoint=$this->getTpointbyUser(); $list="<option value='0'>Всі торгові точки</option>";
 		$r=$db->query("select * from T_POINT where status=1 order by id asc;"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
 			$name=$db->result($r,$i-1,"name");
 			$caption=$db->result($r,$i-1,"full_name");
-			if ($id==$tpoint) $selected="selected"; $selected="";
+			if ($id==$tpoint) $selected="selected"; else $selected="";
 			$list.="<option value='$id' $selected>$caption ($name)</option>";
 		}
 		return $list;	
@@ -57,21 +58,17 @@ class report_overdraft {
 		return $name;
 	}
 	
-	function showReportOverdraftList($date_cur,$client_id,$tpoint_id) { $db=DbSingleton::getDb(); $list=""; $clients=[]; $summ_uah=$summ_usd=$summ_eur=0;
-		$form_htm=RD."/tpl/report_overdraft_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}	
+	function showReportOverdraftList($date_cur,$client_id_cur,$tpoint_id) {$db=DbSingleton::getDb();$summ_uah=$summ_usd=$summ_eur=0;$list="";$clients=[];
+        $form="";$form_htm=RD."/tpl/report_overdraft_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		if ($tpoint_id!="0" && $tpoint_id!=NULL) $where_tpoint=" and sv.tpoint_id='$tpoint_id' "; else $where_tpoint="";
-		if ($client_id!="0" && $client_id!=NULL) $where=" and sv.data_pay<'$date_cur' and sv.client_id=$client_id"; else $where=" and sv.data_pay<'$date_cur'";
+		if ($client_id_cur!="0" && $client_id_cur!=NULL) $where=" and sv.data_pay<'$date_cur' and sv.client_id=$client_id_cur"; else $where=" and sv.data_pay<'$date_cur'";
 		$r=$db->query("select sv.*, dp.prefix as dp_prefix, dp.doc_nom as dp_nom, cl.name as client_name, ch.abr2 as cash_abr from J_SALE_INVOICE sv
 			left outer join J_DP dp on dp.id=sv.dp_id
 			left outer join CASH ch on ch.id=sv.cash_id
 			left outer join A_CLIENTS cl on cl.id=sv.client_conto_id
-		where sv.status=1 and sv.summ_debit>0 $where $where_tpoint order by sv.time_stamp desc, sv.status_invoice asc, sv.data_create desc, sv.prefix asc, sv.id desc;");
-		$n=$db->num_rows($r);
+		where sv.status=1 and sv.summ_debit>0 $where $where_tpoint order by sv.time_stamp desc, sv.status_invoice asc, sv.data_create desc, sv.prefix asc, sv.id desc;"); $n=$db->num_rows($r);
+
 		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"id");
-			$dp_id=$db->result($r,$i-1,"dp_id"); $dp_nom=$db->result($r,$i-1,"dp_prefix").$db->result($r,$i-1,"dp_nom");
-			$prefix=$db->result($r,$i-1,"prefix");
-			$doc_nom=$db->result($r,$i-1,"doc_nom");
 			$client_id=$db->result($r,$i-1,"client_id");
 			$client_name=$db->result($r,$i-1,"client_name");;
 			$summ=$db->result($r,$i-1,"summ_debit");
@@ -124,22 +121,21 @@ class report_overdraft {
 		return $amount_date;
 	}
 	
-	function getClientReportOverdraftList($client_id,$date_cur,$tpoint_id) { $db=DbSingleton::getDb(); $list=""; $docs=[]; $js="";
+	function getClientReportOverdraftList($client_id,$date_cur,$tpoint_id) { $db=DbSingleton::getDb();
+        $summ_uah=$summ_usd=$summ_eur=0; $list=""; $docs=[];
 		$where=" and sv.data_pay<'$date_cur' and sv.client_id=$client_id"; 
 		if ($tpoint_id!="0" && $tpoint_id!=NULL) $where_tpoint=" and sv.tpoint_id=$tpoint_id "; else $where_tpoint="";
 		$r=$db->query("select sv.*, dp.prefix as dp_prefix, dp.doc_nom as dp_nom, cl.name as client_name, ch.abr2 as cash_abr from J_SALE_INVOICE sv
 			left outer join J_DP dp on dp.id=sv.dp_id
 			left outer join CASH ch on ch.id=sv.cash_id
 			left outer join A_CLIENTS cl on cl.id=sv.client_conto_id
-		where sv.status=1 and sv.summ_debit>0 $where $where_tpoint order by sv.data_pay asc, sv.status_invoice asc, sv.data_create desc, sv.prefix asc, sv.id desc;");
-		$n=$db->num_rows($r);
+		where sv.status=1 and sv.summ_debit>0 $where $where_tpoint order by sv.data_pay asc, sv.status_invoice asc, sv.data_create desc, sv.prefix asc, sv.id desc;"); $n=$db->num_rows($r);
+
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
-			$dp_id=$db->result($r,$i-1,"dp_id"); $dp_nom=$db->result($r,$i-1,"dp_prefix").$db->result($r,$i-1,"dp_nom");
 			$prefix=$db->result($r,$i-1,"prefix");
 			$doc_nom=$db->result($r,$i-1,"doc_nom");
 			$client_id=$db->result($r,$i-1,"client_id");
-			$client_name=$db->result($r,$i-1,"client_name");;
 			$summ=$db->result($r,$i-1,"summ_debit");
 			$cash_id=$db->result($r,$i-1,"cash_id");
 			$cash_abr=$db->result($r,$i-1,"cash_abr");
@@ -177,7 +173,6 @@ class report_overdraft {
 				<td align='right' onClick='showSaleInvoiceCard(\"$invoice_id\");'>$prolog_amount</td>
 			</tr>";
 		}
-			
 		return $list;
 	}
 	
@@ -188,9 +183,8 @@ class report_overdraft {
 		return $diff;
 	}
 	
-	function showDocsProlongationForm($client_id,$invoice_id) { $db=DbSingleton::getDb(); 
+	function showDocsProlongationForm($client_id,$invoice_id) { $db=DbSingleton::getDb(); $list="";
 		$r=$db->query("select * from J_SALE_INVOICE_PROLONGATION where invoice_id='$invoice_id' and client_id='$client_id';"); $n=$db->num_rows($r);
-        $list = '';
 		for ($i=1;$i<=$n;$i++){
 			$user_id=$db->result($r,$i-1,"user_id"); $user_name=$this->getMediaUserName($user_id);
 			$date_pay_new=$db->result($r,$i-1,"date_pay_new");

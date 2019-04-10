@@ -20,9 +20,9 @@ function exportDocs($client_id,$date_start,$date_end) {
 	exit(0);
 }
 
-function getBackClientsStrSumm($back_id) { $db=DbSingleton::getDb(); $summ=0; $col=0;
+function getBackClientsStrSumm($back_id) { $db=DbSingleton::getDb(); $summ=$col=0;
 	$r=$db->query("select price_buh_uah,partition_amount from J_BACK_CLIENTS_PARTITION_STR where back_id='$back_id';"); $n=$db->num_rows($r);
-	for ($i=1;$i<=$n;$i++){ $amount=0; $price=0;
+	for ($i=1;$i<=$n;$i++){
 		$price=$db->result($r,$i-1,"price_buh_uah");
 		$amount=$db->result($r,$i-1,"partition_amount");
 		$col+=$amount;
@@ -37,20 +37,18 @@ function getTaxInvo($tax_id) { $db=DbSingleton::getDb();
 	return $tax_type_id;
 }
 
-function exportBackClients($client_id,$date_start,$date_end) { $db=DbSingleton::getDb();														  
+function exportBackClients($client_id,$date_start,$date_end) { $db=DbSingleton::getDb();$list=[];
 	$where=" and j.seller_id='$client_id' and j.time_stamp>='$date_start 00:00:00' and j.time_stamp<='$date_end 23:59:59' ";
 	$r=$db->query("select j.*, c.full_name as client_seller_name, cd.edrpou, cd.vytjag, tx.doc_nom as tax_doc, tx.tax_type_id, tx.tax_to_back_id
 	from J_BACK_CLIENTS j
 		left outer join A_CLIENTS c on c.id=j.client_id
 		left outer join A_CLIENT_DETAILS cd on cd.client_id=j.client_id
 		left outer join J_TAX_INVOICE tx on tx.back_id=j.id
-	where j.status=1 and j.doc_type_id=61 and tx.status=1 $where;"); $n=$db->num_rows($r); $list=[];
-															  
+	where j.status=1 and j.doc_type_id=61 and tx.status=1 $where;"); $n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
 		$prefix=$db->result($r,$i-1,"prefix"); $doc_nom=$db->result($r,$i-1,"doc_nom"); if ($doc_nom==0){$doc_nom="-";} $name="$prefix-$doc_nom";
 		$data=$db->result($r,$i-1,"data");
-		$client_seller=$db->result($r,$i-1,"client_seller");
 		$client_seller_name=$db->result($r,$i-1,"client_seller_name");
 		$client_seller_name=str_replace("&rsquo;",'"',$client_seller_name);
 		$client_edrpou=$db->result($r,$i-1,"edrpou");
@@ -69,9 +67,9 @@ function exportBackClients($client_id,$date_start,$date_end) { $db=DbSingleton::
 	return $list;
 }
 
-function getSaleInvoiceStrSumm($invoice_id) { $db=DbSingleton::getDb(); $summ=0; $col=0;
+function getSaleInvoiceStrSumm($invoice_id) { $db=DbSingleton::getDb(); $summ=$col=0;
 	$r=$db->query("select price_buh_uah,invoice_amount from J_SALE_INVOICE_PARTITION_STR where invoice_id='$invoice_id';"); $n=$db->num_rows($r);
-	for ($i=1;$i<=$n;$i++){ $amount=0; $price=0;
+	for ($i=1;$i<=$n;$i++){
 		$price=$db->result($r,$i-1,"price_buh_uah");
 		$amount=$db->result($r,$i-1,"invoice_amount");
 		$col+=$amount;
@@ -80,19 +78,17 @@ function getSaleInvoiceStrSumm($invoice_id) { $db=DbSingleton::getDb(); $summ=0;
     return array($summ,$col);
 }
 
-function exportSaleInvoice($client_id,$date_start,$date_end) { $db=DbSingleton::getDb();												  
+function exportSaleInvoice($client_id,$date_start,$date_end) { $db=DbSingleton::getDb();$list=[];
 	$where=" and j.seller_id='$client_id' and j.data_create>='$date_start 00:00:00' and j.data_create<='$date_end 23:59:59' ";
 	$r=$db->query("select j.*, c.full_name as client_seller_name, cd.edrpou, cd.vytjag, tx.doc_nom as tax_doc from J_SALE_INVOICE j
 		left outer join A_CLIENTS c on c.id=j.client_conto_id
 		left outer join A_CLIENT_DETAILS cd on cd.client_id=j.client_conto_id
 		left outer join J_TAX_INVOICE tx on tx.sale_invoice_id=j.id
-	where j.status=1 $where and tx.back_id=0;");$n=$db->num_rows($r);$list=[];
-															  
+	where j.status=1 $where and tx.back_id=0;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
 		$prefix=$db->result($r,$i-1,"prefix"); $doc_nom=$db->result($r,$i-1,"doc_nom");if ($doc_nom==0){$doc_nom="-";} $name="$prefix-$doc_nom";
 		$data=$db->result($r,$i-1,"data_create");
-		$client_seller=$db->result($r,$i-1,"client_seller");
 		$client_seller_name=$db->result($r,$i-1,"client_seller_name");
 		$client_seller_name=str_replace("&rsquo;",'"',$client_seller_name);
 		$client_edrpou=$db->result($r,$i-1,"edrpou");
@@ -108,7 +104,7 @@ function exportSaleInvoice($client_id,$date_start,$date_end) { $db=DbSingleton::
 
 function getIncomeStrSumm($income_id) { $db=DbSingleton::getDb(); $summ=0; $col=0;
 	$r=$db->query("select price_buh_uah,amount from J_INCOME_STR where income_id='$income_id';"); $n=$db->num_rows($r);
-	for ($i=1;$i<=$n;$i++){ $amount=0; $price=0;
+	for ($i=1;$i<=$n;$i++){
 		$price=$db->result($r,$i-1,"price_buh_uah");
 		$amount=$db->result($r,$i-1,"amount");
 		$col+=$amount;
@@ -117,20 +113,18 @@ function getIncomeStrSumm($income_id) { $db=DbSingleton::getDb(); $summ=0; $col=
     return array($summ,$col);
 }
 
-function exportIncome($client_id,$date_start,$date_end) { $db=DbSingleton::getDb();
+function exportIncome($client_id,$date_start,$date_end) { $db=DbSingleton::getDb();$list=[];
 	$where=" and j.client_id='$client_id' and j.data>='$date_start 00:00:00' and j.data<='$date_end 23:59:59' ";
 	$r=$db->query("select j.*, c.full_name as client_seller_name, cd.edrpou, cd.vytjag from J_INCOME j
 		left outer join A_CLIENTS c on c.id=j.client_seller
 		left outer join A_CLIENT_DETAILS cd on cd.client_id=j.client_seller
-	where j.status=1 $where ;");$n=$db->num_rows($r);$list=[];
-														 
+	where j.status=1 $where ;");$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$id=$db->result($r,$i-1,"id");
 		$prefix=$db->result($r,$i-1,"prefix"); $doc_nom=$db->result($r,$i-1,"doc_nom");if ($doc_nom==0){$doc_nom="-";} $name="$prefix-$doc_nom";
 		$data=$db->result($r,$i-1,"data");
 		$invoice_income=$db->result($r,$i-1,"invoice_income");
 		$invoice_data=$db->result($r,$i-1,"invoice_data");
-		$client_seller=$db->result($r,$i-1,"client_seller");
 		$client_seller_name=$db->result($r,$i-1,"client_seller_name");
 		$client_seller_name=str_replace("&rsquo;",'"',$client_seller_name);
 		$client_edrpou=$db->result($r,$i-1,"edrpou");
@@ -142,7 +136,7 @@ function exportIncome($client_id,$date_start,$date_end) { $db=DbSingleton::getDb
 	return $list;
 }
 
-function showSelectList() { $db=DbSingleton::getDb();
+function showSelectList() { $db=DbSingleton::getDb();$list="";
 	$r=$db->query("select c.id, c.full_name, cc.category_id from A_CLIENTS c 
 		left outer join A_CLIENTS_CATEGORY cc on cc.client_id=c.id
 	where cc.category_id=3 order by c.id asc;");$n=$db->num_rows($r);
@@ -165,7 +159,7 @@ function exportDocsForm() {
 
 // export Cross -----------------------------------------------------------------------------------------------------------------------------------
 
-function ExportCross($br) { $db=DbSingleton::getTokoDb();						
+function ExportCross($br) { $db=DbSingleton::getTokoDb(); $list=[];
 	$br2="'".implode("','", $br)."'"; 
 	$r=$db->query("
 	SELECT b3.BRAND_NAME, tarez.ARTICLE_NR_DISPL, t2c.DISPLAY_NR, b2.BRAND_NAME
@@ -184,7 +178,7 @@ function ExportCross($br) { $db=DbSingleton::getTokoDb();
 	INNER JOIN T2_BRANDS b2 ON b2.BRAND_ID = t2c.BRAND_ID
 	LEFT JOIN T2_BRANDS b3 ON b3.BRAND_ID = tarez.BRAND_ID
 	");
-	$n=$db->num_rows($r); $list="";
+	$n=$db->num_rows($r);
 	for ($i=1;$i<=$n;$i++){
 		$article=$db->result($r,$i-1,"tarez.ARTICLE_NR_DISPL");
 		$name=$db->result($r,$i-1,"b3.BRAND_NAME");
@@ -206,4 +200,3 @@ function showBrandsSelect() { $db=DbSingleton::getTokoDb();
 	return $list;
 }
 
-?>

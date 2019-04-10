@@ -2,7 +2,6 @@ var errs=[];
 errs[0]="Помилка індексу";
 errs[1]="Занадто короткий запит для пошуку";
 
-
 $(document).ready(function() {
 	$('#flClientCategoryTree') .on('changed.jstree', function (e, data) {
 		var i, j, r = [];
@@ -15,7 +14,6 @@ $(document).ready(function() {
 		  r.push(data.instance.get_node(data.selected[i]).id);
 		}
 		$('#flClientCategoryTree_id').val(''+r.join(', '));
-		
 	}).jstree({
 		'core' : {'check_callback' : true},
 		'plugins' : [ 'types', 'dnd',"sort" ],
@@ -47,7 +45,6 @@ function ClearClientSearch(){
 	filterClientsList();
 }
 
-
 function newClientCard(){
 	JsHttpRequest.query($rcapi,{ 'w': 'newClientCard'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -57,7 +54,6 @@ function newClientCard(){
 		} else {
 			showClientCard(client_id);
 		}
-//		filterClientsList();
 	}}, true);
 }
 
@@ -72,8 +68,6 @@ function checkEmptyClients(client_id) {
 		}
 	}}, true);
 }
-
-
 
 var barcode_settings = {barWidth: 1,barHeight: 50,moduleSize: 5,showHRI: true,addQuietZone: true,marginHRI: 5,bgColor: "#FFFFFF",color: "#000000",fontSize: 14,output: "css",posX: 0,posY: 0};
 
@@ -108,7 +102,6 @@ function showClientCard(client_id){
 }
 
 function showClientRetailList(press_btn){
-	
 	var status=$('#input_done').val();
 	if (press_btn) {
 		if (status=="true") status=true; else status=false;
@@ -123,8 +116,6 @@ function showClientRetailList(press_btn){
 	} else {
 		if (status=="true") status=false; else status=true;
 	}
-	
-
 	var prevRange=$("#clients_range").html();
 	JsHttpRequest.query($rcapi,{ 'w': 'showClientRetailList', 'status':status}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){
@@ -163,11 +154,10 @@ function saveClientRetailGeneralInfo(){
 	var user_id=$("#user_id").val();
 	var user_name=$("#user_name").val();
 	var client_id=$("#client_name").val();
-//	var user_city=$("#user_city").val();
-		var country_id=$("#country_id option:selected").val();
-		var state_id=$("#state_id option:selected").val();
-		var region_id=$("#region_id option:selected").val();
-		var city_id=$("#city_id option:selected").val();
+	var country_id=$("#country_id option:selected").val();
+	var state_id=$("#state_id option:selected").val();
+	var region_id=$("#region_id option:selected").val();
+	var city_id=$("#city_id option:selected").val();
 	var user_category=$("#user_category").val();
 	var user_phone=$("#user_phone").val();
 	var user_email=$("#user_email").val();
@@ -183,7 +173,7 @@ function saveClientRetailGeneralInfo(){
 	function (isConfirm) {
 		if (isConfirm) {
 			if (user_id.length>0){
-				JsHttpRequest.query($rcapi,{ 'w':'saveClientRetailGeneralInfo','user_id':user_id, 'user_name':user_name, 'client_id':client_id, 'country_id':country_id, 'state_id':state_id, 'region_id':region_id, 'city_id':city_id, 'user_category':user_category, 'user_phone':user_phone, 'user_email':user_email, 'user_pass':user_pass, 'user_status':user_status, 'user_data':user_data},
+				JsHttpRequest.query($rcapi,{ 'w':'saveClientRetailGeneralInfo','user_id':user_id, 'user_name':user_name, 'country_id':country_id, 'state_id':state_id, 'region_id':region_id, 'city_id':city_id, 'user_category':user_category, 'user_phone':user_phone, 'user_email':user_email, 'user_status':user_status},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
@@ -228,7 +218,6 @@ function moveClientsRetail(user_id,client_id){
 function setClientRetail(client_id,client_name) {
 	var user_id=$("#user_id").val();
 	var user_name=$("#user_name").val();
-	
 	swal({
 		title: "Привязати користувача \""+user_name+"\" за контрагентом \""+client_name+"\"?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -252,7 +241,6 @@ function setClientRetail(client_id,client_name) {
 			swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
 		}
 	});
-
 }
 
 function loadStateSelectList(){
@@ -263,6 +251,7 @@ function loadStateSelectList(){
 		$("#state_id").select2({placeholder: "Виберіть область",dropdownParent: $("#ClientCard")});
 	}}, true);
 }
+
 function loadRegionSelectList(){
 	var state_id=$("#state_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientRegionSelectList', 'state_id':state_id}, 
@@ -271,6 +260,7 @@ function loadRegionSelectList(){
 		$("#region_id").select2({placeholder: "Виберіть район",dropdownParent: $("#ClientCard")});
 	}}, true);
 }
+
 function loadCitySelectList(){
 	var region_id=$("#region_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientCitySelectList', 'region_id':region_id}, 
@@ -291,8 +281,6 @@ function loadCitySelectList(){
 	}}, true);
 }
 
-
-
 function loadClientConditions(client_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
@@ -311,7 +299,6 @@ function loadClientConditions(client_id){
 	}
 }
 
-
 function loadClientDetails(client_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
@@ -319,7 +306,7 @@ function loadClientDetails(client_id){
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			document.getElementById("details_place").innerHTML=result["content"];
 			$('#catalogue_tabs').tab();
-//			$("#units").select2({placeholder: "Одиниці виміру",dropdownParent: $("#ClientCard")});
+			//$("#units").select2({placeholder: "Одиниці виміру",dropdownParent: $("#ClientCard")});
 		}}, true);
 	}
 }
@@ -329,7 +316,6 @@ function norResidentAcive(){
 		document.getElementById("nr_details").disabled="";
 	}else{document.getElementById("nr_details").disabled="disabled";}
 }
-
 
 function preconfirmClientDetails(){
 	swal({
@@ -345,6 +331,7 @@ function preconfirmClientDetails(){
 		}
 	});
 }
+
 function saveClientDetails(){
 	var client_id=$("#client_id").val();
 	var address_jur=$("#address_jur").val();
@@ -360,7 +347,6 @@ function saveClientDetails(){
 	var not_resident=0; if (document.getElementById("not_resident").checked){not_resident=1;}else{nr_details="";}
 	var buh_name=$("#buh_name").val();
 	var buh_edrpou=$("#buh_edrpou").val();
-
 	if (client_id.length>0){
 		JsHttpRequest.query($rcapi,{ 'w':'saveClientDetails','client_id':client_id,'address_jur':address_jur,'address_fakt':address_fakt,'edrpou':edrpou,'svidotctvo':svidotctvo,'vytjag':vytjag,'vat':vat,'mfo':mfo, 'bank':bank,'account':account,'not_resident':not_resident,'nr_details':nr_details,'buh_name':buh_name,'buh_edrpou':buh_edrpou},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -369,12 +355,9 @@ function saveClientDetails(){
 				filterClientsList();
 			}
 			else{ swal("Помилка!", result["error"], "error");}
-			
 		}}, true);
 	}
 }
-
-
 
 function loadClientDocumentPrefix(client_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
@@ -386,6 +369,7 @@ function loadClientDocumentPrefix(client_id){
 		}}, true);
 	}
 }
+
 function showClientDocumentPrefixForm(client_id, prefix_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
@@ -396,6 +380,7 @@ function showClientDocumentPrefixForm(client_id, prefix_id){
 		}}, true);
 	}
 }
+
 function dropClientDocumentPrefix(client_id,prefix_id,prefix_name){
 	swal({
 		title: "Видалити префікс документа\""+prefix_name+"\"?",
@@ -431,7 +416,6 @@ function saveClientDocumentPrefixForm(client_id,prefix_id){
 		if (isConfirm) {
 			var prefix=$("#prefix").val();
 			var doc_type_id=$("#doc_type_id option:selected").val();
-
 			if (client_id.length>0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveClientDocumentPrefixForm','client_id':client_id,'prefix_id':prefix_id,'doc_type_id':doc_type_id,'prefix':prefix},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -448,7 +432,6 @@ function saveClientDocumentPrefixForm(client_id,prefix_id){
 		}
 	});
 }
-
 
 function loadClientContacts(client_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
@@ -471,7 +454,6 @@ function showClientContactForm(client_id, contact_id){
 		}}, true);
 	}
 }
-
 
 function dropClientContact(client_id,contact_id,contact_name){
 	swal({
@@ -533,8 +515,6 @@ function saveClientContactForm(client_id,contact_id){
 	});
 }
 
-
-
 function preconfirmClientGeneralInfo(){
 	swal({
 		title: "Зберегти зміни у розділі \"Загальна інформація\"?",
@@ -551,7 +531,6 @@ function preconfirmClientGeneralInfo(){
 }
 
 function saveClientGeneralInfo(){
-	
 	var client_id=$("#client_id").val();
 	var org_type=$("#org_type option:selected").val();
 	var client_name=$("#client_name").val();
@@ -565,12 +544,11 @@ function saveClientGeneralInfo(){
 	var city_id=$("#city_id option:selected").val(); 
 	var c_category_kol=$("#c_category_kol").val();
 	var user_category=$("#user_category").val();
-	
 	var c_category=[]; var cc="";
 	for (var i=1;i<=c_category_kol;i++){var cc=0;if(document.getElementById("c_category_"+i).checked) { cc=$("#c_category_"+i).val(); }c_category[i]=cc;}
 
 	if (client_id.length>0){
-		JsHttpRequest.query($rcapi,{ 'w':'saveClientGeneralInfo','client_id':client_id,'org_type':org_type,'name':client_name,'full_name':client_full_name,'phone':phone,'email':email, 'parrent_id':parrent_id, 'country_id':country_id, 'state_id':state_id, 'region_id':region_id, 'city_id':city_id, 'c_category_kol':c_category_kol, 'c_category':c_category,'user_category':user_category},
+		JsHttpRequest.query($rcapi,{ 'w':'saveClientGeneralInfo', 'client_id':client_id, 'org_type':org_type, 'name':client_name, 'full_name':client_full_name, 'phone':phone, 'email':email, 'parrent_id':parrent_id, 'country_id':country_id, 'state_id':state_id, 'region_id':region_id, 'city_id':city_id, 'c_category_kol':c_category_kol, 'c_category':c_category, 'user_category':user_category},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			if (result["answer"]==1){ 
 				swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
@@ -584,8 +562,6 @@ function saveClientGeneralInfo(){
 							console.log(result["client_id"]);
 						}
 					})
-				
-
 				//var art=$("#catalogue_art").val();
 				//if (art.length>0){
 				//	catalogue_client_search();
@@ -595,8 +571,6 @@ function saveClientGeneralInfo(){
 		}}, true);
 	}
 }
-
-
 
 function preconfirmClientConditions(client_id){
 	swal({
@@ -633,13 +607,12 @@ function saveClientConditions(client_id){
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			if (result["answer"]==1){ 
 				swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
+                loadClientConditions(client_id);
 			}
 			else{ swal("Помилка!", result["error"], "error");}
-			
 		}}, true);
 	}
 }
-
 
 function showClientsParrentTree(client_id,parrent_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
@@ -684,6 +657,7 @@ function unlinkClientsParrent(client_id){
 		}
 	});
 }
+
 function unlinkClientsSubclient(client_id,subclient_id){
 	swal({
 		title: "Відвязати контагента від \""+$('#client_full_name').val()+"\"?",text: "Внесені Вами зміни вплинуть на роботу Контагента",
@@ -706,7 +680,6 @@ function unlinkClientsSubclient(client_id,subclient_id){
 	});
 }
 
-
 function loadClientSubclients(client_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
@@ -716,8 +689,6 @@ function loadClientSubclients(client_id){
 		}}, true);
 	}
 }
-
-
 
 function loadClientUsers(client_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
@@ -742,15 +713,15 @@ function showClientUserForm(client_id, user_id){
 }
 
 function randString(id){
-  var dataSet = $(id).attr('data-character-set').split(',');  
-  var possible = '';  var text = '';
-  if($.inArray('a-z', dataSet) >= 0){possible += 'abcdefghijklmnopqrstuvwxyz';}
-  if($.inArray('A-Z', dataSet) >= 0){possible += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';}
-  if($.inArray('0-9', dataSet) >= 0){possible += '0123456789';}
-  if($.inArray('#', dataSet) >= 0){possible += '![]{}()%&*$#^<>~@|';}
-  for(var i=0; i < $(id).attr('data-size'); i++) {text += possible.charAt(Math.floor(Math.random() * possible.length));}
-  $(id).val(""+text);
-  return text;
+	var dataSet = $(id).attr('data-character-set').split(',');
+	var possible = '';  var text = '';
+	if($.inArray('a-z', dataSet) >= 0){possible += 'abcdefghijklmnopqrstuvwxyz';}
+	if($.inArray('A-Z', dataSet) >= 0){possible += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';}
+	if($.inArray('0-9', dataSet) >= 0){possible += '0123456789';}
+	if($.inArray('#', dataSet) >= 0){possible += '![]{}()%&*$#^<>~@|';}
+	for(var i=0; i < $(id).attr('data-size'); i++) {text += possible.charAt(Math.floor(Math.random() * possible.length));}
+	$(id).val(""+text);
+	return text;
 }
 
 function dropClientUser(client_id,user_id,user_name){
@@ -793,7 +764,6 @@ function saveClientUserForm(client_id,user_id){
 			var user_main=0; if(document.getElementById("user_main").checked) { user_main=1;}
 			var price_main=0; if(document.getElementById("user_price").checked) { price_main=1;}
 			var export_main=0; if(document.getElementById("user_export").checked) { export_main=1;}
-
 			if (client_id.length>0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveClientUserForm','client_id':client_id,'user_id':user_id,'user_name':user_name,'user_email':user_email,'user_phone':user_phone,'user_pass':user_pass,'user_main':user_main,'price_main':price_main,'export_main':export_main},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -810,7 +780,6 @@ function saveClientUserForm(client_id,user_id){
 		}
 	});
 }
-
 
 function loadClientCommets(client_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
@@ -836,6 +805,7 @@ function saveClientComment(client_id){
 		}
 	}
 }
+
 function dropClientComment(client_id,cmt_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
@@ -849,6 +819,7 @@ function dropClientComment(client_id,cmt_id){
 		}
 	}
 }
+
 function loadClientCDN(client_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
@@ -895,7 +866,6 @@ function viewClientsDetailsFile(client_id,file_type){
 	}
 }
 
-
 function fileClientsDetailsUploadForm(client_id,file_type){
 	$("#dtls_client_id").val(client_id);
 	$("#dtls_file_type").val(file_type);
@@ -909,7 +879,6 @@ function fileClientsDetailsUploadForm(client_id,file_type){
 		viewClientsDetailsFile(client_id,file_type);
 	});
 }
-
 
 function showClientsDetailsDropConfirmForm(client_id,file_type,file_id,file_name){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
@@ -933,7 +902,6 @@ function showCountryManual(){
 		setTimeout(function(){
 		  $('#datatable_country').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [10, 20, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
 		}, 500);
-		
 	}}, true);
 }
 
@@ -943,6 +911,7 @@ function selectCountry(id,name){
 	$("#country_name").val(name);
 	$("#CountryModalWindow").modal('hide');
 }
+
 function showCountryForm(country_id){
 	JsHttpRequest.query($rcapi,{ 'w':'showCountryForm','country_id':country_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -959,7 +928,6 @@ function saveClientCountryForm(){
 	var alfa3=$("#form_country_alfa3").val();
 	var duty=$("#form_country_duty").val();
 	var risk=$("#form_country_risk").val();
-	
 	JsHttpRequest.query($rcapi,{ 'w':'saveClientCountryForm','id':id,'name':name,'alfa2':alfa2,'alfa3':alfa3,'duty':duty,'risk':risk},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		if (result["answer"]==1){ 
@@ -968,10 +936,9 @@ function saveClientCountryForm(){
 			showCountryManual();
 		}
 		else{ swal("Помилка!", result["error"], "error");}
-		
 	}}, true);
-	
 }
+
 function showCostumsManual(){
 	var costums_id=$("#costums_id").val();
 	JsHttpRequest.query($rcapi,{ 'w':'showCostumsManual','costums_id':costums_id},
@@ -981,14 +948,15 @@ function showCostumsManual(){
 		setTimeout(function(){
 		  $('#datatable_costums').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [10, 20, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
 		}, 500);
-		
 	}}, true);
 }
+
 function selectCostums(id,name){
 	$("#costums_id").val(id);
 	$("#costums_name").val(name);
 	$("#CostumsModalWindow").modal('hide');
 }
+
 function showCostumsForm(costums_id){
 	JsHttpRequest.query($rcapi,{ 'w':'showCostumsForm','costums_id':costums_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -1006,7 +974,6 @@ function saveClientCostumsForm(){
 	var type_declaration=$("#form_costums_type_declaration").val();
 	var sertification=$("#form_costums_sertification").val();
 	var gos_standart=$("#form_costums_gos_standart").val();
-	
 	JsHttpRequest.query($rcapi,{ 'w':'saveClientCostumsForm','id':id,'name':name,'preferential_rate':preferential_rate,'full_rate':full_rate,'type_declaration':type_declaration,'sertification':sertification,'gos_standart':gos_standart},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		if (result["answer"]==1){ 
@@ -1015,12 +982,8 @@ function saveClientCostumsForm(){
 			showCostumsManual();
 		}
 		else{ swal("Помилка!", result["error"], "error");}
-		
 	}}, true);
-	
 }
-
-
 
 function loadClientStorage(client_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
@@ -1044,8 +1007,8 @@ function showClientStorageForm(client_id,storage_id){
 		$("#storage_city_id").select2({placeholder: "Виберіть населений пунк",dropdownParent: $("#FormModalWindow")});
 	}}, true);
 }
-function saveClientStorageForm(client_id,storage_id){
 
+function saveClientStorageForm(client_id,storage_id){
 	var name=$("#storage_name").val();
 	var email=$("#storage_email").val();
 	var phone=$("#storage_phone").val();
@@ -1055,8 +1018,6 @@ function saveClientStorageForm(client_id,storage_id){
 	var region=$("#storage_region_id option:selected").val();
 	var city=$("#storage_city_id option:selected").val();
 	var client_visible=0;if (document.getElementById("client_visible").checked){client_visible=1;}
-
-	
 	JsHttpRequest.query($rcapi,{ 'w':'saveClientStorageForm','client_id':client_id,'storage_id':storage_id,'name':name,'email':email,'phone':phone,'contact_person':contact_person,'country':country,'state':state,'region':region,'city':city,'client_visible':client_visible},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		if (result["answer"]==1){ 
@@ -1065,9 +1026,7 @@ function saveClientStorageForm(client_id,storage_id){
 			loadClientStorage(client_id);
 		}
 		else{ swal("Помилка!", result["error"], "error");}
-		
 	}}, true);
-	
 }
 
 function loadStorageStateSelectList(){
@@ -1078,6 +1037,7 @@ function loadStorageStateSelectList(){
 		$("#storage_state_id").select2({placeholder: "Виберіть область",dropdownParent: $("#FormModalWindow")});
 	}}, true);
 }
+
 function loadStorageRegionSelectList(){
 	var state_id=$("#storage_state_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientRegionSelectList', 'state_id':state_id}, 
@@ -1086,6 +1046,7 @@ function loadStorageRegionSelectList(){
 		$("#storage_region_id").select2({placeholder: "Виберіть район",dropdownParent: $("#FormModalWindow")});
 	}}, true);
 }
+
 function loadStorageCitySelectList(){
 	var region_id=$("#storage_region_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientCitySelectList', 'region_id':region_id}, 
@@ -1128,13 +1089,9 @@ function saveClientSupplConditions(client_id){
 			var prepay_summ=$("#prepay_summ").val();
 			var prepay_type=$("#prepay_type option:selected").val();
 			var prepay_persent=parseInt($("#prepay_persent").val());
-			
 			var er=0;
-			
 			if (prepay_persent<0 || prepay_persent>100){er=1; swal("Помилка!", "Відсоток передоплати не повинен бути більше 100", "error");}
-			if ((prepay_persent<0 || prepay_persent>100) && er==0){
-				
-			}
+			if ((prepay_persent<0 || prepay_persent>100) && er==0){}
 		
 			if (client_id.length>0 && er==0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveClientSupplConditions','client_id':client_id,'prepayment':prepayment,'prepay_all':prepay_all,'prepay_summ':prepay_summ,'prepay_type':prepay_type,'prepay_persent':prepay_persent},
@@ -1143,7 +1100,6 @@ function saveClientSupplConditions(client_id){
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 					}
 					else{ swal("Помилка!", result["error"], "error");}
-					
 				}}, true);
 			}
 		} else {
@@ -1151,6 +1107,7 @@ function saveClientSupplConditions(client_id){
 		}
 	});
 }
+
 function changePrepayment(){
 	if (document.getElementById("prepayment").checked){
 		$("#prepay_all").removeAttr('disabled');
@@ -1164,9 +1121,8 @@ function changePrepayment(){
 		$("#prepay_type").attr('readonly', true);
 		changePrepayType();
 		$("#prepay_persent").attr('readonly', true);
-		
 	}
-	return;
+	return true;
 }
 
 function changePrepayType(){
@@ -1177,7 +1133,7 @@ function changePrepayType(){
 	if (prepay_type==65){
 		$("#prepay_persent").attr('readonly', true);
 	}
-	return;
+	return true;
 }
 
 function showClientGeneralSaldoForm(client_id){
@@ -1192,6 +1148,7 @@ function showClientGeneralSaldoForm(client_id){
 		}}, true);
 	}
 }
+
 function filterClientGeneralSaldoForm(client_id){
 	if (client_id.length>0){
 		var from=$("#saldo_data_start").val();
@@ -1203,11 +1160,9 @@ function filterClientGeneralSaldoForm(client_id){
 			document.getElementById("client_saldo_end").innerHTML=result["saldo_end"];
 			document.getElementById("client_saldo_data_start").innerHTML=result["saldo_data_start"];
 			document.getElementById("client_saldo_data_end").innerHTML=result["saldo_data_end"];
-			
 		}}, true);
 	}
 }
-
 
 function viewJpayMoneyPay(pay_id){
 	JsHttpRequest.query($rcapi,{ 'w': 'viewJpayMoneyPay', 'pay_id':pay_id}, 
@@ -1343,7 +1298,6 @@ function saveClientMandateForm(client_id,mandate_id){
 	var receiver=$("#mandate_receiver").val();
 	var data_from=$("#mandate_data_from").val();
 	var data_to=$("#mandate_data_to").val();
-
 	JsHttpRequest.query($rcapi,{ 'w':'saveClientMandateForm','client_id':client_id,'mandate_id':mandate_id,'number':number,'seria':seria,'receiver':receiver,'data_from':data_from,'data_to':data_to},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		if (result["answer"]==1){ 
@@ -1352,9 +1306,7 @@ function saveClientMandateForm(client_id,mandate_id){
 			loadClientSupplDocuments(client_id);
 		}
 		else{ swal("Помилка!", result["error"], "error");}
-		
 	}}, true);
-	
 }
 
 function dropClientMandate(client_id,mandate_id){
@@ -1397,7 +1349,6 @@ function saveClientBasisForm(client_id,basis_id){
 	var number=$("#basis_number").val();
 	var data_from=$("#basis_data_from").val();
 	var data_to=$("#basis_data_to").val();
-
 	JsHttpRequest.query($rcapi,{ 'w':'saveClientBasisForm','client_id':client_id,'basis_id':basis_id,'number':number,'data_from':data_from,'data_to':data_to},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		if (result["answer"]==1){ 
@@ -1406,9 +1357,7 @@ function saveClientBasisForm(client_id,basis_id){
 			loadClientSupplDocuments(client_id);
 		}
 		else{ swal("Помилка!", result["error"], "error");}
-		
 	}}, true);
-	
 }
 
 function dropClientBasis(client_id,basis_id){
@@ -1451,3 +1400,4 @@ function showClientConditionsHistory(client_id) {
 		}}, true);
 	}
 }
+

@@ -2,7 +2,6 @@ var errs=[];
 errs[0]="Помилка індексу";
 errs[1]="Занадто короткий запит для пошуку";
 
-
 $(document).ready(function() {
     shortcut.add("Insert", function() {
 		var  jmoving_id=$("#jmoving_id").val();
@@ -29,15 +28,12 @@ function filterJmovingsList() {
 	var data_from=$('#filDataFrom').val();
 	var data_to=$('#filDataTo').val();
 	var status=$("#filStatusMain option:selected").val();
-	
 	$("#jmoving_range").empty();
-	
 	JsHttpRequest.query($rcapi,{ 'w': 'filterJmovingList', 'name':name, 'data_from':data_from, 'data_to':data_to, 'status':status}, 
-	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		//console.log(name+" - "+data_from+" - "+data_to+" - "+status);
+	function (result, errors){ if (errors) {alert(errors);} if (result){
 		$("#jmoving_range").html(result["content"]);
-		$('#filDataFrom').datepicker({format: "yyyy-mm-dd",autoclose:true})
-		$('#filDataTo').datepicker({format: "yyyy-mm-dd",autoclose:true})
+		$('#filDataFrom').datepicker({format: "yyyy-mm-dd",autoclose:true});
+		$('#filDataTo').datepicker({format: "yyyy-mm-dd",autoclose:true});
 	}}, true);
 }
 
@@ -55,24 +51,21 @@ function autoUpdateJmoving(press_btn){
 	if (press_btn) {
 		if (status=="true") status=true; else status=false;
 		if (status){
-				console.log("Нажав STOP");
 			$('#update_status').val('false');
 			$('#toggle_update').html("<i class='fa fa-play'></i>");		
 		}
 		else  {
-				console.log("Нажав PLAY");
 			$('#update_status').val('true');
 			$('#toggle_update').html("<i class='fa fa-stop-circle'></i>");
 		}	
 	}
-	//console.log("Обновляю AutoUpdate - "+status);
 	updateJmovingRange();
 }
 
 function updateJmovingRange(press_btn){
 	var status=$('#input_done').val();
 	if (press_btn) {
-		if (status=="true") status=true; else status=false;
+        status==="true" ? status=true : status=false;
 		if (status){
 			$('#input_done').val('false');
 			$('#toggle_done').html("<i class='fa fa-eye-slash'></i>");		
@@ -82,22 +75,20 @@ function updateJmovingRange(press_btn){
 			$('#toggle_done').html("<i class='fa fa-eye'></i>");
 		}	
 	} else {
-		if (status=="true") status=false; else status=true;
+		status==="true" ? status=false : status=true;
 	}
-	
-
-		var prevRange=$("#jmoving_range").html();
-		JsHttpRequest.query($rcapi,{ 'w': 'show_jmoving_search', 'status':status}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){
-			if (prevRange.length != result["content"].length){
-				$("#jmoving_range").empty();
-				document.getElementById("jmoving_range").innerHTML=result["content"];
-			}
+	var prevRange=$("#jmoving_range").html();
+	JsHttpRequest.query($rcapi,{ 'w': 'show_jmoving_search', 'status':status},
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+		if (prevRange.length != result["content"].length){
+			$("#jmoving_range").empty();
+			document.getElementById("jmoving_range").innerHTML=result["content"];
+		}
 		var status=$('#update_status').val();
-		if (status==="true") { //	console.log("Обновляю Update - "+status); 
-							  setTimeout(function(){updateJmovingRange();},15*1000);}
-		}}, true);
-
+		if (status==="true") {
+			  setTimeout(function(){updateJmovingRange();},15*1000);
+		}
+	}}, true);
 }
 
 function preNewJmovingCard(){
@@ -121,7 +112,7 @@ function newJmovingCard(type_id){
 }
 
 function showJmovingCard(jmoving_id){
-	if (jmoving_id<=0 || jmoving_id==""){toastr["error"](errs[0]);}
+	if (jmoving_id<=0 || jmoving_id===""){toastr["error"](errs[0]);}
 	if (jmoving_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'showJmovingCard', 'jmoving_id':jmoving_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){
@@ -130,7 +121,7 @@ function showJmovingCard(jmoving_id){
 			document.getElementById("JmovingCardLabel").innerHTML=result["doc_prefix_nom"];
 			$('#jmoving_tabs').tab();
 			$("#cash_id").select2({placeholder: "Виберіть валюту",dropdownParent: $("#JmovingCard")});
-			$('#jmoving_data').datepicker({format: "yyyy-mm-dd",autoclose:true})
+			$('#jmoving_data').datepicker({format: "yyyy-mm-dd",autoclose:true});
 			$('.i-checks').iCheck({checkboxClass: 'icheckbox_square-green',radioClass: 'iradio_square-green',});
 //			$("#storage_id_to").select2({placeholder: "Виберіть склад",dropdownParent: $("#JmovingCard")});
 //			$("#cell_id_to").select2({placeholder: "Виберіть комірку",dropdownParent: $("#JmovingCard")});
@@ -139,7 +130,7 @@ function showJmovingCard(jmoving_id){
 	}
 }
 function showJmovingCardLocal(jmoving_id){
-	if (jmoving_id<=0 || jmoving_id==""){toastr["error"](errs[0]);}
+	if (jmoving_id<=0 || jmoving_id===""){toastr["error"](errs[0]);}
 	if (jmoving_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'showJmovingCardLocal', 'jmoving_id':jmoving_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -148,7 +139,7 @@ function showJmovingCardLocal(jmoving_id){
 			document.getElementById("JmovingCardLabel").innerHTML=result["doc_prefix_nom"];
 			$('#jmoving_tabs').tab();
 			$("#cash_id").select2({placeholder: "Виберіть валюту",dropdownParent: $("#JmovingCard")});
-			$('#jmoving_data').datepicker({format: "yyyy-mm-dd",autoclose:true})
+			$('#jmoving_data').datepicker({format: "yyyy-mm-dd",autoclose:true});
 			$('.i-checks').iCheck({checkboxClass: 'icheckbox_square-green',radioClass: 'iradio_square-green',});
 //			$("#storage_id_to").select2({placeholder: "Виберіть склад",dropdownParent: $("#JmovingCard")});
 //			$("#cell_id_to").select2({placeholder: "Виберіть комірку",dropdownParent: $("#JmovingCard")});
@@ -156,6 +147,7 @@ function showJmovingCardLocal(jmoving_id){
 		}}, true);
 	}
 }
+
 function closeJmovingCard(){
 	if ($("#jmoving_id")){
 		var jmoving_id=$("#jmoving_id").val();
@@ -167,6 +159,7 @@ function closeJmovingCard(){
 		$("#JmovingCard").modal('hide');document.getElementById("JmovingCardBody").innerHTML="";document.getElementById("JmovingCardLabel").innerHTML="";
 	}
 }
+
 function addNewRow(){
 	var storage_id_to=$("#storage_id_to option:selected").val();
 	if (storage_id_to=="" || storage_id_to==0){swal("Помилка!", "Оберіть склад переміщення!", "error");}
@@ -174,7 +167,6 @@ function addNewRow(){
 		var row=$("#jmovingStrNewRow").html();
 		var kol_row=parseInt($("#kol_row").val());
 		kol_row+=1;$("#kol_row").val(kol_row);
-		
 		row=row.replace('nom_i', ''+kol_row);
 		row=row.replace('i_0', ''+kol_row);
 		row=row.replace('i_0', ''+kol_row);
@@ -191,8 +183,6 @@ function addNewRow(){
 		row=row.replace('amountRestStr_0', 'amountRestStr_'+kol_row);
 		row=row.replace('max_stock_0', 'max_stock_'+kol_row);
 		row=row.replace('amountStr_0', 'amountStr_'+kol_row);
-		
-			
 		row=row.replace("id='jmovingStrNewRow' class='hidden'", " id='strRow_"+kol_row+"'");
 		var tbody=$("#jmoving_str tbody").append("<tr>"+row+"</tr>");
 		//numberOnly();
@@ -201,7 +191,7 @@ function addNewRow(){
 		console.log(kol_row);
 		console.log(jmoving_id);
 	}
-	return;
+	return true;
 }
 
 function addNewRowLocal(){
@@ -211,7 +201,6 @@ function addNewRowLocal(){
 		var row=$("#jmovingStrNewRow").html();
 		var kol_row=parseInt($("#kol_row").val());
 		kol_row+=1;$("#kol_row").val(kol_row);
-		
 		row=row.replace('nom_i', ''+kol_row);
 		row=row.replace('i_0', ''+kol_row);
 		row=row.replace('i_0', ''+kol_row);
@@ -229,16 +218,14 @@ function addNewRowLocal(){
 		row=row.replace('max_stock_0', 'max_stock_'+kol_row);
 		row=row.replace('amountStr_0', 'amountStr_'+kol_row);
 		row=row.replace('cellIdTo_0', 'cellIdTo_'+kol_row);
-			
 		row=row.replace("id='jmovingStrNewRow' class='hidden'", " id='strRow_"+kol_row+"'");
 		var tbody=$("#jmoving_str tbody").append("<tr>"+row+"</tr>");
 		//numberOnly();
 		var  jmoving_id=$("#jmoving_id").val();
 		showJmovingArticleLocalSearchForm(''+kol_row,'0','0','',''+jmoving_id,'');
 	}
-	return;
+	return true;
 }
-
 
 function saveJmovingCard(){
 	var jmoving_id=$("#jmoving_id").val();
@@ -262,14 +249,13 @@ function saveJmovingCard(){
 			else{ swal("Помилка!", result["error"], "error");}
 		}}, true);
 	}
-
 }
+
 function saveJmovingCardLocal(){
 	var jmoving_id=$("#jmoving_id").val();
 	var jmoving_op_id=$("#jmoving_op_id option:selected").val();
 	var data=$("#jmoving_data").val();
 	var storage_id_to=$("#storage_id_to option:selected").val();
-	var cell_id_to=$("#cell_id_to option:selected").val();
 	var comment=$("#jmoving_comment").val();
 	var ikr=$("#kol_row").val();
 	var idStr=[];var artIdStr=[]; var cellIdToStr=[];
@@ -290,7 +276,6 @@ function saveJmovingCardLocal(){
 	}
 }
 
-
 function showJmovingDocumentList(jmoving_id){
 	var jmoving_op_id=$("#jmoving_op_id option:selected").val();
 	var document_id=$("#document_id").val();
@@ -301,6 +286,7 @@ function showJmovingDocumentList(jmoving_id){
 		document.getElementById("FormModalLabel").innerHTML=result["header"];
 	}}, true);
 }
+
 function findJmovingDocumentsSearch(jmoving_id,jmoving_op_id){
 	var s_nom=$("#form_document_search").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'findJmovingDocumentsSearch', 'jmoving_id':jmoving_id, 'jmoving_op_id':jmoving_op_id, 's_nom':s_nom}, 
@@ -308,6 +294,7 @@ function findJmovingDocumentsSearch(jmoving_id,jmoving_op_id){
 		document.getElementById("documents_search_result").innerHTML=result["content"];
 	}}, true);
 }
+
 function setDocumentToForm(document_id,document_name){
 	$("#document_id").val(document_id);
 	$("#document_name").val(document_name);
@@ -315,8 +302,6 @@ function setDocumentToForm(document_id,document_name){
 	document.getElementById("FormModalBody").innerHTML="";
 	document.getElementById("FormModalLabel").innerHTML="";
 }
-
-
 
 function loadJmovingStorage(jmoving_id){
 	if (jmoving_id<=0 || jmoving_id==""){toastr["error"](errs[0]);}
@@ -330,6 +315,7 @@ function loadJmovingStorage(jmoving_id){
 		}}, true);
 	}
 }
+
 function loadStorageCellsSelectList(place,place_to){
 	if (place==""){ var storage_id=$("#storage_id_to option:selected").val();}
 	if (place!=""){ var storage_id=$("#"+place+" option:selected").val();}
@@ -361,14 +347,14 @@ function showJmovingLocalAutoCellForm(){
 	}
 }
 
-
 function saveJmovingLocalAutoCell(){
 	var jmoving_id=$("#jmoving_idA").val();
 	var storage_id_to=$("#storage_id_toA").val();
 	var cell_id_from=$("#cell_from_move option:selected").val();
+    var cell_id_to=$("#cell_from_move_to option:selected").val();
 	if (cell_id_from==0 || cell_id_from==""){swal("Помилка!", "Оберіть комірку розміщення", "error");}
 	if (cell_id_from>0){
-		JsHttpRequest.query($rcapi,{ 'w': 'saveJmovingLocalAutoCell','jmoving_id':jmoving_id,'storage_id_to':storage_id_to,'cell_id_from':cell_id_from}, 
+		JsHttpRequest.query($rcapi,{ 'w': 'saveJmovingLocalAutoCell','jmoving_id':jmoving_id,'storage_id_to':storage_id_to,'cell_id_from':cell_id_from,'cell_id_to':cell_id_to},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow3").modal('hide');document.getElementById("FormModalBody3").innerHTML="";	document.getElementById("FormModalLabel3").innerHTML="";
 			if (result["no_row"]==1){
@@ -385,7 +371,7 @@ function showJmovingArticleSearchForm(i,art_id,brand_id,article_nr_displ,jmoving
 	var jmoving_id=$("#jmoving_id").val();
 	if (storage_id_to=="" || storage_id_to==0){storage_id_to=$("#storage_id_to option:selected").val();}
 	if (storage_id_to=="" || storage_id_to==0){ swal("Помилка!", "Оберіть склад переміщення", "error"); } else{
-		JsHttpRequest.query($rcapi,{ 'w': 'showJmovingArticleSearchForm', 'art_id':art_id,'brand_id':brand_id,'article_nr_displ':article_nr_displ,'jmoving_id':jmoving_id,'storage_id_to':storage_id_to}, 
+		JsHttpRequest.query($rcapi,{ 'w': 'showJmovingArticleSearchForm', 'brand_id':brand_id,'article_nr_displ':article_nr_displ,'jmoving_id':jmoving_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow").modal('show');document.getElementById("FormModalBody").innerHTML=result["content"];document.getElementById("FormModalLabel").innerHTML="Номенклатура";
 			$("#row_pos").val(i);
@@ -395,14 +381,13 @@ function showJmovingArticleSearchForm(i,art_id,brand_id,article_nr_displ,jmoving
 }
 
 function showJmovingArticleLocalSearchForm(i,art_id,brand_id,article_nr_displ,jmoving_id,storage_id_from){
-	JsHttpRequest.query($rcapi,{ 'w': 'showJmovingArticleLocalSearchForm', 'art_id':art_id,'brand_id':brand_id,'article_nr_displ':article_nr_displ,'jmoving_id':jmoving_id,'storage_id_from':storage_id_from}, 
+	JsHttpRequest.query($rcapi,{ 'w': 'showJmovingArticleLocalSearchForm','brand_id':brand_id,'article_nr_displ':article_nr_displ,'jmoving_id':jmoving_id,'storage_id_from':storage_id_from},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow").modal('show');document.getElementById("FormModalBody").innerHTML=result["content"];document.getElementById("FormModalLabel").innerHTML="Номенклатура";
 		$("#row_pos").val(i);
 		$('#datatable_parrent').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
 	}}, true);
 }
-
 
 function catalogue_article_storage_rest_search(search_type){
 	var art=$("#catalogue_art").val();
@@ -411,7 +396,6 @@ function catalogue_article_storage_rest_search(search_type){
 		art=$("#list2_art").val();$("#list2_art").val("");
 		brand_id=$("#list2_brand_id").val();$("#list2_brand_id").val("");
 	}
-	
 	if (art.length<=2){ $("#srchInG").addClass("has-error");/*	toastr["warning"](errs[1]);*/}
 	if (art.length>2){$("#srchInG").removeClass("has-error");
 		$("#waveSpinnerCat_place").html(waveSpinner);
@@ -440,7 +424,6 @@ function catalogue_article_storage_rest_search_local(search_type){
 		art=$("#list2_art").val();$("#list2_art").val("");
 		brand_id=$("#list2_brand_id").val();$("#list2_brand_id").val("");
 	}
-	
 	if (art.length<=2){ $("#srchInG").addClass("has-error");/*	toastr["warning"](errs[1]);*/}
 	if (art.length>2){$("#srchInG").removeClass("has-error");
 		$("#waveSpinnerCat_place").html(waveSpinner);
@@ -466,14 +449,13 @@ function catalogue_article_storage_rest_search_local(search_type){
 function setArticleToSelectAmountJmoving(art_id,article_nr_displ,brand_id,brand_name,storage_id,storage_name,cell_id,cell_name,max_stock,amountRest){
 	//var jmoving_type_id=$("#jmoving_type_id").val();
 	//var j_storage=0; if (jmoving_type_id==0){j_storage=$("#storage_id_to option:selected").val();}
-	j_storage=$("#storage_id_to option:selected").val();
-	JsHttpRequest.query($rcapi,{ 'w': 'setArticleToSelectAmountJmoving','art_id':art_id,'j_storage':j_storage,'storage_id':j_storage}, 
+	var j_storage=$("#storage_id_to option:selected").val();
+	JsHttpRequest.query($rcapi,{ 'w': 'setArticleToSelectAmountJmoving','art_id':art_id,'j_storage':j_storage},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow2").modal('show');
 		document.getElementById("FormModalBody2").innerHTML=result["content"];
 		document.getElementById("FormModalLabel2").innerHTML="Вкажіть кількість: "+article_nr_displ+" "+brand_name;
 		numberOnlyPlace("amount_move_numbers");
-		
 		$('#art_idS2').val(art_id);
 		$('#article_nr_displS2').val(article_nr_displ);
 		$('#brand_idS2').val(brand_id);
@@ -497,7 +479,6 @@ function setArticleToSelectAmountJmovingLocal(art_id,article_nr_displ,brand_id,b
 		document.getElementById("FormModalBody2").innerHTML=result["content"];
 		document.getElementById("FormModalLabel2").innerHTML="Вкажіть кількість: "+article_nr_displ+" "+brand_name;
 		numberOnlyPlace("amount_move_numbers");
-		
 		$('#art_idS2').val(art_id);
 		$('#article_nr_displS2').val(article_nr_displ);
 		$('#brand_idS2').val(brand_id);
@@ -520,7 +501,7 @@ function setCellMaxMoving(){
 	$("#amountMaxValue").val(max_value);
 	//$('#storage_idS2').val($("#storage_move option:selected").val());
 	//$('#cell_idS2').val($("#storage_move option:selected").attr('data-cellId-mov')); 
-	return;
+	return true;
 }
 
 function setStorageMaxMoving(){
@@ -529,7 +510,7 @@ function setStorageMaxMoving(){
 	$("#amountMaxValue").val(max_value);
 	$('#storage_idS2').val($("#storage_move option:selected").val());
 	$('#cell_idS2').val($("#storage_move option:selected").attr('data-cellId-mov')); 
-	return;
+	return true;
 }
 
 function setArticleToJmoving(){
@@ -537,10 +518,9 @@ function setArticleToJmoving(){
 	var jmoving_id=$("#jmoving_id").val();
 	var amount_move=parseFloat($('#amount_move').val());
 	var pos=$("#row_pos").val();
-	
 	var max_value=parseFloat($("#amountMaxValue").val());
 	if (max_value<amount_move){swal("Помилка!", "Кількість для переміщення більша за залишок!", "error");}
-	if (jmoving_id.length>0 && pos>0 && parseFloat(amount_move)>0 && amount_move<=max_value){
+	if (jmoving_id.length>0 && pos>0 && amount_move>0 && amount_move<=max_value){
 		var idStr=$("#idStr_"+pos).val();
 		var artIdStr=$('#art_idS2').val();
 		var article_nr_displStr=$('#article_nr_displS2').val();
@@ -548,16 +528,18 @@ function setArticleToJmoving(){
 		var storageIdFromStr=$('#storage_idS2').val();
 		var cellIdFromStr=$('#cell_idS2').val(); 
 		var amountStr=amount_move;
-		
 		JsHttpRequest.query($rcapi,{ 'w':'setArticleToJmoving','jmoving_id':jmoving_id,'idStr':idStr,'artIdStr':artIdStr,'article_nr_displStr':article_nr_displStr,'brandIdStr':brandIdStr,'storageIdFromStr':storageIdFromStr,'cellIdFromStr':cellIdFromStr,'amountStr':amountStr},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			if (result["answer"]==1){
 				document.getElementById("jmoving_weight").innerHTML=result["weight"];
 				document.getElementById("jmoving_volume").innerHTML=result["volume"];
 				document.getElementById("label_un_articles").innerHTML=result["label_empty"];
+				console.log("answer = 1");
 
-				JsHttpRequest.query($rcapi,{ 'w': 'showJmovingCardStr', 'jmoving_id':jmoving_id},
-				function (result, errors){ if (errors) {alert(errors);} if (result){  
+                var storage_id_to=$('#storage_id_to').val();
+				JsHttpRequest.query($rcapi,{ 'w': 'showJmovingCardStr', 'jmoving_id':jmoving_id, 'storage_id_to':storage_id_to},
+				function (result, errors){ if (errors) {alert(errors);} if (result){
+					console.log("updated range");
 					document.getElementById("jmoving_сhild_range").innerHTML=result["content"];
 					numberOnly();
 				}}, true);
@@ -574,7 +556,6 @@ function setArticleToJmoving(){
 					$("#storage_id_to").attr("disabled","");
 					$("#storage_id_to").removeClass("disabled");
 				}
-				
 			}
 			else{ swal("Помилка!", result["error"], "error"); }
 		}}, true);
@@ -585,7 +566,7 @@ function changeArticleToJmoving(){
 	var jmoving_id=$("#jmoving_id").val();
 	var jmoving_str_id=$("#jmoving_str_id").val();
 	var amount_move=parseFloat($('#amount_move').val());
-	var max_value=parseFloat($("#max_stock_ch").val());
+	//var max_value=parseFloat($("#max_stock_ch").val());
 	//if (max_value<amount_move){swal("Помилка!", "Кількість для переміщення більша за залишок!", "error");}
 	//if (jmoving_id.length>0 && parseFloat(amount_move)>0 && amount_move<=max_value){
 		JsHttpRequest.query($rcapi,{ 'w':'changeArticleToJmoving','jmoving_id':jmoving_id,'jmoving_str_id':jmoving_str_id,'amount_change':amount_move},
@@ -608,6 +589,7 @@ function changeArticleToJmoving(){
 		}}, true);
 	//}
 }
+
 function changeArticleToJmovingLocal(){
 	var jmoving_id=$("#jmoving_id").val();
 	var jmoving_str_id=$("#jmoving_str_id").val();
@@ -636,11 +618,11 @@ function changeArticleToJmovingLocal(){
 		}}, true);
 	}
 }
+
 function setArticleToJmovingLocal(){
 	var jmoving_id=$("#jmoving_id").val();
 	var amount_move=parseFloat($('#amount_move').val());
 	var pos=$("#row_pos").val();
-	
 	var max_value=parseFloat($("#amountMaxValue").val());
 	if (max_value<amount_move){swal("Помилка!", "Кількість для переміщення більша за залишок!", "error");}
 	if (jmoving_id.length>0 && pos>0 && parseFloat(amount_move)>0 && amount_move<=max_value){
@@ -715,6 +697,7 @@ function dropJmovingStr(pos,jmoving_id,jmoving_str_id){
 	});
 	}
 }
+
 function dropJmovingLocalStr(pos,jmoving_id,jmoving_str_id){
 	if (jmoving_id<=0 || jmoving_id==""){toastr["error"](errs[0]);}
 	if (jmoving_id>0 && jmoving_str_id>0){
@@ -742,6 +725,7 @@ function dropJmovingLocalStr(pos,jmoving_id,jmoving_str_id){
 	});
 	}
 }
+
 function clearJmovingLocalAutoCellForm(){
 	var jmoving_id=$("#jmoving_id").val();
 	if (jmoving_id<=0 || jmoving_id==""){toastr["error"](errs[0]);}
@@ -770,12 +754,11 @@ function clearJmovingLocalAutoCellForm(){
 	}
 }
 
-
 function showJmovingArticleAmountChange(pos,str_id,art_id,amount){
 	var jmoving_id=$("#jmoving_id").val();
 	if (jmoving_id<=0 || jmoving_id==""){toastr["error"](errs[0]);}
 	if (jmoving_id>0 && str_id>0){
-		JsHttpRequest.query($rcapi,{ 'w': 'showJmovingArticleAmountChange','art_id':art_id,'str_id':str_id,'amount':amount}, 
+		JsHttpRequest.query($rcapi,{ 'w': 'showJmovingArticleAmountChange','art_id':art_id,'str_id':str_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow2").modal('show');
 			document.getElementById("FormModalBody2").innerHTML=result["content"];
@@ -789,7 +772,7 @@ function showJmovingArticleAmountLocalChange(pos,str_id,art_id,amount){
 	var jmoving_id=$("#jmoving_id").val();
 	if (jmoving_id<=0 || jmoving_id==""){toastr["error"](errs[0]);}
 	if (jmoving_id>0 && str_id>0){
-		JsHttpRequest.query($rcapi,{ 'w': 'showJmovingArticleAmountLocalChange','art_id':art_id,'str_id':str_id,'amount':amount}, 
+		JsHttpRequest.query($rcapi,{ 'w': 'showJmovingArticleAmountLocalChange','art_id':art_id,'str_id':str_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow2").modal('show');
 			document.getElementById("FormModalBody2").innerHTML=result["content"];
@@ -798,7 +781,6 @@ function showJmovingArticleAmountLocalChange(pos,str_id,art_id,amount){
 		}}, true);
 	}
 }
-
 
 function showJmovingUserForm(jmoving_id, user_id){
 	if (jmoving_id<=0 || jmoving_id==""){toastr["error"](errs[0]);}
@@ -814,15 +796,15 @@ function showJmovingUserForm(jmoving_id, user_id){
 }
 
 function randString(id){
-  var dataSet = $(id).attr('data-character-set').split(',');  
-  var possible = '';  var text = '';
-  if($.inArray('a-z', dataSet) >= 0){possible += 'abcdefghijklmnopqrstuvwxyz';}
-  if($.inArray('A-Z', dataSet) >= 0){possible += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';}
-  if($.inArray('0-9', dataSet) >= 0){possible += '0123456789';}
-  if($.inArray('#', dataSet) >= 0){possible += '![]{}()%&*$#^<>~@|';}
-  for(var i=0; i < $(id).attr('data-size'); i++) {text += possible.charAt(Math.floor(Math.random() * possible.length));}
-  $(id).val(""+text);
-  return text;
+	var dataSet = $(id).attr('data-character-set').split(',');
+	var possible = '';  var text = '';
+	if($.inArray('a-z', dataSet) >= 0){possible += 'abcdefghijklmnopqrstuvwxyz';}
+	if($.inArray('A-Z', dataSet) >= 0){possible += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';}
+	if($.inArray('0-9', dataSet) >= 0){possible += '0123456789';}
+	if($.inArray('#', dataSet) >= 0){possible += '![]{}()%&*$#^<>~@|';}
+	for(var i=0; i < $(id).attr('data-size'); i++) {text += possible.charAt(Math.floor(Math.random() * possible.length));}
+	$(id).val(""+text);
+	return text;
 }
 
 function loadJmovingCommetsLabel(jmoving_id){
@@ -863,10 +845,10 @@ function saveJmovingComment(jmoving_id){
 		}
 	}
 }
+
 function dropJmovingComment(jmoving_id,cmt_id){
 	if (jmoving_id<=0 || jmoving_id==""){toastr["error"](errs[0]);}
 	if (jmoving_id>0){
-		
 		if(confirm('Видалити запис?')){ 
 			JsHttpRequest.query($rcapi,{ 'w': 'dropJmovingComment', 'jmoving_id':jmoving_id, 'cmt_id':cmt_id}, 
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -876,6 +858,7 @@ function dropJmovingComment(jmoving_id,cmt_id){
 		}
 	}
 }
+
 function loadJmovingCDN(jmoving_id){
 	if (jmoving_id<=0 || jmoving_id==""){toastr["error"](errs[0]);}
 	if (jmoving_id>0){
@@ -922,7 +905,6 @@ function viewJmovingDetailsFile(jmoving_id,file_type){
 	}
 }
 
-
 function fileJmovingDetailsUploadForm(jmoving_id,file_type){
 	$("#dtls_jmoving_id").val(jmoving_id);
 	$("#dtls_file_type").val(file_type);
@@ -936,7 +918,6 @@ function fileJmovingDetailsUploadForm(jmoving_id,file_type){
 		viewJmovingDetailsFile(jmoving_id,file_type);
 	});
 }
-
 
 function showJmovingDetailsDropConfirmForm(jmoving_id,file_type,file_id,file_name){
 	if (jmoving_id<=0 || jmoving_id==""){toastr["error"](errs[0]);}
@@ -960,16 +941,15 @@ function showCountryManual(){
 		setTimeout(function(){
 		  $('#datatable_country').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [10, 20, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
 		}, 500);
-		
 	}}, true);
 }
-
 
 function selectCountry(id,name){
 	$("#country_id").val(id);
 	$("#country_name").val(name);
 	$("#CountryModalWindow").modal('hide');
 }
+
 function showCountryForm(country_id){
 	JsHttpRequest.query($rcapi,{ 'w':'showCountryForm','country_id':country_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -986,7 +966,6 @@ function saveJmovingCountryForm(){
 	var alfa3=$("#form_country_alfa3").val();
 	var duty=$("#form_country_duty").val();
 	var risk=$("#form_country_risk").val();
-	
 	JsHttpRequest.query($rcapi,{ 'w':'saveJmovingCountryForm','id':id,'name':name,'alfa2':alfa2,'alfa3':alfa3,'duty':duty,'risk':risk},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		if (result["answer"]==1){ 
@@ -997,8 +976,8 @@ function saveJmovingCountryForm(){
 		else{ swal("Помилка!", result["error"], "error");}
 		
 	}}, true);
-	
 }
+
 function showCostumsManual(){
 	var costums_id=$("#costums_id").val();
 	JsHttpRequest.query($rcapi,{ 'w':'showCostumsManual','costums_id':costums_id},
@@ -1011,11 +990,13 @@ function showCostumsManual(){
 		
 	}}, true);
 }
+
 function selectCostums(id,name){
 	$("#costums_id").val(id);
 	$("#costums_name").val(name);
 	$("#CostumsModalWindow").modal('hide');
 }
+
 function showCostumsForm(costums_id){
 	JsHttpRequest.query($rcapi,{ 'w':'showCostumsForm','costums_id':costums_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -1033,17 +1014,14 @@ function saveJmovingCostumsForm(){
 	var type_declaration=$("#form_costums_type_declaration").val();
 	var sertification=$("#form_costums_sertification").val();
 	var gos_standart=$("#form_costums_gos_standart").val();
-	
 	JsHttpRequest.query($rcapi,{ 'w':'saveJmovingCostumsForm','id':id,'name':name,'preferential_rate':preferential_rate,'full_rate':full_rate,'type_declaration':type_declaration,'sertification':sertification,'gos_standart':gos_standart},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		if (result["answer"]==1){ 
 			swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
-
 			$("#costums_id").val(id);
 			showCostumsManual();
 		}
 		else{ swal("Помилка!", result["error"], "error");}
-		
 	}}, true);
 }
 
@@ -1084,17 +1062,13 @@ function loadJmovingUnknownArticles(jmoving_id){
 	}
 }
 
-
 function checkJmovingUnStr(jmoving_id,pos,art_id){
 	if (jmoving_id<=0 || jmoving_id==""){toastr["error"](errs[0]);}
 	if (jmoving_id>0 && art_id>0){
-		
-		
 		var article_nr_displ=$("#article_nr_displUnStr_"+pos).val();
 		var volume=$("#volumeUnStr_"+pos).val();
 		var weight=$("#weightNettoUnStr_"+pos).val();
 		var weight2=$("#weightBruttoUnStr_"+pos).val();
-		
 		if (art_id>0 && volume>0 && weight>0 && weight2>0){
 			JsHttpRequest.query($rcapi,{ 'w': 'checkJmovingUnStr', 'jmoving_id':jmoving_id,'art_id':art_id,'volume':volume,'weight':weight,'weight2':weight2}, 
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -1126,13 +1100,13 @@ function startJmovingStorageSelect(){
 		}}, true);
 	}
 }
+
 function startJmovingStorageSelectLocal(){
 	$("#jmoving_send").attr("disabled", true); //disable button
 	var jmoving_id=$("#jmoving_id").val();
 	var jmoving_op_id=$("#jmoving_op_id option:selected").val();
 	var data=$("#jmoving_data").val();
 	var storage_id_to=$("#storage_id_to option:selected").val();
-	var cell_id_to=$("#cell_id_to option:selected").val();
 	var comment=$("#jmoving_comment").val();
 	var ikr=$("#kol_row").val();
 	var idStr=[];var artIdStr=[]; var cellIdToStr=[];
@@ -1159,7 +1133,6 @@ function startJmovingStorageSelectLocal(){
 		}}, true);
 	}
 }
-
 
 function loadJmovingStorageSelect2(jmoving_id,jmoving_status){
 	if (jmoving_id<=0 || jmoving_id==""){toastr["error"](errs[0]);}
@@ -1213,6 +1186,7 @@ function makesJmovingStorageSelect(){
 		}
 	});
 }
+
 function makesJmovingStorageSelectLocal(){
 	var jmoving_id=$("#jmoving_id").val();
 	swal({
@@ -1239,6 +1213,7 @@ function makesJmovingStorageSelectLocal(){
 		}
 	});
 }
+
 function clearJmovingStorageSelect(){
 	var jmoving_id=$("#jmoving_id").val();
 	if (jmoving_id.length>0){
@@ -1252,6 +1227,7 @@ function clearJmovingStorageSelect(){
 		}}, true);
 	}
 }
+
 function clearJmovingStorageSelectLocal(){
 	var jmoving_id=$("#jmoving_id").val();
 	if (jmoving_id.length>0){
@@ -1275,7 +1251,6 @@ function updateInformerUnknownArticles(jmoving_id){
 	}
 }
 
-
 function loadJmovingStorageSelect(jmoving_id){
 	if (jmoving_id<=0 || jmoving_id==""){toastr["error"](errs[0]);}
 	if (jmoving_id>0){
@@ -1287,6 +1262,7 @@ function loadJmovingStorageSelect(jmoving_id){
 		}}, true);
 	}
 }
+
 function loadJmovingStorageSelectLocal(jmoving_id){
 	if (jmoving_id<=0 || jmoving_id==""){toastr["error"](errs[0]);}
 	if (jmoving_id>0){
@@ -1311,6 +1287,7 @@ function viewJmovingStorageSelect(jmoving_id,select_id,jmoving_status){
 		}}, true);
 	}
 }
+
 function viewJmovingStorageSelectLocal(jmoving_id,select_id,jmoving_status){
 	if (jmoving_id<=0 || jmoving_id=="" || select_id=="" || select_id==0){toastr["error"](errs[0]);}
 	if (jmoving_id>0 && select_id>0){
@@ -1323,6 +1300,7 @@ function viewJmovingStorageSelectLocal(jmoving_id,select_id,jmoving_status){
 		}}, true);
 	}
 }
+
 function dropJmovingStorageSelect(jmoving_id,select_id){
 	swal({
 		title: "Видалити складський відбір?",
@@ -1346,6 +1324,7 @@ function dropJmovingStorageSelect(jmoving_id,select_id){
 		}
 	});
 }
+
 function dropJmovingStorageSelectLocal(jmoving_id,select_id){
 	swal({
 		title: "Видалити складський відбір?",
@@ -1369,7 +1348,6 @@ function dropJmovingStorageSelectLocal(jmoving_id,select_id){
 		}
 	});
 }
-
 
 function collectJmovingStorageSelect(jmoving_id,select_id){
 	swal({
@@ -1395,6 +1373,7 @@ function collectJmovingStorageSelect(jmoving_id,select_id){
 		}
 	});
 }
+
 function collectJmovingStorageSelectLocal(jmoving_id,select_id){
 	swal({
 		title: "Розпочати збирання складського відбору?",
@@ -1428,7 +1407,6 @@ function cutJmovingStorageAll(){
 		select_id.push(this.id);
 	});
 	var comment=$("#jmoving_comment").val();
-	
 	swal({
 		title: "Відділити складський відбори у окремі документи переміщення?",
 		text: "Будуть сформовані нові документи переміщення", type: "info", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -1441,20 +1419,16 @@ function cutJmovingStorageAll(){
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						swal("Сформовано нові документи переміщення!", "", "success");
-						
 						var jmovArray=result["ids"];
 						console.log(jmovArray);
 						var jmov_id=0;
-						
 						for (var i = 0; i < jmovArray.length; i++) {
 							console.log(jmovArray[i]);
 							jmov_id=parseInt(jmovArray[i]);
 							startJmovingStorageSelectAll(jmov_id);				
 						}
-						
 						loadJmovingStorageSelect2(jmoving_id,44);
 						showJmovingCard(jmoving_id);
-
 					}
 					else{ swal("Помилка!", result["error"], "error");}
 				}}, true);
@@ -1516,12 +1490,12 @@ function printJmovingStorageSelectView(jmoving_id,select_id){
 		window.open("/Jmoving/printJmS1/"+jmoving_id+"/"+select_id,"_blank","printWindow");
 	}
 }
+
 function printJmovingStorageSelectViewLocal(jmoving_id,select_id){
 	if (jmoving_id.length>0 && select_id.length>0){
 		window.open("/Jmoving/printJmS1L/"+jmoving_id+"/"+select_id,"_blank","printWindow");
 	}
 }
-
 
 function showJmovingStorageSelectBarcodeForm(jmoving_id,select_id){
 	if (jmoving_id.length>0 && select_id.length>0){
@@ -1537,6 +1511,7 @@ function showJmovingStorageSelectBarcodeForm(jmoving_id,select_id){
 		}}, true);
 	}
 }
+
 function saveJmovingStorageSelectBarcodeForm(jmoving_id,select_id){
 	var barcode=$("#BarCodeInput").val();
 	if (jmoving_id.length>0 && select_id.length>0 && barcode.length>0){
@@ -1557,8 +1532,6 @@ function saveJmovingStorageSelectBarcodeForm(jmoving_id,select_id){
 	}
 }
 
-
-
 function finishJmovingStorageSelectBarcodeForm(jmoving_id,select_id){
 	if (jmoving_id.length>0 && select_id.length>0){
 		JsHttpRequest.query($rcapi,{ 'w':'finishJmovingStorageSelectBarcodeForm','jmoving_id':jmoving_id,'select_id':select_id},
@@ -1572,6 +1545,7 @@ function finishJmovingStorageSelectBarcodeForm(jmoving_id,select_id){
 		}}, true);
 	}
 }
+
 function finishJmovingLocalStorageSelect(jmoving_id,select_id){
 	if (jmoving_id.length>0 && select_id.length>0){
 		JsHttpRequest.query($rcapi,{ 'w':'finishJmovingLocalStorageSelect','jmoving_id':jmoving_id,'select_id':select_id},
@@ -1585,7 +1559,6 @@ function finishJmovingLocalStorageSelect(jmoving_id,select_id){
 		}}, true);
 	}
 }
-
 
 function showJmovingStorageSelectSendTruckForm(jmoving_id){
 	$("#jmoving_send").attr("disabled", true); //disable button
@@ -1724,7 +1697,6 @@ function saveJmovingAcceptBugForm(jmoving_id,str_id){
 	}	
 }
 
-
 function showJmovingStorageAcceptForm(jmoving_id){
 	$("#jmoving_take").attr("disabled", true); //disable button
 	if (jmoving_id.length>0){
@@ -1759,7 +1731,6 @@ function saveJmovingAcceptBarcodeForm(jmoving_id,select_id){
 		}}, true);
 	}
 }
-
 
 function separateJmovingByDefect(jmoving_id) {
 	swal({
@@ -1840,7 +1811,7 @@ function finishJmovingLocalAcceptForm(jmoving_id){
 
 function showJmovingStorageSelectNoscanForm(jmoving_id,select_id,art_id,str_id){
 	if (jmoving_id.length>0 && select_id.length>0 && art_id.length>0 && str_id.length>0){
-		JsHttpRequest.query($rcapi,{ 'w':'showJmovingStorageSelectNoscanForm','jmoving_id':jmoving_id,'select_id':select_id,'art_id':art_id,'str_id':str_id},
+		JsHttpRequest.query($rcapi,{ 'w':'showJmovingStorageSelectNoscanForm','jmoving_id':jmoving_id,'select_id':select_id,'str_id':str_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			if (result["answer"]==1){ 
 				$("#FormModalWindow5").modal('show');
@@ -1852,6 +1823,7 @@ function showJmovingStorageSelectNoscanForm(jmoving_id,select_id,art_id,str_id){
 		}}, true);
 	}
 }
+
 function saveJmovingStorageSelectNoscanForm(jmoving_id,select_id,art_id,str_id){
 	if (jmoving_id.length>0 && select_id.length>0 && art_id.length>0 && str_id.length>0){
 		var err=0; 
@@ -1884,9 +1856,10 @@ function saveJmovingStorageSelectNoscanForm(jmoving_id,select_id,art_id,str_id){
 		}
 	}
 }
+
 function showJmovingAcceptNoscanForm(jmoving_id,art_id,str_id){
 	if (jmoving_id.length>0 && art_id.length>0 && str_id.length>0){
-		JsHttpRequest.query($rcapi,{ 'w':'showJmovingAcceptNoscanForm','jmoving_id':jmoving_id,'art_id':art_id,'str_id':str_id},
+		JsHttpRequest.query($rcapi,{ 'w':'showJmovingAcceptNoscanForm','jmoving_id':jmoving_id,'str_id':str_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			if (result["answer"]==1){ 
 				$("#FormModalWindow5").modal('show');
@@ -1898,6 +1871,7 @@ function showJmovingAcceptNoscanForm(jmoving_id,art_id,str_id){
 		}}, true);
 	}
 }
+
 function saveJmovingAcceptNoscanForm(jmoving_id,art_id,str_id){
 	if (jmoving_id.length>0 && art_id.length>0 && str_id.length>0){
 		var err=0; 
@@ -1932,22 +1906,22 @@ function saveJmovingAcceptNoscanForm(jmoving_id,art_id,str_id){
 }
 
 function cancelJmoving() {
-	var  jmoving_id=$("#jmoving_id").val();
+	var jmoving_id=$("#jmoving_id").val();
 	swal({
-			title: "Анулювати переміщення?",
-			text: "", type: "danger", text: "Увага! Переміщення буде видалено!", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394", confirmButtonText: "Підтвердити", cancelButtonText: "Скасувати", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
-		},
-		function (isConfirm) {
-			if (isConfirm) {
-				JsHttpRequest.query($rcapi,{ 'w':'cancelJmoving','jmoving_id':jmoving_id},
-				function (result, errors){ if (errors) {alert(errors);} if (result){  
-						if (result["answer"]==1){ 
-							swal("Видалено!", "Дані успішно анульовані.", "success");
-							$("#JmovingCard").modal('hide');
-							updateJmovingRange();
-						}
-						else{ swal("Помилка!", result["error"], "error");}
-					}}, true);
-				}else {swal("Відмінено", "", "error");}
+		title: "Анулювати переміщення?",
+		text: "", type: "danger", text: "Увага! Переміщення буде видалено!", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394", confirmButtonText: "Підтвердити", cancelButtonText: "Скасувати", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
+	},
+	function (isConfirm) {
+		if (isConfirm) {
+			JsHttpRequest.query($rcapi,{ 'w':'cancelJmoving','jmoving_id':jmoving_id},
+			function (result, errors){ if (errors) {alert(errors);} if (result){
+					if (result["answer"]==1){
+						swal("Видалено!", "Дані успішно анульовані.", "success");
+						$("#JmovingCard").modal('hide');
+						updateJmovingRange();
+					}
+					else{ swal("Помилка!", result["error"], "error");}
+				}}, true);
+			}else {swal("Відмінено", "", "error");}
 	});
 }

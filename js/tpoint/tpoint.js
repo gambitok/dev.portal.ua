@@ -2,29 +2,27 @@ var errs=[];
 errs[0]="Помилка індексу";
 errs[1]="Занадто короткий запит для пошуку";
 
-
-$(document).ready(function() {
-});
-
 function changeDeliveryTime(){
-	var value1 = $("#time_from_del").val();
-	var value2 = $("#time_to_del").val();
-	if(value1!==0 || value2!==0) 
-    $("#giveout_time").val('з '+value1+' по '+value2);
+	let time_from_ = $("#time_from_del").val();
+	let time_to = $("#time_to_del").val();
+	if(time_from_!==0 || time_to!==0)
+    $("#giveout_time").val('з '+time_from_+' по '+time_to);
 		else $("#giveout_time").val('');
 }
 
 function loadTpointList(){
 	JsHttpRequest.query($rcapi,{ 'w': 'showTpointList'}, 
-	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		$("#tpoint_range").empty();
-		$("#tpoint_range").html(result["content"]);
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+		let tpoint_range=$("#tpoint_range");
+        tpoint_range.empty();
+        tpoint_range.html(result.content);
 	}}, true);
 }
+
 function newTpointCard(){
 	JsHttpRequest.query($rcapi,{ 'w': 'newTpointCard'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		var tpoint_id=result["tpoint_id"];
+		let tpoint_id=result["tpoint_id"];
 		showTpointCard(tpoint_id);
 	}}, true);
 }
@@ -32,23 +30,23 @@ function newTpointCard(){
 var barcode_settings = {barWidth: 1,barHeight: 50,moduleSize: 5,showHRI: true,addQuietZone: true,marginHRI: 5,bgColor: "#FFFFFF",color: "#000000",fontSize: 14,output: "css",posX: 0,posY: 0};
 
 function showTpointCard(tpoint_id){
-	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
+	if (tpoint_id<=0 || tpoint_id===""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'showTpointCard', 'tpoint_id':tpoint_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			$("#TpointCard").modal('show');
-			document.getElementById("TpointCardBody").innerHTML=result["content"];
-			document.getElementById("TpointCardLabel").innerHTML=$("#tpoint_name").val()+" (ID:"+$("#tpoint_id").val()+")";
-			$('#tpoint_tabs').tab();
-			$("#country_id").select2({placeholder: "Виберіть країну",dropdownParent: $("#TpointCard")});
-			$("#state_id").select2({placeholder: "Виберіть область",dropdownParent: $("#TpointCard")});
-			$("#region_id").select2({placeholder: "Виберіть район",dropdownParent: $("#TpointCard")});
-			$("#city_id").select2({placeholder: "Виберіть населений пункт",dropdownParent: $("#TpointCard")});
-
-			
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+			let tpoint_card=$("#TpointCard");
+            tpoint_card.modal("show");
+            $("#TpointCardBody").html(result.content);
+            $("#TpointCardLabel").html($("#tpoint_name").val()+" (ID:"+$("#tpoint_id").val()+")");
+			$("#tpoint_tabs").tab();
+			$("#country_id").select2({placeholder: "Виберіть країну",dropdownParent: tpoint_card});
+			$("#state_id").select2({placeholder: "Виберіть область",dropdownParent: tpoint_card});
+			$("#region_id").select2({placeholder: "Виберіть район",dropdownParent: tpoint_card});
+			$("#city_id").select2({placeholder: "Виберіть населений пункт",dropdownParent: tpoint_card});
 		}}, true);
 	}
 }
+
 function saveTpointGeneralInfo(){
 	swal({
 		title: "Зберегти зміни у розділі \"Загальна інформація\"?",
@@ -72,6 +70,7 @@ function saveTpointGeneralInfo(){
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
+						$("#TpointCard").modal('hide');
 						loadTpointList();
 					}
 					else{ swal("Помилка!", result["error"], "error");}
@@ -110,23 +109,25 @@ function deleteTpoint() {
 }
 
 function loadStateSelectList(){
-	var country_id=$("#country_id option:selected").val();
+	let country_id=$("#country_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientStateSelectList', 'country_id':country_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		document.getElementById("state_id").innerHTML=result["content"];
 		$("#state_id").select2({placeholder: "Виберіть область",dropdownParent: $("#TpointCard")});
 	}}, true);
 }
+
 function loadRegionSelectList(){
-	var state_id=$("#state_id option:selected").val();
+	let state_id=$("#state_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientRegionSelectList', 'state_id':state_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		document.getElementById("region_id").innerHTML=result["content"];
 		$("#region_id").select2({placeholder: "Виберіть район",dropdownParent: $("#TpointCard")});
 	}}, true);
 }
+
 function loadCitySelectList(){
-	var region_id=$("#region_id option:selected").val();
+	let region_id=$("#region_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientCitySelectList', 'region_id':region_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		document.getElementById("city_id").innerHTML=result["content"];
@@ -135,11 +136,11 @@ function loadCitySelectList(){
 }
 
 function loadTpointStorage(tpoint_id){
-	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
+	if (tpoint_id<=0 || tpoint_id===""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadTpointStorage', 'tpoint_id':tpoint_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("storage_place").innerHTML=result["content"];
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+			$("#storage_place").html(result.content);
 			$('#tpoint_tabs').tab();
 			$('#datatable_storage').DataTable( {searching: true,"language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}} );
 		}}, true);
@@ -147,7 +148,7 @@ function loadTpointStorage(tpoint_id){
 }
 
 function showTpointStorageForm(tpoint_id, s_id){
-	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
+	if (tpoint_id<=0 || tpoint_id===""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showTpointStorageForm', 'tpoint_id':tpoint_id, 's_id':s_id}, 
@@ -159,7 +160,7 @@ function showTpointStorageForm(tpoint_id, s_id){
 }
 
 function showTpointSupplStorageForm(tpoint_id, s_id){
-	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
+	if (tpoint_id<=0 || tpoint_id===""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showTpointSupplStorageForm', 'tpoint_id':tpoint_id, 's_id':s_id}, 
@@ -193,7 +194,6 @@ function dropTpointSupplStorageForm(tpoint_id,s_id){
 	});
 }
 
-
 function dropTpointStorage(tpoint_id,s_id){
 	swal({
 		title: "Відкріпити склад від торгової точки?",
@@ -219,7 +219,7 @@ function dropTpointStorage(tpoint_id,s_id){
 }
 
 function saveTpointStorageForm(tpoint_id,s_id){
-	var storage_name=$("#storage_id option:selected").html();
+	let storage_name=$("#storage_id option:selected").html();
 	swal({
 		title: "Закріпити склад \""+storage_name+"\" за торговою точкою?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -248,7 +248,7 @@ function saveTpointStorageForm(tpoint_id,s_id){
 }
 
 function saveTpointSupplStorageForm(tpoint_id,s_id){
-	var storage_name=$("#storage_id option:selected").html();
+	let storage_name=$("#storage_id option:selected").html();
 	swal({
 		title: "Закріпити склад \""+storage_name+"\" за торговою точкою?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -275,10 +275,8 @@ function saveTpointSupplStorageForm(tpoint_id,s_id){
 	});
 }
 
-
-
 function loadTpointClients(tpoint_id){
-	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
+	if (tpoint_id<=0 || tpoint_id===""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadTpointClients', 'tpoint_id':tpoint_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -287,8 +285,9 @@ function loadTpointClients(tpoint_id){
 		}}, true);
 	}
 }
+
 function showTpointClientsForm(tpoint_id, s_id){
-	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
+	if (tpoint_id<=0 || tpoint_id===""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showTpointClientsForm', 'tpoint_id':tpoint_id, 's_id':s_id}, 
@@ -298,6 +297,7 @@ function showTpointClientsForm(tpoint_id, s_id){
 		}}, true);
 	}
 }
+
 function showTpointClientList(client_id){
 	JsHttpRequest.query($rcapi,{ 'w': 'showTpointClientList', 'client_id':client_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -307,6 +307,7 @@ function showTpointClientList(client_id){
 		setTimeout(function() { $('#datatable_parrent').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}}); }, 500);
 	}}, true);
 }
+
 function setTpointClient(id,name){
 	$('#client_id').val(id);
 	$('#client_name').val(name);
@@ -340,7 +341,7 @@ function dropTpointClients(tpoint_id,s_id){
 }
 
 function saveTpointClientsForm(tpoint_id,s_id){
-	var client_name=$("#client_name").val();
+	let client_name=$("#client_name").val();
 	swal({
 		title: "Закріпити контагента \""+client_name+"\" за торговою точкою?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -371,9 +372,8 @@ function saveTpointClientsForm(tpoint_id,s_id){
 	});
 }
 
-
 function loadTpointWorkers(tpoint_id){
-	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
+	if (tpoint_id<=0 || tpoint_id===""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadTpointWorkers', 'tpoint_id':tpoint_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -384,15 +384,16 @@ function loadTpointWorkers(tpoint_id){
 }
 
 function showTpointWorkersForm(tpoint_id, s_id){
-	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
+	if (tpoint_id<=0 || tpoint_id===""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showTpointWorkersForm', 'tpoint_id':tpoint_id, 's_id':s_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("FormModalBody").innerHTML=result["content"];
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+			$("#FormModalBody").html(result.content);
 		}}, true);
 	}
 }
+
 function dropTpointWorkers(tpoint_id,s_id){
 	swal({
 		title: "Відкріпити працівника від торгової точки?",
@@ -418,7 +419,7 @@ function dropTpointWorkers(tpoint_id,s_id){
 }
 
 function saveTpointWorkersForm(tpoint_id,s_id){
-	var worker_name=$("#worker_id option:selected").html();
+	let worker_name=$("#worker_id option:selected").html();
 	swal({
 		title: "Закріпити працівника \""+worker_name+"\" за торговою точкою?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -427,7 +428,6 @@ function saveTpointWorkersForm(tpoint_id,s_id){
 	function (isConfirm) {
 		if (isConfirm) {
 			var worker_id=$("#worker_id option:selected").val();
-
 			if (tpoint_id.length>0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveTpointWorkersForm','tpoint_id':tpoint_id,'s_id':s_id,'worker_id':worker_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -445,10 +445,8 @@ function saveTpointWorkersForm(tpoint_id,s_id){
 	});
 }
 
-
-
 function loadTpointDeliveryTime(tpoint_id){
-	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
+	if (tpoint_id<=0 || tpoint_id===""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadTpointDeliveryTime', 'tpoint_id':tpoint_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -463,7 +461,7 @@ function loadTpointDeliveryTime(tpoint_id){
 }
 
 function showTpointDeliveryForm(tpoint_id, s_id){
-	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
+	if (tpoint_id<=0 || tpoint_id===""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showTpointDeliveryForm', 'tpoint_id':tpoint_id, 's_id':s_id}, 
@@ -474,7 +472,7 @@ function showTpointDeliveryForm(tpoint_id, s_id){
 }
 
 function saveTpointDeliveryForm(tpoint_id,s_id){
-	var storage_name=$("#storage_id option:selected").html();
+	let storage_name=$("#storage_id option:selected").html();
 	swal({
 		title: "Зберегти умову доставки для складу \""+storage_name+"\"?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -507,6 +505,7 @@ function saveTpointDeliveryForm(tpoint_id,s_id){
 		}
 	});
 }
+
 function dropTpointDelivery(tpoint_id,s_id){
 	swal({
 		title: "Видалити умову доставки для складу?",
@@ -532,7 +531,7 @@ function dropTpointDelivery(tpoint_id,s_id){
 }
 
 function loadTpointSupplDeliveryTime(tpoint_id){
-	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
+	if (tpoint_id<=0 || tpoint_id===""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadTpointSupplDeliveryTime', 'tpoint_id':tpoint_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -545,7 +544,7 @@ function loadTpointSupplDeliveryTime(tpoint_id){
 }
 
 function loadTpointSupplStorage(tpoint_id){
-	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
+	if (tpoint_id<=0 || tpoint_id===""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadTpointSupplStorage', 'tpoint_id':tpoint_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -565,6 +564,7 @@ function loadTpointSupplStorageSelectList(){
 		}}, true);
 	}
 }
+
 function loadSupplStorageList(){
 	var suppl_id=$("#suppl_id option:selected").val(); 
 	if (suppl_id>0){
@@ -574,9 +574,9 @@ function loadSupplStorageList(){
 		}}, true);
 	}
 }
-//
+
 function showTpointSupplDeliveryForm(tpoint_id, s_id){
-	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
+	if (tpoint_id<=0 || tpoint_id===""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showTpointSupplDeliveryForm', 'tpoint_id':tpoint_id, 's_id':s_id}, 
@@ -587,9 +587,8 @@ function showTpointSupplDeliveryForm(tpoint_id, s_id){
 }
 
 function saveTpointSupplDeliveryForm(tpoint_id,s_id){
-	
-	var suppl_name=$("#suppl_id option:selected").html();
-	var storage_name=$("#suppl_storage_id option:selected").html();
+	let suppl_name=$("#suppl_id option:selected").html();
+	let storage_name=$("#suppl_storage_id option:selected").html();
 	swal({
 		title: "Зберегти умову доставки для складу \""+storage_name+"\" постачальника "+suppl_name+"?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -623,6 +622,7 @@ function saveTpointSupplDeliveryForm(tpoint_id,s_id){
 		}
 	});
 }
+
 function dropTpointSupplDelivery(tpoint_id,s_id){
 	swal({
 		title: "Видалити умову доставки для складу?",
@@ -648,22 +648,22 @@ function dropTpointSupplDelivery(tpoint_id,s_id){
 }
 
 function loadTpointSupplFm(tpoint_id){
-	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
+	if (tpoint_id<=0 || tpoint_id===""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadTpointSupplFm', 'tpoint_id':tpoint_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			document.getElementById("fm_place").innerHTML=result["content"];
 			$('#tpoint_tabs').tab();
 			$('#datatable_suppl_fm').DataTable( {
-					searching: true,
-					"language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}
-				} );
+				searching: true,
+				"language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}
+			} );
 		}}, true);
 	}
 }
 
 function showTpointSupplFmForm(tpoint_id, s_id){
-	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
+	if (tpoint_id<=0 || tpoint_id===""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showTpointSupplFmForm', 'tpoint_id':tpoint_id, 's_id':s_id}, 
@@ -672,11 +672,10 @@ function showTpointSupplFmForm(tpoint_id, s_id){
 		}}, true);
 	}
 }
+
 function saveTpointSupplFmForm(tpoint_id,s_id){
-	
-	var suppl_name=$("#suppl_id option:selected").html();
-	var storage_name=$("#suppl_storage_id option:selected").html();
-	var price_rating_id=$("#price_rating_id option:selected").html();
+	let suppl_name=$("#suppl_id option:selected").html();
+	let price_rating_id=$("#price_rating_id option:selected").html();
 	swal({
 		title: "Зберегти ціноутворення для рейтингу \""+price_rating_id+"\" постачальника "+suppl_name+"?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -710,8 +709,32 @@ function saveTpointSupplFmForm(tpoint_id,s_id){
 	});
 }
 
+function dropTpointSupplFm(tpoint_id,s_id){
+    swal({
+            title: "Видалити умову доставки для складу?",
+            text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
+            confirmButtonText: "Так", cancelButtonText: "Відмінити", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
+        },
+        function (isConfirm) {
+            if (isConfirm) {
+                if (tpoint_id.length>0){
+                    JsHttpRequest.query($rcapi,{ 'w':'dropTpointSupplDelivery','tpoint_id':tpoint_id,'s_id':s_id},
+                        function (result, errors){ if (errors) {alert(errors);} if (result){
+                            if (result["answer"]==1){
+                                swal("Відкріплено!", "", "success");
+                                loadTpointDeliveryTime(tpoint_id);
+                            }
+                            else{ swal("Помилка!", result["error"], "error");}
+                        }}, true);
+                }
+            } else {
+                swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
+            }
+        });
+}
+
 function loadTpointPayBox(tpoint_id){
-	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
+	if (tpoint_id<=0 || tpoint_id===""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadTpointPayBox', 'tpoint_id':tpoint_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -720,8 +743,9 @@ function loadTpointPayBox(tpoint_id){
 		}}, true);
 	}
 }
+
 function showTpointPayBoxForm(tpoint_id, s_id){
-	if (tpoint_id<=0 || tpoint_id==""){toastr["error"](errs[0]);}
+	if (tpoint_id<=0 || tpoint_id===""){toastr["error"](errs[0]);}
 	if (tpoint_id>0){
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showTpointPayBoxForm', 'tpoint_id':tpoint_id, 's_id':s_id}, 
@@ -757,7 +781,7 @@ function dropTpointPayBox(tpoint_id,s_id){
 }
 
 function saveTpointPayBoxForm(tpoint_id,s_id){
-	var client_name=$("#client_name").val();
+	let client_name=$("#client_name").val();
 	swal({
 		title: "Закріпити контагента \""+client_name+"\" за торговою точкою?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -768,6 +792,7 @@ function saveTpointPayBoxForm(tpoint_id,s_id){
 			var client_id=$("#client_id").val();
 			var name=$("#name").val();
 			var in_use=0;if (document.getElementById("in_use").checked){in_use=1;}
+
 			if (tpoint_id.length>0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveTpointPayBoxForm','tpoint_id':tpoint_id,'s_id':s_id,'client_id':client_id,'name':name,'in_use':in_use},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -784,3 +809,4 @@ function saveTpointPayBoxForm(tpoint_id,s_id){
 		}
 	});
 }
+

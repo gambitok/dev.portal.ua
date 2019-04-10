@@ -1,39 +1,44 @@
 <div style="font-size:12px;">
-<p></p>
-<table width="100%" border="0"><tr>
-	<td><small>Дата видруку: {curtime}</small></td>
-    <td align="right"><img src="http://portal.myparts.pro/images/logo/logo-tokogroup.png" height="30"></td>
-</tr></table>
-<h4 align="center">Прихідна накладна №{prefix}{doc_nom} від {data}</h4>
-<p>
-<table width="100%" border="0" style="font-size:12px;">
-<tr>
-	<td>Склад: {storage_name};</td>
-</tr>
-<tr>
-    <td>Примітка: _________________________________________________________________________________________________________________________</td>
-</tr>
-</table>
-</p><br>
+    <p></p>
 
-<table border="1" class="table table-condensed table-striped table-hover table-bordered" width="100%" style="font-size:12px;">
-    <thead>
-        <tr align="center">
-            <th width="50" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">№ п/п</th>
-            <th width="100" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Індекс</th>
-            <th width="100" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Бренд</th>
-            <th width="80" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">К-сть</th>
-            <th width="150" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Найменування</th>
-            <th width="140" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Примітка</th>
-        </tr>
-    </thead>
-    <tbody>
-        {ArticlesList}
-    </tbody>
-</table>
-<table width="100%" border="0"><tr>
-	<td>Прийняв: ____________________ {user_name}</td>
-    <td align="right">{qrImage}</td>
-</tr></table>
-<hr>
+    <table width="100%" border="0"><tr>
+        <td><small>Дата видруку: {curtime}</small></td>
+        <td align="right"><img src="http://portal.myparts.pro/images/logo/logo-tokogroup.png" height="30"></td>
+    </tr></table>
+
+    <h4 align="center">Прихідна накладна №{prefix}{doc_nom} від {data}</h4>
+
+    <p>
+        <table width="100%" border="0" style="font-size:12px;">
+            <tr>
+                <td>Склад: {storage_name};</td>
+            </tr>
+            <tr>
+                <td>Примітка: _________________________________________________________________________________________________________________________</td>
+            </tr>
+        </table>
+    </p><br>
+
+    <table border="1" class="table table-condensed table-striped table-hover table-bordered" width="100%" style="font-size:12px;">
+        <thead>
+            <tr align="center">
+                <th width="50" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">№ п/п</th>
+                <th width="100" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Індекс</th>
+                <th width="100" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Бренд</th>
+                <th width="80" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">К-сть</th>
+                <th width="150" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Найменування</th>
+                <th width="140" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Примітка</th>
+            </tr>
+        </thead>
+        <tbody>
+            {ArticlesList}
+        </tbody>
+    </table>
+
+    <table width="100%" border="0"><tr>
+        <td>Прийняв: ____________________ {user_name}</td>
+        <td align="right">{qrImage}</td>
+    </tr></table>
+
+    <hr>
 </div>

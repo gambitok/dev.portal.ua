@@ -1,8 +1,16 @@
 <?php
 
 class export_stock_price {
+
+    function getPriceList() {$n=50;$list="";
+        for ($i=1;$i<=$n;$i++){
+            $ii=$i-1;
+            $list.="<option value='$i'>Price $ii</option>";
+        }
+        return $list;
+    }
 	
-	function exportStocks() {$db=DbSingleton::getTokoDb();
+	function exportStocks() {
 		header('Content-Type: text/csv; charset=utf-8');
 		header('Content-Disposition: attachment; filename=export_stocks.csv'); ob_clean();
 		$output = fopen('php://output', 'w');
@@ -14,12 +22,12 @@ class export_stock_price {
 		exit(0);
 	}	
 	
-	function exportPrices() {$db=DbSingleton::getTokoDb();
+	function exportPrices($price_select) {
 		header('Content-Type: text/csv; charset=utf-8');
 		header('Content-Disposition: attachment; filename=export_prices.csv'); ob_clean();
 		$output = fopen('php://output', 'w');
 		fputcsv($output, array("ART_ID","ARTICLE_NR_DISPL","ARTICLE_NR_SEARCH","BRAND_ID","BRAND_NAME","PRICE"),$delimiter = ';');
-		$array=$this->getArticlesPriceData(); 
+		$array=$this->getArticlesPriceData($price_select);
 		foreach ($array as $fields) {
 			fputcsv($output,$fields,$delimiter = ';');
 		}
@@ -51,20 +59,20 @@ class export_stock_price {
 		return $array;
 	}
 	
-	function getArticlesPriceData() {$db=DbSingleton::getTokoDb(); $array=[];
-		$r=$db->query("SELECT `T2_ARTICLES`. *, `T2_BRANDS`.`BRAND_NAME`, `T2_ARTICLES_PRICE_RATING`.`price_3` 
+	function getArticlesPriceData($price_select) {$db=DbSingleton::getTokoDb();$array=[];$price_val="price_$price_select";
+		$r=$db->query("SELECT `T2_ARTICLES`.*, `T2_BRANDS`.`BRAND_NAME`, `T2_ARTICLES_PRICE_RATING`.`$price_val` 
 		FROM `T2_ARTICLES_PRICE_RATING` 
 			LEFT JOIN `T2_ARTICLES` ON `T2_ARTICLES_PRICE_RATING`.`art_id`=`T2_ARTICLES`.`art_id` 
 			LEFT JOIN `T2_BRANDS` ON `T2_ARTICLES`.`BRAND_ID`=`T2_BRANDS`.`BRAND_ID`
-		WHERE `T2_ARTICLES_PRICE_RATING`.`in_use`=1");
-		$n=$db->num_rows($r);
+		WHERE `T2_ARTICLES_PRICE_RATING`.`in_use`=1"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
 			$art_id=$db->result($r,$i-1,"ART_ID");
 			$art_displ=$db->result($r,$i-1,"ARTICLE_NR_DISPL");
 			$art_search=$db->result($r,$i-1,"ARTICLE_NR_SEARCH");
 			$brand_id=$db->result($r,$i-1,"BRAND_ID");
 			$brand=$db->result($r,$i-1,"BRAND_NAME");
-			$price=$db->result($r,$i-1,"price_3");
+			$price=$db->result($r,$i-1,"$price_val");
+			$price=str_replace(".",",",$price);
 			$array[$i]=array($art_id,$art_displ,$art_search,$brand_id,$brand,$price);
 		}
 		return $array;

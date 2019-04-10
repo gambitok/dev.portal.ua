@@ -47,16 +47,16 @@
                                 </div>
                                 
                                 <label class="col-sm-2 control-label">Вид документу</label>
-                                <div class="col-sm-2"><select class="form-control" disabled size="1" id="doc_type_id" style="width:100%;">{doc_type_list}</select></div>
+                                <div class="col-sm-2"><select title="Вид документу" class="form-control" disabled size="1" id="doc_type_id" style="width:100%;">{doc_type_list}</select></div>
                             </div>
                             <div class="form-group">
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">Валюта</label>
                                 <input type="hidden" id="check_cash_id" value="{cash_id}">
-                                <div class="col-lg-2 col-md-2 col-sm-8"><select class="form-control" disabled size="1" id="cash_id" style="width:100%;" onChange="changeDpCash();">{cash_list}</select></div>
+                                <div class="col-lg-2 col-md-2 col-sm-8"><select title="Валюта" class="form-control" disabled size="1" id="cash_id" style="width:100%;" onChange="changeDpCash();">{cash_list}</select></div>
                                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Юридична особа</label>
-                                <div class="col-lg-3 col-md-6 col-sm-8"><select class="form-control" id="client_conto_id" onchange='getClientContoCash();getClientPaymentDelay();getClientDocType();'><option value="0">-- оберіть клієна --</option>{client_conto_list}</select></div> 
+                                <div class="col-lg-3 col-md-6 col-sm-8"><select title="Юридична особа" class="form-control" id="client_conto_id" onchange='getClientContoCash();getClientPaymentDelay();getClientDocType();'><option value="0">-- оберіть клієна --</option>{client_conto_list}</select></div>
                                 <label class="col-sm-2 control-label">Тип доставки</label>
-                                <div class="col-sm-2"><select class="form-control" {oper_disabled} size="1" id="delivery_type_id" onChange="fixDeliveryCarrier()" style="width:100%;">{delivery_type_list}</select></div>
+                                <div class="col-sm-2"><select title="Тип доставки" class="form-control" {oper_disabled} size="1" id="delivery_type_id" onChange="fixDeliveryCarrier()" style="width:100%;">{delivery_type_list}</select></div>
                             </div>
                             <div class="form-group">
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">Дата оплати</label>
@@ -71,24 +71,22 @@
                                     </div>
                                 </div>
              					<label class="col-lg-2 col-md-2 col-sm-4 control-label">Перевізник</label>
-								<div class="col-lg-2 col-md-6 col-sm-8"><select class="form-control {carrier_dis}" id="carrier_id" style="width:100%;">{carrier_list}</select></div>
+								<div class="col-lg-2 col-md-6 col-sm-8"><select title="Перевізник" class="form-control {carrier_dis}" id="carrier_id" style="width:100%;">{carrier_list}</select></div>
                             </div>
                             <div class="form-group">
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">Вага / Об'єм<br>Курс валют</label>
                                 <label class="col-lg-2 col-md-2 col-sm-8"><span id="dp_volume">{volume}</span>кг <span id="dp_weight">{weight}</span>м3<br>$1={usd_to_uah}грн; 1&euro;={eur_to_uah}грн</label>
                                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Сума документу</label>
-                                <div class="col-lg-3 col-md-6 col-sm-8"><input type="text" readonly class="form-control" id="dp_summ" value="{dp_summ}"></div>
+                                <div class="col-lg-3 col-md-6 col-sm-8"><input title="Сума" type="text" readonly class="form-control" id="dp_summ" value="{dp_summ}"></div>
                                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Адреса доставки (склад)</label>
 								<div class="col-lg-2 col-md-6 col-sm-8">
 									<input class="form-control" {oper_disabled} type="text" id="delivery_address" value="{delivery_address}" placeholder="">
-									<select class="form-control disabled hidden" id="delivery_type_storage" onChange="setDeliveryAddress()" style="width:100%;">
+									<select title="Доставка" class="form-control disabled hidden" id="delivery_type_storage" onChange="setDeliveryAddress()" style="width:100%;">
 										{dp_storage_list}
 									</select>
 								</div>
                             </div>
 							
-
-                           
 							<div class="row">
                                 <div class="col-sm-12">
                                 	<span class="buttons-inline pull-left">
@@ -118,7 +116,7 @@
                                         <thead>
                                             <tr align="center">
 												<th style="text-align: center;">
-													<input type="checkbox" id="checkAll" onClick="ShowCheckAll();"/>
+													<input title="Показати" type="checkbox" id="checkAll" onClick="ShowCheckAll();"/>
 													<button type="button" class="btn btn-xs btn-default " onClick="ShowModalAll();"><i class="fa fa-percent"></i></button>
 												</th>
                                                 <th>№</th>
@@ -177,7 +175,7 @@
 									</button>
                                 </div>
                                 <div class="col-sm-6 text-right">
-                                    <button class="btn btn-primary" type="button" {oper_disabled} onClick="saveDpCard();">Зберігти зміни</button>
+                                    <button class="btn btn-primary" type="button" {oper_disabled} onClick="saveDpCard();">Зберегти зміни</button>
                                     <button class="btn btn-white" type="button" data-dismiss="modal" onClick="closeDpCard();" >Закрити</button>
                                 </div>
                             </div>

@@ -10,16 +10,17 @@ function showKoursList(){
 		toastr["info"]("Виконано!");
 	}}, true);
 }
+
 function newKoursCard(){
 	JsHttpRequest.query($rcapi,{ 'w': 'newKoursCard'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		var kours_id=result["kours_id"];
+		let kours_id=result["kours_id"];
 		showKoursCard(kours_id);
 	}}, true);
 }
 
 function showKoursCard(kours_id){
-	if (kours_id<=0 || kours_id==""){toastr["error"](errs[0]);}
+	if (kours_id<=0 || kours_id===""){toastr["error"](errs[0]);}
 	if (kours_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'showKoursCard', 'kours_id':kours_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -39,7 +40,6 @@ function saveKoursForm(){
 			var kours_id=$("#kours_id").val();
 			var kours_value=$("#kours_value").val();
 			var cash_id=$("#cash_id option:selected").val();
-	
 			if (kours_id.length>0){
 				JsHttpRequest.query($rcapi,{'w':'saveKoursForm','kours_id':kours_id,'kours_value':kours_value,'cash_id':cash_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -56,6 +56,7 @@ function saveKoursForm(){
 		}
 	});	
 }
+
 function loadStateSelectList(){
 	var country_id=$("#country_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientStateSelectList', 'country_id':country_id}, 
@@ -64,6 +65,7 @@ function loadStateSelectList(){
 		$("#state_id").select2({placeholder: "Виберіть область",dropdownParent: $("#KoursCard")});
 	}}, true);
 }
+
 function loadRegionSelectList(){
 	var state_id=$("#state_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientRegionSelectList', 'state_id':state_id}, 
@@ -72,6 +74,7 @@ function loadRegionSelectList(){
 		$("#region_id").select2({placeholder: "Виберіть район",dropdownParent: $("#KoursCard")});
 	}}, true);
 }
+
 function loadCitySelectList(){
 	var region_id=$("#region_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientCitySelectList', 'region_id':region_id}, 
@@ -82,7 +85,7 @@ function loadCitySelectList(){
 }
 
 function loadKoursStorage(kours_id){
-	if (kours_id<=0 || kours_id==""){toastr["error"](errs[0]);}
+	if (kours_id<=0 || kours_id===""){toastr["error"](errs[0]);}
 	if (kours_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadKoursStorage', 'kours_id':kours_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -102,6 +105,7 @@ function showKoursStorageForm(kours_id, s_id){
 		}}, true);
 	}
 }
+
 function dropKoursStorage(kours_id,s_id){
 	swal({
 		title: "Відкріпити склад від торгової точки?",
@@ -156,9 +160,8 @@ function saveKoursStorageForm(kours_id,s_id){
 	});
 }
 
-
 function loadKoursClients(kours_id){
-	if (kours_id<=0 || kours_id==""){toastr["error"](errs[0]);}
+	if (kours_id<=0 || kours_id===""){toastr["error"](errs[0]);}
 	if (kours_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadKoursClients', 'kours_id':kours_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -167,8 +170,9 @@ function loadKoursClients(kours_id){
 		}}, true);
 	}
 }
+
 function showKoursClientsForm(kours_id, s_id){
-	if (kours_id<=0 || kours_id==""){toastr["error"](errs[0]);}
+	if (kours_id<=0 || kours_id===""){toastr["error"](errs[0]);}
 	if (kours_id>0){
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showKoursClientsForm', 'kours_id':kours_id, 's_id':s_id}, 
@@ -181,6 +185,7 @@ function showKoursClientsForm(kours_id, s_id){
 		}}, true);
 	}
 }
+
 function showKoursClientList(client_id){
 	JsHttpRequest.query($rcapi,{ 'w': 'showKoursClientList', 'client_id':client_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -190,6 +195,7 @@ function showKoursClientList(client_id){
 		setTimeout(function() { $('#datatable_parrent').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}}); }, 500);
 	}}, true);
 }
+
 function setKoursClient(id,name){
 	$('#client_id').val(id);
 	$('#client_name').val(name);
@@ -251,9 +257,8 @@ function saveKoursClientsForm(kours_id,s_id){
 	});
 }
 
-
 function loadKoursWorkers(kours_id){
-	if (kours_id<=0 || kours_id==""){toastr["error"](errs[0]);}
+	if (kours_id<=0 || kours_id===""){toastr["error"](errs[0]);}
 	if (kours_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadKoursWorkers', 'kours_id':kours_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -264,7 +269,7 @@ function loadKoursWorkers(kours_id){
 }
 
 function showKoursWorkersForm(kours_id, s_id){
-	if (kours_id<=0 || kours_id==""){toastr["error"](errs[0]);}
+	if (kours_id<=0 || kours_id===""){toastr["error"](errs[0]);}
 	if (kours_id>0){
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showKoursWorkersForm', 'kours_id':kours_id, 's_id':s_id}, 
@@ -273,6 +278,7 @@ function showKoursWorkersForm(kours_id, s_id){
 		}}, true);
 	}
 }
+
 function dropKoursWorkers(kours_id,s_id){
 	swal({
 		title: "Відкріпити працівника від торгової точки?",

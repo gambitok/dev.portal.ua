@@ -2,13 +2,11 @@ var errs=[];
 errs[0]="Помилка індексу";
 errs[1]="Занадто короткий запит для пошуку";
 
-
 $(document).ready(function() {
 	$(document).bind('keydown', 'ctrl+a', function(){ ShowCheckAll2();});
 	$(document).bind('keydown', 'a', function(){ ShowCheckAll2();});
 	$(document).bind('keydown', 'p', function(){ ShowModalAll(); });
-	$(document).bind('keydown', 'f2', function(){ document.getElementById("discountStr").focus()});			
-	
+	$(document).bind('keydown', 'f2', function(){ document.getElementById("discountStr").focus()});
 });
 
 $(window).bind('beforeunload', function(e){
@@ -72,6 +70,7 @@ function saveMoneySpend(){
 		}
 	}
 }
+
 function getPayBoxBalans(){
 	var paybox_id=$("#paybox_id option:selected").val();
 	if (paybox_id<=0 || paybox_id==""){toastr["error"](errs[0]);}
@@ -96,13 +95,11 @@ function getPayboxUserCashSaldoList(){
 }
 
 function loadCashBoxList(client_id,document_type_id,seller_id){
-	//client_id=$("client_id").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadMoneySpendCashBoxList', 'client_id':client_id, 'document_type_id':document_type_id,'seller_id':seller_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		document.getElementById("paybox_id").innerHTML=result["content"];
 	}}, true);
 }
-
 
 function loadMoneySpendCDN(spend_id){
 	if (spend_id<=0 || spend_id==""){toastr["error"](errs[0]);}

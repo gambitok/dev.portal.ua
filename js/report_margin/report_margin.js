@@ -1,3 +1,4 @@
+
 var select_ids = [];
 $(document).ready(function(e) {
     //$('select#managers option').each(function(index, element) {select_ids.push($(this).val());})

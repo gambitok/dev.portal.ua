@@ -2,10 +2,6 @@ var errs=[];
 errs[0]="Помилка індексу";
 errs[1]="Занадто короткий запит для пошуку";
 
-
-$(document).ready(function() {
-});
-
 function loadPayboxList(){
 	JsHttpRequest.query($rcapi,{ 'w': 'loadPayboxList'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -13,6 +9,7 @@ function loadPayboxList(){
 		$("#paybox_range").html(result["content"]);
 	}}, true);
 }
+
 function newPayboxCard(){
 	JsHttpRequest.query($rcapi,{ 'w': 'newPayboxCard'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -34,6 +31,7 @@ function showPayboxCard(paybox_id,paybox_name){
 		}}, true);
 	}
 }
+
 function savePayboxGeneralInfo(){
 	swal({
 		title: "Зберегти зміни у розділі \"Загальна інформація\"?",
@@ -66,7 +64,6 @@ function savePayboxGeneralInfo(){
 	});	
 }
 
-
 function loadPayboxWorkersSaldo(paybox_id){
 	if (paybox_id<=0 || paybox_id==""){toastr["error"](errs[0]);}
 	if (paybox_id>0){
@@ -77,7 +74,6 @@ function loadPayboxWorkersSaldo(paybox_id){
 		}}, true);
 	}
 }
-
  
 function showPayboxWorkerSaldoJournal(paybox_id, user_id, cash_id){
 	if (paybox_id<=0 || paybox_id==""){toastr["error"](errs[0]);}
@@ -89,6 +85,7 @@ function showPayboxWorkerSaldoJournal(paybox_id, user_id, cash_id){
 		}}, true);
 	}
 }
+
 function loadPayboxWorkers(paybox_id){
 	if (paybox_id<=0 || paybox_id==""){toastr["error"](errs[0]);}
 	if (paybox_id>0){
@@ -160,6 +157,7 @@ function dropPayboxWorker(paybox_id,s_id){
 		}
 	});
 }
+
 function savePayboxWorkerForm(paybox_id,s_id){
 	var paybox_worker_name=$("#worker_id option:selected").html();
 	swal({
@@ -186,6 +184,7 @@ function savePayboxWorkerForm(paybox_id,s_id){
 		}
 	});
 }
+
 function showPayboxClientList(client_id){
 	JsHttpRequest.query($rcapi,{ 'w': 'showPayboxClientList', 'client_id':client_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -194,6 +193,7 @@ function showPayboxClientList(client_id){
 		document.getElementById("FormModalLabel2").innerHTML="Контрагенти";
 	}}, true);
 }
+
 function setPayboxClient(id,name){
 	$('#firm_id').val(id);
 	$('#firm_name').val(name);

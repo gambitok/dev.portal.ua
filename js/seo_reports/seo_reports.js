@@ -1,8 +1,10 @@
+
 var select_ids = [];
+
 $(document).ready(function(e) {
     $('select#managers option').each(function(index, element) {
         select_ids.push($(this).val());
-    })
+    });
 	var elem2 = document.querySelector('#client_status');if (elem2){ var client_status = new Switchery(elem2, { color: '#1AB394' });}
 });
 
@@ -57,10 +59,9 @@ function exportSeoReports() {
 	var date_start=$("#date_start").val();
 	var date_end=$("#date_end").val();
 	var managers = Array.prototype.filter.call( document.getElementById("managers").options, el => el.selected).map(el => el.value).join(",");
-	if (managers=="") managers=0;
+	if (managers==="") managers=0;
 	var cash_id=$("#cash_select option:selected").val();
 	var client_status=$("#client_status").prop("checked"); if (client_status) client_status=1; else client_status=0;
-	
 //	var url = "/SeoReports/download/"+date_start+"/"+date_end+"/"+managers+"/"+cash_id+"/"+client_status+"/";
 	var url = "/export_managers.php?w=Export&date_start="+date_start+"&date_end="+date_end+"&managers="+managers+"&cash_id="+cash_id+"&client_status="+client_status;
 	window.open(url, '_blank');
