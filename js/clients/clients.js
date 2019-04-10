@@ -548,7 +548,7 @@ function saveClientGeneralInfo(){
 	for (var i=1;i<=c_category_kol;i++){var cc=0;if(document.getElementById("c_category_"+i).checked) { cc=$("#c_category_"+i).val(); }c_category[i]=cc;}
 
 	if (client_id.length>0){
-		JsHttpRequest.query($rcapi,{ 'w':'saveClientGeneralInfo','client_id':client_id,'org_type':org_type,'name':client_name,'full_name':client_full_name,'phone':phone,'email':email, 'parrent_id':parrent_id, 'country_id':country_id, 'state_id':state_id, 'region_id':region_id, 'city_id':city_id, 'c_category_kol':c_category_kol, 'c_category':c_category,'user_category':user_category},
+		JsHttpRequest.query($rcapi,{ 'w':'saveClientGeneralInfo', 'client_id':client_id, 'org_type':org_type, 'name':client_name, 'full_name':client_full_name, 'phone':phone, 'email':email, 'parrent_id':parrent_id, 'country_id':country_id, 'state_id':state_id, 'region_id':region_id, 'city_id':city_id, 'c_category_kol':c_category_kol, 'c_category':c_category, 'user_category':user_category},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			if (result["answer"]==1){ 
 				swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
