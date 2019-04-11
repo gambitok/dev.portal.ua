@@ -77,8 +77,8 @@ function showClientCard(client_id){
 		JsHttpRequest.query($rcapi,{ 'w': 'showClientCard', 'client_id':client_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#ClientCard").modal('show');
-			document.getElementById("ClientCardBody").innerHTML=result["content"];
-			document.getElementById("ClientCardLabel").innerHTML=$("#client_name").val()+" (ID:"+$("#client_id").val()+")";
+            $("#ClientCardBody").html(result["content"]);
+            $("#ClientCardLabel").html($("#client_name").val()+" (ID:"+$("#client_id").val()+")");
 			$('#client_tabs').tab();
 			$("#comment_info").markdown({autofocus:false,savable:false})
 			$("#country_id").select2({placeholder: "Виберіть країну",dropdownParent: $("#ClientCard")});
@@ -104,7 +104,7 @@ function showClientCard(client_id){
 function showClientRetailList(press_btn){
 	var status=$('#input_done').val();
 	if (press_btn) {
-		if (status=="true") status=true; else status=false;
+		status==="true" ? status=true : status=false;
 		if (status){
 			$('#input_done').val('false');
 			$('#toggle_done').html("<i class='fa fa-eye-slash'></i>");		
@@ -114,8 +114,8 @@ function showClientRetailList(press_btn){
 			$('#toggle_done').html("<i class='fa fa-eye'></i>");
 		}	
 	} else {
-		if (status=="true") status=false; else status=true;
-	}
+        status==="true" ? status=false : status=true;
+    }
 	var prevRange=$("#clients_range").html();
 	JsHttpRequest.query($rcapi,{ 'w': 'showClientRetailList', 'status':status}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){
@@ -132,8 +132,8 @@ function showClientRetailCard(user_id){
 		JsHttpRequest.query($rcapi,{ 'w': 'showClientRetailCard', 'user_id':user_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#ClientCard").modal('show');
-			document.getElementById("ClientCardBody").innerHTML=result["content"];
-			document.getElementById("ClientCardLabel").innerHTML=$("#user_name").val()+" (ID:"+$("#user_id").val()+")";
+            $("#ClientCardBody").html(result["content"]);
+            $("#ClientCardLabel").html($("#user_name").val()+" (ID:"+$("#user_id").val()+")");
 			$("#country_id").select2({placeholder: "Виберіть країну",dropdownParent: $("#ClientCard")});
 			$("#state_id").select2({placeholder: "Виберіть область",dropdownParent: $("#ClientCard")});
 			$("#region_id").select2({placeholder: "Виберіть район",dropdownParent: $("#ClientCard")});
@@ -153,7 +153,7 @@ function newClientRetailCard(){
 function saveClientRetailGeneralInfo(){
 	var user_id=$("#user_id").val();
 	var user_name=$("#user_name").val();
-	var client_id=$("#client_name").val();
+	//var client_id=$("#client_name").val();
 	var country_id=$("#country_id option:selected").val();
 	var state_id=$("#state_id option:selected").val();
 	var region_id=$("#region_id option:selected").val();
@@ -161,9 +161,9 @@ function saveClientRetailGeneralInfo(){
 	var user_category=$("#user_category").val();
 	var user_phone=$("#user_phone").val();
 	var user_email=$("#user_email").val();
-	var user_pass=$("#user_pass").val();
+	//var user_pass=$("#user_pass").val();
 	var user_status=$("#user_status").val();
-	var user_data=$("#user_data").val();
+	//var user_data=$("#user_data").val();
 	
 	swal({
 		title: "Зберегти дані користувача \""+user_name+"\"?",
@@ -246,8 +246,8 @@ function setClientRetail(client_id,client_name) {
 function loadStateSelectList(){
 	var country_id=$("#country_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientStateSelectList', 'country_id':country_id}, 
-	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		document.getElementById("state_id").innerHTML=result["content"];
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+        $("#state_id").html(result["content"]);
 		$("#state_id").select2({placeholder: "Виберіть область",dropdownParent: $("#ClientCard")});
 	}}, true);
 }
@@ -255,8 +255,8 @@ function loadStateSelectList(){
 function loadRegionSelectList(){
 	var state_id=$("#state_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientRegionSelectList', 'state_id':state_id}, 
-	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		document.getElementById("region_id").innerHTML=result["content"];
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+        $("#region_id").html(result["content"]);
 		$("#region_id").select2({placeholder: "Виберіть район",dropdownParent: $("#ClientCard")});
 	}}, true);
 }
@@ -285,8 +285,8 @@ function loadClientConditions(client_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadClientConditions', 'client_id':client_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("conditions_place").innerHTML=result["content"];
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+			$("#conditions_place").html(result["content"]);
 			$('#client_tabs').tab();
 			$("#cash_id").select2({placeholder: "Основна валюта",dropdownParent: $("#ClientCard")});
 			$("#country_cash_id").select2({placeholder: "Національна валюта",dropdownParent: $("#ClientCard")});
@@ -303,8 +303,8 @@ function loadClientDetails(client_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadClientDetails', 'client_id':client_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("details_place").innerHTML=result["content"];
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#details_place").html(result["content"]);
 			$('#catalogue_tabs').tab();
 			//$("#units").select2({placeholder: "Одиниці виміру",dropdownParent: $("#ClientCard")});
 		}}, true);
@@ -347,6 +347,7 @@ function saveClientDetails(){
 	var not_resident=0; if (document.getElementById("not_resident").checked){not_resident=1;}else{nr_details="";}
 	var buh_name=$("#buh_name").val();
 	var buh_edrpou=$("#buh_edrpou").val();
+
 	if (client_id.length>0){
 		JsHttpRequest.query($rcapi,{ 'w':'saveClientDetails','client_id':client_id,'address_jur':address_jur,'address_fakt':address_fakt,'edrpou':edrpou,'svidotctvo':svidotctvo,'vytjag':vytjag,'vat':vat,'mfo':mfo, 'bank':bank,'account':account,'not_resident':not_resident,'nr_details':nr_details,'buh_name':buh_name,'buh_edrpou':buh_edrpou},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -363,8 +364,8 @@ function loadClientDocumentPrefix(client_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadClientDocumentPrefix', 'client_id':client_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("document_prefix_place").innerHTML=result["content"];
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#document_prefix_place").html(result["content"]);
 			$('#catalogue_tabs').tab();
 		}}, true);
 	}
@@ -375,8 +376,8 @@ function showClientDocumentPrefixForm(client_id, prefix_id){
 	if (client_id>0){
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showClientDocumentPrefixForm', 'client_id':client_id, 'prefix_id':prefix_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("FormModalBody").innerHTML=result["content"];
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#FormModalBody").html(result["content"]);
 		}}, true);
 	}
 }
@@ -437,8 +438,8 @@ function loadClientContacts(client_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadClientContacts', 'client_id':client_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("contacts_place").innerHTML=result["content"];
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#contacts_place").html(result["content"]);
 			$('#catalogue_tabs').tab();
 		}}, true);
 	}
@@ -449,8 +450,8 @@ function showClientContactForm(client_id, contact_id){
 	if (client_id>0){
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showClientContactForm', 'client_id':client_id, 'contact_id':contact_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("FormModalBody").innerHTML=result["content"];
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#FormModalBody").html(result["content"]);
 		}}, true);
 	}
 }
@@ -553,15 +554,13 @@ function saveClientGeneralInfo(){
 			if (result["answer"]==1){ 
 				swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 				$("#ClientCard").modal('hide');
-			
-					$('#ClientCard').on('hidden.bs.modal', function () {
-						// do something…
-						var client_input = $("#client_id").val();
-						if (client_input=="0") {
-							showClientCard(result["client_id"]);
-							console.log(result["client_id"]);
-						}
-					})
+				$('#ClientCard').on('hidden.bs.modal', function () {
+					var client_input = $("#client_id").val();
+					if (client_input=="0") {
+						showClientCard(result["client_id"]);
+						console.log(result["client_id"]);
+					}
+				})
 				//var art=$("#catalogue_art").val();
 				//if (art.length>0){
 				//	catalogue_client_search();
@@ -620,8 +619,8 @@ function showClientsParrentTree(client_id,parrent_id){
 		JsHttpRequest.query($rcapi,{ 'w': 'showClientsParrentTree', 'client_id':client_id, 'parrent_id':parrent_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow").modal('show');
-			document.getElementById("FormModalBody").innerHTML=result["content"];
-			document.getElementById("FormModalLabel").innerHTML="Контрагенти";
+            $("#FormModalBody").html(result["content"]);
+            $("#FormModalLabel").html("Контрагенти");
 			$('#datatable_parrent').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
 		}}, true);
 	}
@@ -631,8 +630,8 @@ function setClientParrent(id,name){
 	$('#parrent_id').val(id);
 	$('#parrent_name').val(name);
 	$("#FormModalWindow").modal('hide');
-	document.getElementById("FormModalBody").innerHTML="";
-	document.getElementById("FormModalLabel").innerHTML="";
+    $("#FormModalBody").html("");
+    $("#FormModalLabel").html("");
 }
 
 function unlinkClientsParrent(client_id){
@@ -694,8 +693,8 @@ function loadClientUsers(client_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadClientUsers', 'client_id':client_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("users_place").innerHTML=result["content"];
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#users_place").html(result["content"]);
 		}}, true);
 	}
 }
@@ -705,8 +704,8 @@ function showClientUserForm(client_id, user_id){
 	if (client_id>0){
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showClientUserForm', 'client_id':client_id, 'user_id':user_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("FormModalBody").innerHTML=result["content"];
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#FormModalBody").html(result["content"]);
 			$('.i-checks').iCheck({checkboxClass: 'icheckbox_square-green',radioClass: 'iradio_square-green',});
 		}}, true);
 	}
@@ -785,8 +784,8 @@ function loadClientCommets(client_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadClientCommets', 'client_id':client_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("client_commets_place").innerHTML=result["content"];
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#client_commets_place").html(result["content"]);
 		}}, true);
 	}
 }
@@ -809,7 +808,6 @@ function saveClientComment(client_id){
 function dropClientComment(client_id,cmt_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
-		
 		if(confirm('Видалити запис?')){ 
 			JsHttpRequest.query($rcapi,{ 'w': 'dropClientComment', 'client_id':client_id, 'cmt_id':cmt_id}, 
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -824,8 +822,8 @@ function loadClientCDN(client_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadClientCDN', 'client_id':client_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("client_cdn_place").innerHTML=result["content"];
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#client_cdn_place").html(result["content"]);
 		}}, true);
 	}
 }
@@ -860,8 +858,8 @@ function viewClientsDetailsFile(client_id,file_type){
 	if (client_id>0){
 		$("#viewDetailsForm").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'loadClientsDetailsFile', 'client_id':client_id, 'file_type':file_type}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("client_details_files_place").innerHTML=result["content"];
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#client_details_files_place").html(result["content"]);
 		}}, true);
 	}
 }
@@ -898,13 +896,12 @@ function showCountryManual(){
 	JsHttpRequest.query($rcapi,{ 'w':'showCountryManual','country_id':country_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#CountryModalWindow").modal('show');
-		document.getElementById("CountryBody").innerHTML=result["content"];
+        $("#CountryBody").html(result["content"]);
 		setTimeout(function(){
-		  $('#datatable_country').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [10, 20, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+			$('#datatable_country').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [10, 20, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
 		}, 500);
 	}}, true);
 }
-
 
 function selectCountry(id,name){
 	$("#country_id").val(id);
@@ -916,8 +913,8 @@ function showCountryForm(country_id){
 	JsHttpRequest.query($rcapi,{ 'w':'showCountryForm','country_id':country_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow").modal('show');
-		document.getElementById("FormModalBody").innerHTML=result["content"];
-		document.getElementById("FormModalLabel").innerHTML=result["header"];
+        $("#FormModalBody").html(result["content"]);
+        $("#FormModalLabel").html(result["header"]);
 	}}, true);
 }
 
@@ -944,7 +941,7 @@ function showCostumsManual(){
 	JsHttpRequest.query($rcapi,{ 'w':'showCostumsManual','costums_id':costums_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#CostumsModalWindow").modal('show');
-		document.getElementById("CostumsBody").innerHTML=result["content"];
+        $("#CostumsBody").html(result["content"]);
 		setTimeout(function(){
 		  $('#datatable_costums').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [10, 20, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
 		}, 500);
@@ -961,8 +958,8 @@ function showCostumsForm(costums_id){
 	JsHttpRequest.query($rcapi,{ 'w':'showCostumsForm','costums_id':costums_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow").modal('show');
-		document.getElementById("FormModalBody").innerHTML=result["content"];
-		document.getElementById("FormModalLabel").innerHTML=result["header"];
+        $("#FormModalBody").html(result["content"]);
+        $("#FormModalLabel").html(result["header"]);
 	}}, true);
 }
 
@@ -989,8 +986,8 @@ function loadClientStorage(client_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadClientStorage', 'client_id':client_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("storage_place").innerHTML=result["content"];
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#storage_place").html(result["content"]);
 		}}, true);
 	}
 }
@@ -999,8 +996,8 @@ function showClientStorageForm(client_id,storage_id){
 	JsHttpRequest.query($rcapi,{ 'w':'showClientStorageForm','client_id':client_id,'storage_id':storage_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow").modal('show');
-		document.getElementById("FormModalBody").innerHTML=result["content"];
-		document.getElementById("FormModalLabel").innerHTML=result["header"];
+		$("#FormModalBody").html(result["content"]);
+		$("#FormModalLabel").html(result["header"]);
 		$("#storage_country_id").select2({placeholder: "Виберіть країну",dropdownParent: $("#FormModalWindow")});
 		$("#storage_state_id").select2({placeholder: "Виберіть область",dropdownParent: $("#FormModalWindow")});
 		$("#storage_region_id").select2({placeholder: "Виберіть регіон",dropdownParent: $("#FormModalWindow")});
@@ -1032,26 +1029,26 @@ function saveClientStorageForm(client_id,storage_id){
 function loadStorageStateSelectList(){
 	var country_id=$("#storage_country_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientStateSelectList', 'country_id':country_id}, 
-	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		document.getElementById("storage_state_id").innerHTML=result["content"];
-		$("#storage_state_id").select2({placeholder: "Виберіть область",dropdownParent: $("#FormModalWindow")});
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+		$("#storage_state_id").html(result["content"]);
+        $("#storage_state_id").select2({placeholder: "Виберіть область",dropdownParent: $("#FormModalWindow")});
 	}}, true);
 }
 
 function loadStorageRegionSelectList(){
 	var state_id=$("#storage_state_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientRegionSelectList', 'state_id':state_id}, 
-	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		document.getElementById("storage_region_id").innerHTML=result["content"];
-		$("#storage_region_id").select2({placeholder: "Виберіть район",dropdownParent: $("#FormModalWindow")});
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+        $("#storage_region_id").html(result["content"]);
+        $("#storage_region_id").select2({placeholder: "Виберіть район",dropdownParent: $("#FormModalWindow")});
 	}}, true);
 }
 
 function loadStorageCitySelectList(){
 	var region_id=$("#storage_region_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientCitySelectList', 'region_id':region_id}, 
-	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		document.getElementById("storage_city_id").innerHTML=result["content"];
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+		$("#storage_city_id").html(result["content"]);
 		$("#storage_city_id").select2({placeholder: "Виберіть район",dropdownParent: $("#FormModalWindow")});
 	}}, true);
 }
@@ -1091,9 +1088,8 @@ function saveClientSupplConditions(client_id){
 			var prepay_persent=parseInt($("#prepay_persent").val());
 			var er=0;
 			if (prepay_persent<0 || prepay_persent>100){er=1; swal("Помилка!", "Відсоток передоплати не повинен бути більше 100", "error");}
-			if ((prepay_persent<0 || prepay_persent>100) && er==0){}
-		
-			if (client_id.length>0 && er==0){
+			//if ((prepay_persent<0 || prepay_persent>100) && er===0){}
+			if (client_id.length>0 && er===0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveClientSupplConditions','client_id':client_id,'prepayment':prepayment,'prepay_all':prepay_all,'prepay_summ':prepay_summ,'prepay_type':prepay_type,'prepay_persent':prepay_persent},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
@@ -1141,10 +1137,10 @@ function showClientGeneralSaldoForm(client_id){
 		JsHttpRequest.query($rcapi,{ 'w': 'showClientGeneralSaldoForm', 'client_id':client_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow").modal('show');
-			document.getElementById("FormModalBody").innerHTML=result["content"];
-			document.getElementById("FormModalLabel").innerHTML=result["header"];
-			$('#saldo_data_start').datepicker({format: "yyyy-mm-dd",autoclose:true})
-			$('#saldo_data_end').datepicker({format: "yyyy-mm-dd",autoclose:true})
+            $("#FormModalBody").html(result["content"]);
+            $("#FormModalLabel").html(result["header"]);
+			$('#saldo_data_start').datepicker({format: "yyyy-mm-dd",autoclose:true});
+			$('#saldo_data_end').datepicker({format: "yyyy-mm-dd",autoclose:true});
 		}}, true);
 	}
 }
@@ -1168,8 +1164,8 @@ function viewJpayMoneyPay(pay_id){
 	JsHttpRequest.query($rcapi,{ 'w': 'viewJpayMoneyPay', 'pay_id':pay_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow2").modal('show');
-		document.getElementById("FormModalBody2").innerHTML=result["content"];
-		document.getElementById("FormModalLabel2").innerHTML="Оплата накладної";
+        $("#FormModalBody2").html(result["content"]);
+        $("#FormModalLabel2").html("Оплата накладної");
 		numberOnlyPlace("sale_invoice_kredit");
 		numberOnlyPlace("cash_kours");
 	}}, true);
@@ -1178,13 +1174,12 @@ function viewJpayMoneyPay(pay_id){
 function getSaleInvoceProlog() {
 	var client_id=$("#client_id").val();
 	var date_search=$("#data_search").val();
-	console.log(date_search);
 	if (client_id.length>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'getSaleInvoceProlog', 'client_id':client_id,'date_search':date_search}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow").modal('show');
-			document.getElementById("FormModalBody").innerHTML=result["content"];
-			document.getElementById("FormModalLabel").innerHTML="Пролонгація документів";
+            $("#FormModalBody").html(result["content"]);
+            $("#FormModalLabel").html("Пролонгація документів");
 		}}, true);
 	}
 }
@@ -1197,8 +1192,8 @@ function checkSaleInvoceProlog() {
 		JsHttpRequest.query($rcapi,{ 'w': 'checkSaleInvoceProlog', 'client_id':client_id,'date_start':date_start,'date_new':date_new}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow").modal('show');
-			document.getElementById("FormModalBody").innerHTML=result["content"];
-			document.getElementById("FormModalLabel").innerHTML="Пролонгація документів";
+			$("#FormModalBody").html(result["content"]);
+			$("#FormModalLabel").html("Пролонгація документів");
 		}}, true);
 	}
 }
@@ -1209,8 +1204,8 @@ function getSaleInvocePrologHistory() {
 		JsHttpRequest.query($rcapi,{ 'w': 'getSaleInvocePrologHistory', 'client_id':client_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow").modal('show');
-			document.getElementById("FormModalBody").innerHTML=result["content"];
-			document.getElementById("FormModalLabel").innerHTML="Історія пролонгація документів";
+            $("#FormModalBody").html(result["content"]);
+            $("#FormModalLabel").html("Історія пролонгація документів");
 			$('#datatable_prolog').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [10, 20, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
 		}}, true);
 	}
@@ -1233,7 +1228,6 @@ function editSaleInvoceProlog() {
 					if (result["answer"]==1){ 
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						getSaleInvoceProlog();
-						console.log(result["error"]);
 					}
 					else{ swal("Помилка!", result["error"], "error");}			
 				}}, true);
@@ -1287,8 +1281,8 @@ function showClientMandateForm(client_id,mandate_id){
 		JsHttpRequest.query($rcapi,{ 'w':'showClientMandateForm','client_id':client_id,'mandate_id':mandate_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow").modal('show');
-			document.getElementById("FormModalBody").innerHTML=result["content"];
-			document.getElementById("FormModalLabel").innerHTML=result["header"];
+            $("#FormModalBody").html(result["content"]);
+            $("#FormModalLabel").html(result["header"]);
 		}}, true);
 	}
 }
@@ -1340,8 +1334,8 @@ function showClientBasisForm(client_id,basis_id){
 		JsHttpRequest.query($rcapi,{ 'w':'showClientBasisForm','client_id':client_id,'basis_id':basis_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow").modal('show');
-			document.getElementById("FormModalBody").innerHTML=result["content"];
-			document.getElementById("FormModalLabel").innerHTML=result["header"];
+            $("#FormModalBody").html(result["content"]);
+            $("#FormModalLabel").html(result["header"]);
 		}}, true);
 	}
 }

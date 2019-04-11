@@ -39,6 +39,7 @@ class clients {
             left outer join T2_REGION t2rg on t2rg.REGION_ID=c.region
             left outer join T2_CITY t2ct on t2ct.CITY_ID=c.city
         where c.status=1 $where;");$n=$db->num_rows($r);$list="";
+
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $name=$db->result($r,$i-1,"name");
@@ -74,6 +75,7 @@ class clients {
             left outer join T2_REGION t2rg on t2rg.REGION_ID=c.region
             left outer join T2_CITY t2ct on t2ct.CITY_ID=c.city
         where c.status=1 and c.parrent_id=0;");$n=$db->num_rows($r);$list="";
+
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $name=$db->result($r,$i-1,"name");
@@ -176,8 +178,7 @@ class clients {
         return array($answer,$err);
     }
 
-    function showCategoryTree($sel_id=null){$db=DbSingleton::getDb();$tree="";//$form="";
-        //$form="";$form_htm=RD."/tpl/clients_category_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+    function showCategoryTree($sel_id=null){$db=DbSingleton::getDb();$tree="";
         $r=$db->query("select * from A_CATEGORY where parrent_id='0' order by id asc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
@@ -185,8 +186,6 @@ class clients {
             $sel="";if ($sel_id==$id){$sel=" data-jstree='{\"selected\":true}'";}
             $tree.="<li id='$id' $sel>$name".$this->showCategoryTreeSubLevel($id,$sel_id)."</li>";
         }
-        //$form=str_replace("{tree}",$tree,$form);
-        //$form=str_replace("{category_id}",$sel_id,$form);
         return $tree;
     }
 
@@ -208,6 +207,7 @@ class clients {
         $r=$db->query("select c.*, ot.name as org_type_name from A_CLIENTS c 
             left outer join A_ORG_TYPE ot on ot.id=c.org_type 
         where c.parrent_id='$sel_id' and c.status='1' order by c.id asc;");$n=$db->num_rows($r);
+
         if ($n>0){$kol_childs=$n;
             for ($i=1;$i<=$n;$i++){
                 $id=$db->result($r,$i-1,"id");
@@ -240,6 +240,7 @@ class clients {
         $r=$db->query("select c.*, ot.full_name as ot_full_name from A_CLIENTS c  
             left outer join A_ORG_TYPE ot on ot.id=c.org_type
         where c.id='$client_id' and c.status='1' limit 0,1;");$n=$db->num_rows($r);
+
         if ($n==0){
             $client_id=0;
         }
@@ -345,8 +346,8 @@ class clients {
         $r=$db->query("select * from A_CLIENTS_USERS_RETAIL where id='$user_id' limit 0,1;"); $n=$db->num_rows($r);
         if ($n==0){$form_htm=RD."/tpl/access_deny.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);} }
         if ($n==1){
-            $client_id=$db->result($r,0,"client_id");
-            $client_category=$db->result($r,0,"client_category");
+            $client_id=$db->result($r,0,"client_id"); $retail_client=$this->getClientNameById($client_id);
+            $client_category=$db->result($r,0,"client_category"); $client_category_list=$this->showUserCategorySelectList($client_category);
             $data=$db->result($r,0,"data");
             $name=$db->result($r,0,"name");
             $email=$db->result($r,0,"email");
@@ -356,21 +357,17 @@ class clients {
             $region=$db->result($r,0,"region_id");
             $city=$db->result($r,0,"city_id");
             $pass=$db->result($r,0,"pass");
-            $status=$db->result($r,0,"status");
-
+            $status=$db->result($r,0,"status"); $status_list=$this->showUserStatusSelectList($status);
             $user_id_created=$db->result($r,0,"user_id_created"); $user_id_created_name=$this->getUserNameById($user_id_created);
             $client_id_created=$db->result($r,0,"client_id_created"); $client_id_created_name=$this->getClientNameById($client_id_created);
-            $move_client_retail="";
-            if ($status==147) $move_client_retail="<div class='hr-line-dashed'></div>
-            Контрагент: $client_id_created_name (ID:$client_id_created), пользователь: $user_id_created_name (ID:$user_id_created)";
+            if ($status==147) $move_client_retail="<div class='hr-line-dashed'></div>Контрагент: $client_id_created_name (ID:$client_id_created), пользователь: $user_id_created_name (ID:$user_id_created)"; else $move_client_retail="";
+            if ($status==146 || $status==147) $disabled_status="disabled"; else $disabled_status="";
 
             $form=str_replace("{move_client_retail}",$move_client_retail,$form);
             $form=str_replace("{user_id}",$user_id,$form);
-            $retail_client=$this->getClientNameById($client_id);
             $form=str_replace("{client_id}",$client_id,$form);
             $form=str_replace("{client_name}",$retail_client,$form);
             $form=str_replace("{user_category}",$client_category,$form);
-            $client_category_list=$this->showUserCategorySelectList($client_category);
             $form=str_replace("{category_list}",$client_category_list,$form);
             $form=str_replace("{user_data}",$data,$form);
             $form=str_replace("{user_name}",$name,$form);
@@ -381,9 +378,7 @@ class clients {
             $form=str_replace("{state_list}",$slave->showSelectSubList("T2_STATE","COUNTRY_ID","$country","STATE_ID","STATE_NAME",$state),$form);
             $form=str_replace("{region_list}",$slave->showSelectSubList("T2_REGION","STATE_ID","$state","REGION_ID","REGION_NAME",$region),$form);
             $form=str_replace("{city_list}",$slave->showSelectSubListDBM("T2_CITY","REGION_ID","$region","CITY_ID","CITY_NAME",$city),$form);
-            $status_list=$this->showUserStatusSelectList($status);
             $form=str_replace("{status_list}",$status_list,$form);
-            if ($status==146 || $status==147) $disabled_status="disabled"; else $disabled_status="";
             $form=str_replace("{disabled_status}",$disabled_status,$form);
         }
         return $form;
@@ -504,7 +499,6 @@ class clients {
         $form="";$form_htm=RD."/tpl/clients_document_prefix_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from A_CLIENTS_DOCUMENT_PREFIX where id='$prefix_id' and client_id='$client_id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){
-            //$user_id=$db->result($r,0,"id");
             $doc_type_id=$db->result($r,0,"doc_type_id");
             $prefix=$db->result($r,0,"prefix");
         }
@@ -737,7 +731,6 @@ class clients {
         $r=$db->query("select cc.*, u.name from A_CLIENTS_COMMENTS cc 
             left outer join media_users u on u.id=cc.USER_ID 
         where cc.CLIENT_ID='$client_id' order by cc.id desc;");$n=$db->num_rows($r);$list="";
-
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"ID");
             $user_id=$db->result($r,$i-1,"USER_ID");
@@ -999,7 +992,8 @@ class clients {
             if ($i==1) { ($this->checkSaleInvoiceClients($client_id)) || ($this->checkJPayClients($client_id)) ? $client_disabled="disabled" : $client_disabled="";
             }
             $list.="<label><input $client_disabled type='checkbox' class='i-checks' id='c_category_$i' value='$id' $ch> - $name;</label> ";
-        }$list.="<input type='hidden' id='c_category_kol' value='$n'>";
+        }
+        $list.="<input type='hidden' id='c_category_kol' value='$n'>";
         return $list;
     }
 
@@ -1079,13 +1073,13 @@ class clients {
         return $tree;
     }
 
-    function loadClientSupplConditions($client_id){$db=DbSingleton::getDb();$gmanual=new gmanual;
+    function loadClientSupplConditions($client_id){$db=DbSingleton::getDb();$gmanual=new gmanual;$prepayment_checked=$prepay_all_checked=$prepay_summ_disabled=$prepay_persent_readonly="";
         $form="";$form_htm=RD."/tpl/clients_suppl_conditions.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $r=$db->query("select * from A_CLIENTS_SUPPL_CONDITIONS where client_id='$client_id' limit 0,1;");
-        $prepayment=$db->result($r,0,"prepayment"); $prepayment_checked=""; if ($prepayment==1){$prepayment_checked=" checked='checked'";}
-        $prepay_all=$db->result($r,0,"prepay_all"); $prepay_all_checked=""; $prepay_summ_disabled=""; if ($prepay_all==1){$prepay_all_checked=" checked='checked'"; $prepay_summ_disabled="readonly";}
+        $prepayment=$db->result($r,0,"prepayment"); if ($prepayment==1){$prepayment_checked=" checked='checked'";}
+        $prepay_all=$db->result($r,0,"prepay_all"); if ($prepay_all==1){$prepay_all_checked=" checked='checked'"; $prepay_summ_disabled="readonly";}
         $prepay_summ=$db->result($r,0,"prepay_summ");
-        $prepay_type=$db->result($r,0,"prepay_type");$prepay_persent_readonly=""; if ($prepay_type==65){$prepay_persent_readonly=" readonly";}
+        $prepay_type=$db->result($r,0,"prepay_type"); if ($prepay_type==65){$prepay_persent_readonly=" readonly";}
         $prepay_persent=$db->result($r,0,"prepay_persent");
         $form=str_replace("{client_id}",$client_id,$form);
         $form=str_replace("{prepayment_checked}",$prepayment_checked,$form);
@@ -1124,9 +1118,9 @@ class clients {
         return $list;
     }
 
-    function loadClientConditions($client_id){$db=DbSingleton::getDb();
+    function loadClientConditions($client_id){$db=DbSingleton::getDb();$client_vat_checked="";
         $form="";$form_htm=RD."/tpl/clients_conditions.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from A_CLIENTS_CONDITIONS where client_id='$client_id' limit 0,1;"); $n=$db->num_rows($r);
+        $r=$db->query("select * from A_CLIENTS_CONDITIONS where client_id='$client_id' limit 0,1;");
 
         $cash_id=$db->result($r,0,"cash_id");
         $country_cash_id=$db->result($r,0,"country_cash_id");
@@ -1139,7 +1133,7 @@ class clients {
         $price_suppl_lvl=$db->result($r,0,"price_suppl_lvl");
         $margin_price_suppl_lvl=$db->result($r,0,"margin_price_suppl_lvl");
         $tpoint_id=$db->result($r,0,"tpoint_id");
-        $client_vat=$db->result($r,0,"client_vat");$client_vat_checked=""; if ($client_vat==1){$client_vat_checked=" checked='checked'";}
+        $client_vat=$db->result($r,0,"client_vat");if ($client_vat==1){$client_vat_checked=" checked='checked'";}
         $doc_type_id=$db->result($r,0,"doc_type_id");
 
         $form=str_replace("{client_id}",$client_id,$form);
@@ -1477,7 +1471,6 @@ class clients {
         $sertification=$db->result($r,0,"SERTIFICATION");
         $gos_standart=$db->result($r,0,"GOS_STANDART");
         $type_declaration=$db->result($r,0,"TYPE_DECLARATION");
-
         $form=str_replace("{id}",$id,$form);
         $form=str_replace("{name}",$name,$form);
         $form=str_replace("{preferential_rate}",$preferential_rate,$form);
@@ -1514,7 +1507,6 @@ class clients {
             left outer join T2_COUNTRIES t2c on t2c.COUNTRY_ID=t2z.COUNTRY_ID
             left outer join T2_COSTUMS t2s on t2s.COSTUMS_ID=t2z.COSTUMS_ID
         where t2z.ART_ID='$client_id' limit 0,1;");;
-
         $country_id=$db->result($r,0,"COUNTRY_ID");
         $country_name=$db->result($r,0,"COUNTRY_NAME");
         $costums_id=$db->result($r,0,"COSTUMS_ID");
@@ -1787,11 +1779,13 @@ class clients {
     }
 
     function showClientGeneralSaldoForm($client_id){$db=DbSingleton::getDb();$form="";$balans_after=0;
+        require_once (RD."/lib/sale_invoice_class.php");$sale_invoice=new sale_invoice;
+        require_once (RD."/lib/back_clients_class.php");$back_clients=new back_clients;
         if ($client_id>0){
-            $data_from=date("Y-m-01");$data_to=date("Y-m-t"); //current_month
+            $data_from=date("Y-m-01");$data_to=date("Y-m-t");
             $form_htm=RD."/tpl/client_general_saldo_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-            //$saldo_start=0;
-            $saldo_end=0; //default value
+
+            $saldo_end=0;
             $client_cash_id=$this->getClientCash($client_id);
             list($saldo_start,$saldo_cash_id,)=$this->getClientBalansPeriodStart($client_id,$client_cash_id,$data_from,0);
 
@@ -1804,7 +1798,7 @@ class clients {
                 left outer join CASH pmc on pmc.id=b.pay_cash_id 
             where b.client_id='$client_id' and b.data>='$data_from 00:00:00' and b.data<='$data_to 23:59:59' group by b.doc_type_id, b.doc_id order by b.id asc;");$n=$db->num_rows($r);$list="";
 
-            if ($n>0){ $sale_invoice=new sale_invoice; $back_clients=new back_clients;//$pay=new pay;
+            if ($n>0){
                 for ($i=1;$i<=$n;$i++){
                     $data=$db->result($r,$i-1,"data");
                     $cash_name=$db->result($r,$i-1,"cash_name");
@@ -1812,13 +1806,13 @@ class clients {
                     $deb_kre=$db->result($r,$i-1,"deb_kre");
                     $balans_before=$db->result($r,$i-1,"balans_before");
                     $balans_after=$db->result($r,$i-1,"balans_after");
-                    $doc_type_id=$db->result($r,$i-1,"doc_type_id"); // 1-Видаткова (SaleInvoice); 2- Оплата(Pay); 3-Автооплата(PayAuto)
+                    $doc_type_id=$db->result($r,$i-1,"doc_type_id");
                     $doc_id=$db->result($r,$i-1,"doc_id");
                     $pay_cash_name=$db->result($r,$i-1,"pmc.abr");
                     $pay_summ=$db->result($r,$i-1,"pay_summ");
                     $document_name="";$function="";
                     if ($doc_type_id==1){ $document_name=$sale_invoice->getSaleInvoiceName($doc_id);$function="showSaleInvoiceCard(\"$doc_id\");"; }
-                    if ($doc_type_id==2){ //????????????????????? change summ to 0 if avans pay
+                    if ($doc_type_id==2){
                         list($jpay_doc_type_id,$document_name)=$sale_invoice->getJPayName($doc_id); $function="viewJpayMoneyPay(\"$doc_id\")";
                         if ($jpay_doc_type_id==99) {$summ="";}
                     }
@@ -1834,7 +1828,6 @@ class clients {
                         $kredit=$summ;
                         $saldo_end+=$kredit;
                     }
-                    //if ($i==$n){$saldo_data_end=substr($data,0,10);}
                     $list.="<tr align='center'>
                         <td>$i</td>
                         <td>$data</td>
@@ -1850,7 +1843,6 @@ class clients {
                 }
                 $saldo_end=round($balans_after,2);
             }
-
             if ($n==0){$list="<tr><td colspan='8' align='center'>Документи відсутні</td></tr>"; $saldo_end=$saldo_start;}
             $form=str_replace("{list}",$list,$form);
             $form=str_replace("{saldo_end}",$saldo_end."".$this->getCashAbr($saldo_cash_id),$form);
@@ -1862,10 +1854,9 @@ class clients {
     }
 
     function getSaldoEnd($client_id){$db=DbSingleton::getDb();$saldo_start=$balans_after=0;
+        require_once (RD."/lib/sale_invoice_class.php");$sale_invoice=new sale_invoice;
         if ($client_id>0){
-            $data_from=date("Y-m-01");$data_to=date("Y-m-t");
-            //$saldo_start=0;
-            $saldo_end=0;
+            $data_from=date("Y-m-01");$data_to=date("Y-m-t");$saldo_end=0;
             $client_cash_id=$this->getClientCash($client_id);
             list($saldo_start,$saldo_cash_id,)=$this->getClientBalansPeriodStart($client_id,$client_cash_id,$data_from,0);
 
@@ -1873,31 +1864,17 @@ class clients {
                 left outer join CASH mc on mc.id=b.cash_id 
                 left outer join CASH pmc on pmc.id=b.pay_cash_id 
             where b.client_id='$client_id' and b.data>='$data_from 00:00:00' and b.data<='$data_to 23:59:59' group by b.doc_type_id, b.doc_id order by b.id asc;");$n=$db->num_rows($r);
+
             if ($n>0){
-                $sale_invoice=new sale_invoice; //$back_clients=new back_clients;
                 for ($i=1;$i<=$n;$i++){
-                    //$id=$db->result($r,$i-1,"id");
-                    //$data=$db->result($r,$i-1,"data");
-                    //$cash_id=$db->result($r,$i-1,"cash_id");
-                    //$cash_name=$db->result($r,$i-1,"cash_name");
                     $summ=round($db->result($r,$i-1,"summ"),2);
                     $deb_kre=$db->result($r,$i-1,"deb_kre");
-                    //$balans_before=$db->result($r,$i-1,"balans_before");
-                    //$balans_after=$db->result($r,$i-1,"balans_after");
                     $doc_type_id=$db->result($r,$i-1,"doc_type_id");
                     $doc_id=$db->result($r,$i-1,"doc_id");
-                    //$pay_cash_name=$db->result($r,$i-1,"pmc.abr");
-                    //$pay_summ=$db->result($r,$i-1,"pay_summ");
-                    //$document_name="";$function="";
-                   // if ($doc_type_id==1){ $document_name=$sale_invoice->getSaleInvoiceName($doc_id);/*$function="showSaleInvoiceCard(\"$doc_id\");";*/ }
                     if ($doc_type_id==2){
-                        list($jpay_doc_type_id,)=$sale_invoice->getJPayName($doc_id); //$function="viewJpayMoneyPay(\"$doc_id\")";
+                        list($jpay_doc_type_id,)=$sale_invoice->getJPayName($doc_id);
                         if ($jpay_doc_type_id==99) {$summ="";}
                     }
-                    //if ($doc_type_id==3){ list($jpay_doc_type_id,$document_name)=$sale_invoice->getJPayName($doc_id); }
-                    //if ($doc_type_id==5){ $document_name=$back_clients->getBackClientsName($doc_id); }
-
-                    //$debit="";$kredit="";
                     if ($deb_kre==1){
                         $debit=$summ;
                         $saldo_end-=$debit;
@@ -1907,15 +1884,8 @@ class clients {
                         $saldo_end+=$kredit;
                     }
                 }
-                //$saldo_end=round($balans_after,2);
             }
-
-            //if($saldo_end<0) $saldo_cap="<span style='color:red;'>(борг)</span>";
-            //if($saldo_end>0) $saldo_cap="<span style='color:limegreen;'>(предоплата)</span>";
-            //$saldo_end=$saldo_end." ".$this->getCashAbr($saldo_cash_id)." ".$saldo_cap;
             $saldo_cap="";
-            //if($saldo_start<0) $saldo_cap="<span style='color:red;'>(борг)</span>";
-            //if($saldo_start>0) $saldo_cap="<span style='color:limegreen;'>(предоплата)</span>";
             $saldo_start=$saldo_start." ".$this->getCashAbr($saldo_cash_id)." ".$saldo_cap;
         }
         return $saldo_start;
@@ -1923,9 +1893,10 @@ class clients {
 
     function filterClientGeneralSaldoForm($client_id,$data_from,$data_to){$db=DbSingleton::getDb();
         $list="";$client_saldo_start=$client_saldo_end=$client_saldo_data_start=$client_saldo_data_end=0;
-        if ($client_id>0){ //current_month
-            //$saldo_data_start=substr($data_from,0,-2)."01";$saldo_start=0;
-            $saldo_data_end=$data_to;$saldo_end=0; //default value
+        require_once (RD."/lib/sale_invoice_class.php");$sale_invoice=new sale_invoice;
+        require_once (RD."/lib/back_clients_class.php");$back_clients=new back_clients;
+        if ($client_id>0){
+            $saldo_data_end=$data_to;$saldo_end=0;
             $client_cash_id=$this->getClientCash($client_id);
 
             list($saldo_start,$saldo_cash_id,)=$this->getClientBalansPeriodStart($client_id,$client_cash_id,$data_from,0);
@@ -1939,23 +1910,20 @@ class clients {
             where b.client_id='$client_id' and b.data>='$data_from 00:00:00' and b.data<='$data_to 23:59:59' group by b.doc_type_id, b.doc_id order by b.id asc;");$n=$db->num_rows($r);$list="";
 
             if ($n>0){
-                $sale_invoice=new sale_invoice; $back_clients=new back_clients;//$pay=new pay;
                 for ($i=1;$i<=$n;$i++){
-                    //$id=$db->result($r,$i-1,"id");
                     $data=$db->result($r,$i-1,"data");
-                    //$cash_id=$db->result($r,$i-1,"cash_id");
                     $cash_name=$db->result($r,$i-1,"cash_name");
                     $summ=round($db->result($r,$i-1,"summ"),2);
                     $deb_kre=$db->result($r,$i-1,"deb_kre");
                     $balans_before=$db->result($r,$i-1,"balans_before");
                     $balans_after=$db->result($r,$i-1,"balans_after");
-                    $doc_type_id=$db->result($r,$i-1,"doc_type_id"); // 1-Видаткова (SaleInvoice); 2- Оплата(Pay); 3-Автооплата(PayAuto)
+                    $doc_type_id=$db->result($r,$i-1,"doc_type_id");
                     $doc_id=$db->result($r,$i-1,"doc_id");
                     $pay_cash_name=$db->result($r,$i-1,"pmc.abr");
                     $pay_summ=$db->result($r,$i-1,"pay_summ");
                     $document_name="";$function="";
                     if ($doc_type_id==1){ $document_name=$sale_invoice->getSaleInvoiceName($doc_id);$function="showSaleInvoiceCard(\"$doc_id\");"; }
-                    if ($doc_type_id==2){ //????????????????????? change summ to 0 if avans pay
+                    if ($doc_type_id==2){
                         list($jpay_doc_type_id,$document_name)=$sale_invoice->getJPayName($doc_id); $function="viewJpayMoneyPay(\"$doc_id\")";
                         if ($jpay_doc_type_id==99) {$summ="";}
                     }
@@ -1972,7 +1940,6 @@ class clients {
                         $saldo_end+=$kredit;
                     }
                     if ($i==$n){
-                        //$saldo_data_end=substr($data,0,10);
                         $client_saldo_end=$balans_after."".$this->getCashAbr($saldo_cash_id);
                     }
                     if ($i==1){
@@ -1991,11 +1958,9 @@ class clients {
                         <td><button class='btn btn-xs btn-default' title='Переглянути' onClick='$function'><i class='fa fa-eye'></i></button></td>
                     </tr>";
                 }
-                //$saldo_end=round($balans_after,2);
             }
             if ($n==0){
                 $list="<tr><td colspan='8' align='center'>Документи відсутні</td></tr>";
-                //$client_saldo_end=$balans_after."".$this->getCashAbr($saldo_cash_id);
                 $client_saldo_start=$client_saldo_end=$saldo_start."".$this->getCashAbr($saldo_cash_id);
             }
         }
@@ -2078,18 +2043,23 @@ class clients {
         return $form;
     }
 
-    function checkSaleInvoceProlog($client_id,$date_start,$date_new) { $db=DbSingleton::getDb();$list="";session_start();$user_id=$_SESSION["media_user_id"];$users=new users;
-        $users_credit=$users->getUsersAccessCredit($user_id);
+    function getUsersAccessCredit($users_id) {$db=DbSingleton::getDb();
+        $r=$db->query("select * from media_users where id='$users_id' limit 1;");
+        $access_credit=$db->result($r,0,"access_credit");
+        return $access_credit;
+    }
 
+    function checkSaleInvoceProlog($client_id,$date_start,$date_new) { $db=DbSingleton::getDb();$list="";session_start();$user_id=$_SESSION["media_user_id"];
+        $users_credit=$this->getUsersAccessCredit($user_id);
         $r=$db->query("select * from J_SALE_INVOICE where client_id='$client_id' and data_pay<='$date_start' and summ_debit!=0;"); $n=$db->num_rows($r);
-        for ($i=1;$i<=$n;$i++){$date_pay_start="";
+        for ($i=1;$i<=$n;$i++){
             $prefix=$db->result($r,$i-1,"prefix");
             $doc_nom=$db->result($r,$i-1,"doc_nom");
             $data_create=$db->result($r,$i-1,"data_create");
             $data_pay=$db->result($r,$i-1,"data_pay");
-            $data_pay_start=$db->result($r,$i-1,"data_pay_start");
+            $date_pay_start=$db->result($r,$i-1,"data_pay_start");
 
-            if ($date_pay_start=="" || $date_pay_start=="0000-00-00") $datetime1 = new DateTime($data_pay); else $datetime1 = new DateTime($data_pay_start);
+            if ($date_pay_start=="" || $date_pay_start=="0000-00-00") $datetime1 = new DateTime($data_pay); else $datetime1 = new DateTime($date_pay_start);
             $datetime2 = new DateTime($date_new);
             $interval = $datetime1->diff($datetime2);
             $dec = $interval->format('%a');
@@ -2111,12 +2081,6 @@ class clients {
         $form=str_replace("{prolog_days}",$users_credit,$form);
         $form=str_replace("{data_pay}",$date_new,$form);
         return $form;
-    }
-
-    function getUsersAccessCredit($users_id) {$db=DbSingleton::getDb();
-        $r=$db->query("select * from media_users where id='$users_id' limit 1;");
-        $access_credit=$db->result($r,0,"access_credit");
-        return $access_credit;
     }
 
     function editSaleInvoceProlog($client_id,$date_start,$date_new) { $db=DbSingleton::getDb();$answer=0;$err="Помилка збереження даних!";session_start();$user_id=$_SESSION["media_user_id"];
@@ -2159,9 +2123,11 @@ class clients {
     }
 
     function printGeneralSaldoList($client_id,$data_from,$data_to) {$db=DbSingleton::getDb();$form="";$balans_after=0;
-        if ($client_id>0){ // $data_from=date("Y-m-01");$data_to=date("Y-m-t"); //current_month
-            $form_htm=RD."/tpl/clients_print_saldo.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-            $saldo_end=0; //default value
+        require_once (RD."/lib/sale_invoice_class.php");$sale_invoice=new sale_invoice;
+        require_once (RD."/lib/back_clients_class.php");$back_clients=new back_clients;
+        if ($client_id>0){
+            $form_htm=RD."/tpl/clients_print_saldo.htm";if (file_exists("$form_htm")){$form = file_get_contents($form_htm);}
+            $saldo_end=0;
             $client_cash_id=$this->getClientCash($client_id);
             list($saldo_start,$saldo_cash_id,)=$this->getClientBalansPeriodStart($client_id,$client_cash_id,$data_from,0);
 
@@ -2173,25 +2139,23 @@ class clients {
                 left outer join CASH mc on mc.id=b.cash_id 
                 left outer join CASH pmc on pmc.id=b.pay_cash_id 
             where b.client_id='$client_id' and b.data>='$data_from 00:00:00' and b.data<='$data_to 23:59:59' group by b.doc_type_id, b.doc_id order by b.id asc;");$n=$db->num_rows($r);$list="";
+
             if ($n>0){
-                $sale_invoice=new sale_invoice; $back_clients=new back_clients;//$pay=new pay;
                 for ($i=1;$i<=$n;$i++){
-                    //$id=$db->result($r,$i-1,"id");
                     $data=$db->result($r,$i-1,"data");
-                    //$cash_id=$db->result($r,$i-1,"cash_id");
                     $cash_name=$db->result($r,$i-1,"cash_name");
                     $summ=round($db->result($r,$i-1,"summ"),2);
                     $deb_kre=$db->result($r,$i-1,"deb_kre");
                     $balans_before=$db->result($r,$i-1,"balans_before");
                     $balans_after=$db->result($r,$i-1,"balans_after");
-                    $doc_type_id=$db->result($r,$i-1,"doc_type_id"); // 1-Видаткова (SaleInvoice); 2- Оплата(Pay); 3-Автооплата(PayAuto)
+                    $doc_type_id=$db->result($r,$i-1,"doc_type_id");
                     $doc_id=$db->result($r,$i-1,"doc_id");
                     $pay_cash_name=$db->result($r,$i-1,"pmc.abr");
                     $pay_summ=$db->result($r,$i-1,"pay_summ");
                     $document_name="";
-                    if ($doc_type_id==1){ $document_name=$sale_invoice->getSaleInvoiceName($doc_id);/*$function="showSaleInvoiceCard(\"$doc_id\");"; */}
-                    if ($doc_type_id==2){ //????????????????????? change summ to 0 if avans pay
-                        list($jpay_doc_type_id,$document_name)=$sale_invoice->getJPayName($doc_id);/* $function="viewJpayMoneyPay(\"$doc_id\")";*/
+                    if ($doc_type_id==1){ $document_name=$sale_invoice->getSaleInvoiceName($doc_id);}
+                    if ($doc_type_id==2){
+                        list($jpay_doc_type_id,$document_name)=$sale_invoice->getJPayName($doc_id);
                         if ($jpay_doc_type_id==99) {$summ="";}
                     }
                     if ($doc_type_id==3){ list(,$document_name)=$sale_invoice->getJPayName($doc_id); }
@@ -2206,7 +2170,6 @@ class clients {
                         $kredit=$summ;
                         $saldo_end+=$kredit;
                     }
-                    //if ($i==$n){$saldo_data_end=substr($data,0,10);}
                     $list.="<tr align='center'>
                         <td>$i</td>
                         <td>$data</td>
@@ -2221,7 +2184,6 @@ class clients {
                 }
                 $saldo_end=round($balans_after,2);
             }
-
             if ($n==0){$list="<tr><td colspan='8' align='center'>Документи відсутні</td></tr>";}
             $form=str_replace("{list}",$list,$form);
             $form=str_replace("{saldo_end}",$saldo_end."".$this->getCashAbr($saldo_cash_id),$form);
