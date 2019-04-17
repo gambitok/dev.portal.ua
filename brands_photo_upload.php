@@ -3,7 +3,8 @@ error_reporting(0);
 @ini_set('display_errors', false);
 define('RD', dirname (__FILE__));
 date_default_timezone_set("Europe/Kiev");
-require_once (RD."/lib/mysql_class.php");$db=DbSingleton::getTokoDb();
+require_once (RD."/lib/mysql_class.php");
+require_once (RD."/lib/DbSingleton.php");$db=DbSingleton::getTokoDb();
 		
 $targetDir = RD."/cdn/brands_files/";
 

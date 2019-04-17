@@ -13,7 +13,7 @@ class group_tree {
 				<div class='tree-head pointer'>
 					<i class='fa fa-eye' onclick='showGroupTreeHeadCard($HEAD_ID)'></i> 
 					<i class='fa fa-plus' onclick='addGroupTreeHeadStr($HEAD_ID)'></i>
-					$HEAD_ID. $TEX_TEXT 
+					$HEAD_ID. $TEX_TEXT
 				</div>
 				<div class='tree-list dnone'>$header_list</div>
 			</li>";
@@ -34,6 +34,7 @@ class group_tree {
         $form=str_replace("{tree_list}",$tree_list,$form);
         $form=str_replace("{category_list}",$category_list,$form);
         $form=str_replace("{position_list}",$position_list,$form);
+        $form=str_replace("{group_img}","",$form);
         $form=str_replace("{disp_text_ru}","",$form);
         $form=str_replace("{disp_text_ua}","",$form);
         $form=str_replace("{disp_text_en}","",$form);
@@ -51,6 +52,8 @@ class group_tree {
         $disp_text_ua=$db->result($r,0,"TEX_UA");;
         $disp_text_en=$db->result($r,0,"TEX_EN");
         $CAT_ID=$db->result($r,0,"CAT_ID");
+        $IMAGES=$db->result($r,0,"IMAGES");
+        $IMAGES=="" ? $group_img="https://toko.ua/images/no-photo.png" : $group_img="https://toko.ua/uploads/images/group_tree_str/$IMAGES";
         $head_list=$this->getTreeHeadersList($HEAD_ID);
         $tree_list=$this->getTreeGroupList($STR_ID);
         $position_list=$this->getPositionList($POSITION);
@@ -61,6 +64,7 @@ class group_tree {
         $form=str_replace("{tree_list}",$tree_list,$form);
         $form=str_replace("{category_list}",$category_list,$form);
         $form=str_replace("{position_list}",$position_list,$form);
+        $form=str_replace("{group_img}",$group_img,$form);
         $form=str_replace("{disp_text_ru}",$disp_text_ru,$form);
         $form=str_replace("{disp_text_ua}",$disp_text_ua,$form);
         $form=str_replace("{disp_text_en}",$disp_text_en,$form);
@@ -192,7 +196,8 @@ class group_tree {
             $GROUP_ID=$db->result($r,$i-1,"GROUP_ID");
             $DISP_TEXT=$db->result($r,$i-1,"TEX_RU");
             $POSITION=$db->result($r,$i-1,"POSITION");
-            $arr[$CAT_ID][$i]=["text"=>$DISP_TEXT, "group"=>$GROUP_ID, "position"=>$POSITION];
+            $IMAGES=$db->result($r,$i-1,"IMAGES");
+            $arr[$CAT_ID][$i]=["text"=>$DISP_TEXT, "group"=>$GROUP_ID, "position"=>$POSITION, "images"=>$IMAGES];
         }
 
         foreach ($arr as $key=>$value) {
@@ -203,7 +208,9 @@ class group_tree {
                 $tex=$v["text"];
                 $group=$v["group"];
                 $position=$v["position"];
-                $list.="<li><i class='fa fa-pencil pointer' onclick='showGroupTreeHeadStr($group);'> $tex ($position)</i></li>";
+                $images=$v["images"];
+                if ($images=="") $img_icon="<i class='fa fa-eye-slash'></i>"; else $img_icon="";
+                $list.="<li><i class='fa fa-pencil pointer' onclick='showGroupTreeHeadStr($group);'> $tex ($position) $img_icon </i></li>";
             }
             $list.="</ul>";
         }
@@ -228,29 +235,35 @@ class group_tree {
         if ($head_id=="0") {
             $r1=$db->query("select max(HEAD_ID) as max_head from T2_GROUP_TREE_HEAD;");
             $head_id=0+$db->result($r1,0,"max_head")+1;
-            $disp_text_ru=$disp_text_ua=$disp_text_en="";
+            $disp_text_ru=$disp_text_ua=$disp_text_en=$head_img="";$head_status=0;
         } else {
             $r=$db->query("select * from T2_GROUP_TREE_HEAD where HEAD_ID='$head_id' limit 1;");
             $disp_text_ru=$db->result($r,0,"TEX_RU");
             $disp_text_ua=$db->result($r,0,"TEX_UA");
             $disp_text_en=$db->result($r,0,"TEX_EN");
+            $IMAGES=$db->result($r,0,"IMAGES");
+            $IMAGES=="" ? $head_img="https://toko.ua/images/no-photo.png" : $head_img="https://toko.ua/uploads/images/group_tree_head/$IMAGES";
+            $head_status=$db->result($r,0,"STATUS");
         }
         $form=str_replace("{head_id}",$head_id,$form);
         $form=str_replace("{disp_text_ru}",$disp_text_ru,$form);
         $form=str_replace("{disp_text_ua}",$disp_text_ua,$form);
         $form=str_replace("{disp_text_en}",$disp_text_en,$form);
+        $form=str_replace("{head_image}",$head_img,$form);
+        if ($head_status) $head_status="checked"; else $head_status="";
+        $form=str_replace("{head_status}",$head_status,$form);
         return $form;
 	}
 	
-	function saveGroupTreeHead($head_id, $disp_text_ru, $disp_text_ua, $disp_text_en) {$db=DbSingleton::getTokoDb();
-        $answer=0;$err="Помилка збереження даних!";
+	function saveGroupTreeHead($head_id, $disp_text_ru, $disp_text_ua, $disp_text_en, $head_status) {$db=DbSingleton::getTokoDb();
+        $answer=0;$err="Помилка збереження даних!"; if($head_status) $head_status="1"; else $head_status="0";
         if ($head_id>0){
             $r=$db->query("select * from T2_GROUP_TREE_HEAD where `HEAD_ID`='$head_id';"); $n=$db->num_rows($r);
             if ($n>0) {
-                $db->query("update T2_GROUP_TREE_HEAD set `TEX_RU`='$disp_text_ru',`TEX_UA`='$disp_text_ua',`TEX_EN`='$disp_text_en' where `HEAD_ID`='$head_id';");
+                $db->query("update T2_GROUP_TREE_HEAD set `TEX_RU`='$disp_text_ru', `TEX_UA`='$disp_text_ua', `TEX_EN`='$disp_text_en', `STATUS`=$head_status where `HEAD_ID`='$head_id';");
             }
             else {
-                $db->query("insert into T2_GROUP_TREE_HEAD (`HEAD_ID`,`TEX_RU`,`TEX_UA`,`TEX_EN`) values ('$head_id', '$disp_text_ru', '$disp_text_ua', '$disp_text_en');");
+                $db->query("insert into T2_GROUP_TREE_HEAD (`HEAD_ID`,`TEX_RU`,`TEX_UA`,`TEX_EN`) values ('$head_id', '$disp_text_ru', '$disp_text_ua', '$disp_text_en', '$head_status');");
             }
             $answer=1;$err="";
         }
@@ -373,6 +386,23 @@ class group_tree {
         $r=$db->query("SELECT count(STR_ID) as kol FROM `T2_GROUP_TREE` where `STR_ID_PARENT`='$str_id';");
         $kol=intval($db->result($r,0,"kol"));
         return $kol;
+    }
+
+    function dropUploadPhotoForm($type_id,$group_id) {$db=DbSingleton::getTokoDb();
+        $answer=0;$err="Помилка збереження даних!";
+        if ($group_id>0) {
+            if ($type_id=="group") $db->query("update T2_GROUP_TREE_HEAD_STR set IMAGES='' where GROUP_ID='$group_id';");
+            if ($type_id=="head") $db->query("update T2_GROUP_TREE_HEAD set IMAGES='' where HEAD_ID='$group_id';");
+            $answer=1;$err="";
+        }
+        return array($answer,$err);
+    }
+
+    function showUploadDropzone($type_id,$str_id) {
+	    $form="";$form_htm=RD."/tpl/dropzone_upload_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+	    $form=str_replace("{group_type_id}",$type_id,$form);
+	    $form=str_replace("{group_str_id}",$str_id,$form);
+	    return $form;
     }
 	
 }

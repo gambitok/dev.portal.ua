@@ -1,24 +1,24 @@
+//=Language====================================================================
 
 function loadLanguageList() {
 	JsHttpRequest.query($rcapi,{ 'w': 'loadLanguageList' }, 
-	function (result, errors){ if (errors) {alert(errors);} if (result){  
-			$("#lang_range").html(result["content"]);
-		}
-	}, true);
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+		let dt=$("#datatable");
+		dt.DataTable().destroy();
+		$("#lang_range").html(result.content);
+		dt.DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+	}}, true);
 }
 
 function newLanguageCard(){
-	var lang_var=$("#lang_var").val();
+	let lang_var=$("#lang_var").val();
 	if (lang_var==="" || lang_var===undefined) {
 		toastr["error"]("Введіть значення змінної!");
-		document.getElementById('lang_var').select();
-	}
-	else {
+		$("#lang_var").select();
+	} else {
 		JsHttpRequest.query($rcapi,{ 'w': 'newLanguageCard', 'lang_var':lang_var}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			var id=result["id"];
-			showLanguageCard(id);
-			
+			showLanguageCard(result["id"]);
 		}}, true);
 	}
 }
@@ -29,8 +29,8 @@ function showLanguageCard(id){
 		JsHttpRequest.query($rcapi,{ 'w': 'showLanguageCard', 'id':id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#LanguageCard").modal('show');
-			document.getElementById("LanguageCardBody").innerHTML=result["content"];
-			document.getElementById("LanguageCardLabel").innerHTML=$("#lang_id").val();
+			$("#LanguageCardBody").html(result["content"]);
+			$("#LanguageCardLabel").html($("#lang_id").val());
 			$('#language_tabs').tab();
 		}}, true);
 	}
@@ -40,7 +40,6 @@ function saveLanguage() {
 	var lang_ru = $("#lang_ru").val();
 	var lang_ua = $("#lang_ua").val();
 	var lang_eng = $("#lang_eng").val();
-	var lang_var = $("#lang_var").val();
 	var lang_id = $("#lang_id").val();
 	swal({
 		title: "Зберегти зміни?",
@@ -50,7 +49,7 @@ function saveLanguage() {
 	function (isConfirm) {
 		if (isConfirm) {
 			if (lang_id.length>0){
-				JsHttpRequest.query($rcapi,{'w':'saveLanguage','lang_id':lang_id,'lang_var':lang_var,'lang_ru':lang_ru,'lang_ua':lang_ua,'lang_eng':lang_eng},
+				JsHttpRequest.query($rcapi,{'w':'saveLanguage','lang_id':lang_id,'lang_ru':lang_ru,'lang_ua':lang_ua,'lang_eng':lang_eng},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
@@ -68,7 +67,7 @@ function saveLanguage() {
 
 function dropLanguage(id) { 
 	swal({
-		title: "Видалити контакт?",
+		title: "Видалити мовну змінну?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
 		confirmButtonText: "Так", cancelButtonText: "Відмінити", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
 	},
@@ -96,17 +95,18 @@ function dropLanguage(id) {
 function loadContactsList() {
 	JsHttpRequest.query($rcapi,{ 'w': 'loadContactsList' }, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
-			$("#contacts_range").html(result["content"]);
-		}
-	}, true);
+		let dt=$("#datatable");
+		dt.DataTable().destroy();
+		$("#contacts_range").html(result.content);
+		dt.DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+	}}, true);
 }
 
 function newContactsCard(){
-	var lang =$("#lang_select option:selected").val();
+	let lang =$("#lang_select option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'newContactsCard','lang':lang}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		var id=result["id"];
-		showContactsCard(id);
+		showContactsCard(result["id"]);
 	}}, true);
 }
 
@@ -116,9 +116,9 @@ function showContactsCard(id){
 		JsHttpRequest.query($rcapi,{ 'w': 'showContactsCard', 'id':id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#ContactsCard").modal('show');
-			document.getElementById("ContactsCardBody").innerHTML=result["content"];
-			document.getElementById("ContactsCardLabel").innerHTML="«" + $("#contact_title").val() + "» (" + $("#contact_id").val() + ")";
-			$('#contacts_tabs').tab();
+			$("#ContactsCardBody").html(result["content"]);
+			$("#ContactsCardLabel").html("«" + $("#contact_title").val() + "» (" + $("#contact_id").val() + ")");
+			$("#contacts_tabs").tab();
 		}}, true);
 	}
 }
@@ -144,7 +144,7 @@ function saveContacts() {
 						$("#ContactsCard").modal('hide');
 						loadContactsList();
 					}
-					else{ swal("Помилка!", result["error"], "error");}
+					else{swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -169,7 +169,7 @@ function dropContacts(id) {
 						$("#ContactsCard").modal('hide');
 						loadContactsList();
 					}
-					else{ swal("Помилка!", result["error"], "error");}
+					else{swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -183,16 +183,17 @@ function dropContacts(id) {
 function loadContactsBotList() {
 	JsHttpRequest.query($rcapi,{ 'w': 'loadContactsBotList' }, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
-			$("#contacts_range").html(result["content"]);
-		}
-	}, true);
+        let dt=$("#datatable");
+        dt.DataTable().destroy();
+        $("#contacts_range").html(result.content);
+        dt.DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+    }}, true);
 }
 
 function newContactsBotCard(){
 	JsHttpRequest.query($rcapi,{ 'w': 'newContactsBotCard'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		var id=result["id"];
-		showContactsBotCard(id);
+		showContactsBotCard(result["id"]);
 	}}, true);
 }
 
@@ -202,9 +203,9 @@ function showContactsBotCard(id){
 		JsHttpRequest.query($rcapi,{ 'w': 'showContactsBotCard', 'id':id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#ContactsCard").modal('show');
-			document.getElementById("ContactsCardBody").innerHTML=result["content"];
-			document.getElementById("ContactsCardLabel").innerHTML=$("#contact_id").val();
-			$('#contacts_tabs').tab();
+			$("#ContactsCardBody").html(result["content"]);
+			$("#ContactsCardLabel").html($("#contact_id").val());
+			$("#contacts_tabs").tab();
 			var elem = document.querySelector('#contact_status');if (elem){ var dflt = new Switchery(elem, { color: '#1AB394' });}
 		}}, true);
 	}
@@ -268,12 +269,13 @@ function dropContactsBot(id) {
 //=news====================================================================
 
 function loadNewsPhoto(news_id,lang_id){
-	if (news_id>0){
-		JsHttpRequest.query($rcapi,{ 'w': 'loadNewsPhoto', 'news_id':news_id, 'lang_id':lang_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("news_photo_place").innerHTML=result["content"];
-		}}, true);
-	}
+	JsHttpRequest.query($rcapi,{ 'w': 'loadNewsPhoto', 'news_id':news_id, 'lang_id':lang_id},
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+        let dt=$("#datatable");
+        dt.DataTable().destroy();
+        $("#news_photo_place").html(result.content);
+        dt.DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+    }}, true);
 }
 
 function showNewsUploadLogoForm(news_id,lang_id,file_id){
@@ -317,18 +319,18 @@ function deleteNewsLogo(news_id){
 function loadNewsList() {
 	JsHttpRequest.query($rcapi,{ 'w': 'loadNewsList' }, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
-			$("#news_range").html(result["content"]);
-		}
-	}, true);
+        let dt=$("#datatable");
+        dt.DataTable().destroy();
+        $("#news_range").html(result.content);
+        dt.DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+    }}, true);
 }
 
 function newNewsCard(){
-	var lang =$("#lang_select option:selected").val();
+	let lang =$("#lang_select option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'newNewsCard', 'lang':lang}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		var id=result["id"];
-		console.log(id);
-		showNewsCard(id);
+		showNewsCard(result["id"]);
 	}}, true);
 }
 
@@ -343,8 +345,7 @@ function showNewsCard(id){
 			$('#news_tabs').tab();
 			var elem = document.querySelector('#news_status');if (elem){ var dflt = new Switchery(elem, { color: '#1AB394' });}	
 			initSample();
-			var lang_id=$("#lang_id").val();
-			loadNewsPhoto(id,lang_id);
+			loadNewsPhoto(id,$("#lang_id").val());
 		}}, true);
 	}
 }
@@ -354,7 +355,7 @@ function saveNews() {
 	var caption = $("#news_caption").val();
 	var data = $("#news_data").val();
 	var short = $("#news_short").val();
-	var descr = CKEDITOR.instances.editor.getData(); console.log(descr);
+	var descr = CKEDITOR.instances.editor.getData();
 	swal({
 		title: "Зберегти зміни?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",

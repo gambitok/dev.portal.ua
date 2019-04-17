@@ -1,9 +1,7 @@
 @charset "windows-1251";
 /* CSS Document */
 
-
-.tf-tree,
-.tf-tree li {
+.tf-tree, .tf-tree li {
   list-style: none;
   padding-left: 0;
   line-height: 20px;
@@ -53,11 +51,13 @@
   text-align: center;
   transition: .1s linear;
   content: " ";
-  background: url('misc.png') 0px -59px no-repeat;
+  background: url('misc.png') 0 -59px no-repeat;
 }
 
-
-.tf-tree .tf-child-true.tf-open > div { font-weight: bold; content: ""; }
+.tf-tree .tf-child-true.tf-open > div {
+  font-weight: bold;
+  content: "";
+}
 
 .tf-tree .tf-child-true.tf-open > ul { display: block; }
 
@@ -87,7 +87,7 @@
 
 .tf-tree .tf-closed { 
 	content: " ";
-  	background: url('misc.png') 0px -59px no-repeat;
+  	background: url('misc.png') 0 -59px no-repeat;
 	font-weight: normal; 
 }
 

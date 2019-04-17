@@ -1,9 +1,7 @@
 @charset "windows-1251";
 /* CSS Document */
 
-
-.tf-tree,
-.tf-tree li {
+.tf-tree, .tf-tree li {
   list-style: none;
   padding-left: 0;
   line-height: 20px;
@@ -33,12 +31,17 @@
   content: "\003e";
 }
 
-
-.tf-tree .tf-child-true.tf-open > div { font-weight: bold;   content: ""; }
+.tf-tree .tf-child-true.tf-open > div {
+  font-weight: bold;
+  content: "";
+}
 
 .tf-tree .tf-child-true.tf-open > ul { display: block; }
 
-.tf-tree .tf-child-true.tf-open:before { content: "\003e"; -webkit-transform: rotate(90deg); }
+.tf-tree .tf-child-true.tf-open:before {
+  content: "\003e";
+  -webkit-transform: rotate(90deg);
+}
 
 .tf-tree .tf-child-false {
   cursor: pointer;
@@ -58,7 +61,11 @@
   text-align: center;
 }
 
-.tf-tree .tf-closed { content: "\003e"; font-weight: normal;-webkit-transform: rotate(0deg); }
+.tf-tree .tf-closed {
+  content: "\003e";
+  font-weight: normal;
+  -webkit-transform: rotate(0deg);
+}
 
 .tf-tree .tf-selected {
   background: #fff;

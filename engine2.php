@@ -14,7 +14,7 @@ require_once RD.'/lib/buh_back_class.php';$buh_back=new buh_back;
 require_once RD.'/lib/settings_new_class.php';$settings_new=new SettingsNewClass;
 require_once RD.'/lib/catalogue_class.php';$catalogue=new catalogue;
 require_once RD.'/lib/dp_class.php';$dp=new dp;
-require_once RD.'/lib/dp_class.php';$income=new income;
+require_once RD.'/lib/income_class.php';$income=new income;
 require_once RD.'/lib/back_clients_class.php';$back_clients=new back_clients;
 require_once RD.'/lib/cash_reports_class.php';$cash_reports=new cash_reports;
 require_once RD.'/lib/jpay_class.php';$jpay=new jpay;
@@ -53,7 +53,6 @@ if ($_REQUEST["w"]=="saveArticleZed"){ list($answer,$err)=$income->saveArticleZe
 
 if ($_REQUEST["w"]=="showIncomeStrList"){ $GLOBALS['_RESULT'] = array("content"=>$income->showIncomeStrList($_REQUEST["income_id"],$_REQUEST["type_id"],$_REQUEST["oper_status"]));}
 
-
 if ($_REQUEST["w"]=="filterIncomeList"){ $GLOBALS['_RESULT'] = array("content"=>$income->show_income_list_filter($_REQUEST["date_start"],$_REQUEST["date_end"]));}
 
 // ---- BUHBACK ---- //
@@ -64,26 +63,26 @@ if ($_REQUEST["w"]=="filterBuhBackClientsList"){ $GLOBALS['_RESULT'] = array("co
 
 if ($_REQUEST["w"]=="getDpTpointInfo"){ $GLOBALS['_RESULT'] = array("content"=>$dp->getDpTpointInfo($_REQUEST["client_id"]));}
 
-if ($_REQUEST["w"]=="deleteOrderSite"){list($answer,$err)=$dp->deleteOrderSite($_REQUEST["order_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);} 
+if ($_REQUEST["w"]=="deleteOrderSite"){ list($answer,$err)=$dp->deleteOrderSite($_REQUEST["order_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 	
-if ($_REQUEST["w"]=="showOrderSiteRange"){$GLOBALS['_RESULT'] = array("content"=>$dp->showOrderSiteRange($_REQUEST["status"],$_REQUEST["data_start"],$_REQUEST["data_end"]));}
+if ($_REQUEST["w"]=="showOrderSiteRange"){ $GLOBALS['_RESULT'] = array("content"=>$dp->showOrderSiteRange($_REQUEST["status"],$_REQUEST["data_start"],$_REQUEST["data_end"]));}
 
 if ($_REQUEST["w"]=="show_dp_search_filter"){ $GLOBALS['_RESULT'] = array("content"=>$dp->show_dp_list_filter($_REQUEST["status"],$_REQUEST["filStatus"],$_REQUEST["filAuthor"],$_REQUEST["filTpoint"]));}
 
-/*---- New settings ----*/
+// ---- New Settings ---- //
 
-/*language===============================*/
-if ($_REQUEST["w"]=="loadLanguageList"){$GLOBALS['_RESULT'] = array("content"=>$settings_new->loadLanguageList());}
+// language
+if ($_REQUEST["w"]=="loadLanguageList"){ $GLOBALS['_RESULT'] = array("content"=>$settings_new->loadLanguageList());}
 
 if ($_REQUEST["w"]=="showLanguageCard"){ $GLOBALS['_RESULT'] = array("content"=>$settings_new->showLanguageCard($_REQUEST["id"]));}
 
 if ($_REQUEST["w"]=="newLanguageCard"){ $GLOBALS['_RESULT'] = array("id"=>$settings_new->newLanguageCard($_REQUEST["lang_var"]));}
 
-if ($_REQUEST["w"]=="saveLanguage"){ list($answer,$err)=$settings_new->saveLanguage($_REQUEST["lang_id"],$_REQUEST["lang_var"],$_REQUEST["lang_ru"],$_REQUEST["lang_ua"],$_REQUEST["lang_eng"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+if ($_REQUEST["w"]=="saveLanguage"){ list($answer,$err)=$settings_new->saveLanguage($_REQUEST["lang_id"],$_REQUEST["lang_ru"],$_REQUEST["lang_ua"],$_REQUEST["lang_eng"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
 if ($_REQUEST["w"]=="dropLanguage"){ list($answer,$err)=$settings_new->dropLanguage($_REQUEST["id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
-/*contacts===============================*/
+// contacts
 if ($_REQUEST["w"]=="loadContactsList"){$GLOBALS['_RESULT'] = array("content"=>$settings_new->loadContactsList());}
 
 if ($_REQUEST["w"]=="showContactsCard"){ $GLOBALS['_RESULT'] = array("content"=>$settings_new->showContactsCard($_REQUEST["id"]));}
@@ -94,8 +93,8 @@ if ($_REQUEST["w"]=="saveContacts"){ list($answer,$err)=$settings_new->saveConta
 
 if ($_REQUEST["w"]=="dropContacts"){ list($answer,$err)=$settings_new->dropContacts($_REQUEST["id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
-/*contacts bot===============================*/
-if ($_REQUEST["w"]=="loadContactsBotList"){$GLOBALS['_RESULT'] = array("content"=>$settings_new->loadContactsBotList());}
+// contacts bottom
+if ($_REQUEST["w"]=="loadContactsBotList"){ $GLOBALS['_RESULT'] = array("content"=>$settings_new->loadContactsBotList());}
 
 if ($_REQUEST["w"]=="showContactsBotCard"){ $GLOBALS['_RESULT'] = array("content"=>$settings_new->showContactsBotCard($_REQUEST["id"]));}
 
@@ -105,8 +104,8 @@ if ($_REQUEST["w"]=="saveContactsBot"){ list($answer,$err)=$settings_new->saveCo
 
 if ($_REQUEST["w"]=="dropContactsBot"){ list($answer,$err)=$settings_new->dropContactsBot($_REQUEST["id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
-/*news==============================*/
-if ($_REQUEST["w"]=="loadNewsList"){$GLOBALS['_RESULT'] = array("content"=>$settings_new->loadNewsList());}
+// news
+if ($_REQUEST["w"]=="loadNewsList"){ $GLOBALS['_RESULT'] = array("content"=>$settings_new->loadNewsList());}
 
 if ($_REQUEST["w"]=="showNewsCard"){ $GLOBALS['_RESULT'] = array("content"=>$settings_new->showNewsCard($_REQUEST["id"]));}
 
@@ -120,7 +119,7 @@ if ($_REQUEST["w"]=="loadNewsPhoto"){ $GLOBALS['_RESULT'] = array("content"=>$se
 
 if ($_REQUEST["w"]=="deleteNewsLogo"){list($answer,$err)=$settings_new->deleteNewsLogo($_REQUEST["news_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
-/*---- USERS ----*/
+// ---- USERS ---- //
 
 if ($_REQUEST["w"]=="newTrustedIPCard")  { $GLOBALS['_RESULT'] = array("trusted_id"=>$users->newTrustedIPCard());}
 
@@ -130,8 +129,6 @@ if ($_REQUEST["w"]=="showTrustedIPCard") { $GLOBALS['_RESULT'] = array("content"
 
 if ($_REQUEST["w"]=="saveTrustedIPGeneralInfo"){ list($answer,$err)=$users->saveTrustedIPGeneralInfo($_REQUEST["trusted_id"],$_REQUEST["trusted_ip"],$_REQUEST["trusted_descr"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
-//if ($_REQUEST["w"]=="saveUTrustedIPGeneralInfo"){ list($answer,$err)=$users->saveUsersGeneralInfo($_REQUEST["trusted_id"],$_REQUEST["trusted_ip"],$_REQUEST["trusted_descr"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
-
 if ($_REQUEST["w"]=="dropTrustedIP"){ list($answer,$err)=$users->dropTrustedIP($_REQUEST["trusted_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
 if ($_REQUEST["w"]=="loadUsersAccessTime"){ $GLOBALS['_RESULT'] = array("content"=>$users->loadUsersAccessTime($_REQUEST["users_id"]));}
@@ -140,22 +137,23 @@ if ($_REQUEST["w"]=="saveUsersAccessTime"){ list($answer,$err)=$users->saveUsers
 
 // ---- STORSEL ---- //
 
-if ($_REQUEST["w"]=="updateStorselStatus"){list($answer,$err)=$storsel->updateStorselStatus($_REQUEST["select_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
+if ($_REQUEST["w"]=="updateStorselStatus"){ list($answer,$err)=$storsel->updateStorselStatus($_REQUEST["select_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
 
 if ($_REQUEST["w"]=="calculateStorselParams"){ $GLOBALS['_RESULT'] = array("content"=>$storsel->calculateStorselParams($_REQUEST["select_id"]));}
 
 // ---- BRANDS ---- //
 
 if ($_REQUEST["w"]=="showBrandsList"){ $GLOBALS['_RESULT'] = array("content"=>$brands->show_brands_list());}
+
 if ($_REQUEST["w"]=="newBrandsCard"){ $GLOBALS['_RESULT'] = array("brands_id"=>$brands->newBrandsCard());}
+
 if ($_REQUEST["w"]=="showBrandsCard"){ $GLOBALS['_RESULT'] = array("content"=>$brands->showBrandsCard($_REQUEST["brands_id"]));}
 
 if ($_REQUEST["w"]=="ImportBrands"){ $GLOBALS['_RESULT'] = array("content"=>ImportBrands());}
 
 if ($_REQUEST["w"]=="finishBrandsIndexImport"){ list($answer,$err)=finishBrandsIndexImport($_REQUEST["start_row"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
 
-if ($_REQUEST["w"]=="saveBrandsGeneralInfo")
-{ 
+if ($_REQUEST["w"]=="saveBrandsGeneralInfo") {
 	list($answer,$err)=$brands->saveBrandsGeneralInfo(
 		$_REQUEST["brands_id"],
 		$_REQUEST["brands_name"],
@@ -168,8 +166,7 @@ if ($_REQUEST["w"]=="saveBrandsGeneralInfo")
 
 if ($_REQUEST["w"]=="loadBrandsDetails"){ $GLOBALS['_RESULT'] = array("content"=>$brands->loadBrandsDetails($_REQUEST["brands_id"]));}
 
-if ($_REQUEST["w"]=="saveBrandsDetails")
-{ 
+if ($_REQUEST["w"]=="saveBrandsDetails") {
 	list($answer,$err)=$brands->saveBrandsDetails(
 		$_REQUEST["brands_id"],
 		$_REQUEST["descr"],
@@ -181,14 +178,15 @@ if ($_REQUEST["w"]=="loadBrandsPhoto"){ $GLOBALS['_RESULT'] = array("content"=>$
 
 if ($_REQUEST["w"]=="deleteBrandsLogo"){ list($answer,$err)=$brands->deleteBrandsLogo($_REQUEST["brands_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
-//------------              COUNTRIES          --------------------------
+// ---- COUNTRIES ---- //
 
 if ($_REQUEST["w"]=="showCountryList"){ $GLOBALS['_RESULT'] = array("content"=>$country->show_country_list());}
+
 if ($_REQUEST["w"]=="newCountryCard"){ $GLOBALS['_RESULT'] = array("country_id"=>$country->newCountryCard());}
+
 if ($_REQUEST["w"]=="showCountryCard"){ $GLOBALS['_RESULT'] = array("content"=>$country->showCountryCard($_REQUEST["country_id"]));}
 
-if ($_REQUEST["w"]=="saveCountryGeneralInfo")
-{ 
+if ($_REQUEST["w"]=="saveCountryGeneralInfo") {
 	list($answer,$err)=$country->saveCountryGeneralInfo(
 		$_REQUEST["country_id"],
 		$_REQUEST["country_name"],
@@ -201,7 +199,7 @@ if ($_REQUEST["w"]=="saveCountryGeneralInfo")
 
 if ($_REQUEST["w"]=="DeleteCountry") { list($answer,$err)=$country->DeleteCountry($_REQUEST["country_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
-//------------              TPOINT          --------------------------
+// ---- TPOINT ---- //
 
 if ($_REQUEST["w"]=="cutJmovingStorageAll"){ list($answer,$err,$ids)=$jmoving->cutJmovingStorageAll($_REQUEST["jmoving_id"],$_REQUEST["select_id"],$_REQUEST['comment']); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err,"ids"=>$ids);}
 
@@ -209,13 +207,9 @@ if ($_REQUEST["w"]=="separateJmovingByDefect"){ list($answer,$err)=$jmoving->sep
 
 if ($_REQUEST["w"]=="checkJmovingBugs"){ $GLOBALS['_RESULT'] = array("content"=>$jmoving->checkJmovingBugs($_REQUEST["jmoving_id"]));}
 
-if ($_REQUEST["w"]=="deleteTpoint"){
-	list($answer,$err)=$tpoint->deleteTpoint($_REQUEST["tpoint_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);
-}
+if ($_REQUEST["w"]=="deleteTpoint"){ list($answer,$err)=$tpoint->deleteTpoint($_REQUEST["tpoint_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
-if ($_REQUEST["w"]=="deleteStorage"){
-	list($answer,$err)=$storage->deleteStorage($_REQUEST["storage_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);
-}
+if ($_REQUEST["w"]=="deleteStorage"){ list($answer,$err)=$storage->deleteStorage($_REQUEST["storage_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
 // ---- CLIENTS ---- //
 
@@ -271,7 +265,6 @@ if ($_REQUEST["w"]=="getMaxSupplIndex"){ $GLOBALS['_RESULT'] = array("content"=>
 
 if ($_REQUEST["w"]=="saveIndexArticle"){ $GLOBALS['_RESULT'] = array("content"=>$catalogue->saveIndexArticle($_REQUEST["art_id"],$_REQUEST["article_nr_displ"],$_REQUEST["brand_id"],$_REQUEST["article_name"],$_REQUEST["article_name_ukr"],$_REQUEST["article_info"]));}
 
-
 if ($_REQUEST["w"]=="showArticleJDocs"){ list($content,$header)=$catalogue->showArticleJDocs($_REQUEST["art_id"]); $GLOBALS['_RESULT'] = array("content"=>$content, "header"=>$header);}
 
 if ($_REQUEST["w"]=="loadArticleInfo"){ $GLOBALS['_RESULT'] = array("content"=>$catalogue->loadArticleInfo($_REQUEST["art_id"]));}
@@ -312,7 +305,7 @@ if ($_REQUEST["w"]=="saveSupplCoop"){ list($answer,$err)=$suppl->saveSupplCoop($
 
 if ($_REQUEST["w"]=="showSupplCoopCard"){ $GLOBALS['_RESULT'] = array("content"=>$suppl->showSupplCoopCard($_REQUEST["suppl_id"]));}
 
-// report_overdraft
+// ---- Report Overdraft ---- //
 
 if ($_REQUEST["w"]=="filterReportOverdraftList"){ $GLOBALS['_RESULT'] = array("content"=>$report_overdraft->showReportOverdraftList($_REQUEST["data"],$_REQUEST["client_id_cur"],$_REQUEST["tpoint_id_cur"]));}
 
@@ -320,17 +313,17 @@ if ($_REQUEST["w"]=="getClientOverdraftList"){ $GLOBALS['_RESULT'] = array("cont
 
 if ($_REQUEST["w"]=="showDocsProlongationForm"){ $GLOBALS['_RESULT'] = array("content"=>$report_overdraft->showDocsProlongationForm($_REQUEST["client_id"],$_REQUEST["invoice_id"]));}
 
-// seo_reports
+// ---- Seo Reports ---- //
 
 if ($_REQUEST["w"]=="showSeoReports"){ $GLOBALS['_RESULT'] = array("content"=>$seo_reports->showSeoReports($_REQUEST["date_start"],$_REQUEST["date_end"],$_REQUEST["managers"],$_REQUEST["cash_id"],$_REQUEST["client_status"]));}
 
 if ($_REQUEST["w"]=="getSummUser"){ $GLOBALS['_RESULT'] = array("content"=>$seo_reports->getSummUser($_REQUEST["user_id"],$_REQUEST["date_start"],$_REQUEST["date_end"],$_REQUEST["cash_id"]));}
 
-// report sales
+// ---- Report Sales ---- //
 
 if ($_REQUEST["w"]=="showReportSales"){ $GLOBALS['_RESULT'] = array("content"=>$report_sales->showReportSales($_REQUEST["date_start"],$_REQUEST["tpoint"]));}
 
-// group tree
+// ---- Group Tree ---- //
 
 if ($_REQUEST["w"]=="showGroupTreeCard"){ $GLOBALS['_RESULT'] = array("content"=>$group_tree->showGroupTreeCard($_REQUEST["str_id"]));}
 
@@ -340,12 +333,11 @@ if ($_REQUEST["w"]=="saveGroupTreeCard"){ list($answer,$err)=$group_tree->saveGr
 
 if ($_REQUEST["w"]=="showGroupTreeHead"){ $GLOBALS['_RESULT'] = array("content"=>$group_tree->showGroupTreeHead($_REQUEST["head_id"]));}
 
-if ($_REQUEST["w"]=="saveGroupTreeHead"){ list($answer,$err)=$group_tree->saveGroupTreeHead($_REQUEST["head_id"],$_REQUEST["disp_text_ru"],$_REQUEST["disp_text_ua"],$_REQUEST["disp_text_en"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+if ($_REQUEST["w"]=="saveGroupTreeHead"){ list($answer,$err)=$group_tree->saveGroupTreeHead($_REQUEST["head_id"],$_REQUEST["disp_text_ru"],$_REQUEST["disp_text_ua"],$_REQUEST["disp_text_en"],$_REQUEST["head_status"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
 if ($_REQUEST["w"]=="dropGroupTreeHead"){ list($answer,$err)=$group_tree->dropGroupTreeHead($_REQUEST["head_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
 //head str
-
 if ($_REQUEST["w"]=="addGroupTreeHeadStr"){ $GLOBALS['_RESULT'] = array("content"=>$group_tree->addGroupTreeHeadStr($_REQUEST["head_id"]));}
 
 if ($_REQUEST["w"]=="showGroupTreeHeadStr"){ $GLOBALS['_RESULT'] = array("content"=>$group_tree->showGroupTreeHeadStr($_REQUEST["group_id"]));}
@@ -355,11 +347,15 @@ if ($_REQUEST["w"]=="saveGroupTreeHeadStrCard"){ list($answer,$err)=$group_tree-
 if ($_REQUEST["w"]=="dropGroupTreeHeadStr"){ list($answer,$err)=$group_tree->dropGroupTreeHeadStr($_REQUEST["group_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
 //category
-
 if ($_REQUEST["w"]=="showGroupTreeHeadCategory"){ $GLOBALS['_RESULT'] = array("content"=>$group_tree->showGroupTreeHeadCategory($_REQUEST["cat_id"]));}
 
 if ($_REQUEST["w"]=="saveGroupTreeHeadCategoryCard"){ list($answer,$err)=$group_tree->saveGroupTreeHeadCategoryCard($_REQUEST["cat_id"],$_REQUEST["head_id"],$_REQUEST["position"],$_REQUEST["disp_text_ru"],$_REQUEST["disp_text_ua"],$_REQUEST["disp_text_en"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
 if ($_REQUEST["w"]=="dropGroupTreeHeadCategory"){ list($answer,$err)=$group_tree->dropGroupTreeHeadCategory($_REQUEST["cat_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+
+//group tree
+if ($_REQUEST["w"]=="dropUploadPhotoForm"){ list($answer,$err)=$group_tree->dropUploadPhotoForm($_REQUEST["type_id"],$_REQUEST["group_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+
+if ($_REQUEST["w"]=="showUploadDropzone"){ $GLOBALS['_RESULT'] = array("content"=>$group_tree->showUploadDropzone($_REQUEST["type_id"],$_REQUEST["group_id"]));}
 
 ?>

@@ -72,33 +72,30 @@ function checkEmptyClients(client_id) {
 var barcode_settings = {barWidth: 1,barHeight: 50,moduleSize: 5,showHRI: true,addQuietZone: true,marginHRI: 5,bgColor: "#FFFFFF",color: "#000000",fontSize: 14,output: "css",posX: 0,posY: 0};
 
 function showClientCard(client_id){
-//	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
-//	if (client_id>0){
-		JsHttpRequest.query($rcapi,{ 'w': 'showClientCard', 'client_id':client_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			$("#ClientCard").modal('show');
-            $("#ClientCardBody").html(result["content"]);
-            $("#ClientCardLabel").html($("#client_name").val()+" (ID:"+$("#client_id").val()+")");
-			$('#client_tabs').tab();
-			$("#comment_info").markdown({autofocus:false,savable:false})
-			$("#country_id").select2({placeholder: "Виберіть країну",dropdownParent: $("#ClientCard")});
-			$("#state_id").select2({placeholder: "Виберіть область",dropdownParent: $("#ClientCard")});
-			$("#region_id").select2({placeholder: "Виберіть район",dropdownParent: $("#ClientCard")});
-			$("#city_id").select2({placeholder: "Виберіть населений пункт",dropdownParent: $("#ClientCard")})
-			.on('select2:close', function() {var el = $(this);
-				if(el.val()==="NEW") { var newval = prompt("Введіть нове значення: ");
-				  if(newval !== null) { 
-				  	var region_id=$("#region_id option:selected").val();
-				  	JsHttpRequest.query($rcapi,{ 'w': 'addNewCity', 'region_id':region_id, 'name':newval}, 
-					function (result, errors){ if (errors) {alert(errors);} if (result){  
-					  	el.append('<option id="'+result["id"]+'">'+newval+'</option>').val(newval);
-					}}, true);
-				  }
-				}
-			  });
-			$('.i-checks').iCheck({checkboxClass: 'icheckbox_square-green',radioClass: 'iradio_square-green',});
-		}}, true);
-//	}
+	JsHttpRequest.query($rcapi,{ 'w': 'showClientCard', 'client_id':client_id},
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+		$("#ClientCard").modal('show');
+		$("#ClientCardBody").html(result["content"]);
+		$("#ClientCardLabel").html($("#client_name").val()+" (ID:"+$("#client_id").val()+")");
+		$('#client_tabs').tab();
+		$("#comment_info").markdown({autofocus:false,savable:false})
+		$("#country_id").select2({placeholder: "Виберіть країну",dropdownParent: $("#ClientCard")});
+		$("#state_id").select2({placeholder: "Виберіть область",dropdownParent: $("#ClientCard")});
+		$("#region_id").select2({placeholder: "Виберіть район",dropdownParent: $("#ClientCard")});
+		$("#city_id").select2({placeholder: "Виберіть населений пункт",dropdownParent: $("#ClientCard")})
+		.on('select2:close', function() {var el = $(this);
+			if(el.val()==="NEW") { var newval = prompt("Введіть нове значення: ");
+			  if(newval !== null) {
+				var region_id=$("#region_id option:selected").val();
+				JsHttpRequest.query($rcapi,{ 'w': 'addNewCity', 'region_id':region_id, 'name':newval},
+				function (result, errors){ if (errors) {alert(errors);} if (result){
+					el.append('<option id="'+result["id"]+'">'+newval+'</option>').val(newval);
+				}}, true);
+			  }
+			}
+		  });
+		$('.i-checks').iCheck({checkboxClass: 'icheckbox_square-green',radioClass: 'iradio_square-green',});
+	}}, true);
 }
 
 function showClientRetailList(press_btn){
@@ -120,9 +117,12 @@ function showClientRetailList(press_btn){
 	JsHttpRequest.query($rcapi,{ 'w': 'showClientRetailList', 'status':status}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){
 		if (prevRange.length != result["content"].length){
-			$("#clients_range").empty();
-			$("#clients_range").html(result["content"]);
-		}
+            let dt=$("#datatable");
+            dt.DataTable().destroy();
+            $("#clients_range").empty();
+            $("#clients_range").html(result.content);
+            dt.DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+        }
 	}}, true);
 }
 

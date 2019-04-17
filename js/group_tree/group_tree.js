@@ -71,6 +71,13 @@ function showGroupTreeHeadCard(head_id) {
         }}, true);
 }
 
+function updateGroupTreeHeadCard(head_id) {
+    JsHttpRequest.query($rcapi,{ 'w': 'showGroupTreeHead', 'head_id':head_id},
+        function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#GroupTreeCardBody").html(result.content);
+        }}, true);
+}
+
 function saveGroupTreeHeadCard(head_id) {
     swal({
             title: "Зберегти зміни у розділі \"Дерево товарів\"?",
@@ -82,14 +89,14 @@ function saveGroupTreeHeadCard(head_id) {
                 var disp_text_ru=$("#disp_text_ru").val();
                 var disp_text_ua=$("#disp_text_ua").val();
                 var disp_text_en=$("#disp_text_en").val();
+                var head_status= $("#head_status").prop('checked');
 
                 if (head_id.length>0){
-                    JsHttpRequest.query($rcapi,{ 'w': 'saveGroupTreeHead', 'head_id':head_id, 'disp_text_ru':disp_text_ru, 'disp_text_ua':disp_text_ua, 'disp_text_en':disp_text_en},
+                    JsHttpRequest.query($rcapi,{ 'w': 'saveGroupTreeHead', 'head_id':head_id, 'disp_text_ru':disp_text_ru, 'disp_text_ua':disp_text_ua, 'disp_text_en':disp_text_en, 'head_status':head_status},
                         function (result, errors){ if (errors) {alert(errors);} if (result){
                             if (result["answer"]==1){
                                 swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
-                                $("#GroupTreeCard").modal('hide');
-                                showGroupTreeHeaders();
+                                updateGroupTreeHeadCard(head_id);
                             }
                             else{ swal("Помилка!", result["error"], "error");}
                         }}, true);
@@ -140,6 +147,13 @@ function showGroupTreeHeadStr(group_id) {
             $("#GroupTreeCard").modal('show');
             $("#GroupTreeCardBody").html(result.content);
             $("#GroupTreeCardLabel").html("Карта пунктів дерева");
+        }}, true);
+}
+
+function updateGroupTreeHeadStr(group_id) {
+    JsHttpRequest.query($rcapi,{ 'w': 'showGroupTreeHeadStr', 'group_id':group_id},
+        function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#GroupTreeCardBody").html(result.content);
         }}, true);
 }
 
@@ -261,6 +275,49 @@ function dropGroupTreeHeadCategory(cat_id) {
                                 swal("Видалено!", "Внесені Вами зміни успішно збережені.", "success");
                                 $("#GroupTreeCard").modal('hide');
                                 showGroupTreeHeaders();
+                            }
+                            else{ swal("Помилка!", result["error"], "error");}
+                        }}, true);
+                }
+            } else {
+                swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
+            }
+        });
+}
+
+function showUploadPhotoForm(type_id,group_id) {
+    $("#GroupTreeUploadForm").modal("show");
+    $("#GroupTreeUploadBody").html("");
+    JsHttpRequest.query($rcapi,{'w':'showUploadDropzone','type_id':type_id,'group_id':group_id},
+        function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#GroupTreeUploadBody").html(result.content);
+            // $("#dropzone-form").dropzone();
+            var dropzone = new Dropzone('#dropzone-form', {
+                parallelUploads: 2,
+                thumbnailHeight: 120,
+                thumbnailWidth: 120,
+                maxFilesize: 1,
+                maxFiles: 1,
+                filesizeBase: 1000
+            });
+        }}, true);
+}
+
+function dropUploadPhotoForm(type_id,group_id) {
+    swal({
+            title: "Видалити зображення?",
+            text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
+            confirmButtonText: "Так, видалити!", cancelButtonText: "Відмінити!", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
+        },
+        function (isConfirm) {
+            if (isConfirm) {
+                if (group_id.length>0){
+                    JsHttpRequest.query($rcapi,{'w':'dropUploadPhotoForm','type_id':type_id,'group_id':group_id},
+                        function (result, errors){ if (errors) {alert(errors);} if (result){
+                            if (result["answer"]==1){
+                                swal("Видалено!", "Внесені Вами зміни успішно збережені.", "success");
+                                if (type_id=="group") updateGroupTreeHeadStr(group_id);
+                                if (type_id=="head") updateGroupTreeHeadCard(group_id);
                             }
                             else{ swal("Помилка!", result["error"], "error");}
                         }}, true);

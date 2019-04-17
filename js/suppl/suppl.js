@@ -18,8 +18,8 @@ function showSupplCard(suppl_id){
 		JsHttpRequest.query($rcapi,{ 'w': 'showSupplCard', 'suppl_id':suppl_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#SupplCard").modal('show');
-			document.getElementById("SupplCardBody").innerHTML=result["content"];
-			document.getElementById("SupplCardLabel").innerHTML=result["header"];
+            $("#SupplCardBody").html(result["content"]);
+            $("#SupplCardLabel").html(result["header"]);
 			$('#suppl_tabs').tab();
 		}}, true);
 	}
@@ -62,8 +62,8 @@ function saveSupplGeneralInfo(){
 function loadStateSelectList(){
 	var country_id=$("#country_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientStateSelectList', 'country_id':country_id}, 
-	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		document.getElementById("state_id").innerHTML=result["content"];
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+        $("#state_id").html(result.content);
 		$("#state_id").select2({placeholder: "Виберіть область",dropdownParent: $("#SupplCard")});
 	}}, true);
 }
@@ -71,8 +71,8 @@ function loadStateSelectList(){
 function loadRegionSelectList(){
 	var state_id=$("#state_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientRegionSelectList', 'state_id':state_id}, 
-	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		document.getElementById("region_id").innerHTML=result["content"];
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+		$("#region_id").html(result.content);
 		$("#region_id").select2({placeholder: "Виберіть район",dropdownParent: $("#SupplCard")});
 	}}, true);
 }
@@ -80,19 +80,19 @@ function loadRegionSelectList(){
 function loadCitySelectList(){
 	var region_id=$("#region_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientCitySelectList', 'region_id':region_id}, 
-	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		document.getElementById("city_id").innerHTML=result["content"];
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+        $("#city_id").html(result.content);
 		$("#city_id").select2({placeholder: "Виберіть населений пункт",dropdownParent: $("#SupplCard")});
 	}}, true);
 }
 
 function loadSupplVat(suppl_id){
-	if (suppl_id<=0 || suppl_id==""){toastr["error"](errs[0]);}
+	if (suppl_id<=0 || suppl_id===""){toastr["error"](errs[0]);}
 	if (suppl_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadSupplVat', 'suppl_id':suppl_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("vat_place").innerHTML=result["content"];
-			var elem1 = document.querySelector('#price_in_vat');if (elem1){ var price_in_vat = new Switchery(elem1, { color: '#1AB394' });}
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#vat_place").html(result["content"]);
+            var elem1 = document.querySelector('#price_in_vat');if (elem1){ var price_in_vat = new Switchery(elem1, { color: '#1AB394' });}
 			var elem2 = document.querySelector('#show_in_vat');if (elem2){ var show_in_vat = new Switchery(elem2, { color: '#1AB394' });}
 			var elem3 = document.querySelector('#price_add_vat');if (elem3){ var price_add_vat = new Switchery(elem3, { color: '#1AB394' });}
 			elem1.addEventListener('change', function() {
@@ -104,7 +104,7 @@ function loadSupplVat(suppl_id){
 					//price_add_vat.enable();
 				}
 			});
-			$('#suppl_tabs').tab();
+			$("#suppl_tabs").tab();
 		}}, true);
 	}
 }
@@ -146,16 +146,16 @@ function changePriceInVat(){
 		//var elem2 = document.querySelector('#show_in_vat');if (elem2){ var show_in_vat = new Switchery(elem2);show_in_vat.enabled();}
 		//var elem3 = document.querySelector('#price_add_vat');if (elem2){ var price_add_vat = new Switchery(elem3);price_add_vat.enabled();}
 	}
-	return;
+	return true;
 }
 
 function loadSupplPrice(suppl_id){
-	if (suppl_id<=0 || suppl_id==""){toastr["error"](errs[0]);}
+	if (suppl_id<=0 || suppl_id===""){toastr["error"](errs[0]);}
 	if (suppl_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadSupplPrice', 'suppl_id':suppl_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("price_place").innerHTML=result["content"];
-			$('#suppl_tabs').tab();
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#price_place").html(result.content);
+            $("#suppl_tabs").tab();
 		}}, true);
 	}
 }
@@ -203,12 +203,12 @@ function finishSupplPriceImport(suppl_id){
 }
 
 function loadSupplIndex(suppl_id){
-	if (suppl_id<=0 || suppl_id==""){toastr["error"](errs[0]);}
+	if (suppl_id<=0 || suppl_id===""){toastr["error"](errs[0]);}
 	if (suppl_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadSupplIndex', 'suppl_id':suppl_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("index_place").innerHTML=result["content"];
-			$('#suppl_tabs').tab();
+            $("#index_place").html(result.content);
+			$("#suppl_tabs").tab();
 		}}, true);
 	}
 }
@@ -253,12 +253,12 @@ function finishSupplIndexImport(suppl_id){
 }
 
 function loadSupplOrderInfo(suppl_id){
-	if (suppl_id<=0 || suppl_id==""){toastr["error"](errs[0]);}
+	if (suppl_id<=0 || suppl_id===""){toastr["error"](errs[0]);}
 	if (suppl_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadSupplOrderInfo', 'suppl_id':suppl_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("info_suppl_place").innerHTML=result["content"];
-			$('#suppl_tabs').tab();
+            $("#info_suppl_place").html(result.content);
+            $('#suppl_tabs').tab();
 			$("#suppl_text_info").markdown({autofocus:false,savable:false})
 			initSample();
 		}}, true);
@@ -306,8 +306,8 @@ function showSupplCoopCard(suppl_id){
 		JsHttpRequest.query($rcapi,{ 'w': 'showSupplCoopCard', 'suppl_id':suppl_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#SupplCard").modal('show');
-			document.getElementById("SupplCardBody").innerHTML=result["content"];
-			document.getElementById("SupplCardLabel").innerHTML=result["header"];
+            $("#SupplCardBody").html(result["content"]);
+            $("#SupplCardLabel").html(result["header"]);
 			$("#country_id").select2({placeholder: "Виберіть країну",dropdownParent: $("#SupplCard")});
 			$("#state_id").select2({placeholder: "Виберіть область",dropdownParent: $("#SupplCard")});
 			$("#region_id").select2({placeholder: "Виберіть район",dropdownParent: $("#SupplCard")});

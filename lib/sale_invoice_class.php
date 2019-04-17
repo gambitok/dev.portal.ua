@@ -80,7 +80,7 @@ class sale_invoice {
         if ($data_start!='' && $data_end!='') $where=" and sv.time_stamp>='$data_start 00:00:00' and sv.time_stamp<='$data_end 23:59:59'"; else
             $where=" and sv.time_stamp>='$data_cur 00:00:00' and sv.time_stamp<='$data_cur 23:59:59'";
 
-        $r=$db->query("select sv.*, dp.prefix as dp_prefix, dp.doc_nom as dp_nom, t.name as tpoint_name, sl.name as seller_name, cl.name as client_name, dt.mvalue as doc_type_name,ch.abr2 as cash_abr 
+        $r=$db->query("select sv.*, dp.prefix as dp_prefix, dp.doc_nom as dp_nom, t.name as tpoint_name, sl.name as seller_name, cl.name as client_name, dt.mvalue as doc_type_name, ch.abr2 as cash_abr 
         from J_SALE_INVOICE sv
             left outer join J_DP dp on dp.id=sv.dp_id
             left outer join CASH ch on ch.id=sv.cash_id
@@ -146,7 +146,9 @@ class sale_invoice {
     }
 
     function getJPayName($id){$db=DbSingleton::getDb();$name="";$pay_type_id=0;
-        $r=$db->query("select p.*, m.mcaption as pay_type_name from J_PAY p left outer join manual m on (m.id=p.pay_type_id and m.`key`='pay_type_id') where p.status=1 and p.id='$id' limit 0,1;");$n=$db->num_rows($r);
+        $r=$db->query("select p.*, m.mcaption as pay_type_name from J_PAY p 
+            left outer join manual m on (m.id=p.pay_type_id and m.`key`='pay_type_id') 
+        where p.status=1 and p.id='$id' limit 0,1;");$n=$db->num_rows($r);
         if ($n==1){ $pay_type_id=$db->result($r,0,"pay_type_id"); $name=$db->result($r,0,"pay_type_name")." ¹".$db->result($r,0,"doc_nom"); }
         return array($pay_type_id,$name);
     }
@@ -168,7 +170,8 @@ class sale_invoice {
 
             $rt=$db->query("select max(id) as mid from J_TAX_INVOICE;");$tax_id=0+$db->result($rt,0,"mid")+1;
             $rt=$db->query("select max(doc_nom) as mid from J_TAX_INVOICE where seller_id='$seller_id';");$tax_nom=0+$db->result($rt,0,"mid")+1;
-            $db->query("insert into J_TAX_INVOICE (`id`,`tax_type_id`,`doc_nom`,`data_create`,`sale_invoice_id`,`tpoint_id`,`seller_id`,`client_id`,`cash_id`,`summ`,`user_id`) values ('$tax_id','160','$tax_nom',CURDATE(),'$invoice_id','$tpoint_id','$seller_id','$client_id','$cash_id','$summ','$user_id');");
+            $db->query("insert into J_TAX_INVOICE (`id`,`tax_type_id`,`doc_nom`,`data_create`,`sale_invoice_id`,`tpoint_id`,`seller_id`,`client_id`,`cash_id`,`summ`,`user_id`) 
+            values ('$tax_id','160','$tax_nom',CURDATE(),'$invoice_id','$tpoint_id','$seller_id','$client_id','$cash_id','$summ','$user_id');");
 
             $r1=$db->query("select * from J_SALE_INVOICE_STR where invoice_id='$invoice_id' order by id asc;");$n1=$db->num_rows($r1);
             for ($i=1;$i<=$n1;$i++){
@@ -177,7 +180,8 @@ class sale_invoice {
                 $price=$db->result($r1,$i-1,"price_end");
                 $summ=$db->result($r1,$i-1,"summ");
                 $zed=$cat->getArticleZED($art_id);$art_name=$cat->getArticleNameLang($art_id);
-                $db->query("insert into J_TAX_INVOICE_STR (`tax_id`,`zed`,`art_id`,`goods_name`,`amount`,`price`,`summ`,`tax_str_nom`) values ('$tax_id','$zed','$art_id','$art_name','$amount','$price','$summ','$i');");
+                $db->query("insert into J_TAX_INVOICE_STR (`tax_id`,`zed`,`art_id`,`goods_name`,`amount`,`price`,`summ`,`tax_str_nom`) 
+                values ('$tax_id','$zed','$art_id','$art_name','$amount','$price','$summ','$i');");
             }
             $answer=1;$err="";
         }
@@ -192,7 +196,7 @@ class sale_invoice {
 
     function showSaleInvoiceCard($invoice_id){$db=DbSingleton::getDb();$cat=new catalogue;$volume=0;$list="";$prefix="";$doc_nom=0;
         $form="";$form_htm=RD."/tpl/sale_invoice_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select sv.*, t.name as tpoint_name, sl.name as seller_name, cl.name as client_name, dt.mcaption as doc_type_name, dt.mvalue as doc_type_abr,ch.abr2 as cash_abr 
+        $r=$db->query("select sv.*, t.name as tpoint_name, sl.name as seller_name, cl.name as client_name, dt.mcaption as doc_type_name, dt.mvalue as doc_type_abr, ch.abr2 as cash_abr 
         from J_SALE_INVOICE sv
             left outer join CASH ch on ch.id=sv.cash_id
             left outer join T_POINT t on t.id=sv.tpoint_id
@@ -581,8 +585,7 @@ class sale_invoice {
 
     function loadSaleInvoiceMoneyPay($invoice_id){$db=DbSingleton::getDb();$list="";
         $form="";$form_htm=RD."/tpl/sale_invoice_money_pay_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select pay.*, pt.mcaption as pay_type_caption, pb.name as paybox_name, c.abr 
-        from J_PAY pay
+        $r=$db->query("select pay.*, pt.mcaption as pay_type_caption, pb.name as paybox_name, c.abr from J_PAY pay
             left outer join J_PAY_STR pst on pst.pay_id=pay.id
             left outer join CASH c on c.id=pay.cash_id
             left outer join T_POINT_PAY_BOX pb on pb.id=pay.paybox_id
@@ -623,7 +626,7 @@ class sale_invoice {
         $summ=$db->result($r,0,"summ");
         $summ_debit=$db->result($r,0,"summ_debit");
         $summ_kredit=$summ-($summ-$summ_debit);
-        if ($pay_id==0){$print_pay_disabled="disabled"; $cash_kours="1";}else {$print_pay_disabled="";}
+        if ($pay_id==0){$print_pay_disabled="disabled"; $cash_kours="1";} else {$print_pay_disabled="";}
         $form=str_replace("{invoice_id}",$invoice_id,$form);
         $form=str_replace("{pay_id}",$pay_id,$form);
         $form=str_replace("{doc_cash_id}",$cash_id,$form);
@@ -1095,9 +1098,9 @@ class sale_invoice {
         return $form;
     }
 
-    function exportSaleInvoiceExcel($invoice_id,$separator){$db=DbSingleton::getDb();$cat=new catalogue;$invoice_summ=0;
+    function exportSaleInvoiceExcel($invoice_id,$separator=""){$db=DbSingleton::getDb();$cat=new catalogue;$invoice_summ=0;
         $r=$db->query("select sv.*, t.name as tpoint_name, sl.name as seller_name, sld.edrpou, ot.name as org_type_abr, 
-        cl.name as client_name, dt.mcaption as doc_type_name, dt.mvalue as doc_type_abr,ch.abr2 as cash_abr,dp.delivery_address 
+        cl.name as client_name, dt.mcaption as doc_type_name, dt.mvalue as doc_type_abr, ch.abr2 as cash_abr, dp.delivery_address 
         from J_SALE_INVOICE sv
             left outer join CASH ch on ch.id=sv.cash_id
             left outer join T_POINT t on t.id=sv.tpoint_id

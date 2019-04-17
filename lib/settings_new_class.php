@@ -1,8 +1,93 @@
 <?php
 
 class SettingsNewClass {
-	
-	//contacts============================================================================================================================
+
+    //Language============================================================================================================================
+
+    function showLanguageList() {$db = DbSingleton::getTokoDb();$list="";$m = 3;
+        $form=""; $form_htm=RD."/tpl/new/language.htm"; if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        $r=$db->query("select * from new_lang_wd"); $n=$db->num_rows($r);
+        for ($i=1;$i<=$n;$i++){
+            $id=$db->result($r,$i-1,"id");
+            $var=$db->result($r,$i-1,"variable");
+            $list.="<tr style='cursor:pointer' onClick='showLanguageCard(\"$id\")'><td>$var</td>";
+            for ($j=1;$j<=$m;$j++) {
+                $rs=$db->query("select caption from new_lang_wdv where lang_id='$j' and wd='$id';");
+                $cap=$db->result($rs,0,"caption");
+                $list.="<td>$cap</td>";
+            }
+            $list.="</tr>";
+        }
+        $form=str_replace("{lang_range}",$list,$form);
+        return $form;
+    }
+
+    function loadLanguageList() {$db = DbSingleton::getTokoDb();$list="";$m = 3;
+        $r=$db->query("select * from new_lang_wd"); $n=$db->num_rows($r);
+        for ($i=1;$i<=$n;$i++){
+            $id=$db->result($r,$i-1,"id");
+            $var=$db->result($r,$i-1,"variable");
+            $list.="<tr style='cursor:pointer' onClick='showLanguageCard(\"$id\")'><td>$var</td>";
+            for ($j=1;$j<=$m;$j++) {
+                $rs=$db->query("select caption from new_lang_wdv where lang_id='$j' and wd='$id';");
+                $cap=$db->result($rs,0,"caption");
+                $list.="<td>$cap</td>";
+            }
+            $list.="</tr>";
+        }
+        return $list;
+    }
+
+    function newLanguageCard($lang_var){ $db = DbSingleton::getTokoDb();
+        $r=$db->query("select max(id) as mid from new_lang_wd;"); $max_id=0+$db->result($r,0,"mid")+1;
+        $db->query("insert into new_lang_wd (`id`,`variable`) values ('$max_id','$lang_var');");
+        return $max_id;
+    }
+
+    function showLanguageCard($id){ $db=DbSingleton::getTokoDb(); $m=3; $lang_arr=[];
+        $form="";$form_htm=RD."/tpl/new/language_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        $r=$db->query("select * from new_lang_wd where id=$id");
+        $lang_var=$db->result($r,0,"variable");
+        for ($j=1;$j<=$m;$j++) {
+            $rs=$db->query("select caption from new_lang_wdv where lang_id='$j' and wd='$id';");
+            $cap=$db->result($rs,0,"caption");
+            array_push($lang_arr,$cap);
+        }
+        $lang_ru=$lang_arr[0]; $lang_ua=$lang_arr[1]; $lang_eng=$lang_arr[2];
+        $form=str_replace("{id}",$id,$form);
+        $form=str_replace("{lang_var}",$lang_var,$form);
+        $form=str_replace("{lang_ru}",$lang_ru,$form);
+        $form=str_replace("{lang_ua}",$lang_ua,$form);
+        $form=str_replace("{lang_eng}",$lang_eng,$form);
+        return $form;
+    }
+
+    function saveLanguage($lang_id,$lang_ru,$lang_ua,$lang_eng){ $db=DbSingleton::getTokoDb(); $answer=0; $err="Помилка збереження даних!";
+        if ($lang_id>0){
+            $r=$db->query("select * from new_lang_wdv where lang_id=1 and wd=$lang_id;"); $n=$db->num_rows($r);
+            if ($n>0) $db->query("update new_lang_wdv set caption='$lang_ru' where lang_id=1 and wd=$lang_id;");
+            else $db->query("insert into new_lang_wdv (lang_id,wd,caption) values (1,$lang_id,'$lang_ru');");
+            $r=$db->query("select * from new_lang_wdv where lang_id=2 and wd=$lang_id;"); $n=$db->num_rows($r);
+            if ($n>0) $db->query("update new_lang_wdv set caption='$lang_ua' where lang_id=2 and wd=$lang_id;");
+            else $db->query("insert into new_lang_wdv (lang_id,wd,caption) values (2,$lang_id,'$lang_ua');");
+            $r=$db->query("select * from new_lang_wdv where lang_id=3 and wd=$lang_id;"); $n=$db->num_rows($r);
+            if ($n>0) $db->query("update new_lang_wdv set caption='$lang_eng' where lang_id=3 and wd=$lang_id;");
+            else $db->query("insert into new_lang_wdv (lang_id,wd,caption) values (3,$lang_id,'$lang_eng');");
+            $answer=1;$err="";
+        }
+        return array($answer,$err);
+    }
+
+    function dropLanguage($lang_id) { $db=DbSingleton::getTokoDb(); $answer=0; $err="Помилка збереження даних!";
+        if ($lang_id>0) {
+            $db->query("delete from new_lang_wd where id='$lang_id';");
+            $db->query("delete from new_lang_wdv where wd='$lang_id';");
+            $answer=1;$err="";
+        }
+        return array($answer,$err);
+    }
+
+	//Contacts============================================================================================================================
 	
 	function getLangCap($lang_id) {$db = DbSingleton::getTokoDb();
 		$r=$db->query("select caption from new_lang where id='$lang_id';");
@@ -20,13 +105,13 @@ class SettingsNewClass {
 			$schedule=$db->result($r,$i-1,"schedule");
 			$phone=$db->result($r,$i-1,"phone");
 			$lang_id=$db->result($r,$i-1,"lang_id"); $lang_id=$this->getLangCap($lang_id);
-			$list.="<tr style='cursor:pointer' onClick='showContactsCard(\"$id\")'>";
-				$list.="<td>$title</td>";
-				$list.="<td>$address</td>";
-				$list.="<td>$schedule</td>";
-				$list.="<td>$phone</td>";
-				$list.="<td>$lang_id</td>";
-			$list.="</tr>";
+			$list.="<tr style='cursor:pointer' onClick='showContactsCard(\"$id\")'>
+				<td>$title</td>
+				<td>$address</td>
+				<td>$schedule</td>
+				<td>$phone</td>
+				<td>$lang_id</td>
+			</tr>";
 		}
 		$form=str_replace("{contacts_range}",$list,$form);
 		return $form;
@@ -40,12 +125,12 @@ class SettingsNewClass {
 			$address=$db->result($r,$i-1,"address");
 			$schedule=$db->result($r,$i-1,"schedule");
 			$phone=$db->result($r,$i-1,"phone");
-			$list.="<tr style='cursor:pointer' onClick='showContactsCard(\"$id\")'>";
-				$list.="<td>$title</td>";
-				$list.="<td>$address</td>";
-				$list.="<td>$schedule</td>";
-				$list.="<td>$phone</td>";
-			$list.="</tr>";
+			$list.="<tr style='cursor:pointer' onClick='showContactsCard(\"$id\")'>
+				<td>$title</td>
+				<td>$address</td>
+				<td>$schedule</td>
+				<td>$phone</td>
+			</tr>";
 		}
 		return $list;
 	}
@@ -89,105 +174,14 @@ class SettingsNewClass {
 		}
 		return array($answer,$err);	
     }
-
-	//language============================================================================================================================
 	
-	function showLanguageList() {$db = DbSingleton::getTokoDb();$list="";
-		$form=""; $form_htm=RD."/tpl/new/language.htm"; if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-		$m = 3; 
-		$r=$db->query("select * from new_lang_wd");
-		$n=$db->num_rows($r);
-		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"id");
-			$var=$db->result($r,$i-1,"variable");
-			$list.="<tr style='cursor:pointer' onClick='showLanguageCard(\"$id\")'><td>$var</td>";
-			for ($j=1;$j<=$m;$j++) {
-				$rs=$db->query("select caption from new_lang_wdv where lang_id='$j' and wd='$id';");
-				$cap=$db->result($rs,0,"caption");
-				$list.="<td>$cap</td>";
-			}
-			$list.="</tr>";
-		}
-		$form=str_replace("{lang_range}",$list,$form);
-		return $form;
-	}
-	
-	function loadLanguageList() {$db = DbSingleton::getTokoDb(); $list="";
-		$m = 3; 
-		$r=$db->query("select * from new_lang_wd");
-		$n=$db->num_rows($r);
-		for ($i=1;$i<=$n;$i++){
-			$id=$db->result($r,$i-1,"id");
-			$var=$db->result($r,$i-1,"variable");
-			$list.="<tr style='cursor:pointer' onClick='showLanguageCard(\"$id\")'><td>$var</td>";
-			for ($j=1;$j<=$m;$j++) {
-				$rs=$db->query("select caption from new_lang_wdv where lang_id='$j' and wd='$id';");
-				$cap=$db->result($rs,0,"caption");
-				$list.="<td>$cap</td>";
-			}
-			$list.="</tr>";
-		}
-		return $list;
-	}
-		
-	function newLanguageCard($lang_var){ $db = DbSingleton::getTokoDb();
-		$r=$db->query("select max(id) as mid from new_lang_wd;"); $max_id=0+$db->result($r,0,"mid")+1;
-		$db->query("insert into new_lang_wd (`id`,`variable`) values ('$max_id','$lang_var');");
-		return $max_id;
-	}
-	
-	function showLanguageCard($id){ $db=DbSingleton::getTokoDb();
-        $form="";$form_htm=RD."/tpl/new/language_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-		$m=3; $lang_arr=[];
-		$r=$db->query("select * from new_lang_wd where id=$id");
-		$lang_var=$db->result($r,0,"variable");
-		for ($j=1;$j<=$m;$j++) {
-			$rs=$db->query("select caption from new_lang_wdv where lang_id='$j' and wd='$id';");
-			$cap=$db->result($rs,0,"caption");
-			array_push($lang_arr,$cap);
-		}
-		$lang_ru=$lang_arr[0]; $lang_ua=$lang_arr[1]; $lang_eng=$lang_arr[2];
-		$form=str_replace("{id}",$id,$form);
-		$form=str_replace("{lang_var}",$lang_var,$form);
-		$form=str_replace("{lang_ru}",$lang_ru,$form);
-		$form=str_replace("{lang_ua}",$lang_ua,$form);
-		$form=str_replace("{lang_eng}",$lang_eng,$form);
-		return $form;
-  	}
-	
-	function saveLanguage($lang_id,$lang_var,$lang_ru,$lang_ua,$lang_eng){ $db=DbSingleton::getTokoDb(); $answer=0; $err="Помилка збереження даних!";										  
-		if ($lang_id>0){
-			$r=$db->query("select * from new_lang_wdv where lang_id=1 and wd=$lang_id;"); $n=$db->num_rows($r);
-				if ($n>0) $db->query("update new_lang_wdv set caption='$lang_ru' where lang_id=1 and wd=$lang_id;");
-				else $db->query("insert into new_lang_wdv (lang_id,wd,caption) values (1,$lang_id,'$lang_ru');");
-			$r=$db->query("select * from new_lang_wdv where lang_id=2 and wd=$lang_id;"); $n=$db->num_rows($r);
-				if ($n>0) $db->query("update new_lang_wdv set caption='$lang_ua' where lang_id=2 and wd=$lang_id;");
-				else $db->query("insert into new_lang_wdv (lang_id,wd,caption) values (2,$lang_id,'$lang_ua');");
-			$r=$db->query("select * from new_lang_wdv where lang_id=3 and wd=$lang_id;"); $n=$db->num_rows($r);
-				if ($n>0) $db->query("update new_lang_wdv set caption='$lang_eng' where lang_id=3 and wd=$lang_id;");
-				else $db->query("insert into new_lang_wdv (lang_id,wd,caption) values (3,$lang_id,'$lang_eng');");
-			$answer=1;$err="";
-		}
-		return array($answer,$err);
-	}
-	
-	function dropLanguage($lang_id) { $db=DbSingleton::getTokoDb(); $answer=0; $err="Помилка збереження даних!";
-		if ($lang_id>0) {
-			$db->query("delete from new_lang_wd where id='$lang_id';");	
-			$db->query("delete from new_lang_wdv where wd='$lang_id';");	
-			$answer=1;$err="";
-		}
-		return array($answer,$err);	
-    }
-	
-	//locations======================================================================================================================
+	//Locations======================================================================================================================
 	
 	function showLocations() {$db = DbSingleton::getTokoDb();$list="";
 		$form=""; $form_htm=RD."/tpl/new/locations.htm"; if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}						
 		$r=$db->query("select t2c.CITY_NAME, t2r.REGION_NAME, t2s.STATE_NAME from T2_CITY t2c
 			left outer join T2_REGION t2r on t2r.REGION_ID=t2c.REGION_ID
-			left outer join T2_STATE t2s on t2s.STATE_ID=t2r.STATE_ID");
-		$n=$db->num_rows($r);
+			left outer join T2_STATE t2s on t2s.STATE_ID=t2r.STATE_ID"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
 			$city=$db->result($r,$i-1,"CITY_NAME");
 			$region=$db->result($r,$i-1,"REGION_NAME");
@@ -237,12 +231,12 @@ class SettingsNewClass {
 			$icon=$db->result($r,$i-1,"icon"); $icon=$this->getIcon($icon);
 			$link=$db->result($r,$i-1,"link"); 
 			$status=$db->result($r,$i-1,"status"); $status=$this->getStatusCaption($status);
-			$list.="<tr style='cursor:pointer' onClick='showContactsBotCard(\"$id\")'>";
-				$list.="<td>$text</td>";
-				$list.="<td>$icon</td>";
-				$list.="<td>$link</td>";
-				$list.="<td>$status</td>";
-			$list.="</tr>";
+			$list.="<tr style='cursor:pointer' onClick='showContactsBotCard(\"$id\")'>
+				<td>$text</td>
+				<td>$icon</td>
+				<td>$link</td>
+				<td>$status</td>
+			</tr>";
 		}
 		$form=str_replace("{contacts_range}",$list,$form);
 		return $form;
@@ -256,12 +250,12 @@ class SettingsNewClass {
 			$icon=$db->result($r,$i-1,"icon"); $icon=$this->getIcon($icon);
 			$link=$db->result($r,$i-1,"link");
 			$status=$db->result($r,$i-1,"status"); $status=$this->getStatusCaption($status);
-			$list.="<tr style='cursor:pointer' onClick='showContactsBotCard(\"$id\")'>";
-				$list.="<td>$text</td>";
-				$list.="<td>$icon</td>";
-				$list.="<td>$link</td>";
-				$list.="<td>$status</td>";
-			$list.="</tr>";
+			$list.="<tr style='cursor:pointer' onClick='showContactsBotCard(\"$id\")'>
+				<td>$text</td>
+				<td>$icon</td>
+				<td>$link</td>
+				<td>$status</td>
+			</tr>";
 		}
 		return $list;
 	}
@@ -280,8 +274,7 @@ class SettingsNewClass {
 			$text=$db->result($r,0,"text");
 			$icon=$db->result($r,0,"icon"); $icon_select=$this->showIcontSelectList($icon);
 			$link=$db->result($r,0,"link");
-			$status=$db->result($r,0,"status");
-			$checked="";if ($status>0){$checked=" checked";}
+			$status=$db->result($r,0,"status"); $status>0 ? $checked=" checked" : $checked="";
 			$form=str_replace("{id}",$id,$form);
 			$form=str_replace("{text}",$text,$form);
 			$form=str_replace("{icon_select}",$icon_select,$form);
@@ -300,14 +293,14 @@ class SettingsNewClass {
 	}
 	
 	function dropContactsBot($contact_id) { $db=DbSingleton::getTokoDb(); $answer=0;$err="Помилка збереження даних!";
-		if ($contact_id>0) {
+		if ($contact_id>0){
 			$db->query("delete from contacts_bottom_new where id='$contact_id';");	
 			$answer=1;$err="";
 		}
 		return array($answer,$err);	
     }
 	
-	//news=======================================================================================================================================
+	//News=======================================================================================================================================
 	
 	function getLangCaption($lang_id) {$db = DbSingleton::getTokoDb();
 		$r=$db->query("select caption from lang where id='$lang_id' limit 1;");
@@ -316,25 +309,23 @@ class SettingsNewClass {
 	}
 	
 	function showNewsList() { $db = DbSingleton::getTokoDb(); $date=date("Y-m-d");$list="";
-		$form=""; $form_htm=RD."/tpl/new/news.htm"; if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}						
+		$form="";$form_htm=RD."/tpl/new/news.htm"; if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$r=$db->query("select * from news order by data desc;"); $n=$db->num_rows($r);							
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
 			$lang=$db->result($r,$i-1,"lang_id"); $lang=$this->getLangCaption($lang);
 			$caption=$db->result($r,$i-1,"caption");
 			$short_desc=$db->result($r,$i-1,"short_desc");
-			$data=$db->result($r,$i-1,"data");
-			if ($data>$date) $color_data="style='background:coral'"; else $color_data="";
-			$status=$db->result($r,$i-1,"status"); 
-			if ($status) $color_status="style='background:lightgreen'"; else $color_status="style='background:lightpink'";
-			$status=$this->getStatusCaption($status); 
-			$list.="<tr style='cursor:pointer' onClick='showNewsCard(\"$id\")'>";
-				$list.="<td $color_data>$data</td>";
-				$list.="<td>$lang</td>";
-				$list.="<td>$caption</td>";
-				$list.="<td>$short_desc</td>";
-				$list.="<td $color_status>$status</td>";
-			$list.="</tr>";
+			$data=$db->result($r,$i-1,"data"); $data>$date ? $color_data="style='background:coral'" : $color_data="";
+			$status=$db->result($r,$i-1,"status"); $status==true ? $color_status="style='background:lightgreen'" : $color_status="style='background:lightpink'";
+			$status=$this->getStatusCaption($status);
+			$list.="<tr style='cursor:pointer' onClick='showNewsCard(\"$id\")'>
+				<td $color_data>$data</td>
+				<td>$lang</td>
+				<td>$caption</td>
+				<td>$short_desc</td>
+				<td $color_status>$status</td>
+			</tr>";
 		}
 		$form=str_replace("{news_range}",$list,$form);
 		return $form;
@@ -347,18 +338,16 @@ class SettingsNewClass {
 			$lang=$db->result($r,$i-1,"lang_id"); $lang=$this->getLangCaption($lang);
 			$caption=$db->result($r,$i-1,"caption");
 			$short_desc=$db->result($r,$i-1,"short_desc");
-			$data=$db->result($r,$i-1,"data");
-			if ($data>$date) $color_data="style='background:coral'"; else $color_data="";
-			$status=$db->result($r,$i-1,"status"); 
-			if ($status) $color_status="style='background:lightgreen'"; else $color_status="style='background:lightpink'";
+			$data=$db->result($r,$i-1,"data"); $data>$date ? $color_data="style='background:coral'" : $color_data="";
+			$status=$db->result($r,$i-1,"status"); $status==true ? $color_status="style='background:lightgreen'" : $color_status="style='background:lightpink'";
 			$status=$this->getStatusCaption($status); 
-			$list.="<tr style='cursor:pointer' onClick='showNewsCard(\"$id\")'>";
-				$list.="<td $color_data>$data</td>";
-				$list.="<td>$lang</td>";
-				$list.="<td>$caption</td>";
-				$list.="<td>$short_desc</td>";
-				$list.="<td $color_status>$status</td>";
-			$list.="</tr>";
+			$list.="<tr style='cursor:pointer' onClick='showNewsCard(\"$id\")'>
+				<td $color_data>$data</td>
+				<td>$lang</td>
+				<td>$caption</td>
+				<td>$short_desc</td>
+				<td $color_status>$status</td>
+			</tr>";
 		}
 		return $list;
 	}
@@ -378,9 +367,8 @@ class SettingsNewClass {
 			$lang_id=$db->result($r,0,"lang_id"); $lang_val=$this->getLangCaption($lang_id);
 			$short_desc=$db->result($r,0,"short_desc");
 			$data=$db->result($r,0,"data");
-			$status=$db->result($r,0,"status");
+			$status=$db->result($r,0,"status"); $status>0 ? $checked=" checked" : $checked="";
 			$descr=$db->result($r,0,"desc");
-			$checked=""; if($status>0){$checked=" checked";}
 			$form=str_replace("{id}",$id,$form);
 			$form=str_replace("{caption}",$caption,$form);
 			$form=str_replace("{lang_id}",$lang_id,$form);
@@ -412,10 +400,9 @@ class SettingsNewClass {
 		return array($answer,$err);	
     }
 	
-	function loadNewsPhoto($news_id,$lang_id) { $db=DbSingleton::getTokoDb();
-		$form_htm=RD."/tpl/new/news_photo_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-		$r=$db->query("select * from news_galery where cat='$news_id';");
-		$n=$db->num_rows($r);$list="";
+	function loadNewsPhoto($news_id,$lang_id) { $db=DbSingleton::getTokoDb(); $list="";
+        $form="";$form_htm=RD."/tpl/new/news_photo_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+		$r=$db->query("select * from news_galery where cat='$news_id';"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
 			$file=$db->result($r,$i-1,"id");
 			$file_text=$db->result($r,$i-1,"caption"); 

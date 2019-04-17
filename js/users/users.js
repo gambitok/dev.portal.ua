@@ -22,21 +22,20 @@ function loadUsersList(){
 function newUsersCard(){
 	JsHttpRequest.query($rcapi,{ 'w': 'newUsersCard'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		var users_id=result["users_id"];
-		showUsersCard(users_id);
+		showUsersCard(result["users_id"]);
 	}}, true);
 }
 
 var barcode_settings = {barWidth: 1,barHeight: 50,moduleSize: 5,showHRI: true,addQuietZone: true,marginHRI: 5,bgColor: "#FFFFFF",color: "#000000",fontSize: 14,output: "css",posX: 0,posY: 0};
 
 function showUsersCard(users_id){
-	if (users_id<=0 || users_id==""){toastr["error"](errs[0]);}
+	if (users_id<=0 || users_id===""){toastr["error"](errs[0]);}
 	if (users_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'showUsersCard', 'users_id':users_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#UsersCard").modal('show');
-			document.getElementById("UsersCardBody").innerHTML=result["content"];
-			document.getElementById("UsersCardLabel").innerHTML=$("#users_name").val()+" (ID:"+$("#users_id").val()+")";
+			$("#UsersCardBody").html(result["content"]);
+			$("#UsersCardLabel").html($("#users_name").val()+" (ID:"+$("#users_id").val()+")");
 			$('#users_tabs').tab();
 			$("#country_id").select2({placeholder: "Виберіть країну",dropdownParent: $("#UsersCard")});
 		}}, true);

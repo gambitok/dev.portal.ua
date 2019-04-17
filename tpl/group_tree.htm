@@ -4,6 +4,8 @@
 <link href="/js/plugins/jquery.treefilter/jquery.treefilter.custom.css" rel="stylesheet">
 <link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
 
+<link rel="stylesheet" href="/js/plugins/dropzone/dropzone.css">
+
 <style>
     .dnone{
         display: none;
@@ -34,6 +36,7 @@
                         <div class="col-lg-6">
                             <button style="margin-bottom: 30px;" class="btn btn-primary" onClick="showGroupTreeHeadCard('0');"><i class="fa fa-plus"></i> Додати розділ</button>
                             <button style="margin-bottom: 30px;" class="btn btn-info" onClick="showGroupTreeHeadCategory('0');"><i class="fa fa-plus"></i> Додати категорію</button>
+                            <button style="margin-bottom: 30px;" class="btn btn-success" onClick="showGroupTreeHeaders();" title="Оновити дерево"><i class="fa fa-retweet"></i></button>
                             <div id="group-tree">
                                 {group_tree_head}
                             </div>
@@ -45,7 +48,7 @@
     </div>
 </div>
 
-<div id="GroupTreeCard" class="modal inmodal fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog"  aria-hidden="true">
+<div id="GroupTreeCard" class="modal inmodal fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog" aria-hidden="true" data-dismiss="modal">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
             <div class="modal-header">
@@ -58,6 +61,24 @@
     </div>
 </div>
 
+<div id="GroupTreeUploadForm" class="modal inmodal fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog" aria-hidden="true" data-dismiss="modal">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true">х</button>
+                <h3 id="GroupTreeUploadLabel">Завантажування файлів</h3>
+            </div>
+            <div class="modal-body" id="GroupTreeUploadBody">
+                <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+                <form id="dropzone-form" action="upload_images.php" class="dropzone">
+                    <input id="group_str_id" type="hidden" name="group_str_id" value="0">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/plugins/dropzone/dropzone.js"></script>
 <script type="text/javascript" src="/js/plugins/barcode-generator/jquery-barcode.js"></script>
 <!-- Bootstrap markdown -->
 <script src="/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>

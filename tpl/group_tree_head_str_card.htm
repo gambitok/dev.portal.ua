@@ -1,6 +1,6 @@
 <div class="tabs-container">
     <ul class="nav nav-tabs" id="tree_tabs">
-        <li class="active"><a data-toggle="tab" href="#tab1"><i class="fa fa-bars"></i> <span class="hidden-sm-down not-visible">Загальна інформація</span></a></li>
+        <li class="active"><a data-toggle="tab" href="#tab1" onclick="updateGroupTreeHeadStr('{group_id}');"><i class="fa fa-bars"></i> <span class="hidden-sm-down not-visible">Загальна інформація</span></a></li>
     </ul>
 
     <div class="tab-content">
@@ -12,10 +12,10 @@
 
                             <div class="form-group">
                                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Заголовок дерева</label>
-                                <div class="col-sm-2"><input class="form-control" type="text" name="head_id" readonly id="head_id" value="{head_id}" placeholder=""></div>
+                                <div class="col-sm-2"><input title="Заголовок дерева" class="form-control" type="text" name="head_id" readonly id="head_id" value="{head_id}"></div>
                                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Категорія товара</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" name="category_list" id="category_list">
+                                    <select title="Виберіть категорію" class="form-control" name="category_list" id="category_list">
                                         {category_list}
                                     </select>
                                 </div>
@@ -24,19 +24,19 @@
                             <div class="form-group">
                                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Заголовок</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" name="head_list" id="head_list" onChange="changeTreeHeader();">
+                                    <select title="Виберіть заголовок" class="form-control" name="head_list" id="head_list" onChange="changeTreeHeader();">
                                         {head_list}
                                     </select>
                                 </div>
                                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Каталог</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" name="str_list" id="str_list">
+                                    <select title="Виберіть каталог" class="form-control" name="str_list" id="str_list">
                                         {tree_list}
                                     </select>
                                 </div>
                                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Позиція</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" name="position_list" id="position_list">
+                                    <select title="Виберіть позицію" class="form-control" name="position_list" id="position_list">
                                         {position_list}
                                     </select>
                                 </div>
@@ -55,6 +55,17 @@
                             <div class="hr-line-dashed"></div>
 
                             <div class="form-group">
+                                <label class="col-lg-2 col-md-2 col-sm-2 control-label">
+                                    Зображення
+                                </label>
+                                <div class="col-lg-10 col-md-10 col-sm-10">
+                                    <img src="{group_img}" alt="image" style="width:250px; height: 250px;"><br>
+                                    <a onclick="showUploadPhotoForm('group','{group_id}');" class="btn btn-primary"><i class="fa fa-upload"></i> Завантажити зображення</a>
+                                    <a onclick="dropUploadPhotoForm('group','{group_id}');" class="btn btn-danger"><i class="fa fa-remove"></i> Видалити зображення</a>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <div class="col-sm-10 text-right col-sm-offset-2">
                                     <button class="btn btn-primary" type="button" onClick="saveGroupTreeHeadStrCard('{group_id}');">Зберегти зміни</button>
                                     <button class="btn btn-danger" type="button" onClick="dropGroupTreeHeadStr('{group_id}');" {disabled}>Видалити</button>
@@ -70,3 +81,4 @@
     </div>
 
 </div>
+
