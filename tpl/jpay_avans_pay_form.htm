@@ -1,4 +1,3 @@
-<!---   PAY TAB BLOCK   -->
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <form method="get" onSubmit="return false;" class="form-horizontal">
@@ -16,30 +15,29 @@
                                 <span class="input-group-btn"> <button type="button" class="btn btn-default" {oper_disabled} id="clientDropBtn" onClick="unlinkJpayAutoClient();"><i class="fa fa-times"></i></button> </span>
                             </div>
                         </div>
-                        
                     </div>
                     <div class="form-group">
                         <label class="col-md-4 col-sm-12 control-label">Валюта договору</label>
                         <div class="col-md-7 col-sm-12">
-                            <input type="text" id="doc_cash_name" class="form-control numbers" readonly value='{doc_cash_name}'>
+                            <input title="Валюта договору" type="text" id="doc_cash_name" class="form-control numbers" readonly value='{doc_cash_name}'>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-4 col-sm-12 col-sm-4 control-label">Вид оплаты</label>
+                        <label class="col-md-4 col-sm-12 col-sm-4 control-label">Вид оплати</label>
                         <div class="col-md-7 col-sm-12">
-                            <select size="1" id="pay_type_id" {pay_type_id_disabled} class="form-control"><option value="0">--Оберіть зі списку--</option>{pay_type_list}</select>
+                            <select title="Вид оплати" size="1" id="pay_type_id" {pay_type_id_disabled} class="form-control"><option value="0">--Оберіть зі списку--</option>{pay_type_list}</select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-4 col-sm-12 control-label">Каса</label>
                         <div class="col-md-7 col-sm-12">
-                            <select size="1" id="paybox_id" class="form-control"><option value="0">--Оберіть зі списку--</option>{paybox_list}</select>
+                            <select title="Каса" size="1" id="paybox_id" class="form-control"><option value="0">--Оберіть зі списку--</option>{paybox_list}</select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-4 col-sm-12 control-label">Валюта оплати</label>
                         <div class="col-md-7 col-sm-12">
-                            <select size="1" id="cash_id" class="form-control" onChange="getCashKours();"><option value="0">--Оберіть зі списку--</option>{cash_list}</select>
+                            <select title="Валюта оплати" size="1" id="cash_id" class="form-control" onChange="getCashKours();"><option value="0">--Оберіть зі списку--</option>{cash_list}</select>
                         </div>
                     </div>
                     <div class="form-group">
@@ -54,20 +52,18 @@
                     <div class="form-group">
                         <label class="col-md-4 col-sm-12 control-label">Сума оплати клієнтом</label>
                         <div class="col-md-7 col-sm-12">
-                            <input type="text" id="sale_invoice_kredit" class="form-control numbers" value='{sale_invoice_kredit}' min='1' max="">
+                            <input title="Сума оплати клієнтом" type="text" id="sale_invoice_kredit" class="form-control numbers" value='{sale_invoice_kredit}' min='1' max="">
                         </div>
                     </div>
-                   
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <div class="col-sm-12 text-right">
                             <button id="jpay_save" class="btn btn-primary" type="button" onClick="saveJpayAvansPay();">Зафіксувати</button>
-                            <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                            <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
                         </div>
                     </div>
 	            </div>
                 <div class="col-md-6 col-sm-12">
-                
                 </div>
             </div>
         </form>

@@ -14,7 +14,8 @@ class slave {
 		return $wks["$week_day"];
 	}
 	
-	function showWeekdaySelectList($week_day){$list="";
+	function showWeekdaySelectList($week_day){
+        $list="";
 		$wks = array ( '1' => "Понеділок", '2' => "Вівторок", '3' => "Середа", '4' => "Четвер", '5' => "П'ятниця", '6' => "Субота", '7' => "Неділя");
 		for ($i=1;$i<=7;$i++){
 			$sel="";if ($i==$week_day){$sel=" selected='selected'";}
@@ -29,9 +30,10 @@ class slave {
 		return $mnths["m$month_id"];
 	}
 
-	function data_word($data){$dataw="-";$dt=explode(" ",$data);$time=$dt[1];$data=$dt[0];if ($time=="00:00:00"){$time="";}
+	function data_word($data){
+	    $dataw="-";$dt=explode(" ",$data);$time=$dt[1];$data=$dt[0];if ($time=="00:00:00"){$time="";}
 		if ($data!="0000-00-00" && $data!=""){
-			$mon=substr($data,5,2);
+			$mon=substr($data,5,2);$day="";
 			$mnths = array ( '01'=>"Січня",'02'=>"Лютого",'03'=>"Березня",'04'=>"Квітня",'05'=>"Травня",'06'=>"Червня",'07'=>"Липня",'08'=>"Серпня",'09'=>"Вересня",'10'=>"Жовтня",'11'=>"Листопада",'12'=>"Грудня");
 			if (substr($data,8,1)=="0"){$day=substr($data,9,1);}
 			if (substr($data,8,1)!="0"){$day=substr($data,8,2);}
@@ -41,9 +43,10 @@ class slave {
 		return $dataw;
 	}
 
-	function data_word_short($data){$dataw="-";$dt=explode(" ",$data);$time=$dt[1];$data=$dt[0];if ($time=="00:00:00"){$time="";}
+	function data_word_short($data){
+        $dataw="-";$dt=explode(" ",$data);$time=$dt[1];$data=$dt[0];if ($time=="00:00:00"){$time="";}
 		if ($data!="0000-00-00" && $data!=""){
-			$mon=substr($data,5,2);
+			$mon=substr($data,5,2);$day="";
 			$mnths = array ( '01'=>"Січ",'02'=>"Лют",'03'=>"Бер",'04'=>"Кві",'05'=>"Тра",'06'=>"Чер",'07'=>"Лип",'08'=>"Сер",'09'=>"Вер",'10'=>"Жов",'11'=>"Лис",'12'=>"Гру");
 			if (substr($data,8,1)=="0"){$day=substr($data,9,1);}
 			if (substr($data,8,1)!="0"){$day=substr($data,8,2);}
@@ -54,7 +57,7 @@ class slave {
 	}
 
 	function data_r($data){
-		$mon=substr($data,5,2);
+		$mon=substr($data,5,2);$day="";
 		if (substr($data,8,1)=="0"){$day=substr($data,9,1);}
 		if (substr($data,8,1)!="0"){$day=substr($data,8,2);}
 		return $day."-".$mon."-".substr($data,0,4);
@@ -66,8 +69,8 @@ class slave {
 	}
 	
 	function addJuornalArtDocs($doc_type,$doc_id,$art_id,$amount){$db=DbSingleton::getDb();
-		//doc_type: 1-income, 2-move, 3-sale, 4-backclient, 5-backsuppl
-	  	$db->query("insert into J_ART_DOCS (`art_id`,`amount`,`doc_type`,`doc_id`) values ('$art_id','$amount','$doc_type',$doc_id);");
+		//doc_type: 1-income, 2-move, 3-sale, 4-backclient, 5-backsuppl 6-write_off
+	  	$db->query("INSERT INTO `J_ART_DOCS` (`art_id`,`amount`,`doc_type`,`doc_id`) VALUES ('$art_id','$amount','$doc_type',$doc_id);");
 		//if (($doc_type>=1 && $doc_type<=5) && $doc_id>0 && $art_id!=""){ }
 		return;
 	}
@@ -197,7 +200,7 @@ class slave {
 			if ($sizes[0] <= $size){
 				$new_width = $sizes[0];
 				$new_height = $sizes[1];
-			}else{
+			} else {
 				$new_width = $size;
 				$new_height = abs($new_width/$aspect_ratio);
 			}
@@ -216,8 +219,7 @@ class slave {
 		return;
 	}
 
-	function get_file_deps($file){
-		$db=DbSingleton::getDb();
+	function get_file_deps($file){ $db=DbSingleton::getDb();
 		$r=$db->query("select id from module_files where file='$file';");
 		$n=$db->num_rows($r);
 		if ($n>0){
@@ -229,7 +231,8 @@ class slave {
 		return array($dep_up,$dep_cur);
 	}
 	
-	function showSelectList($table,$field_id,$field,$sel_id){$db=DbSingleton::getDb();$list="<option value='0'></option>";
+	function showSelectList($table,$field_id,$field,$sel_id){$db=DbSingleton::getDb();
+	    $list="<option value='0'></option>";
 		$r=$db->query("select `$field_id`,`$field` from `$table` order by `$field` asc;");$n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"$field_id");
@@ -240,8 +243,9 @@ class slave {
 		return $list;
 	}
 
-	function showSelectSubList($table,$prnt_field,$prnt_id,$field_id,$field,$sel_id){$db=DbSingleton::getTokoDb();$list="<option value='0'></option>";
-		$where="  and `$prnt_field`='$prnt_id'";//if ($prnt_id==0){$where="";}
+	function showSelectSubList($table,$prnt_field,$prnt_id,$field_id,$field,$sel_id){$db=DbSingleton::getTokoDb();
+	    $list="<option value='0'></option>";
+		$where=" and `$prnt_field`='$prnt_id'";//if ($prnt_id==0){$where="";}
 		$r=$db->query("select `$field_id`,`$field` from `$table` where 1 $where order by `$field` asc;");$n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"$field_id");
@@ -253,7 +257,7 @@ class slave {
 	}
 	
 	function showSelectSubListDBM($table,$prnt_field,$prnt_id,$field_id,$field,$sel_id){$db=DbSingleton::getDb();$list="<option value='0'></option>";
-		$where="  and `$prnt_field`='$prnt_id'";//if ($prnt_id==0){$where="";}
+		$where=" and `$prnt_field`='$prnt_id'";//if ($prnt_id==0){$where="";}
 		$r=$db->query("select `$field_id`,`$field` from `$table` where 1 $where order by `$field` asc;");$n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"$field_id");

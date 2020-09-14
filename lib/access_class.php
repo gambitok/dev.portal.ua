@@ -5,9 +5,10 @@ class access {
 	function check_user_access($file){$db=DbSingleton::getDb(); session_start(); $media_user_id=$_SESSION["media_user_id"];
         $access="0"; $acc_lvl="0";
         if ($media_user_id!=1){
-            $r=$db->query("select rs.lvl from media_users_role_structure rs 
-                inner join module_files mf on mf.id=rs.file_id 
-            where rs.user_id='$media_user_id' and mf.file='$file' limit 0,1;"); $n=$db->num_rows($r);
+            $r=$db->query("SELECT rs.lvl 
+            FROM `media_users_role_structure` rs 
+                INNER JOIN `module_files` mf on mf.id=rs.file_id 
+            WHERE rs.user_id='$media_user_id' and mf.file='$file' LIMIT 1;"); $n=$db->num_rows($r);
             if ($n==1){
                 $access="1"; $acc_lvl=$db->result($r,0,"lvl");
             }
@@ -30,7 +31,7 @@ class access {
 	
 	function checkTrustedIp($media_user_id) {$db=DbSingleton::getDb();
 	  	$ip_address=$_SERVER['REMOTE_ADDR'];
-		$r=$db->query("select * from trusted_ip where ip='$ip_address' and status=1 limit 1;"); $n=$db->num_rows($r);
+		$r=$db->query("SELECT * FROM `trusted_ip` WHERE `ip`='$ip_address' and `status`=1 LIMIT 1;"); $n=$db->num_rows($r);
 		$n>0 ? $result=true : $result=false;
 		$media_user_id!=1 ? : $result=true;
 		return $result;
@@ -38,7 +39,7 @@ class access {
 	
 	function checkAccessTime($media_user_id) {$db=DbSingleton::getDb(); 
 		$result=false; $cur_time=date("h:i:s");					
-		$r=$db->query("select * from media_users_time where id='$media_user_id' limit 1;"); $n=$db->num_rows($r);
+		$r=$db->query("SELECT * FROM `media_users_time` WHERE `id`='$media_user_id' LIMIT 1;"); $n=$db->num_rows($r);
 		if ($n>0) {
 			$access=$db->result($r,0,"access");
 			$access_time=$db->result($r,0,"access_time");
@@ -65,7 +66,7 @@ class access {
 	
 	function getMediaUserRole() {$db=DbSingleton::getDb(); 
 		$media_user_id=$_SESSION["media_user_id"];
-		$r=$db->query("select role_id from media_users where id='$media_user_id' limit 1;");
+		$r=$db->query("SELECT `role_id` FROM `media_users` WHERE `id`='$media_user_id' LIMIT 1;");
 		$role_id=$db->result($r,0,"role_id");
 		return $role_id;
 	}

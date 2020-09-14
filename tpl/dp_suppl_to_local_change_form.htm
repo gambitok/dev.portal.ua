@@ -1,12 +1,10 @@
 <div id="cat_tab1" class="tab-pane active">
 	<div class="panel-body">
-	<!---   PAY TAB BLOCK   -->
 			<form method="get" onSubmit="return false;" class="form-horizontal">
 				<div class="row">
 					<div class="col-sm-12">
 						<div class="ibox float-e-margins">
 							<div class="ibox-title"><h5>Постачальник: {suppl_name}</h5></div>
-
 
 							<div class="ibox-content">
 								<h5>Товар</h5>
@@ -18,34 +16,34 @@
 								<div class="form-group">
 									<div class="col-sm-6">
 										Кількість замовлена
-										<input type="text" class="form-control" id="amount" readonly value="{amount}">
+										<input type="text" class="form-control" id="amount" readonly value="{amount}" title="Кількість замовлена">
 									</div>
 									<div class="col-sm-6">
 										Кількість підтверджена
-										<input type="text" class="form-control" id="amount_order" readonly value="{amount_order}">
+										<input type="text" class="form-control" id="amount_order" readonly value="{amount_order}" title="Кількість підтверджена">
 									</div>
 								</div>
+
 								<div class="form-group">
 									<div class="col-sm-12 form-inline">
 										Склад наявності
 										<input type="hidden" id="stock_n" value="{stock_n}">
 										<table class="table table-bordered table-hover">
-											<thead>
-											<tr>
+											<thead><tr>
 												<th>#</th>
 												<th>Склад</th>
 												<th>Комірка</th>
 												<th>Залишок</th>
 												<th>Резерв</th>
 												<th>Відбір</th>
-											</tr>
-											</thead>
+											</tr></thead>
 											<tbody>
 												{stock_list}
 											</tbody>
 										</table>
 									</div>
 								</div>
+
 							</div>
 						</div>
 					</div>
@@ -54,7 +52,7 @@
 				<div class="form-group">
 					<div class="col-sm-12 text-right">
 						<button class="btn btn-primary" type="button" onClick="saveDpSupplToLocalChangeForm('{dp_id}','{dp_str_id}','{art_id}');">Відібрати</button>
-						<button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+						<button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
 					</div>
 				</div>
 			</form>

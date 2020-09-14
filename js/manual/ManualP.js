@@ -13,6 +13,7 @@ function filterManualPList(){
 		$('#ManualScroll').append(result["content"]);
 	}}, true); 
 }
+
 function showManualP(key,fldVal,fldText,parrentKey) {
 	var manValue =document.getElementById(fldVal).value;
 	var manText =document.getElementById(fldText).value;
@@ -26,8 +27,8 @@ function showManualP(key,fldVal,fldText,parrentKey) {
 		document.getElementById("valText").value=fldText;
 		showAlertForm();
 	}}, true);
-	
 }
+
 function showManualP2(key,fldVal,fldText,parrentKey,parrentKeyVal) {
 	var manValue =document.getElementById(fldVal).value;
 	var manText =document.getElementById(fldText).value;
@@ -42,8 +43,8 @@ function showManualP2(key,fldVal,fldText,parrentKey,parrentKeyVal) {
 		document.getElementById("valText").value=fldText;
 		showAlertForm();
 	}}, true);
-	
 }
+
 function closeAlertForm() {
 	document.getElementById("AlertForm").style.visibility="hidden";
 	document.getElementById("AlertForm").style.position="absolute";
@@ -64,6 +65,7 @@ function AddManualPValue(key){
 		if(parrKeyVal!=""){ showManualP2(key,document.getElementById("val").value,document.getElementById("valText").value,parrKey,parrKeyVal);}
 	}}, true);
 }
+
 function setValueP(id){
 	var fValue =document.getElementById("v"+id).innerHTML;
 	var fldVal=document.getElementById("val").value;

@@ -571,6 +571,9 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
     display: block;
     float: none;
   }
+  .navbar-top-links {
+    display: inline-block;
+  }
 }
 .menu-visible-lg,
 .menu-visible-md {

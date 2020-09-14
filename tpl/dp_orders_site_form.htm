@@ -1,8 +1,10 @@
 <div class="ibox">
 	<div class="ibox-content">
 		<form method="get" class="form-horizontal" onSubmit="return false;">
-			<input type="hidden" id="order_id" value="{order_id}">
+
+            <input type="hidden" id="order_id" value="{order_id}">
 			<input type="hidden" id="dp_id" value="{dp_id}">
+
 			<div class="form-group">
 				<label class="col-sm-1 control-label">Дата</label>
 				<div class="col-sm-2"><input class="form-control" disabled type="text" id="dp_data" value="{data}" placeholder="РРРР-ММ-ДД"></div>
@@ -10,9 +12,10 @@
 				<div class="col-lg-7 col-md-7 col-sm-7">
 					<input type="hidden" id="client_id" name="client_id" value="{client_id}">
 					<input type="hidden" id="client_user_id" name="client_user_id" value="{client_user_id}">
-					<input class="form-control" type="text" readonly disabled id="client_name" value="{client_name}" placeholder="Клієнт основа">
+					<input type="text" id="client_name" class="form-control" readonly disabled value="{client_name}" placeholder="Клієнт основа">
 				</div>
 			</div>
+
 			<div class="form-group">
 				<label class="col-lg-1 col-md-2 col-sm-4 control-label">Валюта</label>
 				<input type="hidden" id="check_cash_id" value="{cash_id}">
@@ -24,14 +27,16 @@
 				<input class="form-control" type="text" readonly disabled id="retail_name" value="{name} ({retail_name})" placeholder="Клієнт">
 				</div> 
 			</div>
+
 			<div class="form-group">
 				<label class="col-lg-1 col-md-2 col-sm-4 control-label">Сума</label>
-				<div class="col-lg-2 col-md-2 col-sm-8"><input type="text" readonly class="form-control" id="summ" value="{summ}"></div>
+				<div class="col-lg-2 col-md-2 col-sm-8"><input type="text" readonly class="form-control" id="summ" value="{summ}" title="Сума"></div>
 				<label class="col-sm-2 control-label">Тип доставки</label>
 				<div class="col-sm-2"><input class="form-control" type="text" readonly disabled id="delivery" value="{delivery}" placeholder="Тип доставки"></div>
-				<label class="col-sm-1 control-label">Адреса</label>
-				<div class="col-sm-4"><input class="form-control" type="text" readonly disabled id="delivery_info" value="{delivery_info}" placeholder="Адреса доставки"></div>
+				<label class="col-sm-1 control-label">Доставка інф.</label>
+				<div class="col-sm-4"><input class="form-control" type="text" readonly disabled id="delivery_info" value="{delivery_info}" placeholder="Доставка інф."></div>
 			</div>
+
 			<div class="form-group">
 				<label class="col-lg-1 col-md-2 col-sm-4 control-label">Торгова точка</label>
 				<div class="col-lg-2 col-md-2 col-sm-8">
@@ -39,53 +44,127 @@
 					<input class="form-control" type="text" readonly disabled id="tpoint_name" value="{tpoint_name}" placeholder="Торгова точка">
 				</div>
 				<label class="col-lg-2 col-md-2 col-sm-4 control-label">Спосіб оплати</label>
-				<div class="col-lg-3 col-md-2 col-sm-8">
-					<input class="form-control" type="text" readonly disabled id="payment" value="{payment}" placeholder="">
+				<div class="col-sm-2">
+					<input class="form-control" type="text" readonly disabled id="payment" value="{payment}" placeholder="Спосіб оплати">
 				</div>
-				<div class="col-lg-4 col-md-2 col-sm-8">
-					<input class="form-control" type="text" readonly disabled id="payment_info" value="{payment_info}" placeholder="Торгова точка">
+				<label class="col-sm-1 control-label">Оплата інф.</label>
+				<div class="col-sm-4">
+					<input class="form-control" type="text" readonly disabled id="payment_info" value="{payment_info}" placeholder="Спосіб оплати інфо">
 				</div>
 			</div>
-			
+
+			<div class="form-group">
+				<label class="col-sm-offset-4 col-sm-1 control-label">Місто</label>
+				<div class="col-sm-2">
+					<input class="form-control" type="text" readonly disabled id="city_name" value="{city_name}" placeholder="Місто">
+				</div>
+				<label class="col-sm-1 control-label">Адреса</label>
+				<div class="col-sm-4">
+					<input class="form-control" type="text" readonly disabled id="address" value="{address}" placeholder="Адреса">
+				</div>
+			</div>
+
+			<div class="hr-line-dashed"></div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Веб-користувач</label>
+				<div class="col-sm-2">
+					<input class="form-control" disabled type="text" id="order_user" value="{order_user}" placeholder="Веб-користувач">
+				</div>
+				<label class="col-sm-2 control-label">Отримувач (ФІО)</label>
+				<div class="col-sm-2">
+					<input class="form-control" disabled type="text" id="order_del_name" value="{order_del_name}" placeholder="Отримувач ФІО">
+				</div>
+				<label class="col-sm-2 control-label">Отримувач (телефон)</label>
+				<div class="col-sm-2">
+					<input class="form-control" disabled type="text" id="order_del_phone" value="{order_del_phone}" placeholder="Отримувач телефон">
+				</div>
+			</div>
+
+			<div class="form-group">
+                <label class="col-sm-2 control-label">Місто</label>
+                <div class="col-sm-2">
+                    <input class="form-control" disabled type="text" id="order_city" value="{order_city}" placeholder="Місто">
+                </div>
+                <label class="col-sm-2 control-label">Доставка</label>
+                <div class="col-sm-2">
+                    <input class="form-control" disabled type="text" id="order_delivery" value="{order_delivery}" placeholder="Доставка">
+                </div>
+                <label class="col-sm-2 control-label">Оплата</label>
+                <div class="col-sm-2">
+                    <input class="form-control" disabled type="text" id="order_payment" value="{order_payment}" placeholder="Оплата">
+                </div>
+			</div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Вулиця</label>
+                <div class="col-sm-2">
+                    <input class="form-control" disabled type="text" id="order_del_street" value="{order_del_street}" placeholder="Вулиця">
+                </div>
+                <label class="col-sm-2 control-label">Будинок</label>
+                <div class="col-sm-2">
+                    <input class="form-control" disabled type="text" id="order_del_house" value="{order_del_house}" placeholder="Будинок">
+                </div>
+                <label class="col-sm-2 control-label">Підїзд</label>
+                <div class="col-sm-2">
+                    <input class="form-control" disabled type="text" id="order_del_porch" value="{order_del_porch}" placeholder="Підїзд">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Відділеня</label>
+                <div class="col-sm-2">
+                    <input class="form-control" disabled type="text" id="order_del_department" value="{order_del_department}" placeholder="Відділеня">
+                </div>
+                <label class="col-sm-2 control-label">Тип експрес доставки</label>
+                <div class="col-sm-2">
+                    <input class="form-control" disabled type="text" id="order_del_express" value="{order_del_express}" placeholder="Тип експрес доставки">
+                </div>
+                <label class="col-sm-2 control-label">Інформація експрес доставки</label>
+                <div class="col-sm-2">
+                    <input class="form-control" disabled type="text" id="order_del_express_info" value="{order_del_express_info}" placeholder="Інформація експрес доставки">
+                </div>
+            </div>
+
+			<div class="hr-line-dashed"></div>
+
 			<div class="form-group">
 				<div id="incomeChildsList">
 					<h4 align="center">Структура замволення</h4>
 					<div class="table-responsive">
-					<table id="order_str" class="table table-condensed table-striped table-hover table-bordered" width="100%">
-						<thead>
-							<tr align="center">
-								<th>№</th>
-								<th>Постачальник</th>
-								<th>ArtID</th>
-								<th>Індекс</th>
-								<th>Бренд</th>
-								<th>К-сть</th>
-								<th>Ціна</th>
-								<th>Сума</th>
-							</tr>
-						</thead>
-						<tbody id="order_str_range">
-							{order_str_list}
-						</tbody>
-					</table>
+						<table id="order_str" class="table table-condensed table-striped table-hover table-bordered" width="100%">
+							<thead>
+								<tr align="center">
+									<th>№</th>
+									<th>ART_ID</th>
+									<th>Індекс</th>
+									<th>Бренд</th>
+									<th>Постачальник</th>
+									<th>К-сть</th>
+									<th>Ціна</th>
+									<th>Сума</th>
+								</tr>
+							</thead>
+							<tbody id="order_str_range">
+								{order_str_list}
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>
+
 			<div class="hr-line-dashed"></div>
+
 			<div class="form-group">
-				<div class="col-sm-6 text-left">
-					<button class="btn btn-primary" type="button" {oper_disabled} onClick="createDpFromOrder('{order_id}');">
-						<i class="fa fa-flag-o"></i> Передати в ДП
-					</button>
-					<!--<button class="btn btn-info" type="button" {oper_visible} onClick="printDpSaleInvoce('{dp_id}');">
-						<i class="fa fa-print"></i> Друк замовлення
-					</button>-->
+				<div class="col-lg-6 col-sm-6 text-left">
+					<button id="create_dp" class="btn btn-primary" type="button" {oper_disabled} onClick="createDpFromOrder('{order_id}');"><i class="fa fa-flag-o"></i> Передати в ДП</button>
 				</div>
-				<div class="col-sm-6 text-right">
-					<button class="btn btn-danger" type="button" {oper_disabled} onClick="deleteOrderSite('{order_id}');"><i class="fa fa-trash"></i> Видалити</button>
+				<div class="col-lg-6 col-sm-6 text-right">
+					<button id="delete_dp" class="btn btn-danger" type="button" {oper_disabled} onClick="deleteOrderSite('{order_id}');"><i class="fa fa-trash"></i> Видалити</button>
 					<button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
 				</div>
 			</div>
+
 		</form>
 	</div>
 </div>

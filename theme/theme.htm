@@ -9,7 +9,8 @@
 	<meta name="Originator" content="Studio Spektr https://webspektr.com">
 	<meta name="revisit-after" content="1 days"> 
 	<meta name="robots" content="ALL"> 
-	<meta http-equiv="Pragma" content="no-cache"> 
+	<meta http-equiv="Pragma" content="no-cache">
+
 	<link rel="shortcut icon" href="{site_address}/images/favicon/favicon.ico" type="image/x-icon" />
 	<link rel="icon" href="{site_address}/images/favicon/favicon.png" type="image/png" />
     
@@ -21,7 +22,10 @@
 	<link rel="apple-touch-icon" sizes="120x120" href="{site_address}/images/favicon/favicon-120x120.png">
 	<link rel="apple-touch-icon" sizes="76x76" href="{site_address}/images/favicon/favicon-76x76.png">
 	<link rel="apple-touch-icon" sizes="152x152" href="{site_address}/images/favicon/favicon-152x152.png">
-    
+
+    <link rel="apple-touch-icon" sizes="152x152" href="/favicon.png">
+    <link rel="manifest" href="manifest.json" />
+
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/vendors/font-awesome/css/font-awesome.css" rel="stylesheet">
     <link href="/vendors/toastr/css/toastr.min.css" rel="stylesheet"/>
@@ -65,10 +69,10 @@
                     <li class="nav-header">
                         <div class="dropdown profile-element"> <span>
                             <img alt="image" class="img-circle" src="/images/profile/{media_user_id}.jpg" style="max-width:50px;" />
-                             </span>
+                            </span>
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{UserName} </strong>
-                             </span> <span class="text-muted text-xs block">{UserPost} <b class="caret"></b></span> </span> </a>
+                            </span> <span class="text-muted text-xs block">{UserPost} <b class="caret"></b></span> </span> </a>
                             <ul class="dropdown-menu animated fadeInRight m-t-xs">
                                 <li><a href="profile.html">Профіль</a></li>
                                 <li><a href="contacts.html">Контакти</a></li>
@@ -89,139 +93,41 @@
 
         <div id="page-wrapper" class="gray-bg dashbard-1">
         <div class="row border-bottom">
-        <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
-        <div class="navbar-header">
-            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
-            <form role="search" class="navbar-form-custom" action="/search_results">
-                <div class="form-group">
-                    <input type="text" placeholder="Пошук" class="form-control" name="top-search" id="top-search">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                    <form role="search" class="navbar-form-custom" action="/search_results">
+                        <div class="form-group">
+                            <input type="text" placeholder="Пошук" class="form-control" name="top-search" id="top-search">
+                        </div>
+                    </form>
                 </div>
-            </form>
-        </div>
-            <ul class="nav navbar-top-links navbar-right">
-                <li>
-                    <span class="m-r-sm text-muted welcome-message">Вітаємо на порталі {title_short}.</span>
-                </li>
-				<li style="{style_overdraft}">
-					<a class="btn " href="https://portal.myparts.pro/ReportOverdraft"><i class='fa fa-file'></i> Прострочені документи </a>
-					<span title="Кількість прострочених документів" id="label_un_articles" class="label label-tab label-info" style="{kilk_overdraft_back}">{kilk_overdraft}</span>
-				</li>
-				<li style="{style_retail}">					
-					<a class="btn " href="https://portal.myparts.pro/ClientsRetail"><i class='fa fa-users'></i> Нові клієнти </a>
-					<span title="Магазини / Роздрібні користувачі" id="label_un_articles2" class="label label-tab label-info" style="{kilk_users_back}">{kilk_users}</span>		
-				</li>
-				<li style="{style_dp}">
-					<a class="btn " href="https://portal.myparts.pro/JournalDp"><i class='fa fa-exclamation-triangle'></i> Замовлення сайту </a>
-					<span title="Кількість замовлень" id="label_un_articles3" class="label label-tab label-info" style="{kilk_orders_back}">{kilk_orders}</span>
-				</li>
-				<li style="{style_cooperation}">
-					<a class="btn " href="https://portal.myparts.pro/SuppliersCooperation"><i class='fa fa-male'></i> Запити на співпрацю </a>
-					<span title="Кількість запитів" id="label_un_articles4" class="label label-tab label-info" style="{kilk_suppl_back}">{kilk_suppl}</span>
-				</li>
-<!--
-                <li class="dropdown">
-                    <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                        <i class="fa fa-envelope"></i>  <span class="label label-warning">16</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-messages">
-                        <li>
-                            <div class="dropdown-messages-box">
-                                <a href="profile.html" class="pull-left">
-                                    <img alt="image" class="img-circle" src="img/a7.jpg">
-                                </a>
-                                <div class="media-body">
-                                    <small class="pull-right">46h ago</small>
-                                    <strong>Mike Loreipsum</strong> started following <strong>Monica Smith</strong>. <br>
-                                    <small class="text-muted">3 days ago at 7:58 pm - 10.06.2014</small>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <div class="text-center link-block">
-                                <a href="mailbox.html">
-                                    <i class="fa fa-envelope"></i> <strong>Read All Messages</strong>
-                                </a>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                        <i class="fa fa-bell"></i>  <span class="label label-primary">8</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-alerts">
-                        <li>
-                            <a href="mailbox.html">
-                                <div>
-                                    <i class="fa fa-envelope fa-fw"></i> You have 16 messages
-                                    <span class="pull-right text-muted small">4 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                    </ul>
-                </li>
--->
-                <li>
-                    <a href="#logOut" onclick="logOut();">
-                        <i class="fa fa-sign-out"></i> Вихід
-                    </a>
-                </li>
-                <li>
-                    <a class="right-sidebar-toggle">
-                        <i class="fa fa-tasks"></i>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+                <ul id="menu-top-nav" class="nav navbar-top-links navbar-right">
+                    {nav_top_menu}
+                </ul>
+            </nav>
         </div>
 
 		<div class="row">
 			{work_window}
 		</div>
-        <!--<div class="row">
-            <div class="col-lg-12">
-                <div class="wrapper wrapper-content">
-					<div class="row">
-                        <div class="col-lg-12">
-                            
-                        </div>
-                    </div>
-                </div>
-                <div class="footer fixed">
-                    <div class="pull-right">
-                        10GB of <strong>250GB</strong> Free.
-                    </div>
-                    <div>
-                        <strong>&copy; {title}</strong> Розробка і супровід <a href="https://webspektr.com">Студія Спектр</a>
-                    </div>
-                </div>
-            </div>
-        </div>
--->
+
         </div>
         
         <div id="right-sidebar">
             <div class="sidebar-container">
 
                 <ul class="nav nav-tabs navs-3">
-                    <li class="active"><a data-toggle="tab" href="#tab-1">
-                        Notes
-                    </a></li>
-                    <li><a data-toggle="tab" href="#tab-2">
-                        Projects
-                    </a></li>
-                    <li class=""><a data-toggle="tab" href="#tab-3">
-                        <i class="fa fa-gear"></i>
-                    </a></li>
+                    <li class="active"><a data-toggle="tab" href="#tab-1">Notes</a></li>
+                    <li><a data-toggle="tab" href="#tab-2">Projects</a></li>
+                    <li class=""><a data-toggle="tab" href="#tab-3"><i class="fa fa-gear"></i></a></li>
                 </ul>
 
                 <div class="tab-content">
                     <div id="tab-1" class="tab-pane active">
 
                         <div class="sidebar-title">
-                            <h3> <i class="fa fa-comments-o"></i> Latest Notes</h3>
+                            <h3><i class="fa fa-comments-o"></i> Latest Notes</h3>
                             <small><i class="fa fa-tim"></i> You have 10 new message.</small>
                         </div>
 
@@ -229,15 +135,13 @@
                             <div class="sidebar-message">
                                 <a href="#">
                                     <div class="pull-left text-center">
-                                        <img alt="image" class="img-circle message-avatar" src="img/a1.jpg">
-
+                                        <!--<img alt="image" class="img-circle message-avatar" src="img/a1.jpg">-->
                                         <div class="m-t-xs">
                                             <i class="fa fa-star text-warning"></i>
                                             <i class="fa fa-star text-warning"></i>
                                         </div>
                                     </div>
                                     <div class="media-body">
-
                                         There are many variations of passages of Lorem Ipsum available.
                                         <br>
                                         <small class="text-muted">Today 4:21 pm</small>
@@ -260,7 +164,6 @@
                                     <div class="small pull-right m-t-xs">9 hours ago</div>
                                     <h4>Business valuation</h4>
                                     It is a long established fact that a reader will be distracted.
-
                                     <div class="small">Completion with: 22%</div>
                                     <div class="progress progress-mini">
                                         <div style="width: 22%;" class="progress-bar progress-bar-warning"></div>
@@ -273,7 +176,6 @@
                                     <div class="small pull-right m-t-xs">9 hours ago</div>
                                     <h4>Contract with Company </h4>
                                     Many desktop publishing packages and web page editors.
-
                                     <div class="small">Completion with: 48%</div>
                                     <div class="progress progress-mini">
                                         <div style="width: 48%;" class="progress-bar"></div>
@@ -291,9 +193,7 @@
                         </div>
 
                         <div class="setings-item">
-                            <span>
-                                Show notifications
-                            </span>
+                            <span>Show notifications</span>
                             <div class="switch">
                                 <div class="onoffswitch">
                                     <input type="checkbox" name="collapsemenu" class="onoffswitch-checkbox" id="example">
@@ -306,9 +206,7 @@
                         </div>
 
                         <div class="setings-item">
-                            <span>
-                                Disable Chat
-                            </span>
+                            <span>Disable Chat</span>
                             <div class="switch">
                                 <div class="onoffswitch">
                                     <input type="checkbox" name="collapsemenu" checked class="onoffswitch-checkbox" id="example2">
@@ -321,9 +219,7 @@
                         </div>
 
                         <div class="setings-item">
-                            <span>
-                                Enable history
-                            </span>
+                            <span>Enable history</span>
                             <div class="switch">
                                 <div class="onoffswitch">
                                     <input type="checkbox" name="collapsemenu" class="onoffswitch-checkbox" id="example3">
@@ -336,9 +232,7 @@
                         </div>
 
                         <div class="setings-item">
-                            <span>
-                                Show charts
-                            </span>
+                            <span>Show charts</span>
                             <div class="switch">
                                 <div class="onoffswitch">
                                     <input type="checkbox" name="collapsemenu" class="onoffswitch-checkbox" id="example4">
@@ -351,9 +245,7 @@
                         </div>
 
                         <div class="setings-item">
-                            <span>
-                                Offline users
-                            </span>
+                            <span>Offline users</span>
                             <div class="switch">
                                 <div class="onoffswitch">
                                     <input type="checkbox" checked name="collapsemenu" class="onoffswitch-checkbox" id="example5">
@@ -366,9 +258,7 @@
                         </div>
 
                         <div class="setings-item">
-                            <span>
-                                Global search
-                            </span>
+                            <span>Global search</span>
                             <div class="switch">
                                 <div class="onoffswitch">
                                     <input type="checkbox" checked name="collapsemenu" class="onoffswitch-checkbox" id="example6">
@@ -381,9 +271,7 @@
                         </div>
 
                         <div class="setings-item">
-                            <span>
-                                Update everyday
-                            </span>
+                            <span>Update everyday</span>
                             <div class="switch">
                                 <div class="onoffswitch">
                                     <input type="checkbox" name="collapsemenu" class="onoffswitch-checkbox" id="example7">
@@ -461,6 +349,7 @@
 <script type="text/javascript" src="/js/plugins/datepicker/bootstrap-datepicker.js"></script>
 <script src="/js/plugins/datepicker/bootstrap-datepicker.uk.min.js"></script>
 <script src="/js/plugins/datepicker/moment-with-locales.js"></script>
+<script src="/js/script.js"></script>
 
 <script>
     $(document).ready(function() {
@@ -468,12 +357,13 @@
     });
 </script>
 
-<div style="display: none;" class="modal fade" id="AlertModal" tabindex="-1" role="dialog" aria-labelledby="AlertModalLabel" aria-hidden="true">
+<div style="display: none; z-index: 10001!important;" class="modal fade" id="AlertModal" tabindex="-1" role="dialog" aria-labelledby="AlertModalLabel" aria-hidden="true">
     <div class="modal-dialog  modal-lg">
         <div class="modal-content">
             <div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">Х</button>
                 <h4 class="modal-title" id="AlertModalLabel">Довідник</h4>
-            </div><div id="hiddenModalSpin" style="visibility:hidden; position:absolute;"><div class="spin-icon" style="text-align:center"><i class="fa fa-cogs fa-spin"></i></div></div>
+            </div>
+            <div id="hiddenModalSpin" style="visibility:hidden; position:absolute;"><div class="spin-icon" style="text-align:center"><i class="fa fa-cogs fa-spin"></i></div></div>
             <div class="modal-body" id="AlertModalViewHolder">
                 <div class="spin-icon" style="text-align:center"><i class="fa fa-cogs fa-spin"></i></div>
             </div>

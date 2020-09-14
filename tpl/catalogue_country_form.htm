@@ -22,7 +22,7 @@
             <div class="col-sm-4">
                 <input id="form_country_duty" name="form_country_duty" value="{duty}" type="hidden">
                 <div class="input-group">
-                    <input class="form-control" name="form_country_duty_caption" id="form_country_duty_caption" value="{duty_caption}" readonly type="text">
+                    <input title="Мито" class="form-control" name="form_country_duty_caption" id="form_country_duty_caption" value="{duty_caption}" readonly type="text">
                     <span class="input-group-btn"><button type="button" class="btn btn-primary" onclick="showManual('DUTY','form_country_duty','form_country_duty_caption');"><i class="fa fa-tasks"></i></button></span>
                 </div>
             </div>
@@ -30,7 +30,7 @@
             <div class="col-sm-4">
 	            <input id="form_country_risk" name="form_country_risk" value="{risk}" type="hidden">
                 <div class="input-group">
-                    <input class="form-control" name="form_country_risk_caption" id="form_country_risk_caption" value="{risk_caption}" readonly type="text">
+                    <input title="Ризик" class="form-control" name="form_country_risk_caption" id="form_country_risk_caption" value="{risk_caption}" readonly type="text">
                     <span class="input-group-btn"><button type="button" class="btn btn-primary" onclick="showManual('RISK','form_country_risk','form_country_risk_caption');"><i class="fa fa-tasks"></i></button></span>
                 </div>
             </div>
@@ -40,7 +40,7 @@
     <div class="form-group">
         <div class="col-sm-10 text-right col-sm-offset-2">
             <button class="btn btn-primary" type="button" onClick="saveCatalogueCountryForm();">Зберегти зміни</button>
-            <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+            <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
         </div>
     </div>
 </form>

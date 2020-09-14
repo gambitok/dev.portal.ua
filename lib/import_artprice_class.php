@@ -2,28 +2,6 @@
 
 class import_artprice {
 
-    function getNBUKours($data,$val){$db=DbSingleton::getDb();$kours="";
-        if ($val==1){$val="usd";} if ($val==2){$val="usd";} if ($val==3){$val="euro";}
-        $r=$db->query("select `$val` from kours where data='$data' limit 0,1;");$n=$db->num_rows($r);
-        if ($n==1){$kours=$db->result($r,0,"$val"); }
-        return $kours;
-    }
-
-    function getKourForDate($cash_id_to,$cash_id_from,$data){$db=DbSingleton::getDb(); $kours=1; if ($data=="0000-00-00"){$data=date("Y-m-d");}
-        if ($cash_id_from!=$cash_id_to){
-            $r=$db->query("select `kours_value` from `J_KOURS` 
-            where `cash_id`='$cash_id_from' and `data_from`<='$data' and (`data_to`='0000-00-00' or `data_to`>='$data') and in_use in (0,1) order by id desc limit 0,1;");$n=$db->num_rows($r);
-            if ($n==1){$kours=$db->result($r,0,"kours_value");}
-        }
-        return $kours;
-    }
-
-    function loadIncomeKours($data){
-        $usd_to_uah=$this->getKourForDate(1,2,$data);
-        $eur_to_uah=$this->getKourForDate(1,3,$data);
-        return array($usd_to_uah,$eur_to_uah);
-    }
-
     function show_import_artprice_form(){
         $form="";$form_htm=RD."/tpl/import_artprice_str_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         list(,,$pre_table)=$this->showCsvPreview();
@@ -33,8 +11,10 @@ class import_artprice {
         return $form;
     }
 
-    function showCsvPreview(){$db=DbSingleton::getDb();$csv_exist=0;$fn=0;$kol_cols=0;$csv_file_name="Оберіть файл";$pre_table="<h3 align='center'>Записи не завантажено</h3>"; session_start();$user_id=$_SESSION["media_user_id"];$form="";
-        $r=$db->query("select * from J_IMPORT_ARTPRICE_CSV where user_id='$user_id' order by id desc limit 0,1;");$n=$db->num_rows($r);
+    function showCsvPreview(){$db=DbSingleton::getDb();
+        $csv_exist=0;$fn=0;$kol_cols=0;$csv_file_name="Оберіть файл";$pre_table="<h3 align='center'>Записи не завантажено</h3>";
+        session_start();$user_id=$_SESSION["media_user_id"];$form="";
+        $r=$db->query("SELECT * FROM `J_IMPORT_ARTPRICE_CSV` WHERE `user_id`='$user_id' ORDER BY `id` DESC LIMIT 1;");$n=$db->num_rows($r);
         if ($n==1){
             $file_name=$db->result($r,0,"file_name");
             $file_path=RD."/cdn/import_artprice_files/$user_id/$file_name";
@@ -43,7 +23,6 @@ class import_artprice {
                 $cols_list=""; $records_list="";
                 $handle = @fopen($file_path, "r");
                 if ($handle) {
-                    //$db->query("delete from catalogue_price where provider='$provider';");
                     set_time_limit(0);$max_cols=0;
                     while (($buffer = fgets($handle, 4096)) !== false) {$fn+=1;
                         $buf=explode(";",$buffer);
@@ -54,17 +33,20 @@ class import_artprice {
                             for ($i=1;$i<=$kol_cols;$i++){
                                 if ($i==1){$row="<td>$fn</td>";}
                                 $row.="<td>".trim($buf[$i-1])."</td>";
-                                if ($ex_cols==1){$cols_list.="<th><select id=\"clm-$i\" size='1'><option value='0'>-</option><option value='1'>ART_ID</option><option value='2'>ОС, $</option><option value='3'>Min, %</option>
-                                <option value='4'>0 Прайс</option><option value='5'>1 Прайс</option><option value='6'>2 Прайс</option>
-                                <option value='7'>3 Прайс</option><option value='8'>4 Прайс</option><option value='9'>5 Прайс</option>
-                                <option value='10'>6 Прайс </option><option value='11'>7 Прайс</option><option value='12'>8 Прайс</option>
-                                <option value='13'>9 Прайс</option><option value='14'>10 Прайс</option><option value='15'>11 Прайс</option>
-                                <option value='16'>0 %</option><option value='17'>1 %</option><option value='18'>2 %</option>
-                                <option value='19'>3 %</option><option value='20'>4 %</option><option value='21'>5 %</option>
-                                <option value='22'>6 %</option><option value='23'>7 %</option><option value='24'>8 %</option>
-                                <option value='25'>9 %</option><option value='26'>10 %</option><option value='27'>11 %</option>
+                                if ($ex_cols==1){$cols_list.="<th><select id=\"clm-$i\" size='1'>
+                                    <option value='0'>-</option>
+                                    <option value='1'>ART_ID</option><option value='2'>ОС, $</option><option value='3'>Min, %</option>
+                                    <option value='4'>0 Прайс</option><option value='5'>1 Прайс</option><option value='6'>2 Прайс</option>
+                                    <option value='7'>3 Прайс</option><option value='8'>4 Прайс</option><option value='9'>5 Прайс</option>
+                                    <option value='10'>6 Прайс </option><option value='11'>7 Прайс</option><option value='12'>8 Прайс</option>
+                                    <option value='13'>9 Прайс</option><option value='14'>10 Прайс</option><option value='15'>11 Прайс</option>
+                                    <option value='16'>0 %</option><option value='17'>1 %</option><option value='18'>2 %</option>
+                                    <option value='19'>3 %</option><option value='20'>4 %</option><option value='21'>5 %</option>
+                                    <option value='22'>6 %</option><option value='23'>7 %</option><option value='24'>8 %</option>
+                                    <option value='25'>9 %</option><option value='26'>10 %</option><option value='27'>11 %</option><option value='28'>Валюта</option>
                                 </select></th>";}
-                            }if ($row!=""){
+                            }
+                            if ($row!=""){
                                 $records_list.="<tr>$row</tr>";
                             }
                         }
@@ -82,16 +64,17 @@ class import_artprice {
         return array($csv_exist,$csv_file_name,$pre_table);
     }
 
-    function finishArtpriceCsvImport($start_row,$kol_cols,$cols){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка збереження даних!";
+    function finishArtpriceCsvImport($start_row,$kol_cols,$cols){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();
+        $slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка збереження даних!";
         $start_row=$slave->qq($start_row);$kol_cols=$slave->qq($kol_cols);$cols=$slave->qq($cols);$fn=0;$Per=$Prc=[];
-        $r=$db->query("select * from J_IMPORT_ARTPRICE_CSV where user_id='$user_id' order by id desc limit 0,1;");$n=$db->num_rows($r);
+        $r=$db->query("SELECT * FROM `J_IMPORT_ARTPRICE_CSV` WHERE `user_id`='$user_id' ORDER BY `id` DESC LIMIT 1;");$n=$db->num_rows($r);
         if ($n==1){
             $file_name=$db->result($r,0,"file_name");
             $file_path=RD."/cdn/import_artprice_files/$user_id/$file_name";
             if (file_exists($file_path)){
                 //$form_htm=RD."/tpl/csv_str_file.htm";if (file_exists("$form_htm")){$form=file_get_contents($form_htm);}
                 //$cols_list=""; $records_list="";
-                $art_id=0;$min_price=0;$price[0]=0;$price[1]=0;$price[2]=0;$price[3]=0;$price[4]=0;$price[5]=0;$price[6]=0;
+                $cash_id=0;$art_id=0;$min_price=0;$price[0]=0;$price[1]=0;$price[2]=0;$price[3]=0;$price[4]=0;$price[5]=0;$price[6]=0;
                 $price[7]=0;$price[8]=0;$price[9]=0;$price[10]=0;$price[11]=0;$perc[0]=0;$perc[1]=0;$perc[2]=0;$perc[3]=0;$perc[4]=0;
                 $perc[5]=0;$perc[6]=0;$perc[7]=0;$perc[8]=0;$perc[9]=0;$perc[10]=0;$perc[11]=0;//$oc_price=0;
 
@@ -107,6 +90,7 @@ class import_artprice {
                     if ($cols[$i]==20){$perc[4]=$i;}if ($cols[$i]==21){$perc[5]=$i;}if ($cols[$i]==22){$perc[6]=$i;}if ($cols[$i]==23){$perc[7]=$i;}
                     if ($cols[$i]==24){$perc[8]=$i;}if ($cols[$i]==25){$perc[9]=$i;}if ($cols[$i]==26){$perc[10]=$i;}
                     if ($cols[$i]==27){$perc[11]=$i;}
+                    if ($cols[$i]==28){$cash_id=$i;}
                 }
 
                 $handle = @fopen($file_path, "r");
@@ -118,6 +102,7 @@ class import_artprice {
                             if ($fn>=$start_row){
                                 $buf=str_replace("'","\'",$buf);$buf=str_replace('"','\"',$buf);
                                 $ArtId=trim($buf[$art_id-1]);
+                                $CashId=trim($buf[$cash_id-1]);
                                 //$OcPrice=trim($buf[$oc_price-1]);
                                 $MinPrice=trim($buf[$min_price-1]);
                                 for ($j=0;$j<=$kol_elem;$j++){
@@ -125,17 +110,17 @@ class import_artprice {
                                   $Per[$j]=trim($buf[$perc[$j]-1]);$Per[$j]=str_replace(",",".",$Per[$j]);$Per[$j]=str_replace(" ","",$Per[$j]);
                                 }
                                 if ($ArtId!=0 && $ArtId!="" && $MinPrice!=0 && $MinPrice!="" && $Prc[0]!="" && $Prc[0]!=0 && $Prc[1]!="" && $Prc[1]!=0){
-                                    $r=$dbt->query("select * from T2_ARTICLES_PRICE_RATING where art_id='$ArtId' and in_use='1' limit 0,1;");$n=$dbt->num_rows($r);
+                                    $r=$dbt->query("SELECT * FROM `T2_ARTICLES_PRICE_RATING` WHERE `art_id`='$ArtId' AND `in_use`='1' LIMIT 1;");$n=$dbt->num_rows($r);
                                     if ($n==1){
-                                        $dbt->query("update T2_ARTICLES_PRICE_RATING set in_use='0' where art_id='$ArtId' and in_use='1';");
+                                        $dbt->query("UPDATE `T2_ARTICLES_PRICE_RATING` SET `in_use`='0' WHERE `art_id`='$ArtId' AND `in_use`='1';");
                                     }
-                                    $query="insert into T2_ARTICLES_PRICE_RATING (`art_id`,`in_use`,`data_update`,`user_id`,`template_id`,`minMarkup`";
+                                    $query="INSERT INTO `T2_ARTICLES_PRICE_RATING` (`art_id`,`in_use`,`data_update`,`user_id`,`template_id`,`minMarkup`,`cash_id`";
                                     for ($i=1;$i<=$kol_elem+1;$i++){ $query.=",`price_$i`,`persent_$i`"; }
-                                    $query.=") values ('$ArtId','1',CURDATE(),'$user_id','0','$MinPrice'";
+                                    $query.=") VALUES ('$ArtId','1',CURDATE(),'$user_id','0','$MinPrice','$CashId'";
                                     for ($i=0;$i<=$kol_elem;$i++){
-                                        //$price=$prc[$i];$percent=$prs[$i];
                                         $query.=",'$Prc[$i]','$Per[$i]'";
-                                    } $query.=");";
+                                    }
+                                    $query.=");";
                                     $dbt->query($query);
                                 }
                             }
@@ -143,12 +128,36 @@ class import_artprice {
                     }
                     fclose($handle);
                     if (file_exists(RD."/cdn/import_artprice_files/$user_id/$file_name")){unlink(RD."/cdn/import_artprice_files/$user_id/$file_name");}
-                    $db->query("update J_IMPORT_ARTPRICE_CSV set status=0 where `user_id`='$user_id';");
+                    $db->query("UPDATE `J_IMPORT_ARTPRICE_CSV` SET `status`=0 WHERE `user_id`='$user_id';");
                     $answer=1;$err="";
                 }
             }
         }
         return array($answer,$err);
     }
+
+//    function getNBUKours($data,$val){$db=DbSingleton::getDb();
+//        $kours="";
+//        if ($val==1){$val="usd";} if ($val==2){$val="usd";} if ($val==3){$val="euro";}
+//        $r=$db->query("SELECT `$val` FROM `kours` WHERE `data`='$data' LIMIT 1;");$n=$db->num_rows($r);
+//        if ($n==1){$kours=$db->result($r,0,"$val"); }
+//        return $kours;
+//    }
+
+//    function getKourForDate($cash_id_to,$cash_id_from,$data){$db=DbSingleton::getDb();
+//        $kours=1; if ($data=="0000-00-00"){$data=date("Y-m-d");}
+//        if ($cash_id_from!=$cash_id_to){
+//            $r=$db->query("SELECT `kours_value` FROM `J_KOURS`
+//            WHERE `cash_id`='$cash_id_from' AND `data_from`<='$data' AND (`data_to`='0000-00-00' OR `data_to`>='$data') AND `in_use` IN (0,1) ORDER BY `id` DESC LIMIT 1;");$n=$db->num_rows($r);
+//            if ($n==1){$kours=$db->result($r,0,"kours_value");}
+//        }
+//        return $kours;
+//    }
+
+//    function loadIncomeKours($data){
+//        $usd_to_uah=$this->getKourForDate(1,2,$data);
+//        $eur_to_uah=$this->getKourForDate(1,3,$data);
+//        return array($usd_to_uah,$eur_to_uah);
+//    }
 
 }

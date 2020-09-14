@@ -3,7 +3,7 @@
 <link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
 <link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
 
-<h2 class=" border-bottom white-bg dashboard-header">Журнал переміщень</h2>
+<h2 class="border-bottom white-bg dashboard-header">Журнал переміщень</h2>
 <input type="hidden" id="doc_prefix" value="{doc_prefix}">
 
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -13,7 +13,7 @@
                 <div class="ibox-title">
                     <div class="row">
                         <div class="col-md-6">
-							<a class="btn btn-success"  href="#newJmoving" onClick="preNewJmovingCard();"><i class='fa fa-plus'></i> Нове переміщення</a>
+							<a class="btn btn-success" href="#newJmoving" onClick="preNewJmovingCard();"><i class='fa fa-plus'></i> Нове переміщення</a>
 							<a id="toggle_done" class="btn btn-info" onclick="updateJmovingRange(true);" title="Показати/Сховати пусті замовлення зі статусом `Створення`"><i class="fa fa-eye"></i></a>
 							<input id="input_done" type="hidden" value="true">
 							<a id="toggle_update" class="btn btn-danger" onclick="autoUpdateJmoving(true);" title="Включити/виключити автооновлення таблиці"><i class="fa fa-stop-circle"></i></a>
@@ -32,12 +32,12 @@
                                     <div class="col-md-3 text-right"><strong>Найменування</strong></div>
                                     <div class="col-md-9"><input class="form-control" name="filJmovingName" id="filJmovingName" placeholder="Повна або часткова назва" value=""></div>
                                 </div><br>
-                               </div>
+                           </div>
                             <div class="col-md-4">
                         		<div class="row">
                                     <div class="col-md-3 text-right"><strong>Дата</strong></div>
                                     <div class="col-md-4">
-										<input class="form-control" type="text" name="filDataFrom" id="filDataFrom" placeholder="РРРР-ММ-ДД" value=""  data-provide="datepicker" data-date-format="yyyy-mm-dd">
+										<input class="form-control" type="text" name="filDataFrom" id="filDataFrom" placeholder="РРРР-ММ-ДД" value="" data-provide="datepicker" data-date-format="yyyy-mm-dd">
 									</div>
                                     <div class="col-md-4">
 										<input class="form-control" type="text" name="filDataTo" id="filDataTo" placeholder="рррр-мм-дд" value="" data-provide="datepicker" data-date-format="yyyy-mm-dd">
@@ -45,7 +45,7 @@
                                 </div><br>
 								<div class="row">
                                     <div class="col-md-3 text-right"><strong>Статус</strong></div>
-                                    <div class="col-md-9"><select class="form-control" size="1" id="filStatusMain"><option value="0">-Не вибрано-</option>{status_main_list}</select></div>
+                                    <div class="col-md-9"><select class="form-control" size="1" id="filStatusMain" title="Статус"><option value="0">-Не вибрано-</option>{status_main_list}</select></div>
                                 </div><br>
                                 <div class="row">
 	                                <div class="col-md-3"></div>
@@ -57,7 +57,7 @@
                         </form>
 					</div>
                     <div class="table-responsive">
-                        <table  id="datatable" class="table table-striped table-hover table-bordered" width="100%">
+                        <table id="datatable" class="table table-striped table-hover table-bordered" width="100%">
                             <thead>
                                 <tr align="center">
 									<th width="50px">#</th>
@@ -76,12 +76,11 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
 
-<div id="JmovingCard" class="modal inmodal fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog"  aria-hidden="true">
+<div id="JmovingCard" class="modal inmodal fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header">
@@ -111,7 +110,7 @@
     </div>
 </div>
 
-<div style="display: none;" id="JmovingPreSelect" class="modal fade JmovingPreSelect" tabindex="-1" role="dialog" data-backdrop="static"  data-keyboard="false" aria-hidden="true">
+<div style="display: none;" id="JmovingPreSelect" class="modal fade JmovingPreSelect" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true" onClick="clearJmovingStorageSelect();">х</button><h3 id="JmovingPreSelectLabel" class="text-left"></h3></div>
@@ -119,7 +118,8 @@
         </div>
     </div>
 </div>
-<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel" class="text-left"></h3></div>
@@ -127,7 +127,8 @@
         </div>
     </div>
 </div>
-<div style="display: none;" id="FormModalWindow2" class="modal fade FormModalWindow2" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none;" id="FormModalWindow2" class="modal fade FormModalWindow2" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel2" class="text-left"></h3></div>
@@ -135,6 +136,7 @@
         </div>
     </div>
 </div>
+
 <div style="display: none;" id="FormModalWindow3" class="modal fade FormModalWindow3" tabindex="-1" role="dialog" data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -143,6 +145,7 @@
         </div>
     </div>
 </div>
+
 <div style="display: none;" id="FormModalWindow4" class="modal fade FormModalWindow3" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog modal-wide2">
         <div class="modal-content">
@@ -151,7 +154,8 @@
         </div>
     </div>
 </div>
-<div style="display: none;" id="FormModalWindow5" class="modal fade FormModalWindow5" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none;" id="FormModalWindow5" class="modal fade FormModalWindow5" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel5" class="text-left"></h3></div>
@@ -159,6 +163,24 @@
         </div>
     </div>
 </div>
+
+<div style="display: none;" class="modal inmodal fade fileJmovingCsvUploadForm" id="fileJmovingCsvUploadForm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">Х</button>
+                <h4 class="modal-title" id="myModalLabel2">Завантаження файлів</h4>
+            </div>
+            <div class="modal-body" id="fileViewHolderDoc2">
+                <p>Для завантаження файлів натисніть на форму або перетягніть файли у поле форми</p>
+                <form action="/cdn_file_jmoving_upload.php" class="dropzone" id="myDropzone3" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csv_jmoving_id" id="csv_jmoving_id" value="">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript" src="/js/plugins/barcode-generator/jquery-barcode.js"></script>
 <!-- Bootstrap markdown -->
 <script src="/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>
@@ -175,7 +197,7 @@
 <script src="/js/jmoving/jmoving.js?201705301435"></script>
 <script language="javascript">
 $(document).ready(function() {
-	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+	$("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
 });
 </script>
 <script type="text/javascript">

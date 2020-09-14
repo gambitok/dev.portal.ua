@@ -3,11 +3,10 @@ $access=new access; $mf="buh_back";
 list($accss,$acc_lvl)=$access->check_user_access($mf);$alg_u=0;
 
 if ($accss=="1"){
-    require_once (RD."/lib/buh_back_class.php");
-	$buh_back=new buh_back;
+    require_once (RD."/lib/back_clients_class.php");$back_clients=new back_clients;
 	$form_htm=RD."/tpl/buh_back.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 
-	$buh_range=$buh_back->show_back_clients_list();
+	$buh_range=$back_clients->show_buh_back_clients_list();
 	$form=str_replace("{buh_back_range}", $buh_range, $form);
 
 	$content=str_replace("{work_window}", $form, $content);

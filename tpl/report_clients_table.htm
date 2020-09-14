@@ -1,5 +1,4 @@
-
-<h2>СУМА: {summ_reports} {cash_abr}</h2>
+<h2>Сума продаж: <b>{summ_reports} {cash_abr}</b></h2> <br>
 
 <div class="table-responsive">
 	<table id="datatable" class="table table-striped table-hover table-bordered" width="100%">
@@ -13,6 +12,10 @@
 				<th>Продажі</th>
 				<th>Повернення</th>
 				<th>Сума</th>
+				<th>Прострочена сума на дату</th>
+				<th>Виплати по клієнту</th>
+				<th>Загальна заборгованість</th>
+				<th>Сума по накладним</th>
 			</tr>
 		</thead>
 		<tbody id="report_clients_range">
@@ -23,6 +26,6 @@
 
 <script language="javascript">
 $(document).ready(function() {
-	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+	$("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
 });
 </script>

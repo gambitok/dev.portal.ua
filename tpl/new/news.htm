@@ -14,14 +14,14 @@
             <div class="ibox">
                 <div class="ibox-title">
                     <div class="row">
-                        <div class="col-md-1"><a class="btn btn-success"  href="#newNews" onClick="newNewsCard();"><i class='fa fa-plus'></i> Нова новина</a>
+                        <div class="col-md-1"><a class="btn btn-success"  href="#newNews" onClick="newNewsCard();"><i class="fa fa-plus"></i> Нова новина</a>
 						</div>
 						<div class="col-md-3">
-						<select name="lang_select" class="form-control" id="lang_select">
-							<option value="1">Російська</option>
-							<option value="5">Українська</option>
-							<option value="2">Англійська</option>	
-						</select>
+                            <select title="Мова" name="lang_select" class="form-control" id="lang_select">
+                                <option value="1">Російська</option>
+                                <option value="5">Українська</option>
+                                <option value="2">Англійська</option>
+                            </select>
 						</div>
 	                </div>
                 </div>
@@ -71,7 +71,7 @@
             </div>
             <div class="modal-body" id="fileViewHolderFoto">
                 <p>Для завантаження фото натисніть на форму або перетягніть файли у поле форми</p>
-                <form action="/images/news_photo_upload.php" class="dropzone" id="myDropzone3" enctype="multipart/form-data">
+                <form action="/news_photo_upload.php" class="dropzone" id="myDropzone3" enctype="multipart/form-data">
                     <input type="hidden" name="photo_news_id" id="photo_news_id" value="">
                     <input type="hidden" name="photo_lang_id" id="photo_lang_id" value="">
                     <input type="hidden" name="photo_file_id" id="photo_file_id" value="">
@@ -94,7 +94,7 @@
 
 <script language="javascript">
 $(document).ready(function() {
-	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
+	$("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
 });
 </script>
 

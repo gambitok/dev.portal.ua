@@ -15,6 +15,7 @@ require_once (RD."/lib/module_class.php");
 require_once (RD."/lib/access_class.php");
 require_once (RD."/lib/catalogue_class.php");
 require_once (RD."/lib/clients_class.php");
+require_once (RD."/lib/storage_class.php");
 require_once (RD."/lib/storage_reports_class.php"); $storage_reports=new storage_reports;
 
 $w=$_REQUEST["w"];

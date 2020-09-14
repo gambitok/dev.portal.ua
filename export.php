@@ -4,6 +4,7 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_WARNING);
 set_include_path( get_include_path().PATH_SEPARATOR."..");
 define('RD', dirname (__FILE__));
 $content=null;
+require_once (RD."/lib/DbSingleton.php");
 require_once (RD."/lib/mysql_class.php");
 require_once (RD."/lib/slave_class.php");
 require_once (RD."/lib/manual_class.php");
@@ -26,9 +27,9 @@ if ($w=="incomeUnStr"){
 		header('Content-Type: text/csv; charset=utf-8');
 		header('Content-Disposition: attachment; filename=data.csv');
 		$output = fopen('php://output', 'w');
-		fputcsv($output, array('#', 'ART_ID', 'Індекс товару', 'Бренд', 'Країна Абр', 'Код УКТЗЕД', 'Кількість', 'Ціна', 'Вага Нетто', 'Коментар'));
+		fputcsv($output, array('#', 'ART_ID', 'Індекс товару', 'Бренд', 'Країна Абр', 'Код УКТЗЕД', 'Кількість', 'Ціна', 'Вага Нетто', 'Коментар'), $delimiter = ';');
 		foreach ($csv_content as $fields) {
-			fputcsv($output, $fields);
+			fputcsv($output, $fields, $delimiter = ';');
 		}
 	}
 }
@@ -37,4 +38,18 @@ if ($w=="SIRP"){
 	$si_id=$_REQUEST["sid"];
 	$sale_invoice->exportSaleInvoiceExcel($si_id);
 	//exit(0);
+}
+
+if ($w=="incomeStr"){
+    $income_id=$_REQUEST["income_id"];
+    if ($income_id!="" && is_numeric($income_id)){
+        $csv_content=$income->exportIncomeStr($income_id);
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename=data.csv');
+        $output = fopen('php://output', 'w');
+        fputcsv($output, array('Индекс ТОКО', 'Описание', 'Номер в программе', 'Количество', 'Каталожный номер', 'Номер по приходу'), $delimiter = ';');
+        foreach ($csv_content as $fields) {
+            fputcsv($output, $fields, $delimiter = ';');
+        }
+    }
 }

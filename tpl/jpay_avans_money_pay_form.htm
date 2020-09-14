@@ -1,4 +1,3 @@
-<!---   PAY TAB BLOCK   -->
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <form method="get" onSubmit="return false;" class="form-horizontal">
@@ -21,39 +20,38 @@
                     <div class="form-group">
                         <label class="col-md-4 col-sm-12 control-label">Валюта договору</label>
                         <div class="col-md-7 col-sm-12">
-                            <input type="text" id="doc_cash_name" class="form-control numbers" readonly value='{doc_cash_name}'>
+                            <input title=">Валюта договору" type="text" id="doc_cash_name" class="form-control numbers" readonly value='{doc_cash_name}'>
                         </div> 
                     </div>
                     <div class="form-group">
-                        <label class="col-md-4 col-sm-12 col-sm-4 control-label">Вид оплаты</label>
+                        <label class="col-md-4 col-sm-12 col-sm-4 control-label">Вид оплати</label>
                         <div class="col-md-7 col-sm-12">
-                            <select size="1" id="pay_type_id" {pay_type_id_disabled} class="form-control"><option value="0">--Оберіть зі списку--</option>{pay_type_list}</select>
+                            <select title="Вид оплати" size="1" id="pay_type_id" {pay_type_id_disabled} class="form-control"><option value="0">--Оберіть зі списку--</option>{pay_type_list}</select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-4 col-sm-12 control-label">Борг клієнта, <span id="client_cash_name">{cash_name}</span></label>
                         <div class="col-md-7 col-sm-12">
-                            <input type="text" id="client_balans" class="form-control numbers" readonly value='0' min='1' max="">
+                            <input title="Борг клієнта" type="text" id="client_balans" class="form-control numbers" readonly value='0' min='1' max="">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-4 col-sm-12 control-label">Баланс авансу клієнта, <span id="client_balans_cash_name">{cash_name}</span></label>
                         <div class="col-md-7 col-sm-12">
-                            <input type="text" id="client_balans_avans" class="form-control numbers" readonly value='{client_balans_avans}'>
+                            <input title="Баланс авансу клієнта" type="text" id="client_balans_avans" class="form-control numbers" readonly value='{client_balans_avans}'>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-4 col-sm-12 control-label">Сума оплати з авансу</label>
                         <div class="col-md-7 col-sm-12">
-                            <input type="text" id="avans_kredit" readonly class="form-control numbers" value='{avans_kredit}' min='1' max="">
+                            <input title="Сума оплати з авансу" type="text" id="avans_kredit" readonly class="form-control numbers" value='{avans_kredit}' min='1' max="">
                         </div>
                     </div>
-                   
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <div class="col-sm-12 text-right">
                             <button id="jpay_save" class="btn btn-primary" type="button" onClick="saveJpayAvansMoneyPay();">Зафіксувати</button>
-                            <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                            <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
                         </div>
                     </div>
 	            </div>

@@ -5,8 +5,7 @@
 <link rel="stylesheet" href="/css/plugins/chosen-1.8.3/docsupport/prism.css">
 <link rel="stylesheet" href="/css/plugins/chosen-1.8.3/chosen.css">
 
-
-<h2 class=" border-bottom white-bg dashboard-header">Наявність на складах</h2>
+<h2 class="border-bottom white-bg dashboard-header">Наявність на складах</h2>
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -16,24 +15,20 @@
                     <div class="tabs-container">
 						<div class="panel-body">
 							<div class="ibox float-e-margins">
-								
 								<div class="row">
 								
 									<div class="col-sm-6 col-lg-6">
 									    <label style="padding-right: 15px; padding-left: 30px;">Склади</label>
-										<select id="storages" name="storages[]" data-placeholder="Вибрати склади" class="chosen-select" multiple tabindex="4" style="width: 250px;">
+										<select id="storages" title="Склади" name="storages[]" data-placeholder="Вибрати склади" class="chosen-select" multiple tabindex="4" style="width: 250px;">
 											{storages_list}
 										</select>
 									</div>						
 									
-
 									<div class="col-sm-6 col-lg-6" style="float:right;">
 										<button type="button" class="btn btn-info" onClick="exportStorageReports();"><i class="fa fa-print"></i> Експорт рахунку</button>
 									</div>
 								
-											
 								</div>
-								
 							</div>
 						</div>
 					</div>

@@ -3,22 +3,15 @@
 <link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
 <link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
 
-<h2 class=" border-bottom white-bg dashboard-header">Незареєстровані користувачі</h2>
+<h2 class="border-bottom white-bg dashboard-header">Незареєстровані користувачі</h2>
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-md-offset-3 col-md-12 col-md-pull-3">
             <div class="ibox">
-<!--
-                <div class="ibox-title">
-                    <div class="row">
-                        <div class="col-md-6"><a class="btn btn-success"  href="#newClientRetail" onClick="newClientRetailCard();"><i class='fa fa-plus'></i> Новий користувач</a></div>
-	                </div>
-                </div>
--->
                 <div class="ibox-content">
                     <div class="table-responsive">
-                        <table  id="datatable" class="table table-striped table-hover table-bordered" width="100%">
+                        <table id="datatable" class="table table-striped table-hover table-bordered" width="100%">
                             <thead>
                                 <tr align="center">
                                     <th>Код</th>
@@ -33,17 +26,15 @@
                                 </tr>
                             </thead>
                             <tbody id="clients_range">
-							{clients_range}
+							    {clients_range}
                             </tbody>
 						</table>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
-
 
 <div id="ClientRetailCard" class="modal inmodal fade" tabindex="-1" role="dialog"  aria-hidden="true">
     <div class="modal-dialog modal-wide">
@@ -70,7 +61,7 @@
 <script src="/js/clients/clients.js?201705301435"></script>
 <script language="javascript">
 $(document).ready(function() {
-	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+	$("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
 });
 </script>
 <script type="text/javascript">

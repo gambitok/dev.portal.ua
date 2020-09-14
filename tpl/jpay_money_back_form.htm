@@ -1,4 +1,3 @@
-<!---   PAY TAB BLOCK   -->
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <form method="get" onSubmit="return false;" class="form-horizontal">
@@ -21,19 +20,19 @@
                     <div class="form-group">
                         <label class="col-md-4 col-sm-12 control-label">Валюта договору</label>
                         <div class="col-md-7 col-sm-12">
-                            <input type="text" id="doc_cash_name" class="form-control numbers" readonly value='{doc_cash_name}'>
+                            <input title="Валюта договору" type="text" id="doc_cash_name" class="form-control numbers" readonly value='{doc_cash_name}'>
                         </div> 
                     </div>
                     <div class="form-group">
                         <label class="col-md-4 col-sm-12 col-sm-4 control-label">Вид виплати</label>
                         <div class="col-md-7 col-sm-12">
-                            <select size="1" id="pay_type_id" {pay_type_id_disabled} class="form-control"><option value="0">--Оберіть зі списку--</option>{pay_type_list}</select>
+                            <select title="Вид виплати" size="1" id="pay_type_id" {pay_type_id_disabled} class="form-control"><option value="0">--Оберіть зі списку--</option>{pay_type_list}</select>
                         </div>
                     </div>
 					<div class="form-group">
                         <label class="col-md-4 col-sm-12 control-label">Каса</label>
                         <div class="col-md-7 col-sm-12">
-                            <select size="1" id="paybox_id" class="form-control" onChange="getPayBoxBalans();"><option value="0">--Оберіть зі списку--</option>{paybox_list}</select>
+                            <select title="Каса" size="1" id="paybox_id" class="form-control" onChange="getPayBoxBalans();"><option value="0">--Оберіть зі списку--</option>{paybox_list}</select>
                         </div>
                     </div>
                     <div class="form-group">
@@ -43,13 +42,13 @@
                     <div class="form-group">
                         <label class="col-md-4 col-sm-12 control-label">Баланс авансу клієнта, <span id="client_balans_cash_name">{cash_name}</span></label>
                         <div class="col-md-7 col-sm-12">
-                            <input type="text" id="client_balans_avans" class="form-control numbers" readonly value='{client_balans_avans}'>
+                            <input title="Баланс авансу клієнта" type="text" id="client_balans_avans" class="form-control numbers" readonly value='{client_balans_avans}'>
                         </div>
                     </div>
 					<div class="form-group">
 						<label class="col-md-4 col-sm-12 control-label">Валюта виплати</label>
 						<div class="col-md-3 col-sm-12">
-							<select size="1" id="cash_id" class="form-control" onChange="getCashKours();"><option value="0">--Оберіть зі списку--</option>{cash_list}</select>
+							<select title="Валюта виплати" size="1" id="cash_id" class="form-control" onChange="getCashKours();"><option value="0">--Оберіть зі списку--</option>{cash_list}</select>
 						</div>
                 		<label class="col-md-1 col-sm-4 control-label">Курс</label>
                 		<div class="col-md-3 col-sm-7">
@@ -62,15 +61,14 @@
                     <div class="form-group">
                         <label class="col-md-4 col-sm-12 control-label">Сума виплати з авансу</label>
                         <div class="col-md-7 col-sm-12">
-                            <input type="text" id="avans_debit" class="form-control numbers" value='{avans_debit}' min='0' max="">
+                            <input title="Сума виплати з авансу" type="text" id="avans_debit" class="form-control numbers" value='{avans_debit}' min='0' max="">
                         </div>
                     </div>
-                   
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <div class="col-sm-12 text-right">
                             <button id="jpay_save" class="btn btn-primary" type="button" onClick="saveJpayMoneyBackPay();">Зафіксувати</button>
-                            <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                            <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
                         </div>
                     </div>
 	            </div>

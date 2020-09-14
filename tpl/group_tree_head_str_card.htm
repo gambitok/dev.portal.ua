@@ -1,4 +1,5 @@
 <div class="tabs-container">
+
     <ul class="nav nav-tabs" id="tree_tabs">
         <li class="active"><a data-toggle="tab" href="#tab1" onclick="updateGroupTreeHeadStr('{group_id}');"><i class="fa fa-bars"></i> <span class="hidden-sm-down not-visible">Загальна інформація</span></a></li>
     </ul>
@@ -19,6 +20,12 @@
                                         {category_list}
                                     </select>
                                 </div>
+                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Позиція</label>
+                                <div class="col-sm-2">
+                                    <select title="Виберіть позицію" class="form-control" name="position_list" id="position_list">
+                                        {position_list}
+                                    </select>
+                                </div>
                             </div>
 
                             <div class="form-group">
@@ -31,16 +38,14 @@
                                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Каталог</label>
                                 <div class="col-sm-2">
                                     <select title="Виберіть каталог" class="form-control" name="str_list" id="str_list">
+                                        <option value="0">-Не вибрано-</option>
                                         {tree_list}
                                     </select>
                                 </div>
-                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Позиція</label>
-                                <div class="col-sm-2">
-                                    <select title="Виберіть позицію" class="form-control" name="position_list" id="position_list">
-                                        {position_list}
-                                    </select>
-                                </div>
+                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Назва (посилання)</label>
+                                <div class="col-sm-2"><input class="form-control" type="text" name="disp_text_link" id="disp_text_link" value="{disp_text_link}" placeholder=""></div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
 
                             <div class="form-group">
@@ -55,21 +60,23 @@
                             <div class="hr-line-dashed"></div>
 
                             <div class="form-group">
-                                <label class="col-lg-2 col-md-2 col-sm-2 control-label">
-                                    Зображення
-                                </label>
+                                <label class="col-lg-2 col-md-2 col-sm-2 control-label">Зображення</label>
                                 <div class="col-lg-10 col-md-10 col-sm-10">
-                                    <img src="{group_img}" alt="image" style="width:250px; height: 250px;"><br>
-                                    <a onclick="showUploadPhotoForm('group','{group_id}');" class="btn btn-primary"><i class="fa fa-upload"></i> Завантажити зображення</a>
-                                    <a onclick="dropUploadPhotoForm('group','{group_id}');" class="btn btn-danger"><i class="fa fa-remove"></i> Видалити зображення</a>
+                                    <img src="{group_img}" alt="image" style="width:200px; height: 200px;"><br>
+                                    <div class="btn-group">
+                                        <a onclick="showUploadPhotoForm('group','{group_id}');" class="btn btn-primary btn-sm"><i class="fa fa-upload"></i> Завантажити </a>
+                                        <a onclick="dropUploadPhotoForm('group','{group_id}');" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i> Видалити </a>
+                                    </div>
                                 </div>
                             </div>
 
+                            <div class="hr-line-dashed"></div>
+
                             <div class="form-group">
                                 <div class="col-sm-10 text-right col-sm-offset-2">
-                                    <button class="btn btn-primary" type="button" onClick="saveGroupTreeHeadStrCard('{group_id}');">Зберегти зміни</button>
-                                    <button class="btn btn-danger" type="button" onClick="dropGroupTreeHeadStr('{group_id}');" {disabled}>Видалити</button>
-                                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                                    <button class="btn btn-primary" type="button" onClick="saveGroupTreeHeadStrCard('{group_id}');"><i class="fa fa-save"></i> Зберегти зміни</button>
+                                    <button class="btn btn-danger" type="button" onClick="dropGroupTreeHeadStr('{group_id}');" {disabled}><i class="fa fa-trash"></i> Видалити</button>
+                                    <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
                                 </div>
                             </div>
 

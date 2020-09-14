@@ -1,4 +1,5 @@
 <div class="tabs-container">
+
     <ul class="nav nav-tabs" id="catalogue_tabs">
         <li class="active"><a data-toggle="tab" href="#cat_tab1" onClick="showIncomeCard('{income_id}');"><i class="fa fa-bars"></i> <span class="hidden-sm-down">Структура накладної</span></a></li>
         <li><a data-toggle="tab" href="#cat_tab7" onClick="loadIncomeUnknownArticles('{income_id}');"><i class="fa fa-bug"></i> <span class="hidden-sm-down">Не визначені артикули <span id="label_un_articles">{labelArticlesUnKnownCount}</span></span></a></li>
@@ -7,6 +8,7 @@
         <li class="tab-count-info"><a data-toggle="tab" class="tab-count-info" href="#cat_tab8" onClick="loadIncomeCommets('{income_id}');"><i class="fa fa-edit"></i> Замітки <span id="label_comments">{labelCommentsCount}</span></a></li>
         <li><a data-toggle="tab" href="#cat_tab9" onClick="loadIncomeCDN('{income_id}');"><i class="fa fa-cloud"></i> <span class="hidden-sm-down">CDN Файли</span></a></li>
     </ul>
+
     <div class="tab-content">
         <div id="cat_tab1" class="tab-pane active">
             <div class="panel-body">
@@ -15,7 +17,7 @@
                         <form method="get" class="form-horizontal" onSubmit="return false;">
 							<input type="hidden" id="income_id" value="{income_id}">
                             <input type="hidden" id="income_type_id" value="{type_id}">
-							 <input type="hidden" id="income_oper_status" value="{oper_status}">
+							<input type="hidden" id="income_oper_status" value="{oper_status}">
                             <input type="hidden" id="income_document_prefix" value="{doc_prefix}">
                             <input type="hidden" id="income_spend_item_1" value="{income_spend_item_1}">
                             <input type="hidden" id="income_spend_item_2" value="{income_spend_item_2}">
@@ -27,7 +29,6 @@
                             <div class="form-group">
                             	<label class="col-sm-2 control-label">Дата</label>
                                 <div class="col-sm-3"><input class="form-control" type="text" name="income_data" id="income_data" readonly value="{data}" placeholder="РРРР-ММ-ДД"></div>
-								
                                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Постачальник</label>
                                 <div class="col-lg-3 col-md-2 col-sm-7">
                                     <input type="hidden" id="client_seller" name="client_seller" value="{client_seller}">
@@ -49,7 +50,6 @@
                                         <span class="input-group-btn"> <button type="button" {oper_disabled} class="btn btn-default" id="clientDropBtn" onClick="unlinkIncomeClient('{income_id}');"><i class="fa fa-times"></i></button> </span>
                                     </div>
                                 </div>
-								
 								<label class="col-sm-2 control-label">Вхідний документ</label>
 								<div class="col-sm-3"><input class="form-control" type="text" {oper_disabled} name="invoice_income" id="invoice_income" value="{invoice_income}" placeholder="Номер накладної, інвойсу"><input type="hidden" id="hidden_invoice_income" name="hidden_invoice_income" value=""></div> 
                             </div>
@@ -57,7 +57,6 @@
                             <div class="form-group">
                                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Курс валюти до грн.</label>
                                 <div class="col-lg-3 col-md-2 col-sm-8"><input class="form-control {oper_disabled} currencyOnly" type="text" name="cours_to_uah" id="cours_to_uah" value="{cours_to_uah}" placeholder=""></div>
-								
 								<label class="col-sm-2 control-label">Дата вхідного документу</label>
 								<div class="col-sm-3"><input class="form-control" type="text" {oper_disabled} name="invoice_data" id="invoice_data" value="{invoice_data}" placeholder=""></div>
                             </div>
@@ -65,30 +64,29 @@
 							<div class="form-group">
 								<label class="col-sm-2 control-label">Склад зберігання</label>
 								<div class="col-sm-3">
-									<select id="storage_id" {oper_disabled} name="storage_id" size="1" onChange="loadStorageCellsSelectList()">{storage_list}</select>
+									<select id="storage_id" {oper_disabled} name="storage_id" size="1" onChange="loadStorageCellsSelectList()" title="Склад">{storage_list}</select>
 								</div>
 								
 								<label class="col-lg-2 col-md-2 col-sm-4 control-label">Валюта</label>
-								<div class="col-lg-3 col-md-2 col-sm-8"><select class="form-control" {oper_disabled} size="1" name="cash_id" id="cash_id" style="width:100%;">{cash_list}</select></div>
+								<div class="col-lg-3 col-md-2 col-sm-8"><select class="form-control" {oper_disabled} size="1" name="cash_id" id="cash_id" style="width:100%;" title="Валюта">{cash_list}</select></div>
 							</div>
 							
 							<div class="form-group">
 								<label class="col-sm-2 control-label">Комірка зберігання</label>
 								<div class="col-sm-3">
-									<select id="storage_cells_id" {oper_disabled} name="storage_cells_id" size="1">{storage_cells_list}</select>
+									<select id="storage_cells_id" {oper_disabled} name="storage_cells_id" size="1" title="Комірка">{storage_cells_list}</select>
 								</div>
-								
 								<label class="col-lg-2 col-md-2 col-sm-4 control-label">Сума</label>
                                 <div class="col-lg-3 col-md-2 col-sm-8"><input class="form-control numberOnly" {oper_disabled} type="text" name="invoice_summ" id="invoice_summ" value="{invoice_summ}" placeholder=""></div>
 							</div>
 							
 							<div class="form-group">
 								<div class="col-sm-5 text-right">
-<!--									<button class="btn btn-primary" type="button" onClick="saveIncomeStorage('{income_id}');">Зберегти</button>-->
+                                    <!--<button class="btn btn-primary" type="button" onClick="saveIncomeStorage('{income_id}');">Зберегти</button>-->
 								</div>
                                 <div class="col-sm-5 col-sm-offset-2">
                                     <span class="buttons-inline pull-left">
-                                    	<input type="checkbox" {oper_disabled} class="js-switch" data-size="small" id="vat_use" {vat_checked} onChange="setIncomeVat();" /> - з ПДВ
+                                    	<input type="checkbox" {oper_disabled} class="js-switch" data-size="small" id="vat_use" {vat_checked} onChange="setIncomeVat();" title="vat_use"> - з ПДВ
                                     </span>
                                  </div>
                             </div>
@@ -96,8 +94,8 @@
 							<div class="form-group">										
 								<div class="col-sm-5 col-sm-offset-7">
 									<label class="control-label text center">Довідник курс валют: 
-											$ <span id="usd_to_uah_text">{usd_to_uah}</span>, &euro; <span id="eur_to_uah_text">{eur_to_uah}</span> &nbsp;<input type="hidden" name="usd_to_uah" id="usd_to_uah" value="{usd_to_uah}"><input type="hidden" name="eur_to_uah" id="eur_to_uah" value="{eur_to_uah}">
-											<button class="btn btn-xs btn-primary" {oper_disabled} onClick="loadIncomeKours();"><i class="fa fa-refresh" title="отримати курс"></i></button>
+                                        $ <span id="usd_to_uah_text">{usd_to_uah}</span>, &euro; <span id="eur_to_uah_text">{eur_to_uah}</span> &nbsp;<input type="hidden" name="usd_to_uah" id="usd_to_uah" value="{usd_to_uah}"><input type="hidden" name="eur_to_uah" id="eur_to_uah" value="{eur_to_uah}">
+                                        <button class="btn btn-xs btn-primary" {oper_disabled} onClick="loadIncomeKours();"><i class="fa fa-refresh" title="отримати курс"></i></button>
 									</label>
 								</div>
 							</div>
@@ -110,11 +108,15 @@
 									<button type="button" class="btn btn-warning" {hide_calculate_button} onClick="recalculateIncomeStrLocal();"><i class="fa fa-calculator"></i> Перерахунок цін</button>
                                     <button type="button" class="btn btn-success" {hide_import_button} onClick="importIncomeStrCSV('{income_id}');"><i class="fa fa-table"></i> Імпорт CSV</button>
 									<button type="button" class="btn btn-default" {hide_new_row_button} onClick="clearIncomeStr('{income_id}');"><i class="fa fa-times"></i> Очистити структуру</button>
+                                    <button type="button" class="btn btn-default" {oper_disabled2} onclick="setIncomeBarcodes('{income_id}');"><i class="fa fa-barcode"></i> Заповнити штрих-коди</button>
+                                    <button type="button" class="btn btn-default" {oper_disabled2} onclick="setIncomePrices('{income_id}');"><i class="fa fa-money"></i> Заповнити прайси</button>
+                                    <button type="button" class="btn btn-default" {oper_disabled2} onclick="recalculateMadeIncome('{income_id}');"><i class="fa fa-percent"></i> Перерахунок проведеного документа</button>
                                 </div>
                                 <div class="col-sm-4 text-right">
-                                    <button class="btn btn-primary" type="button" {oper_disabled} onClick="saveIncomeCard();">Зберегти зміни</button>
-									<button id="make_income" class="btn btn-warning" type="button" {oper_disabled} onClick="makeIncomeCardFinish();">Провести накладну</button>
-                                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                                    <button class="btn btn-primary" type="button" {oper_disabled} onClick="saveIncomeCard();"><i class="fa fa-save"></i> Зберегти зміни</button>
+									<button id="make_income" class="btn btn-warning" type="button" {oper_disabled} onClick="makeIncomeCardFinish();"><i class="fa fa-code"></i> Провести накладну</button>
+                                    <button class="btn btn-primary" onclick="exportIncomeStr('{income_id}');"><i class="fa fa-file-excel-o"></i> Експорт позицій</button>
+                                    <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
                                 </div>
                             </div>
 							
@@ -147,7 +149,7 @@
                                             </tr>
                                         </thead>
                                         <tbody id="income_shild_range">
-                                        {incomeChildsList}
+                                            {incomeChildsList}
                                         </tbody>
                                     </table>
                                     </div>
@@ -157,10 +159,10 @@
                         </form>
                     </div>
                 </div>
-                
-                
+
             </div>
         </div>
+
         <div id="cat_tab2" class="tab-pane">
             <div class="panel-body" id="spend_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
@@ -178,16 +180,19 @@
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
         <div id="cat_tab5" class="tab-pane">
             <div class="panel-body gray-bg" id="contacts_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
         <div id="cat_tab7" class="tab-pane">
             <div class="panel-body" id="unknown_articles_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
         <div id="cat_tab8" class="tab-pane">
             <div class="panel-body">
                 <div class="social-footer">
@@ -212,9 +217,9 @@
                 </div>
             </div>
         </div>
+
         <div id="cat_tab9" class="tab-pane">
             <div class="panel-body">
-            <!--   PHOTO TAB BLOCK   -->
                 <div class="user-button">
                     <div class="row">
                         <div class="col-md-6">
@@ -222,21 +227,23 @@
 						</div>
                     </div>
                 </div>
-                <div class="row"><div class="col-lg-12 animated fadeInRight">
-                	<span id="income_cdn_place">
-                        <div class="sk-spinner sk-spinner-wave">
-                            <div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div>
-                        </div>
-                    </span>
-                </div></div>
+                <div class="row">
+                    <div class="col-lg-12 animated fadeInRight">
+                        <span id="income_cdn_place">
+                            <div class="sk-spinner sk-spinner-wave">
+                                <div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
+
         <div id="cat_tab10" class="tab-pane">
             <div class="panel-body" id="supll_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
     </div>
-
 
 </div>

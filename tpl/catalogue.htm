@@ -1,16 +1,21 @@
 <link href="/js/plugins/jsTree/jstree_style.min.css" rel="stylesheet">
 <link href="/js/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 <link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
-<link href="/js/plugins/chosen/chosen.css" rel="stylesheet">
+<!--<link href="/js/plugins/chosen/chosen.css" rel="stylesheet">-->
+<link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
+<link rel="stylesheet" href="/css/plugins/chosen-1.8.3/docsupport/prism.css">
+<link rel="stylesheet" href="/css/plugins/chosen-1.8.3/chosen.css">
 
 <style>
-td.group{
-	background-color:#2a6257;
-	font-weight:bold; text-align:center;	
-	color:#FFF;
-}
+    td.group{
+        background-color:#2a6257;
+        font-weight:bold; text-align:center;
+        color:#FFF;
+    }
 </style>
+
 <h3 class="panel-primary border-bottom dashboard-header" style="margin-bottom:0;">Номенклатура</h3>
+
 <div class="wrapper wrapper-content animated fadeInRight" style="margin-top:0; padding-top:0;">
     <div class="row">
         <div class="col-sm-12">
@@ -20,7 +25,6 @@ td.group{
                         <form method="post" onSubmit="catalogue_article_search(0,0);return false;" class="form-inline">
                             <div class="form-group" id="srchInG">
                                 <div class="input-group">
-                                	
                                     <input type="text" class="form-control control-label required" style="width:250px;" id="catalogue_art" name="catalogue_art" value="{art}" placeholder="Введите артикул (F2)">
                                 	<div class="input-group-btn"> 
                                     	<button type="submit" tabindex="-1" class="btn btn-primary"><i class="fa fa-search"></i></button> 
@@ -35,102 +39,114 @@ td.group{
 								</div>
                             </div>
                             <div class="form-group">
-                                <a class="btn btn-primary collapsed"  title="Фільтр по номенклатурі" aria-expanded="false" data-toggle="collapse" data-parent="#accordion1" href="#collapseCatFilter4" onClick="$('#collapseCatFilter2').collapse('hide');"><i class='fa fa-glass'></i></a>
-                            
-                                <a class="btn btn-primary collapsed"  title="Фільтр по авто" aria-expanded="false" data-toggle="collapse" data-parent="#accordion2" href="#collapseCatFilter2" onClick="$('#collapseCatFilter4').collapse('hide');"><i class='fa fa-car'></i></a>
+                                <a class="btn btn-primary collapsed" title="Фільтр по номенклатурі" aria-expanded="false" data-toggle="collapse" data-parent="#accordion1" href="#collapseCatFilter4" onClick="$('#collapseCatFilter2').collapse('hide');"><i class='fa fa-glass'></i></a>
+                                <a class="btn btn-primary collapsed" title="Фільтр по авто" aria-expanded="false" data-toggle="collapse" data-parent="#accordion2" href="#collapseCatFilter2" onClick="$('#collapseCatFilter4').collapse('hide');"><i class='fa fa-car'></i></a>
                             </div>
-                            <button class="btn btn-primary  pull-right"  title="Створення нового артикулу"  onClick="showCatNewArticle(); return false;"><i class='fa fa-plus'></i> новий артикул</button>&nbsp; 
-                            <button class="btn btn-default  pull-right"  title="Налаштування таблиці"  onClick="showCatFieldsViewForm(); return false;"><i class='fa fa-eye'></i></button>&nbsp; 
+                            <button class="btn btn-primary pull-right" title="Створення нового артикулу" onClick="showCatNewArticle(); return false;"><i class='fa fa-plus'></i> Новий артикул</button>&nbsp;
+                            <button class="btn btn-default pull-right" title="Налаштування таблиці" onClick="showCatFieldsViewForm(); return false;"><i class='fa fa-eye'></i></button>&nbsp;
                         </form><br>
                     </div>
 
                     <div aria-expanded="false" id="collapseCatFilter4" class="panel-collapse collapse">
-                    	<h3 align="center">Фільтр по номенклатурі</h3>
-                        <form method="post" id="CatFilterSearch" onSubmit="fil4Search(); return false;">
-                        <div class="row">
-                        	<div class="col-md-4">
-                                <div class="row">
-                                   <div class="col-md-3 text-right"><strong>Постачальник</strong></div>
-                                    <div class="col-md-9"><select class="form-control select2-multiple selectpicker"  multiple="multiple" data-actions-box="true" data-selected-text-format="count > 3" id="fil4SupplId" name="fil4SupplId" placeholder="Постачальник" style="width:100%;">
-                                    	{fil4SupplList}
-                                    </select></div>
-                                </div><br>
-                                <div class="row">
-                                    <div class="col-md-3 text-right"><strong>Бренд</strong></div>
-                                    <div class="col-md-9"><select class="form-control select2-multiple selectpicker"  multiple="multiple" data-actions-box="true" data-selected-text-format="count > 3" id="fil4BrandId" name="fil4BrandId" placeholder="Виробник" style="width:100%;">
-                                    	{fil4BrandList}
-                                    </select></div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-	                            <div class="row">
-                                    <div class="col-md-3 text-right"><strong>Товарна група</strong></div>
-									<div class="col-md-9">
-                                    	<select class="form-control select2-multiple" id="fil4GoodsGroupId" name="fil4GoodsGroupId"  multiple="multiple" data-actions-box="true"placeholder="Товарна група" style="width:100%;">
-                                    	{fil4GoodsGroupList}
-                                    </select>
+                    	<h3 align="left">Фільтр по номенклатурі</h3>
+                        <form method="post" class="border-bottom" id="CatFilterSearch4" onSubmit="fil4Search(); return false;">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="row">
+                                       <div class="col-md-3 text-right"><strong>Постачальник</strong></div>
+                                        <div class="col-md-9">
+                                            <select class="form-control select2-multiple selectpicker" multiple="multiple" data-actions-box="true" data-selected-text-format="count > 3" id="fil4SupplId" name="fil4SupplId" title="Постачальник">
+                                                {fil4SupplList}
+                                            </select>
+                                        </div>
+                                    </div><br>
+                                    <div class="row">
+                                        <div class="col-md-3 text-right"><strong>Бренд</strong></div>
+                                        <div class="col-md-9">
+                                            <select class="form-control select2-multiple selectpicker" multiple="multiple" data-actions-box="true" data-selected-text-format="count > 3" id="fil4BrandId" name="fil4BrandId" title="Виробник">
+                                                {fil4BrandList}
+                                            </select>
+                                        </div>
                                     </div>
-                                </div><br>
-                        		<div class="row">
-                                    <div class="col-md-3 text-right"><strong>ТОП</strong></div>
-                                    <div class="col-md-9"><input class="form-control" name="fil4Top" id="fil4Top" placeholder="ТОП" value="{fil4Top}"></div>
-                                </div><br>
-                            </div>
-                            <div class="col-md-4">
-                        		<div class="row">
-                                    <div class="col-md-3 text-right"><strong>Наявність</strong></div>
-                                    <div class="col-md-4"><input class="form-control" name="fil4StokTo" id="fil4StokTo" placeholder="від певної кількості" value="{fil4StokTo}"></div>
-                                    <div class="col-md-4"><input class="form-control" name="fil4StokFrom" id="fil4StokFrom" placeholder="до певної кількості" value="{fil4StokFrom}"></div>
-                                </div><br>
-                                <div class="row">
-                                	<div class="col-md-3 col-sm-hidden"></div>
-	                                <div class="col-md-9">
-                                    	<button class="btn btn-primary"><i class='fa fa-search'></i> Пошук</button>
-                                    	<a onClick="ClearFil4Search();" class="btn btn-info"><i class='fa fa-eraser'></i></a>
-									</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-3 text-right"><strong>Товарна група</strong></div>
+                                        <div class="col-md-9">
+                                            <select class="form-control select2-multiple" id="fil4GoodsGroupId" name="fil4GoodsGroupId" multiple="multiple" data-actions-box="true" title="Товарна група">
+                                                {fil4GoodsGroupList}
+                                            </select>
+                                        </div>
+                                    </div><br>
+                                    <div class="row">
+                                        <div class="col-md-3 text-right"><strong>ТОП</strong></div>
+                                        <div class="col-md-9"><input class="form-control" name="fil4Top" id="fil4Top" placeholder="ТОП" value="{fil4Top}"></div>
+                                    </div><br>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-3 text-right"><strong>Наявність</strong></div>
+                                        <div class="col-md-4"><input class="form-control" name="fil4StokTo" id="fil4StokTo" placeholder="від певної кількості" value="{fil4StokTo}"></div>
+                                        <div class="col-md-4"><input class="form-control" name="fil4StokFrom" id="fil4StokFrom" placeholder="до певної кількості" value="{fil4StokFrom}"></div>
+                                    </div><br>
+                                    <div class="row">
+                                        <div class="col-md-3 col-sm-hidden"></div>
+                                        <div class="col-md-9">
+                                            <button class="btn btn-primary"><i class='fa fa-search'></i> Пошук</button>
+                                            <a onClick="ClearFil4Search();" class="btn btn-info"><i class='fa fa-eraser'></i></a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         </form>
 					</div>
 
-
 					<div aria-expanded="false" id="collapseCatFilter2" class="panel-collapse collapse">
-                    	<h3 align="center">Фільтр по авто</h3>
-                        <form method="post" id="CatFilterSearch" class="form-inline border-bottom " onSubmit="fil2Search(); return false;">
-                        <input type="hidden" id="fil2StrId" value="{fil2StrId}"><input type="hidden" id="fil2ArtIds" value="{fil2ArtIds}">
-                        <input type="hidden" id="fil2StrText" value="{fil2StrText}">
-                        <div class="row">
-	                        <div class="form-group col-md-2">
-                                <div class="input-group col-md-12">
-                                    <label class="font-noraml">Виробник</label>
-                                    <select id="fil2Manufacture" data-placeholder="Вибрати марку" class="form-control" style="width:100%" onChange="loadFilterModelSelectList()"><option value="0"></option>{fil2ManufactureList}</select>
+                    	<h3 align="left">Фільтр по авто</h3>
+                        <form method="post" id="CatFilterSearch2" style="padding-bottom: 30px;" class="form-inline border-bottom" onSubmit="fil2Search(); return false;">
+                            <input type="hidden" id="fil2StrId" value="{fil2StrId}"><input type="hidden" id="fil2ArtIds" value="{fil2ArtIds}">
+                            <input type="hidden" id="fil2StrText" value="{fil2StrText}">
+                            <div class="row">
+                                <div class="form-group col-md-2">
+                                    <div class="input-group col-md-12">
+                                        <label class="font-noraml">Виробник</label>
+                                        <select title="Виробник" id="fil2Manufacture" data-placeholder="Вибрати марку" class="form-control" style="width:100%" onChange="loadFilterModelSelectList()">
+                                            <option value="0"></option>
+                                            {fil2ManufactureList}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <div class="input-group col-md-12">
+                                        <label class="font-noraml">Модель</label>
+                                        <select title="Модель" id="fil2Model" data-placeholder="Вибрати модель" class="form-control" style="width:100%" onChange="loadFilterModificationSelectList()">
+                                            <option value="0"></option>
+                                            {fil2ModelList}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-5">
+                                    <div class="input-group col-md-12">
+                                        <label class="font-noraml">Модифікація <small>(Тип палива | Двигун | Рік | К.С./кВт | Об'єм двигуна, cm3 | Код двигуна)</small></label>
+                                        <select title="Модифікація" id="fil2Modification" data-placeholder="Вибрати модифікацію" class="form-control" style="width:100%" onChange="loadFilterGroupTreeListSide()">
+                                            <option value="0"></option>
+                                            {fil2ModificationList}
+                                        </select>
+                                    </div>
+                                </div>
+                                <!--<div class="form-group col-md-1">
+                                    <div class="input-group col-md-6 pull-right">
+                                        <label class="font-noraml">&nbsp;</label>
+                                        <button class="form-control btn btn-primary"><i class='fa fa-search'></i> Пошук</button>
+                                    </div>
+                                </div>-->
+                                <div class="form-group col-md-1">
+                                    <div class="input-group">
+                                        <label class="font-noraml">&nbsp;</label>
+                                        <button class="form-control btn btn-info" onClick="ClearFil2Search();"><i class='fa fa-eraser'></i></button>
+                                    </div>
                                 </div>
                             </div>
-							<div class="form-group col-md-3">
-                                <div class="input-group col-md-12">
-                                    <label class="font-noraml">Модель</label>
-                                    <select id="fil2Model" data-placeholder="Вибрати модель" class="form-control" style="width:100%" onChange="loadFilterModificationSelectList()"><option value="0"></option>{fil2ModelList}</select>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-5">
-                                <div class="input-group col-md-12">
-                                    <label class="font-noraml">Модифікація <small>(Тип палива  |  Двигун  |  Рік | К.С./кВт  | Об'єм двигуна, cm3  | Код двигуна)</small></label>
-                                    <select id="fil2Modification" data-placeholder="Вибрати модифікацію" class="form-control" style="width:100%" onChange="loadFilterGroupTreeListSide()"><option value="0"></option>{fil2ModificationList}</select>                                </div>
-                            </div>
-                            <!--<div class="form-group col-md-1">
-                                <div class="input-group col-md-6 pull-right">
-                                    <label class="font-noraml">&nbsp;</label>
-                                    <button class="form-control btn btn-primary"><i class='fa fa-search'></i> Пошук</button>
-                                </div>
-                            </div>-->
-                            <div class="form-group col-md-1">
-                                <div class="input-group">
-                                    <label class="font-noraml">&nbsp;</label>
-                                    <button class="form-control btn btn-info" onClick="ClearFil2Search();"><i class='fa fa-eraser'></i></button>
-                                </div>
-                            </div>
-                        </div>
                         </form>
 					</div>
 					<section id="filter_range_place">
@@ -139,49 +155,47 @@ td.group{
                             <div class="col-md-2 col-sm-6 col-xs-12 pull-right">
 	                            <input type="text" class="form-control input-sm m-b-xs" id="filter2" placeholder="Пошук у результатах">
                             </div>
-                            <table  id="datatable_catalogue" class="footable table table-stripped table-bordered" data-sorting="true" data-page-size="20" data-filter="#filter2">
+                            <table id="datatable_catalogue" class="footable table table-stripped table-bordered" data-sorting="true" data-page-size="20" data-filter="#filter2">
                                 <thead id="catalogue_header">
                                    {header_list}
                                 </thead>
                                 <tbody id="catalogue_range">
-                                {range_list}
+                                    {range_list}
                                 </tbody>
                                 <tfoot>
-                                <tr>
-                                    <td colspan="12">
-                                        <ul class="pagination pull-right"></ul>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td colspan="12">
+                                            <ul class="pagination pull-right"></ul>
+                                        </td>
+                                    </tr>
                                 </tfoot>
                             </table>
                         </div>
                     </section>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
 
-<div id="CatalogueCard" class="modal inmodal fade" tabindex="-1" role="dialog"  aria-hidden="true">
+<div id="CatalogueCard" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
-                <h3 id="myModalLabel text-left">Карта товара: <span id="CatalogueCardArticleNrDispl"></span></h3>
+                <h3 class="myModalLabel text-left">Карта товара: <span id="CatalogueCardArticleNrDispl"></span></h3>
             </div>
-            <div class="modal-body" id="CatalogueCardBody">
-	        </div>
+            <div class="modal-body" id="CatalogueCardBody"></div>
         </div>
     </div>
 </div>
 
-<div id="GoodsGroupModalWindow" class="modal inmodal fade GoodsGroupModalWindow" tabindex="-1" role="dialog"  aria-hidden="true">
+<div id="GoodsGroupModalWindow" class="modal inmodal fade GoodsGroupModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 			<div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
-                <h3 id="myModalLabel text-left">Товарні групи</h3>
+                <h3 class="myModalLabel text-left">Товарні групи</h3>
             </div>
             <div class="modal-body" id="GoodsGroupBody">
                 <div class="sk-spinner sk-spinner-cube-grid"><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div></div>
@@ -190,19 +204,17 @@ td.group{
     </div>
 </div>
 
-<div id="fileUploadForm2" class="modal inmodal fade" tabindex="-1" role="dialog"  aria-hidden="true">
-    <div class="modal-dialog modal-wide">
-        <div class="modal-content">
-			<div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
-                <h3 id="myModalLabel text-left">Карта товара</h3>
-            </div>
-            <div class="modal-body" id="CatalogueCardBody">
-                
-	        </div>
-        </div>
-    </div>
-</div>
+<!--<div id="fileUploadForm2" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">-->
+    <!--<div class="modal-dialog modal-wide">-->
+        <!--<div class="modal-content">-->
+			<!--<div class="modal-header">-->
+                <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>-->
+                <!--<h3 class="myModalLabel text-left">Карта товара</h3>-->
+            <!--</div>-->
+            <!--<div class="modal-body" id="CatalogueCardBody"></div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
 
 <div style="display: none;" class="modal inmodal fade fileArticlesCDNUploadForm" id="fileArticlesCDNUploadForm" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
@@ -220,12 +232,13 @@ td.group{
         </div>
     </div>
 </div>
+
 <div style="display: none;" class="modal inmodal fade fileArticlesFotoUploadForm" id="fileArticlesFotoUploadForm" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">Х</button>
-                <h4 class="modal-title" id="myModalLabel">Завантаження фото</h4>
+                <h4 class="myModalLabel modal-title">Завантаження фото</h4>
             </div>
             <div class="modal-body" id="fileViewHolderFoto">
                 <p>Для завантаження фото натисніть на форму або перетягніть файли у поле форми</p>
@@ -237,12 +250,12 @@ td.group{
     </div>
 </div>
 
-<div style="display: none;" id="CountryModalWindow" class="modal fade CountryModalWindow" tabindex="-1" role="dialog"  aria-hidden="true">
+<div style="display: none;" id="CountryModalWindow" class="modal fade CountryModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 			<div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
-                <h3 id="myModalLabel text-left">Довідник країн походження</h3>
+                <h3 class="myModalLabel text-left">Довідник країн походження</h3>
             </div>
             <div class="modal-body" id="CountryBody">
                 <div class="sk-spinner sk-spinner-cube-grid"><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div></div>
@@ -250,12 +263,13 @@ td.group{
         </div>
     </div>
 </div>
-<div style="display: none;" id="CostumsModalWindow" class="modal fade CostumsModalWindow" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none;" id="CostumsModalWindow" class="modal fade CostumsModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 			<div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
-                <h3 id="myModalLabel text-left">Довідник митних кодів</h3>
+                <h3 class="myModalLabel text-left">Довідник митних кодів</h3>
             </div>
             <div class="modal-body" id="CostumsBody">
                 <div class="sk-spinner sk-spinner-cube-grid"><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div></div>
@@ -263,7 +277,8 @@ td.group{
         </div>
     </div>
 </div>
-<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none; z-index: 10000!important;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel" class="text-left"></h3></div>
@@ -271,7 +286,8 @@ td.group{
         </div>
     </div>
 </div>
-<div style="display: none;" id="FormModalWindow2" class="modal fade FormModalWindow2" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none; z-index: 10001!important;" id="FormModalWindow2" class="modal fade FormModalWindow2" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel2" class="text-left"></h3></div>
@@ -279,14 +295,15 @@ td.group{
         </div>
     </div>
 </div>
+
 <div style="display: none;" class="modal inmodal fade fileArticlesSchemeUploadForm" id="fileArticlesSchemeUploadForm" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">Х</button>
-                <h4 class="modal-title" id="myModalLabel">Завантаження схеми</h4>
+                <h4 class="myModalLabel modal-title">Завантаження схеми</h4>
             </div>
-            <div class="modal-body" id="fileViewHolderFoto">
+            <div class="modal-body" id="fileViewHolderScheme">
                 <p>Для завантаження фото натисніть на форму або перетягніть файли у поле форми</p>
                 <form action="/cdn_file_upload.php" class="dropzone" id="myDropzone4" enctype="multipart/form-data">
                     <input type="hidden" name="scheme_template_id" id="scheme_template_id" value="">
@@ -295,7 +312,8 @@ td.group{
         </div>
     </div>
 </div>
-<div style="display: none;" id="FormModalWindow3" class="modal fade FormModalWindow3" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none;" id="FormModalWindow3" class="modal fade FormModalWindow3" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel3" class="text-left"></h3></div>
@@ -303,6 +321,33 @@ td.group{
         </div>
     </div>
 </div>
+
+<div id="ActionClientsCard" class="modal inmodal fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true">х</button>
+                <h3 id="myModalLabel text-left">Акція "<span id="ActionClientsCardLabel"></span>"</h3>
+            </div>
+            <div class="modal-body" id="ActionClientsCardBody"></div>
+        </div>
+    </div>
+</div>
+
+
+<div id="CatalogAddCard" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
+                <h3 class="myModalLabel text-left">Привязка <span id="CatalogAddCardLabel"></span></h3>
+            </div>
+            <div class="modal-body" id="CatalogAddCardBody">
+            </div>
+        </div>
+    </div>
+</div>
+
 <span id="list_brand_select" class="hidden">{list_brand_select}</span>
 
 <script type="text/javascript" src="/js/plugins/barcode-generator/jquery-barcode.js"></script>
@@ -316,21 +361,25 @@ td.group{
 <script src="/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 <script src="/js/plugins/dropzone/dropzone.js"></script>
 <script src="/js/plugins/sortable/jquery.sortable.js"></script>
-<script src="/js/plugins/chosen/chosen.jquery.js"></script>
+<!--<script src="/js/plugins/chosen/chosen.jquery.js"></script>-->
+<script src="/css/plugins/chosen-1.8.3/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+<script src="/css/plugins/chosen-1.8.3/docsupport/init.js" type="text/javascript" charset="utf-8"></script>
 <script src="/js/plugins/jquery.treefilter/jquery.treefilter.js"></script>
+<script src="/js/plugins/switchery/switchery.js"></script>
 <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
 <script src="/js/plugins/currency/currency.js"></script>
+<script src="/js/action_clients/action_clients.js"></script>
 <script src="/js/catalogue/catalogue.js?201705061435"></script>
 <script language="javascript">
 $(document).ready(function() {
 //	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,"searching": false,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}, "dom": '<"top">rt<"bottom"flpi><"clear">'});
-	$('.footable').footable({"useParentWidth": true});
+	$(".footable").footable({"useParentWidth": true});
 	$("#fil2Manufacture").select2({placeholder: "Вибрати виробника"});
 	$("#fil2Model").select2({placeholder: "Вибрати модель"});
 	$("#fil2Modification").select2({placeholder: "Вибрати модифікацію"});
-	$('#fil4SupplId').select2({placeholder: "Вибрати постачальника"});
-	$('#fil4BrandId').select2({placeholder: "Вибрати виробника"});
-	$('#fil4GoodsGroupId').select2({placeholder: "Вибрати товарну групу"});
+	$("#fil4SupplId").select2({placeholder: "Вибрати постачальника"});
+	$("#fil4BrandId").select2({placeholder: "Вибрати виробника"});
+	$("#fil4GoodsGroupId").select2({placeholder: "Вибрати товарну групу"});
 	checkBrandSelectList();
 });
 </script>

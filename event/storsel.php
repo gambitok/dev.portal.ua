@@ -22,10 +22,10 @@ if ($accss=="1"){
 		$form=$storsel->printStorselView2($select_id);
 	}
 
-	if ($w=="printJmSTP"){
-		$storsel_id=$links[2];$select_id=$links[3];
-		$form=$storsel->printStorselTruckList($storsel_id);
-	}
+//	if ($w=="printJmSTP"){
+//		$storsel_id=$links[2];$select_id=$links[3];
+//		$form=$storsel->printStorselTruckList($storsel_id);
+//	}
 
 	if ($alg_u==0){ //не надано права на операціїї з розділом
 		$content=str_replace("{work_window}", $access->show_access_deny($mf), $content);

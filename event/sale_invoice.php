@@ -18,22 +18,23 @@ if ($accss=="1"){
 
 	if ($w=="printSlIv"){
 		$invoice_id=$links[2];
-		$form=$sale_invoice->printSaleInvoice($invoice_id);
+		$type=$links[3];
+        $content=$sale_invoice->printSaleInvoice($invoice_id,$type);
 	}
 
 	if ($w=="printDpSlIv"){
 		$invoice_id=$links[2];
-		$form=$dp->printDpSaleInvoice($invoice_id);
+        $content=$dp->printDpSaleInvoice($invoice_id);
 	}
 
 	if ($w=="printSlIvBuh"){
 		$invoice_id=$links[2];
-		$form=$sale_invoice->printSaleInvoiceBuh($invoice_id);
+        $content=$sale_invoice->printSaleInvoiceBuh($invoice_id);
 	}
 
 	if ($w=="exportExcelSlIv"){
 		$invoice_id=$links[2];$separator=$links[3];
-		$form=$sale_invoice->exportSaleInvoiceExcel($invoice_id,$separator);
+        $content=$sale_invoice->exportSaleInvoiceExcel($invoice_id,$separator);
 	}
 
 	if ($alg_u==0){

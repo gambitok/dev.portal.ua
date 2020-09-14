@@ -3,7 +3,7 @@
 <link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
 <link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
 
-<h2 class=" border-bottom white-bg dashboard-header">Мова на toko(new)</h2>
+<h2 class="border-bottom white-bg dashboard-header">Мова на toko(new)</h2>
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -15,16 +15,17 @@
 							<a class="btn btn-success"  href="#newLang" onClick="newLanguageCard();"><i class='fa fa-plus'></i> Нова змінна</a>
 						</div>
 						<div class="col-md-3">
-							<input id="lang_var" type="text" class="form-control">
+							<input title="Мова" id="lang_var" type="text" class="form-control">
 						</div>
                        
 	                </div>
                 </div>
                 <div class="ibox-content">
                     <div class="table-responsive">
-                        <table  id="datatable" class="table table-striped table-hover table-bordered" width="100%">
+                        <table id="datatable" class="table table-striped table-hover table-bordered" width="100%">
                             <thead>
                                 <tr align="center">
+                                    <th>#</th>
                                     <th>Змінна</th>
                                     <th>РУС</th>
                                     <th>УКР</th>
@@ -69,7 +70,7 @@
 
 <script language="javascript">
 $(document).ready(function() {
-	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
+	$("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
 });
 </script>
 

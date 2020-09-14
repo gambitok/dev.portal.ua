@@ -3,41 +3,43 @@
 <link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
 <link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
 
-<h2 class=" border-bottom white-bg dashboard-header">Журнал повернень клієнтів</h2>
+<h2 class="border-bottom white-bg dashboard-header">Журнал повернень клієнтів</h2>
 <input type="hidden" id="doc_prefix" value="{doc_prefix}">
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-sm-12">
             <div class="ibox">
+
                 <div class="ibox-title">
                     <div class="row">
                         <div class="col-md-8">
-							<a class="btn btn-success"  href="#newBackClients" onClick="newBackClientsCard();"><i class='fa fa-plus'></i> Нове повернення</a>
-							<label for="date_start" style="padding-right: 15px; padding-left: 30px;">Дата від</label><input id="date_start" type="date" value="{date_old}" class="form-control" style="width: 200px; display: inline; padding: 0px 5px;">
-							<label for="date_end" style="padding-right: 15px; padding-left: 30px;">Дата до</label><input id="date_end" type="date" value="{date_today}" class="form-control" style="width: 200px; display: inline; padding: 0px 5px;">
+							<a class="btn btn-success" href="#newBackClients" onClick="newBackClientsCard();"><i class='fa fa-plus'></i> Нове повернення</a>
+							<label for="date_start" style="padding-right: 15px; padding-left: 30px;">Дата від</label><input id="date_start" type="date" value="{date_old}" class="form-control" style="width: 200px; display: inline; padding: 0 5px;">
+							<label for="date_end" style="padding-right: 15px; padding-left: 30px;">Дата до</label><input id="date_end" type="date" value="{date_today}" class="form-control" style="width: 200px; display: inline; padding: 0 5px;">
 							<button class="btn btn-primary" onClick="filterBackClientsList();"><i class='fa fa-search'></i></button>
 						</div>
                         <div class="col-md-4 text-right"><a class="btn btn-info collapsed" aria-expanded="false" data-toggle="collapse" data-parent="#accordion" href="#collapseSearch"><i class='fa fa-search'></i> Пошук у реєстрі</a></div>
 	                </div>
                 </div>
+
                 <div class="ibox-content">
                 	 <div aria-expanded="false" id="collapseSearch" class="panel-collapse collapse">
                     	<h3 align="center">Пошук записів за параметрами</h3>
                         <form method="get" id="BackClientsSearch" onSubmit="filterBackClientssList(); return false;">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="row">
-	                                <div class="col-md-3"></div>
-                                    <div class="col-md-5"><button class="form-control btn btn-success"><i class='fa fa-search'></i> Пошук</button></div>
-                                    <div class="col-md-4"><a onClick="ClearBackClientsSearch();" class="btn btn-info"><i class='fa fa-eraser'></i></a></div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-3"></div>
+                                        <div class="col-md-5"><button class="form-control btn btn-success"><i class='fa fa-search'></i> Пошук</button></div>
+                                        <div class="col-md-4"><a onClick="ClearBackClientsSearch();" class="btn btn-info"><i class='fa fa-eraser'></i></a></div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         </form>
 					</div>
                     <div class="table-responsive">
-                        <table  id="datatable" class="table table-striped table-hover table-bordered" width="100%">
+                        <table id="datatable" class="table table-striped table-hover table-bordered" width="100%">
                             <thead>
                                 <tr align="center">
 	                                <th>Номер</th>
@@ -62,21 +64,19 @@
     </div>
 </div>
 
-
-<div id="BackClientsCard" class="modal inmodal fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog"  aria-hidden="true">
+<div id="BackClientsCard" class="modal inmodal fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header">
                 <button type="button" class="close" aria-hidden="true" onClick="closeBackClientsCard();">х</button>
                 <h3 id="myModalLabel text-left">Повернення №<span id="BackClientsCardLabel"></span></h3>
             </div>
-            <div class="modal-body" id="BackClientsCardBody">
-	        </div>
+            <div class="modal-body" id="BackClientsCardBody"></div>
         </div>
     </div>
 </div>
 
-<div style="display: none;" id="BackClientsPreSelect" class="modal fade BackClientsPreSelect" tabindex="-1" role="dialog" data-backdrop="static"  data-keyboard="false" aria-hidden="true">
+<div style="display: none;" id="BackClientsPreSelect" class="modal fade BackClientsPreSelect" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true" onClick="clearBackClientsStorageSelect();">х</button><h3 id="BackClientsPreSelectLabel" class="text-left"></h3></div>
@@ -84,7 +84,8 @@
         </div>
     </div>
 </div>
-<div style="display: none;" id="CatalogueModalWindow" class="modal fade CatalogueModalWindow" tabindex="-1" role="dialog"  data-backdrop="static" data-keyboard="false" aria-hidden="true">
+
+<div style="display: none;" id="CatalogueModalWindow" class="modal fade CatalogueModalWindow" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog modal-ex-wide">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="CatalogueModalLabel" class="text-left"></h3></div>
@@ -96,7 +97,8 @@
         </div>
     </div>
 </div>
-<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel" class="text-left"></h3></div>
@@ -104,7 +106,8 @@
         </div>
     </div>
 </div>
-<div style="display: none;" id="FormModalWindow2" class="modal fade FormModalWindow2" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none;" id="FormModalWindow2" class="modal fade FormModalWindow2" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel2" class="text-left"></h3></div>
@@ -112,6 +115,7 @@
         </div>
     </div>
 </div>
+
 <div style="display: none;" id="FormModalWindow3" class="modal fade FormModalWindow3" tabindex="-1" role="dialog" data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -120,6 +124,7 @@
         </div>
     </div>
 </div>
+
 <div style="display: none;" id="FormModalWindow4" class="modal fade FormModalWindow3" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog modal-wide2">
         <div class="modal-content">
@@ -128,7 +133,8 @@
         </div>
     </div>
 </div>
-<div style="display: none;" id="FormModalWindow5" class="modal fade FormModalWindow5" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none;" id="FormModalWindow5" class="modal fade FormModalWindow5" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel5" class="text-left"></h3></div>
@@ -153,7 +159,7 @@
 <script src="/js/back_clients/back_clients.js?201712131435"></script>
 <script language="javascript">
 $(document).ready(function() {
-	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+	$("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
 });
 </script>
 <script type="text/javascript">

@@ -1,15 +1,17 @@
 <h2 align="center">Наявність у комірках складі: {storage_name}</h2>
 <h3>Артикул: {article_nr_displ}</h3>
-<table  id="datatable_costums" class="table table-striped table-hover table-bordered" width="100%">
-    <thead>
-        <tr align="center">
-            <th>№</th>
-            <th>Комірка</th>
-            <th align='center'>Залишок</th>
-            <th align='center'>Резерв</th>
-        </tr>
-    </thead>
-    <tbody id="t2sc_list_range">
-        {list}
-    </tbody>
-</table>
+<div class="table-responsive">
+    <table id="datatable_costums" class="table table-striped table-hover table-bordered" width="100%">
+        <thead>
+            <tr align="center">
+                <th>№</th>
+                <th>Комірка</th>
+                <th align='center'>Залишок</th>
+                <th align='center'>Резерв</th>
+            </tr>
+        </thead>
+        <tbody id="t2sc_list_range">
+            {list}
+        </tbody>
+    </table>
+</div>

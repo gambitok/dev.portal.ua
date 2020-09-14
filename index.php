@@ -17,6 +17,7 @@ require_once (RD."/lib/access_class.php");
 require_once (RD."/lib/alerts_class.php");
 require_once (RD."/lib/print_class.php");
 require_once (RD."/lib/media_users_class.php");
+require_once (RD."/lib/nova-poshta-api-2/src/Delivery/NovaPoshtaApi2.php");
 
 if ($content==null){require_once (RD."/out.php");}
 echo $content;

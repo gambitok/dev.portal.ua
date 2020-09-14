@@ -11,13 +11,12 @@ function showManualK(key,fldVal,fldText,filter) {
 		showAlertForm();
 		$('#ManualKScroll').slimscroll({width: '100%', height: '500px', size: '10px', color: '#1361b7', distance: '0px', railVisible: true, railColor: '#ccc', railOpacity: 0.3, wheelStep: 10, allowPageScroll: false, disableFadeOut: false });
 	}}, true);
-	
 }
+
 function setValueK(){
 	var key=document.getElementById("keyK").value;
 	var fldVal=document.getElementById("valK").value;
 	var fldText=document.getElementById("valKText").value;
-	
 	
 	var kol=document.getElementById("kolKonstr").value;
 	var result="";var resultText="";
@@ -34,6 +33,7 @@ function setValueK(){
 	document.getElementById(fldText).value=resultText;
 	closeAlertForm();
 }
+
 function showManualKForm(){
 	document.getElementById("ManualKCaptionIn").value="";
 	document.getElementById("ManualKForm").className="visibleDoc";
@@ -41,6 +41,7 @@ function showManualKForm(){
 	document.getElementById("ManualKZnosFromIn").value="";
 	document.getElementById("ManualKZnosToIn").value="";
 }
+
 function hideManualKForm(){
 	document.getElementById("ManualKCaptionIn").value="";
 	document.getElementById("ManualKDescIn").value="";

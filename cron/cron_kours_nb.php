@@ -3,8 +3,9 @@ error_reporting(E_ERROR);
 @ini_set('display_errors', true);
 @ini_set('html_errors', false);
 define('RD', dirname (__FILE__));
-require_once(RD . "/lib/DbSingleton.php");$db=DbSingleton::getDb();
-require_once (RD."/lib/slave_class.php");
+date_default_timezone_set("Europe/Kiev");
+require_once(RD."/lib/DbSingleton.php");$db=DbSingleton::getDb();
+require_once(RD."/lib/slave_class.php");
 
 $curdate=date("Y-m-d");$usd="0.0";$euro="0.0";$rub="0.0";
 
@@ -25,6 +26,6 @@ foreach($ex as $cur){
 		if ($cure=="RUR"){$rub=$val;}
 	}
 }
-$db->query("insert into kours values ('','$curdate','$usd','$euro','$rub');");
+$db->query("INSERT INTO `kours` VALUES ('','$curdate','$usd','$euro','$rub');");
 
 ?>

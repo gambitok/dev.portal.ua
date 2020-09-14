@@ -6,7 +6,7 @@
 <script src="/js/plugins/ckeditor/ckeditor.js"></script>
 <script src="/js/plugins/ckeditor/samples/js/sample.js"></script>
 
-<h2 class=" border-bottom white-bg dashboard-header">Робота з постачальниками</h2>
+<h2 class="border-bottom white-bg dashboard-header">Робота з постачальниками</h2>
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -14,7 +14,7 @@
             <div class="ibox">
                 <div class="ibox-content">
                     <div class="table-responsive">
-                        <table  id="datatable" class="table table-striped table-hover table-bordered" width="100%">
+                        <table id="datatable" class="table table-striped table-hover table-bordered" width="100%">
                             <thead>
                                 <tr align="center">
                                     <th>Код</th>
@@ -30,13 +30,11 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
 
-
-<div id="SupplCard" class="modal inmodal fade" tabindex="-1" role="dialog"  aria-hidden="true">
+<div id="SupplCard" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header">
@@ -49,7 +47,7 @@
     </div>
 </div>
 
-<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog"  aria-hidden="true">
+<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel" class="text-left"></h3></div>
@@ -57,7 +55,8 @@
         </div>
     </div>
 </div>
-<div style="display: none;" id="FormModalWindow2" class="modal fade FormModalWindow2" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none;" id="FormModalWindow2" class="modal fade FormModalWindow2" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel2" class="text-left"></h3></div>
@@ -65,7 +64,8 @@
         </div>
     </div>
 </div>
-<div style="display: none;" id="FormModalWindow3" class="modal fade FormModalWindow3" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none;" id="FormModalWindow3" class="modal fade FormModalWindow3" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel3" class="text-left"></h3></div>
@@ -73,6 +73,7 @@
         </div>
     </div>
 </div>
+
 <div style="display: none;" class="modal inmodal fade fileSupplCsvUploadForm" id="fileSupplCsvUploadForm" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -90,6 +91,7 @@
         </div>
     </div>
 </div>
+
 <div style="display: none;" class="modal inmodal fade fileSupplIndexUploadForm" id="fileSupplIndexUploadForm" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -107,6 +109,7 @@
         </div>
     </div>
 </div>
+
 <!-- Bootstrap markdown -->
 <script src="/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>
 <script src="/js/plugins/bootstrap-markdown/markdown.js"></script>
@@ -118,7 +121,7 @@
 <script src="/js/suppl/suppl.js?201811301304"></script>
 <script language="javascript">
 $(document).ready(function() {
-	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": false,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
+	$("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
 });
 </script>
 <script type="text/javascript">
@@ -126,4 +129,3 @@ $(document).ready(function() {
 Dropzone.autoDiscover = false;
 </script>
 <script src="/js/plugins/sweetalert/sweetalert.min.js"></script>
-

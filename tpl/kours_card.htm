@@ -4,7 +4,7 @@
 		<input type="hidden" id="kours_id" value="{kours_id}">
             <div class="form-group">
                 <label class="col-sm-2 control-label">Валюта</label>
-                <div class="col-sm-3"><select class="form-control" id="cash_id" placeholder="Валюта" style="width:100%;">{cash_list}</select></div>
+                <div class="col-sm-3"><select class="form-control" id="cash_id" title="Валюта" style="width:100%;">{cash_list}</select></div>
                 <label class="col-sm-2 control-label">Значення</label>
                 <div class="col-sm-3"><input class="form-control" type="text" id="kours_value" value="" placeholder="XX.XXXXXX"></div>
             </div>
@@ -12,7 +12,7 @@
             <div class="form-group">
                 <div class="col-sm-10 text-right col-sm-offset-2">
                     <button class="btn btn-primary" type="button" onClick="saveKoursForm();">Встановити курс</button>
-                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                    <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
                 </div>
             </div>
         </form>

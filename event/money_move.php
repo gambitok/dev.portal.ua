@@ -14,10 +14,10 @@ if ($accss=="1"){
 		$content=str_replace("{money_move_range}", $range_list, $content);
 	}
 
-	if ($w=="printMMv"){ 
-		$invoice_id=$links[2];
-		$form=$money_move->printDpSaleInvoice($invoice_id);
-	}
+//	if ($w=="printMMv"){
+//		$invoice_id=$links[2];
+//		$form=$money_move->printDpSaleInvoice($invoice_id);
+//	}
 
 	if ($alg_u==0){ //не надано права на операціїї з розділом
 		$content=str_replace("{work_window}", $access->show_access_deny($mf), $content);

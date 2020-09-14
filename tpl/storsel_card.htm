@@ -1,7 +1,7 @@
 <div class="tabs-container">
 
     <ul class="nav nav-tabs" id="catalogue_tabs">
-        <li class="active"><a data-toggle="tab" class="tab-count-info" href="#cat_tab1"><i class="fa fa-truck"></i> <span class="hidden-sm-down">Складські відбори</span></a></li>
+        <li class="active"><a data-toggle="tab" class="tab-count-info" href="#cat_tab1" onclick="showStorselCard('{select_id}')"><i class="fa fa-truck"></i> <span class="hidden-sm-down">Складські відбори</span></a></li>
         <li class="tab-count-info"><a data-toggle="tab" class="tab-count-info" href="#cat_tab3" onClick="loadStorselCommets('{select_id}');"><i class="fa fa-edit"></i> Замітки <span id="label_comments">{labelCommentsCount}</span></a></li>
     </ul>
 
@@ -11,26 +11,31 @@
                 <div class="ibox float-e-margins">
                     <div class="ibox-content">
                         <form method="get" class="form-horizontal" onSubmit="return false;">
+
                             <input type="hidden" id="select_id" value="{select_id}">
                             <input type="hidden" id="parrent_doc_type" value="{parrent_doc_type}">
                             <input type="hidden" id="parrent_doc_id" value="{parrent_doc_id}">
+
                             <div class="form-group">
-  
                                 <label class="col-md-2 col-sm-2 control-label">Належить документу</label>
                                 <div class="col-lg-2 col-md-2 col-sm-5">
-                                	<input class="form-control" readonly type="text" value="{doc_parrent}">
+                                	<input class="form-control" readonly type="text" value="{doc_parrent}" title="Належить документу">
 								</div>
 									
 								<label class="col-lg-1 col-md-2 col-sm-4 control-label">Клієнт</label>
                                 <div class="col-lg-2 col-md-3 col-sm-9">
-                                	<input class="form-control" readonly type="text" value="{storsel_client}">
+                                	<input class="form-control" readonly type="text" value="{storsel_client}" title="Клієнт">
                                 </div>
 									
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">Статус відбору</label>
                                 <div class="col-lg-2 col-md-3 col-sm-9">
-                                	<input class="form-control" readonly type="text" value="{status_select_name}">
+                                	<input class="form-control" readonly type="text" value="{status_select_name}" title="Статус відбору">
                                 </div>
-								
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
                                 <div class="col-lg-12 col-md-12 col-sm-12 text-right" style="font-size: 10px; padding-top: 15px; padding-bottom: 15px; text-align: left;">
                                     <p>Вага нетто(кг):<span id="storsel_weight_netto" style="font-weight:bold">{weight_netto}</span> |
                                     Вага бруто(кг):<span id="storsel_weight_brutto" style="font-weight:bold">{weight_brutto}</span> |
@@ -43,37 +48,56 @@
                                     Хто зібрав:<span style="font-weight:bold"> {user_collect}</span></p>
                                 </div>
                             </div>
-							
-							<div class="form-group">
-								<br>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <div class="col-lg-12 col-sm-12">
+                                    <div class="media-heading">
+                                        <label for="dp_address_field" class="control-label">Адреса доставки</label>
+                                    </div>
+                                    <div class="media-body">
+                                        <textarea class="form-control" id="dp_address_field" disabled placeholder="Адреса доставки">{dp_address}</textarea><br>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group"><br>
 								<div class="social_comment col-lg-12 col-sm-12">
+                                    <div class="media-heading">
+                                        <label for="dp_note_field" class="control-label">Примітка документу</label>
+                                    </div>
 									<div class="media-body">
 										 <textarea class="form-control" id="dp_note_field" placeholder="Залишити свою примітку">{dp_note}</textarea><br>
-										 <small class="text-muted">
-											<button class="btn btn-xs btn-white" onClick="dropDpNote('{dp_id}');"><i class="fa fa-trash"></i> Видалити запис</button>
-										</small>
 										 <div class="btn-group pull-right">
-											<button class="btn btn-sm btn-primary pull-right m-t-n-xs" onClick="setDpNote('{dp_id}');"><i class="fa fa-note"></i> Зберегти примітку</button>
+                                             <button class="btn btn-sm btn-white" onClick="dropDpNote('{dp_id}');"><i class="fa fa-trash"></i> Видалити примітку</button>
+											 <button class="btn btn-sm btn-primary" onClick="setDpNote('{dp_id}');"><i class="fa fa-sticky-note"></i> Зберегти примітку</button>
 										</div>
 									</div>
 								</div>
-								<span id="dp_note_place">
-								</span>
+								<span id="dp_note_place"></span>
                				</div>
 							
 							<div class="hr-line-dashed"></div> 
 							
                             <div class="row {preview-hidden}">
-						        <div class="col-sm-2"><button class="btn btn-sm btn-info" type="button" onClick="printStorselView('{select_id}');"><i class="fa fa-print"></i> Друкувати</button></div>
-						        <div class="col-sm-2"><button class="btn btn-sm btn-info" type="button" onClick="printStorselView2('{select_id}');"><i class="fa fa-print"></i> Друкувати по ячейкам</button></div>
-						        <div class="col-sm-2"><button class="btn btn-sm btn-success {disabled83}" {disabled83} type="button" onClick="collectStorsel('{select_id}');"><i class="fa fa-cart-arrow-down"></i> Почати збирати</button></div>
-						        <div class="col-sm-3"><button id="storsel_check" class="btn btn-sm btn-default {disabled85}" {disabled85} type="button" onClick="showStorselBarcodeForm('{select_id}');"><i class="fa fa-barcode"></i> Перевірка по штрих-кодам</button></div>
-                                <div class="col-sm-3"><button id="storsel_params" class="btn btn-sm btn-info" type="button" onClick="calculateStorselParams('{select_id}');"><i class="fa fa-calculator"></i> Перерахувати параметри</button></div>
-                                <div class="col-sm-5 text-right">
-                                    <button id="storsel_send" {disabled_128} class="btn btn-warning" type="button" onClick="updateStorselStatus({select_id});" >Відгрузити</button>
-                                    <button class="btn btn-white" type="button" onClick="closeStorselCard();" >Закрити</button>
+						        <div class="col-sm-6">
+                                    <button class="btn btn-sm btn-info" type="button" onClick="printStorselView('{select_id}');"><i class="fa fa-print"></i> Друкувати</button>
+                                    <button class="btn btn-sm btn-info" type="button" onClick="printStorselView2('{select_id}');"><i class="fa fa-print"></i> Друкувати по ячейкам</button>
+                                    <button id="storsel_params" class="btn btn-sm btn-warning" type="button" onClick="calculateStorselParams('{select_id}');"><i class="fa fa-calculator"></i> Перерахувати параметри</button>
+                                    <button class="btn btn-sm btn-danger" {cancel_storsel} type="button" onClick="cancelStorselScan('{select_id}');"><i class="fa fa-edit"></i> Корегувати відбір</button>
+                                </div>
+                                <div class="col-sm-6">
+                                    <button class="btn btn-sm btn-success {disabled83}" {disabled83} type="button" onClick="collectStorsel('{select_id}');"><i class="fa fa-cart-arrow-down"></i> Почати збирати</button>
+                                    <button id="storsel_check" class="btn btn-sm btn-default {disabled85}" {disabled85} type="button" onClick="showStorselBarcodeForm('{select_id}');"><i class="fa fa-barcode"></i> Перевірка по штрих-кодам</button>
+                                    <button id="storsel_send" class="btn btn-sm btn-primary" {disabled_128} type="button" onClick="updateStorselStatus('{select_id}');"><i class="fa fa-truck"></i> Відгрузити</button>
+                                    <button class="btn btn-white" style="float:right" type="button" onClick="closeStorselCard();">Закрити</button>
                                 </div>
                             </div>
+
+                            <div class="hr-line-dashed"></div>
 
                             <div class="form-group">
                                 <div id="selectChildsList">
@@ -109,6 +133,7 @@
             </div>
 
         </div>
+
         <div id="cat_tab3" class="tab-pane">
             <div class="panel-body">
                 <div class="social-footer">
@@ -134,4 +159,5 @@
             </div>
         </div>
     </div>
+
 </div>

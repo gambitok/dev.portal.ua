@@ -1,16 +1,17 @@
 var select_ids = [];
+
 $(document).ready(function(e) {
-    $('select#payboxes option').each(function(index, element) {
+    $("select#payboxes option").each(function(index, element) {
         select_ids.push($(this).val());
-    })
+    });
 });
 
 function showCashReports() {
-	var e = document.getElementById("payboxes");	
-	var payboxes = Array.prototype.filter.call( document.getElementById("payboxes").options, el => el.selected).map(el => el.value).join(",");
-	var date_start=$("#date_start").val();
-	var date_end=$("#date_end").val();
-	var cash_id=1;
+    let e = document.getElementById("payboxes");
+    let payboxes = Array.prototype.filter.call( document.getElementById("payboxes").options, el => el.selected).map(el => el.value).join(",");
+    let date_start=$("#date_start").val();
+    let date_end=$("#date_end").val();
+    let cash_id=1;
 	if (payboxes==="" || payboxes===undefined) toastr["error"]("Виберіть каси!"); else {
 		cash_id=1;
 		JsHttpRequest.query($rcapi,{ 'w': 'showCashReportsList', 'date_start':date_start, 'date_end':date_end, 'payboxes':payboxes, 'cash_id':cash_id}, 

@@ -3,7 +3,7 @@
 <link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
 <link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
 
-<h2 class=" border-bottom white-bg dashboard-header">Журнал оплат</h2>
+<h2 class="border-bottom white-bg dashboard-header">Журнал оплат</h2>
 <input type="hidden" id="doc_prefix" value="{doc_prefix}">
 
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -14,11 +14,11 @@
 					
                     <div class="row">
                         <div class="col-md-6">
-                        	<a class="btn btn-success"  href="#newMp" onClick="showJpayMoneyPayForm();"><i class='fa fa-money'></i> Оплата</a>
-                            <a class="btn btn-danger"  href="#newAmp" onClick="showJpayAutoMoneyPayForm();"><i class='fa fa-stack-exchange'></i> Автооплата</a>
-                            <a class="btn btn-info"  href="#newAv" onClick="showJpayAvansForm();"><i class='fa fa-css3'></i> Аванс</a>
-                            <a class="btn btn-warning"  href="#newMb" onClick="showJpayMoneyBackForm();"><i class='fa fa-briefcase'></i> Видача коштів</a>
-                            <a class="btn btn-info"  href="#newAvmp" onClick="showJpayAvansMoneyPayForm();"><i class='fa fa-stack-exchange'></i> Оплата з авансу</a>
+                        	<a class="btn btn-success" href="#newMp" onClick="showJpayMoneyPayForm();"><i class='fa fa-money'></i> Оплата</a>
+                            <a class="btn btn-danger" href="#newAmp" onClick="showJpayAutoMoneyPayForm();"><i class='fa fa-stack-exchange'></i> Автооплата</a>
+                            <a class="btn btn-info" href="#newAv" onClick="showJpayAvansForm();"><i class='fa fa-css3'></i> Аванс</a>
+                            <a class="btn btn-warning" href="#newMb" onClick="showJpayMoneyBackForm();"><i class='fa fa-briefcase'></i> Видача коштів</a>
+                            <a class="btn btn-info" href="#newAvmp" onClick="showJpayAvansMoneyPayForm();"><i class='fa fa-stack-exchange'></i> Оплата з авансу</a>
                         </div>
                         <div class="col-md-6 text-right"><a class="btn btn-info collapsed" aria-expanded="false" data-toggle="collapse" data-parent="#accordion" href="#collapseSearch"><i class='fa fa-search'></i> Пошук у реєстрі</a></div>
 	                </div>
@@ -26,70 +26,64 @@
 					<hr>
 					
 					<div class="row" style="padding-bottom: 15px;">
-						
 						<div class="col-md-2">
 							<label for="date_start">Дата від</label><input id="date_start" type="date" value="{date_today}" class="form-control">
 						</div>
-						
 						<div class="col-md-2">
 							<label for="date_end">Дата до</label><input id="date_end" type="date" value="{date_today}" class="form-control">
 						</div>
-						
 						<div class="col-md-2">
 							<label for="doc_type">Тип документу</label>
-							<select id="doc_type" value="{date_today}" class="form-control">
+							<select id="doc_type" title="{date_today}" class="form-control">
 								<option value="0">-</option>
 								{select_doc_type}
 							</select>
 						</div>
-						
 						<div class="col-md-2">
 							<label for="jpay_name">Каса</label>
-							<select id="jpay_name" value="{jpay_name}" class="form-control">
+							<select id="jpay_name" title="{jpay_name}" class="form-control">
 								<option value="0">-</option>
 								{select_jpay_name}
 							</select>
 						</div>
-						
 						<div class="col-md-2">
 							<label for="filterJPay">Фільтр</label>
-							<button id="filterJPay" class="btn btn-primary" onClick="filterJPayList();" style="width:100%;"><i class='fa fa-search'></i></button>
+							<button id="filterJPay" class="btn btn-primary" onClick="filterJPayList();" style="width:100%;"><i class="fa fa-search"></i></button>
 						</div>
 					</div>
-					
                 </div>
                 <div class="ibox-content">
                 	 <div aria-expanded="false" id="collapseSearch" class="panel-collapse collapse">
                     	<h3 align="center">Пошук записів за параметрами</h3>
                         <form method="get" id="DpSearch" onSubmit="filterDpsList(); return false;">
-                        <div class="row">
-                        	<div class="col-md-4">
-                        		<div class="row">
-                                    <div class="col-md-3 text-right"><strong>Найменування</strong></div>
-                                    <div class="col-md-9"><input class="form-control" name="filDpName" id="filDpName" placeholder="Повна або часткова назва" value="{filDpName}"></div>
-                                </div><br>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-3 text-right"><strong>Найменування</strong></div>
+                                        <div class="col-md-9"><input class="form-control" name="filDpName" id="filDpName" placeholder="Повна або часткова назва" value="{filDpName}"></div>
+                                    </div><br>
                                </div>
-                            <div class="col-md-4">
-                        		<div class="row">
-                                    <div class="col-md-3 text-right"><strong>Дата</strong></div>
-                                    <div class="col-md-4"><input class="form-control" name="filDataFrom" id="filDataFrom" placeholder="рррр-мм-дд" value="{filDataFrom}"></div>
-                                    <div class="col-md-4"><input class="form-control" name="filDataTo" id="filDataTo" placeholder="рррр-мм-дд" value="{filDataTo}"></div>
-                                </div><br>
-								<div class="row">
-                                    <div class="col-md-3 text-right"><strong>Статус</strong></div>
-                                    <div class="col-md-9"><select class="form-control" size="1" id="filStatusMain"><option value="0">-- -- --</option>{status_main_list}</select></div>
-                                </div><br>
-                                <div class="row">
-	                                <div class="col-md-3"></div>
-                                    <div class="col-md-5"><button class="form-control btn btn-success"><i class='fa fa-search'></i> Пошук</button></div>
-                                    <div class="col-md-4"><a onClick="ClearDpSearch();" class="btn btn-info"><i class='fa fa-eraser'></i></a></div>
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-3 text-right"><strong>Дата</strong></div>
+                                        <div class="col-md-4"><input class="form-control" name="filDataFrom" id="filDataFrom" placeholder="рррр-мм-дд" value="{filDataFrom}"></div>
+                                        <div class="col-md-4"><input class="form-control" name="filDataTo" id="filDataTo" placeholder="рррр-мм-дд" value="{filDataTo}"></div>
+                                    </div><br>
+                                    <div class="row">
+                                        <div class="col-md-3 text-right"><strong>Статус</strong></div>
+                                        <div class="col-md-9"><select title="Статус" class="form-control" size="1" id="filStatusMain"><option value="0">-- -- --</option>{status_main_list}</select></div>
+                                    </div><br>
+                                    <div class="row">
+                                        <div class="col-md-3"></div>
+                                        <div class="col-md-5"><button class="form-control btn btn-success"><i class='fa fa-search'></i> Пошук</button></div>
+                                        <div class="col-md-4"><a onClick="ClearDpSearch();" class="btn btn-info"><i class='fa fa-eraser'></i></a></div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         </form>
 					</div>
                     <div class="table-responsive">
-                        <table  id="datatable" class="table table-striped table-hover table-bordered" width="100%">
+                        <table id="datatable" class="table table-striped table-hover table-bordered" width="100%">
                             <thead>
                                 <tr align="center">
 	                                <th>Тип документу</th>
@@ -116,8 +110,7 @@
     </div>
 </div>
 
-
-<div id="DpCard" class="modal inmodal fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog"  aria-hidden="true">
+<div id="DpCard" class="modal inmodal fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header">
@@ -129,7 +122,8 @@
         </div>
     </div>
 </div>
-<div style="display: none;" id="CatalogueModalWindow" class="modal fade CatalogueModalWindow" tabindex="-1" role="dialog"  data-backdrop="static" data-keyboard="false" aria-hidden="true">
+
+<div style="display: none;" id="CatalogueModalWindow" class="modal fade CatalogueModalWindow" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog modal-ex-wide">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="CatalogueModalLabel" class="text-left"></h3></div>
@@ -141,7 +135,8 @@
         </div>
     </div>
 </div>
-<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel" class="text-left"></h3></div>
@@ -149,7 +144,8 @@
         </div>
     </div> 
 </div>
-<div style="display: none;" id="FormModalWindow2" class="modal fade FormModalWindow2" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none;" id="FormModalWindow2" class="modal fade FormModalWindow2" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel2" class="text-left"></h3></div>
@@ -157,6 +153,7 @@
         </div>
     </div>
 </div>
+
 <div style="display: none;" id="FormModalWindow3" class="modal fade FormModalWindow3" tabindex="-1" role="dialog" data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -165,6 +162,7 @@
         </div>
     </div>
 </div>
+
 <div style="display: none;" id="FormModalWindow4" class="modal fade FormModalWindow3" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog modal-wide2">
         <div class="modal-content">
@@ -173,7 +171,8 @@
         </div>
     </div>
 </div>
-<div style="display: none;" id="FormModalWindow5" class="modal fade FormModalWindow5" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none;" id="FormModalWindow5" class="modal fade FormModalWindow5" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel5" class="text-left"></h3></div>
@@ -197,7 +196,7 @@
 <script src="/js/jpay/jpay.js?201805151435"></script>
 <script language="javascript">
 $(document).ready(function() {
-	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+	$("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
 });
 </script>
 <script type="text/javascript">

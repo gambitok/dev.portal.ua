@@ -2,71 +2,75 @@
 
 	<div class="ibox-content">
         <form method="get" class="form-horizontal" onSubmit="return false;">
-			<input type="hidden" id="claim_id" value="{claim_id}">
+
+			<input id="claim_id" type="hidden" value="{claim_id}">
 							
             <div class="form-group">
                 <label class="col-sm-1 control-label">Контактна особа</label>
-                <div class="col-lg-2 col-sm-2"><input class="form-control"  type="text" value="{claim_client}"></div>
+                <div class="col-lg-2 col-sm-2"><input id="claim_client" class="form-control" readonly type="text" value="{claim_client}" title="Контактна особа"></div>
 									
                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Адреса</label>
-                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control"  type="text" value="{claim_adress}"></div>        
+                <div class="col-lg-2 col-md-2 col-sm-7"><input id="claim_adress" class="form-control" readonly type="text" value="{claim_adress}" title="Адреса"></div>
 								
 				<label class="col-lg-2 col-md-2 col-sm-4 control-label">Телефон</label>
-                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control"  type="text" value="{claim_phone}"></div>  
+                <div class="col-lg-2 col-md-2 col-sm-7"><input id="claim_phone" class="form-control" readonly type="text" value="{claim_phone}" title="Телефон"></div>
             </div>
 			
 			<div class="form-group">
                 <label class="col-sm-1 control-label">СТО</label>
-                <div class="col-lg-2 col-sm-2"><input class="form-control"  type="text" value="{claim_sto}"></div>
+                <div class="col-lg-2 col-sm-2"><input id="claim_sto" class="form-control" type="text" value="{claim_sto}" title="СТО"></div>
 									
                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Кількість</label>
-                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control"  type="number" value="{claim_count}"></div>        
+                <div class="col-lg-2 col-md-2 col-sm-7"><input id="claim_amount" class="form-control" type="number" value="{claim_amount}" title="Кількість"></div>
 								
 				<label class="col-lg-2 col-md-2 col-sm-4 control-label">Коментарі</label>
-                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control"  type="text" value="{claim_comment}"></div>  
+                <div class="col-lg-2 col-md-2 col-sm-7"><input id="claim_text_ru" class="form-control" type="text" value="{claim_text_ru}" title="Коментарі"></div>
             </div>
 			
 			<div class="form-group">
                 <label class="col-sm-1 control-label">Авто</label>
-                <div class="col-lg-2 col-sm-2"><input class="form-control"  type="text" value="{claim_auto}"></div>
+                <div class="col-lg-2 col-sm-2"><input id="claim_auto" class="form-control" type="text" value="{claim_auto}" title="Авто"></div>
 									
                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Рік</label>
-                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control"  type="text" value="{claim_year}"></div>        
+                <div class="col-lg-2 col-md-2 col-sm-7"><input id="claim_year" class="form-control" type="text" value="{claim_year}" title="Рік"></div>
 								
 				<label class="col-lg-2 col-md-2 col-sm-4 control-label">Номер</label>
-                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control"  type="text" value="{claim_number}"></div>  
+                <div class="col-lg-2 col-md-2 col-sm-7"><input id="claim_number" class="form-control" type="text" value="{claim_number}" title="Номер"></div>
             </div>
 						
 			<div class="form-group">
                 <label class="col-sm-1 control-label">VIN</label>
-                <div class="col-lg-2 col-sm-2"><input class="form-control"  type="text" value="{claim_vin}"></div>
+                <div class="col-lg-2 col-sm-2"><input id="claim_vin" class="form-control" type="text" value="{claim_vin}" title="VIN"></div>
 									
                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Пробіг до монтажу</label>
-                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control"  type="text" value="{claim_kilo1}"></div>        
+                <div class="col-lg-2 col-md-2 col-sm-7"><input id="claim_kilo1" class="form-control" type="text" value="{claim_kilo1}" title="Пробіг до монтажу"></div>
 								
 				<label class="col-lg-2 col-md-2 col-sm-4 control-label">Пробіг після монтажу</label>
-                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control"  type="text" value="{claim_kilo2}"></div>  
+                <div class="col-lg-2 col-md-2 col-sm-7"><input id="claim_kilo2" class="form-control" type="text" value="{claim_kilo2}" title="Пробіг після монтажу"></div>
             </div>
 									
 			<div class="form-group">
                 <label class="col-sm-1 control-label">Стан</label>
-                <div class="col-lg-2 col-sm-2"><input class="form-control"  type="text" value="{claim_state}"></div>
+                <div class="col-lg-2 col-sm-2">
+                    <select id="claim_state" title="Статус" class="form-control" name="claim_state">
+                        <option value="0">Не вибрано</option>
+                        {claim_state}
+                    </select>
+                </div>
 									
                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Дата монтажу</label>
-                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control"  type="date" value="{claim_date1}"></div>        
-								
+                <div class="col-lg-2 col-md-2 col-sm-7"><input id="claim_date1" class="form-control" type="date" value="{claim_date1}" title="Дата монтажу"></div>
+
 				<label class="col-lg-2 col-md-2 col-sm-4 control-label">Дата демонтажу</label>
-                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control"  type="date" value="{claim_date2}"></div>  
+                <div class="col-lg-2 col-md-2 col-sm-7"><input id="claim_date2" class="form-control" type="date" value="{claim_date2}" title="Дата демонтажу"></div>
             </div>
 			
 			<div class="hr-line-dashed"></div> 
 							
             <div class="form-group">
-                <div class="col-sm-6 text-left">
-					<button class="btn btn-primary" type="button" onClick="saveClaimActCard();">Зберегти</button>
-                </div>
-                <div class="col-sm-6 text-right">
-                    <button class="btn btn-white" type="button" onClick="closeClaimCard();">Закрити</button>
+                <div class="col-sm-offset-6 col-sm-6 text-right">
+                    <button class="btn btn-primary" type="button" onClick="saveClaimActCard('{claim_id}');">Зберегти</button>
+                    <button class="btn btn-white" type="button" data-dismiss="modal" aria-hidden="true">Закрити</button>
                 </div>
             </div>
 			

@@ -3,8 +3,7 @@ $access=new access; $mf="back_clients";
 list($accss,$acc_lvl)=$access->check_user_access($mf);$alg_u=0;
 
 if ($accss=="1"){
-    require_once (RD."/lib/back_clients_class.php");
-	$back_clients=new back_clients;
+    require_once (RD."/lib/back_clients_class.php");$back_clients=new back_clients;
 	$form_htm=RD."/tpl/back_clients.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 	$content=str_replace("{work_window}", $form, $content);
 	$link=gnLink; if (substr($link,-1)=="/"){$link=substr($link,0,strlen($link)-1);} $links=explode("/", $link);$w=$links[1];
@@ -16,6 +15,11 @@ if ($accss=="1"){
 	    $content=str_replace("{date_old}", $data_old, $content);
 	    $content=str_replace("{date_today}", $data_cur, $content);
 	}
+
+    if ($w=="exportExcelSlIv"){
+        $back_id=$links[2];$separator=$links[3];
+        $form=$back_clients->exportBackClientsExcel($back_id,$separator);
+    }
 
 	if ($w=="printBCn1"){ 
 		$back_id=$links[2];

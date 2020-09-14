@@ -5,8 +5,7 @@
 <link rel="stylesheet" href="/css/plugins/chosen-1.8.3/docsupport/prism.css">
 <link rel="stylesheet" href="/css/plugins/chosen-1.8.3/chosen.css">
 
-
-<h2 class=" border-bottom white-bg dashboard-header">Касовий звіт</h2>
+<h2 class="border-bottom white-bg dashboard-header">Касовий звіт</h2>
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -18,32 +17,35 @@
 							<div class="ibox float-e-margins">
 								
 								<div class="row">
-								
-									<div class="col-sm-6 col-lg-6">
-										<label for="date_start" style="padding-right: 15px; padding-left: 30px;">Дата від</label>
-										<input id="date_start" type="date" value="{date}" class="form-control" style="width: 200px; display: inline; padding: 0px 5px;">
 
-										<label for="date_end" style="padding-right: 15px; padding-left: 30px;">Дата до</label>
-										<input id="date_end" type="date" value="{date}" class="form-control" style="width: 200px; display: inline; padding: 0px 5px;">
+									<div class="col-sm-2 col-lg-2">
+										<label for="date_start">Дата від</label>
+										<input id="date_start" type="date" value="{date}" class="form-control" style="width: 200px; display: inline; padding: 0 5px;">
+									</div>
+
+									<div class="col-sm-2 col-lg-2">
+										<label for="date_end">Дата до</label>
+										<input id="date_end" type="date" value="{date}" class="form-control" style="width: 200px; display: inline; padding: 0 5px;">
 								    </div>
+
 									<div class="col-sm-4 col-lg-4">
-									    <label style="padding-right: 15px; padding-left: 30px;">Каси</label>
-										<select id="payboxes" name="payboxes[]" data-placeholder="Вибрати каси" class="chosen-select" multiple tabindex="4" style="width: 250px;">
+									    <label for="payboxes" style="display: block">Каси</label>
+										<select id="payboxes" name="payboxes[]" data-placeholder="Вибрати каси" class="chosen-select" multiple tabindex="4" style="display: inline; width: 300px;" title="Каси">
 											{paybox_list}
 										</select>
 									</div>
 
-									<div class="col-sm-2 col-lg-2">
-										<button class="btn btn-primary" onClick="showCashReports();">Сформувати</button>	
+									<div class="col-sm-4 col-lg-4 text-right">
+										<button class="btn btn-primary" onClick="showCashReports();"><i class="fa fa-table"></i> Сформувати</button>
 									</div>
-											
+
 								</div>
 								
-								<div class="row">
+								<div class="row" style="margin: 0;">
 									<div id="cash_reports_uah"></div>
 									<div id="cash_reports_usd"></div>
 									<div id="cash_reports_eur"></div>
-							</div>
+								</div>
 								
 							</div>
 						</div>

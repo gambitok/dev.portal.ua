@@ -1,11 +1,8 @@
 <div class="tabs-container">
+
     <ul class="nav nav-tabs" id="catalogue_tabs">
-        <li class="active"><a data-toggle="tab" href="#cat_tab1" onClick="showClaimCard('{claim_id}');"><i class="fa fa-bars"></i> 
-			<span class="hidden-sm-down">Структура</span>
-			</a></li>
-        <li><a data-toggle="tab" href="#cat_tab2" onClick="loadClaimAct('{claim_id}');"><i class="fa fa-bug"></i> 
-			<span class="hidden-sm-down">Акт рекламації</span>
-			</a></li>
+        <li class="active"><a data-toggle="tab" href="#cat_tab1" onClick="showClaimCard('{claim_id}');"><i class="fa fa-bars"></i> <span class="hidden-sm-down">Структура</span></a></li>
+        <li><a data-toggle="tab" href="#cat_tab2" onClick="loadClaimAct('{claim_id}');"><i class="fa fa-bug"></i> <span class="hidden-sm-down">Акт рекламації</span></a></li>
     </ul>
 	
     <div class="tab-content">
@@ -16,68 +13,96 @@
                     <div class="ibox-content">
                         <form method="get" class="form-horizontal" onSubmit="return false;">
 							
-                            <input type="hidden" id="claim_id" value="{claim_id}">
+                            <input id="claim_id" type="hidden" value="{claim_id}">
 							
                             <div class="form-group">
-								<label class="col-sm-1 control-label">Накладна клієнта</label>
-                                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control" type="text" value="{claim_client_invoice}"></div> 
+                                <label class="col-sm-1 control-label">Клієнт</label>
+                                <div class="col-sm-2"><input id="claim_client" class="form-control" readonly type="text" value="{claim_client}" title="Клієнт"></div>
 								
                                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Артикул</label>
-                                <div class="col-lg-2 col-sm-2"><input class="form-control" readonly type="text" name="claim_art" id="claim_art" value="{claim_art}"></div>
+                                <div class="col-lg-2 col-sm-2"><input id="claim_art" class="form-control" readonly type="text" name="claim_art" value="{claim_art}" title="Артикул"></div>
 									
                                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Бренд</label>
-                                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control" readonly type="text" value="{claim_brand}"></div>        
+                                <div class="col-lg-2 col-md-2 col-sm-7"><input id="claim_brand" class="form-control" readonly type="text" value="{claim_brand}" title="Бренд"></div>
                             </div>
 							
-                            <div class="form-group">								
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">Кілометраж</label>
+                                <div class="col-lg-2 col-md-2 col-sm-7"><input id="claim_kilometers" class="form-control" readonly type="text" value="{claim_kilometers}" title="Кілометраж"></div>
+								
+								<!--<label class="col-lg-2 col-md-2 col-sm-4 control-label">Коментарі</label>-->
+                                <!--<div class="col-lg-2 col-md-2 col-sm-7"><input id="claim_comment" class="form-control" readonly type="text" value="{claim_comment}" title="Коментарі"></div>-->
+                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Документ</label>
+                                <div class="col-lg-2 col-md-2 col-sm-7"><input id="claim_receipt_doc" class="form-control" readonly type="text" value="{claim_receipt_doc}" title="Документ"></div>
+
+                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Накладна клієнта</label>
+                                <div class="col-lg-2 col-md-2 col-sm-7">
+                                    <div class="input-group">
+                                        <input class="form-control" type="text" readonly name="claim_client_invoice" id="claim_client_invoice" value="{claim_client_invoice}" title="Накладна клієнта">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" onclick="{show_invoice}"><i class="fa fa-bars"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+							<div class="form-group">
+                                <label class="col-sm-1 control-label">Стан</label>
+                                <div class="col-lg-2 col-md-2 col-sm-7">
+                                    <select id="claim_state" title="Статус" class="form-control" name="claim_state">
+                                        <option value="0">Не вибрано</option>
+                                        {claim_state}
+                                    </select>
+                                </div>
+
+                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Виробник</label>
+                                <div class="col-lg-2 col-md-2 col-sm-7">
+                                    <select id="claim_manufacturer" title="Виробник" class="form-control" name="claim_manufacturer">
+                                        <option value="0">Не вибрано</option>
+                                        {claim_manufacturer}
+                                    </select>
+                                </div>
+
+                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Кількість</label>
+                                <div class="col-lg-2 col-md-2 col-sm-7"><input id="claim_amount" class="form-control" type="number" value="{claim_count}" title="Кількість"></div>
+                            </div>
+							
+							<div class="form-group">
                                 <label class="col-sm-1 control-label">Постачальник</label>
-                                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control" type="text" value="{claim_supplier}"></div> 
-								
-								<label class="col-lg-2 col-md-2 col-sm-4 control-label">Виробник</label>
-                                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control" type="text" value="{claim_manufacturer}"></div> 
-								
-								<label class="col-lg-2 col-md-2 col-sm-4 control-label">Кількість</label>
-                                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control" type="number" value="{claim_count}"></div> 
+                                <div class="col-lg-2 col-md-2 col-sm-7">
+                                    <select id="claim_supplier" title="Постачальник" class="form-control" name="claim_supplier">
+                                        <option value="0">Не вибрано</option>
+                                        {claim_supplier}
+                                    </select>
+                                </div>
+
+                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Дата</label>
+                                <div class="col-lg-2 col-md-2 col-sm-7"><input id="claim_data" class="form-control" type="date" value="{claim_data}" title="Дата"></div>
                             </div>
-							
-							<div class="form-group">
-                                <label class="col-sm-1 control-label">Клієнт</label>
-                                <div class="col-sm-2"><input class="form-control" {oper_disabled} type="text" value="{claim_client}" ></div>
-								
-                         
-								<label class="col-lg-2 col-md-2 col-sm-4 control-label">Коментарі</label>
-                                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control" readonly type="text" value="{claim_comment}"></div> 
-                            </div>
-							
-							<div class="form-group">
-                                <label class="col-sm-1 control-label">Документ</label>
-                                <div class="col-sm-2"><input class="form-control" {oper_disabled} type="text" value="{claim_receipt_doc}" ></div>
-								
-                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Кілометраж</label>
-                                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control" readonly type="text" value="{claim_kilometers}"></div> 
-								
-								<label class="col-lg-2 col-md-2 col-sm-4 control-label">Стан</label>
-                                <div class="col-lg-2 col-md-2 col-sm-7"><input class="form-control" type="text" value="{claim_state}"></div> 
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">Коментарі(рус)</label>
+                                <div class="col-sm-11"><textarea title="Коментарі" class="form-control" name="claim_text_ru" id="claim_text_ru" data-provide="markdown" rows="5">{claim_text_ru}</textarea></div>
                             </div>
 							
 							<div class="form-group">
                                 <label class="col-sm-1 control-label">Коментарі(укр)</label>
-                                <div class="col-sm-10"><textarea class="form-control" name="claim_text_ukr" id="claim_text_ukr" data-provide="markdown" rows="5">{claim_text_ukr}</textarea></div>
+                                <div class="col-sm-11"><textarea title="Коментарі" class="form-control" name="claim_text_ua" id="claim_text_ua" data-provide="markdown" rows="5">{claim_text_ua}</textarea></div>
                             </div>
 							
 							<div class="form-group">
                                 <label class="col-sm-1 control-label">Коментарі(eng)</label>
-                                <div class="col-sm-10"><textarea class="form-control" name="claim_text_eng" id="claim_text_eng" data-provide="markdown" rows="5">{claim_text_eng}</textarea></div>
+                                <div class="col-sm-11"><textarea title="Коментарі" class="form-control" name="claim_text_en" id="claim_text_en" data-provide="markdown" rows="5">{claim_text_en}</textarea></div>
                             </div>
 
                             <div class="hr-line-dashed"></div> 
 							
                             <div class="form-group">
-                                <div class="col-sm-6 text-left">
-									<button class="btn btn-primary" type="button" onClick="saveClaimCard();">Зберегти</button>
-                                </div>
-                                <div class="col-sm-6 text-right">
-                                    <button class="btn btn-white" type="button" onClick="closeClaimCard();">Закрити</button>
+                                <div class="col-sm-offset-6 col-sm-6 text-right">
+                                    <button class="btn btn-primary" type="button" onClick="saveClaimCard('{claim_id}');">Зберегти</button>
+                                    <button class="btn btn-white" type="button" data-dismiss="modal" aria-hidden="true">Закрити</button>
                                 </div>
                             </div>
 							
@@ -93,4 +118,5 @@
             </div>
         </div>
 
+    </div>
 </div>

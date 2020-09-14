@@ -6,63 +6,62 @@
     <div class="tab-content">
         <div id="cat_tab1" class="tab-pane active">
 			<div class="panel-body">
-			<!---   PAY TAB BLOCK   -->
-			<div class="ibox float-e-margins">
-				<div class="ibox-content">
-					<form method="get" onSubmit="return false;" class="form-horizontal">
-						<input type='hidden' id="move_id" value="0">
-						<input type='hidden' id="move_cash_id" value="{move_cash_id}">
-						<input type='hidden' id="user_id" value="{user_id}">
-						<div class="row">
-							<div class="col-lg-6 col-md-6 col-sm-12">
-								<h3>Каса</h3>
-								<div class="form-group">
-									<label class="col-md-6 col-sm-12 control-label">Ваша Каса</label>
-									<div class="col-md-6 col-sm-12">
-										<select size="1" id="paybox_id_from" class="form-control" onChange="getPayboxUserCashSaldoList();"><option value="0">--Оберіть зі списку--</option>{paybox_from_list}</select>
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<form method="get" onSubmit="return false;" class="form-horizontal">
+							<input type='hidden' id="move_id" value="0">
+							<input type='hidden' id="move_cash_id" value="{move_cash_id}">
+							<input type='hidden' id="user_id" value="{user_id}">
+							<div class="row">
+								<div class="col-lg-6 col-md-6 col-sm-12">
+									<h3>Каса</h3>
+									<div class="form-group">
+										<label class="col-md-6 col-sm-12 control-label">Ваша Каса</label>
+										<div class="col-md-6 col-sm-12">
+											<select size="1" id="paybox_id_from" class="form-control" onChange="getPayboxUserCashSaldoList();" title="Ваша каса"><option value="0">--Оберіть зі списку--</option>{paybox_from_list}</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 col-sm-12 control-label">Каса видачі</label>
+										<div class="col-md-6 col-sm-12">
+											<select size="1" id="balans_id_from" class="form-control" title="Каса видачі"><option value="0">--Оберіть спочатку касу--</option></select>
+										</div>
 									</div>
 								</div>
-								<div class="form-group">
-									<label class="col-md-6 col-sm-12 control-label">Каса видачі</label>
-									<div class="col-md-6 col-sm-12">
-										<select size="1" id="balans_id_from" class="form-control"><option value="0">--Оберіть спочатку касу--</option></select>
+								<div class="col-lg-6 col-md-6 col-sm-12">
+									<h3>Опис видатків</h3>
+									<div class="form-group">
+										<label class="col-md-6 col-sm-12 control-label">Тип видатків</label>
+										<div class="col-md-6 col-sm-12">
+											<select size="1" id="spend_type_id" class="form-control" title="Тип видатків"><option value="0">--Оберіть зі списку--</option>{spend_type_list}</select>
+										</div>
+									</div>
+									<div class="form-group">
+									<label class="col-md-6 col-sm-12 control-label">Сума видачі</label>
+										<div class="col-md-6 col-sm-12">
+											<input type="text" id="summ_incash" class="form-control numbers" value='0' placeholder="0">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 col-sm-12 control-label">Опис витрати</label>
+										<div class="col-md-6 col-sm-12">
+											<textarea id="comment" class="form-control" rows="4" title="Опис витрати"></textarea>
+										</div>
 									</div>
 								</div>
 							</div>
-							<div class="col-lg-6 col-md-6 col-sm-12">
-								<h3>Опис видатків</h3>
-								<div class="form-group">
-									<label class="col-md-6 col-sm-12 control-label">Тип видатків</label>
-									<div class="col-md-6 col-sm-12">
-										<select size="1" id="spend_type_id" class="form-control"><option value="0">--Оберіть зі списку--</option>{spend_type_list}</select>
-									</div>
+							<div class="hr-line-dashed"></div>
+							<div class="form-group">
+								<div class="col-sm-4 text-right">
 								</div>
-								<div class="form-group">
-								<label class="col-md-6 col-sm-12 control-label">Сума видачі</label>
-									<div class="col-md-6 col-sm-12">
-										<input type="text"  id="summ_incash" class="form-control numbers" value='0' placeholder="0">
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-md-6 col-sm-12 control-label">Опис витрати</label>
-									<div class="col-md-6 col-sm-12">
-										<textarea id="comment" class="form-control" rows="4"></textarea>
-									</div>
+								<div class="col-sm-8 text-right">
+									<button id="save_money_spend" class="btn btn-primary" type="button" onClick="saveMoneySpend();">Зафіксувати</button>
+									<button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
 								</div>
 							</div>
-						</div>
-						<div class="hr-line-dashed"></div>
-						<div class="form-group">
-							<div class="col-sm-4 text-right">
-							</div>
-							<div class="col-sm-8 text-right">
-								<button id="save_money_spend" class="btn btn-primary" type="button" onClick="saveMoneySpend();">Зафіксувати</button>
-								<button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
-							</div>
-						</div>
-					</form>
+						</form>
+					</div>
 				</div>
-			</div>
 			</div>
 		</div>
 	</div>

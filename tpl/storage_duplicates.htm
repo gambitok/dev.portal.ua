@@ -5,7 +5,7 @@
 
 <link href="/js/plugins/bootstrap-markdown/bootstrap-markdown.min.css" rel="stylesheet">
 
-<h2 class=" border-bottom white-bg dashboard-header">Дуплікати на складах</h2>
+<h2 class="border-bottom white-bg dashboard-header">Дуплікати на складах</h2>
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -96,7 +96,49 @@
                             </tbody>
 						</table>
                     </div>
-					
+
+                    <hr>
+
+                    <h2>Сума наявності: Партії + загальна наявність</h2>
+
+                    <div class="table-responsive">
+                        <table id="datatable5" class="table table-striped table-hover table-bordered" width="100%">
+                            <thead>
+                            <tr align="center">
+                                <th>#</th>
+                                <th>ART_ID</th>
+                                <th>Артикул</th>
+                                <th>Загальна наявність</th>
+                                <th>Наявність на складах</th>
+                            </tr>
+                            </thead>
+                            <tbody id="partition_stock_general_range">
+                                {partition_stock_general_range}
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr>
+
+                    <h2>Мінуси на складах/комірках</h2>
+
+                    <div class="table-responsive">
+                        <table id="datatable6" class="table table-striped table-hover table-bordered" width="100%">
+                            <thead>
+                            <tr align="center">
+                                <th>#</th>
+                                <th>ART_ID</th>
+                                <th>Артикул</th>
+                                <th>Склад</th>
+                                <th>Комірка</th>
+                                <th>Наявність</th>
+                                <th>Резерв</th>
+                            </tr>
+                            </thead>
+                            <tbody id="storage_minus">
+                                {storage_minus}
+                            </tbody>
+                        </table>
+                    </div>
 					
                 </div>
             </div>
@@ -116,10 +158,12 @@
 
 <script language="javascript">
 $(document).ready(function() {
-	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
-	$('#datatable2').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
-	$('#datatable3').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
-	$('#datatable4').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+	$("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+	$("#datatable2").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+	$("#datatable3").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+	$("#datatable4").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+	$("#datatable5").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+	$("#datatable6").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
 });
 </script>
 

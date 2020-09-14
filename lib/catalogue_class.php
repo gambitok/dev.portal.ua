@@ -1,22 +1,35 @@
 <?php
 
 class catalogue {
-	
+
 	var $kol_price_rating=12;
-	
+
+    function clearArticle($art){
+        $art=str_replace(" ","",$art);$art=str_replace("_","",$art);$art=str_replace("-","",$art);$art=str_replace(".","",$art);$art=str_replace("+","",$art);
+        $art=str_replace("'","",$art);$art=str_replace("/","",$art);$art=str_replace('"',"",$art);$art=preg_replace ("/[^a-zA-ZА-Яа-я0-9\s]/","",$art);$art=strtolower($art);
+        return $art;
+    }
+
+    function getMediaUserName($user_id){$db=DbSingleton::getDb();$name="";
+        $r=$db->query("SELECT `name` FROM `media_users` WHERE `id`='$user_id' LIMIT 1;");$n=$db->num_rows($r);
+        if ($n==1){$name=$db->result($r,0,"name");}
+        return $name;
+    }
+
     function getManualCap($id) {$db=DbSingleton::getDb();
-        $r=$db->query("select mcaption from manual where id='$id';");
+        $r=$db->query("SELECT `mcaption` FROM `manual` WHERE `id`='$id';");
         $cap=$db->result($r,0,"mcaption");
         return $cap;
     }
 
     function getArticleJDocsData($doc_type,$doc_id,$art_id) {$db=DbSingleton::getDb();
         $prixod=$rasxod=$dvigen=""; $name=$prefix=$color=""; $storage_from=$storage_to=0;
-        if ($doc_type==1) {
-            $r=$db->query("select j.storage_id, j.storage_cells_id, j.client_id, j.client_seller, j.prefix, j.doc_nom, js.amount from J_INCOME j 
-                left outer join J_INCOME_STR js on js.income_id=j.id
-            where j.id='$doc_id' and js.art_id='$art_id';");
 
+        if ($doc_type==1) { // 1 - пріход
+            $r=$db->query("SELECT j.storage_id, j.storage_cells_id, j.client_id, j.client_seller, j.prefix, j.doc_nom, js.amount 
+            FROM `J_INCOME` j 
+                LEFT OUTER JOIN `J_INCOME_STR` js on js.income_id=j.id
+            WHERE j.id='$doc_id' AND js.art_id='$art_id';");
             $client_id=$db->result($r,0,"client_id"); $client_id=$this->getClientName($client_id);
             $client_seller=$db->result($r,0,"client_seller"); $client_seller=$this->getClientName($client_seller);
             $cell_to=$db->result($r,0,"storage_cells_id"); $cell_to=$this->getStorageCellName($cell_to);
@@ -30,16 +43,16 @@ class catalogue {
             $color="lightblue";
         }
 
-        if ($doc_type==2) {
-            $r=$db->query("select j.storage_id_to, j.cell_id_to, j.type_id, j.prefix, j.doc_nom, js.storage_id_from, js.cell_id_from as cell_from, js.cell_id_to as cell_to, js.amount, js.select_id from J_MOVING j
-                left outer join J_MOVING_STR js on js.jmoving_id=j.id
-            where j.id='$doc_id' and js.art_id='$art_id';");
-
+        if ($doc_type==2) { // 2 - переміщення
+            $cell4="";
+            $r=$db->query("SELECT j.storage_id_to, j.cell_id_to, j.type_id, j.prefix, j.doc_nom, js.storage_id_from, js.cell_id_from as cell_from, js.cell_id_to as cell_to, js.amount, js.select_id 
+            FROM `J_MOVING` j
+                LEFT OUTER JOIN `J_MOVING_STR` js on js.jmoving_id=j.id
+            WHERE j.id='$doc_id' AND js.art_id='$art_id';");
             $type=$db->result($r,0,"type_id");
             $select_id=$db->result($r,0,"select_id");
-            $cell4="";
 
-            $r2=$db->query("select * from J_SELECT_STR where select_id='$select_id' and art_id='$art_id';"); $n=$db->num_rows($r);
+            $r2=$db->query("SELECT * FROM `J_SELECT_STR` WHERE `select_id`='$select_id' AND `art_id`='$art_id';"); $n=$db->num_rows($r);
             for ($i=1;$i<=$n;$i++){
                 $amount=$db->result($r2,$i-1,"amount");
                 $cell_id_from=$db->result($r2,$i-1,"cell_id_from"); $cell_id_from=$this->getStorageCellName($cell_id_from);
@@ -51,7 +64,7 @@ class catalogue {
             $cell2=$db->result($r,0,"cell_to"); $cell2=$this->getStorageCellName($cell2);
             $cell3=$db->result($r,0,"cell_id_to"); $cell3=$this->getStorageCellName($cell3);
 
-            if ($type) {$cell_to=$cell3; $cell_from=$cell4;} else {$cell_to=$cell1; $cell_from=$cell2;}
+            if ($type) {$cell_to=$cell3; $cell_from=$cell4;} else {$cell_to=$cell2; $cell_from=$cell1;}
             if ($type) $type="між складами"; else $type="внутрішнє";
 
             $storage_to=$db->result($r,0,"storage_id_to"); $storage_to=$this->getStorageName($storage_to)." ($cell_to)";
@@ -64,12 +77,12 @@ class catalogue {
             $color="";
         }
 
-        if ($doc_type==3) {
-            $r=$db->query("select j.doc_type_id, j.dp_id, j.client_id, j.prefix, j.doc_nom, js.amount, js.storage_id_from, js.cell_id_from from J_SALE_INVOICE j
-                left outer join J_SALE_INVOICE_STR js on js.invoice_id=j.id
-            where j.id='$doc_id' and js.art_id='$art_id';"); $n=$db->num_rows($r);
+        if ($doc_type==3) { // 3 - видаткова
             $cells="";$type="";
-
+            $r=$db->query("SELECT j.doc_type_id, j.dp_id, j.client_id, j.prefix, j.doc_nom, js.amount, js.storage_id_from, js.cell_id_from 
+            FROM `J_SALE_INVOICE` j
+                LEFT OUTER JOIN `J_SALE_INVOICE_STR` js on js.invoice_id=j.id
+            WHERE j.id='$doc_id' AND js.art_id='$art_id';"); $n=$db->num_rows($r);
             for ($i=1;$i<=$n;$i++){
                 $amount=$db->result($r,$i-1,"amount");
                 $cell_from=$db->result($r,$i-1,"cell_id_from"); $cell_from=$this->getStorageCellName($cell_from);
@@ -85,11 +98,11 @@ class catalogue {
             $color="lightgreen";
         }
 
-        if ($doc_type==4) {
-            $r=$db->query("select j.storage_id, j.client_id, j.prefix, j.doc_nom, js.amount, j.cell_id from J_BACK_CLIENTS j
-                left outer join J_BACK_CLIENTS_STR js on js.back_id=j.id
-            where j.id='$doc_id' and js.art_id='$art_id';");
-
+        if ($doc_type==4) { // 4 - повернення
+            $r=$db->query("SELECT j.storage_id, j.client_id, j.prefix, j.doc_nom, js.amount, j.cell_id 
+            FROM `J_BACK_CLIENTS` j
+                LEFT OUTER JOIN `J_BACK_CLIENTS_STR` js on js.back_id=j.id
+            WHERE j.id='$doc_id' AND js.art_id='$art_id';");
             $client_id=$db->result($r,0,"client_id"); $client_id=$this->getClientName($client_id); $storage_from=$client_id;
             $cell_id=$db->result($r,0,"cell_id"); $cell_to=$this->getStorageCellName($cell_id);
             $storage_to=$db->result($r,0,"storage_id"); $storage_to=$this->getStorageName($storage_to)." ($cell_to)";
@@ -100,19 +113,42 @@ class catalogue {
             $name="Повернення від клієнта";
             $color="pink";
         }
+
+        if ($doc_type==6) { // 6 - списання
+            $cells="";$type="";
+            $r=$db->query("SELECT j.status_write_off, j.dp_id, j.client_id, j.prefix, j.doc_nom, js.amount, js.storage_id_from, js.cell_id_from 
+            FROM `J_WRITE_OFF` j
+                LEFT OUTER JOIN `J_WRITE_OFF_STR` js on js.write_off_id=j.id
+            WHERE j.id='$doc_id' AND js.art_id='$art_id';"); $n=$db->num_rows($r);
+            for ($i=1;$i<=$n;$i++){
+                $amount=$db->result($r,$i-1,"amount");
+                $cell_from=$db->result($r,$i-1,"cell_id_from"); $cell_from=$this->getStorageCellName($cell_from);
+                if ($n==1) $cells=$cell_from; else $cells.=" $cell_from = $amount шт.;";
+                $storage_from=$db->result($r,$i-1,"storage_id_from"); $storage_from=$this->getStorageName($storage_from)." ($cells)";
+                $status_write_off=$db->result($r,$i-1,"status_write_off"); $type=$this->getManualCap($status_write_off);
+                $client_id=$db->result($r,$i-1,"client_id"); $client_id=$this->getClientName($client_id); $storage_to=$client_id;
+                $doc_nom=$db->result($r,$i-1,"doc_nom");
+                $prefix=$db->result($r,$i-1,"prefix")."-$doc_nom";
+                $rasxod+=$amount;
+            }
+            $name="Списання ($type)";
+            $color="lightyellow";
+        }
         return array($name,$prefix,$color,$prixod,$rasxod,$dvigen,$storage_from,$storage_to);
     }
 
-    function showArticleJDocs($art_id) {$db=DbSingleton::getDb();$form="";
+    function showArticleJDocs($art_id) { $db=DbSingleton::getDb();
+        $form="";
         if ($art_id>0){
             $form_htm=RD."/tpl/catalogue_history_moving.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-            $r=$db->query("select *, sum(amount) as sum_amount from J_ART_DOCS where art_id='$art_id' group by art_id, doc_id order by data desc;"); $n=$db->num_rows($r);$list="";
+            $r=$db->query("SELECT *, SUM(`amount`) as sum_amount FROM `J_ART_DOCS` WHERE `art_id`='$art_id' 
+            GROUP BY `art_id`, `doc_id` ORDER BY `data` DESC;"); $n=$db->num_rows($r);$list="";
             for ($i=1;$i<=$n;$i++){
-                $amount=intval($db->result($r,$i-1,"sum_amount"));
                 $data=$db->result($r,$i-1,"data");
                 $doc_type=$db->result($r,$i-1,"doc_type");
                 $doc_id=$db->result($r,$i-1,"doc_id");
                 list($name,$prefix,$color,$prixod,$rasxod,$dvigen,$storage_from,$storage_to)=$this->getArticleJDocsData($doc_type,$doc_id,$art_id);
+                $summ=$prixod-$rasxod;
                 $list.="<tr align='center' style='background:$color;'>
                     <td>$i</td>
                     <td>$data</td>
@@ -123,7 +159,7 @@ class catalogue {
                     <td>$prixod</td>
                     <td>$rasxod</td>
                     <td>$dvigen</td>
-                    <td>$amount</td>
+                    <td>$summ</td>
                 </tr>";
             }
             $form=str_replace("{list}",$list,$form);
@@ -135,59 +171,60 @@ class catalogue {
 
     function showCatNewArticle(){
         $form_htm=RD."/tpl/catalogue_new_article_form.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $form=str_replace("{brand_list}",$this->showBrandLetterListSelect(""),$form);
         $form=str_replace("{goods_list}",$this->showGoodsGroupLetterListSelect(""),$form);
         $form=str_replace("{manuf_list}",$this->showManufListSelect(""),$form);
         return array($form,"Генерування нового артиклу номенклатури");
     }
 
-    function findNewArtNextNum($brand,$group,$sub_group,$manuf){$db=DbSingleton::getTokoDb();$ar=[];
+    function findNewArtNextNum($brand,$group,$sub_group,$manuf){$db=DbSingleton::getTokoDb();
+        $ar=[];
         $brand=explode("-",$brand);$brand_key=$brand[1];
         $group=explode("-",$group);$group_key=$group[1];
         $sub_group=explode("-",$sub_group);$sub_group_key=$sub_group[1];
         $manuf=explode("-",$manuf);$manuf_key=$manuf[1];
         $ex=$brand_key."".$group_key."".$sub_group_key."".$manuf_key;
-        $r=$db->query("select ARTICLE_NR_SEARCH from T2_ARTICLES where ARTICLE_NR_SEARCH like '$ex%' order by ARTICLE_NR_SEARCH asc;");$n=$db->num_rows($r);
+        $r=$db->query("SELECT `ARTICLE_NR_SEARCH` FROM `T2_ARTICLES` WHERE `ARTICLE_NR_SEARCH` LIKE '$ex%' ORDER BY `ARTICLE_NR_SEARCH` ASC;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){$ar[$i]=substr($db->result($r,$i-1,"ARTICLE_NR_SEARCH"),0,8);}
         $num=intval(substr($ar[$n],4,3)); $num+=1; if (strlen($num)==1){$num="00".$num;}if (strlen($num)==2){$num="0".$num;}
         return $num;
     }
 
-    function findNewArtID($brand){$db=DbSingleton::getTokoDb();$adp_from=1000;$adp_to=10000000;
+    function findNewArtID($brand){$db=DbSingleton::getTokoDb();
+        $adp_from=1000;$adp_to=10000000;
         $brand=explode("-",$brand);$brand_key=$brand[1];
         if ($brand_key=="T"){$adp_from=100000000;$adp_to=1000000000;}
-        $r=$db->query("select max(ART_ID) as mid from T2_ARTICLES where ART_ID>='$adp_from' and ART_ID<='$adp_to';");$mid=$db->result($r,0,"mid");
+        $r=$db->query("SELECT MAX(`ART_ID`) as mid FROM `T2_ARTICLES` WHERE `ART_ID`>='$adp_from' AND `ART_ID`<='$adp_to';");$mid=$db->result($r,0,"mid");
         $mid+=1;
         return $mid;
     }
 
-    function checkCatalogueNewArt($num,$art_id){$db=DbSingleton::getTokoDb();$answer=0;$err="Помилка обробки данних!";
-        $r=$db->query("select COUNT(ART_ID) as kol from T2_ARTICLES where ART_ID='$art_id'");$art_ex=$db->result($r,0,"kol")+0;
-        $r=$db->query("select COUNT(ARTICLE_NR_SEARCH) as kol from T2_ARTICLES where ARTICLE_NR_SEARCH='$num'");$num_ex=$db->result($r,0,"kol")+0;
+    function checkCatalogueNewArt($num,$art_id){$db=DbSingleton::getTokoDb();
+        $answer=0;$err="Помилка обробки данних!";
+        $r=$db->query("SELECT COUNT(`ART_ID`) as kol FROM `T2_ARTICLES` WHERE `ART_ID`='$art_id';");$art_ex=$db->result($r,0,"kol")+0;
+        $r=$db->query("SELECT COUNT(`ARTICLE_NR_SEARCH`) as kol FROM `T2_ARTICLES` WHERE `ARTICLE_NR_SEARCH`='$num';");$num_ex=$db->result($r,0,"kol")+0;
         if ($num_ex==0 && $art_ex==0){$answer=1;$err="";}
         if ($num_ex>0){$answer=0;$err="Індекс існує у базі";}
         if ($art_ex>0){$answer=0;$err="ART_ID існує у базі";}
         return array($answer,$err);
     }
 
-    function saveCatalogueNewArt($num,$art_id,$brand,$sub_group){$db=DbSingleton::getTokoDb();$new_art_id="";$answer=0;$err="Помилка обробки данних!";
-        $brand=explode("-",$brand);$brand_id=$brand[0];//$brand_key=$brand[1];
-        //$group=explode("-",$group);$group_key=$group[1];$group_id=$group[0];
-        $sub_group=explode("-",$sub_group);$sub_group_id=$sub_group[0];//$sub_group_key=$sub_group[1];
-        //$manuf=explode("-",$manuf);$manuf_key=$manuf[1];$manuf_id=$manuf[0];
+    function saveCatalogueNewArt($num,$art_id,$brand,$sub_group){$db=DbSingleton::getTokoDb();
+        $new_art_id="";$answer=0;$err="Помилка обробки данних!";
+        $brand=explode("-",$brand);$brand_id=$brand[0];//$brand_key=$brand[1]; //$group=explode("-",$group);$group_key=$group[1];$group_id=$group[0];
+        $sub_group=explode("-",$sub_group);$sub_group_id=$sub_group[0];//$sub_group_key=$sub_group[1]; //$manuf=explode("-",$manuf);$manuf_key=$manuf[1];$manuf_id=$manuf[0];
         if ($art_id!="" && $num!="" && $brand>0 && $sub_group_id>0){
-            $r=$db->query("select COUNT(ART_ID) as kol from T2_ARTICLES where ART_ID='$art_id'");$art_ex=$db->result($r,0,"kol")+0;
-            $r=$db->query("select COUNT(ARTICLE_NR_SEARCH) as kol from T2_ARTICLES where ARTICLE_NR_SEARCH='$num'");$num_ex=$db->result($r,0,"kol")+0;
+            $r=$db->query("SELECT COUNT(`ART_ID`) as kol FROM `T2_ARTICLES` WHERE `ART_ID`='$art_id'");$art_ex=$db->result($r,0,"kol")+0;
+            $r=$db->query("SELECT COUNT(`ARTICLE_NR_SEARCH`) as kol FROM `T2_ARTICLES` WHERE `ARTICLE_NR_SEARCH`='$num'");$num_ex=$db->result($r,0,"kol")+0;
             if ($num_ex>0){$answer=0;$err="Індекс існує у базі";}
             if ($art_ex>0){$answer=0;$err="ART_ID існує у базі";}
             if ($num_ex==0 && $art_ex==0){
                 $num_up=strtoupper($num);
-                $db->query("insert into T2_ARTICLES (`ART_ID`,`ARTICLE_NR_DISPL`,`ARTICLE_NR_SEARCH`,`BRAND_ID`) values ('$art_id','$num_up','$num_up','$brand_id');");
-                $db->query("insert into T2_GOODS_GROUP (`ART_ID`,`GOODS_GROUP_ID`) values ('$art_id','$sub_group_id');");
-                $db->query("insert into T2_CROSS (`ART_ID`,`SEARCH_NUMBER`,`KIND`,`BRAND_ID`,`DISPLAY_NR`,`RELATION`) values ('$art_id','$num_up','0','$brand_id','$num_up','0');");
+                $db->query("INSERT INTO `T2_ARTICLES` (`ART_ID`,`ARTICLE_NR_DISPL`,`ARTICLE_NR_SEARCH`,`BRAND_ID`) VALUES ('$art_id','$num_up','$num_up','$brand_id');");
+                $db->query("INSERT INTO `T2_GOODS_GROUP` (`ART_ID`,`GOODS_GROUP_ID`) VALUES ('$art_id','$sub_group_id');");
+                $db->query("INSERT INTO `T2_CROSS` (`ART_ID`,`SEARCH_NUMBER`,`KIND`,`BRAND_ID`,`DISPLAY_NR`,`RELATION`) VALUES ('$art_id','$num_up','0','$brand_id','$num_up','0');");
 
                 $sub_group_name=$this->getGoodsGroupName($sub_group_id);
-                $db->query("insert into T2_NAMES (`ART_ID`,`LANG_ID`,`NAME`,`INFO`) values ('$art_id','16','$sub_group_name','');");
+                $db->query("INSERT INTO `T2_NAMES` (`ART_ID`,`LANG_ID`,`NAME`,`INFO`) VALUES ('$art_id','16','$sub_group_name','');");
                 /*$rg=$db->query("select STR_ID from T2_GTGG_CROSS where `GROUP_ID`='$sub_group_id' order by id asc;");$bg=$db->num_rows($rg);
                 for ($i=1;$i<=$ng;$i++){
                     $str_id=$db->result($rg,$i-1,"STR_ID");
@@ -219,9 +256,10 @@ class catalogue {
         return $form;
     }
 
-    function showCatFieldsViewForm(){$db=DbSingleton::getDb();session_start();$user_id=$_SESSION["media_user_id"];$table_key="catalogue";
+    function showCatFieldsViewForm(){$db=DbSingleton::getDb();
+        session_start();$user_id=$_SESSION["media_user_id"];$table_key="catalogue";
         $form="";$form_htm=RD."/tpl/catalogue_fields_view_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from CFN_TABLE_FIELDS where table_key='$table_key' order by id asc;");$n=$db->num_rows($r);$list="";$lst=array();
+        $r=$db->query("SELECT * FROM `CFN_TABLE_FIELDS` WHERE `table_key`='$table_key' ORDER BY `id` ASC;");$n=$db->num_rows($r);$list="";$lst=array();
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $field_name=$db->result($r,$i-1,"field_name");
@@ -248,12 +286,13 @@ class catalogue {
         $form=str_replace("{fields_list}",$list,$form);
         $form=str_replace("{kol_fields}",$n,$form);
         $form=str_replace("{table_key}",$table_key,$form);
-        return array($form,"Налаштування відображення таблиці Номенклатура");
+        return array($form,"Налаштування відображення таблиці `Номенклатура`");
     }
 
-    function showCatFieldsViewDocForm(){$db=DbSingleton::getDb();session_start();$user_id=$_SESSION["media_user_id"];$table_key="catalogue_doc";
+    function showCatFieldsViewDocForm(){$db=DbSingleton::getDb();
+        session_start();$user_id=$_SESSION["media_user_id"];$table_key="catalogue_doc";
         $form="";$form_htm=RD."/tpl/catalogue_fields_view_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from CFN_TABLE_FIELDS where table_key='$table_key' order by id asc;");$n=$db->num_rows($r);$list="";$lst=array();
+        $r=$db->query("SELECT * FROM `CFN_TABLE_FIELDS` WHERE `table_key`='$table_key' ORDER BY `id` ASC;");$n=$db->num_rows($r);$list="";$lst=array();
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $field_name=$db->result($r,$i-1,"field_name");
@@ -280,11 +319,13 @@ class catalogue {
         $form=str_replace("{fields_list}",$list,$form);
         $form=str_replace("{kol_fields}",$n,$form);
         $form=str_replace("{table_key}",$table_key,$form);
-        return array($form,"Налаштування відображення таблиці Номенклатура");
+        return array($form,"Налаштування відображення таблиці `Номенклатура`");
     }
 
-    function checkCatalogueFieldsUserCheck($user_id,$table_key,$field_key){$db=DbSingleton::getDb();$ch="checked";$field_pos=0;
-        $r=$db->query("select field_active, field_pos from CFN_USERS_TABLE_CONFIG where table_key='$table_key' and user_id='$user_id' and field_key='$field_key' limit 0,1;");$n=$db->num_rows($r);
+    function checkCatalogueFieldsUserCheck($user_id,$table_key,$field_key){$db=DbSingleton::getDb();
+        $ch="checked";$field_pos=0;
+        $r=$db->query("SELECT `field_active`, `field_pos` FROM `CFN_USERS_TABLE_CONFIG` 
+        WHERE `table_key`='$table_key' AND `user_id`='$user_id' AND `field_key`='$field_key' LIMIT 1;");$n=$db->num_rows($r);
         if ($n==1){
             $field_active=$db->result($r,0,"field_active");if ($field_active==0){$ch="";}
             $field_pos=$db->result($r,0,"field_pos");
@@ -292,25 +333,27 @@ class catalogue {
         return array($ch,$field_pos);
     }
 
-    function saveCatalogueFieldsViewForm($kol_fields,$fl_id,$fl_ch,$table_key){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];
+    function saveCatalogueFieldsViewForm($kol_fields,$fl_id,$fl_ch,$table_key){$db=DbSingleton::getDb();
+        $slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];
         $answer=0;$err="Помилка збереження даних!";if ($table_key==""){$table_key="catalogue";}
         $kol_fields=$slave->qq($kol_fields);$fl_id=$slave->qq($fl_id);$fl_ch=$slave->qq($fl_ch);
         if ($kol_fields>0){
-            $db->query("delete from CFN_USERS_TABLE_CONFIG where user_id='$user_id' and table_key='$table_key';");
+            $db->query("DELETE FROM `CFN_USERS_TABLE_CONFIG` WHERE `user_id`='$user_id' AND `table_key`='$table_key';");
             for ($i=1;$i<=$kol_fields;$i++){
                 $field_id=$fl_id[$i];
                 $field_ch=$fl_ch[$i];
                 list($field_name,$field_key)=$this->getFieldInfo("$table_key",$field_id);
-                $db->query("insert into CFN_USERS_TABLE_CONFIG (`user_id`,`table_key`,`field_name`,`field_key`,`field_active`,`field_pos`) 
-                values ('$user_id','$table_key','$field_name','$field_key','$field_ch','$i');");
+                $db->query("INSERT INTO `CFN_USERS_TABLE_CONFIG` (`user_id`,`table_key`,`field_name`,`field_key`,`field_active`,`field_pos`) 
+                VALUES ('$user_id','$table_key','$field_name','$field_key','$field_ch','$i');");
             }
             $answer=1;$err="";
         }
         return array($answer,$err);
     }
 
-    function getFieldInfo($table_key,$field_id){$db=DbSingleton::getDb();$name="";$key="";
-        $r=$db->query("select * from CFN_TABLE_FIELDS where table_key='$table_key' and id='$field_id' limit 0,1;");$n=$db->num_rows($r);
+    function getFieldInfo($table_key,$field_id){$db=DbSingleton::getDb();
+        $name="";$key="";
+        $r=$db->query("SELECT * FROM `CFN_TABLE_FIELDS` WHERE `table_key`='$table_key' AND `id`='$field_id' LIMIT 1;");$n=$db->num_rows($r);
         if ($n==1){
             $name=$db->result($r,0,"field_name");
             $key=$db->result($r,0,"field_key");
@@ -318,10 +361,11 @@ class catalogue {
         return array($name,$key);
     }
 
-    function getCatalogueClientViewFieldsData($user_id,$table_key){$db=DbSingleton::getDb();if ($table_key==""){$table_key="catalogue";}$lst=array();
-        $r=$db->query("select * from CFN_USERS_TABLE_CONFIG where table_key='$table_key' and user_id='$user_id' and field_active='1' order by field_pos,id asc;");$n=$db->num_rows($r);
+    function getCatalogueClientViewFieldsData($user_id,$table_key){$db=DbSingleton::getDb();
+        if ($table_key==""){$table_key="catalogue";}$lst=array();
+        $r=$db->query("SELECT * FROM `CFN_USERS_TABLE_CONFIG` WHERE `table_key`='$table_key' AND `user_id`='$user_id' AND `field_active`='1' ORDER BY `field_pos` ASC, `id` ASC;");$n=$db->num_rows($r);
         if ($n==0){
-            $r=$db->query("select * from CFN_TABLE_FIELDS where table_key='$table_key' order by id asc;");$n=$db->num_rows($r);
+            $r=$db->query("SELECT * FROM `CFN_TABLE_FIELDS` WHERE table_key='$table_key' ORDER BY `id` ASC;");$n=$db->num_rows($r);
         }
         if ($n>0){
             for ($i=1;$i<=$n;$i++){
@@ -334,7 +378,8 @@ class catalogue {
         return array($lst,$n);
     }
 
-    function showCatalogueBrandSelectList($r){$db=DbSingleton::getDb();$slave=new slave;$list="";
+    function showCatalogueBrandSelectList($r){$db=DbSingleton::getDb();
+        $slave=new slave;$list="";
         $n=$db->num_rows($r);$tkey=time();//$code_search
         $db->query("CREATE TEMPORARY TABLE IF NOT EXISTS `NBRAND_RESULT_$tkey` (`art_id` INT NOT NULL ,`display_nr` VARCHAR( 100 ) NOT NULL ,`name` VARCHAR( 255 ) NOT NULL ,`brand_id` INT NOT NULL ,`brand_name` VARCHAR( 100 ) NOT NULL ,`kol_res` TINYINT NOT NULL) ENGINE = MYISAM ;");
         for ($i=1;$i<=$n;$i++){
@@ -343,12 +388,11 @@ class catalogue {
             $name=$slave->qq($db->result($r,$i-1,"NAME"));
             $brand_id=$db->result($r,$i-1,"BRAND_ID");
             $brand_name=$slave->qq($db->result($r,$i-1,"BRAND_NAME"));
-            $kol_res=0;
-            //$kol_res=$this->countCatalogueBrandSelectItems($code_search,$brand_id);
-            $db->query("insert into `NBRAND_RESULT_$tkey` values ('$art_id','$display_nr','$name','$brand_id','$brand_name','$kol_res');");
+            $kol_res=0; //$kol_res=$this->countCatalogueBrandSelectItems($code_search,$brand_id);
+            $db->query("INSERT INTO `NBRAND_RESULT_$tkey` VALUES ('$art_id','$display_nr','$name','$brand_id','$brand_name','$kol_res');");
         }
 
-        $r=$db->query("select * from `NBRAND_RESULT_$tkey` order by `kol_res` desc;");$n=$db->num_rows($r);
+        $r=$db->query("SELECT * FROM `NBRAND_RESULT_$tkey` ORDER BY `kol_res` DESC;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $art_id=$db->result($r,$i-1,"art_id");
             $display_nr=$db->result($r,$i-1,"display_nr");
@@ -375,110 +419,220 @@ class catalogue {
         return $form;
     }
 
-    function showArticlesSearchList($art,$query_2,$search_type=null){$db=DbSingleton::getTokoDb();session_start();$user_id=$_SESSION["media_user_id"];;
-        $list2="";$ak=$rk=[];$r="";$query="";
-        if ($query_2=="" && $search_type==0){$n=0;
-            $link=gnLink;
-            if (substr($link,-1)=="/"){$link=substr($link,0,strlen($link)-1);}
-            $links=explode("/", $link);
-            $art=$this->clearArticle($art);
-            $brand_id=$links[2];
+    function getArtID($art) {$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT * FROM `T2_ARTICLES` WHERE `ARTICLE_NR_SEARCH`='$art' LIMIT 1;");
+        $art_id=$db->result($r,0,"ART_ID");
+        $brand_id=$db->result($r,0,"BRAND_ID");
+        return array($art_id,$brand_id);
+    }
 
-            $where_brand="";$group_brand="group by t2c.BRAND_ID"; if ($brand_id!="" && $brand_id>0){$where_brand=" and t2c.BRAND_ID='$brand_id'"; $group_brand="";}
+    function getOEList($true_art_id) {$db=DbSingleton::getTokoDb();
+        $ak=array();$rk=array();session_start();$user_id=$_SESSION["media_user_id"];$list="";$range_list="";$search_str="";
+        $query="SELECT * FROM `T2_CROSS` WHERE `ART_ID`='$true_art_id' AND `KIND`=3 AND `RELATION`=0 GROUP BY `SEARCH_NUMBER`;";
+        $r=$db->query($query);$n=$db->num_rows($r);
+        for ($i=1;$i<=$n;$i++) {
+            $SEARCH_NUMBER = $db->result($r, $i - 1, "SEARCH_NUMBER");
+            $search_str.="'$SEARCH_NUMBER'"; if ($i<$n) $search_str.=",";
+        }
+
+        if ($search_str!="") {
+            $r=$db->query("SELECT * FROM `T2_ARTICLES` WHERE `ARTICLE_NR_SEARCH` IN ($search_str)");$n=$db->num_rows($r);
+            $art_id_arr=[];
+            for ($i=1;$i<=$n;$i++){
+                $ART_ID=$db->result($r,$i-1,"ART_ID");
+                $KIND=3;
+                $RELATION=0;
+                array_push($art_id_arr,$ART_ID);
+                if (($ak[$ART_ID]=="") || $KIND==3){$ak[$ART_ID]=$KIND;}
+                if (($rk[$ART_ID]=="") || $RELATION==0){$rk[$ART_ID]=$RELATION;}
+            }
+
+            $art_id_arr=array_unique($art_id_arr);
+            $art_id_str=implode(",",$art_id_arr);
+            $art_id_str!="" ? : $art_id_str=0;
+
+            $query="SELECT t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as inner_cross, gg.NAME as goods_group_name, u.name as unit_name, cs.COSTUMS_CODE, cc.COUNTRY_NAME
+            FROM `T2_ARTICLES` t2a 
+                LEFT OUTER JOIN `T2_BRANDS` t2b on t2b.BRAND_ID=t2a.BRAND_ID 
+                LEFT OUTER JOIN `T2_NAMES` t2n on t2n.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_BARCODES` t2bc on t2bc.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_INNER_CROSS` t2ic on t2ic.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_GOODS_GROUP` t2gg on t2gg.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `GOODS_GROUP` gg on gg.ID=t2gg.GOODS_GROUP_ID 
+                LEFT OUTER JOIN `T2_PACKAGING` t2p on t2p.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `units` u on u.id=t2p.UNITS_ID 
+                LEFT OUTER JOIN `T2_ZED` t2z on t2z.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_COUNTRIES` cc on cc.COUNTRY_ID=t2z.COUNTRY_ID 
+                LEFT OUTER JOIN `T2_COSTUMS` cs on cs.COSTUMS_ID=t2z.COSTUMS_ID 	
+            WHERE t2a.ART_ID IN ($art_id_str)";
+
+            $r=$db->query($query); $n=$db->num_rows($r);
+
+            list($fldcnf,$kol_f)=$this->getCatalogueClientViewFieldsData($user_id,"catalogue");
+            for ($i=1;$i<=$kol_f;$i++){
+                $range_list.="<td onClick='showCatalogueCard(\"{art_id}\")'>{".$fldcnf[$i]["field_key"]."}</td>";
+            }
+            $lst=array();
+
+            for ($i=1;$i<=$n;$i++){
+                $art_id=$db->result($r,$i-1,"ART_ID");
+                $kind_id=$ak[$art_id];
+                $relation=$rk[$art_id];
+                $article_nr_displ=$db->result($r,$i-1,"ARTICLE_NR_DISPL");
+                $brand_name=$db->result($r,$i-1,"BRAND_NAME");
+                $name=$db->result($r,$i-1,"NAME");
+                $info=$db->result($r,$i-1,"INFO");
+                $barcode=$db->result($r,$i-1,"BARCODE");
+                $inner_cross=$db->result($r,$i-1,"inner_cross");
+                $goods_group_name=$db->result($r,$i-1,"goods_group_name");
+                $unit_name=$db->result($r,$i-1,"unit_name");
+                $costums_code=$db->result($r,$i-1,"COSTUMS_CODE");
+                $country_name=$db->result($r,$i-1,"COUNTRY_NAME");
+                $lst[$i]["kind"]=$kind_id;
+                $lst[$i]["relation"]=$relation;
+
+                $check_photo=$this->checkPhotoEmpty($art_id);
+                if ($check_photo>0) {
+                    $lst[$i]["data"]="<tr style='cursor:pointer'>
+                        <td class='text-center'><button class='btn btn-sm btn-default' onclick='showArtilceGallery(\"$art_id\",\"$article_nr_displ\")'><i class='fa fa-image'></i></button></td>
+                        <td class='text-center'>{kind_name}</td>
+                    ".$range_list."</tr>";
+                } else {
+                    $lst[$i]["data"]="<tr style='cursor:pointer'>
+                        <td class='text-center'></td>
+                        <td class='text-center'>{kind_name}</td>
+                    ".$range_list."</tr>";
+                }
+                $lst[$i]["data"]=str_replace("{art_id}",$art_id,$lst[$i]["data"]);
+                $lst[$i]["data"]=str_replace("{article_nr_displ}",$article_nr_displ,$lst[$i]["data"]);
+                $lst[$i]["data"]=str_replace("{brand_name}",$brand_name,$lst[$i]["data"]);
+                $lst[$i]["data"]=str_replace("{name}",$name,$lst[$i]["data"]);
+                $lst[$i]["data"]=str_replace("{info}",$info,$lst[$i]["data"]);
+                $lst[$i]["data"]=str_replace("{barcode}",$barcode,$lst[$i]["data"]);
+                $lst[$i]["data"]=str_replace("{art_id}",$art_id,$lst[$i]["data"]);
+                $lst[$i]["data"]=str_replace("{inner_cross}",$inner_cross,$lst[$i]["data"]);
+                $lst[$i]["data"]=str_replace("{goods_group_id}",$goods_group_name,$lst[$i]["data"]);
+                $lst[$i]["data"]=str_replace("{units_id}",$unit_name,$lst[$i]["data"]);
+                $lst[$i]["data"]=str_replace("{costums_id}",$costums_code,$lst[$i]["data"]);
+                $lst[$i]["data"]=str_replace("{country_id}",$country_name,$lst[$i]["data"]);
+            }
+            $lst_kr=array();
+            for ($i=1;$i<=$n;$i++){
+                $lst_kr[1].=$lst[$i]["data"];
+            }
+            $lst_kr[1]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"ОЕ\" class=\"fa fa-opera\"></i>",$lst_kr[1]);$list.=$lst_kr[1];
+        }
+        return $list;
+    }
+
+    function showArticlesSearchList($art,$query_2,$search_type=null){$db=DbSingleton::getTokoDb();
+        session_start();$user_id=$_SESSION["media_user_id"];
+        $list2="";$ak=$rk=[];$r="";$query="";list($true_art_id,)=$this->getArtID($art);
+        $link=gnLink;
+        if (substr($link,-1)=="/"){$link=substr($link,0,strlen($link)-1);}
+        $links=explode("/", $link);
+        $art=$this->clearArticle($art);
+        $brand_id=$links[2];
+
+        if ($query_2=="" && $search_type==0){$n=0;
+            $where_brand="";$group_brand="GROUP BY t2c.BRAND_ID"; if ($brand_id!="" && $brand_id>0){$where_brand=" and t2c.BRAND_ID='$brand_id'"; $group_brand="";}
             if ($art!=""){
-                $query="select t2b.BRAND_NAME, t2n.NAME, t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION 
-                from T2_CROSS t2c 
-                     inner join T2_BRANDS t2b on t2b.BRAND_ID=t2c.BRAND_ID
-                     left outer join T2_NAMES t2n on t2n.ART_ID=t2c.ART_ID
-                 where t2c.SEARCH_NUMBER = '$art' $where_brand $group_brand order by t2n.NAME asc;";
-                 $r=$db->query($query);$n=$db->num_rows($r);
+                $query="SELECT t2b.BRAND_NAME, IFNULL(t2n.NAME,'') as NAME, t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION 
+                FROM `T2_CROSS` t2c 
+                     INNER JOIN `T2_BRANDS` t2b on t2b.BRAND_ID=t2c.BRAND_ID
+                     LEFT OUTER JOIN `T2_NAMES` t2n on t2n.ART_ID=t2c.ART_ID
+                WHERE t2c.SEARCH_NUMBER='$art' $where_brand $group_brand ORDER BY t2n.NAME asc;";
+                $r=$db->query($query);$n=$db->num_rows($r);
             }
             $one_result=0;
             if ($n>1 && $brand_id==""){ $where_brand="";
                 $list2=$this->showCatalogueBrandSelectList($r);
             }
             if ($n==1){
-                $query="select t2b.BRAND_NAME, t2n.NAME, t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION 
-                from T2_CROSS t2c 
-                     inner join T2_BRANDS t2b on t2b.BRAND_ID=t2c.BRAND_ID
-                     left outer join T2_NAMES t2n on t2n.ART_ID=t2c.ART_ID
-                 where t2c.SEARCH_NUMBER = '$art' $where_brand order by t2n.NAME asc;";
+                $query="SELECT t2b.BRAND_NAME, IFNULL(t2n.NAME,'') as NAME, t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION 
+                FROM `T2_CROSS` t2c 
+                     INNER JOIN `T2_BRANDS` t2b on t2b.BRAND_ID=t2c.BRAND_ID
+                     LEFT OUTER JOIN `T2_NAMES` t2n on t2n.ART_ID=t2c.ART_ID
+                WHERE (t2c.SEARCH_NUMBER='$art' $where_brand) or t2c.ART_ID='$true_art_id' ORDER BY t2n.NAME asc;";
                 $r=$db->query($query);$n=$db->num_rows($r);$one_result=1;
             }
             if (($n>1 && $brand_id!="") || $one_result==1){$ak=array();$rk=array();
-                $art_id_str="";
+                $art_id_arr=[];$ART_ID=0;
                 for ($i=1;$i<=$n;$i++){
                     $ART_ID=$db->result($r,$i-1,"ART_ID");
                     $KIND=$db->result($r,$i-1,"KIND");
                     $RELATION=$db->result($r,$i-1,"RELATION");
-                    $art_id_str.="'$ART_ID'";if ($i<$n){$art_id_str.=",";}
+                    array_push($art_id_arr,$ART_ID);
                     if (($ak[$ART_ID]=="") || $KIND==0){$ak[$ART_ID]=$KIND;}
                     if (($rk[$ART_ID]=="") || $RELATION==0){$rk[$ART_ID]=$RELATION;}
                 }
+                $art_id_arr=array_unique($art_id_arr);
+                $art_id_str=implode(",",$art_id_arr);
+                $true_art_id=$ART_ID;
 
-                $query="select t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as inner_cross, gg.NAME as goods_group_name, u.name as unit_name, cs.COSTUMS_CODE, cc.COUNTRY_NAME
-                from T2_ARTICLES t2a 
-                    left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
-                    left outer join T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID 
-                    left outer join T2_BARCODES t2bc on t2bc.ART_ID=t2a.ART_ID 
-                    left outer join T2_INNER_CROSS t2ic on t2ic.ART_ID=t2a.ART_ID 
-                    left outer join T2_GOODS_GROUP t2gg on t2gg.ART_ID=t2a.ART_ID 
-                    left outer join GOODS_GROUP gg on gg.ID=t2gg.GOODS_GROUP_ID 
-                    left outer join T2_PACKAGING t2p on t2p.ART_ID=t2a.ART_ID 
-                    left outer join units u on u.id=t2p.UNITS_ID 
-                    left outer join T2_ZED t2z on t2z.ART_ID=t2a.ART_ID 
-                    left outer join T2_COUNTRIES cc on cc.COUNTRY_ID=t2z.COUNTRY_ID 
-                    left outer join T2_COSTUMS cs on cs.COSTUMS_ID=t2z.COSTUMS_ID 	
-                where t2a.ART_ID in ($art_id_str)";
+                $query="SELECT t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, IFNULL(t2n.NAME,'') as NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as inner_cross, gg.NAME as goods_group_name, u.name as unit_name, cs.COSTUMS_CODE, cc.COUNTRY_NAME
+                FROM `T2_ARTICLES` t2a 
+                    LEFT OUTER JOIN T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
+                    LEFT OUTER JOIN T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID 
+                    LEFT OUTER JOIN T2_BARCODES t2bc on t2bc.ART_ID=t2a.ART_ID 
+                    LEFT OUTER JOIN T2_INNER_CROSS t2ic on t2ic.ART_ID=t2a.ART_ID 
+                    LEFT OUTER JOIN T2_GOODS_GROUP t2gg on t2gg.ART_ID=t2a.ART_ID 
+                    LEFT OUTER JOIN GOODS_GROUP gg on gg.ID=t2gg.GOODS_GROUP_ID 
+                    LEFT OUTER JOIN T2_PACKAGING t2p on t2p.ART_ID=t2a.ART_ID 
+                    LEFT OUTER JOIN units u on u.id=t2p.UNITS_ID 
+                    LEFT OUTER JOIN T2_ZED t2z on t2z.ART_ID=t2a.ART_ID 
+                    LEFT OUTER JOIN T2_COUNTRIES cc on cc.COUNTRY_ID=t2z.COUNTRY_ID 
+                    LEFT OUTER JOIN T2_COSTUMS cs on cs.COSTUMS_ID=t2z.COSTUMS_ID 	
+                WHERE t2a.ART_ID in ($art_id_str)";
             }
         }
         if ($query_2=="" && $search_type==1){
-            $query="select t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as inner_cross, gg.NAME as goods_group_name, u.name as unit_name, cs.COSTUMS_CODE, cc.COUNTRY_NAME
-            from T2_ARTICLES t2a 
-                left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
-                left outer join T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID 
-                left outer join T2_BARCODES t2bc on t2bc.ART_ID=t2a.ART_ID 
-                left outer join T2_INNER_CROSS t2ic on t2ic.ART_ID=t2a.ART_ID 
-                left outer join T2_GOODS_GROUP t2gg on t2gg.ART_ID=t2a.ART_ID 
-                left outer join GOODS_GROUP gg on gg.ID=t2gg.GOODS_GROUP_ID 
-                left outer join T2_PACKAGING t2p on t2p.ART_ID=t2a.ART_ID 
-                left outer join units u on u.id=t2p.UNITS_ID 
-                left outer join T2_ZED t2z on t2z.ART_ID=t2a.ART_ID 
-                left outer join T2_COUNTRIES cc on cc.COUNTRY_ID=t2z.COUNTRY_ID 
-                left outer join T2_COSTUMS cs on cs.COSTUMS_ID=t2z.COSTUMS_ID 
-            where t2a.ARTICLE_NR_SEARCH='$art' or t2a.ARTICLE_NR_DISPL='$art';";
+            $query="SELECT t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, IFNULL(t2n.NAME,'') as NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as inner_cross, gg.NAME as goods_group_name, u.name as unit_name, cs.COSTUMS_CODE, cc.COUNTRY_NAME
+            FROM `T2_ARTICLES` t2a 
+                LEFT OUTER JOIN `T2_BRANDS` t2b on t2b.BRAND_ID=t2a.BRAND_ID 
+                LEFT OUTER JOIN `T2_NAMES` t2n on t2n.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_BARCODES` t2bc on t2bc.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_INNER_CROSS` t2ic on t2ic.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_GOODS_GROUP` t2gg on t2gg.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `GOODS_GROUP` gg on gg.ID=t2gg.GOODS_GROUP_ID 
+                LEFT OUTER JOIN `T2_PACKAGING` t2p on t2p.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `units` u on u.id=t2p.UNITS_ID 
+                LEFT OUTER JOIN `T2_ZED` t2z on t2z.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_COUNTRIES` cc on cc.COUNTRY_ID=t2z.COUNTRY_ID 
+                LEFT OUTER JOIN `T2_COSTUMS` cs on cs.COSTUMS_ID=t2z.COSTUMS_ID 
+            WHERE t2a.ARTICLE_NR_SEARCH='$art' or t2a.ARTICLE_NR_DISPL='$art';";
         }
         if ($query_2=="" && $search_type==2){
-            $query="select t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as inner_cross, gg.NAME as goods_group_name, u.name as unit_name, cs.COSTUMS_CODE, cc.COUNTRY_NAME
-            from T2_ARTICLES t2a 
-                left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
-                left outer join T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID 
-                left outer join T2_BARCODES t2bc on t2bc.ART_ID=t2a.ART_ID 
-                left outer join T2_INNER_CROSS t2ic on t2ic.ART_ID=t2a.ART_ID 
-                left outer join T2_GOODS_GROUP t2gg on t2gg.ART_ID=t2a.ART_ID 
-                left outer join GOODS_GROUP gg on gg.ID=t2gg.GOODS_GROUP_ID 
-                left outer join T2_PACKAGING t2p on t2p.ART_ID=t2a.ART_ID 
-                left outer join units u on u.id=t2p.UNITS_ID 
-                left outer join T2_ZED t2z on t2z.ART_ID=t2a.ART_ID 
-                left outer join T2_COUNTRIES cc on cc.COUNTRY_ID=t2z.COUNTRY_ID 
-                left outer join T2_COSTUMS cs on cs.COSTUMS_ID=t2z.COSTUMS_ID 
-            where t2bc.BARCODE='$art';";
+            $query="SELECT t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, IFNULL(t2n.NAME,'') as NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as inner_cross, gg.NAME as goods_group_name, u.name as unit_name, cs.COSTUMS_CODE, cc.COUNTRY_NAME
+            FROM `T2_ARTICLES` t2a 
+                LEFT OUTER JOIN `T2_BRANDS` t2b on t2b.BRAND_ID=t2a.BRAND_ID 
+                LEFT OUTER JOIN `T2_NAMES` t2n on t2n.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_BARCODES` t2bc on t2bc.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_INNER_CROSS` t2ic on t2ic.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_GOODS_GROUP` t2gg on t2gg.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `GOODS_GROUP` gg on gg.ID=t2gg.GOODS_GROUP_ID 
+                LEFT OUTER JOIN `T2_PACKAGING` t2p on t2p.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `units` u on u.id=t2p.UNITS_ID 
+                LEFT OUTER JOIN `T2_ZED` t2z on t2z.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_COUNTRIES` cc on cc.COUNTRY_ID=t2z.COUNTRY_ID 
+                LEFT OUTER JOIN `T2_COSTUMS` cs on cs.COSTUMS_ID=t2z.COSTUMS_ID 
+            WHERE t2bc.BARCODE='$art';";
         }
         if ($query_2=="" && $search_type==3){
-            $query="select t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as inner_cross, gg.NAME as goods_group_name, u.name as unit_name, cs.COSTUMS_CODE, cc.COUNTRY_NAME
-            from T2_ARTICLES t2a 
-                left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
-                left outer join T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID 
-                left outer join T2_BARCODES t2bc on t2bc.ART_ID=t2a.ART_ID 
-                left outer join T2_INNER_CROSS t2ic on t2ic.ART_ID=t2a.ART_ID 
-                left outer join T2_GOODS_GROUP t2gg on t2gg.ART_ID=t2a.ART_ID 
-                left outer join GOODS_GROUP gg on gg.ID=t2gg.GOODS_GROUP_ID 
-                left outer join T2_PACKAGING t2p on t2p.ART_ID=t2a.ART_ID 
-                left outer join units u on u.id=t2p.UNITS_ID 
-                left outer join T2_ZED t2z on t2z.ART_ID=t2a.ART_ID 
-                left outer join T2_COUNTRIES cc on cc.COUNTRY_ID=t2z.COUNTRY_ID 
-                left outer join T2_COSTUMS cs on cs.COSTUMS_ID=t2z.COSTUMS_ID 
-            where t2a.ART_ID='$art';";
+            $query="SELECT t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, IFNULL(t2n.NAME,'') as NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as inner_cross, gg.NAME as goods_group_name, u.name as unit_name, cs.COSTUMS_CODE, cc.COUNTRY_NAME
+            FROM `T2_ARTICLES` t2a 
+                LEFT OUTER JOIN `T2_BRANDS` t2b on t2b.BRAND_ID=t2a.BRAND_ID 
+                LEFT OUTER JOIN `T2_NAMES` t2n on t2n.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_BARCODES` t2bc on t2bc.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_INNER_CROSS` t2ic on t2ic.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_GOODS_GROUP` t2gg on t2gg.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `GOODS_GROUP` gg on gg.ID=t2gg.GOODS_GROUP_ID 
+                LEFT OUTER JOIN `T2_PACKAGING` t2p on t2p.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `units` u on u.id=t2p.UNITS_ID 
+                LEFT OUTER JOIN `T2_ZED` t2z on t2z.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_COUNTRIES` cc on cc.COUNTRY_ID=t2z.COUNTRY_ID 
+                LEFT OUTER JOIN `T2_COSTUMS` cs on cs.COSTUMS_ID=t2z.COSTUMS_ID 
+            WHERE t2a.ART_ID='$art';";
         }
         if ($query_2!=""){$query=$query_2;}
         $r=$db->query($query);$n=$db->num_rows($r);$list="";$header_list="";$range_list="";
@@ -548,13 +702,15 @@ class catalogue {
                 if (($kind==3 || $kind==4) && $relation==0){ $lst_kr[2].=$lst[$i]["data"]; }
                 if (($kind==3 || $kind==4) && $relation==1){ $lst_kr[3].=$lst[$i]["data"]; }
                 if (($kind==3 || $kind==4) && $relation==2){ $lst_kr[4].=$lst[$i]["data"]; }
-                if ($kind=="" || $relation==""){$lst_kr[5].=$lst[$i]["data"];}
+                if ($kind=="" || $relation==""){ $lst_kr[5].=$lst[$i]["data"]; }
             }
             if ($lst_kr[1]!=""){$lst_kr[1]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"запитаний артикул\" class=\"fa fa-key\"></i>",$lst_kr[1]);$list.=$lst_kr[1];}
             if ($lst_kr[2]!=""){$lst_kr[2]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"аналог\" class=\"fa fa-link\"></i>",$lst_kr[2]);$list.=$lst_kr[2];}
             if ($lst_kr[3]!=""){$lst_kr[3]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"артикул присутні в \" class=\"fa fa-level-down\"></i>",$lst_kr[3]);$list.=$lst_kr[3];}
             if ($lst_kr[4]!=""){$lst_kr[4]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"артикул включає в себе\" class=\"fa fa-level-up\"></i>",$lst_kr[4]);$list.=$lst_kr[4];}
             if ($lst_kr[5]!=""){$lst_kr[5]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"інше\" class=\"fa fa-ellipsis-h\"></i>",$lst_kr[5]);$list.=$lst_kr[5];}
+
+            $list.=$this->getOEList($true_art_id);
             /*if ($lst_kr[1]!=""){$list.="".$lst_kr[1];}
             if ($lst_kr[2]!=""){$list.="".$lst_kr[2];}
             if ($lst_kr[3]!=""){$list.="".$lst_kr[3];}
@@ -564,14 +720,14 @@ class catalogue {
         return array($header_list,$list,$list2);
     }
 
-    function getGoodsGroupName($gg_id){$db=DbSingleton::getTokoDb(); $name="";
-        $r=$db->query ("select NAME from GOODS_GROUP where ID='$gg_id' limit 0,1;");$n=$db->num_rows($r);
+    function getGoodsGroupName($gg_id){$db=DbSingleton::getTokoDb();
+        $r=$db->query ("SELECT `NAME` FROM `GOODS_GROUP` WHERE `ID`='$gg_id' LIMIT 1;");$n=$db->num_rows($r); $name="";
         if ($n==1){$name=$db->result($r,0,"NAME");}
         return $name;
     }
 
-    function listSubGoodsGroup($gg_id){$db=DbSingleton::getTokoDb(); $list="";
-        $r=$db->query ("select ID from GOODS_GROUP where PARRENT_ID='$gg_id' order by `KEY`,`ID` asc;");$n=$db->num_rows($r);
+    function listSubGoodsGroup($gg_id){$db=DbSingleton::getTokoDb();
+        $r=$db->query ("SELECT `ID` FROM `GOODS_GROUP` WHERE `PARRENT_ID`='$gg_id' ORDER BY `KEY` ASC,`ID` ASC;");$n=$db->num_rows($r); $list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"ID");
             $list.="'$id',".$this->listSubGoodsGroup($id);
@@ -585,72 +741,77 @@ class catalogue {
             foreach($brand_id as $brnd_id){
                 $where_brand.="'$brnd_id',";
             }
-            $where_brand=" and t2a.BRAND_ID in (".substr($where_brand,0,-1).") ";
+            $where_brand=" AND t2a.BRAND_ID IN (".substr($where_brand,0,-1).") ";
         }
         $where_goods_group="";
         if ($goods_group_id!=""){
             foreach($goods_group_id as $gg_id){
                 $where_goods_group.="'$gg_id',".$this->listSubGoodsGroup($gg_id);
             }
-            $where_goods_group=" and t2gg.GOODS_GROUP_ID in (".substr($where_goods_group,0,-1).") ";
+            $where_goods_group=" AND t2gg.GOODS_GROUP_ID IN (".substr($where_goods_group,0,-1).") ";
         }
 
-        $query="select t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as inner_cross, gg.NAME as goods_group_name, u.name as unit_name, cs.COSTUMS_CODE, cc.COUNTRY_NAME
-        from T2_ARTICLES t2a 
-            left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
-            left outer join T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID 
-            left outer join T2_BARCODES t2bc on t2bc.ART_ID=t2a.ART_ID 
-            left outer join T2_INNER_CROSS t2ic on t2ic.ART_ID=t2a.ART_ID 
-            left outer join T2_GOODS_GROUP t2gg on t2gg.ART_ID=t2a.ART_ID 
-            left outer join GOODS_GROUP gg on gg.ID=t2gg.GOODS_GROUP_ID 
-            left outer join T2_PACKAGING t2p on t2p.ART_ID=t2a.ART_ID 
-            left outer join units u on u.id=t2p.UNITS_ID 
-            left outer join T2_ZED t2z on t2z.ART_ID=t2a.ART_ID 
-            left outer join T2_COUNTRIES cc on cc.COUNTRY_ID=t2z.COUNTRY_ID 
-            left outer join T2_COSTUMS cs on cs.COSTUMS_ID=t2z.COSTUMS_ID 
-        where 1 $where_brand $where_goods_group limit 0,3000;";
+        $query="SELECT t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as inner_cross, gg.NAME as goods_group_name, u.name as unit_name, cs.COSTUMS_CODE, cc.COUNTRY_NAME
+        FROM `T2_ARTICLES` t2a 
+            LEFT OUTER JOIN `T2_BRANDS` t2b on t2b.BRAND_ID=t2a.BRAND_ID 
+            LEFT OUTER JOIN `T2_NAMES` t2n on t2n.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN `T2_BARCODES` t2bc on t2bc.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN `T2_INNER_CROSS` t2ic on t2ic.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN `T2_GOODS_GROUP` t2gg on t2gg.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN `GOODS_GROUP` gg on gg.ID=t2gg.GOODS_GROUP_ID 
+            LEFT OUTER JOIN `T2_PACKAGING` t2p on t2p.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN `units` u on u.id=t2p.UNITS_ID 
+            LEFT OUTER JOIN `T2_ZED` t2z on t2z.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN `T2_COUNTRIES` cc on cc.COUNTRY_ID=t2z.COUNTRY_ID 
+            LEFT OUTER JOIN `T2_COSTUMS` cs on cs.COSTUMS_ID=t2z.COSTUMS_ID 
+        WHERE 1 $where_brand $where_goods_group LIMIT 0,3000;";
 
         list($header_list,$list,$list_brand_select)=$this->showArticlesSearchList("",$query);
         return array($header_list,$list,$list_brand_select);
     }
 
-    function showArticlesFil2SearchList($art_ids){$where_artds="";
-        if ($art_ids!=""){$where_artds=" and t2a.ART_ID in (".$art_ids.") ";}
-        $query="select t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as inner_cross, gg.NAME as goods_group_name, u.name as unit_name, cs.COSTUMS_CODE, cc.COUNTRY_NAME
-        from T2_ARTICLES t2a 
-            left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
-            left outer join T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID 
-            left outer join T2_BARCODES t2bc on t2bc.ART_ID=t2a.ART_ID 
-            left outer join T2_INNER_CROSS t2ic on t2ic.ART_ID=t2a.ART_ID 
-            left outer join T2_GOODS_GROUP t2gg on t2gg.ART_ID=t2a.ART_ID 
-            left outer join GOODS_GROUP gg on gg.ID=t2gg.GOODS_GROUP_ID 
-            left outer join T2_PACKAGING t2p on t2p.ART_ID=t2a.ART_ID 
-            left outer join units u on u.id=t2p.UNITS_ID 
-            left outer join T2_ZED t2z on t2z.ART_ID=t2a.ART_ID 
-            left outer join T2_COUNTRIES cc on cc.COUNTRY_ID=t2z.COUNTRY_ID 
-            left outer join T2_COSTUMS cs on cs.COSTUMS_ID=t2z.COSTUMS_ID 
-        where 1 $where_artds limit 0,3000;";
+    function showArticlesFil2SearchList($art_ids){
+        $where_artds="";
+        if ($art_ids!=""){$where_artds=" AND t2a.ART_ID IN (".$art_ids.") ";}
+        $query="SELECT t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as inner_cross, gg.NAME as goods_group_name, u.name as unit_name, cs.COSTUMS_CODE, cc.COUNTRY_NAME
+        FROM `T2_ARTICLES` t2a 
+            LEFT OUTER JOIN `T2_BRANDS` t2b on t2b.BRAND_ID=t2a.BRAND_ID 
+            LEFT OUTER JOIN `T2_NAMES` t2n on t2n.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN `T2_BARCODES` t2bc on t2bc.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN `T2_INNER_CROSS` t2ic on t2ic.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN `T2_GOODS_GROUP` t2gg on t2gg.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN `GOODS_GROUP` gg on gg.ID=t2gg.GOODS_GROUP_ID 
+            LEFT OUTER JOIN `T2_PACKAGING` t2p on t2p.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN `units` u on u.id=t2p.UNITS_ID 
+            LEFT OUTER JOIN `T2_ZED` t2z on t2z.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN `T2_COUNTRIES` cc on cc.COUNTRY_ID=t2z.COUNTRY_ID 
+            LEFT OUTER JOIN `T2_COSTUMS` cs on cs.COSTUMS_ID=t2z.COSTUMS_ID 
+        WHERE 1 $where_artds LIMIT 0,3000;";
         list($header_list,$list,$list_brand_select)=$this->showArticlesSearchList("",$query);
         return array($header_list,$list,$list_brand_select);
     }
 
-    function getArticleOperPriceGeneralStock($art_id){$db=DbSingleton::getTokoDb();$oper_price=0;$general_stock=0;
-        $r=$db->query("select * from T2_ARTICLES_PRICE_STOCK where ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
+    function getArticleOperPriceGeneralStock($art_id){$db=DbSingleton::getTokoDb();
+        $oper_price=0;$general_stock=0;
+        $r=$db->query("SELECT * FROM `T2_ARTICLES_PRICE_STOCK` WHERE `ART_ID`='$art_id' LIMIT 1;");$n=$db->num_rows($r);
         if ($n==1){ $oper_price=$db->result($r,0,"OPER_PRICE"); $general_stock=$db->result($r,0,"GENERAL_STOCK"); }
         return array($oper_price,$general_stock);
     }
 
-    function setArticleOperPriceGeneralStock($art_id,$new_oper_price,$new_general_stock){$db=DbSingleton::getTokoDb();
-        $r=$db->query("select * from T2_ARTICLES_PRICE_STOCK where ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
-        if ($n==1){ $db->query("update T2_ARTICLES_PRICE_STOCK set `OPER_PRICE`='$new_oper_price', `GENERAL_STOCK`='$new_general_stock' where ART_ID='$art_id';"); }
-        if ($n==0){ $db->query("insert into T2_ARTICLES_PRICE_STOCK (`ART_ID`,`OPER_PRICE`,`GENERAL_STOCK`) values ('$art_id','$new_oper_price','$new_general_stock');"); }
+    function setArticleOperPriceGeneralStock($art_id,$new_oper_price,$new_general_stock){$db=DbSingleton::getTokoDb();$dbm=DbSingleton::getDb();
+        $r=$db->query("SELECT * FROM `T2_ARTICLES_PRICE_STOCK` WHERE `ART_ID`='$art_id' LIMIT 1;");$n=$db->num_rows($r);
+        if ($n==1){ $db->query("UPDATE `T2_ARTICLES_PRICE_STOCK` SET `OPER_PRICE`='$new_oper_price', `GENERAL_STOCK`='$new_general_stock' WHERE `ART_ID`='$art_id';"); }
+        if ($n==0){ $db->query("INSERT INTO `T2_ARTICLES_PRICE_STOCK` (`ART_ID`,`OPER_PRICE`,`GENERAL_STOCK`) VALUES ('$art_id','$new_oper_price','$new_general_stock');"); }
+        $dbm->query("UPDATE `ACTION_CLIENTS` SET `status_update`=1 WHERE `art_id`='$art_id' AND `oper_price`!='$new_oper_price';");
         return;
     }
 
-    function getArticleNrDisplBrand($art_id){$db=DbSingleton::getTokoDb();$article_nr_displ=$article_nr_search=$brand_name="";$brand_id=0;
-        $r=$db->query("select t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2a.ARTICLE_NR_SEARCH, t2b.BRAND_NAME from T2_ARTICLES t2a  
-            left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
-        where t2a.ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
+    function getArticleNrDisplBrand($art_id){$db=DbSingleton::getTokoDb();
+        $article_nr_displ=$article_nr_search=$brand_name="";$brand_id=0;
+        $r=$db->query("SELECT t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2a.ARTICLE_NR_SEARCH, t2b.BRAND_NAME 
+        FROM `T2_ARTICLES` t2a  
+            LEFT OUTER JOIN `T2_BRANDS` t2b on t2b.BRAND_ID=t2a.BRAND_ID 
+        WHERE t2a.ART_ID='$art_id' LIMIT 1;");$n=$db->num_rows($r);
         if ($n==1){
             $brand_id=$db->result($r,0,"BRAND_ID");
             $article_nr_displ=$db->result($r,0,"ARTICLE_NR_DISPL");
@@ -660,51 +821,58 @@ class catalogue {
         return array($article_nr_displ,$brand_id,$brand_name,$article_nr_search);
     }
 
-    function getArticleName($art_id){$db=DbSingleton::getTokoDb();$name="";
-        $r=$db->query("select NAME from T2_NAMES where ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
+    function getArticleName($art_id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `NAME` FROM `T2_NAMES` WHERE `ART_ID`='$art_id' ORDER BY `LANG_ID` ASC LIMIT 1;");$n=$db->num_rows($r);$name="";
         if ($n==1){ $name=$db->result($r,0,"NAME"); }
         return $name;
     }
 
-    function getArticleNameLang($art_id){$db=DbSingleton::getTokoDb();$name="";
-        $r=$db->query("select NAME from T2_NAMES where ART_ID='$art_id' and LANG_ID='41' limit 0,1;");$n=$db->num_rows($r);
+    function getArticleNameLang($art_id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `NAME` FROM `T2_NAMES` WHERE `ART_ID`='$art_id' AND `LANG_ID`='41' LIMIT 1;");$n=$db->num_rows($r);$name="";
         if ($n==1){ $name=$db->result($r,0,"NAME"); } else {
-            $r=$db->query("select NAME from T2_NAMES where ART_ID='$art_id' and LANG_ID='16' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("SELECT `NAME` FROM `T2_NAMES` WHERE `ART_ID`='$art_id' AND `LANG_ID`='16' LIMIT 1;");$n=$db->num_rows($r);
             if ($n==1){ $name=$db->result($r,0,"NAME"); }
         }
         return $name;
     }
 
-    function getArtNameUkr($art_id) {$db=DbSingleton::getTokoDb();$name="";
-        $r=$db->query("select NAME from T2_NAMES where ART_ID='$art_id' and LANG_ID='41' limit 1;");$n=$db->num_rows($r);
+    function getArtNameUkr($art_id) {$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `NAME` FROM `T2_NAMES` WHERE `ART_ID`='$art_id' and `LANG_ID`='41' LIMIT 1;");$n=$db->num_rows($r);$name="";
         if ($n==1){ $name=$db->result($r,0,"NAME");}
         return $name;
     }
 
     function getUniqueNumber($art_id) { $db=DbSingleton::getTokoDb();
-        $r=$db->query("select UNIV_NUMBER from T2_ARTICLES_UNIV_NUMBER where ART_ID='$art_id' limit 1;");
+        $r=$db->query("SELECT `UNIV_NUMBER` FROM `T2_ARTICLES_UNIV_NUMBER` WHERE `ART_ID`='$art_id' LIMIT 1;");
         $number=$db->result($r,0,"UNIV_NUMBER");
         return $number;
     }
 
-    function showCatalogueCard($art_id){$db=DbSingleton::getTokoDb();session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$article_nr_displ="";
+    function getArticleStatusExport($art_id) { $db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT * FROM `T2_ARTICLES_NOT_EXPORT` WHERE `ART_ID`='$art_id';"); $n=$db->num_rows($r);
+        if ($n>0) return true; else return false;
+    }
+
+    function showCatalogueCard($art_id){$db=DbSingleton::getTokoDb();
+        session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];$article_nr_displ="";
         $form="";$form_htm=RD."/tpl/catalogue_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2n.NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as INNER_CROSS, t2gg.GOODS_GROUP_ID, gg.NAME as GOODS_GROUP_NAME, IFNULL(t2ps.OPER_PRICE,0) as OPER_PRICE, IFNULL(t2ps.GENERAL_STOCK,0) as GENERAL_STOCK
-        from T2_ARTICLES t2a 
-            left outer join T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID 
-            left outer join T2_BARCODES t2bc on t2bc.ART_ID=t2a.ART_ID 
-            left outer join T2_INNER_CROSS t2ic on t2ic.ART_ID=t2a.ART_ID 
-            left outer join T2_GOODS_GROUP t2gg on t2gg.ART_ID=t2a.ART_ID 
-            left outer join GOODS_GROUP gg on gg.ID=t2gg.GOODS_GROUP_ID 
-            left outer join T2_ARTICLES_PRICE_STOCK t2ps on t2ps.ART_ID=t2a.ART_ID 
-        where t2a.ART_ID='$art_id' limit 0,1;"); $n=$db->num_rows($r);
+
+        $r=$db->query("SELECT t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, IFNULL(t2n.NAME,'') as NAME, CASE WHEN (t2n.LANG_ID!=16) THEN '' ELSE t2n.NAME END as NAME2, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as INNER_CROSS, t2gg.GOODS_GROUP_ID, gg.NAME as GOODS_GROUP_NAME, IFNULL(t2ps.OPER_PRICE,0) as OPER_PRICE, IFNULL(t2ps.GENERAL_STOCK,0) as GENERAL_STOCK
+        FROM `T2_ARTICLES` t2a 
+            LEFT OUTER JOIN `T2_NAMES` t2n on t2n.ART_ID=t2a.ART_ID
+            LEFT OUTER JOIN `T2_BARCODES` t2bc on t2bc.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN `T2_INNER_CROSS` t2ic on t2ic.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN `T2_GOODS_GROUP` t2gg on t2gg.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN `GOODS_GROUP` gg on gg.ID=t2gg.GOODS_GROUP_ID 
+            LEFT OUTER JOIN `T2_ARTICLES_PRICE_STOCK` t2ps on t2ps.ART_ID=t2a.ART_ID 
+        WHERE t2a.ART_ID='$art_id' AND (CASE WHEN t2n.LANG_ID!=NULL THEN t2n.LANG_ID=16 ELSE TRUE END) ORDER BY t2n.LANG_ID ASC LIMIT 1;"); $n=$db->num_rows($r);
 
         if ($n==0){$form_htm=RD."/tpl/access_deny.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);} }
         if ($n==1){
             $art_id=$db->result($r,0,"ART_ID");
             $article_nr_displ=$db->result($r,0,"ARTICLE_NR_DISPL");
             $brand_id=$db->result($r,0,"BRAND_ID");
-            $article_name=$db->result($r,0,"NAME");
+            $article_name2=$db->result($r,0,"NAME2");
             $article_info=$db->result($r,0,"INFO");
             $barcode=$db->result($r,0,"BARCODE");
             $inner_cross=$db->result($r,0,"INNER_CROSS");
@@ -723,7 +891,7 @@ class catalogue {
             $form=str_replace("{brand_list}",$this->showBrandListSelect($brand_id),$form);
             $form=str_replace("{goods_group_id}",$goods_group_id,$form);
             $form=str_replace("{goods_group_name}",$goods_group_name,$form);
-            $form=str_replace("{article_name}",$article_name,$form);
+            $form=str_replace("{article_name}",$article_name2,$form);
             $form=str_replace("{article_name_ukr}",$article_name_ukr,$form);
             $form=str_replace("{article_info}",$article_info,$form);
             $form=str_replace("{general_stock}",$general_stock,$form);
@@ -731,15 +899,16 @@ class catalogue {
             $form=str_replace("{my_user_id}",$user_id,$form);
             $form=str_replace("{my_user_name}",$user_name,$form);
             $form=str_replace("{unique_number}",$unnumber,$form);
+            $form=str_replace("{price_export_status}",$this->getArticleStatusExport($art_id) ? "checked" : "",$form);
         }
         return array($form,$article_nr_displ);
     }
 
-    function showArticleCross($art_id) {$db=DbSingleton::getTokoDb();$list="";
-        $r=$db->query("select `CROSS` from `T2_INNER_CROSS` where `ART_ID`='$art_id' limit 1;");
+    function showArticleCross($art_id) {$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `CROSS` FROM `T2_INNER_CROSS` WHERE `ART_ID`='$art_id' LIMIT 1;");
         $cross=$db->result($r,0,"CROSS");
         $form="";$form_htm=RD."/tpl/catalogue_cross_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select `ART_ID` from `T2_INNER_CROSS` where `CROSS`='$cross';"); $n=$db->num_rows($r);
+        $r=$db->query("SELECT `ART_ID` FROM `T2_INNER_CROSS` WHERE `CROSS`='$cross';"); $n=$db->num_rows($r); $list="";
         for ($i=1;$i<=$n;$i++){
             $art_id=$db->result($r,$i-1,"ART_ID");
             list($article_nr_displ,,$brand_name)=$this->getArticleNrDisplBrand($art_id);
@@ -761,14 +930,15 @@ class catalogue {
     function saveArticleCross($cross,$new_cross) {$db=DbSingleton::getTokoDb();
         $answer=0;$err="Помилка збереження даних!";
         if ($cross!="") {
-            $db->query("update `T2_INNER_CROSS` set `CROSS`='$new_cross' where `CROSS`='$cross';");
+            $db->query("UPDATE `T2_INNER_CROSS` SET `CROSS`='$new_cross' WHERE `CROSS`='$cross';");
             $answer=1;$err="";
         }
         return array($answer,$err);
     }
 
-    function getArticlesStorage($art_id) {$db=DbSingleton::getTokoDb(); $full_amount=$full_reserv_amount=0;
-        $r=$db->query("select * from `T2_ARTICLES_STRORAGE` where `ART_ID`='$art_id';"); $n=$db->num_rows($r);
+    function getArticlesStorage($art_id) {$db=DbSingleton::getTokoDb();
+        $full_amount=$full_reserv_amount=0;
+        $r=$db->query("SELECT * FROM `T2_ARTICLES_STRORAGE` WHERE `ART_ID`='$art_id';"); $n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $AMOUNT=$db->result($r,$i-1,"AMOUNT");
             $RESERV_AMOUNT=$db->result($r,$i-1,"RESERV_AMOUNT");
@@ -778,106 +948,132 @@ class catalogue {
         return array($full_amount, $full_reserv_amount);
     }
 
-    function saveCatalogueGeneralInfo($art_id,$article_nr_displ,$barcode,$inner_cross,$brand_id,$goods_group_id,$article_name,$article_info,$article_name_ukr,$unique_number){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка збереження даних!";
-        $art_id=$slave->qq($art_id);$article_nr_displ=$slave->qq($article_nr_displ);$barcode=$slave->qq($barcode);$inner_cross=$slave->qq($inner_cross);$brand_id=$slave->qq($brand_id);$goods_group_id=$slave->qq($goods_group_id);$article_name=$slave->qq($article_name);$article_info=$slave->qq($article_info);
+    function generateBarcode() { $db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT MAX(`BARCODE`) as mid FROM `T2_BARCODES`;");
+        $barcode=0+$db->result($r,0,"mid")+1;
+        return $barcode;
+    }
+
+    function saveBarcode($art_id,$barcode) { $db=DbSingleton::getTokoDb();
+        $answer=0;$err="Помилка збереження даних!";
+        $r=$db->query("SELECT `ART_ID` FROM `T2_BARCODES` WHERE `BARCODE`='$barcode' LIMIT 1;");$n=$db->num_rows($r);
+        if ($n==0 || $barcode=="") {
+            if ($art_id>0 && (strlen($barcode)==6 || $barcode=="")) {
+                $r1=$db->query("SELECT `BARCODE` FROM `T2_BARCODES` WHERE `ART_ID`='$art_id' LIMIT 1;");$n1=$db->num_rows($r1);
+                if ($n1==0){
+                    $db->query("INSERT INTO `T2_BARCODES` (`ART_ID`,`BARCODE`) VALUES ('$art_id','$barcode');");
+                }
+                if ($n1==1){
+                    $barcode_db=$db->result($r,0,"BARCODE");
+                    if ($barcode_db!=$barcode || $barcode==""){
+                        $db->query("UPDATE `T2_BARCODES` SET `BARCODE`='$barcode' WHERE `ART_ID`='$art_id';");
+                    }
+                }
+                $answer=1;$err="";
+            }
+        }
+        return array($answer,$err);
+    }
+
+    function saveCatalogueGeneralInfo($art_id,$article_nr_displ,$inner_cross,$brand_id,$goods_group_id,$article_name,$article_info,$article_name_ukr,$unique_number,$export_status){$db=DbSingleton::getTokoDb();
+        $slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка збереження даних!";
+        $art_id=$slave->qq($art_id);$article_nr_displ=$slave->qq($article_nr_displ);$inner_cross=$slave->qq($inner_cross);$brand_id=$slave->qq($brand_id);$goods_group_id=$slave->qq($goods_group_id);$article_name=$slave->qq($article_name);$article_info=$slave->qq($article_info);
         if ($art_id>0){
             $article_nr_search=$this->clearArticle($article_nr_displ);
-            $r=$db->query("select ARTICLE_NR_DISPL,BRAND_ID from T2_ARTICLES where `ART_ID`='$art_id' limit 1;");
+            $r=$db->query("SELECT `ARTICLE_NR_DISPL`, `BRAND_ID` FROM `T2_ARTICLES` WHERE `ART_ID`='$art_id' LIMIT 1;");
             $ARTICLE_NR_DISPL_old=$db->result($r,0,"ARTICLE_NR_DISPL");
             $BRAND_ID_old=$db->result($r,0,"BRAND_ID");
-            $r=$db->query("select `NAME` from `T2_NAMES` where `ART_ID`='$art_id' and `LANG_ID`='16' limit 1;");
+
+            $r=$db->query("SELECT `NAME` FROM `T2_NAMES` WHERE `ART_ID`='$art_id' AND `LANG_ID`='16' LIMIT 1;");
             $NAME_old=$db->result($r,0,"NAME");
-            $r=$db->query("select `NAME` from `T2_NAMES` where `ART_ID`='$art_id' and `LANG_ID`='41' limit 1;");
+            $r=$db->query("SELECT `NAME` FROM `T2_NAMES` WHERE `ART_ID`='$art_id' AND `LANG_ID`='41' LIMIT 1;");
             $NAME_41_old=$db->result($r,0,"NAME");
 
-            $db->query("update T2_ARTICLES set `ARTICLE_NR_DISPL`='$article_nr_displ', `ARTICLE_NR_SEARCH`='$article_nr_search', `BRAND_ID`='$brand_id' where `ART_ID`='$art_id';");
-
-            //BARCODE UPDATE
-            $r=$db->query("select `BARCODE` from `T2_BARCODES` where `ART_ID`='$art_id' limit 0,1;");$n=$db->num_rows($r);
-            if ($n==0){
-                $db->query("insert into T2_BARCODES (`ART_ID`,`BARCODE`) values ('$art_id','$barcode');");
-            }
-            if ($n==1){
-                $barcode_db=$db->result($r,0,"BARCODE");
-                if ($barcode_db!=$barcode){
-                    $db->query("update T2_BARCODES set `BARCODE`='$barcode' where `ART_ID`='$art_id';");
-                }
-            }
+            $db->query("UPDATE `T2_ARTICLES` SET `ARTICLE_NR_DISPL`='$article_nr_displ', `ARTICLE_NR_SEARCH`='$article_nr_search', `BRAND_ID`='$brand_id' WHERE `ART_ID`='$art_id';");
 
             //T2_GOODS_GROUP UPDATE
-            $r=$db->query("select `GOODS_GROUP_ID` from `T2_GOODS_GROUP` where `ART_ID`='$art_id' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("SELECT `GOODS_GROUP_ID` FROM `T2_GOODS_GROUP` WHERE `ART_ID`='$art_id' LIMIT 1;");$n=$db->num_rows($r);
             if ($n==0){
-                $db->query("insert into T2_GOODS_GROUP (`ART_ID`,`GOODS_GROUP_ID`) values ('$art_id','$goods_group_id');");
+                $db->query("INSERT INTO `T2_GOODS_GROUP` (`ART_ID`,`GOODS_GROUP_ID`) VALUES ('$art_id','$goods_group_id');");
             }
             if ($n==1){
                 $goods_group_id_db=$db->result($r,0,"GOODS_GROUP_ID");
                 if ($goods_group_id_db!=$goods_group_id){
-                    $db->query("update T2_GOODS_GROUP set `GOODS_GROUP_ID`='$goods_group_id' where `ART_ID`='$art_id';");
+                    $db->query("UPDATE `T2_GOODS_GROUP` SET `GOODS_GROUP_ID`='$goods_group_id' WHERE `ART_ID`='$art_id';");
                 }
             }
 
             //T2_INNER_CROSS UPDATE
-            $r=$db->query("select `CROSS` from `T2_INNER_CROSS` where `ART_ID`='$art_id' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("SELECT `CROSS` FROM `T2_INNER_CROSS` WHERE `ART_ID`='$art_id' LIMIT 1;");$n=$db->num_rows($r);
             $inner_cross_old=$db->result($r,0,"CROSS");
             if ($n==0){
-                $db->query("insert into T2_INNER_CROSS (`ART_ID`,`CROSS`) values ('$art_id','$inner_cross');");
+                $db->query("INSERT INTO `T2_INNER_CROSS` (`ART_ID`,`CROSS`) VALUES ('$art_id','$inner_cross');");
             }
             if ($n==1){
                 $inner_cross_db=$db->result($r,0,"CROSS");
                 if ($inner_cross_db!=$inner_cross){
-                    $db->query("update T2_INNER_CROSS set `CROSS`='$inner_cross' where `ART_ID`='$art_id';");
+                    $db->query("UPDATE `T2_INNER_CROSS` SET `CROSS`='$inner_cross' WHERE `ART_ID`='$art_id';");
                 }
             }
 
             //T2_ARTICLES_UNIV_NUMBER
-            $r=$db->query("select `UNIV_NUMBER` from `T2_ARTICLES_UNIV_NUMBER` where `ART_ID`='$art_id' limit 1;");$n=$db->num_rows($r);
+            $r=$db->query("SELECT `UNIV_NUMBER` FROM `T2_ARTICLES_UNIV_NUMBER` WHERE `ART_ID`='$art_id' LIMIT 1;");$n=$db->num_rows($r);
             $unique_number_old=$db->result($r,0,"UNIV_NUMBER");
             if ($n==0){
-                $db->query("insert into T2_ARTICLES_UNIV_NUMBER (`ART_ID`,`UNIV_NUMBER`) values ('$art_id','$unique_number');");
+                $db->query("INSERT INTO `T2_ARTICLES_UNIV_NUMBER` (`ART_ID`,`UNIV_NUMBER`) VALUES ('$art_id','$unique_number');");
             }
             if ($n==1){
                 $unique_number_db=$db->result($r,0,"UNIV_NUMBER");
                 if ($unique_number_db!=$unique_number){
-                    $db->query("update T2_ARTICLES_UNIV_NUMBER set `UNIV_NUMBER`='$unique_number' where `ART_ID`='$art_id';");
+                    $db->query("UPDATE `T2_ARTICLES_UNIV_NUMBER` SET `UNIV_NUMBER`='$unique_number' WHERE `ART_ID`='$art_id';");
                 }
             }
 
             //T2_INNER_CROSS UPDATE
-            $r=$db->query("select `NAME`, `INFO` from `T2_NAMES` where `ART_ID`='$art_id' and `LANG_ID`='16' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("SELECT `NAME`, `INFO` FROM `T2_NAMES` WHERE `ART_ID`='$art_id' AND `LANG_ID`='16' LIMIT 1;");$n=$db->num_rows($r);
             if ($n==0){
-                $db->query("insert into T2_NAMES (`ART_ID`,`LANG_ID`,`NAME`,`INFO`) values ('$art_id','16','$article_name','$article_info');");
+                $db->query("INSERT INTO `T2_NAMES` (`ART_ID`,`LANG_ID`,`NAME`,`INFO`) VALUES ('$art_id','16','$article_name','$article_info');");
             }
             if ($n==1){
                 $article_name_db=$db->result($r,0,"NAME");
                 $article_info_db=$db->result($r,0,"INFO");
                 if ($article_name_db!=$article_name || $article_info_db!=$article_info){
-                    $db->query("update T2_NAMES set `NAME`='$article_name', `INFO`='$article_info' where `ART_ID`='$art_id' and `LANG_ID`='16';");
+                    $db->query("UPDATE `T2_NAMES` SET `NAME`='$article_name', `INFO`='$article_info' WHERE `ART_ID`='$art_id' AND `LANG_ID`='16';");
                 }
             }
 
             //T2_INNER_CROSS UPDATE 41
-            $r=$db->query("select `NAME`, `INFO` from `T2_NAMES` where `ART_ID`='$art_id' and `LANG_ID`='41' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("SELECT `NAME`, `INFO` FROM `T2_NAMES` WHERE `ART_ID`='$art_id' AND `LANG_ID`='41' LIMIT 1;");$n=$db->num_rows($r);
             if ($n==0){
-                $db->query("insert into T2_NAMES (`ART_ID`,`LANG_ID`,`NAME`,`INFO`) values ('$art_id','41','$article_name_ukr','$article_info');");
+                $db->query("INSERT INTO `T2_NAMES` (`ART_ID`,`LANG_ID`,`NAME`,`INFO`) VALUES ('$art_id','41','$article_name_ukr','$article_info');");
             }
             if ($n==1){
                 $article_name_db=$db->result($r,0,"NAME");
                 $article_info_db=$db->result($r,0,"INFO");
                 if ($article_name_db!=$article_name_ukr || $article_info_db!=$article_info){
-                    $db->query("update T2_NAMES set `NAME`='$article_name_ukr', `INFO`='$article_info' where `ART_ID`='$art_id' and `LANG_ID`='41';");
+                    $db->query("UPDATE `T2_NAMES` SET `NAME`='$article_name_ukr', `INFO`='$article_info' WHERE `ART_ID`='$art_id' AND `LANG_ID`='41';");
                 }
             }
 
+            // price export status
+            if ($export_status) {
+                $db->query("DELETE FROM `T2_ARTICLES_NOT_EXPORT` WHERE `ART_ID`='$art_id';");
+                $db->query("INSERT INTO `T2_ARTICLES_NOT_EXPORT` (`ART_ID`) VALUES ('$art_id');");
+            } else {
+                $db->query("DELETE FROM `T2_ARTICLES_NOT_EXPORT` WHERE `ART_ID`='$art_id';");
+            }
+
             //Add history - T2_ARTICLES_LOGS
-            $db->query("insert into T2_ARTICLES_LOGS (`user_id`,`art_id`,`article_nr_displ`,`brand_id`,`article_name_ru`,`article_name_ua`,`inner_cross`,`unique_number`,`article_nr_displ_old`,`brand_id_old`,`article_name_ru_old`,`article_name_ua_old`,`inner_cross_old`,`unique_number_old`) values ('$user_id','$art_id','$article_nr_displ','$brand_id','$article_name','$article_name_ukr','$inner_cross','$unique_number','$ARTICLE_NR_DISPL_old','$BRAND_ID_old','$NAME_old','$NAME_41_old','$inner_cross_old','$unique_number_old');");
+            $db->query("INSERT INTO `T2_ARTICLES_LOGS` (`user_id`,`art_id`,`article_nr_displ`,`brand_id`,`article_name_ru`,`article_name_ua`,`inner_cross`,`unique_number`,`article_nr_displ_old`,`brand_id_old`,`article_name_ru_old`,`article_name_ua_old`,`inner_cross_old`,`unique_number_old`) 
+            VALUES ('$user_id','$art_id','$article_nr_displ','$brand_id','$article_name','$article_name_ukr','$inner_cross','$unique_number','$ARTICLE_NR_DISPL_old','$BRAND_ID_old','$NAME_old','$NAME_41_old','$inner_cross_old','$unique_number_old');");
             $answer=1;$err="";
         }
         return array($answer,$err);
     }
 
-    function showArticleLogs($art_id) {$db=DbSingleton::getTokoDb(); $list="";
+    function showArticleLogs($art_id) {$db=DbSingleton::getTokoDb();
         $form="";$form_htm=RD."/tpl/catalogue_article_logs.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from T2_ARTICLES_LOGS where art_id='$art_id';"); $n=$db->num_rows($r);
+        $r=$db->query("SELECT * FROM `T2_ARTICLES_LOGS` WHERE `art_id`='$art_id';"); $n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $data=$db->result($r,$i-1,"data");
             $user_id=$db->result($r,$i-1,"user_id"); $user_name=$this->getMediaUserName($user_id);
@@ -917,14 +1113,9 @@ class catalogue {
         return $form;
     }
 
-    function clearArticle($art){
-        $art=str_replace(" ","",$art);$art=str_replace("_","",$art);$art=str_replace("-","",$art);$art=str_replace(".","",$art);$art=str_replace("+","",$art);$art=str_replace("'","",$art);$art=str_replace("/","",$art);$art=str_replace('"',"",$art);$art=preg_replace ("/[^a-zA-ZА-Яа-я0-9\s]/","",$art);$art=strtolower($art);
-        return $art;
-    }
-
     function loadArticleCommets($art_id){$db=DbSingleton::getTokoDb();
         $form="";$form_htm=RD."/tpl/catalogue_comment_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select t2ac.* from T2_ARTICLES_COMMENTS t2ac where t2ac.ART_ID='$art_id' order by id desc;");$n=$db->num_rows($r);$list="";
+        $r=$db->query("SELECT * FROM `T2_ARTICLES_COMMENTS` WHERE `ART_ID`='$art_id' ORDER BY `id` DESC;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"ID");
             $user_id=$db->result($r,$i-1,"USER_ID");
@@ -944,38 +1135,33 @@ class catalogue {
         return $list;
     }
 
-    function saveArticleComment($art_id,$comment){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];
+    function saveArticleComment($art_id,$comment){$db=DbSingleton::getTokoDb();
+        $slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];
         $answer=0;$err="Помилка збереження даних!";
         $art_id=$slave->qq($art_id);$comment=$slave->qq($comment);
         if ($art_id>0 && $comment!=""){
-            $db->query("insert into T2_ARTICLES_COMMENTS (`ART_ID`,`USER_ID`,`COMMENT`) values ('$art_id','$user_id','$comment');");
+            $db->query("INSERT INTO `T2_ARTICLES_COMMENTS` (`ART_ID`,`USER_ID`,`COMMENT`) VALUES ('$art_id','$user_id','$comment');");
             $answer=1;$err="";
         }
         return array($answer,$err);
     }
 
-    function dropArticleComment($art_id,$comment_id){$db=DbSingleton::getTokoDb();$slave=new slave;
-        $answer=0;$err="Помилка видалення запису!";
+    function dropArticleComment($art_id,$comment_id){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$answer=0;$err="Помилка видалення запису!";
         $art_id=$slave->qq($art_id);$comment_id=$slave->qq($comment_id);
         if ($art_id>0 && $comment_id>0){
-            $r=$db->query("select * from T2_ARTICLES_COMMENTS where ART_ID='$art_id' and ID='$comment_id' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("SELECT * FROM `T2_ARTICLES_COMMENTS` WHERE `ART_ID`='$art_id' AND `ID`='$comment_id' LIMIT 1;");$n=$db->num_rows($r);
             if ($n==1){
-                $db->query("delete from T2_ARTICLES_COMMENTS where ART_ID='$art_id' and ID='$comment_id';");
+                $db->query("DELETE FROM `T2_ARTICLES_COMMENTS` WHERE `ART_ID`='$art_id' AND `ID`='$comment_id';");
                 $answer=1;$err="";
             }
         }
         return array($answer,$err);
     }
 
-    function getMediaUserName($user_id){$db=DbSingleton::getDb();$name="";
-        $r=$db->query("select name from media_users where id='$user_id' limit 0,1;");$n=$db->num_rows($r);
-        if ($n==1){$name=$db->result($r,0,"name");}
-        return $name;
-    }
-
     function loadArticleCDN($art_id){$db=DbSingleton::getTokoDb();
         $form="";$form_htm=RD."/tpl/catalogue_cdn_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select t2ac.* from T2_ARTICLES_CDN t2ac 	where t2ac.ART_ID='$art_id' and t2ac.STATUS='1' order by t2ac.FILE_NAME asc;");$n=$db->num_rows($r);$list="";
+        $r=$db->query("SELECT * FROM `T2_ARTICLES_CDN` WHERE `ART_ID`='$art_id' AND `STATUS`='1' ORDER BY `FILE_NAME` ASC;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $file_id=$db->result($r,$i-1,"ID");
             $user_id=$db->result($r,$i-1,"USER_ID");
@@ -983,7 +1169,7 @@ class catalogue {
             $name=$db->result($r,$i-1,"NAME");
             $data=$db->result($r,$i-1,"DATA");
             $user_name=$this->getMediaUserName($user_id);
-            $link="http://cdn.myparts.pro/artfiles/$art_id/$file_name";
+            $link="https://portal.myparts.pro/artfiles/$art_id/$file_name";
             $file_view="<div class=\"icon\"><i class=\"fa fa-file\"></i></div>";
             $exten=pathinfo($file_name, PATHINFO_EXTENSION);
             if ($exten=="jpg" || $exten=="jpeg" || $exten=="png" || $exten=="gif" || $exten=="bmp" || $exten=="svg"){
@@ -1003,14 +1189,14 @@ class catalogue {
         return $list;
     }
 
-    function articlesCDNDropFile($art_id,$file_id){$db=DbSingleton::getTokoDb();$slave=new slave;
+    function articlesCDNDropFile($art_id,$file_id){$db=DbSingleton::getTokoDb();
         $answer=0;$err="Помилка видалення файлу!";
-        $art_id=$slave->qq($art_id);$file_id=$slave->qq($file_id);
+        $slave=new slave;$art_id=$slave->qq($art_id);$file_id=$slave->qq($file_id);
         if ($art_id>0 && $file_id>0){
-            $r=$db->query("select FILE_NAME from T2_ARTICLES_CDN where ART_ID='$art_id' and ID='$file_id' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("SELECT `FILE_NAME` FROM `T2_ARTICLES_CDN` WHERE `ART_ID`='$art_id' AND `ID`='$file_id' LIMIT 1;");$n=$db->num_rows($r);
             if ($n==1){
                 unlink(RD.'/cdn/artfiles/$art_id/$file_name');
-                $db->query("delete from T2_ARTICLES_CDN where ART_ID='$art_id' and ID='$file_id';");
+                $db->query("DELETE FROM `T2_ARTICLES_CDN` WHERE `ART_ID`='$art_id' AND `ID`='$file_id';");
                 $answer=1;$err="";
             }
         }
@@ -1019,13 +1205,13 @@ class catalogue {
 
     function showArtilceGallery($art_id,$disp_nomber){$db=DbSingleton::getTokoDb();
         $form="";$form_htm=RD."/tpl/catalogue_article_gallery.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select t2af.* from T2_PHOTOS t2af where t2af.ART_ID='$art_id' and t2af.ACTIVE=1 order by t2af.PHOTO_NAME asc;");$n=$db->num_rows($r);$list="";$slide_list="";
+        $r=$db->query("SELECT * FROM `T2_PHOTOS` WHERE `ART_ID`='$art_id' AND `ACTIVE`=1 ORDER BY `PHOTO_NAME` ASC;");$n=$db->num_rows($r);$list="";$slide_list="";
         for ($i=1;$i<=$n;$i++){
             $file_name=$db->result($r,$i-1,"PHOTO_NAME"); $file_name=trim(preg_replace('/\s\s+/', ' ', $file_name));
             $main_v=""; $main_c="";	if ($i==1){$main_v="active";$main_c="class=\"active\"";}
             $link="https://toko.ua/uploads/images/catalogue/$file_name";
             $list.="<div class=\"item $main_v\">
-                <img alt=\"image\"  class=\"img-responsive\" src=\"$link\" align='center'>
+                <img alt=\"image\" class=\"img-responsive\" src=\"$link\" align='center'>
                 <div class=\"carousel-caption\">
                     <p>$file_name</p>
                 </div>
@@ -1040,7 +1226,7 @@ class catalogue {
 
     function loadArticleFoto($art_id){$db=DbSingleton::getTokoDb();
         $form="";$form_htm=RD."/tpl/catalogue_foto_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select t2af.* from T2_PHOTOS t2af where t2af.ART_ID='$art_id' and t2af.ACTIVE=1 order by t2af.PHOTO_NAME asc;");$n=$db->num_rows($r);$list="";
+        $r=$db->query("SELECT * FROM `T2_PHOTOS` WHERE `ART_ID`='$art_id' AND `ACTIVE`=1 ORDER BY `PHOTO_NAME` ASC;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $file_id=$db->result($r,$i-1,"ID");
             $user_id=$db->result($r,$i-1,"USER_ID");
@@ -1066,25 +1252,25 @@ class catalogue {
         return $list;
     }
 
-    function setArticlesFotoMain($art_id,$file_id){$db=DbSingleton::getTokoDb();$slave=new slave;
+    function setArticlesFotoMain($art_id,$file_id){$db=DbSingleton::getTokoDb();
         $answer=0;$err="Помилка обробки запиту!";
-        $art_id=$slave->qq($art_id);$file_id=$slave->qq($file_id);
+        $slave=new slave;$art_id=$slave->qq($art_id);$file_id=$slave->qq($file_id);
         if ($art_id>0 && $file_id>0){
-            $db->query("update T2_PHOTOS set MAIN='0' where ART_ID='$art_id' and MAIN='1';");
-            $db->query("update T2_PHOTOS set MAIN='1' where ART_ID='$art_id' and ID='$file_id';");
+            $db->query("UPDATE `T2_PHOTOS` SET `MAIN`='0' WHERE `ART_ID`='$art_id' AND `MAIN`='1';");
+            $db->query("UPDATE `T2_PHOTOS` SET `MAIN`='1' WHERE `ART_ID`='$art_id' AND `ID`='$file_id';");
             $answer=1;$err="";
         }
         return array($answer,$err);
     }
 
-    function articlesFotoDropFile($art_id,$file_id){$db=DbSingleton::getTokoDb();$slave=new slave;
+    function articlesFotoDropFile($art_id,$file_id){$db=DbSingleton::getTokoDb();
         $answer=0;$err="Помилка видалення файлу!";
-        $art_id=$slave->qq($art_id);$file_id=$slave->qq($file_id);
+        $slave=new slave;$art_id=$slave->qq($art_id);$file_id=$slave->qq($file_id);
         if ($art_id>0 && $file_id>0){
-            $r=$db->query("select PHOTO_NAME from T2_PHOTOS where ART_ID='$art_id' and ID='$file_id' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("SELECT `PHOTO_NAME` FROM `T2_PHOTOS` WHERE `ART_ID`='$art_id' AND `ID`='$file_id' LIMIT 1;");$n=$db->num_rows($r);
             if ($n==1){
                 unlink(RD.'/cdn/artfoto/$PHOTO_NAME');
-                $db->query("delete from T2_PHOTOS where ART_ID='$art_id' and ID='$file_id';");
+                $db->query("DELETE FROM `T2_PHOTOS` WHERE `ART_ID`='$art_id' AND `ID`='$file_id';");
                 $answer=1;$err="";
             }
         }
@@ -1093,7 +1279,7 @@ class catalogue {
 
     function loadArticleScheme($template_id,$op){$db=DbSingleton::getTokoDb();
         $form="";$form_htm=RD."/tpl/catalogue_scheme_block.htm";if ($op==1){$form_htm=RD."/tpl/catalogue_scheme_view_block.htm";}if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from T2_ARTICLES_SCHEME where TEMPLATE_ID='$template_id' order by FILE_NAME asc;");$n=$db->num_rows($r);$list="";
+        $r=$db->query("SELECT * FROM `T2_ARTICLES_SCHEME` WHERE `TEMPLATE_ID`='$template_id' ORDER BY `FILE_NAME` ASC;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $file_id=$db->result($r,$i-1,"ID");
             $user_id=$db->result($r,$i-1,"USER_ID");
@@ -1118,14 +1304,14 @@ class catalogue {
         return $list;
     }
 
-    function articlesSchemeDropFile($file_id){$db=DbSingleton::getTokoDb();$slave=new slave;
+    function articlesSchemeDropFile($file_id){$db=DbSingleton::getTokoDb();
         $answer=0;$err="Помилка видалення файлу!";
-        $file_id=$slave->qq($file_id);
+        $slave=new slave;$file_id=$slave->qq($file_id);
         if ($file_id>0){
-            $r=$db->query("select TEMPLATE_ID, FILE_NAME from T2_ARTICLES_SCHEME where ID='$file_id' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("SELECT `TEMPLATE_ID`, `FILE_NAME` FROM `T2_ARTICLES_SCHEME` WHERE `ID`='$file_id' LIMIT 1;");$n=$db->num_rows($r);
             if ($n==1){
                 unlink(RD.'/cdn/articles_scheme/$template_id/$file_name');
-                $db->query("delete from T2_ARTICLES_SCHEME where ID='$file_id';");
+                $db->query("DELETE FROM `T2_ARTICLES_SCHEME` WHERE `ID`='$file_id';");
                 $answer=1;$err="";
             }
         }
@@ -1133,10 +1319,11 @@ class catalogue {
     }
 
     function showSupplListSelect($sel_id){$db=DbSingleton::getDb();
-        $r=$db->query("select c.*, ot.name as org_type_name from A_CLIENTS c 
-            inner join A_CLIENTS_CATEGORY cc on cc.client_id=c.id 
-            left outer join A_ORG_TYPE ot on ot.id=c.org_type 
-        where c.status='1' and cc.category_id='2' order by name,full_name,id asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
+        $r=$db->query("SELECT c.*, ot.name as org_type_name 
+        FROM `A_CLIENTS` c 
+            INNER JOIN `A_CLIENTS_CATEGORY` cc on cc.client_id=c.id 
+            LEFT OUTER JOIN `A_ORG_TYPE` ot on ot.id=c.org_type 
+        WHERE c.status='1' AND cc.category_id='2' ORDER BY c.name, c.full_name, c.id ASC;");$n=$db->num_rows($r);$list="<option value=''></option>";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $org_type=$db->result($r,$i-1,"org_type_name");
@@ -1148,7 +1335,7 @@ class catalogue {
     }
 
     function showManufactureListSelect($sel_id){$db=DbSingleton::getTokoDb();
-        $r=$db->query("select * from T_manufacturers order by MFA_BRAND asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
+        $r=$db->query("SELECT * FROM `T_manufacturers` ORDER BY `MFA_BRAND` ASC;");$n=$db->num_rows($r);$list="<option value=''></option>";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"MFA_ID");
             $name=$db->result($r,$i-1,"MFA_BRAND");
@@ -1159,7 +1346,7 @@ class catalogue {
     }
 
     function showModelSelectList($mfa_id,$sel_id){$db=DbSingleton::getTokoDb();
-        $r=$db->query("select * from T_models where MOD_MFA_ID='$mfa_id' order by Model asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
+        $r=$db->query("SELECT * FROM `T_models` WHERE `MOD_MFA_ID`='$mfa_id' ORDER BY `Model` ASC;");$n=$db->num_rows($r);$list="<option value=''></option>";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"MOD_ID");
             $name=$db->result($r,$i-1,"TEX_TEXT")." (";
@@ -1177,7 +1364,7 @@ class catalogue {
     }
 
     function showFilterModificationSelectList($mod_id,$sel_id){$db=DbSingleton::getTokoDb();
-        $r=$db->query("select * from T_types where TYP_MOD_ID='$mod_id' order by TYP_SORT,TYP_TEXT asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
+        $r=$db->query("SELECT * FROM `T_types` WHERE `TYP_MOD_ID`='$mod_id' ORDER BY `TYP_SORT`, `TYP_TEXT` ASC;");$n=$db->num_rows($r);$list="<option value=''></option>";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"TYP_ID");
             $name="";
@@ -1199,32 +1386,31 @@ class catalogue {
     }
 
     function getTecGroupTreeChilds($str_id){$db = DbSingleton::getTokoDb();
-        $r=$db->query("SELECT count(STR_ID) as kol FROM `T2_GROUP_TREE` where `STR_ID_PARENT`='$str_id';");
+        $r=$db->query("SELECT COUNT(`STR_ID`) as kol FROM `T2_GROUP_TREE` WHERE `STR_ID_PARENT`='$str_id';");
         $kol=0+$db->result($r,0,"kol");
         return $kol;
     }
 
-    function createTDtree($typ_id) {$db = DbSingleton::getTokoDb(); $dbp=DbSingleton::getTokoDb();
-        $query="SELECT ART_ID,LA_ID FROM T2_LINKS where TYP_ID ='$typ_id' GROUP BY ART_ID;";
-        $r=$dbp->query($query);$n=$dbp->num_rows($r);$art_id_str="0";
+    function createTDtree($typ_id) { $db=DbSingleton::getTokoDb(); //$dbp=DbSingleton::getTokoDb();
+        $query="SELECT `ART_ID` FROM `T2_LINKS` WHERE `TYP_ID`='$typ_id' GROUP BY `ART_ID`;";
+        $r=$db->query($query);$n=$db->num_rows($r);$art_id_str="0";
         for ($i=1;$i<=$n;$i++){
-            $art_id=$dbp->result($r,$i-1,"ART_ID");if ($art_id!=""){$art_id_str.=",$art_id";}
-    //			$la_id=$dbp->result($r,$i-1,"LA_ID");if ($la_id!=""){$art_id_str.=",$la_id";}
+            $art_id=$db->result($r,$i-1,"ART_ID");if ($art_id!=""){$art_id_str.=",$art_id";}
         }
-        $query="SELECT ART_ID FROM T2_ARTICLES where `ART_ID` in ($art_id_str);";
+        $query="SELECT `ART_ID` FROM `T2_ARTICLES` WHERE `ART_ID` IN ($art_id_str);";
         $r=$db->query($query);$n=$db->num_rows($r);$art_id_str="0";
         for ($i=1;$i<=$n;$i++){
             $art_id=$db->result($r,$i-1,"ART_ID");$art_id_str.=",$art_id";
         }
-        $query="SELECT * FROM T2_TREE where `ART_ID` in ($art_id_str);";
-        $r=$dbp->query($query);$n=$dbp->num_rows($r);$str_id_str="0";$str_id_a=array();
+        $query="SELECT * FROM `T2_TREE` WHERE `ART_ID` IN ($art_id_str);";
+        $r=$db->query($query);$n=$db->num_rows($r);$str_id_str="0";$str_id_a=array();
         for ($i=1;$i<=$n;$i++){
-            $str_id=$dbp->result($r,$i-1,"STR_ID");$str_id_str.=",$str_id";
-            $art_id=$dbp->result($r,$i-1,"ART_ID");$str_id_a[$str_id][$art_id]=$art_id;
+            $str_id=$db->result($r,$i-1,"STR_ID");$str_id_str.=",$str_id";
+            $art_id=$db->result($r,$i-1,"ART_ID");$str_id_a[$str_id][$art_id]=$art_id;
         }
         $td_array = array();
-        $query="SELECT * FROM `T2_GROUP_TREE` where `STR_ID` in ($str_id_str);";
-        $r=$db->query($query);$n=$dbp->num_rows($r);
+        $query="SELECT * FROM `T2_GROUP_TREE` WHERE `STR_ID` IN ($str_id_str);";
+        $r=$db->query($query);$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $str_id=$db->result($r,$i-1,"STR_ID");
             $str_id_parrent=$db->result($r,$i-1,"STR_ID_PARENT");if ($str_id_parrent==""){$str_id_parrent=0;}
@@ -1240,7 +1426,7 @@ class catalogue {
             $td_array[$i]["art_ids"] = $art_ids;
         }
         $tree = ""; $lvl = 1;
-        for ($i = 1; $i <= 10; $i++) { $lvl += 1;
+        for ($i=1; $i<=10; $i++) { $lvl += 1;
             foreach ($td_array as $elm) {
                 if ($elm["level"] == $lvl) {
                     $str="<li><div>";
@@ -1262,15 +1448,15 @@ class catalogue {
         return $tree;
     }
 
-    function createTDtree_universal($art_id) {$db = DbSingleton::getTokoDb(); $dbp=DbSingleton::getTokoDb();
-        $query="SELECT * FROM T2_TREE where `ART_ID` in ($art_id);";
-        $r=$dbp->query($query);$n=$dbp->num_rows($r);$str_id_str="0";$str_id_a=array();
+    function createTDtree_universal($art_id) { $db=DbSingleton::getTokoDb(); //$dbp=DbSingleton::getTokoDb();
+        $query="SELECT * FROM `T2_TREE` WHERE `ART_ID` IN ($art_id);";
+        $r=$db->query($query);$n=$db->num_rows($r);$str_id_str="0";$str_id_a=array();
         for ($i=1;$i<=$n;$i++){
-            $str_id=$dbp->result($r,$i-1,"STR_ID");$str_id_str.=",$str_id";
+            $str_id=$db->result($r,$i-1,"STR_ID");$str_id_str.=",$str_id";
         }
         $td_array = array();
-        $query="SELECT * FROM `T2_GROUP_TREE` where `LNG_ID` = '16';";
-        $r=$db->query($query);$n=$dbp->num_rows($r);
+        $query="SELECT * FROM `T2_GROUP_TREE` WHERE `LNG_ID`='16';";
+        $r=$db->query($query);$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $str_id=$db->result($r,$i-1,"STR_ID");
             $str_id_parrent=$db->result($r,$i-1,"STR_ID_PARENT");if ($str_id_parrent==""){$str_id_parrent=0;}
@@ -1278,7 +1464,6 @@ class catalogue {
             $tex_text=$db->result($r,$i-1,"TEX_TEXT");
             $child=$this->getTecGroupTreeChilds($str_id);
             $art_ids=implode(",", $str_id_a[$str_id]);
-
             $td_array[$i]["id_tree"] = $str_id;
             $td_array[$i]["id_parent"] = $str_id_parrent;
             $td_array[$i]["level"] = $str_level;
@@ -1328,26 +1513,26 @@ class catalogue {
         return array($form,$form_tree,$form_result);
     }
 
-    function getBrandId($art_id){$db=DbSingleton::getTokoDb();$brand_id=0;
-        $r=$db->query("select BRAND_ID from T2_ARTICLES where ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
+    function getBrandId($art_id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `BRAND_ID` FROM `T2_ARTICLES` WHERE `ART_ID`='$art_id' LIMIT 1;");$n=$db->num_rows($r);$brand_id=0;
         if ($n==1){$brand_id=$db->result($r,0,"BRAND_ID");}
         return $brand_id;
     }
 
-    function getBrandKind($sel_id){$db=DbSingleton::getTokoDb();$kind=4;
-        $r=$db->query("select KIND from T2_BRANDS where BRAND_ID='$sel_id' limit 0,1;");$n=$db->num_rows($r);
+    function getBrandKind($sel_id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `KIND` FROM `T2_BRANDS` WHERE `BRAND_ID`='$sel_id' LIMIT 1;");$n=$db->num_rows($r);$kind=4;
         if ($n==1){$kind=$db->result($r,0,"KIND");}
         return $kind;
     }
 
-    function getBrandName($sel_id){$db=DbSingleton::getTokoDb();$brand_name="";
-        $r=$db->query("select BRAND_NAME from T2_BRANDS where BRAND_ID='$sel_id' limit 0,1;");$n=$db->num_rows($r);
+    function getBrandName($sel_id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `BRAND_NAME` FROM `T2_BRANDS` WHERE `BRAND_ID`='$sel_id' LIMIT 1;");$n=$db->num_rows($r);$brand_name="";
         if ($n==1){$brand_name=$db->result($r,0,"BRAND_NAME");}
         return $brand_name;
     }
 
     function showManufListSelect($sel_id){$db=DbSingleton::getTokoDb();
-        $r=$db->query("select * from T2_MANUF order by NAME asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
+        $r=$db->query("SELECT * FROM `T2_MANUF` ORDER BY `NAME` ASC;");$n=$db->num_rows($r);$list="<option value=''></option>";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"ID");
             $key=$db->result($r,$i-1,"KEY");
@@ -1358,20 +1543,20 @@ class catalogue {
         return $list;
     }
 
-    function showBrandLetterListSelect($sel_id){$db=DbSingleton::getTokoDb();
-        $r=$db->query("select * from T2_BRANDS where LETTER_CODE!='' order by BRAND_NAME asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
-        for ($i=1;$i<=$n;$i++){
-            $id=$db->result($r,$i-1,"BRAND_ID");
-            $letter_code=$db->result($r,$i-1,"LETTER_CODE");
-            $name=$db->result($r,$i-1,"BRAND_NAME");
-            $sel="";if ($sel_id==$id){$sel="selected='selected'";}
-            $list.="<option value='$id-$letter_code' $sel>$name</option>";
-        }
-        return $list;
-    }
+//    function showBrandLetterListSelect($sel_id){$db=DbSingleton::getTokoDb();
+//        $r=$db->query("SELECT * FROM `T2_BRANDS` WHERE `LETTER_CODE`!='' ORDER BY `BRAND_NAME` ASC;");$n=$db->num_rows($r);$list="<option value=''></option>";
+//        for ($i=1;$i<=$n;$i++){
+//            $id=$db->result($r,$i-1,"BRAND_ID");
+//            $letter_code=$db->result($r,$i-1,"LETTER_CODE");
+//            $name=$db->result($r,$i-1,"BRAND_NAME");
+//            $sel="";if ($sel_id==$id){$sel="selected='selected'";}
+//            $list.="<option value='$id-$letter_code' $sel>$name</option>";
+//        }
+//        return $list;
+//    }
 
     function showBrandListSelect($sel_id){$db=DbSingleton::getTokoDb();
-        $r=$db->query("select * from T2_BRANDS order by BRAND_NAME asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
+        $r=$db->query("SELECT * FROM `T2_BRANDS` ORDER BY `BRAND_NAME` ASC;");$n=$db->num_rows($r);$list="<option value=''></option>";
         for ($i=1;$i<=$n;$i++){
             $brand_id=$db->result($r,$i-1,"BRAND_ID");
             $brand_name=$db->result($r,$i-1,"BRAND_NAME");
@@ -1381,8 +1566,9 @@ class catalogue {
         return $list;
     }
 
-    function showUnitsListSelect($sel_id,$ns){$db=DbSingleton::getTokoDb();if ($ns==""){$ns=1;}
-        $r=$db->query("select * from units order by name asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
+    function showUnitsListSelect($sel_id,$ns){$db=DbSingleton::getTokoDb();
+        if ($ns==""){$ns=1;}
+        $r=$db->query("SELECT * FROM `units` ORDER BY `name` ASC;");$n=$db->num_rows($r);$list="<option value=''></option>";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $name=$db->result($r,$i-1,"abr");
@@ -1394,7 +1580,7 @@ class catalogue {
     }
 
     function loadRefinementListSelect($group_id){$db=DbSingleton::getTokoDb();
-        $r=$db->query("select * from T2_REFINEMENT where GROUP_ID='$group_id' order by `NAME`,`ID` asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
+        $r=$db->query("SELECT * FROM `T2_REFINEMENT` WHERE `GROUP_ID`='$group_id' ORDER BY `NAME` ASC, `ID` ASC;");$n=$db->num_rows($r);$list="<option value=''></option>";
         for ($i=1;$i<=$n;$i++){
             $name=$db->result($r,$i-1,"NAME");
             $key=$db->result($r,$i-1,"KEY");
@@ -1404,7 +1590,7 @@ class catalogue {
     }
 
     function showGoodsGroupLetterListSelect($prnt_id){$db=DbSingleton::getTokoDb();
-        $r=$db->query("select * from GOODS_GROUP where PARRENT_ID='$prnt_id' order by `KEY`,`ID` asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
+        $r=$db->query("SELECT * FROM `GOODS_GROUP` WHERE `PARRENT_ID`='$prnt_id' ORDER BY `KEY`, `ID` ASC;");$n=$db->num_rows($r);$list="<option value=''></option>";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"ID");
             $name=$db->result($r,$i-1,"NAME");
@@ -1415,7 +1601,7 @@ class catalogue {
     }
 
     function showGoodsGroupListSelect($sel_id){$db=DbSingleton::getTokoDb();
-        $r=$db->query("select * from GOODS_GROUP where PARRENT_ID='0' order by `KEY`,`ID` asc;");$n=$db->num_rows($r);$list="<option value=''></option>";
+        $r=$db->query("SELECT * FROM `GOODS_GROUP` WHERE `PARRENT_ID`='0' ORDER BY `KEY`, `ID` ASC;");$n=$db->num_rows($r);$list="<option value=''></option>";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"ID");
             $name=$db->result($r,$i-1,"NAME");
@@ -1426,7 +1612,7 @@ class catalogue {
     }
 
     function showGoodsGroupSubListSelect($parrent_id,$sel_id,$prn_i){$db=DbSingleton::getTokoDb();
-        $r=$db->query("select * from GOODS_GROUP where PARRENT_ID='$parrent_id'  order by `KEY`,`ID` asc;");$n=$db->num_rows($r);$list="";
+        $r=$db->query("SELECT * FROM `GOODS_GROUP` WHERE `PARRENT_ID`='$parrent_id' ORDER BY `KEY`, `ID` ASC;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"ID");
             $name=$db->result($r,$i-1,"NAME");
@@ -1436,18 +1622,19 @@ class catalogue {
         return $list;
     }
 
-    function unlinkCatalogueGoodGroup($art_id,$group_id){$db=DbSingleton::getTokoDb(); $answer=0;$err="Помилка обробки даних";
-        $r=$db->query("select * from T2_GOODS_GROUP where ART_ID='$art_id' and `GOODS_GROUP_ID`='$group_id' limit 0,1;");$n=$db->num_rows($r);
+    function unlinkCatalogueGoodGroup($art_id,$group_id){$db=DbSingleton::getTokoDb();
+        $answer=0;$err="Помилка обробки даних";
+        $r=$db->query("SELECT * FROM `T2_GOODS_GROUP` WHERE `ART_ID`='$art_id' AND `GOODS_GROUP_ID`='$group_id' LIMIT 1;");$n=$db->num_rows($r);
         if ($n==1){
-            $db->query("delete from T2_GOODS_GROUP where ART_ID='$art_id' and `GOODS_GROUP_ID`='$group_id';");
+            $db->query("DELETE FROM `T2_GOODS_GROUP` WHERE `ART_ID`='$art_id' AND `GOODS_GROUP_ID`='$group_id';");
             $answer=1;$err="";
         }
         return array($answer,$err);
     }
 
-    function showGoodGroupTree($sel_id){$db=DbSingleton::getTokoDb();$tree="";
+    function showGoodGroupTree($sel_id){$db=DbSingleton::getTokoDb();
         $form="";$form_htm=RD."/tpl/catalogue_goods_group_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from GOODS_GROUP where PARRENT_ID='0' order by `KEY`,`ID` asc;");$n=$db->num_rows($r);
+        $r=$db->query("SELECT * FROM `GOODS_GROUP` WHERE `PARRENT_ID`='0' ORDER BY `KEY`, `ID` ASC;");$n=$db->num_rows($r);$tree="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"ID");
             $name=$db->result($r,$i-1,"NAME");
@@ -1459,8 +1646,8 @@ class catalogue {
         return $form;
     }
 
-    function showGoodGroupSubLevel($parrent_id,$sel_id){$db=DbSingleton::getTokoDb();$tree="";
-        $r=$db->query("select * from GOODS_GROUP where PARRENT_ID='$parrent_id' order by `KEY`,`ID` asc;");$n=$db->num_rows($r);
+    function showGoodGroupSubLevel($parrent_id,$sel_id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT * FROM `GOODS_GROUP` WHERE `PARRENT_ID`='$parrent_id' ORDER BY `KEY`, `ID` ASC;");$n=$db->num_rows($r);$tree="";
         if ($n>0){$tree.="<ul>";
             for ($i=1;$i<=$n;$i++){
                 $id=$db->result($r,$i-1,"ID");
@@ -1473,38 +1660,41 @@ class catalogue {
         return $tree;
     }
 
-    function getArticleGoodsGroup($art_id){$db=DbSingleton::getTokoDb();$id=0;$caption="";
-        $r=$db->query("select gg.* from GOODS_GROUP gg inner join T2_GOODS_GROUP t2gg on t2gg.GOODS_GROUP_ID=gg.ID where t2gg.ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
+    function getArticleGoodsGroup($art_id){$db=DbSingleton::getTokoDb();
+        $id=0;$caption="";
+        $r=$db->query("SELECT gg.* FROM `GOODS_GROUP` gg 
+            INNER JOIN `T2_GOODS_GROUP` t2gg on t2gg.GOODS_GROUP_ID=gg.ID
+        WHERE t2gg.ART_ID='$art_id' LIMIT 1;");$n=$db->num_rows($r);
         if ($n==1){$id=$db->result($r,0,"ID");$caption=$db->result($r,0,"NAME");}
         return array($id,$caption);
     }
 
-    function getArticleGoodsGroupTemplateId($art_id,$goods_group_id){$db=DbSingleton::getTokoDb();$id=0;
-        $r=$db->query("select TEMPLATE_ID from T2_GOODS_GROUP_TEMPLATES where ART_ID='$art_id' and GOODS_GROUP_ID='$goods_group_id' limit 0,1;");$n=$db->num_rows($r);
+    function getArticleGoodsGroupTemplateId($art_id,$goods_group_id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `TEMPLATE_ID` FROM `T2_GOODS_GROUP_TEMPLATES` WHERE `ART_ID`='$art_id' AND `GOODS_GROUP_ID`='$goods_group_id' LIMIT 1;");$n=$db->num_rows($r);$id=0;
         if ($n==1){$id=$db->result($r,0,"TEMPLATE_ID");}
         return $id;
     }
 
-    function getArticleGoodsGroupTemplateCaption($id){$db=DbSingleton::getTokoDb();$name="";
-        $r=$db->query("select NAME from GOODS_GROUP_TEMPLATE where ID='$id' limit 0,1;");$n=$db->num_rows($r);
+    function getArticleGoodsGroupTemplateCaption($id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `NAME` from `GOODS_GROUP_TEMPLATE` WHERE `ID`='$id' LIMIT 1;");$n=$db->num_rows($r);$name="";
         if ($n==1){$name=$db->result($r,0,"NAME");}
         return $name;
     }
 
-    function getArticleGoodsGroupTemplateText($id){$db=DbSingleton::getTokoDb();$name="";
-        $r=$db->query("select TEXT from GOODS_GROUP_TEMPLATE where ID='$id' limit 0,1;");$n=$db->num_rows($r);
+    function getArticleGoodsGroupTemplateText($id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `TEXT` FROM `GOODS_GROUP_TEMPLATE` WHERE `ID`='$id' LIMIT 1;");$n=$db->num_rows($r);$name="";
         if ($n==1){$name=$db->result($r,0,"TEXT");}
         return $name;
     }
 
-    function getArticleGoodsGroupTemplateDescr($id){$db=DbSingleton::getTokoDb();$name="";
-        $r=$db->query("select DESCR from GOODS_GROUP_TEMPLATE where ID='$id' limit 0,1;");$n=$db->num_rows($r);
+    function getArticleGoodsGroupTemplateDescr($id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `DESCR` FROM `GOODS_GROUP_TEMPLATE` WHERE `ID`='$id' LIMIT 1;");$n=$db->num_rows($r);$name="";
         if ($n==1){$name=$db->result($r,0,"DESCR");}
         return $name;
     }
 
     function showGoodsGroupTemplateListSelect($goods_group_id,$sel_id){$db=DbSingleton::getTokoDb();
-        $r=$db->query("select * from GOODS_GROUP_TEMPLATE where GOODS_GROUP_ID='$goods_group_id' order by name,id asc;");$n=$db->num_rows($r);$list="";
+        $r=$db->query("SELECT * FROM `GOODS_GROUP_TEMPLATE` WHERE `GOODS_GROUP_ID`='$goods_group_id' ORDER BY `name`, `id` ASC;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"ID");
             $name=$db->result($r,$i-1,"NAME");
@@ -1514,14 +1704,15 @@ class catalogue {
         return $list;
     }
 
-    function getGoodsGroupParamValue($art_id,$param_id){$db=DbSingleton::getTokoDb();$value="";
-        $r=$db->query("select PARAM_VALUE from T2_GOODS_GROUP_PARAMS_VALUE where ART_ID='$art_id' and PARAM_ID='$param_id' limit 0,1;");$n=$db->num_rows($r);
+    function getGoodsGroupParamValue($art_id,$param_id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `PARAM_VALUE` FROM `T2_GOODS_GROUP_PARAMS_VALUE` WHERE `ART_ID`='$art_id' AND `PARAM_ID`='$param_id' LIMIT 1;");$n=$db->num_rows($r);$value="";
         if ($n==1){$value=$db->result($r,0,"PARAM_VALUE");}
         return $value;
     }
 
-    function getGoodsGroupParamsValueDataList($param_id,$template_id){$db=DbSingleton::getTokoDb();$list="<datalist id='datalist_".$param_id."'>";
-        $r=$db->query("select PARAM_VALUE from T2_GOODS_GROUP_PARAMS_VALUE where PARAM_ID='$param_id' and TEMPLATE_ID='$template_id' group by PARAM_VALUE order by PARAM_VALUE asc;");$n=$db->num_rows($r);
+    function getGoodsGroupParamsValueDataList($param_id,$template_id){$db=DbSingleton::getTokoDb();
+        $list="<datalist id='datalist_".$param_id."'>";
+        $r=$db->query("SELECT `PARAM_VALUE` FROM `T2_GOODS_GROUP_PARAMS_VALUE` WHERE `PARAM_ID`='$param_id' AND `TEMPLATE_ID`='$template_id' GROUP BY `PARAM_VALUE` ORDER BY `PARAM_VALUE` ASC;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $param_value=$db->result($r,$i-1,"PARAM_VALUE");
             $list.="<option value='$param_value'>";
@@ -1530,8 +1721,9 @@ class catalogue {
         return $list;
     }
 
-    function showGoodsGroupParamsList($art_id,$template_id){$db=DbSingleton::getTokoDb();$manual=new manual;
-        $r=$db->query("select * from GOODS_GROUP_TEMPLATE_PARAMS where TEMPLATE_ID='$template_id' order by PARAM_ID asc;");$n=$db->num_rows($r);$list="";
+    function showGoodsGroupParamsList($art_id,$template_id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT * FROM `GOODS_GROUP_TEMPLATE_PARAMS` WHERE `TEMPLATE_ID`='$template_id' ORDER BY `PARAM_ID` asc;");
+        $n=$db->num_rows($r);$list="";$manual=new manual;
         for ($i=1;$i<=$n;$i++){
             $param_name=$db->result($r,$i-1,"NAME");
             $param_id=$db->result($r,$i-1,"PARAM_ID");
@@ -1548,12 +1740,14 @@ class catalogue {
                 <td><input type='$ftype' class='form-control' list='datalist_".$param_id."' id='param_value_".$param_id."' value='$param_value'>".$this->getGoodsGroupParamsValueDataList($param_id,$template_id)."</td>
                 <td>$tparam</td>
             </tr>";
-        }$list.="<input type='hidden' id='params_kol' value='$n'>";
+        }
+        $list.="<input type='hidden' id='params_kol' value='$n'>";
         return $list;
     }
 
-    function showGoodsGroupParamsNameList($template_id){$db=DbSingleton::getTokoDb();$manual=new manual;$type=0;
-        $r=$db->query("select * from GOODS_GROUP_TEMPLATE_PARAMS where TEMPLATE_ID='$template_id' order by PARAM_ID asc;");$n=$db->num_rows($r);$list="";
+    function showGoodsGroupParamsNameList($template_id){$db=DbSingleton::getTokoDb();
+        $manual=new manual;$type=0;
+        $r=$db->query("SELECT * FROM `GOODS_GROUP_TEMPLATE_PARAMS` WHERE `TEMPLATE_ID`='$template_id' ORDER BY `PARAM_ID` asc;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n+15;$i++){ $param_name=""; $param_id=0;$field_type="";
             if ($i<=$n){
                 $param_name=$db->result($r,$i-1,"NAME");
@@ -1600,122 +1794,126 @@ class catalogue {
         return $form;
     }
 
-    function loadArticleInfo($art_id) {$db=DbSingleton::getTokoDb(); $list="";
+/*SHOW INFO*/
+
+    function addArticleInfo($art_id, $lang_id, $text, $value, $sort) { $db=DbSingleton::getTokoDb();
+        $answer=0; $err="Помилка збереження даних!";
+        if ($art_id>0) {
+            $db->query("INSERT INTO `T2_INFO` (`ART_ID`, `LANG_ID`, `TEXT`, `VALUE`, `SORT`) VALUES ('$art_id', '$lang_id', '$text', '$value', '$sort');");
+            $answer=1;$err="";
+        }
+        return array($answer,$err);
+    }
+
+    function loadArticleInfo($art_id) {$db=DbSingleton::getTokoDb();
         $form="";$form_htm=RD."/tpl/catalogue_article_info.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from T2_INFO where ART_ID='$art_id' order by `SORT` asc;"); $n=$db->num_rows($r);
+        $r=$db->query("SELECT * FROM `T2_INFO` WHERE `ART_ID`='$art_id' ORDER BY `SORT` ASC;"); $n=$db->num_rows($r); $list="";
         for ($i=1;$i<=$n;$i++){
+            $ID=$db->result($r,$i-1,"ID");
             $TEXT=$db->result($r,$i-1,"TEXT");
             $VALUE=$db->result($r,$i-1,"VALUE");
             $SORT=$db->result($r,$i-1,"SORT");
             $LANG_ID=$db->result($r,$i-1,"LANG_ID");
             $lang_select="<select class='form-control' disabled>".$this->getLangList($LANG_ID)."</select>";
             $list.="<div class='row' style='padding-bottom:15px;'>
-                <div class='col-lg-2'><input id='info_text-$i' type='text' value='$TEXT' class='form-control'></div>
-                <div class='col-lg-2'><input id='info_value-$i' type='text' value='$VALUE' class='form-control'></div>
-                <div class='col-lg-2'><input id='info_sort-$i' type='text' value='$SORT' class='form-control'></div>
+                <div class='col-lg-2'><input id='info_text-$ID' type='text' value='$TEXT' class='form-control'></div>
+                <div class='col-lg-2'><input id='info_value-$ID' type='text' value='$VALUE' class='form-control'></div>
+                <div class='col-lg-2'><input id='info_sort-$ID' type='number' value='$SORT' class='form-control'></div>
                 <div class='col-lg-2'>$lang_select</div>
                 <div class='col-lg-2'>
-                    <button class='btn btn-primary' onClick=\"saveArticleInfo('$art_id','$LANG_ID','$SORT','$i');\"><i class='fa fa-save'></i> Зберегти</button>
-                    <button class='btn btn-danger' onClick=\"dropArticleInfo('$art_id','$LANG_ID','$SORT');\"><i class='fa fa-save'></i> Видалити</button>
+                    <button class='btn btn-primary' onClick=\"saveArticleInfo('$ID');\"><i class='fa fa-save'></i> Зберегти</button>
+                    <button class='btn btn-danger' onClick=\"dropArticleInfo('$ID');\"><i class='fa fa-trash'></i></button>
                 </div>
             </div>";
         }
-        if ($n==0) $list="Пусто";
+        if ($n==0) $list="";
+        $form=str_replace("{short_cap}","",$form);
         $form=str_replace("{article_info}",$list,$form);
         $form=str_replace("{add_info}","addArticleInfo($art_id);",$form);
         $form=str_replace("{lang_info}",$this->getLangList(),$form);
         return $form;
     }
 
-    function saveArticleInfo($art_id,$lang_id,$text,$value,$sort,$new_sort) { $db=DbSingleton::getTokoDb();
+    function saveArticleInfo($id, $text, $value, $sort) { $db=DbSingleton::getTokoDb();
         $answer=0;$err="Помилка збереження даних!";
-        if ($art_id>0) {
-            $db->query("update T2_INFO set TEXT='$text', VALUE='$value', SORT='$new_sort' where ART_ID='$art_id' and LANG_ID='$lang_id' and SORT='$sort';");
+        if ($id>0) {
+            $db->query("UPDATE `T2_INFO` SET `TEXT`='$text', `VALUE`='$value', `SORT`='$sort' WHERE `ID`='$id' LIMIT 1;");
             $answer=1;$err="";
         }
         return array($answer,$err);
     }
 
-    function dropArticleInfo($art_id,$lang_id,$sort) { $db=DbSingleton::getTokoDb();
+    function dropArticleInfo($id) { $db=DbSingleton::getTokoDb();
         $answer=0;$err="Помилка збереження даних!";
-        if ($art_id>0) {
-            $db->query("delete from T2_INFO where ART_ID='$art_id' and LANG_ID='$lang_id' and SORT='$sort';");
+        if ($id>0) {
+            $db->query("DELETE FROM `T2_INFO` WHERE `ID`='$id' LIMIT 1;");
             $answer=1;$err="";
         }
         return array($answer,$err);
     }
 
-    function addArticleInfo($art_id,$lang_id,$text,$value,$sort) { $db=DbSingleton::getTokoDb();
+    /*SHOW SHORT INFO*/
+
+    function addArticleShortInfo($art_id, $lang_id, $text, $value, $sort) { $db=DbSingleton::getTokoDb();
         $answer=0; $err="Помилка збереження даних!";
         if ($art_id>0) {
-            $r=$db->query("select * from T2_INFO where ART_ID='$art_id' and LANG_ID='$lang_id' and SORT='$sort';");	$n=$db->num_rows($r);
-            if ($n==0) {
-                $db->query("insert into T2_INFO (ART_ID,LANG_ID,TEXT,VALUE,SORT) values ('$art_id','$lang_id','$text','$value','$sort');");
-                $answer=1;$err="";
-            } else $err="Параметр з таким порядковим номером уже існує!";
+            $db->query("INSERT INTO `T2_SHORT_INFO` (`ART_ID`, `LANG_ID`, `TEXT`, `VALUE`, `SORT`) VALUES ('$art_id', '$lang_id', '$text', '$value', '$sort');");
+            $answer=1;$err="";
         }
         return array($answer,$err);
     }
 
-    function loadArticleShortInfo($art_id) {$db=DbSingleton::getTokoDb(); $list="";
+    function loadArticleShortInfo($art_id) { $db=DbSingleton::getTokoDb();
         $form="";$form_htm=RD."/tpl/catalogue_article_info.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from T2_SHORT_INFO where ART_ID='$art_id' order by `SORT` asc;"); $n=$db->num_rows($r);
+        $r=$db->query("SELECT * FROM `T2_SHORT_INFO` WHERE `ART_ID`='$art_id' ORDER BY `SORT` ASC;"); $n=$db->num_rows($r); $list="";
         for ($i=1;$i<=$n;$i++){
+            $ID=$db->result($r,$i-1,"ID");
             $TEXT=$db->result($r,$i-1,"TEXT");
             $VALUE=$db->result($r,$i-1,"VALUE");
             $SORT=$db->result($r,$i-1,"SORT");
             $LANG_ID=$db->result($r,$i-1,"LANG_ID");
             $lang_select="<select class='form-control' disabled>".$this->getLangList($LANG_ID)."</select>";
             $list.="<div class='row' style='padding-bottom:15px;'>
-                <div class='col-lg-2'><input id='info_text-$i' type='text' value='$TEXT' class='form-control'></div>
-                <div class='col-lg-2'><input id='info_value-$i' type='text' value='$VALUE' class='form-control'></div>
-                <div class='col-lg-2'><input id='info_sort-$i' type='text' value='$SORT' class='form-control'></div>
+                <div class='col-lg-2'><input id='short_info_text-$ID' type='text' value='$TEXT' class='form-control'></div>
+                <div class='col-lg-2'><input id='short_info_value-$ID' type='text' value='$VALUE' class='form-control'></div>
+                <div class='col-lg-2'><input id='short_info_sort-$ID' type='number' value='$SORT' class='form-control'></div>
                 <div class='col-lg-2'>$lang_select</div>
                 <div class='col-lg-2'>
-                    <button class='btn btn-primary' onClick=\"saveArticleShortInfo('$art_id','$LANG_ID','$SORT','$i');\"><i class='fa fa-save'></i> Зберегти</button>
-                    <button class='btn btn-danger' onClick=\"dropArticleShortInfo('$art_id','$LANG_ID','$SORT');\"><i class='fa fa-save'></i> Видалити</button>
+                    <button class='btn btn-primary' onClick=\"saveArticleShortInfo('$ID');\"><i class='fa fa-save'></i> Зберегти</button>
+                    <button class='btn btn-danger' onClick=\"dropArticleShortInfo('$ID');\"><i class='fa fa-trash'></i></button>
                 </div>
             </div>";
         }
-        if ($n==0) $list="Пусто";
+        if ($n==0) $list="";
+        $form=str_replace("{short_cap}","short_",$form);
         $form=str_replace("{article_info}",$list,$form);
         $form=str_replace("{add_info}","addArticleShortInfo($art_id);",$form);
         $form=str_replace("{lang_info}",$this->getLangList(),$form);
         return $form;
     }
 
-    function saveArticleShortInfo($art_id,$lang_id,$text,$value,$sort,$new_sort) { $db=DbSingleton::getTokoDb();
+    function saveArticleShortInfo($id, $text, $value, $sort) { $db=DbSingleton::getTokoDb();
         $answer=0;$err="Помилка збереження даних!";
-        if ($art_id>0) {
-            $db->query("update T2_SHORT_INFO set TEXT='$text', VALUE='$value', SORT='$new_sort' where ART_ID='$art_id' and LANG_ID='$lang_id' and SORT='$sort';");
+        if ($id>0) {
+            $db->query("UPDATE `T2_SHORT_INFO` SET `TEXT`='$text', `VALUE`='$value', `SORT`='$sort' WHERE `ID`='$id' LIMIT 1;");
             $answer=1;$err="";
         }
         return array($answer,$err);
     }
 
-    function dropArticleShortInfo($art_id,$lang_id,$sort) { $db=DbSingleton::getTokoDb();
+    function dropArticleShortInfo($id) { $db=DbSingleton::getTokoDb();
         $answer=0;$err="Помилка збереження даних!";
-        if ($art_id>0) {
-            $db->query("delete from T2_SHORT_INFO where ART_ID='$art_id' and LANG_ID='$lang_id' and SORT='$sort';");
+        if ($id>0) {
+            $db->query("DELETE FROM `T2_SHORT_INFO` WHERE `ID`='$id' LIMIT 1;");
             $answer=1;$err="";
         }
         return array($answer,$err);
     }
 
-    function addArticleShortInfo($art_id,$lang_id,$text,$value,$sort) { $db=DbSingleton::getTokoDb();
-        $answer=0; $err="Помилка збереження даних!";
-        if ($art_id>0) {
-            $r=$db->query("select * from T2_SHORT_INFO where ART_ID='$art_id' and LANG_ID='$lang_id' and SORT='$sort';");$n=$db->num_rows($r);
-            if ($n==0) {
-                $db->query("insert into T2_SHORT_INFO (ART_ID,LANG_ID,TEXT,VALUE,SORT) values ('$art_id','$lang_id','$text','$value','$sort');");
-                $answer=1;$err="";
-            } else $err="Параметр з таким порядковим номером уже існує!";
-        }
-        return array($answer,$err);
-    }
+ /*SHOR INFO END*/
 
-    function getLangList($lang_id="") {$db=DbSingleton::getTokoDb();$list="";
-        $r=$db->query("select * from lang where `on`=1;"); $n=$db->num_rows($r);
+    function getLangList($lang_id="") { $db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT * FROM `lang` WHERE `on`=1;"); $n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $caption=$db->result($r,$i-1,"caption");
             $lang_tcd=$db->result($r,$i-1,"lang_tcd");
@@ -1729,34 +1927,33 @@ class catalogue {
         return array($this->showGoodsGroupParamsList($art_id,$template_id),$this->loadArticleScheme($template_id,1));
     }
 
-    function saveCatalogueParams($art_id,$goods_group_id,$template_id,$fields_type,$params_value){$db=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
+    function saveCatalogueParams($art_id,$goods_group_id,$template_id,$params_value) { $db=DbSingleton::getTokoDb();
+        $slave=new slave;$answer=0;$err="Помилка збереження даних!";
         $art_id=$slave->qq($art_id);$goods_group_id=$slave->qq($goods_group_id);$template_id=$slave->qq($template_id);$params_value=$slave->qq($params_value);
         if ($art_id>0){
-            $r=$db->query("select * from T2_GOODS_GROUP_TEMPLATES where ART_ID='$art_id' and `GOODS_GROUP_ID`='$goods_group_id' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("SELECT * FROM `T2_GOODS_GROUP_TEMPLATES` WHERE `ART_ID`='$art_id' AND `GOODS_GROUP_ID`='$goods_group_id' LIMIT 1;");$n=$db->num_rows($r);
             if ($n==0){
                 $db->query("INSERT INTO `T2_GOODS_GROUP_TEMPLATES` (`ART_ID`, `GOODS_GROUP_ID`, `TEMPLATE_ID`) VALUES ('$art_id', '$goods_group_id', '$template_id');");
             }
             if ($n==1){
                 $db_template_id=$db->result($r,0,"TEMPLATE_ID");
                 if ($db_template_id!=$template_id){
-                    $db->query("update T2_GOODS_GROUP_TEMPLATES set `TEMPLATE_ID`='$template_id' where ART_ID='$art_id' and `GOODS_GROUP_ID`='$goods_group_id';");
-                    $db->query("delete from T2_GOODS_GROUP_PARAMS_VALUE where ART_ID='$art_id' and `TEMPLATE_ID`='$db_template_id';");
+                    $db->query("UPDATE `T2_GOODS_GROUP_TEMPLATES` SET `TEMPLATE_ID`='$template_id' WHERE `ART_ID`='$art_id' AND `GOODS_GROUP_ID`='$goods_group_id';");
+                    $db->query("DELETE FROM `T2_GOODS_GROUP_PARAMS_VALUE` WHERE `ART_ID`='$art_id' and `TEMPLATE_ID`='$db_template_id';");
                 }
             }
-
-            $r2=$db->query("select * from GOODS_GROUP_TEMPLATE_PARAMS where TEMPLATE_ID='$template_id' order by PARAM_ID asc;");$n2=$db->num_rows($r2);
+            $r2=$db->query("SELECT * FROM `GOODS_GROUP_TEMPLATE_PARAMS` WHERE `TEMPLATE_ID`='$template_id' ORDER BY `PARAM_ID` ASC;");$n2=$db->num_rows($r2);
             for ($i=1;$i<=$n2;$i++){
                 $param_id=$db->result($r2,$i-1,"PARAM_ID");
-
-                $r=$db->query("select PARAM_VALUE from T2_GOODS_GROUP_PARAMS_VALUE where ART_ID='$art_id' and PARAM_ID='$param_id' limit 0,1;");$n=$db->num_rows($r);
+                $r=$db->query("SELECT `PARAM_VALUE` FROM `T2_GOODS_GROUP_PARAMS_VALUE` WHERE `ART_ID`='$art_id' AND `PARAM_ID`='$param_id' LIMIT 1;");$n=$db->num_rows($r);
                 if ($n==1){
                     $value=$db->result($r,0,"PARAM_VALUE");
                     if ($params_value[$param_id]!=$value){
-                        $db->query("update T2_GOODS_GROUP_PARAMS_VALUE set `TEMPLATE_ID`='$template_id', PARAM_VALUE='".$params_value[$param_id]."' where ART_ID='$art_id' and PARAM_ID='$param_id';");
+                        $db->query("UPDATE `T2_GOODS_GROUP_PARAMS_VALUE` SET `TEMPLATE_ID`='$template_id', `PARAM_VALUE`='".$params_value[$param_id]."' WHERE `ART_ID`='$art_id' AND `PARAM_ID`='$param_id';");
                     }
                 }
                 if ($n==0){
-                    $db->query("insert into T2_GOODS_GROUP_PARAMS_VALUE (`ART_ID`,`TEMPLATE_ID`,`PARAM_ID`,`PARAM_VALUE`) values ('$art_id','$template_id','$param_id','".$params_value[$param_id]."');");
+                    $db->query("INSERT INTO `T2_GOODS_GROUP_PARAMS_VALUE` (`ART_ID`,`TEMPLATE_ID`,`PARAM_ID`,`PARAM_VALUE`) VALUES ('$art_id','$template_id','$param_id','".$params_value[$param_id]."');");
                 }
                 $answer=1;$err="";
             }
@@ -1765,25 +1962,27 @@ class catalogue {
         return array($answer,$err);
     }
 
-    function saveCatalogueParamsTemplate($art_id,$goods_group_id,$template_id,$template_name,$template_caption,$template_descr,$cn,$params_id,$fields_type,$params_name,$params_type){$db=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
-        $art_id=$slave->qq($art_id);$goods_group_id=$slave->qq($goods_group_id);$template_id=$slave->qq($template_id);$template_name=$slave->qq($template_name);$cn=$slave->qq($cn);$fields_type=$slave->qq($fields_type);$params_name=$slave->qq($params_name); $params_type=$slave->qq($params_type);
+    function saveCatalogueParamsTemplate($art_id,$goods_group_id,$template_id,$template_name,$template_caption,$template_descr,$cn,$params_id,$fields_type,$params_name,$params_type){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$answer=0;$err="Помилка збереження даних!";
+        $art_id=$slave->qq($art_id);$goods_group_id=$slave->qq($goods_group_id);$template_id=$slave->qq($template_id);$template_name=$slave->qq($template_name);$cn=$slave->qq($cn);
+        $fields_type=$slave->qq($fields_type);$params_name=$slave->qq($params_name); $params_type=$slave->qq($params_type);
         if ($art_id>0){
             if ($template_id==0){
-                $r=$db->query("select max(ID) as mid from GOODS_GROUP_TEMPLATE;");$template_id=0+$db->result($r,0,"mid")+1;
-                $db->query("insert into GOODS_GROUP_TEMPLATE (`ID`,`GOODS_GROUP_ID`,`NAME`,`TEXT`,`DESCR`) values ('$template_id','$goods_group_id','$template_name','$template_caption','$template_descr');");
+                $r=$db->query("SELECT MAX(`ID`) as mid FROM `GOODS_GROUP_TEMPLATE`;");$template_id=0+$db->result($r,0,"mid")+1;
+                $db->query("INSERT INTO `GOODS_GROUP_TEMPLATE` (`ID`,`GOODS_GROUP_ID`,`NAME`,`TEXT`,`DESCR`) VALUES ('$template_id','$goods_group_id','$template_name','$template_caption','$template_descr');");
             }
             if ($template_id>0){
-                $db->query("update GOODS_GROUP_TEMPLATE set `NAME`='$template_name', `TEXT`='$template_caption', `DESCR`='$template_descr' where `ID`='$template_id' and `GOODS_GROUP_ID`='$goods_group_id';");
+                $db->query("UPDATE `GOODS_GROUP_TEMPLATE` SET `NAME`='$template_name', `TEXT`='$template_caption', `DESCR`='$template_descr' WHERE `ID`='$template_id' AND `GOODS_GROUP_ID`='$goods_group_id';");
                 for ($i=1;$i<=$cn;$i++){
                     $param_id=$params_id[$i];
                     $param_name=$params_name[$i];
                     $field_type=$fields_type[$i];
                     $param_type=$params_type[$i];
                     if ($param_id==0 && $param_name!=""){
-                        $db->query("insert into GOODS_GROUP_TEMPLATE_PARAMS (`PARAM_ID`,`TEMPLATE_ID`,`NAME`,`FIELD_TYPE`,`TYPE`) values ('','$template_id','$param_name','$field_type','$param_type');");
+                        $db->query("INSERT INTO `GOODS_GROUP_TEMPLATE_PARAMS` (`PARAM_ID`,`TEMPLATE_ID`,`NAME`,`FIELD_TYPE`,`TYPE`) VALUES ('','$template_id','$param_name','$field_type','$param_type');");
                     }
                     if ($param_id>0){
-                        $db->query("update GOODS_GROUP_TEMPLATE_PARAMS set `NAME`='$param_name', `FIELD_TYPE`='$field_type', `TYPE`='$param_type' where `PARAM_ID`='$param_id' and `TEMPLATE_ID`='$template_id';");
+                        $db->query("UPDATE `GOODS_GROUP_TEMPLATE_PARAMS` SET `NAME`='$param_name', `FIELD_TYPE`='$field_type', `TYPE`='$param_type' WHERE `PARAM_ID`='$param_id' AND `TEMPLATE_ID`='$template_id';");
                     }
                 }
                 $answer=1;$err="";
@@ -1797,13 +1996,14 @@ class catalogue {
         return array($form,"Пошук аналогу по індексу");
     }
 
-    function findCatalogueAnalogIndexSearch($index){$db=DbSingleton::getTokoDb();$slave=new slave;$list="";
-        $index=$slave->qq($index);
+    function findCatalogueAnalogIndexSearch($index){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$list=""; $index=$slave->qq($index);
         if ($index!=""){
-            $query="select t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME from T2_ARTICLES t2a 
-                left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
-                left outer join T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID
-            where t2a.ARTICLE_NR_SEARCH='$index' or t2a.ARTICLE_NR_DISPL='$index';";
+            $query="SELECT t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME 
+            FROM `T2_ARTICLES` t2a 
+                LEFT OUTER JOIN `T2_BRANDS` t2b on t2b.BRAND_ID=t2a.BRAND_ID 
+                LEFT OUTER JOIN `T2_NAMES` t2n on t2n.ART_ID=t2a.ART_ID
+            WHERE t2a.ARTICLE_NR_SEARCH='$index' OR t2a.ARTICLE_NR_DISPL='$index';";
             $r=$db->query($query);$n=$db->num_rows($r);$list="";
             for ($i=1;$i<=$n;$i++){
                 $art_id=$db->result($r,$i-1,"ART_ID");
@@ -1828,7 +2028,7 @@ class catalogue {
         $form=str_replace("{kind}",$kind,$form); $kind_name=" ОЕ номер";if ($kind==4){$kind_name=" інший номер";}
         $form=str_replace("{relation}",$relation,$form);
         $form=str_replace("{search_number}",$search_number,$form);
-        $r=$db->query("select * from T2_CROSS where ART_ID='$art_id' and KIND ='$kind' and `SEARCH_NUMBER`='$search_number' limit 0,1;");
+        $r=$db->query("SELECT * FROM `T2_CROSS` WHERE `ART_ID`='$art_id' AND `KIND`='$kind' AND `SEARCH_NUMBER`='$search_number' LIMIT 1;");
         $display_nr=$db->result($r,0,"DISPLAY_NR");
         $brand_id=$db->result($r,0,"BRAND_ID");
         $form=str_replace("{display_nr}",$display_nr,$form);
@@ -1836,7 +2036,8 @@ class catalogue {
         return array($form,"Редагування аналогу".$kind_name);
     }
 
-    function saveCatalogueAnalogForm($art_id,$kind,$relation,$search_number,$display_nr,$brand_id,$art_id2,$index2){$db=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
+    function saveCatalogueAnalogForm($art_id,$kind,$relation,$search_number,$display_nr,$brand_id,$art_id2,$index2){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$answer=0;$err="Помилка збереження даних!";
         $art_id=$slave->qq($art_id);$kind=$slave->qq($kind);$relation=$slave->qq($relation);$search_number=$slave->qq($search_number);$display_nr=$slave->qq($display_nr);$brand_id=$slave->qq($brand_id);
         $art_id2=$slave->qq($art_id2);$index2=$slave->qq($index2);
         if ($art_id>0 && $kind>0 && $relation>=0 && $display_nr!="" && $brand_id>0){
@@ -1846,52 +2047,56 @@ class catalogue {
             $new_kind=$this->getBrandKind($brand_id);
             if ($new_kind!=$kind && $new_kind>0){$kind=$new_kind;}
             if ($old_search_number==""){
-                $db->query("insert into T2_CROSS (`ART_ID`,`SEARCH_NUMBER`,`KIND`,`BRAND_ID`,`DISPLAY_NR`,`RELATION`) values ('$art_id','$search_number_up','$kind','$brand_id','$display_nr','$relation');");
+                $db->query("INSERT INTO `T2_CROSS` (`ART_ID`,`SEARCH_NUMBER`,`KIND`,`BRAND_ID`,`DISPLAY_NR`,`RELATION`) VALUES ('$art_id','$search_number_up','$kind','$brand_id','$display_nr','$relation');");
             }
             if ($old_search_number!=""){
-                $db->query("update T2_CROSS set `SEARCH_NUMBER`='$search_number_up',`DISPLAY_NR`='$display_nr',`BRAND_ID`='$brand_id', `KIND`='$kind', `RELATION`='$relation' where `ART_ID`='$art_id' and `SEARCH_NUMBER`='$old_search_number' and `KIND`='$old_kind';");
+                $db->query("UPDATE `T2_CROSS` SET `SEARCH_NUMBER`='$search_number_up', `DISPLAY_NR`='$display_nr', `BRAND_ID`='$brand_id', `KIND`='$kind', `RELATION`='$relation' WHERE `ART_ID`='$art_id' AND `SEARCH_NUMBER`='$old_search_number' AND `KIND`='$old_kind';");
             }
             if ($art_id2!="" && $index2!=""){$er=0;
                 $index2_cl=$this->clearArticle($index2);
                 if ($relation==1){$relation=2; $er=1;}if ($relation==2 && $er==0){$relation=1;}
                 $brand_id=$this->getBrandId($art_id);
-                $db->query("insert into T2_CROSS (`ART_ID`,`SEARCH_NUMBER`,`KIND`,`BRAND_ID`,`DISPLAY_NR`,`RELATION`) values ('$art_id2','$index2_cl','$kind','$brand_id','$index2','$relation');");
+                $db->query("INSERT INTO `T2_CROSS` (`ART_ID`,`SEARCH_NUMBER`,`KIND`,`BRAND_ID`,`DISPLAY_NR`,`RELATION`) VALUES ('$art_id2','$index2_cl','$kind','$brand_id','$index2','$relation');");
             }
             $answer=1;$err="";
         }
         return array($answer,$err);
     }
 
-    function dropCatalogueAnalog($art_id,$kind,$relation,$search_number,$brand_id){$db=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
+    function dropCatalogueAnalog($art_id,$kind,$relation,$search_number,$brand_id){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$answer=0;$err="Помилка збереження даних!";
         $art_id=$slave->qq($art_id);$kind=$slave->qq($kind);$relation=$slave->qq($relation);$search_number=$slave->qq($search_number);$brand_id=$slave->qq($brand_id);
         if ($art_id>0 && $kind>0 && $relation>=0 && $search_number!="" && $brand_id>0){
-            $db->query("delete from T2_CROSS where `ART_ID`='$art_id' and `SEARCH_NUMBER`='$search_number' and `KIND`='$kind' and `BRAND_ID`='$brand_id' and `RELATION`='$relation' limit 1;");
+            $db->query("DELETE FROM `T2_CROSS` WHERE `ART_ID`='$art_id' and `SEARCH_NUMBER`='$search_number' and `KIND`='$kind' and `BRAND_ID`='$brand_id' and `RELATION`='$relation' LIMIT 1;");
             $answer=1;$err="";
         }
         return array($answer,$err);
     }
 
-    function clearCatalogueAnalogArticle($art_id,$kind,$relation){$db=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
+    function clearCatalogueAnalogArticle($art_id,$kind,$relation){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$answer=0;$err="Помилка збереження даних!";
         $art_id=$slave->qq($art_id);$kind=$slave->qq($kind);$relation=$slave->qq($relation);
         if ($art_id>0 && $kind>0 && $relation>=0){
-            $db->query("delete from T2_CROSS where `ART_ID`='$art_id' and `KIND`='$kind' and `RELATION`='$relation';");
+            $db->query("DELETE FROM `T2_CROSS` WHERE `ART_ID`='$art_id' and `KIND`='$kind' and `RELATION`='$relation';");
             $answer=1;$err="";
         }
         return array($answer,$err);
     }
 
-    function loadArticleAnalogs($art_id){$db=DbSingleton::getTokoDb(); $ak1=$ak2="";$form="";
+    function loadArticleAnalogs($art_id){$db=DbSingleton::getTokoDb();
+        $ak1=$ak2="";$form="";
         $form_htm=RD."/tpl/catalogue_analog_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select t2c.*, t2b.BRAND_NAME from T2_CROSS t2c 
-            left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2c.BRAND_ID  
-        where t2c.ART_ID='$art_id' and t2c.KIND in (3,4) order by t2c.KIND asc;");$n=$db->num_rows($r);$ak3="";$ak4="";
+        $r=$db->query("SELECT t2c.*, t2b.BRAND_NAME 
+        FROM `T2_CROSS` t2c 
+            LEFT OUTER JOIN `T2_BRANDS` t2b on t2b.BRAND_ID=t2c.BRAND_ID  
+        WHERE t2c.ART_ID='$art_id' AND t2c.KIND IN (3,4) ORDER BY t2c.KIND ASC;");$n=$db->num_rows($r);$ak3="";$ak4="";$ak5="";
         for ($i=1;$i<=$n;$i++){
             $search_number=$db->result($r,$i-1,"SEARCH_NUMBER");
             $display_nr=trim($db->result($r,$i-1,"DISPLAY_NR"));
             $kind=$db->result($r,$i-1,"KIND");
             $brand_id=$db->result($r,$i-1,"BRAND_ID");
             $brand_name=$db->result($r,$i-1,"BRAND_NAME");
-            $relation=$db->result($r,$i-1,"relation");
+            $relation=$db->result($r,$i-1,"RELATION");
             $row="<tr>
                 <td>$search_number</td>
                 <td><strong>$display_nr</strong></td>
@@ -1906,71 +2111,283 @@ class catalogue {
             if ($kind==4 && $relation==0){$ak2.=$row;}
             if (($kind==3 || $kind==4) && $relation==1){$ak3.=$row;}
             if (($kind==3 || $kind==4) && $relation==2){$ak4.=$row;}
+            if (($kind==3 || $kind==4) && $relation==3){$ak5.=$row;}
         }
         $form=str_replace("{analog_list_1}",$ak1,$form);
         $form=str_replace("{analog_list_2}",$ak2,$form);
         $form=str_replace("{analog_list_3}",$ak3,$form);
         $form=str_replace("{analog_list_4}",$ak4,$form);
+        $form=str_replace("{analog_list_5}",$ak5,$form);
         $form=str_replace("{art_id}",$art_id,$form);
         return $form;
     }
 
-    function loadArticleAplicability($art_id){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$tab_list="";$form="";
+    function loadArticleAplicability($art_id){$db=DbSingleton::getTokoDb();//$dbp=DbSingleton::getTokoDb();
+        $tab_list="";$form="";
         $form_htm=RD."/tpl/catalogue_aplicability_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$dbp->query("select TYP_ID from T2_LINKS where ART_ID='$art_id';");$n=$dbp->num_rows($r);$typ_id_str="";
+        $r=$db->query("SELECT `TYP_ID` FROM `T2_LINKS` WHERE `ART_ID`='$art_id';");$n=$db->num_rows($r);$typ_id_str="";
         for ($i=1;$i<=$n;$i++){
-            $typ_id=$dbp->result($r,$i-1,"TYP_ID");
+            $typ_id=$db->result($r,$i-1,"TYP_ID");
             $typ_id_str.="$typ_id";if ($i<$n){$typ_id_str.=",";}
         }
         if ($typ_id_str!=""){
-            $r=$db->query("select man.MFA_ID, man.MFA_BRAND from T_types tt inner join T_models tm on tm.MOD_ID=tt.TYP_MOD_ID inner join T_manufacturers man on man.MFA_ID=tm.MOD_MFA_ID where tt.TYP_ID in ($typ_id_str) group by man.MFA_ID order by man.MFA_BRAND asc;");$n=$db->num_rows($r);$tab_list="";$cont_list="";
+            $r=$db->query("SELECT man.MFA_ID, man.MFA_BRAND 
+            FROM `T_types` tt 
+                INNER JOIN `T_models` tm on tm.MOD_ID=tt.TYP_MOD_ID 
+                INNER JOIN `T_manufacturers` man on man.MFA_ID=tm.MOD_MFA_ID 
+            WHERE tt.TYP_ID in ($typ_id_str) GROUP BY man.MFA_ID ORDER BY man.MFA_BRAND ASC;");$n=$db->num_rows($r);$tab_list="";$cont_list="";
             for ($i=1;$i<=$n;$i++){
                 $mfa_id=$db->result($r,$i-1,"MFA_ID");
                 $mfa_name=$db->result($r,$i-1,"MFA_BRAND");
                 $tab_list.="<li><a data-toggle=\"tab\" href=\"#aplic_tab".$mfa_id."\" onClick=\"loadArticleAplicabilityModels('$art_id','$mfa_id');\"><i class=\"fa fa-car\"></i> $mfa_name</a></li>\n";
-                $cont_list.="<div id=\"aplic_tab".$mfa_id."\" class=\"tab-pane \">
+                $cont_list.="<div id=\"aplic_tab".$mfa_id."\" class=\"tab-pane\">
                     <div class=\"panel-body\">
                         <div class=\"sk-spinner sk-spinner-wave\"><div class=\"sk-rect1\"></div><div class=\"sk-rect2\"></div><div class=\"sk-rect3\"></div><div class=\"sk-rect4\"></div><div class=\"sk-rect5\"></div></div>
                     </div>
                 </div>\n";
             }
-        }else {$cont_list="<h3 class='text-center'>Привязка до авто відсутня</h3>";}
+        } else {$cont_list="<h3 class='text-center'>Привязка до авто відсутня</h3>";}
         $tab_list.="<a href=\"#aplic_new\" class='btn btn-primary pull-right' onClick=\"loadArticleAplicabilityNew('$art_id');\"><i class=\"fa fa-plus\"></i></a>";
         $form=str_replace("{manuf_tab_list}",$tab_list,$form);
         $form=str_replace("{manuf_cont_list}",$cont_list,$form);
         return $form;
     }
 
-    function getLaIdComment($la_id){$db=DbSingleton::getTokoDb();$comment="";
-        $r=$db->query("select TEXT from link_notes where LA_ID='$la_id' and `LANG_ID`='16' and `DISPLAY`=1;");$n=$db->num_rows($r);
+    /*==== TREE NEW ====*/
+    function loadArticleTree($art_id) {
+        $form="";$form_htm=RD."/tpl/catalogue_article_tree.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        $form=str_replace("{tree_tecdoc}", $this->getTreeArticleTecdoc($art_id), $form);
+        $form=str_replace("{tree_new}", $this->getTreeArticleNew($art_id), $form);
+        return $form;
+    }
+
+    function getTreeArticleNew($art_id) {$db=DbSingleton::getTokoDb();
+        $list="<ul>";
+        $r=$db->query("SELECT tg.GROUP_ID, tg.TEX_RU 
+        FROM `T2_TREE_ARTS` tt 
+            LEFT JOIN `T2_TREE_GROUP` tg ON (tg.GROUP_ID=tt.GROUP_ID)
+        WHERE tt.`ART_ID`='$art_id' ORDER BY tt.`GROUP_ID` ASC
+        "); $n=$db->num_rows($r);
+        for ($i=1; $i<=$n; $i++) {
+            $group_id = $db->result($r, $i-1, "GROUP_ID");
+            $tex_text = $db->result($r, $i-1, "TEX_RU");
+            if ($group_id!=0) $list.="<li><a class=\"btn btn-danger btn-xs\" onclick=\"dropArticleTreeTecdoc('$art_id', '$group_id');\"><i class='fa fa-trash'></i></a> $group_id - $tex_text</li>";
+        }
+        $list.="</ul>";
+        return $list;
+    }
+
+    function getTreeArticleTecdoc($art_id) {$db=DbSingleton::getTokoDb();
+        $list="<ul>";
+        $r=$db->query("SELECT tg.STR_ID, tg.TEX_TEXT, tg.STR_ID_PARENT 
+        FROM `T2_TREE` tt 
+            LEFT JOIN `T2_GROUP_TREE` tg ON (tg.STR_ID=tt.STR_ID AND tg.LNG_ID=16)
+        WHERE tt.`ART_ID`='$art_id' ORDER BY tt.`STR_ID` ASC
+        "); $n=$db->num_rows($r);
+        for ($i=1; $i<=$n; $i++) {
+            $str_id = $db->result($r, $i-1, "STR_ID");
+            $str_id_parent = $db->result($r, $i-1, "STR_ID_PARENT");
+            $tex_text = $db->result($r, $i-1, "TEX_TEXT");
+            $parent="";
+            if ($str_id_parent!=0) $parent= "(".$this->getStrName($str_id_parent).")";
+            if ($str_id!=0) $list.="<li><a class=\"btn btn-danger btn-xs\" onclick=\"dropArticleTreeNew('$art_id', '$str_id');\"><i class='fa fa-trash'></i></a> $str_id - $tex_text $parent</li>";
+        }
+        $list.="</ul>";
+        return $list;
+    }
+
+    function dropArticleTreeTecdoc($art_id, $str_id) {$db=DbSingleton::getTokoDb();
+        $db->query("DELETE FROM `T2_TREE` WHERE `ART_ID`='$art_id' AND `STR_ID`='$str_id' LIMIT 1;");
+        return true;
+    }
+
+    function dropArticleTreeNew($art_id, $group_id) {$db=DbSingleton::getTokoDb();
+        $db->query("DELETE FROM `T2_TREE_ARTS` WHERE `ART_ID`='$art_id' AND `GROUP_ID`='$group_id' LIMIT 1;");
+        return true;
+    }
+
+    function showArticleTreeTecdoc() {
+        $form="";$form_htm=RD."/tpl/catalogue_article_tree_new.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        $form=str_replace("{tree_range}",$this->getArticleTreeTecdoc(),$form);
+        return $form;
+    }
+
+    function showArticleTreeNew() {
+        $form="";$form_htm=RD."/tpl/catalogue_article_tree_new.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        $form=str_replace("{tree_range}",$this->getArticleTreeNew(),$form);
+        return $form;
+    }
+
+    function getArticleTreeNew() {$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT * FROM `T2_TREE_HEAD`;"); $n=$db->num_rows($r);
+        $list="<input class=\"text-filter\" type=\"text\" id=\"searchInput\" onkeyup=\"searchCatInput();\" placeholder=\"Пошук по назві\" title=\"{search_by_brand}\">";
+        $list.="<ul style='list-style:none; padding:0;'>";
+        for ($i=1;$i<=$n;$i++){
+            $head_id=$db->result($r,$i-1,"HEAD_ID");
+            $text=$db->result($r,$i-1,"TEX_RU");
+            $header_list=$this->getArticleTreeNewList($head_id);
+            $list.="<li>
+				<div class='tree-head pointer'>
+					$head_id. $text
+				</div>
+				<div class='tree-list dnone'>$header_list</div>
+			</li>";
+        }
+        $list.="</ul>";
+        return $list;
+    }
+
+    function getArticleTreeNewList($head_id) { $db=DbSingleton::getTokoDb();
+        $arr=[]; $list="";
+        $r=$db->query("SELECT * FROM `T2_TREE_HCG` WHERE `HEAD_ID`='$head_id' ORDER BY `CAT_ID`;"); $n=$db->num_rows($r);
+        for ($i=1;$i<=$n;$i++) {
+            $cat_id=$db->result($r,$i-1,"CAT_ID");
+            $group_id=$db->result($r,$i-1,"GROUP_ID");
+            if (empty($arr[$cat_id])) $arr[$cat_id]=[];
+            array_push($arr[$cat_id], $group_id);
+        }
+        foreach ($arr as $cat_id=>$group_ids) {
+            $group_arr=[];
+            $cat_name=$this->getCatName($cat_id);
+            $list.="<div class=\"tree-category\"><i>$cat_name</i></div>";
+            $list.="<ul class='group-tree'>";
+            foreach ($group_ids as $group_id) {
+                $group_name=$this->getGroupName($group_id);
+                $group_arr[$group_id] = ["group_id"=>$group_id, "name"=>$group_name];
+            }
+            usort($group_arr, function($a, $b) {
+                return $a['name'] <=> $b['name'];
+            });
+            foreach ($group_arr as $key=>$value) {
+                $group_id=$value["group_id"];
+                $group_name=$value["name"];
+                $list.="<li><a class='btn btn-primary btn-xs' onclick='saveArticleTreeNew($group_id)'>Привязати</a> $group_name</li>";
+            }
+            $list.="</ul>";
+        }
+        if ($n==0) $list="Пусто";
+        return $list;
+    }
+
+    function getArticleTreeTecdoc() {$db=DbSingleton::getTokoDb();
+        $menu_det=$tree=""; $lvl=0; $td_array=$parent_fare=$position_fare=[];
+        $r=$db->query("SELECT * FROM `T2_GROUP_TREE` WHERE `LNG_ID`=16;"); $n=$db->num_rows($r);
+
+        $menu_det.="<div class=\"input-group border0\">
+		<input type=\"search\" id=\"my-search\" class=\"my-search form-control\" placeholder=\"Поиск по категориям\" style='margin-bottom: 15px;'>
+		</div><ul id=\"my-tree\" class=\"tf-tree\">";
+
+        for ($i=1;$i<=$n;$i++){
+            $str_id=$db->result($r,$i-1,"STR_ID");
+            $str_id_parrent=$db->result($r,$i-1,"STR_ID_PARENT");if ($str_id_parrent==""){$str_id_parrent=0;}
+            $str_level=$db->result($r,$i-1,"STR_LEVEL");
+            $tex_text=$db->result($r,$i-1,"DISP_TEXT");
+            $position=$db->result($r,$i-1,"POSITION");
+            $child=$this->getTecGroupTreeChilds($str_id);
+            $td_array[$i]["id_tree"] = $str_id;
+            $td_array[$i]["id_parent"] = $str_id_parrent;
+            $td_array[$i]["level"] = $str_level;
+            $td_array[$i]["name"] = $tex_text;
+            $td_array[$i]["child"] = $child;
+            $td_array[$i]["position"] = $position;
+        }
+
+        foreach ($td_array as $key => $row) {
+            $parent_fare[$key] = $row['id_parent'];
+            $position_fare[$key] = $row['position'];
+        }
+        array_multisort($parent_fare, SORT_ASC, $position_fare, SORT_DESC, $td_array);
+
+        for ($i=1;$i<=30;$i++) { $lvl+=1;
+            foreach ($td_array as $elm) {
+                if ($elm["level"]==$lvl) {
+                    $str_id2 = $elm["id_tree"];
+                    $str="<li><div>";
+                    if ($elm["child"]>0)  {$str.="<a>".$elm["name"]."</a>";}
+                    if ($elm["child"]==0) {
+                        $str.="<a class='btn btn-primary btn-xs' onclick='saveArticleTreeTecdoc($str_id2);'>Привязати</a> <a>".$elm["name"]."</a>";
+                    } $str.="</div>";
+                    if ($elm["child"]>0)  {$str.="\n<ul>\n{p".$elm["id_tree"]."}</ul>\n";} $str.="</li>\n";
+                    if ($lvl==2) {$tree.=$str;}
+                    if ($lvl>2)  {$tree=str_replace("{p".$elm["id_parent"]."}",$str."{p".$elm["id_parent"]."}",$tree);}
+                }
+            }
+        }
+        foreach ($td_array as $elm){
+            $tree=str_replace("{p".$elm["id_parent"]."}","",$tree);
+            $tree=str_replace("{p".$elm["id_tree"]."}","",$tree);
+        }
+        $menu_det.=$tree."</ul>";
+        return $menu_det;
+    }
+
+    function saveArticleTreeTecdoc($art_id, $str_id) {$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT * FROM `T2_TREE` WHERE `ART_ID`='$art_id' AND `STR_ID`='$str_id' LIMIT 1;"); $n=$db->num_rows($r);
+        if ($n==0) {
+            $db->query("INSERT INTO `T2_TREE` (`ART_ID`, `STR_ID`) VALUES ('$art_id', '$str_id');");
+        }
+        return true;
+    }
+
+    function saveArticleTreeNew($art_id, $group_id) {$db=DbSingleton::getTokoDb();
+        session_start();$user_id=$_SESSION["media_user_id"];
+        $r=$db->query("SELECT * FROM `T2_TREE_ARTS` WHERE `ART_ID`='$art_id' AND `GROUP_ID`='$group_id' LIMIT 1;"); $n=$db->num_rows($r);
+        if ($n==0) {
+            $db->query("INSERT INTO `T2_TREE_ARTS` (`ART_ID`, `GROUP_ID`, `USER_ID`) VALUES ('$art_id', '$group_id', '$user_id');");
+        }
+        return true;
+    }
+
+    /*==== /TREE NEW ====*/
+
+    function getStrName($str_id) {$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT * FROM `T2_GROUP_TREE` WHERE `STR_ID`='$str_id' AND `LNG_ID`=16 LIMIT 1;"); $n=$db->num_rows($r);
+        $str_name = $db->result($r, 0, "TEX_TEXT");
+        if ($n==0) $str_name="-не визначена-";
+        return $str_name;
+    }
+
+    function getCatName($cat_id) {$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `TEX_RU` FROM `T2_TREE_CAT` WHERE `CAT_ID`='$cat_id' LIMIT 1;");
+        $cat_name=$db->result($r,0,"TEX_RU");
+        return $cat_name;
+    }
+
+    function getGroupName($group_id) {$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `TEX_RU` FROM `T2_TREE_GROUP` WHERE `GROUP_ID`='$group_id' LIMIT 1;");
+        $group_name=$db->result($r,0,"TEX_RU");
+        return $group_name;
+    }
+
+    function getLaIdComment($la_id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `TEXT` FROM `link_notes` WHERE `LA_ID`='$la_id' AND `LANG_ID`='16' AND `DISPLAY`=1;");$n=$db->num_rows($r);$comment="";
         for ($i=1;$i<=$n;$i++){
             $comment.=$db->result($r,$i-1,"TEXT")."\n";
         }
         return $comment;
     }
 
-    function loadArticleAplicabilityModels($art_id,$mfa_id){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;$list="";
+    function loadArticleAplicabilityModels($art_id,$mfa_id){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$list="";
         $form="";$form_htm=RD."/tpl/catalogue_aplicability_model_block.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $form=str_replace("{mfa_id}",$mfa_id,$form);
         $form=str_replace("{art_id}",$art_id,$form);
-        $r=$dbp->query("select TYP_ID, LA_ID from T2_LINKS where ART_ID='$art_id';");$n=$dbp->num_rows($r);$typ_id_str="";$la_id_arr=array();
+        $r=$db->query("SELECT `TYP_ID`, `LA_ID` FROM `T2_LINKS` WHERE `ART_ID`='$art_id';");$n=$db->num_rows($r);$typ_id_str="";$la_id_arr=array();
         for ($i=1;$i<=$n;$i++){
-            $typ_id=$dbp->result($r,$i-1,"TYP_ID");$typ_id_str.="$typ_id";if ($i<$n){$typ_id_str.=",";}
-            $la_id=$dbp->result($r,$i-1,"LA_ID");
+            $typ_id=$db->result($r,$i-1,"TYP_ID");$typ_id_str.="$typ_id";if ($i<$n){$typ_id_str.=",";}
+            $la_id=$db->result($r,$i-1,"LA_ID");
             $la_id_arr[$typ_id]=$la_id;
-            //$db->query("insert into link_notes (`LA_ID`,`LANG_ID`,`SORT`,`TEXT_NAME`,`TYPE`,`TEXT`,`DISPLAY`) values ('$la_id_new','16','1','','K','$comment','1');");
         }
         if ($typ_id_str==""){$typ_id_str=0;}
-        //$query="select tt.*, tm.TEX_TEXT from T_types tt inner join T_models tm on tm.MOD_ID=tt.TYP_MOD_ID inner join T_manufacturers man on man.MFA_ID=tm.MOD_MFA_ID where tm.MOD_MFA_ID='$mfa_id' and tt.TYP_ID in ($typ_id_str)  order by tt.TYP_TEXT asc";
-        $query="select tt.*, tm.TEX_TEXT from T_types tt inner join T_models tm on tm.MOD_ID=tt.TYP_MOD_ID 
-            inner join T_manufacturers man on man.MFA_ID=tm.MOD_MFA_ID 
-        where tm.MOD_MFA_ID='$mfa_id' and tt.TYP_ID in ($typ_id_str)  order by tt.TYP_TEXT asc";
-
+        $query="SELECT tt.*, tm.TEX_TEXT 
+        FROM `T_types` tt 
+            INNER JOIN `T_models` tm on tm.MOD_ID=tt.TYP_MOD_ID 
+            INNER JOIN `T_manufacturers` man on man.MFA_ID=tm.MOD_MFA_ID 
+        WHERE tm.MOD_MFA_ID='$mfa_id' AND tt.TYP_ID IN ($typ_id_str) ORDER BY tt.TYP_TEXT ASC;";
         $r=$db->query($query);$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $typ_id=$db->result($r,$i-1,"TYP_ID");
             $engine=$db->result($r,$i-1,"TYP_TEXT");
-            //$model_id=$db->result($r,$i-1,"TYP_MOD_ID");
             $typ_text=$db->result($r,$i-1,"TYP_MMT_TEXT");
             $fuel=$db->result($r,$i-1,"Fuel");
             $start=$db->result($r,$i-1,"TYP_PCON_START");if ($start==0){$start="";}if (strlen($start)==6){$start=substr($start,0,4).".".substr($start,4,2);}
@@ -1989,7 +2406,7 @@ class catalogue {
                 <td>$typ_kw_from / $typ_hp_from</td>
                 <td>$typ_ccm</td>
                 <td>$eng_cod</td>
-                <td>$la_id_comment <buttom class='btn btn-xs btn-warning' onclick=\"showLaIdCommentForm('$art_id','$typ_id');\"><i class='fa fa-edit'></i></td>
+                <td><button class='btn btn-xs btn-warning' onclick=\"showLaIdCommentForm('$art_id','$typ_id');\"><i class='fa fa-edit'></i></button> $la_id_comment</td>
                 <td align='center'><button class='btn btn-xs btn-danger btn-bitbucket' title='Відвязати авто' onclick='unlinkArticleAplicabilityModel(\"$mfa_id\",\"$art_id\",\"$typ_id\",\"".$slave->qq($typ_text)."\");'><i class='fa fa-times'></i></button></td>
             </tr>";
         }
@@ -1997,22 +2414,27 @@ class catalogue {
         return $form;
     }
 
-    function unlinkArticleAplicabilityModel($art_id,$typ_id){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$answer="Помилка обробки даних";
-        if ($art_id>0 && $typ_id>0){
-            $query="delete from T2_LINKS where ART_ID='$art_id' and `TYP_ID`='$typ_id';";
-            $dbp->query($query);$db->query($query); $answer=1;
+    function unlinkArticleAplicabilityModel($art_id,$typ_id){$db=DbSingleton::getTokoDb();
+        $answer="Помилка обробки даних";
+        if ($art_id>0 && $typ_id>0) {
+            $query="DELETE FROM `T2_LINKS` WHERE `ART_ID`='$art_id' AND `TYP_ID`='$typ_id';";
+            $db->query($query); $answer=1;
         }
         return $answer;
     }
 
-    function clearActicleAplicabilityManuf($art_id,$mfa_id){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$answer="Помилка обробки даних";
+    function clearActicleAplicabilityManuf($art_id,$mfa_id){$db=DbSingleton::getTokoDb();
+        $answer="Помилка обробки даних";
         if ($art_id>0 && $mfa_id>0){
-            $r=$db->query("select tt.TYP_ID from T_types tt left outer join T_models tm on tm.MOD_ID=tt.TYP_MOD_ID where tm.MOD_MFA_ID='$mfa_id';");$n=$db->num_rows($r);
+            $r=$db->query("SELECT tt.TYP_ID 
+            FROM `T_types` tt 
+                LEFT OUTER JOIN `T_models` tm ON (tm.MOD_ID=tt.TYP_MOD_ID) 
+            WHERE tm.MOD_MFA_ID='$mfa_id';");$n=$db->num_rows($r);
             if ($n>0){
                 for ($i=1;$i<=$n;$i++){
                     $typ_id=$db->result($r,$i-1,"TYP_ID");
-                    $query="delete from T2_LINKS where ART_ID='$art_id' and `TYP_ID`='$typ_id';";
-                    $dbp->query($query);$db->query($query);
+                    $query="DELETE FROM `T2_LINKS` WHERE `ART_ID`='$art_id' AND `TYP_ID`='$typ_id';";
+                    $db->query($query);
                 }
                 $answer=1;
             }
@@ -2020,7 +2442,8 @@ class catalogue {
         return $answer;
     }
 
-    function loadArticleAplicabilityNew($art_id,$index){$form="";
+    function loadArticleAplicabilityNew($art_id,$index){
+        $form="";
         if ($art_id>0){
             $form_htm=RD."/tpl/catalogue_aplicability_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
             $form=str_replace("{art_id}",$art_id,$form);
@@ -2033,27 +2456,22 @@ class catalogue {
         return array($form,"Привязка до авто");
     }
 
-    function saveCatalogueAplicabilityForm($art_id,$comment,$typ_array,$str_array){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
+    function saveCatalogueAplicabilityForm($art_id,$comment,$typ_array,$str_array){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$answer=0;$err="Помилка збереження даних!";
         $art_id=$slave->qq($art_id);$comment=$slave->qq($comment);$typ_array=$slave->qq($typ_array);
         if ($art_id>0){
-            //$brand_id=$this->getBrandId($art_id);
             $typ_array=explode(",",$typ_array);
             foreach($typ_array as $typ_id){
                 if ($typ_id>0 && $typ_id!=""){
-                    $r2=$db->query("select max(LA_ID) as mid from link_notes;");$la_id_new=0+$db->result($r2,0,"mid")+1;
-                    $db->query("insert into link_notes (`LA_ID`,`LANG_ID`,`SORT`,`TEXT_NAME`,`TYPE`,`TEXT`,`DISPLAY`) values ('$la_id_new','16','1','','K','$comment','1');");
-                    //print "insert into link_notes (`LA_ID`,`LANG_ID`,`SORT`,`TEXT_NAME`,`TYPE`,`TEXT`,`DISPLAY`) values ('$la_id_new','16','1','','K','$comment','1');\n";
-                    $dbp->query("insert into T2_LINKS (`TYP_ID`,`ART_ID`,`LA_ID`) values ('$typ_id','$art_id','$la_id_new');");
-                    //print "insert into T2_LINKS (`TYP_ID`,`ART_ID`,`LA_ID`) values ('$typ_id','$art_id','$la_id_new');\n";
-                    $db->query("insert into T2_LINKS (`TYP_ID`,`ART_ID`,`LA_ID`) values ('$typ_id','$art_id','$la_id_new');");
-                    //print "insert into T2_LINKS (`TYP_ID`,`ART_ID`,`LA_ID`) values ('$typ_id','$art_id','$la_id_new');\n";
+                    $r2=$db->query("SELECT MAX(`LA_ID`) as mid FROM `link_notes`;");$la_id_new=0+$db->result($r2,0,"mid")+1;
+                    $db->query("INSERT INTO `link_notes` (`LA_ID`,`LANG_ID`,`SORT`,`TEXT_NAME`,`TYPE`,`TEXT`,`DISPLAY`) VALUES ('$la_id_new','16','1','','K','$comment','1');");
+                    $db->query("INSERT INTO `T2_LINKS` (`TYP_ID`,`ART_ID`,`LA_ID`) VALUES ('$typ_id','$art_id','$la_id_new');");
                 }
             }
             $str_array=explode(",",$str_array);
             foreach($str_array as $str_id){
                 if ($str_id>0 && $str_id!=""){
-                    $dbp->query("insert into T2_TREE (`STR_ID`,`ART_ID`) values ('$str_id','$art_id');");
-                    $db->query("insert into T2_TREE (`STR_ID`,`ART_ID`) values ('$str_id','$art_id');");
+                    $db->query("INSERT INTO `T2_TREE` (`STR_ID`,`ART_ID`) VALUES ('$str_id','$art_id');");
                 }
             }
             $answer=1;$err="";
@@ -2061,18 +2479,18 @@ class catalogue {
         return array($answer,$err);
     }
 
-    function showLaIdCommentForm($art_id,$type_id){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$form="";
+    function showLaIdCommentForm($art_id,$type_id){$db=DbSingleton::getTokoDb();
+        $form="";
         if ($art_id>0 && $type_id>0){
             $form_htm=RD."/tpl/catalogue_laid_comment_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
             $form=str_replace("{art_id}",$art_id,$form);
             $form=str_replace("{type_id}",$type_id,$form);
-
-            $r=$dbp->query("select LA_ID from T2_LINKS where ART_ID='$art_id' and TYP_ID='$type_id';");$n=$dbp->num_rows($r);$laIdArr="0";
+            $r=$db->query("SELECT `LA_ID` FROM `T2_LINKS` WHERE `ART_ID`='$art_id' AND `TYP_ID`='$type_id';");$n=$db->num_rows($r);$laIdArr="0";
             for ($i=1;$i<=$n;$i++){
-                $la_id=$dbp->result($r,$i-1,"LA_ID");
+                $la_id=$db->result($r,$i-1,"LA_ID");
                 $laIdArr.=",".$la_id;
             }
-            $r=$db->query("select * from link_notes where LA_ID in ($laIdArr) and DISPLAY='1' and LANG_ID='16';");$n=$db->num_rows($r);$list="";
+            $r=$db->query("SELECT * FROM `link_notes` WHERE `LA_ID` IN ($laIdArr) AND `DISPLAY`='1' AND `LANG_ID`='16';");$n=$db->num_rows($r);$list="";
             for ($i=1;$i<=$n+1;$i++){$la_id=0;$sort="";	$text_name="";	$type="";$text="";$button="";
                 if($i<=$n){
                     $la_id=$db->result($r,$i-1,"LA_ID");
@@ -2101,8 +2519,10 @@ class catalogue {
         return array($form,"Коментарі LA_ID");
     }
 
-    function saveLaIdCommentForm($art_id,$type_id,$kol,$la_ids,$sorts,$types,$text_names,$texts){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
-        $art_id=$slave->qq($art_id);$type_id=$slave->qq($type_id);$kol=$slave->qq($kol);$la_ids=$slave->qq($la_ids);$sorts=$slave->qq($sorts);$types=$slave->qq($types);$text_names=$slave->qq($text_names);$texts=$slave->qq($texts);
+    function saveLaIdCommentForm($art_id,$type_id,$kol,$la_ids,$sorts,$types,$text_names,$texts){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$answer=0;$err="Помилка збереження даних!";
+        $art_id=$slave->qq($art_id);$type_id=$slave->qq($type_id);$kol=$slave->qq($kol);$la_ids=$slave->qq($la_ids);$sorts=$slave->qq($sorts);
+        $types=$slave->qq($types);$text_names=$slave->qq($text_names);$texts=$slave->qq($texts);
         if ($art_id>0 && $type_id>0){
             for ($i=1;$i<=$kol;$i++){
                 $la_id=$la_ids[$i];
@@ -2111,13 +2531,12 @@ class catalogue {
                 $text_name=$text_names[$i];
                 $text=$texts[$i];
                 if ($la_id!="" && $la_id>0){
-                    $db->query("update link_notes set `SORT`='$sort',`TEXT_NAME`='$text_name',`TYPE`='$type',`TEXT`='$text' where LA_ID='$la_id' and `DISPLAY`='1' and `LANG_ID`='16';");
+                    $db->query("UPDATE `link_notes` SET `SORT`='$sort', `TEXT_NAME`='$text_name', `TYPE`='$type', `TEXT`='$text' WHERE `LA_ID`='$la_id' AND `DISPLAY`='1' AND `LANG_ID`='16';");
                 }
-                if ($la_id==0 && $text!="" and $type!="" and $sort!=""){
-                    $r2=$db->query("select max(LA_ID) as mid from link_notes;");$la_id_new=0+$db->result($r2,0,"mid")+1;
-                    $db->query("insert into link_notes (`LA_ID`,`LANG_ID`,`SORT`,`TEXT_NAME`,`TYPE`,`TEXT`,`DISPLAY`) values ('$la_id_new','16','$sort','$text_name','$type','$text','1');");
-                    $dbp->query("insert into T2_LINKS (`TYP_ID`,`ART_ID`,`LA_ID`) values ('$type_id','$art_id','$la_id_new');");
-                    $db->query("insert into T2_LINKS (`TYP_ID`,`ART_ID`,`LA_ID`) values ('$type_id','$art_id','$la_id_new');");
+                if ($la_id==0 && $text!="" && $type!="" && $sort!=""){
+                    $r2=$db->query("SELECT MAX(`LA_ID`) as mid FROM `link_notes`;");$la_id_new=0+$db->result($r2,0,"mid")+1;
+                    $db->query("INSERT INTO `link_notes` (`LA_ID`,`LANG_ID`,`SORT`,`TEXT_NAME`,`TYPE`,`TEXT`,`DISPLAY`) VALUES ('$la_id_new','16','$sort','$text_name','$type','$text','1');");
+                    $db->query("INSERT INTO `T2_LINKS` (`TYP_ID`,`ART_ID`,`LA_ID`) VALUES ('$type_id','$art_id','$la_id_new');");
                 }
             }
             $answer=1;$err="";
@@ -2125,19 +2544,18 @@ class catalogue {
         return array($answer,$err);
     }
 
-    function dropLaIdComment($art_id,$type_id,$la_id,$sort,$type){$db=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
+    function dropLaIdComment($art_id,$type_id,$la_id,$sort,$type){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$answer=0;$err="Помилка збереження даних!";
         $art_id=$slave->qq($art_id);$type_id=$slave->qq($type_id);$la_id=$slave->qq($la_id);$sort=$slave->qq($sort);$type=$slave->qq($type);
         if ($art_id>0 && $type_id>0 && $la_id>0){
-            $db->query("delete from link_notes where LA_ID='$la_id' and `DISPLAY`='1' and `LANG_ID`='16' and `SORT`='$sort' and `TYPE`='$type' limit 1;");
-            //$dbp->query("delete from T2_LINKS where `TYP_ID`='$type_id' and `ART_ID`='$art_id' and `LA_ID`='$la_id' limit 1;");
-            //$db->query("delete from T2_LINKS where `TYP_ID`='$type_id' and `ART_ID`='$art_id' and `LA_ID`='$la_id' limit 1;");
+            $db->query("DELETE FROM `link_notes` WHERE `LA_ID`='$la_id' AND `DISPLAY`='1' AND `LANG_ID`='16' AND `SORT`='$sort' AND `TYPE`='$type' LIMIT 1;");
             $answer=1;$err="";
         }
         return array($answer,$err);
     }
 
-    function loadManufList(){$db=DbSingleton::getTokoDb();$list="";
-        $r=$db->query("select MFA_ID, MFA_BRAND from T_manufacturers order by MFA_BRAND asc;");$n=$db->num_rows($r);
+    function loadManufList(){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `MFA_ID`, `MFA_BRAND` FROM `T_manufacturers` WHERE `ACTIVE`=1 ORDER BY `MFA_BRAND` ASC;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $mfa_id=$db->result($r,$i-1,"MFA_ID");
             $mfa_name=$db->result($r,$i-1,"MFA_BRAND");
@@ -2146,8 +2564,8 @@ class catalogue {
         return $list;
     }
 
-    function loadAplicabilityModelList($mfa_id){$db=DbSingleton::getTokoDb();$list="";
-        $r=$db->query("select MOD_ID, TEX_TEXT from T_models where MOD_MFA_ID='$mfa_id' order by TEX_TEXT asc;");$n=$db->num_rows($r);
+    function loadAplicabilityModelList($mfa_id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `MOD_ID`, `TEX_TEXT` FROM `T_models` WHERE `MOD_MFA_ID`='$mfa_id' ORDER BY `TEX_TEXT` ASC;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $mod_id=$db->result($r,$i-1,"MOD_ID");
             $mod_name=$db->result($r,$i-1,"TEX_TEXT");
@@ -2156,8 +2574,8 @@ class catalogue {
         return $list;
     }
 
-    function loadAplicabilityModificationList($mod_id){$db=DbSingleton::getTokoDb();$list="";
-        $r=$db->query("select * from T_types where TYP_MOD_ID='$mod_id' order by TYP_MMT_TEXT asc;");$n=$db->num_rows($r);
+    function loadAplicabilityModificationList($mod_id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT * FROM `T_types` WHERE `TYP_MOD_ID`='$mod_id' ORDER BY `TYP_MMT_TEXT` ASC;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $typ_id=$db->result($r,$i-1,"TYP_ID");
             $name="";
@@ -2178,9 +2596,9 @@ class catalogue {
         return $list;
     }
 
-    function loadArticleLogistic($art_id){$db=DbSingleton::getTokoDb();$form="";
-        $form_htm=RD."/tpl/catalogue_logistic.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from T2_PACKAGING where ART_ID='$art_id' limit 0,1;");
+    function loadArticleLogistic($art_id){$db=DbSingleton::getTokoDb();
+        $form="";$form_htm=RD."/tpl/catalogue_logistic.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        $r=$db->query("SELECT * FROM `T2_PACKAGING` WHERE `ART_ID`='$art_id' LIMIT 1;");
         $index_pack=$db->result($r,0,"INDEX_PACK");
         $height=$db->result($r,0,"HEIGHT");
         $length=$db->result($r,0,"LENGTH");
@@ -2210,8 +2628,8 @@ class catalogue {
         return $form;
     }
 
-    function showWorkPairForm($art_id){$db=DbSingleton::getTokoDb();$list="";
-        $r=$db->query("select PAIR_INDEX from T2_WORK_PAIR where ART_ID='$art_id';");$n=$db->num_rows($r);
+    function showWorkPairForm($art_id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `PAIR_INDEX` FROM `T2_WORK_PAIR` WHERE `ART_ID`='$art_id';");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n+3;$i++){
             $pair_index="";
             if ($i<=$n){$pair_index=$db->result($r,$i-1,"PAIR_INDEX");}
@@ -2221,23 +2639,27 @@ class catalogue {
         return $list;
     }
 
-    function saveCatalogueLogistic($art_id,$index_pack,$height,$length,$width,$volume,$weight_netto,$weight_brutto,$necessary_amount_car,$units_id,$multiplicity_package,$shoulder_delivery,$general_quant,$work_pair){$db=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
-        $art_id=$slave->qq($art_id);$index_pack=$slave->qq($index_pack);$height=$slave->qq($slave->point_valid($height));$length=$slave->qq($slave->point_valid($length));$width=$slave->qq($slave->point_valid($width));$volume=$slave->qq($slave->point_valid($volume));$weight_netto=$slave->qq($slave->point_valid($weight_netto));$weight_brutto=$slave->qq($slave->point_valid($weight_brutto));$necessary_amount_car=$slave->qq($necessary_amount_car);$units_id=$slave->qq($units_id);
+    function saveCatalogueLogistic($art_id,$index_pack,$height,$length,$width,$volume,$weight_netto,$weight_brutto,$necessary_amount_car,$units_id,$multiplicity_package,$shoulder_delivery,$general_quant,$work_pair){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$answer=0;$err="Помилка збереження даних!";
+        $art_id=$slave->qq($art_id);$index_pack=$slave->qq($index_pack);$height=$slave->qq($slave->point_valid($height));$length=$slave->qq($slave->point_valid($length));
+        $width=$slave->qq($slave->point_valid($width));$volume=$slave->qq($slave->point_valid($volume));$weight_netto=$slave->qq($slave->point_valid($weight_netto));
+        $weight_brutto=$slave->qq($slave->point_valid($weight_brutto));$necessary_amount_car=$slave->qq($necessary_amount_car);$units_id=$slave->qq($units_id);
         $multiplicity_package=$slave->qq($multiplicity_package);$shoulder_delivery=$slave->qq($shoulder_delivery);$general_quant=$slave->qq($general_quant);
         if ($art_id>0){
-            //T2_PACKAGING UPDATE
-            $r=$db->query("select * from `T2_PACKAGING` where `ART_ID`='$art_id' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("SELECT * FROM `T2_PACKAGING` WHERE `ART_ID`='$art_id' LIMIT 1;");$n=$db->num_rows($r);
             if ($n==0){
-                $db->query("insert into T2_PACKAGING (`ART_ID`,`INDEX_PACK`,`HEIGHT`,`LENGTH`,`WIDTH`,`VOLUME`,`WEIGHT_NETTO`,`WEIGHT_BRUTTO`,`NECESSARY_AMOUNT_CAR`,`UNITS_ID`,`MULTIPLICITY_PACKAGE`,`SHOULDER_DELIVERY`,`GENERAL_QUANT`) values ('$art_id','$index_pack','$height','$length','$width','$volume','$weight_netto','$weight_brutto','$necessary_amount_car','$units_id','$multiplicity_package','$shoulder_delivery','$general_quant');");
+                $db->query("INSERT INTO `T2_PACKAGING` (`ART_ID`,`INDEX_PACK`,`HEIGHT`,`LENGTH`,`WIDTH`,`VOLUME`,`WEIGHT_NETTO`,`WEIGHT_BRUTTO`,`NECESSARY_AMOUNT_CAR`,`UNITS_ID`,`MULTIPLICITY_PACKAGE`,`SHOULDER_DELIVERY`,`GENERAL_QUANT`) 
+                VALUES ('$art_id','$index_pack','$height','$length','$width','$volume','$weight_netto','$weight_brutto','$necessary_amount_car','$units_id','$multiplicity_package','$shoulder_delivery','$general_quant');");
             }
             if ($n==1){
-                $db->query("update T2_PACKAGING set `INDEX_PACK`='$index_pack', `HEIGHT`='$height', `LENGTH`='$length', `WIDTH`='$width', `VOLUME`='$volume', `WEIGHT_NETTO`='$weight_netto', `WEIGHT_BRUTTO`='$weight_brutto', `NECESSARY_AMOUNT_CAR`='$necessary_amount_car', `UNITS_ID`='$units_id', `MULTIPLICITY_PACKAGE`='$multiplicity_package', `SHOULDER_DELIVERY`='$shoulder_delivery', `GENERAL_QUANT`='$general_quant' where `ART_ID`='$art_id';");
+                $db->query("UPDATE `T2_PACKAGING` SET `INDEX_PACK`='$index_pack', `HEIGHT`='$height', `LENGTH`='$length', `WIDTH`='$width', `VOLUME`='$volume', `WEIGHT_NETTO`='$weight_netto', `WEIGHT_BRUTTO`='$weight_brutto', 
+                `NECESSARY_AMOUNT_CAR`='$necessary_amount_car', `UNITS_ID`='$units_id', `MULTIPLICITY_PACKAGE`='$multiplicity_package', `SHOULDER_DELIVERY`='$shoulder_delivery', `GENERAL_QUANT`='$general_quant' WHERE `ART_ID`='$art_id';");
             }
             if ($work_pair!=""){
-                $db->query("delete from T2_WORK_PAIR where ART_ID='$art_id';");
+                $db->query("DELETE FROM `T2_WORK_PAIR` WHERE `ART_ID`='$art_id';");
                 foreach ($work_pair as $wp){
                     if ($wp!=""){
-                        $db->query("insert into T2_WORK_PAIR  (`ART_ID`,`PAIR_INDEX`) values ('$art_id','$wp');");
+                        $db->query("INSERT INTO `T2_WORK_PAIR` (`ART_ID`,`PAIR_INDEX`) VALUES ('$art_id','$wp');");
                     }
                 }
             }
@@ -2246,21 +2668,16 @@ class catalogue {
         return array($answer,$err);
     }
 
-    function getCountryName($sel_id){$db=DbSingleton::getTokoDb();$name="";
-        $r=$db->query("select COUNTRY_NAME from T2_COUNTRIES where COUNTRY_ID='$sel_id' limit 0,1;");$n=$db->num_rows($r);
-        if ($n==1){ $name=$db->result($r,0,"COUNTRY_NAME");}
-        return $name;
-    }
-
-    function getCountryAbr($sel_id){$db=DbSingleton::getTokoDb();$abr="";
-        $r=$db->query("select ALFA2 from T2_COUNTRIES where COUNTRY_ID='$sel_id' limit 0,1;");$n=$db->num_rows($r);
+    function getCountryAbr($sel_id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `ALFA2` FROM `T2_COUNTRIES` WHERE `COUNTRY_ID`='$sel_id' LIMIT 1;");$n=$db->num_rows($r);$abr="";
         if ($n==1){ $abr=$db->result($r,0,"ALFA2");}
         return $abr;
     }
 
-    function showCountryManual($sel_id){$db=DbSingleton::getTokoDb();$manual=new manual;
+    function showCountryManual($sel_id){$db=DbSingleton::getTokoDb();
+        $manual=new manual;
         $form="";$form_htm=RD."/tpl/catalogue_country_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from T2_COUNTRIES order by COUNTRY_NAME asc;");$n=$db->num_rows($r);$list="";
+        $r=$db->query("SELECT * FROM `T2_COUNTRIES` ORDER BY `COUNTRY_NAME` ASC;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"COUNTRY_ID");
             $name=$db->result($r,$i-1,"COUNTRY_NAME");
@@ -2286,9 +2703,10 @@ class catalogue {
         return $form;
     }
 
-    function showCountryForm($id){$db=DbSingleton::getTokoDb();$manual=new manual;
+    function showCountryForm($id){$db=DbSingleton::getTokoDb();
+        $manual=new manual;
         $form="";$form_htm=RD."/tpl/catalogue_country_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from T2_COUNTRIES where COUNTRY_ID='$id' limit 0,1;");
+        $r=$db->query("SELECT * FROM `T2_COUNTRIES` WHERE `COUNTRY_ID`='$id' LIMIT 1;");
         $name=$db->result($r,0,"COUNTRY_NAME");
         $alfa2=$db->result($r,0,"ALFA2");
         $alfa3=$db->result($r,0,"ALFA3");
@@ -2305,40 +2723,42 @@ class catalogue {
         return array($form,"Форма Країни походження");
     }
 
-    function saveCatalogueCountryForm($id,$name,$alfa2,$alfa3,$duty,$risk){$db=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
+    function saveCatalogueCountryForm($id,$name,$alfa2,$alfa3,$duty,$risk){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$answer=0;$err="Помилка збереження даних!";
         $id=$slave->qq($id);$name=$slave->qq($name);$alfa2=$slave->qq($alfa2);$alfa3=$slave->qq($alfa3);$duty=$slave->qq($duty);$risk=$slave->qq($risk);
         if ($id>0){
-            $r=$db->query("select * from `T2_COUNTRIES` where `COUNTRY_ID`='$id' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("SELECT * FROM `T2_COUNTRIES` WHERE `COUNTRY_ID`='$id' LIMIT 1;");$n=$db->num_rows($r);
             if ($n==0){
-                $db->query("insert into T2_COUNTRIES (`COUNTRY_ID`,`COUNTRY_NAME`,`ALFA2`,`ALFA3`,`DUTY`,`RISK`) values ('$id','$name','$alfa2','$alfa3','$duty','$risk');");
+                $db->query("INSERT INTO `T2_COUNTRIES` (`COUNTRY_ID`,`COUNTRY_NAME`,`ALFA2`,`ALFA3`,`DUTY`,`RISK`) VALUES ('$id','$name','$alfa2','$alfa3','$duty','$risk');");
             }
             if ($n==1){
-                $db->query("update T2_COUNTRIES set `COUNTRY_NAME`='$name', `ALFA2`='$alfa2', `ALFA3`='$alfa3', `DUTY`='$duty', `RISK`='$risk' where `COUNTRY_ID`='$id';");
+                $db->query("UPDATE `T2_COUNTRIES` SET `COUNTRY_NAME`='$name', `ALFA2`='$alfa2', `ALFA3`='$alfa3', `DUTY`='$duty', `RISK`='$risk' WHERE `COUNTRY_ID`='$id';");
             }
             $answer=1;$err="";
         }
         if ($id=="" && $name!=""){
-            $db->query("insert into T2_COUNTRIES (`COUNTRY_ID`,`COUNTRY_NAME`,`ALFA2`,`ALFA3`,`DUTY`,`RISK`) values ('$id','$name','$alfa2','$alfa3','$duty','$risk');");
+            $db->query("INSERT INTO `T2_COUNTRIES` (`COUNTRY_ID`,`COUNTRY_NAME`,`ALFA2`,`ALFA3`,`DUTY`,`RISK`) VALUES ('$id','$name','$alfa2','$alfa3','$duty','$risk');");
             $answer=1;$err="";
         }
         return array($answer,$err);
     }
 
-    function dropCountry($id){$db=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка видалення запису!";
-        $id=$slave->qq($id);
+    function dropCountry($id){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$answer=0;$err="Помилка видалення запису!";$id=$slave->qq($id);
         if ($id>0){
-            $r=$db->query("select * from T2_COUNTRIES where COUNTRY_ID='$id' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("SELECT * FROM `T2_COUNTRIES` WHERE `COUNTRY_ID`='$id' LIMIT 1;");$n=$db->num_rows($r);
             if ($n==1){
-                $db->query("delete from T2_COUNTRIES where COUNTRY_ID='$id';");
+                $db->query("DELETE FROM `T2_COUNTRIES` WHERE `COUNTRY_ID`='$id';");
                 $answer=1;$err="";
             }
         }
         return array($answer,$err);
     }
 
-    function showDocumentCountryManual($sel_id,$pos){$db=DbSingleton::getTokoDb();$manual=new manual;
+    function showDocumentCountryManual($sel_id,$pos){$db=DbSingleton::getTokoDb();
+        $manual=new manual;
         $form="";$form_htm=RD."/tpl/documents_country_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from T2_COUNTRIES order by COUNTRY_NAME asc;");$n=$db->num_rows($r);$list="";
+        $r=$db->query("SELECT * FROM `T2_COUNTRIES` ORDER BY `COUNTRY_NAME` ASC;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"COUNTRY_ID");
             $name=$db->result($r,$i-1,"COUNTRY_NAME");
@@ -2361,15 +2781,16 @@ class catalogue {
         return $form;
     }
 
-    function getCostumsCode($sel_id){$db=DbSingleton::getTokoDb();$code="";
-        $r=$db->query("select COSTUMS_CODE from T2_COSTUMS where COSTUMS_ID='$sel_id' limit 0,1;");$n=$db->num_rows($r);
+    function getCostumsCode($sel_id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `COSTUMS_CODE` FROM `T2_COSTUMS` WHERE `COSTUMS_ID`='$sel_id' LIMIT 1;");$n=$db->num_rows($r);$code="";
         if ($n==1){ $code=$db->result($r,0,"COSTUMS_CODE");}
         return $code;
     }
 
-    function showCostumsManual($sel_id){$db=DbSingleton::getTokoDb();$manual=new manual;
+    function showCostumsManual($sel_id){$db=DbSingleton::getTokoDb();
+        $manual=new manual;
         $form="";$form_htm=RD."/tpl/catalogue_costums_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from T2_COSTUMS order by COSTUMS_NAME asc;");$n=$db->num_rows($r);$list="";
+        $r=$db->query("SELECT * FROM `T2_COSTUMS` ORDER BY `COSTUMS_NAME` ASC;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"COSTUMS_ID");
             $code=$db->result($r,$i-1,"COSTUMS_CODE");
@@ -2398,9 +2819,10 @@ class catalogue {
         return $form;
     }
 
-    function showCostumsForm($id){$db=DbSingleton::getTokoDb();$manual=new manual;
+    function showCostumsForm($id){$db=DbSingleton::getTokoDb();
+        $manual=new manual;
         $form="";$form_htm=RD."/tpl/catalogue_costums_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from T2_COSTUMS where COSTUMS_ID='$id' limit 0,1;");
+        $r=$db->query("SELECT * FROM `T2_COSTUMS` WHERE `COSTUMS_ID`='$id' LIMIT 1;");
         $code=$db->result($r,0,"COSTUMS_CODE");
         $name=$db->result($r,0,"COSTUMS_NAME");
         $preferential_rate=$db->result($r,0,"PREFERENTIAL_RATE");
@@ -2422,40 +2844,45 @@ class catalogue {
         return array($form,"Форма митного коду УКТЕЗД");
     }
 
-    function saveCatalogueCostumsForm($id,$code,$name,$preferential_rate,$full_rate,$type_declaration,$sertification,$gos_standart){$db=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
-        $id=$slave->qq($id);$code=$slave->qq($code);$name=$slave->qq($name);$preferential_rate=$slave->qq($slave->point_valid($preferential_rate));$full_rate=$slave->qq($slave->point_valid($full_rate));$type_declaration=$slave->qq($type_declaration);$sertification=$slave->qq($sertification);$gos_standart=$slave->qq($gos_standart);
+    function saveCatalogueCostumsForm($id,$code,$name,$preferential_rate,$full_rate,$type_declaration,$sertification,$gos_standart){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$answer=0;$err="Помилка збереження даних!";
+        $id=$slave->qq($id);$code=$slave->qq($code);$name=$slave->qq($name);$preferential_rate=$slave->qq($slave->point_valid($preferential_rate));
+        $full_rate=$slave->qq($slave->point_valid($full_rate));$type_declaration=$slave->qq($type_declaration);$sertification=$slave->qq($sertification);$gos_standart=$slave->qq($gos_standart);
         if ($id>0){
-            $r=$db->query("select * from `T2_COSTUMS` where `COSTUMS_ID`='$id' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("SELECT * FROM `T2_COSTUMS` WHERE `COSTUMS_ID`='$id' LIMIT 1;");$n=$db->num_rows($r);
             if ($n==0){
-                $db->query("insert into T2_COSTUMS (`COSTUMS_ID`,`COSTUMS_CODE`,`COSTUMS_NAME`,`PREFERENTIAL_RATE`,`FULL_RATE`,`SERTIFICATION`,`GOS_STANDART`,`TYPE_DECLARATION`) values ('$id','$code','$name','$preferential_rate','$full_rate','$sertification','$gos_standart','$type_declaration');");
+                $db->query("INSERT INTO `T2_COSTUMS` (`COSTUMS_ID`,`COSTUMS_CODE`,`COSTUMS_NAME`,`PREFERENTIAL_RATE`,`FULL_RATE`,`SERTIFICATION`,`GOS_STANDART`,`TYPE_DECLARATION`) 
+                VALUES ('$id','$code','$name','$preferential_rate','$full_rate','$sertification','$gos_standart','$type_declaration');");
             }
             if ($n==1){
-                $db->query("update T2_COSTUMS set `COSTUMS_CODE`='$code', `COSTUMS_NAME`='$name', `PREFERENTIAL_RATE`='$preferential_rate', `FULL_RATE`='$full_rate', `SERTIFICATION`='$sertification', `GOS_STANDART`='$gos_standart', `TYPE_DECLARATION`='$type_declaration' where `COSTUMS_ID`='$id';");
+                $db->query("UPDATE `T2_COSTUMS` SET `COSTUMS_CODE`='$code', `COSTUMS_NAME`='$name', `PREFERENTIAL_RATE`='$preferential_rate', `FULL_RATE`='$full_rate', `SERTIFICATION`='$sertification', `GOS_STANDART`='$gos_standart', `TYPE_DECLARATION`='$type_declaration' WHERE `COSTUMS_ID`='$id';");
             }
             $answer=1;$err="";
         }
         if ($id=="" && $name!=""){
-            $db->query("insert into T2_COSTUMS (`COSTUMS_ID`,`COSTUMS_CODE`,`COSTUMS_NAME`,`PREFERENTIAL_RATE`,`FULL_RATE`,`SERTIFICATION`,`GOS_STANDART`,`TYPE_DECLARATION`) values ('$id','$code','$name','$preferential_rate','$full_rate','$sertification','$gos_standart','$type_declaration');");
+            $db->query("INSERT INTO `T2_COSTUMS` (`COSTUMS_ID`,`COSTUMS_CODE`,`COSTUMS_NAME`,`PREFERENTIAL_RATE`,`FULL_RATE`,`SERTIFICATION`,`GOS_STANDART`,`TYPE_DECLARATION`) 
+            VALUES ('$id','$code','$name','$preferential_rate','$full_rate','$sertification','$gos_standart','$type_declaration');");
             $answer=1;$err="";
         }
         return array($answer,$err);
     }
 
-    function dropCostums($id){$db=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка видалення запису!";
-        $id=$slave->qq($id);
+    function dropCostums($id){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$answer=0;$err="Помилка видалення запису!";$id=$slave->qq($id);
         if ($id>0){
-            $r=$db->query("select * from T2_COSTUMS where COSTUMS_ID='$id' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("SELECT * FROM `T2_COSTUMS` WHERE `COSTUMS_ID`='$id' LIMIT 1;");$n=$db->num_rows($r);
             if ($n==1){
-                $db->query("delete from T2_COSTUMS where COSTUMS_ID='$id';");
+                $db->query("DELETE FROM `T2_COSTUMS` WHERE `COSTUMS_ID`='$id';");
                 $answer=1;$err="";
             }
         }
         return array($answer,$err);
     }
 
-    function showDocumentCostumsManual($sel_id,$pos){$db=DbSingleton::getTokoDb();$manual=new manual;
+    function showDocumentCostumsManual($sel_id,$pos){$db=DbSingleton::getTokoDb();
+        $manual=new manual;
         $form="";$form_htm=RD."/tpl/documents_costums_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from T2_COSTUMS order by COSTUMS_NAME asc;");$n=$db->num_rows($r);$list="";
+        $r=$db->query("SELECT * FROM `T2_COSTUMS` ORDER BY `COSTUMS_NAME` ASC;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"COSTUMS_ID");
             $code=$db->result($r,$i-1,"COSTUMS_CODE");
@@ -2481,8 +2908,9 @@ class catalogue {
         return $form;
     }
 
-    function getPriceRatingArray(){$db=DbSingleton::getTokoDb();$rating_ar=array();
-        $r=$db->query("select * from T2_PRICE_RATING order by abr, id asc;");$n=$db->num_rows($r);
+    function getPriceRatingArray(){$db=DbSingleton::getTokoDb();
+        $rating_ar=array();
+        $r=$db->query("SELECT * FROM `T2_PRICE_RATING` ORDER BY `abr`, `id` ASC;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $abr=$db->result($r,$i-1,"abr");
@@ -2494,19 +2922,20 @@ class catalogue {
         return $rating_ar;
     }
 
-    function loadArticlePricing($art_id){$db=DbSingleton::getTokoDb();
+    function loadArticlePricing($art_id, $brand_id) { $db=DbSingleton::getTokoDb();
         $form="";$form_htm=RD."/tpl/catalogue_pricing.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);} $list_price_rating="";
         $form=str_replace("{art_id}",$art_id,$form);
-        $rating_ar=$this->getPriceRatingArray();$kol_rating=0;
-        foreach ($rating_ar as $rar){$kol_rating+=1; $list_price_rating.="<th class='text-center' title='".$rar["name"]."'>Прайс<br>".$rar["abr"]."</th>"; }
+        $rating_ar=$this->getPriceRatingArray(); $kol_rating=0;
+        foreach ($rating_ar as $rar) { $kol_rating+=1; $list_price_rating.="<th class='text-center' title='".$rar["name"]."'>Прайс<br>".$rar["abr"]."</th>"; }
         $form=str_replace("{list_price_rating}",$list_price_rating,$form);
         list(,,,$article_nr_search)=$this->getArticleNrDisplBrand($art_id);
 
-        $r=$db->query("select t2c.ART_ID, t2c.KIND, t2c.RELATION from T2_CROSS t2c 
-            left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2c.BRAND_ID 
-        where t2c.SEARCH_NUMBER='$article_nr_search' order by t2c.KIND asc;");$n=$db->num_rows($r);
-        $ak=array();$rk=array(); $art_id_str="";
-        for ($i=1;$i<=$n;$i++){
+        $ak=array(); $rk=array(); $art_id_str="";
+        $r=$db->query("SELECT t2c.ART_ID, t2c.KIND, t2c.RELATION 
+        FROM `T2_CROSS` t2c 
+            LEFT OUTER JOIN `T2_BRANDS` t2b ON (t2b.BRAND_ID=t2c.BRAND_ID) 
+        WHERE t2c.SEARCH_NUMBER='$article_nr_search' AND t2c.BRAND_ID='$brand_id' ORDER BY t2c.KIND ASC;"); $n=$db->num_rows($r);
+        for ($i=1;$i<=$n;$i++) {
             $ART_ID=$db->result($r,$i-1,"ART_ID");
             $KIND=$db->result($r,$i-1,"KIND");
             $RELATION=$db->result($r,$i-1,"RELATION");
@@ -2514,46 +2943,73 @@ class catalogue {
             if (($ak[$ART_ID]=="") || $KIND==0){$ak[$ART_ID]=$KIND;}
             if (($rk[$ART_ID]=="") || $RELATION==0){$rk[$ART_ID]=$RELATION;}
         }
-        if ($art_id_str==""){$art_id_str=0;}
-        $r=$db->query("select t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME from T2_ARTICLES t2a 
-            left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
-            left outer join T2_BARCODES t2bc on t2bc.ART_ID=t2a.ART_ID 
-        where t2a.ART_ID in ($art_id_str);");$n=$db->num_rows($r);$ak0="";$ak1="";$ak2="";$ak3="";$ak4="";
-        for ($i=1;$i<=$n;$i++){
+        if ($art_id_str=="") { $art_id_str=0; }
+
+        $ak0="";$ak1="";$ak2="";$ak3="";$ak4="";
+        $r=$db->query("SELECT t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME 
+        FROM `T2_ARTICLES` t2a 
+            LEFT OUTER JOIN `T2_BRANDS` t2b ON t2b.BRAND_ID=t2a.BRAND_ID 
+        WHERE t2a.ART_ID IN ($art_id_str);"); $n=$db->num_rows($r);
+        for ($i=1;$i<=$n;$i++) {
             $analog_art_id=$db->result($r,$i-1,"ART_ID");
             $display_nr=trim($db->result($r,$i-1,"ARTICLE_NR_DISPL"));
             $brand_name=$db->result($r,$i-1,"BRAND_NAME");
             $kind_id=$ak[$analog_art_id];
             $relation=$rk[$analog_art_id];
 
-            list($article_oper_price,$article_storage_amount)=$this->getArticleOperPriceGeneralStock($analog_art_id);
+            list($article_oper_price, $article_storage_amount)=$this->getArticleOperPriceGeneralStock($analog_art_id);
             if ($article_oper_price>0){
                 //$article_sales="Відсутня інформація";
                 $article_income_amount=0;
                 //$minMarkUp=0;
-                list($template_price_rating_id,$data_use,$author_id,$minMarkup,$prAr)=$this->getArticlePriceRating($analog_art_id);
+                list($template_price_rating_id, $data_use, $author_id, $minMarkup, $cash_id, $prAr)=$this->getArticlePriceRating($analog_art_id);
                 $author_name=$this->getMediaUserName($author_id);
                 $template_price_rating_select=$this->showPriceRatingTemplateSelect($analog_art_id,$template_price_rating_id);
+                $cash_price_rating_select=$this->showPriceRatingCashSelect($analog_art_id,$cash_id);
                 //$rating_price=0;$rating_persent=0;
                 $row2="";
+                require_once (RD."/lib/action_clients_class.php"); $action_clients=new action_clients; $action_list=$action_clients->getActionsList($analog_art_id);
                 $row="<tr>
-                    <td rowspan=2><input type='hidden' id='$rp_$i' value='$analog_art_id'><strong>$display_nr<br>$brand_name</strong></td>
+                    <td rowspan=2>
+                        <input type='hidden' id='rp_$i' value='$analog_art_id'>
+                        <strong>
+                            $display_nr<br>
+                            $brand_name<br>
+                            <button class=\"btn btn-sm btn-primary btn-outline\" type=\"button\" title=\"Історія\" onclick=\"showArticleJDocs('$analog_art_id');\"><i class='fa fa-history'></i></button><br>
+                            $action_list 
+                        </strong>
+                    </td>
                     <td><input type='text' class='form-control input-xs price_numbers nrCell' readonly id='artStorageAmount_$analog_art_id' value='$article_storage_amount'></td>
                     <td>$article_income_amount</td>
                     <td><input type='text' class='form-control input-xs price_numbers nrCell' readonly id='artOperPrice_$analog_art_id' value='$article_oper_price'></td>";
-                for ($k=1;$k<=$this->kol_price_rating;$k++){
+                for ($k=1;$k<=$this->kol_price_rating;$k++) {
                     $rating_price=$prAr[$k]["price"];
                     $rating_persent=$prAr[$k]["persent"];
                     $row.="<td><input type='text' class='form-control input-xs price_numbers nrCell' id='artRatingPrice_".$analog_art_id."_$k' value='$rating_price' onKeyup='recalcPRArt(\"$analog_art_id\",\"$k\",\"1\")'></td>";
-                    $row2.="<td><input type='text' class='form-control input-xs price_numbers nrCell' id='artRatingPersent_".$analog_art_id."_$k' value='$rating_persent' onKeyup='recalcPRArt(\"$analog_art_id\",\"$k\",\"0\")'></td>";
+                    $row2.="<td><input type='text' class='form-control input-xs' id='artRatingPersent_".$analog_art_id."_$k' value='$rating_persent' onKeyup='recalcPRArt(\"$analog_art_id\",\"$k\",\"0\")'></td>";
                 }
                 $row2="<tr>
-                    <td colspan=3 align='right'>Шаблон націнки: $template_price_rating_select %</td>".$row2."
+                    <td colspan=3>
+                        <table>
+                            <tr>
+                                <td>Шаблон націнки:</td>
+                                <td>$template_price_rating_select %</td>
+                            </tr>
+                            <tr>
+                                <td>Валюта:</td>
+                                <td>$cash_price_rating_select</td>
+                            </tr>
+                        </table>
+                    </td>
+                    ".$row2."
                     <td id='artDataUpdate_".$analog_art_id."'>$data_use</td>
                 </tr>";
                 $sales=$this->getLineArticleSales($analog_art_id);
                 $row.="
-                    <td rowspan=2><button class='btn btn-xs btn-default btn-block' onClick='saveArticlePriceRating(\"$analog_art_id\");return false;'><i class='fa fa-save'></i></button><button class='btn btn-xs btn-default btn-block' onClick='showArticlePriceRatingHistory(\"$analog_art_id\")'><i class='fa fa-table'></i></button></td>
+                    <td rowspan=2>
+                        <button class='btn btn-xs btn-default btn-block' onClick='saveArticlePriceRating(\"$analog_art_id\");return false;'><i class='fa fa-save'></i></button>
+                        <button class='btn btn-xs btn-default btn-block' onClick='showArticlePriceRatingHistory(\"$analog_art_id\")'><i class='fa fa-table'></i></button>
+                    </td>
                     <td rowspan=2><a href='#articleSales' onClick='showArticleSales(\"$analog_art_id\")'>$sales</a></td>
                     <td rowspan=2><input type='text' class='form-control input-xs price_numbers nrCell' id='artMinMarkUp_$analog_art_id' value='$minMarkup'></td>
                     <td id='artAuthorName_".$analog_art_id."'>$author_name</td>
@@ -2565,49 +3021,54 @@ class catalogue {
                 if ($kind_id==4 && $relation==0){$ak3.=$row;}
             }
         }
-        $articles_list=$ak0.$ak1.$ak2.$ak3.$ak4;
-        $form=str_replace("{articles_list}",$articles_list,$form);
+        $articles_list = $ak0.$ak1.$ak2.$ak3.$ak4;
+        $form = str_replace("{articles_list}",$articles_list,$form);
         return $form;
     }
 
-    function saveArticlePriceRating($art_id,$kol_elm,$template_id,$minMarkup,$prc,$prs){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка збереження даних!";
+    function saveArticlePriceRating($art_id,$kol_elm,$template_id,$minMarkup,$cash_id,$prc,$prs){$db=DbSingleton::getTokoDb();
+        $slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка збереження даних!";
         $art_id=$slave->qq($art_id);$kol_elm=$slave->qq($kol_elm);$template_id=$slave->qq($template_id);$minMarkup=$slave->qq($minMarkup);$prc=$slave->qq($prc);$prs=$slave->qq($prs);
         if ($art_id>0){
-            $r=$db->query("select * from T2_ARTICLES_PRICE_RATING where art_id='$art_id' and in_use='1' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("SELECT * FROM `T2_ARTICLES_PRICE_RATING` WHERE `art_id`='$art_id' AND `in_use`=1 LIMIT 1;");$n=$db->num_rows($r);
             if ($n==1){
-                $db->query("update T2_ARTICLES_PRICE_RATING set in_use='0' where art_id='$art_id' and in_use='1';");
+                $db->query("UPDATE `T2_ARTICLES_PRICE_RATING` SET `in_use`=0 WHERE `art_id`='$art_id' AND `in_use`=1;");
             }
-            $query="insert into T2_ARTICLES_PRICE_RATING (`art_id`,`in_use`,`data_update`,`user_id`,`template_id`,`minMarkup`";
+            $query="INSERT INTO `T2_ARTICLES_PRICE_RATING` (`art_id`,`in_use`,`data_update`,`user_id`,`template_id`,`minMarkup`,`cash_id`";
             for ($i=1;$i<=$kol_elm;$i++){ $query.=",`price_$i`,`persent_$i`"; }
-            $query.=") values ('$art_id','1',CURDATE(),'$user_id','$template_id','$minMarkup'";
+            $query.=") VALUES ('$art_id','1',CURDATE(),'$user_id','$template_id','$minMarkup','$cash_id'";
             for ($i=1;$i<=$kol_elm;$i++){
                 $price=$prc[$i];$percent=$prs[$i];
                 $query.=",'$price','$percent'";
             } $query.=");";
             $db->query($query);
+            $dbm=DbSingleton::getDb();
+            $dbm->query("UPDATE `ACTION_CLIENTS` SET `status_update`=1 WHERE `art_id`='$art_id';");
             $answer=1;$err="";
         }
         return array($answer,$err,$this->getMediaUserName($user_id),date("Y-m-d"));
     }
 
-    function getArticlePriceRating($art_id){$db=DbSingleton::getTokoDb();$template_id=0;$user_id=0;$prAr=array();$kol_elm=$this->kol_price_rating;$data_update="";$minMarkup=0;
-        $r=$db->query("select * from T2_ARTICLES_PRICE_RATING where art_id='$art_id' and in_use='1' limit 0,1");$n=$db->num_rows($r);
+    function getArticlePriceRating($art_id){$db=DbSingleton::getTokoDb();
+        $template_id=0;$user_id=0;$prAr=array();$kol_elm=$this->kol_price_rating;$data_update="";$minMarkup=0;$cash_id=0;
+        $r=$db->query("SELECT * FROM `T2_ARTICLES_PRICE_RATING` WHERE `art_id`='$art_id' AND `in_use`='1' LIMIT 1;");$n=$db->num_rows($r);
         if ($n==1){
             $user_id=$db->result($r,0,"user_id");
             $data_update=$db->result($r,0,"data_update");
             $template_id=$db->result($r,0,"template_id");
             $minMarkup=$db->result($r,0,"minMarkup");
+            $cash_id=$db->result($r,0,"cash_id");
             for ($i=1;$i<=$kol_elm;$i++){
                 $prAr[$i]["price"]=$data=$db->result($r,0,"price_$i");
                 $prAr[$i]["persent"]=$db->result($r,0,"persent_$i");
             }
         }
-        return array($template_id,$data_update,$user_id,$minMarkup,$prAr);
+        return array($template_id,$data_update,$user_id,$minMarkup,$cash_id,$prAr);
     }
 
-    function showPriceRatingTemplateSelect($art_id,$sel_id){$db=DbSingleton::getTokoDb();$list="";
+    function showPriceRatingTemplateSelect($art_id,$sel_id) { $db=DbSingleton::getTokoDb();
         $form="<select id='priceRatingTemplate_".$art_id."' onChange='loadPriceRatingTemplate(\"$art_id\")' class='input-xs' style='width:100px;'><option value=0>-- -- --</option>{list}</select>";
-        $r=$db->query("select * from price_rating_template where status='1' order by id asc;");$n=$db->num_rows($r);
+        $r=$db->query("SELECT * FROM `price_rating_template` WHERE `status`='1' ORDER BY `id` ASC;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $name=$db->result($r,$i-1,"name");
@@ -2618,8 +3079,22 @@ class catalogue {
         return $form;
     }
 
-    function loadPriceRatingTemplateStr($sel_id){$db=DbSingleton::getTokoDb();$min_markup=0;$kol_val=$this->kol_price_rating;$rating=[];$answer=0;$err="Помилка!";
-        $r=$db->query("select * from price_rating_template_str where template_id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
+    function showPriceRatingCashSelect($art_id,$sel_id) { $db=DbSingleton::getDb();
+        $form="<select id='priceRatingCash_".$art_id."' class='input-xs' style='width:100px;'><option value=0>-- -- --</option>{list}</select>";
+        $r=$db->query("SELECT * FROM `CASH` ORDER BY `id` ASC;");$n=$db->num_rows($r);$list="";
+        for ($i=1;$i<=$n;$i++){
+            $id=$db->result($r,$i-1,"id");
+            $name=$db->result($r,$i-1,"name");
+            $sel="";if ($id==$sel_id){$sel=" selected='selected'";}
+            $list.="<option value='$id' $sel>$name</option>";
+        }
+        $form=str_replace("{list}",$list,$form);
+        return $form;
+    }
+
+    function loadPriceRatingTemplateStr($sel_id) { $db=DbSingleton::getTokoDb();
+        $min_markup=0;$kol_val=$this->kol_price_rating;$rating=[];$answer=0;$err="Помилка!";
+        $r=$db->query("SELECT * FROM `price_rating_template_str` WHERE `template_id`='$sel_id' LIMIT 1;");$n=$db->num_rows($r);
         if ($n==1){
             $min_markup=$db->result($r,0,"min_markup");
             for ($i=0;$i<=$kol_val;$i++){
@@ -2630,13 +3105,15 @@ class catalogue {
         return array($answer,$err,$min_markup,$kol_val,$rating);
     }
 
-    function showArticlePriceRatingHistory($art_id){$db=DbSingleton::getTokoDb();$answer=0;$err="Помилка індексу";
+    function showArticlePriceRatingHistory($art_id){$db=DbSingleton::getTokoDb();
+        $answer=0;$err="Помилка індексу"; $dp=new dp;
         $form="";$form_htm=RD."/tpl/catalogue_pricing_history.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         if ($art_id!=""){
-            $r=$db->query("select * from T2_ARTICLES_PRICE_RATING where art_id='$art_id' order by data_update desc, id desc;");$n=$db->num_rows($r);$list="";
+            $r=$db->query("SELECT * FROM `T2_ARTICLES_PRICE_RATING` WHERE `art_id`='$art_id' ORDER BY `data_update` DESC, `id` DESC;");$n=$db->num_rows($r);$list="";
             for ($i=1;$i<=$n;$i++){
                 $in_use=$db->result($r,$i-1,"in_use"); $clr="";if ($in_use==1){$clr=" style='background-color:#bce9e0;'";}
                 $data_update=$db->result($r,$i-1,"data_update");
+                $cash_id=$db->result($r,$i-1,"cash_id"); $cash_name=$dp->getCashAbr($cash_id);
                 $author=$this->getMediaUserName($db->result($r,$i-1,"user_id"));
                 $template_id=trim($db->result($r,$i-1,"template_id"));
                 $minMarkup=$db->result($r,$i-1,"minMarkup");
@@ -2644,7 +3121,8 @@ class catalogue {
                     <td>$data_update</td>
                     <td>$author</td>
                     <td>$template_id</td>
-                    <td>$minMarkup</td>";
+                    <td>$minMarkup</td>
+                    <td>$cash_name</td>";
                 for ($k=1;$k<=$this->kol_price_rating;$k++){
                     $price=$db->result($r,$i-1,"price_$k");
                     $persent=$db->result($r,$i-1,"persent_$k");
@@ -2658,31 +3136,33 @@ class catalogue {
         return array($answer,$err,$form,"Історія ціноутворення");
     }
 
-    function getTpointName($tpoint_id){$db=DbSingleton::getDb();$name="";
-        $r=$db->query("select * from T_POINT where id='$tpoint_id' limit 0,1;");$n=$db->num_rows($r);
+    function getTpointName($tpoint_id){$db=DbSingleton::getDb();
+        $r=$db->query("SELECT * FROM `T_POINT` WHERE `id`='$tpoint_id' LIMIT 1;");$n=$db->num_rows($r);$name="";
         if ($n==1){$name=$db->result($r,0,"full_name");}
         return $name;
     }
 
-    function getLineArticleSales($art_id){$db=DbSingleton::getTokoDb();$list="";
+    function getLineArticleSales($art_id){$db=DbSingleton::getTokoDb();
+        $list="";
         if ($art_id!=""){
             for ($m=1;$m<=24;$m++){
                 $month=date("Y-m-00",strtotime("-$m month"));
-                $r=$db->query("select sum(AMOUNT) as sum_amount from T2_ARTICLES_SALES where art_id='$art_id' and MONTH='$month' group by `MONTH`;");$n=$db->num_rows($r);
+                $r=$db->query("SELECT SUM(`AMOUNT`) as sum_amount FROM `T2_ARTICLES_SALES` WHERE `art_id`='$art_id' AND `MONTH`='$month' GROUP BY `MONTH`;");$n=$db->num_rows($r);
                 for ($i=1;$i<=$n;$i++){
                     $amount=$db->result($r,$i-1,"sum_amount");
                     $list.="$amount";
-                }$list.=";";
+                } $list.=";";
             }
         }
         return $list;
     }
 
-    function showArticleSales($art_id){$db=DbSingleton::getTokoDb();$answer=0;$err="Помилка індексу";$list="";$m=0;$article_displ_nomber="";
+    function showArticleSales($art_id){$db=DbSingleton::getTokoDb();
+        $answer=0;$err="Помилка індексу";$list="";$m=0;$article_displ_nomber="";
         $block="";$block_htm=RD."/tpl/catalogue_article_sales.htm";if (file_exists("$block_htm")){ $block = file_get_contents($block_htm);}
         if ($art_id!=""){
             list($article_displ_nomber,)=$this->getArticleNrDisplBrand($art_id);
-            $r1=$db->query("select * from T_POINT where status='1' order by position asc;");$n1=$db->num_rows($r1);
+            $r1=$db->query("SELECT * FROM `T_POINT` WHERE `status`='1' ORDER BY `position` ASC;");$n1=$db->num_rows($r1);
             for ($t=1;$t<=$n1;$t++){
                 $tpoint_id=$db->result($r1,$t-1,"id");
                 $tpoint_name=$db->result($r1,$t-1,"name");
@@ -2692,7 +3172,7 @@ class catalogue {
                     $month=date("Y-m-00",strtotime("-$m month"));
                     $month_list.="<th style='text-align:center'>".substr($month,5,2)."<br>".substr($month,0,4)."</th>";
 
-                    $r=$db->query("select AMOUNT from T2_ARTICLES_SALES where art_id='$art_id' and TPOINT_ID='$tpoint_id' and MONTH='$month';");$n=$db->num_rows($r);
+                    $r=$db->query("SELECT `AMOUNT` FROM `T2_ARTICLES_SALES` WHERE `art_id`='$art_id' AND `TPOINT_ID`='$tpoint_id' AND `MONTH`='$month';");$n=$db->num_rows($r);
                     for ($i=1;$i<=$n;$i++){
                         $amount=$db->result($r,$i-1,"AMOUNT");
                         $style="";
@@ -2712,20 +3192,22 @@ class catalogue {
         return array($answer,$err,$list,"Інформація про продажі артикулу: $article_displ_nomber");
     }
 
-    function getArticleZED($art_id){$db=DbSingleton::getTokoDb();$zed=0;
-        $r=$db->query("select t2s.COSTUMS_CODE from T2_ZED t2z 
-            left outer join T2_COSTUMS t2s on t2s.COSTUMS_ID=t2z.COSTUMS_ID
-        where t2z.ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
+    function getArticleZED($art_id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT t2s.COSTUMS_CODE 
+        FROM `T2_ZED` t2z 
+            LEFT OUTER JOIN `T2_COSTUMS` t2s ON (t2s.COSTUMS_ID=t2z.COSTUMS_ID)
+        WHERE t2z.ART_ID='$art_id' LIMIT 1;");$n=$db->num_rows($r);$zed=0;
         if ($n==1){$zed=$db->result($r,0,"COSTUMS_CODE");}
         return $zed;
     }
 
     function loadArticleZED($art_id){$db=DbSingleton::getTokoDb();
         $form="";$form_htm=RD."/tpl/catalogue_zed.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select t2z.*, t2c.COUNTRY_NAME, t2s.COSTUMS_CODE from T2_ZED t2z 
-            left outer join T2_COUNTRIES t2c on t2c.COUNTRY_ID=t2z.COUNTRY_ID
-            left outer join T2_COSTUMS t2s on t2s.COSTUMS_ID=t2z.COSTUMS_ID
-        where t2z.ART_ID='$art_id' limit 0,1;");
+        $r=$db->query("SELECT t2z.*, t2c.COUNTRY_NAME, t2s.COSTUMS_CODE 
+        FROM `T2_ZED` t2z 
+            LEFT OUTER JOIN `T2_COUNTRIES` t2c ON (t2c.COUNTRY_ID=t2z.COUNTRY_ID)
+            LEFT OUTER JOIN `T2_COSTUMS` t2s ON (t2s.COSTUMS_ID=t2z.COSTUMS_ID)
+        WHERE t2z.ART_ID='$art_id' LIMIT 1;");
         $country_id=$db->result($r,0,"COUNTRY_ID");
         $country_name=$db->result($r,0,"COUNTRY_NAME");
         $costums_id=$db->result($r,0,"COSTUMS_ID");
@@ -2738,22 +3220,24 @@ class catalogue {
         return $form;
     }
 
-    function saveCatalogueZED($art_id,$country_id,$costums_id){$db=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
+    function saveCatalogueZED($art_id,$country_id,$costums_id){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$answer=0;$err="Помилка збереження даних!";
         $art_id=$slave->qq($art_id);$country_id=$slave->qq($country_id);$costums_id=$slave->qq($slave->point_valid($costums_id));
         if ($art_id>0){
-            $r=$db->query("select * from `T2_ZED` where `ART_ID`='$art_id' limit 0,1;");$n=$db->num_rows($r);
+            $r=$db->query("SELECT * FROM `T2_ZED` WHERE `ART_ID`='$art_id' LIMIT 1;");$n=$db->num_rows($r);
             if ($n==0){
-                $db->query("insert into T2_ZED (`ART_ID`,`COUNTRY_ID`,`COSTUMS_ID`) values ('$art_id','$country_id','$costums_id');");
+                $db->query("INSERT INTO `T2_ZED` (`ART_ID`,`COUNTRY_ID`,`COSTUMS_ID`) VALUES ('$art_id','$country_id','$costums_id');");
             }
             if ($n==1){
-                $db->query("update T2_ZED set `COUNTRY_ID`='$country_id', `COSTUMS_ID`='$costums_id' where `ART_ID`='$art_id';");
+                $db->query("UPDATE `T2_ZED` SET `COUNTRY_ID`='$country_id', `COSTUMS_ID`='$costums_id' WHERE `ART_ID`='$art_id';");
             }
             $answer=1;$err="";
         }
         return array($answer,$err);
     }
 
-    function showCatalogueBrandSelectDocumentList($r){$db=DbSingleton::getTokoDb();$list="";$n=$db->num_rows($r); $tkey=time();
+    function showCatalogueBrandSelectDocumentList($r){$db=DbSingleton::getTokoDb();
+        $list="";$n=$db->num_rows($r); $tkey=time();
         $db->query("CREATE TEMPORARY TABLE IF NOT EXISTS `NBRAND_RESULT_$tkey` (`art_id` INT NOT NULL ,`display_nr` VARCHAR( 100 ) NOT NULL ,`name` VARCHAR( 255 ) NOT NULL ,`brand_id` INT NOT NULL ,`brand_name` VARCHAR( 100 ) NOT NULL ,`kol_res` TINYINT NOT NULL) ENGINE = MYISAM ;");
         for ($i=1;$i<=$n;$i++){
             $art_id=$db->result($r,$i-1,"ART_ID");
@@ -2763,10 +3247,9 @@ class catalogue {
             $brand_name=$db->result($r,$i-1,"BRAND_NAME");
             $kol_res=0;
             //$kol_res=$this->countCatalogueBrandSelectItems($code_search,$brand_id);
-            $db->query("insert into `NBRAND_RESULT_$tkey` values ('$art_id','$display_nr','$name','$brand_id','$brand_name','$kol_res');");
+            $db->query("INSERT INTO `NBRAND_RESULT_$tkey` VALUES ('$art_id','$display_nr','$name','$brand_id','$brand_name','$kol_res');");
         }
-
-        $r=$db->query("select * from `NBRAND_RESULT_$tkey` order by `kol_res` desc;");$n=$db->num_rows($r);
+        $r=$db->query("SELECT * FROM `NBRAND_RESULT_$tkey` ORDER BY `kol_res` DESC;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $display_nr=$db->result($r,$i-1,"display_nr");
             $name=$db->result($r,$i-1,"name");
@@ -2787,26 +3270,29 @@ class catalogue {
         return $form;
     }
 
-    function showArticlesSearchDocumentList($art,$brand_id,$search_type){$db=DbSingleton::getTokoDb();$n=0;$list2="";$r="";$query="";
+    function showArticlesSearchDocumentList($art,$brand_id,$search_type){$db=DbSingleton::getTokoDb();
+        $n=0;$list2="";$r="";$query="";
         if ($search_type==0){
             $art=$this->clearArticle($art);
-            $where_brand="";$group_brand="group by t2c.BRAND_ID"; if ($brand_id!="" && $brand_id>0){$where_brand=" and t2c.BRAND_ID='$brand_id'"; $group_brand="";}
+            $where_brand="";$group_brand="GROUP BY t2c.BRAND_ID"; if ($brand_id!="" && $brand_id>0){$where_brand=" AND t2c.BRAND_ID='$brand_id'"; $group_brand="";}
             if ($art!=""){
-                $query="select t2b.BRAND_NAME, t2n.NAME,t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION from T2_CROSS t2c 
-                    inner join T2_BRANDS t2b on t2b.BRAND_ID=t2c.BRAND_ID
-                    left outer join T2_NAMES t2n on t2n.ART_ID=t2c.ART_ID
-                 where t2c.SEARCH_NUMBER = '$art' $where_brand $group_brand order by t2n.NAME asc;";
-                 $r=$db->query($query);$n=$db->num_rows($r);
+                $query="SELECT t2b.BRAND_NAME, t2n.NAME, t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION 
+                FROM `T2_CROSS` t2c 
+                    INNER JOIN `T2_BRANDS` t2b on t2b.BRAND_ID=t2c.BRAND_ID
+                    LEFT OUTER JOIN `T2_NAMES` t2n on t2n.ART_ID=t2c.ART_ID
+                WHERE t2c.SEARCH_NUMBER='$art' $where_brand $group_brand ORDER BY t2n.NAME ASC;";
+                $r=$db->query($query);$n=$db->num_rows($r);
             }
             $one_result=0;
             if ($n>1 && ($brand_id=="" || $brand_id==0)){ $where_brand="";
                 $list2=$this->showCatalogueBrandSelectDocumentList($r);
             }
             if ($n==1){
-                $query="select t2b.BRAND_NAME, t2n.NAME,t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION from T2_CROSS t2c 
-                    inner join T2_BRANDS t2b on t2b.BRAND_ID=t2c.BRAND_ID
-                    left outer join T2_NAMES t2n on t2n.ART_ID=t2c.ART_ID
-                 where t2c.SEARCH_NUMBER = '$art' $where_brand order by t2n.NAME asc;";
+                $query="SELECT t2b.BRAND_NAME, t2n.NAME, t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION 
+                FROM `T2_CROSS` t2c 
+                    INNER JOIN `T2_BRANDS` t2b on t2b.BRAND_ID=t2c.BRAND_ID
+                    LEFT OUTER JOIN `T2_NAMES` t2n on t2n.ART_ID=t2c.ART_ID
+                WHERE t2c.SEARCH_NUMBER='$art' $where_brand ORDER BY t2n.NAME ASC;";
                 $r=$db->query($query);$n=$db->num_rows($r);$one_result=1;
             }
             if (($n>1 && $brand_id!="") || $one_result==1){$ak=array();$rk=array();
@@ -2819,59 +3305,61 @@ class catalogue {
                     if (($ak[$ART_ID]=="") || $KIND==0){$ak[$ART_ID]=$KIND;}
                     if (($rk[$ART_ID]=="") || $RELATION==0){$rk[$ART_ID]=$RELATION;}
                 }
-
-                $query="select t2a.ART_ID,t2a.BRAND_ID,t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as inner_cross, gg.NAME as goods_group_name, u.name as unit_name, cs.COSTUMS_CODE, cc.COUNTRY_NAME
-                from T2_ARTICLES t2a 
-                    left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
-                    left outer join T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID 
-                    left outer join T2_BARCODES t2bc on t2bc.ART_ID=t2a.ART_ID 
-                    left outer join T2_INNER_CROSS t2ic on t2ic.ART_ID=t2a.ART_ID 
-                    left outer join T2_GOODS_GROUP t2gg on t2gg.ART_ID=t2a.ART_ID 
-                    left outer join GOODS_GROUP gg on gg.ID=t2gg.GOODS_GROUP_ID 
-                    left outer join T2_PACKAGING t2p on t2p.ART_ID=t2a.ART_ID 
-                    left outer join units u on u.id=t2p.UNITS_ID 
-                    left outer join T2_ZED t2z on t2z.ART_ID=t2a.ART_ID 
-                    left outer join T2_COUNTRIES cc on cc.COUNTRY_ID=t2z.COUNTRY_ID 
-                    left outer join T2_COSTUMS cs on cs.COSTUMS_ID=t2z.COSTUMS_ID 
-                where t2a.ART_ID in ($art_id_str)";
+                $query="SELECT t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as inner_cross, 
+                gg.NAME as goods_group_name, u.name as unit_name, cs.COSTUMS_CODE, cc.COUNTRY_NAME
+                FROM `T2_ARTICLES` t2a 
+                    LEFT OUTER JOIN `T2_BRANDS` t2b on t2b.BRAND_ID=t2a.BRAND_ID 
+                    LEFT OUTER JOIN `T2_NAMES` t2n on t2n.ART_ID=t2a.ART_ID 
+                    LEFT OUTER JOIN `T2_BARCODES` t2bc on t2bc.ART_ID=t2a.ART_ID 
+                    LEFT OUTER JOIN `T2_INNER_CROSS` t2ic on t2ic.ART_ID=t2a.ART_ID 
+                    LEFT OUTER JOIN `T2_GOODS_GROUP` t2gg on t2gg.ART_ID=t2a.ART_ID 
+                    LEFT OUTER JOIN `GOODS_GROUP` gg on gg.ID=t2gg.GOODS_GROUP_ID 
+                    LEFT OUTER JOIN `T2_PACKAGING` t2p on t2p.ART_ID=t2a.ART_ID 
+                    LEFT OUTER JOIN `units` u on u.id=t2p.UNITS_ID 
+                    LEFT OUTER JOIN `T2_ZED` t2z on t2z.ART_ID=t2a.ART_ID 
+                    LEFT OUTER JOIN `T2_COUNTRIES` cc on cc.COUNTRY_ID=t2z.COUNTRY_ID 
+                    LEFT OUTER JOIN `T2_COSTUMS` cs on cs.COSTUMS_ID=t2z.COSTUMS_ID 
+                WHERE t2a.ART_ID IN ($art_id_str)";
             }
         }
         if ($search_type==1){
-            $query="select t2a.ART_ID,t2a.BRAND_ID,t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as inner_cross, gg.NAME as goods_group_name, u.name as unit_name, cs.COSTUMS_ID, cs.COSTUMS_CODE, cc.COUNTRY_ID, cc.COUNTRY_NAME
-            from T2_ARTICLES t2a 
-                left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
-                left outer join T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID 
-                left outer join T2_BARCODES t2bc on t2bc.ART_ID=t2a.ART_ID 
-                left outer join T2_INNER_CROSS t2ic on t2ic.ART_ID=t2a.ART_ID 
-                left outer join T2_GOODS_GROUP t2gg on t2gg.ART_ID=t2a.ART_ID 
-                left outer join GOODS_GROUP gg on gg.ID=t2gg.GOODS_GROUP_ID 
-                left outer join T2_PACKAGING t2p on t2p.ART_ID=t2a.ART_ID 
-                left outer join units u on u.id=t2p.UNITS_ID 
-                left outer join T2_ZED t2z on t2z.ART_ID=t2a.ART_ID 
-                left outer join T2_COUNTRIES cc on cc.COUNTRY_ID=t2z.COUNTRY_ID 
-                left outer join T2_COSTUMS cs on cs.COSTUMS_ID=t2z.COSTUMS_ID 
-            where t2a.ARTICLE_NR_SEARCH='$art' or t2a.ARTICLE_NR_DISPL='$art';";
+            $query="SELECT t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as inner_cross, 
+            gg.NAME as goods_group_name, u.name as unit_name, cs.COSTUMS_ID, cs.COSTUMS_CODE, cc.COUNTRY_ID, cc.COUNTRY_NAME
+            FROM `T2_ARTICLES` t2a 
+                LEFT OUTER JOIN `T2_BRANDS` t2b on t2b.BRAND_ID=t2a.BRAND_ID 
+                LEFT OUTER JOIN `T2_NAMES` t2n on t2n.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_BARCODES` t2bc on t2bc.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_INNER_CROSS` t2ic on t2ic.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_GOODS_GROUP` t2gg on t2gg.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `GOODS_GROUP` gg on gg.ID=t2gg.GOODS_GROUP_ID 
+                LEFT OUTER JOIN `T2_PACKAGING` t2p on t2p.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `units` u on u.id=t2p.UNITS_ID 
+                LEFT OUTER JOIN `T2_ZED` t2z on t2z.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_COUNTRIES` cc on cc.COUNTRY_ID=t2z.COUNTRY_ID 
+                LEFT OUTER JOIN `T2_COSTUMS` cs on cs.COSTUMS_ID=t2z.COSTUMS_ID 
+            WHERE t2a.ARTICLE_NR_SEARCH='$art' OR t2a.ARTICLE_NR_DISPL='$art';";
         }
         if ($search_type==2){
-            $query="select t2a.ART_ID,t2a.BRAND_ID,t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as inner_cross, gg.NAME as goods_group_name, u.name as unit_name, cs.COSTUMS_ID, cs.COSTUMS_CODE, cc.COUNTRY_ID, cc.COUNTRY_NAME
-            from T2_ARTICLES t2a 
-                left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
-                left outer join T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID 
-                left outer join T2_BARCODES t2bc on t2bc.ART_ID=t2a.ART_ID 
-                left outer join T2_INNER_CROSS t2ic on t2ic.ART_ID=t2a.ART_ID 
-                left outer join T2_GOODS_GROUP t2gg on t2gg.ART_ID=t2a.ART_ID 
-                left outer join GOODS_GROUP gg on gg.ID=t2gg.GOODS_GROUP_ID 
-                left outer join T2_PACKAGING t2p on t2p.ART_ID=t2a.ART_ID 
-                left outer join units u on u.id=t2p.UNITS_ID 
-                left outer join T2_ZED t2z on t2z.ART_ID=t2a.ART_ID 
-                left outer join T2_COUNTRIES cc on cc.COUNTRY_ID=t2z.COUNTRY_ID 
-                left outer join T2_COSTUMS cs on cs.COSTUMS_ID=t2z.COSTUMS_ID 
-            where t2bc.BARCODE='$art';";
+            $query="SELECT t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, t2ic.CROSS as inner_cross, 
+            gg.NAME as goods_group_name, u.name as unit_name, cs.COSTUMS_ID, cs.COSTUMS_CODE, cc.COUNTRY_ID, cc.COUNTRY_NAME
+            FROM `T2_ARTICLES` t2a 
+                LEFT OUTER JOIN `T2_BRANDS` t2b on t2b.BRAND_ID=t2a.BRAND_ID 
+                LEFT OUTER JOIN `T2_NAMES` t2n on t2n.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_BARCODES` t2bc on t2bc.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_INNER_CROSS` t2ic on t2ic.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_GOODS_GROUP` t2gg on t2gg.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `GOODS_GROUP` gg on gg.ID=t2gg.GOODS_GROUP_ID 
+                LEFT OUTER JOIN `T2_PACKAGING` t2p on t2p.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `units` u on u.id=t2p.UNITS_ID 
+                LEFT OUTER JOIN `T2_ZED` t2z on t2z.ART_ID=t2a.ART_ID 
+                LEFT OUTER JOIN `T2_COUNTRIES` cc on cc.COUNTRY_ID=t2z.COUNTRY_ID 
+                LEFT OUTER JOIN `T2_COSTUMS` cs on cs.COSTUMS_ID=t2z.COSTUMS_ID 
+            WHERE t2bc.BARCODE='$art';";
         }
         $r=$db->query($query);$n=$db->num_rows($r);$list="";$header_list="";
         if ($list2==""){  // сработал внешний фильр или основной поиск с выбором бренда
             //$lst=array();
-            $reserv=0;
+            //$reserv=0;
             for ($i=1;$i<=$n;$i++){
                 $art_id=$db->result($r,$i-1,"ART_ID");
                 //$kind_id=$ak[$art_id];
@@ -2880,11 +3368,8 @@ class catalogue {
                 $article_nr_displ=$db->result($r,$i-1,"ARTICLE_NR_DISPL");
                 $brand_name=$db->result($r,$i-1,"BRAND_NAME");
                 $name=$db->result($r,$i-1,"NAME");
-                //$info=$db->result($r,$i-1,"INFO");
                 $barcode=$db->result($r,$i-1,"BARCODE");
-                //$inner_cross=$db->result($r,$i-1,"inner_cross");
                 $goods_group_name=$db->result($r,$i-1,"goods_group_name");
-                //$unit_name=$db->result($r,$i-1,"unit_name");
                 $costums_id=$db->result($r,$i-1,"COSTUMS_ID");
                 $costums_code=$db->result($r,$i-1,"COSTUMS_CODE");
                 $country_id=$db->result($r,$i-1,"COUNTRY_ID");
@@ -2897,20 +3382,22 @@ class catalogue {
                     <td class='text-center'>$name</td>
                     <td class='text-center'>$barcode</td>
                     <td class='text-center'>$goods_group_name</td>
-                    <td class='text-center'>$reserv</td>
                     <td class='text-center'>$art_id</td>
                 </tr>";
+                //<td class='text-center'>$reserv</td>
             }
         }
         return array($header_list,$list,$list2);
     }
 
-    function showArticleStorageCellsRestForm($art_id){$db=DbSingleton::getTokoDb();$form="";
+    function showArticleStorageCellsRestForm($art_id){$db=DbSingleton::getTokoDb();
+        $form="";
         if ($art_id>0){
             $form_htm=RD."/tpl/catalogue_storage_rest_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-            $r=$db->query("select t2s.*, s.name as storage_name from T2_ARTICLES_STRORAGE t2s
-                left outer join STORAGE s on s.ID=t2s.STORAGE_ID
-            where t2s.ART_ID='$art_id' and (t2s.amount>0 or t2s.reserv_amount>0);");$n=$db->num_rows($r);$list="";
+            $r=$db->query("SELECT t2s.*, s.name as storage_name 
+            FROM `T2_ARTICLES_STRORAGE` t2s
+                LEFT OUTER JOIN `STORAGE` s ON (s.ID=t2s.STORAGE_ID)
+            WHERE t2s.ART_ID='$art_id' AND (t2s.amount>0 OR t2s.reserv_amount>0);");$n=$db->num_rows($r);$list="";
             for ($i=1;$i<=$n;$i++){
                 $amount=$db->result($r,$i-1,"AMOUNT");
                 $reserv_amount=$db->result($r,$i-1,"RESERV_AMOUNT");
@@ -2932,10 +3419,12 @@ class catalogue {
         return array($form,"Наявність на складах");
     }
 
-    function showArticlePartitionsRestForm($art_id){$db=DbSingleton::getDb();$form="";$doc_name=$doc_suppl_name="";
+    function showArticlePartitionsRestForm($art_id){$db=DbSingleton::getDb();
+        $form="";$doc_name=$doc_suppl_name="";
         if ($art_id>0){
             $form_htm=RD."/tpl/catalogue_partitions_rest_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-            $r=$db->query("select t2p.* from T2_ARTICLES_PARTITIONS t2p where t2p.ART_ID='$art_id' and t2p.rest>0 order by id desc limit 0,1000;");$n=$db->num_rows($r);$list="";
+            $r=$db->query("SELECT * FROM `T2_ARTICLES_PARTITIONS` 
+            WHERE `art_id`='$art_id' AND `rest`>0 ORDER BY `id` DESC LIMIT 0,1000;");$n=$db->num_rows($r);$list="";
             for ($i=1;$i<=$n;$i++){
                 $amount=$db->result($r,$i-1,"amount");
                 $rest=$db->result($r,$i-1,"rest");
@@ -2969,20 +3458,24 @@ class catalogue {
         return array($form,"Наявність по партіям");
     }
 
-    function getClientName($id){$db=DbSingleton::getDb(); $name="";
-        $r=$db->query("select name from A_CLIENTS where id='$id' limit 0,1;");$n=$db->num_rows($r);
+    function getClientName($id){$db=DbSingleton::getDb();
+        $r=$db->query("SELECT `name` FROM `A_CLIENTS` WHERE `id`='$id' LIMIT 1;");$n=$db->num_rows($r); $name="";
         if ($n==1){$name=$db->result($r,0,"name");}
         return $name;
     }
 
-    function viewArticleReservDocs($art_id,$storage_id){ $db=DbSingleton::getDb();$answer=0;$err="Помилка";$form="";$list="";
+    function viewArticleReservDocs($art_id,$storage_id){ $db=DbSingleton::getDb();
+        $answer=0;$err="Помилка";$form="";$list="";
         if ($art_id>0){
             $form_htm=RD."/tpl/catalogue_storage_reserv_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
             list($article_nr_displ,,$brand_name)=$this->getArticleNrDisplBrand($art_id);
             $form=str_replace("{article_nr_displ}",$article_nr_displ." ".$brand_name,$form);
-            $r=$db->query("select j.id, j.prefix, j.doc_nom, j.type_id, j.data,SUM(js.amount) as amount, j.user_id from J_MOVING_STR js 
-                left outer join J_MOVING j on (j.id=js.jmoving_id) 
-            where js.art_id='$art_id' and js.status_jmoving in (44,45) and j.status='1' and js.amount>0 and js.storage_id_from='$storage_id' and (j.oper_status='30' or (j.oper_status='31' and j.status_jmoving='49' or j.status_jmoving='48')) and j.parrent_type_id=0 and j.parrent_doc_id=0 group by j.id;");$n=$db->num_rows($r);
+            $r=$db->query("SELECT j.id, j.prefix, j.doc_nom, j.type_id, j.data, SUM(js.amount) as amount, j.user_id 
+            FROM `J_MOVING_STR` js 
+                LEFT OUTER JOIN `J_MOVING` j ON (j.id=js.jmoving_id) 
+            WHERE js.art_id='$art_id' AND js.status_jmoving IN (44,45) AND j.status='1' AND js.amount>0 AND js.storage_id_from='$storage_id' AND 
+            (j.oper_status='30' OR (j.oper_status='31' AND j.status_jmoving='49' OR j.status_jmoving='48')) AND j.parrent_type_id=0 AND j.parrent_doc_id=0 
+            GROUP BY j.id;");$n=$db->num_rows($r);
             for ($i=1;$i<=$n;$i++){
                 $prefix=$db->result($r,$i-1,"prefix");
                 $doc_nom=$db->result($r,$i-1,"doc_nom");
@@ -2999,10 +3492,11 @@ class catalogue {
                     <td>$user_name</td>
                 </tr>";
             }
-            //$r=$db->query("select dp.id,dp.prefix,dp.doc_nom,dp.data,SUM(dps.amount) as amount,dp.user_id,dp.client_id from J_DP_STR dps left outer join J_DP dp on (dp.id=dps.dp_id) left outer join J_SELECT s on (s.parrent_doc_type_id='2' and s.parrent_doc_id=dp.id) where dps.art_id='$art_id' and dps.status_dp in (79,80) and s.status_select<85 and dp.status='1' and dps.amount>0 and dps.storage_id_from='$storage_id' and (dp.oper_status='30' or dp.oper_status='31') group by dp.id;");$n=$db->num_rows($r);
-            $r=$db->query("select dp.id, dp.prefix, dp.doc_nom, dp.data, SUM(dps.amount) as amount, SUM(dps.amount_collect) as amount_collect, dp.user_id, dp.client_id from J_DP_STR dps 
-                left outer join J_DP dp on (dp.id=dps.dp_id) 
-            where dps.art_id='$art_id' and dps.status_dps=93 and dp.status='1' and dps.amount>0 and dps.location_storage_id='$storage_id' and (dp.oper_status='30' or dp.oper_status='31') group by dp.id;");$n=$db->num_rows($r);$dp_id_str="0";
+            $r=$db->query("SELECT dp.id, dp.prefix, dp.doc_nom, dp.data, SUM(dps.amount) as amount, SUM(dps.amount_collect) as amount_collect, dp.user_id, dp.client_id 
+            FROM `J_DP_STR` dps 
+                LEFT OUTER JOIN `J_DP` dp ON (dp.id=dps.dp_id) 
+            WHERE dps.art_id='$art_id' AND dps.status_dps=93 AND dp.status='1' AND dps.amount>0 AND dps.location_storage_id='$storage_id' AND (dp.oper_status='30' OR dp.oper_status='31') 
+            GROUP BY dp.id;");$n=$db->num_rows($r);$dp_id_str="0";
             for ($i=1;$i<=$n;$i++){
                 $dp_id=$db->result($r,$i-1,"id"); $dp_id_str.=",$dp_id";
                 $prefix=$db->result($r,$i-1,"prefix");
@@ -3023,9 +3517,11 @@ class catalogue {
                     <td>$user_name</td>
                 </tr>";
             }
-            $r=$db->query("select dp.id, dp.prefix, dp.doc_nom, dp.data, SUM(dps.amount) as amount, SUM(dps.amount_collect) as amount_collect, dp.user_id, dp.client_id from J_DP_STR dps 
-                left outer join J_DP dp on (dp.id=dps.dp_id) 
-            where dps.art_id='$art_id' and dps.status_dps in (94,95,96) and dp.status='1' and dps.amount>0 and dps.location_storage_id='$storage_id' and (dp.oper_status='30' or dp.oper_status='31') group by dp.id;");$n=$db->num_rows($r);// ищем в удаленном отборе склад
+            $r=$db->query("SELECT dp.id, dp.prefix, dp.doc_nom, dp.data, SUM(dps.amount) as amount, SUM(dps.amount_collect) as amount_collect, dp.user_id, dp.client_id 
+            FROM `J_DP_STR` dps 
+                LEFT OUTER JOIN `J_DP` dp ON (dp.id=dps.dp_id) 
+            WHERE dps.art_id='$art_id' AND dps.status_dps IN (94,95,96) AND dp.status='1' AND dps.amount>0 AND dps.location_storage_id='$storage_id' AND (dp.oper_status='30' OR dp.oper_status='31') 
+            GROUP BY dp.id;");$n=$db->num_rows($r);// ищем в удаленном отборе склад
             for ($i=1;$i<=$n;$i++){
                 $dp_id=$db->result($r,$i-1,"id"); $dp_id_str.=",$dp_id";
                 $prefix=$db->result($r,$i-1,"prefix");
@@ -3046,86 +3542,22 @@ class catalogue {
                     <td>$user_name</td>
                 </tr>";
             }
-            /*$r=$db->query("select dp.id,dp.prefix,dp.doc_nom,dp.data,SUM(dps.amount) as amount,SUM(dps.amount_collect) as amount_collect,dp.user_id,dp.client_id
-                        from J_DP_STR dps
-                        left outer join J_DP dp on (dp.id=dps.dp_id)
-                        left outer join J_MOVING jm on (jm.parrent_type_id='1' and jm.parrent_doc_id =dp.id)
-                        left outer join J_SELECT s on (s.parrent_doc_type_id='1' and s.parrent_doc_id=jm.id) where dps.art_id='$art_id' and dps.status_dps=95 and dp.status='1' and dps.amount>0 and dps.storage_id_from='$storage_id' and (dp.oper_status='30' or dp.oper_status='31') group by dp.id;");$n=$db->num_rows($r);// ищем в локальном отборе склад
-            for ($i=1;$i<=$n;$i++){
-                $dp_id=$db->result($r,$i-1,"id"); $dp_id_str.=",$dp_id";
-                $prefix=$db->result($r,$i-1,"prefix");
-                $doc_nom=$db->result($r,$i-1,"doc_nom");
-                $type_id=$db->result($r,$i-1,"type_id");
-                $data=$db->result($r,$i-1,"data");
-                $amount=$db->result($r,$i-1,"amount");$amount_dis=$amount;
-                $amount_collect=$db->result($r,$i-1,"amount_collect");if ($amount_collect>0){$amount_dis=$amount_collect;}
-                $dp_user_id=$db->result($r,$i-1,"user_id");
-                $user_name=$this->getMediaUserName($dp_user_id);
-                $dp_client_id=$db->result($r,$i-1,"client_id");
-                $client_name=$this->getClientName($dp_client_id);
-                $list.="<tr>
-                    <td>jm$i</td>
-                    <td>$prefix-$doc_nom</td>
-                    <td>$data</td>
-                    <td align='right'>$amount_dis</td>
-                    <td>$client_name</td>
-                    <td>$user_name</td>
-                </tr>";
-            }
-            /*$r=$db->query("select dp.id,dp.prefix,dp.doc_nom,dp.data,SUM(dps.amount) as amount,SUM(dps.amount_collect) as amount_collect,dp.user_id,dp.client_id from J_DP_STR dps left outer join J_DP dp on (dp.id=dps.dp_id) left outer join J_SELECT s on (s.parrent_doc_type_id='2' and s.parrent_doc_id=dp.id) where dps.art_id='$art_id' and dps.status_dps='94' and dp.status='1' and dps.amount>0 and dps.storage_id_from='$storage_id' and (dp.oper_status='30' or dp.oper_status='31') and s.status_select<85 and s.storage_id=dps.storage_id_from group by dp.id;");$n=$db->num_rows($r);// ищем в локальном отборе склад
-            for ($i=1;$i<=$n;$i++){
-                $dp_id=$db->result($r,$i-1,"id"); $dp_id_str.=",$dp_id";
-                $prefix=$db->result($r,$i-1,"prefix");
-                $doc_nom=$db->result($r,$i-1,"doc_nom");
-                $type_id=$db->result($r,$i-1,"type_id");
-                $data=$db->result($r,$i-1,"data");
-                $amount=$db->result($r,$i-1,"amount");$amount_dis=$amount;
-                $amount_collect=$db->result($r,$i-1,"amount_collect");if ($amount_collect>0){$amount_dis=$amount_collect;}
-                $dp_user_id=$db->result($r,$i-1,"user_id");
-                $user_name=$this->getMediaUserName($dp_user_id);
-                $dp_client_id=$db->result($r,$i-1,"client_id");
-                $client_name=$this->getClientName($dp_client_id);
-                $list.="<tr>
-                    <td>$i</td>
-                    <td>$prefix-$doc_nom</td>
-                    <td>$data</td>
-                    <td align='right'>$amount_dis</td>
-                    <td>$client_name</td>
-                    <td>$user_name</td>
-                </tr>";
-            }
-            /*$r=$db->queryP("select s.id,s.parrent_doc_id,s.data_create,SUM(ss.amount) as amount,SUM(ss.amount_collect) as amount_collect,s.user_id from J_SELECT_STR ss left outer join J_SELECT s on (s.id=ss.select_id) where ss.art_id='$art_id' and s.status='1' and ss.amount>0 and ss.storage_id_from='$storage_id' and (s.parrent_doc_type_id='2' and s.parrent_doc_id>'0' and s.parrent_doc_id not in ($dp_id_str)) group by s.id;");$n=$db->num_rows($r);
-            for ($i=1;$i<=$n;$i++){
-                $sel_id=$db->result($r,$i-1,"id");
-                $parrent_doc_id=$db->result($r,$i-1,"parrent_doc_id");
-                $data=$db->result($r,$i-1,"data_create");
-                $amount=$db->result($r,$i-1,"amount");$amount_dis=$amount;
-                $amount_collect=$db->result($r,$i-1,"amount_collect");if ($amount_collect>0){$amount_dis=$amount_collect;}
-                $sel_user_id=$db->result($r,$i-1,"user_id");
-                $user_name=$this->getMediaUserName($sel_user_id);
-                $list.="<tr>
-                    <td>й$i</td>
-                    <td>СКв-$sel_id</td>
-                    <td>$data</td>
-                    <td>$amount_dis</td>
-                    <td>ДП-$parrent_doc_id</td>
-                    <td>$user_name</td>
-                </tr>";
-            }*/
             $form=str_replace("{list}",$list,$form);
             $answer=1;$err="";
         }
         return array($answer,$err,$form,"Наявність в документах переміщення");
     }
 
-    function viewArticleCellsRest($art_id,$storage_id){ $db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();$answer=0;$err="Помилка";$list="";$form="";
+    function viewArticleCellsRest($art_id,$storage_id){ $db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();
+        $answer=0;$err="Помилка";$list="";$form="";
         if ($art_id>0){
             $form_htm=RD."/tpl/catalogue_storage_cells_rest_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
             list($article_nr_displ,,$brand_name)=$this->getArticleNrDisplBrand($art_id);
             $form=str_replace("{article_nr_displ}",$article_nr_displ." ".$brand_name,$form);
-            $r=$dbt->query("select t2sc.AMOUNT, t2sc.RESERV_AMOUNT, sc.cell_value from T2_ARTICLES_STRORAGE_CELLS t2sc 
-                left outer join STORAGE_CELLS sc on (sc.id=t2sc.STORAGE_CELLS_ID) 
-            where t2sc.storage_id='$storage_id' and t2sc.ART_ID='$art_id' and (t2sc.AMOUNT>0 or t2sc.RESERV_AMOUNT>0) order by sc.cell_value  asc;");$n=$db->num_rows($r);
+            $r=$dbt->query("SELECT t2sc.AMOUNT, t2sc.RESERV_AMOUNT, sc.cell_value 
+            FROM `T2_ARTICLES_STRORAGE_CELLS` t2sc 
+                LEFT OUTER JOIN `STORAGE_CELLS` sc ON (sc.id=t2sc.STORAGE_CELLS_ID) 
+            WHERE t2sc.storage_id='$storage_id' AND t2sc.ART_ID='$art_id' AND (t2sc.AMOUNT>0 OR t2sc.RESERV_AMOUNT>0) ORDER BY sc.cell_value ASC;");$n=$db->num_rows($r);
             for ($i=1;$i<=$n;$i++){
                 $amount=$db->result($r,$i-1,"AMOUNT");
                 $reserv_amount=$db->result($r,$i-1,"RESERV_AMOUNT");
@@ -3144,19 +3576,20 @@ class catalogue {
         return array($answer,$err,$form,"Наявність у комірках складу");
     }
 
-    function getStorageName($sel_id){$db=DbSingleton::getTokoDb();$name="";
-        $r=$db->query("select name from `STORAGE` where status='1' and id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
+    function getStorageName($sel_id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `name` FROM `STORAGE` WHERE `status`='1' AND `id`='$sel_id' LIMIT 1;");$n=$db->num_rows($r);$name="";
         if ($n==1){$name=$db->result($r,0,"name");}
         return $name;
     }
 
-    function getStorageCellName($sel_id){$db=DbSingleton::getTokoDb();$name="";
-        $r=$db->query("select cell_value from `STORAGE_CELLS` where status='1' and id='$sel_id' limit 0,1;");$n=$db->num_rows($r);
+    function getStorageCellName($sel_id){$db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `cell_value` FROM `STORAGE_CELLS` WHERE `status`='1' AND `id`='$sel_id' LIMIT 1;");$n=$db->num_rows($r);$name="";
         if ($n==1){$name=$db->result($r,0,"cell_value");}
         return $name;
     }
 
-    function showCatalogueDonorForm($art_id){$form="";$kind_name="";
+    function showCatalogueDonorForm($art_id){
+        $form="";$kind_name="";
         $form_htm=RD."/tpl/catalogue_donor_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $form=str_replace("{art_id}",$art_id,$form);
         list($search_number,,)=$this->getArticleNrDisplBrand($art_id);
@@ -3165,18 +3598,19 @@ class catalogue {
         return array($form,"Імпорт інформації від донора".$kind_name);
     }
 
-    function showCatalogueDonorIndexSearch(){$form="";
-        $form_htm=RD."/tpl/catalogue_donor_search.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+    function showCatalogueDonorIndexSearch(){
+        $form="";$form_htm=RD."/tpl/catalogue_donor_search.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         return array($form,"Пошук аналогу по індексу");
     }
 
-    function findCatalogueDonorIndexSearch($index){$db=DbSingleton::getTokoDb();$slave=new slave;$list="";
-        $index=$slave->qq($index);
+    function findCatalogueDonorIndexSearch($index){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$list="";$index=$slave->qq($index);
         if ($index!=""){
-            $query="select t2a.ART_ID, t2a.BRAND_ID,t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME from T2_ARTICLES t2a 
-                left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
-                left outer join T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID 
-            where t2a.ARTICLE_NR_SEARCH='$index' or t2a.ARTICLE_NR_DISPL='$index';";
+            $query="SELECT t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME 
+            FROM `T2_ARTICLES` t2a 
+                LEFT OUTER JOIN `T2_BRANDS` t2b ON (t2b.BRAND_ID=t2a.BRAND_ID) 
+                LEFT OUTER JOIN `T2_NAMES` t2n ON (t2n.ART_ID=t2a.ART_ID)
+            WHERE t2a.ARTICLE_NR_SEARCH='$index' OR t2a.ARTICLE_NR_DISPL='$index';";
             $r=$db->query($query);$n=$db->num_rows($r);$list="";
             for ($i=1;$i<=$n;$i++){
                 $art_id=$db->result($r,$i-1,"ART_ID");
@@ -3195,107 +3629,113 @@ class catalogue {
         return $list;
     }
 
-    function saveCatalogueDonorForm($art_id,$display_nr,$art_id2,$ch){$db=DbSingleton::getTokoDb();$dbp=DbSingleton::getTokoDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
+    function saveCatalogueDonorForm($art_id,$display_nr,$art_id2,$ch){$db=DbSingleton::getTokoDb();//$dbp=DbSingleton::getTokoDb();
+        $slave=new slave;$answer=0;$err="Помилка збереження даних!";
         $art_id=$slave->qq($art_id);$art_id2=$slave->qq($art_id2);$ch=$slave->qq($ch);
         if ($art_id>0 && $display_nr!="" && $art_id2>0){
             if ($ch[1]==1){
-                $r=$db->query("select * from T2_CROSS where ART_ID='$art_id2' and KIND = 3 and RELATION = 0;");$n=$db->num_rows($r);
+                $r=$db->query("SELECT * FROM `T2_CROSS` WHERE `ART_ID`='$art_id2' AND `KIND`=3 AND `RELATION`=0;");$n=$db->num_rows($r);
                 for ($i=1;$i<=$n;$i++){
                     $search_number=$db->result($r,$i-1,"SEARCH_NUMBER");
                     $kind=$db->result($r,$i-1,"KIND");
                     $brand_id=$db->result($r,$i-1,"BRAND_ID");
-                    $relation=$db->result($r,$i-1,"relation");
+                    $relation=$db->result($r,$i-1,"RELATION");
 
-                    $r2=$db->query("select count(ART_ID) as kol from T2_CROSS where `ART_ID`='$art_id' and `SEARCH_NUMBER`='$search_number' and `KIND`='$kind' and `BRAND_ID`='$brand_id' and `RELATION`='$relation';"); $ex_row=$db->result($r2,0,"kol");
+                    $r2=$db->query("SELECT COUNT(`ART_ID`) as kol FROM `T2_CROSS` WHERE `ART_ID`='$art_id' AND `SEARCH_NUMBER`='$search_number' AND `KIND`='$kind' AND `BRAND_ID`='$brand_id' AND `RELATION`='$relation';"); $ex_row=$db->result($r2,0,"kol");
                     if ($ex_row==0){
-                        $query="insert into T2_CROSS (`ART_ID`,`SEARCH_NUMBER`,`KIND`,`BRAND_ID`,`DISPLAY_NR`,`RELATION`) values ('$art_id','$search_number','$kind','$brand_id','$search_number','$relation');";
+                        $query="INSERT INTO `T2_CROSS` (`ART_ID`,`SEARCH_NUMBER`,`KIND`,`BRAND_ID`,`DISPLAY_NR`,`RELATION`) 
+                        VALUES ('$art_id','$search_number','$kind','$brand_id','$search_number','$relation');";
                         $db->query($query);
                     }
                 }
             }
             if ($ch[2]==1){
-                $r=$db->query("select * from T2_CROSS where ART_ID='$art_id2' and KIND = 4 and RELATION = 0;");$n=$db->num_rows($r);
+                $r=$db->query("SELECT * FROM `T2_CROSS` WHERE `ART_ID`='$art_id2' AND `KIND`=4 AND `RELATION`=0;");$n=$db->num_rows($r);
                 for ($i=1;$i<=$n;$i++){
                     $search_number=$db->result($r,$i-1,"SEARCH_NUMBER");
                     $kind=$db->result($r,$i-1,"KIND");
                     $brand_id=$db->result($r,$i-1,"BRAND_ID");
-                    $relation=$db->result($r,$i-1,"relation");
+                    $relation=$db->result($r,$i-1,"RELATION");
 
-                    $r2=$db->query("select count(ART_ID) as kol from T2_CROSS where `ART_ID`='$art_id' and `SEARCH_NUMBER`='$search_number' and `KIND`='$kind' and `BRAND_ID`='$brand_id' and `RELATION`='$relation';"); $ex_row=$db->result($r2,0,"kol");
+                    $r2=$db->query("SELECT COUNT(`ART_ID`) as kol FROM `T2_CROSS` WHERE `ART_ID`='$art_id' AND `SEARCH_NUMBER`='$search_number' AND `KIND`='$kind' AND `BRAND_ID`='$brand_id' AND `RELATION`='$relation';"); $ex_row=$db->result($r2,0,"kol");
                     if ($ex_row==0){
-                        $query="insert into T2_CROSS (`ART_ID`,`SEARCH_NUMBER`,`KIND`,`BRAND_ID`,`DISPLAY_NR`,`RELATION`) values ('$art_id','$search_number','$kind','$brand_id','$search_number','$relation');";
+                        $query="INSERT INTO `T2_CROSS` (`ART_ID`,`SEARCH_NUMBER`,`KIND`,`BRAND_ID`,`DISPLAY_NR`,`RELATION`) 
+                        VALUES ('$art_id','$search_number','$kind','$brand_id','$search_number','$relation');";
                         $db->query($query);
                     }
                 }
             }
             if ($ch[3]==1){
-                $r=$db->query("select * from T2_CROSS where ART_ID='$art_id2' and KIND in (3,4) and RELATION = 1;");$n=$db->num_rows($r);
+                $r=$db->query("SELECT * FROM `T2_CROSS` WHERE `ART_ID`='$art_id2' AND `KIND` IN (3,4) AND `RELATION`=1;");$n=$db->num_rows($r);
                 for ($i=1;$i<=$n;$i++){
                     $search_number=$db->result($r,$i-1,"SEARCH_NUMBER");
                     $kind=$db->result($r,$i-1,"KIND");
                     $brand_id=$db->result($r,$i-1,"BRAND_ID");
-                    $relation=$db->result($r,$i-1,"relation");
+                    $relation=$db->result($r,$i-1,"RELATION");
 
-                    $r2=$db->query("select count(ART_ID) as kol from T2_CROSS where `ART_ID`='$art_id' and `SEARCH_NUMBER`='$search_number' and `KIND`='$kind' and `BRAND_ID`='$brand_id' and `RELATION`='$relation';"); $ex_row=$db->result($r2,0,"kol");
+                    $r2=$db->query("SELECT COUNT(`ART_ID`) as kol FROM `T2_CROSS` WHERE `ART_ID`='$art_id' AND `SEARCH_NUMBER`='$search_number' AND `KIND`='$kind' AND `BRAND_ID`='$brand_id' AND `RELATION`='$relation';"); $ex_row=$db->result($r2,0,"kol");
                     if ($ex_row==0){
-                        $query="insert into T2_CROSS (`ART_ID`,`SEARCH_NUMBER`,`KIND`,`BRAND_ID`,`DISPLAY_NR`,`RELATION`) values ('$art_id','$search_number','$kind','$brand_id','$search_number','$relation');";
+                        $query="INSERT INTO `T2_CROSS` (`ART_ID`,`SEARCH_NUMBER`,`KIND`,`BRAND_ID`,`DISPLAY_NR`,`RELATION`) 
+                        VALUES ('$art_id','$search_number','$kind','$brand_id','$search_number','$relation');";
                         $db->query($query);
                     }
                 }
             }
             if ($ch[4]==1){
-                $r=$db->query("select * from T2_CROSS where ART_ID='$art_id2' and KIND in (3,4) and RELATION = 2;");$n=$db->num_rows($r);
+                $r=$db->query("SELECT * FROM `T2_CROSS` WHERE `ART_ID`='$art_id2' AND `KIND` IN (3,4) AND `RELATION`=2;");$n=$db->num_rows($r);
                 for ($i=1;$i<=$n;$i++){
                     $search_number=$db->result($r,$i-1,"SEARCH_NUMBER");
                     $kind=$db->result($r,$i-1,"KIND");
                     $brand_id=$db->result($r,$i-1,"BRAND_ID");
-                    $relation=$db->result($r,$i-1,"relation");
+                    $relation=$db->result($r,$i-1,"RELATION");
 
-                    $r2=$db->query("select count(ART_ID) as kol from T2_CROSS where `ART_ID`='$art_id' and `SEARCH_NUMBER`='$search_number' and `KIND`='$kind' and `BRAND_ID`='$brand_id' and `RELATION`='$relation';"); $ex_row=$db->result($r2,0,"kol");
+                    $r2=$db->query("SELECT COUNT(`ART_ID`) as kol FROM `T2_CROSS` WHERE `ART_ID`='$art_id' AND `SEARCH_NUMBER`='$search_number' AND `KIND`='$kind' AND `BRAND_ID`='$brand_id' AND `RELATION`='$relation';"); $ex_row=$db->result($r2,0,"kol");
                     if ($ex_row==0){
-                        $query="insert into T2_CROSS (`ART_ID`,`SEARCH_NUMBER`,`KIND`,`BRAND_ID`,`DISPLAY_NR`,`RELATION`) values ('$art_id','$search_number','$kind','$brand_id','$search_number','$relation');";
+                        $query="INSERT INTO `T2_CROSS` (`ART_ID`,`SEARCH_NUMBER`,`KIND`,`BRAND_ID`,`DISPLAY_NR`,`RELATION`) 
+                        VALUES ('$art_id','$search_number','$kind','$brand_id','$search_number','$relation');";
                         $db->query($query);
                     }
                 }
             }
             if ($ch[5]==1){
-                $r=$dbp->query("select TYP_ID,LA_ID from T2_LINKS where ART_ID='$art_id2';");$n=$dbp->num_rows($r);
+                $r=$db->query("SELECT `TYP_ID`, `LA_ID` FROM `T2_LINKS` WHERE `ART_ID`='$art_id2';");$n=$db->num_rows($r);
                 for ($i=1;$i<=$n;$i++){
-                    $typ_id=$dbp->result($r,$i-1,"TYP_ID");
-                    $r2=$dbp->query("select count(ART_ID) as kol from T2_LINKS where `ART_ID`='$art_id' and `TYP_ID`='$typ_id' and LA_ID='0';"); $ex_row=$dbp->result($r2,0,"kol");
+                    $typ_id=$db->result($r,$i-1,"TYP_ID");
+                    $r2=$db->query("SELECT COUNT(`ART_ID`) as kol from `T2_LINKS` WHERE `ART_ID`='$art_id' AND `TYP_ID`='$typ_id' AND `LA_ID`='0';"); $ex_row=$db->result($r2,0,"kol");
                     if ($ex_row==0){
-                        $query="insert into T2_LINKS (`ART_ID`,`TYP_ID`,`LA_ID`) values ('$art_id','$typ_id','0');";
-                        $dbp->query($query);
+                        $query="INSERT INTO `T2_LINKS` (`ART_ID`,`TYP_ID`,`LA_ID`) VALUES ('$art_id','$typ_id','0');";
+                        $db->query($query);
                     }
                 }
             }
             if ($ch[6]==1){
-                $r=$dbp->query("select STR_ID from T2_TREE where ART_ID='$art_id2';");$n=$dbp->num_rows($r);
+                $r=$db->query("SELECT `STR_ID` FROM `T2_TREE` WHERE `ART_ID`='$art_id2';");$n=$db->num_rows($r);
                 for ($i=1;$i<=$n;$i++){
-                    $str_id=$dbp->result($r,$i-1,"STR_ID");
-                    $r2=$dbp->query("select count(ART_ID) as kol from T2_TREE where `ART_ID`='$art_id' and `STR_ID`='$str_id';"); $ex_row=$dbp->result($r2,0,"kol");
+                    $str_id=$db->result($r,$i-1,"STR_ID");
+                    $r2=$db->query("SELECT COUNT(`ART_ID`) as kol FROM `T2_TREE` WHERE `ART_ID`='$art_id' AND `STR_ID`='$str_id';"); $ex_row=$db->result($r2,0,"kol");
                     if ($ex_row==0){
-                        $query="insert into T2_TREE (`ART_ID`,`STR_ID`) values ('$art_id','$str_id');";
-                        $dbp->query($query);
+                        $query="INSERT INTO `T2_TREE` (`ART_ID`,`STR_ID`) VALUES ('$art_id','$str_id');";
+                        $db->query($query);
                     }
                 }
             }
             if ($ch[7]==1){
-                $r=$dbp->query("select TYP_ID,LA_ID from T2_LINKS where ART_ID='$art_id2';");$n=$dbp->num_rows($r);
+                $r=$db->query("SELECT `TYP_ID`, `LA_ID` FROM `T2_LINKS` WHERE `ART_ID`='$art_id2';");$n=$db->num_rows($r);
                 for ($i=1;$i<=$n;$i++){
-                    $typ_id=$dbp->result($r,$i-1,"TYP_ID");
-                    $la_id=$dbp->result($r,$i-1,"LA_ID");
-                    $r2=$db->query("select max(LA_ID) as mid from link_notes;"); $new_la_id=$db->result($r2,0,"mid")+0;
-                    $r2=$db->query("select * from link_notes where `LA_ID`='$la_id' and `LANG_ID`='16' and DISPLAY='1';"); $n2=$db->num_rows($r2);
+                    $typ_id=$db->result($r,$i-1,"TYP_ID");
+                    $la_id=$db->result($r,$i-1,"LA_ID");
+                    $r2=$db->query("SELECT MAX(`LA_ID`) as mid FROM `link_notes`;"); $new_la_id=$db->result($r2,0,"mid")+0;
+                    $r2=$db->query("SELECT * FROM `link_notes` WHERE `LA_ID`='$la_id' AND `LANG_ID`='16' AND `DISPLAY`='1';"); $n2=$db->num_rows($r2);
                     for ($j=1;$j<=$n2;$j++){
                         $sort=$db->result($r2,$j-1,"SORT");
                         $type=$db->result($r2,$j-1,"TYPE");
                         $text_name=$db->result($r2,$j-1,"TEXT_NAME");
                         $text=$db->result($r2,$j-1,"TEXT");
                         $new_la_id+=1;
-                        $query="insert into T2_LINKS (`ART_ID`,`TYP_ID`,`LA_ID`) values ('$art_id','$typ_id','$new_la_id');";
-                        $dbp->query($query);
-                        $query="insert into link_notes (`LA_ID`,`LANG_ID`,`SORT`,`TEXT_NAME`,`TYPE`,`TEXT`,`DISPLAY`) values ('$new_la_id','16','$sort','$text_name','$type','$text','1');";
+                        $query="INSERT INTO `T2_LINKS` (`ART_ID`,`TYP_ID`,`LA_ID`) VALUES ('$art_id','$typ_id','$new_la_id');";
+                        $db->query($query);
+                        $query="INSERT INTO `link_notes` (`LA_ID`,`LANG_ID`,`SORT`,`TEXT_NAME`,`TYPE`,`TEXT`,`DISPLAY`) 
+                        VALUES ('$new_la_id','16','$sort','$text_name','$type','$text','1');";
                         $db->query($query);
                     }
                 }
@@ -3305,10 +3745,8 @@ class catalogue {
         return array($answer,$err);
     }
 
-    //showArticleSearchDocumentForm---------------------------------------------
-
-    function showArticleSearchDocumentForm($brand_id,$article_nr_display,$doc_type,$doc_id){$form="";
-        $form_htm=RD."/tpl/catalogue_document.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+    function showArticleSearchDocumentForm($brand_id,$article_nr_display,$doc_type,$doc_id){
+        $form="";$form_htm=RD."/tpl/catalogue_document.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $form=str_replace("{art}",$article_nr_display,$form);
         $form=str_replace("{brand_id}",$brand_id,$form);
         $form=str_replace("{doc_type}",$doc_type,$form);
@@ -3326,52 +3764,64 @@ class catalogue {
         $form=str_replace("{fil2ManufactureList}",$this->showManufactureListSelect(""),$form);
         $form=str_replace("{fil2StrId}","",$form);
         $form=str_replace("{fil2StrText}","",$form);
-    //	list($range_list,$list_brand_select)=$this->showArticlesSearchDocumentList($article_nr_display,$brand_id,0,$dp_id,$tpoint_id);
         return $form;
     }
 
-    function getTpointStorageList($tpoint_id){$db=DbSingleton::getDb(); $list=0; $week_day=date("N");$cur_time=date("H:i:s");
-        $query="select ps.storage_id from T_POINT_STORAGE ps 
-            left outer join T_POINT_DELIVERY_TIME pdt on pdt.storage_id=ps.storage_id 
-        where ps.tpoint_id='$tpoint_id' and pdt.tpoint_id='$tpoint_id' and ps.status=1 and pdt.week_day='$week_day' and pdt.time_from<='$cur_time' and pdt.time_to>='$cur_time' order by pdt.delivery_days asc;";
+    function getTpointStorageList($tpoint_id){$db=DbSingleton::getDb();
+        $list=0; $week_day=date("N");$cur_time=date("H:i:s");
+        $query="SELECT ps.storage_id FROM `T_POINT_STORAGE` ps 
+            LEFT OUTER JOIN `T_POINT_DELIVERY_TIME` pdt ON (pdt.storage_id=ps.storage_id) 
+        WHERE ps.tpoint_id='$tpoint_id' AND pdt.tpoint_id='$tpoint_id' AND ps.status=1 AND pdt.week_day='$week_day' AND pdt.time_from<='$cur_time' AND pdt.time_to>='$cur_time' 
+        ORDER BY pdt.delivery_days ASC;";
         $r=$db->query($query);$n=$db->num_rows($r);
-        //select delivery_days, giveout_time from T_POINT_DELIVERY_TIME where status='1' and tpoint_id='$tpoint_id' and storage_id='$storage_id' and week_day='$week_day' and time_from<='$cur_time' and time_to>='$cur_time' limit 0,1;
         for ($i=1;$i<=$n;$i++){ $list.=",".$db->result($r,$i-1,"storage_id"); }
         return $list;
     }
 
-    function showArticlesSearchListDoc($art,$brand_id,$query_2,$search_type,$doc_type,$doc_id){$db=DbSingleton::getTokoDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$dp=new dp;
-        $art=$this->clearArticle($art); if ($brand_id==0){$brand_id="";} $ak=$rk=[]; $margin_price_lvl=$tpoint_id=$margin_price_suppl_lvl=$client_vat=$price_suppl_lvl=0;$r="";$query="";
-        $cash_id=1;$price=0;$usd_to_uah=$euro_to_uah=1;
-        $storage_id=$dp_id=0;$function_select_article=$reserv_type_color="";
+    // ARTICLE SEARCH
+    function showArticlesSearchListDoc($art,$brand_id,$query_2,$search_type,$doc_type,$doc_id) { $db = DbSingleton::getTokoDb();
+        $slave=new slave; $dp=new dp;
+        session_start(); $user_id=$_SESSION["media_user_id"];
+        $art=$this->clearArticle($art); if ($brand_id==0){$brand_id="";} $ak=$rk=[];
+        $margin_price_lvl=$tpoint_id=$margin_price_suppl_lvl=$client_vat=$price_suppl_lvl=0;$r="";$query="";
+        $cash_id=1;$price=0; $usd_to_uah=$euro_to_uah=1;
+        $storage_id=$dp_id=0; $function_select_article=$reserv_type_color="";
         $suppl_id=$amountRestTpoint=$amountRestNotTpoint=0; $warranty_info=$return_delay=$delivery_info="";
-        $doc_type=$slave->qq($doc_type);$doc_id=$slave->qq($doc_id);$tpoint_storage_list="0";$price_lvl=1;$list2="";$n=0;
+        $doc_type=$slave->qq($doc_type);$doc_id=$slave->qq($doc_id);$tpoint_storage_list="0";$price_lvl=1;$list2="";$n=0; $markup_min=0;
+
         if ($doc_type=="dp"){$dp_id=$doc_id;
-            list($price_lvl,$margin_price_lvl,$price_suppl_lvl,$margin_price_suppl_lvl,$client_vat)=$dp->getDpClientPriceLevels($dp_id);
-            $tpoint_id=$dp->getDpTpoint($dp_id);
-            $tpoint_storage_list=$this->getTpointStorageList($tpoint_id);$cash_id=$dp->getDpCashId($dp_id);list($usd_to_uah,$euro_to_uah)=$dp->getKoursData();
+            list($price_lvl, $margin_price_lvl, $price_suppl_lvl, $margin_price_suppl_lvl, $client_vat) = $dp->getDpClientPriceLevels($dp_id);
+            $tpoint_id = $dp->getDpTpoint($dp_id);
+            $tpoint_storage_list = $this->getTpointStorageList($tpoint_id);
+            $cash_id = $dp->getDpCashId($dp_id);
+            list($usd_to_uah, $euro_to_uah) = $dp->getKoursData();
+            $markup_min = $dp->getClientMarkupMin($dp->getClientFromDp($dp_id));
         }
 
-        $query_tpl="select t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, IFNULL(gg.NAME,'') as goods_group_name, IFNULL(t2sai.suppl_id,0) as suppl_id, IFNULL(s.id,0) as storage_id, IFNULL(s.name,'') as storage_name, IFNULL(t2apr.price_".$price_lvl.",0) as price, IFNULL(t2sai.return_delay,0) as return_delay, IFNULL(t2sai.warranty_info,'') as warranty_info, IFNULL(t2si.price_usd,0) as price_suppl, IFNULL(t2si.client_storage_id,0) as suppl_storage_id, IFNULL(t2si.stock_suppl,0) as suppl_stock
-        from T2_ARTICLES t2a 
-            left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
-            left outer join T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID 
-            left outer join T2_BARCODES t2bc on t2bc.ART_ID=t2a.ART_ID 
-            left outer join T2_GOODS_GROUP t2gg on t2gg.ART_ID=t2a.ART_ID 
-            left outer join GOODS_GROUP gg on gg.ID=t2gg.GOODS_GROUP_ID 
-            left outer join T2_ARTICLES_STRORAGE t2asc on (t2asc.ART_ID=t2a.ART_ID and t2asc.STORAGE_ID in ($tpoint_storage_list))
-            left outer join T2_ARTICLES_PRICE_RATING t2apr on (t2apr.art_id=t2a.ART_ID and t2apr.in_use=1)
-            left outer join T2_SUPPL_ARTICLES_IMPORT t2sai on (t2sai.art_id=t2a.ART_ID)
-            left outer join T2_SUPPL_IMPORT t2si on (t2si.art_id=t2a.ART_ID and t2si.suppl_id=t2sai.suppl_id and t2si.status=1)
-            left outer join STORAGE s on (s.id=t2asc.STORAGE_ID and s.status=1) ";
+        $query_tpl = "SELECT t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, IFNULL(gg.NAME,'') as goods_group_name, IFNULL(t2sai.suppl_id,0) as suppl_id, 
+        IFNULL(s.id,0) as storage_id, IFNULL(s.name,'') as storage_name, t2apr.minMarkup, t2aps.OPER_PRICE, IFNULL(t2apr.price_".$price_lvl.",0) as price, IFNULL(t2sai.return_delay,0) as return_delay, 
+        IFNULL(t2sai.warranty_info,'') as warranty_info, IFNULL(t2si.price_usd,0) as price_suppl, IFNULL(t2si.client_storage_id,0) as suppl_storage_id, IFNULL(t2si.stock_suppl,0) as suppl_stock
+        FROM `T2_ARTICLES` t2a 
+            LEFT OUTER JOIN T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
+            LEFT OUTER JOIN T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN T2_BARCODES t2bc on t2bc.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN T2_GOODS_GROUP t2gg on t2gg.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN GOODS_GROUP gg on gg.ID=t2gg.GOODS_GROUP_ID 
+            LEFT OUTER JOIN T2_ARTICLES_STRORAGE t2asc on (t2asc.ART_ID=t2a.ART_ID and t2asc.STORAGE_ID in ($tpoint_storage_list))
+            LEFT OUTER JOIN T2_ARTICLES_PRICE_RATING t2apr on (t2apr.art_id=t2a.ART_ID and t2apr.in_use=1)
+            LEFT OUTER JOIN T2_ARTICLES_PRICE_STOCK t2aps on (t2aps.ART_ID=t2a.ART_ID)
+            LEFT OUTER JOIN T2_SUPPL_ARTICLES_IMPORT t2sai on (t2sai.art_id=t2a.ART_ID)
+            LEFT OUTER JOIN T2_SUPPL_IMPORT t2si on (t2si.art_id=t2a.ART_ID and t2si.suppl_id=t2sai.suppl_id and t2si.status=1)
+            LEFT OUTER JOIN STORAGE s on (s.id=t2asc.STORAGE_ID and s.status=1) ";
 
         if ($query_2=="" && $search_type==0){
-            $where_brand="";$group_brand="group by t2c.BRAND_ID"; if ($brand_id!="" && $brand_id>0){$where_brand=" and t2c.BRAND_ID='$brand_id'"; $group_brand="";}
+            $where_brand="";$group_brand="GROUP BY t2c.BRAND_ID"; if ($brand_id!="" && $brand_id>0){$where_brand=" AND t2c.BRAND_ID='$brand_id'"; $group_brand="";}
             if ($art!=""){
-                $query="select t2b.BRAND_NAME, t2n.NAME, t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION from T2_CROSS t2c 
-                    inner join T2_BRANDS t2b on t2b.BRAND_ID=t2c.BRAND_ID
-                    left outer join T2_NAMES t2n on t2n.ART_ID=t2c.ART_ID
-                 where t2c.SEARCH_NUMBER = '$art' $where_brand $group_brand order by t2n.NAME asc;";
+                $query="SELECT t2b.BRAND_NAME, t2n.NAME, t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION 
+                FROM `T2_CROSS` t2c 
+                    INNER JOIN `T2_BRANDS` t2b on t2b.BRAND_ID=t2c.BRAND_ID
+                    LEFT OUTER JOIN `T2_NAMES` t2n on t2n.ART_ID=t2c.ART_ID
+                WHERE t2c.SEARCH_NUMBER = '$art' $where_brand $group_brand ORDER BY t2n.NAME ASC;";
                  $r=$db->query($query);$n=$db->num_rows($r);
             }
             $one_result=0;
@@ -3379,10 +3829,11 @@ class catalogue {
                 $list2=$this->showCatalogueBrandSelectListDoc($r);
             }
             if ($n==1){
-                $query="select t2b.BRAND_NAME, t2n.NAME, t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION from T2_CROSS t2c 
-                    inner join T2_BRANDS t2b on t2b.BRAND_ID=t2c.BRAND_ID
-                    left outer join T2_NAMES t2n on t2n.ART_ID=t2c.ART_ID
-                where t2c.SEARCH_NUMBER = '$art' $where_brand order by t2n.NAME asc;";
+                $query="SELECT t2b.BRAND_NAME, t2n.NAME, t2c.BRAND_ID, t2c.DISPLAY_NR, t2c.ART_ID, t2c.KIND, t2c.RELATION 
+                FROM `T2_CROSS` t2c 
+                    INNER JOIN `T2_BRANDS` t2b on t2b.BRAND_ID=t2c.BRAND_ID
+                    LEFT OUTER JOIN `T2_NAMES` t2n on t2n.ART_ID=t2c.ART_ID
+                WHERE t2c.SEARCH_NUMBER = '$art' $where_brand ORDER BY t2n.NAME ASC;";
                 $r=$db->query($query);$n=$db->num_rows($r);$one_result=1;
             }
             if (($n>1 && $brand_id!="") || $one_result==1){$ak=array();$rk=array();
@@ -3395,131 +3846,160 @@ class catalogue {
                     if (($ak[$ART_ID]=="") || $KIND==0){$ak[$ART_ID]=$KIND;}
                     if (($rk[$ART_ID]=="") || $RELATION==0){$rk[$ART_ID]=$RELATION;}
                 }
-                $query=$query_tpl."	where t2a.ART_ID in ($art_id_str) and t2b.`VISIBLE`='1' order by suppl_id asc;";
+                $query=$query_tpl."	WHERE t2a.ART_ID IN ($art_id_str) AND t2b.`VISIBLE`='1' ORDER BY `suppl_id` ASC;";
             }
         }
         if ($query_2=="" && $search_type==1){
-            $query=$query_tpl."	where t2a.ARTICLE_NR_SEARCH='$art' or t2a.ARTICLE_NR_DISPL='$art' and t2b.`VISIBLE`='1';";
+            $query=$query_tpl."	WHERE t2a.ARTICLE_NR_SEARCH='$art' OR t2a.ARTICLE_NR_DISPL='$art' AND t2b.`VISIBLE`='1';";
         }
         if ($query_2=="" && $search_type==2){
-            $query=$query_tpl." where t2bc.BARCODE='$art' and t2b.`VISIBLE`='1';";
+            $query=$query_tpl." WHERE t2bc.BARCODE='$art' AND t2b.`VISIBLE`='1';";
         }
         if ($query_2=="" && $search_type==3){
-            $query=$query_tpl." where t2a.ART_ID='$art' and t2b.`VISIBLE`='1';";
+            $query=$query_tpl." WHERE t2a.ART_ID='$art' AND t2b.`VISIBLE`='1';";
         }
         if ($query_2!=""){$query=$query_2;}
-        $list="";$header_list="";
-        $r=$db->query($query);$n=$db->num_rows($r);
+        $list=""; $header_list="";
+        $r = $db->query($query); $n = $db->num_rows($r);
 
-        if ($query_2!="" || $list2==""){  // сработал внешний фильр или основной поиск с выбором бренда
-            list($fldcnf,$kol_f)=$this->getCatalogueClientViewFieldsData($user_id,"catalogue_doc");$range_list="";
-            for ($i=1;$i<=$kol_f;$i++){
-                $header_list.="<th>".$fldcnf[$i]["field_name"]."</th>";
-                $range_list.="<td onClick=\"{function_select_article}\">{".$fldcnf[$i]["field_key"]."}</td>";
+        if ($query_2!="" || $list2=="") {  // сработал внешний фильр или основной поиск с выбором бренда
+            list($fldcnf, $kol_f) = $this->getCatalogueClientViewFieldsData($user_id,"catalogue_doc");$range_list="";
+            for ($i=1; $i<=$kol_f; $i++) {
+                $header_list.="<th>".$fldcnf[$i]["field_name"]."</th>";$onclick="{function_select_article}";
+                $range_list.="<td onClick=\"$onclick\">{".$fldcnf[$i]["field_key"]."}</td>";
             }
-            $header_list="<tr align='center'><th data-sortable=\"false\">Фото</th><th data-sortable=\"false\">Тип артикула</th>".$header_list."</tr>";
+            $header_list = "<tr align='center'><th data-sortable=\"false\">Фото</th><th data-sortable=\"false\">Тип артикула</th>".$header_list."</tr>";
 
-            $sch_table="search_cat_$user_id";
-            $sch_table_result="search_cat_$user_id"."_result";
+            $sch_table = "search_cat_$user_id";
+            $sch_table_result = "search_cat_$user_id"."_result";
 
-            if ($query!=""){
-            $db->query("drop table if exists `$sch_table`;");$db->query("drop table if exists `$sch_table_result`;");
-            $db->query("create temporary table if not exists `$sch_table` as $query");
-            $db->query("ALTER TABLE `$sch_table`  ADD INDEX ( `ART_ID` );");
-            $db->query("ALTER TABLE `$sch_table` ADD `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST ;");
-            $db->query("ALTER TABLE `$sch_table` ADD `tpoint_stock` MEDIUMINT NOT NULL AFTER `storage_name`, ADD `tpoint_reserv` MEDIUMINT NOT NULL AFTER `tpoint_stock`, ADD `not_tpoint_stock` MEDIUMINT NOT NULL AFTER `tpoint_reserv`, ADD `not_tpoint_reserv` MEDIUMINT NOT NULL AFTER `not_tpoint_stock`,ADD `delivery_info` VARCHAR( 255 ) NOT NULL AFTER `not_tpoint_reserv`;");
-            $db->query("ALTER TABLE `$sch_table` ADD `kind_id` SMALLINT NOT NULL AFTER `ART_ID`, ADD `relation` SMALLINT NOT NULL AFTER `kind_id`;");
+            if ($query!="") {
+                $db->query("drop table if exists `$sch_table`;");
+                $db->query("drop table if exists `$sch_table_result`;");
+                $db->query("create temporary table if not exists `$sch_table` as $query");
+                $db->query("ALTER TABLE `$sch_table` ADD INDEX ( `ART_ID` );");
+                $db->query("ALTER TABLE `$sch_table` ADD `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST ;");
+                $db->query("ALTER TABLE `$sch_table` ADD `tpoint_stock` MEDIUMINT NOT NULL AFTER `storage_name`, ADD `tpoint_reserv` MEDIUMINT NOT NULL AFTER `tpoint_stock`, ADD `not_tpoint_stock` MEDIUMINT NOT NULL AFTER `tpoint_reserv`, 
+                ADD `not_tpoint_reserv` MEDIUMINT NOT NULL AFTER `not_tpoint_stock`, ADD `delivery_info` VARCHAR( 255 ) NOT NULL AFTER `not_tpoint_reserv`;");
+                $db->query("ALTER TABLE `$sch_table` ADD `kind_id` SMALLINT NOT NULL AFTER `ART_ID`, ADD `relation` SMALLINT NOT NULL AFTER `kind_id`;");
 
-            $r=$db->query("select * from `$sch_table`;");$n=$db->num_rows($r);
-            for ($i=1;$i<=$n;$i++){
-                $id=$db->result($r,$i-1,"id");
-                $art_id=$db->result($r,$i-1,"ART_ID");
-                $kind_id=$ak[$art_id];
-                $relation=$rk[$art_id];
-                $suppl_id=$db->result($r,$i-1,"suppl_id");
-                $storage_id=$db->result($r,$i-1,"storage_id");
-                if ($doc_type=="dp"){
-                    if ($suppl_id==0 || $storage_id>0){
-                        $price=$db->result($r,$i-1,"price");
-                        if ($margin_price_lvl>0){
-                            $price=$price+round($price*$margin_price_lvl/100,2);
-                        }
-                        list($tpoint_stock,$tpoint_reserv)=$dp->getArticleRestTpoint($art_id,$tpoint_id);
-                        list($not_tpoint_stock,$not_tpoint_reserv)=$dp->getArticleRestNotTpoint($art_id,$tpoint_id);
-                        $delivery_info=$dp->getArticleTpointDeliveryInfo($tpoint_id,$art_id);
-                        //$delivery_info=$dp->getTpointDeliveryInfo($tpoint_id,$storage_id);   ????
-                        $db->query("update `$sch_table` set `kind_id`='$kind_id', `relation`='$relation', `price`='$price', `tpoint_stock`='$tpoint_stock', `tpoint_reserv`='$tpoint_reserv', `not_tpoint_stock`='$not_tpoint_stock', `not_tpoint_reserv`='$not_tpoint_reserv', `delivery_info`='$delivery_info' where id='$id';");
-                        if ($tpoint_stock==0 && $tpoint_reserv==0 && $price==0){
-                            $db->query("delete from `$sch_table` where id='$id' limit 1;");
-                        }
-                    }
-                    if ($suppl_id>0 && $storage_id==0){
-                        $suppl_storage_id=$db->result($r,$i-1,"suppl_storage_id");//$row_del=0;
-                        if ($this->checkSupplStorageAllow($suppl_id,$suppl_storage_id)==1){
-                            if ($this->checkSupplStorageTpointAllow($tpoint_id,$suppl_id,$suppl_storage_id)==1){
-                                list($price_in_vat,$show_in_vat,$price_add_vat)=$dp->getSupplVatConditions($suppl_id);
-                                $row_del=0;
-                                //if ($client_vat==0 && $show_in_vat==0){
-                                    //$db->query("delete from `$sch_table` where id='$id';"); $row_del=1;
-                                //}
-                                if ($row_del==0){
-                                    $price_suppl=$db->result($r,$i-1,"price_suppl");
-                                    list($suppl_margin_fm,$suppl_delivery_fm,$suppl_margin2_fm)=$dp->getTpointSupplFm($tpoint_id,$suppl_id,$suppl_storage_id,$price_suppl,$price_suppl_lvl);
-
-                                    if ($suppl_margin_fm>0){
-                                        $price=($price_suppl+$price_suppl*$suppl_margin_fm/100)-$price_suppl;
-
-                                        if ($price>$suppl_delivery_fm){ $price=($price_suppl+$price_suppl*$suppl_margin_fm/100); }
-                                        if ($price<=$suppl_delivery_fm){ $price=$price_suppl+$price_suppl*$suppl_margin2_fm/100+$suppl_delivery_fm; }
-                                        //Step 2; Client Margin
-                                        if ($margin_price_suppl_lvl>0 && $margin_price_suppl_lvl!=""){
-                                            $price=$price+$price*$margin_price_suppl_lvl/100;
-                                        }
-                                        //Step 3; VAT //$price_in_vat,$show_in_vat,$price_add_vat
-                                        //if ($client_vat==0){
-                                            //if ($price_in_vat==0 && $show_in_vat==1 && $price_add_vat==1){
-                                                //$price=$price+$price*20/100;
-                                            //}
-                                        //}
-                                        if ($client_vat==1){
-                                            if ($price_in_vat==0 && $show_in_vat==1 && $price_add_vat==1){
-                                                $price=$price+$price*20/100;
-                                            }
-                                            if ($price_in_vat==1 || $show_in_vat==1){
-                                                //$price=$price+$price*20/100;
-                                            }else{$db->query("delete from `$sch_table` where id='$id';");$row_del=1;}
-                                        }
-                                        if ($row_del==0){
-                                            $amountRestTpoint="";$suppl_stock_show="";
-                                            $amountRestNotTpoint="$suppl_stock_show";
-                                            //$delivery_info=$dp->getArticleTpointSupplDeliveryInfo($tpoint_id,$art_id);
-                                            $delivery_info=$dp->getTpointSupplDeliveryInfo($tpoint_id,$suppl_id,$suppl_storage_id);
-                                            $db->query("update `$sch_table` set `kind_id`='$kind_id', `relation`='$relation', `price_suppl`='$price',`price`='$price', `delivery_info`='$delivery_info' where id='$id';");
-                                        }
-
-                                    }else{$db->query("delete from `$sch_table` where id='$id';");}
+                $r=$db->query("SELECT * FROM `$sch_table`;"); $n=$db->num_rows($r);
+                for ($i=1; $i<=$n; $i++) {
+                    $id=$db->result($r,$i-1,"id");
+                    $art_id=$db->result($r,$i-1,"ART_ID");
+                    $kind_id=$ak[$art_id];
+                    $relation=$rk[$art_id];
+                    $suppl_id=$db->result($r,$i-1,"suppl_id");
+                    $storage_id=$db->result($r,$i-1,"storage_id");
+                    if ($doc_type=="dp") {
+                        if ($suppl_id==0 || $storage_id>0) {
+                            $price=$db->result($r,$i-1,"price");
+                            $minMarkup=$db->result($r,0,"minMarkup");
+                            $OPER_PRICE=$db->result($r,0,"OPER_PRICE");
+                            if ($margin_price_lvl>0) {
+                                $price = $price + round($price * $margin_price_lvl / 100, 2);
+                            }
+                            if ($margin_price_lvl<0 && $markup_min==0) {
+                                $price_minus = $price + ($price * $margin_price_lvl / 100);
+                                $oper_limit = $OPER_PRICE + ($OPER_PRICE * $minMarkup / 100);
+                                if ($price_minus>=$oper_limit) $price = $price_minus;
+                                else if ($oper_limit>=$price) true;
+                                else $price = $oper_limit;
+                            }
+                            if ($margin_price_lvl<0 && $markup_min>0) {
+                                $cash_art_id = $dp->getArticlePriceRatingCash($art_id);
+                                $price = $dp->getPriceRatingKours($price, $cash_art_id, 2, $usd_to_uah, $euro_to_uah);
+                                $proc_price_margin = $price - ($price * abs($margin_price_lvl) / 100);
+                                $proc_oper_price_min = $OPER_PRICE + ($OPER_PRICE * $markup_min / 100);
+                                if ($proc_price_margin>=$proc_oper_price_min) {
+                                    $price = $proc_price_margin;
+                                } else {
+                                    if (($proc_price_margin < $proc_oper_price_min) && ($proc_oper_price_min > $price)) {
+                                        true;
+                                    } else {
+                                        $price = $proc_oper_price_min;
+                                    }
                                 }
-                            }else{$db->query("delete from `$sch_table` where id='$id';");}
-                        }else{$db->query("delete from `$sch_table` where id='$id';");}
+                                $price = $dp->getPriceRatingKours($price, 2, $cash_art_id, $usd_to_uah, $euro_to_uah);
+                            }
+
+                            list($tpoint_stock, $tpoint_reserv) = $dp->getArticleRestTpoint($art_id, $tpoint_id);
+                            list($not_tpoint_stock, $not_tpoint_reserv) = $dp->getArticleRestNotTpoint($art_id, $tpoint_id);
+                            $delivery_info = $dp->getArticleTpointDeliveryInfo($tpoint_id, $art_id);
+                            //$delivery_info=$dp->getTpointDeliveryInfo($tpoint_id,$storage_id);   ????
+                            $db->query("UPDATE `$sch_table` SET `kind_id`='$kind_id', `relation`='$relation', `price`='$price', `tpoint_stock`='$tpoint_stock', `tpoint_reserv`='$tpoint_reserv', `not_tpoint_stock`='$not_tpoint_stock', `not_tpoint_reserv`='$not_tpoint_reserv', `delivery_info`='$delivery_info' WHERE `id`='$id';");
+                            if ($tpoint_stock==0 && $tpoint_reserv==0 && $price==0) {
+                                $db->query("DELETE FROM `$sch_table` WHERE `id`='$id' LIMIT 1;");
+                            }
+                        }
+                        if ($suppl_id>0 && $storage_id==0) {
+                            $suppl_storage_id=$db->result($r,$i-1,"suppl_storage_id");//$row_del=0;
+                            if ($this->checkSupplStorageAllow($suppl_id,$suppl_storage_id)==1){
+                                if ($this->checkSupplStorageTpointAllow($tpoint_id,$suppl_id,$suppl_storage_id)==1){
+                                    list($price_in_vat,$show_in_vat,$price_add_vat)=$dp->getSupplVatConditions($suppl_id);
+                                    $row_del=0;
+                                    //if ($client_vat==0 && $show_in_vat==0){
+                                        //$db->query("delete from `$sch_table` where id='$id';"); $row_del=1;
+                                    //}
+                                    if ($row_del==0){
+                                        $price_suppl=$db->result($r,$i-1,"price_suppl");
+                                        list($suppl_margin_fm,$suppl_delivery_fm,$suppl_margin2_fm)=$dp->getTpointSupplFm($tpoint_id,$suppl_id,$suppl_storage_id,$price_suppl,$price_suppl_lvl);
+
+                                        if ($suppl_margin_fm>0){
+                                            $price=($price_suppl+$price_suppl*$suppl_margin_fm/100)-$price_suppl;
+
+                                            if ($price>$suppl_delivery_fm){ $price=($price_suppl+$price_suppl*$suppl_margin_fm/100); }
+                                            if ($price<=$suppl_delivery_fm){ $price=$price_suppl+$price_suppl*$suppl_margin2_fm/100+$suppl_delivery_fm; }
+                                            //Step 2; Client Margin
+                                            if ($margin_price_suppl_lvl>0 && $margin_price_suppl_lvl!=""){
+                                                $price=$price+$price*$margin_price_suppl_lvl/100;
+                                            }
+                                            //Step 3; VAT //$price_in_vat,$show_in_vat,$price_add_vat
+                                            //if ($client_vat==0){
+                                                //if ($price_in_vat==0 && $show_in_vat==1 && $price_add_vat==1){
+                                                    //$price=$price+$price*20/100;
+                                                //}
+                                            //}
+                                            if ($client_vat==1){
+                                                if ($price_in_vat==0 && $show_in_vat==1 && $price_add_vat==1){
+                                                    $price=$price+$price*20/100;
+                                                }
+                                                if ($price_in_vat==1 || $show_in_vat==1){
+                                                    //$price=$price+$price*20/100;
+                                                }else{$db->query("DELETE FROM `$sch_table` WHERE `id`='$id';");$row_del=1;}
+                                            }
+                                            if ($row_del==0){
+                                                $amountRestTpoint="";$suppl_stock_show="";
+                                                $amountRestNotTpoint="$suppl_stock_show";
+                                                //$delivery_info=$dp->getArticleTpointSupplDeliveryInfo($tpoint_id,$art_id);
+                                                $delivery_info=$dp->getTpointSupplDeliveryInfo($tpoint_id,$suppl_id,$suppl_storage_id);
+                                                $db->query("UPDATE `$sch_table` SET `kind_id`='$kind_id', `relation`='$relation', `price_suppl`='$price', `price`='$price', `delivery_info`='$delivery_info' WHERE `id`='$id';");
+                                            }
+
+                                        } else {$db->query("DELETE FROM `$sch_table` WHERE `id`='$id';");}
+                                    }
+                                } else {$db->query("DELETE FROM `$sch_table` WHERE `id`='$id';");}
+                            } else {$db->query("DELETE FROM `$sch_table` WHERE `id`='$id';");}
+                        }
                     }
                 }
-            }
-            //$db->query("delete from `$sch_table` where price='0.00' and price_suppl='0.00' and suppl_stock='0' and tpoint_stock='0' and tpoint_reserv='0' and kind_id>1;");
+                //$db->query("delete from `$sch_table` where price='0.00' and price_suppl='0.00' and suppl_stock='0' and tpoint_stock='0' and tpoint_reserv='0' and kind_id>1;");
 
-            $db->query("create temporary table if not exists `$sch_table_result` as (select * from `$sch_table` order by art_id, delivery_info, price asc);");//$n=$db->num_rows($r);
+                $db->query("create temporary table if not exists `$sch_table_result` as (select * from `$sch_table` order by art_id, delivery_info, price asc);");//$n=$db->num_rows($r);
 
-            $r=$db->query("select * from `$sch_table_result`;");$n=$db->num_rows($r);$prev_art_id=0;
-            for ($i=1;$i<=$n;$i++){
-                $id=$db->result($r,$i-1,"id");
-                $art_id=$db->result($r,$i-1,"ART_ID");
-                if ($art_id==$prev_art_id){$db->query("delete from `$sch_table_result` where id='$id' limit 1;");}
-                if ($art_id!=$prev_art_id){$prev_art_id=$art_id;}
-            }
+                $r=$db->query("SELECT * FROM `$sch_table_result`;"); $n=$db->num_rows($r); $prev_art_id=0;
+                for ($i=1;$i<=$n;$i++) {
+                    $id=$db->result($r,$i-1,"id");
+                    $art_id=$db->result($r,$i-1,"ART_ID");
+                    if ($art_id==$prev_art_id){$db->query("DELETE FROM `$sch_table_result` WHERE `id`='$id' LIMIT 1;");}
+                    if ($art_id!=$prev_art_id){$prev_art_id=$art_id;}
+                }
 
-            $r=$db->query("select * from `$sch_table_result` order by kind_id asc;");$n=$db->num_rows($r);
+                $r=$db->query("SELECT * FROM `$sch_table_result` ORDER BY `kind_id` ASC;");$n=$db->num_rows($r);
             }
             $lst=array();
-            for ($i=1;$i<=$n;$i++){ $tpoint_suppl_name="";
+            for ($i=1;$i<=$n;$i++) {
+                $tpoint_suppl_name="";
                 $art_id=$db->result($r,$i-1,"ART_ID");
                 $kind_id=$db->result($r,$i-1,"kind_id");
                 $relation=$db->result($r,$i-1,"relation");
@@ -3558,11 +4038,14 @@ class catalogue {
                 if ($cash_id==3){$price=round($price*$usd_to_uah/$euro_to_uah,2); }
                 if ($cash_id==2){$price=round($price,2);}
 
+                $client_id=$dp->getDpClientId($dp_id);
+                $price_round=$dp->getClientPriceRounding($client_id,$price);
+
                 $lst[$i]["kind"]=$kind_id;
                 $lst[$i]["relation"]=$relation;
 
                 $check_photo=$this->checkPhotoEmpty($art_id);$img_b="";
-                if ($check_photo>0) { $img_b="<button class='btn btn-sm btn-default' onclick='showArtilceGallery(\"$art_id\",\"$article_nr_displ\")'><i class='fa fa-image'></i></button>";}
+                if ($check_photo>0) {$img_b="<button class='btn btn-sm btn-default' onclick='showArtilceGallery(\"$art_id\",\"$article_nr_displ\")'><i class='fa fa-image'></i></button>";}
                 $suppl_storage_code=0;
                 $lst[$i]["data"]="<tr style='cursor:pointer'><td class='text-center'>$img_b</td><td class='text-center'>{kind_name}</td>".$range_list."</tr>";
                 $lst[$i]["data"]=str_replace("{art_id}",$art_id,$lst[$i]["data"]);
@@ -3573,7 +4056,7 @@ class catalogue {
                 $lst[$i]["data"]=str_replace("{barcode}",$barcode,$lst[$i]["data"]);
                 $lst[$i]["data"]=str_replace("{goods_group_id}",$goods_group_name,$lst[$i]["data"]);
                 $lst[$i]["data"]=str_replace("{suppl_id}",$suppl_id,$lst[$i]["data"]);
-                $lst[$i]["data"]=str_replace("{price}",$price,$lst[$i]["data"]);
+                $lst[$i]["data"]=str_replace("{price}",$price." ($price_round)",$lst[$i]["data"]);
                 $lst[$i]["data"]=str_replace("{amountRestTpoint}",$amountRestTpoint,$lst[$i]["data"]);
                 $lst[$i]["data"]=str_replace("{amountRestNotTpoint}",$amountRestNotTpoint,$lst[$i]["data"]);
                 $lst[$i]["data"]=str_replace("{suppl_storage_code}","$suppl_storage_code",$lst[$i]["data"]);
@@ -3604,7 +4087,6 @@ class catalogue {
                 if (($kind==3 || $kind==4) && $relation==1){ $lst_kr[3].=$lst[$i]["data"]; }
                 if (($kind==3 || $kind==4) && $relation==2){ $lst_kr[4].=$lst[$i]["data"]; }
                 if ($kind=="" || $relation==""){$lst_kr[5].=$lst[$i]["data"];}
-
             }//$kol_f+=1;
             if ($lst_kr[1]!=""){$lst_kr[1]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"запитаний артикул\" class=\"fa fa-key\"></i>",$lst_kr[1]);$list.=$lst_kr[1];}
             if ($lst_kr[2]!=""){$lst_kr[2]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"аналог\" class=\"fa fa-link\"></i>",$lst_kr[2]);$list.=$lst_kr[2];}
@@ -3612,21 +4094,23 @@ class catalogue {
             if ($lst_kr[4]!=""){$lst_kr[4]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"артикул включає в себе\" class=\"fa fa-level-up\"></i>",$lst_kr[4]);$list.=$lst_kr[4];}
             if ($lst_kr[5]!=""){$lst_kr[5]=str_replace("{kind_name}","<i style=\"width: 100%;height: 60px;\" title=\"інше\" class=\"fa fa-ellipsis-h\"></i>",$lst_kr[5]);$list.=$lst_kr[5];}
         }
-        return array($header_list,$list,$list2);
+        return array($header_list, $list, $list2);
     }
 
     function checkSupplStorageAllow($suppl_id,$storage_id){$db=DbSingleton::getDb();
-        $r=$db->query("select count(id) as kol from `A_CLIENTS_STORAGE` where visible='1' and id='$storage_id' and client_id='$suppl_id' limit 0,1;");$allow=$db->result($r,0,"kol")+0;
+        $r=$db->query("SELECT COUNT(`id`) as kol FROM `A_CLIENTS_STORAGE` WHERE `visible`='1' AND `id`='$storage_id' AND `client_id`='$suppl_id' LIMIT 1;");
+        $allow=$db->result($r,0,"kol")+0;
         return $allow;
     }
 
     function checkSupplStorageTpointAllow($tpoint_id,$suppl_id,$storage_id){$db=DbSingleton::getDb();
-        $r=$db->query("select count(id) as kol from `T_POINT_SUPPL_STORAGE` where tpoint_id='$tpoint_id' and storage_id='$storage_id' and suppl_id='$suppl_id' limit 0,1;");$allow=$db->result($r,0,"kol")+0;
+        $r=$db->query("SELECT COUNT(`id`) as kol FROM `T_POINT_SUPPL_STORAGE` WHERE `tpoint_id`='$tpoint_id' AND `storage_id`='$storage_id' AND `suppl_id`='$suppl_id' LIMIT 1;");
+        $allow=$db->result($r,0,"kol")+0;
         return $allow;
     }
 
-    function showSupplStorageSelectWindow($art_id,$article_nr_displ,$doc_type,$doc_id){$form="";
-        $form_htm=RD."/tpl/catalogue_select_suppl_storage_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+    function showSupplStorageSelectWindow($art_id,$article_nr_displ,$doc_type,$doc_id){
+        $form="";$form_htm=RD."/tpl/catalogue_select_suppl_storage_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
         $list=$this->showArticleSupplStorageRestList($art_id,$doc_type,$doc_id);
         $form=str_replace("{list}",$list,$form);
         $form=str_replace("{art_id}",$art_id,$form);
@@ -3634,7 +4118,8 @@ class catalogue {
         return $form;
     }
 
-    function showArticleSupplStorageRestList($art_id,$doc_type,$doc_id){$db=DbSingleton::getTokoDb();$slave=new slave;$dp=new dp;$price_suppl_lvl=0;
+    function showArticleSupplStorageRestList($art_id,$doc_type,$doc_id){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$dp=new dp;$price_suppl_lvl=0;
         $doc_type=$slave->qq($doc_type);$doc_id=$slave->qq($doc_id);$tpoint_id=0;
         $price_lvl=$margin_price_lvl=$margin_price_suppl_lvl=$client_vat=0;
         $cash_id=$usd_to_uah=$euro_to_uah=1;$suppl_id=$suppl_stock=$dp_id=$suppl_storage_id=0;
@@ -3644,17 +4129,17 @@ class catalogue {
             $tpoint_id=$dp->getDpTpoint($dp_id);
             $cash_id=$dp->getDpCashId($dp_id);list($usd_to_uah,$euro_to_uah)=$dp->getKoursData();
         }
-        $query="select t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, gg.NAME as goods_group_name, t2sai.suppl_id, t2sai.return_delay, t2sai.warranty_info , t2si.price_usd, t2si.client_storage_id, t2si.stock_suppl
-        from T2_ARTICLES t2a 
-            left outer join T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
-            left outer join T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID 
-            left outer join T2_BARCODES t2bc on t2bc.ART_ID=t2a.ART_ID 
-            left outer join T2_GOODS_GROUP t2gg on t2gg.ART_ID=t2a.ART_ID 
-            left outer join GOODS_GROUP gg on gg.ID=t2gg.GOODS_GROUP_ID 
-            left outer join T2_SUPPL_ARTICLES_IMPORT t2sai on (t2sai.art_id=t2a.ART_ID)
-            left outer join T2_SUPPL_IMPORT t2si on (t2si.art_id=t2a.ART_ID and t2si.suppl_id=t2sai.suppl_id and t2si.status=1)
-            left outer join T_POINT_SUPPL_STORAGE pss on (pss.tpoint_id='$tpoint_id' and pss.suppl_id=t2sai.suppl_id and pss.storage_id=t2si.client_storage_id)
-        where t2a.ART_ID = '$art_id' and t2b.`VISIBLE`='1' and t2sai.suppl_id>0;";
+        $query="SELECT t2a.ART_ID, t2a.BRAND_ID, t2a.ARTICLE_NR_DISPL, t2b.BRAND_NAME, t2n.NAME, t2n.INFO, t2bc.BARCODE, gg.NAME as goods_group_name, t2sai.suppl_id, t2sai.return_delay, t2sai.warranty_info , t2si.price_usd, t2si.client_storage_id, t2si.stock_suppl
+        FROM `T2_ARTICLES` t2a 
+            LEFT OUTER JOIN T2_BRANDS t2b on t2b.BRAND_ID=t2a.BRAND_ID 
+            LEFT OUTER JOIN T2_NAMES t2n on t2n.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN T2_BARCODES t2bc on t2bc.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN T2_GOODS_GROUP t2gg on t2gg.ART_ID=t2a.ART_ID 
+            LEFT OUTER JOIN GOODS_GROUP gg on gg.ID=t2gg.GOODS_GROUP_ID 
+            LEFT OUTER JOIN T2_SUPPL_ARTICLES_IMPORT t2sai on (t2sai.art_id=t2a.ART_ID)
+            LEFT OUTER JOIN T2_SUPPL_IMPORT t2si on (t2si.art_id=t2a.ART_ID and t2si.suppl_id=t2sai.suppl_id and t2si.status=1)
+            LEFT OUTER JOIN T_POINT_SUPPL_STORAGE pss on (pss.tpoint_id='$tpoint_id' and pss.suppl_id=t2sai.suppl_id and pss.storage_id=t2si.client_storage_id)
+        WHERE t2a.ART_ID='$art_id' AND t2b.`VISIBLE`='1' AND t2sai.suppl_id>0;";
         $r=$db->query($query);$n=$db->num_rows($r);	$list="";
         
         for ($i=1;$i<=$n;$i++){
@@ -3681,7 +4166,7 @@ class catalogue {
                     }
                     $storage_id=$db->result($r,$i-1,"storage_id");$storage_name=$db->result($r,$i-1,"storage_name");
                     $suppl_storage_code=$storage_name;
-                   // $cell_id=$db->result($r,$i-1,"cell_id");
+                    //$cell_id=$db->result($r,$i-1,"cell_id");
                     //$cell_name=$db->result($r,$i-1,"cell_name");
                     //$stock=$db->result($r,$i-1,"stock");
                     //$reserv=$db->result($r,$i-1,"reserv");
@@ -3690,7 +4175,8 @@ class catalogue {
                     //list($tpoint_stock,$tpoint_reserv)=$dp->getArticleRestTpoint($art_id,$tpoint_id);
                     //$amountRestTpoint="<span class='label label-primary'>$tpoint_stock/$tpoint_reserv</span>";
                     //$amountRestTpoint="$stock/$reserv";
-                    list($not_tpoint_stock,$not_tpoint_reserv)=$dp->getArticleRestNotTpoint($art_id,$tpoint_id); $amountRestNotTpoint="<span class='label label-warning'>$not_tpoint_stock/$not_tpoint_reserv</span>";
+                    list($not_tpoint_stock,$not_tpoint_reserv)=$dp->getArticleRestNotTpoint($art_id,$tpoint_id);
+                    $amountRestNotTpoint="<span class='label label-warning'>$not_tpoint_stock/$not_tpoint_reserv</span>";
                     $delivery_info=$dp->getTpointDeliveryInfo($tpoint_id,$storage_id);
                     //$tpoint_suppl_name=$tpoint_name;
                 }
@@ -3764,14 +4250,14 @@ class catalogue {
         return $list;
     }
 
-    function getSupplStorageName($suppl_storage_id){ $db=DbSingleton::getDb(); $name="";
-        $r=$db->query("select name from A_CLIENTS_STORAGE where id='$suppl_storage_id' limit 0,1;");$n=$db->num_rows($r);
+    function getSupplStorageName($suppl_storage_id){ $db=DbSingleton::getDb();
+        $r=$db->query("SELECT `name` FROM `A_CLIENTS_STORAGE` WHERE `id`='$suppl_storage_id' LIMIT 1;");$n=$db->num_rows($r); $name="";
         if ($n==1){	$name=$db->result($r,0,"name");}
         return $name;
     }
 
-    function showCatalogueBrandSelectListDoc($r){$db=DbSingleton::getDb(); $list="";
-        $n=$db->num_rows($r);$tkey=time();
+    function showCatalogueBrandSelectListDoc($r){$db=DbSingleton::getDb();
+        $n=$db->num_rows($r);$tkey=time();$list="";
         $db->query("CREATE TEMPORARY TABLE IF NOT EXISTS `NBRAND_RESULT_$tkey` (`art_id` INT NOT NULL ,`display_nr` VARCHAR( 100 ) NOT NULL ,`name` VARCHAR( 255 ) NOT NULL ,`brand_id` INT NOT NULL ,`brand_name` VARCHAR( 100 ) NOT NULL ,`kol_res` TINYINT NOT NULL) ENGINE = MYISAM ;");
         for ($i=1;$i<=$n;$i++){
             $art_id=$db->result($r,$i-1,"ART_ID");
@@ -3780,9 +4266,9 @@ class catalogue {
             $brand_id=$db->result($r,$i-1,"BRAND_ID");
             $brand_name=$db->result($r,$i-1,"BRAND_NAME");
             $kol_res=0;
-            $db->query("insert into `NBRAND_RESULT_$tkey` values ('$art_id','$display_nr','$name','$brand_id','$brand_name','$kol_res');");
+            $db->query("INSERT INTO `NBRAND_RESULT_$tkey` VALUES ('$art_id','$display_nr','$name','$brand_id','$brand_name','$kol_res');");
         }
-        $r=$db->query("select * from `NBRAND_RESULT_$tkey` order by `kol_res` desc;");$n=$db->num_rows($r);
+        $r=$db->query("SELECT * FROM `NBRAND_RESULT_$tkey` ORDER BY `kol_res` DESC;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $display_nr=$db->result($r,$i-1,"display_nr");
             $name=$db->result($r,$i-1,"name");
@@ -3794,7 +4280,8 @@ class catalogue {
                 <td>$brand_name</td>
                 <td>$name</td>
             </tr>";
-        }$form="";
+        }
+        $form="";
         if ($n>0){
             $form_htm=RD."/tpl/catalogue_brand_select_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
             $form=str_replace("{list}",$list,$form);
@@ -3804,7 +4291,7 @@ class catalogue {
     }
 
     function checkPhotoEmpty($art_id){ $db=DbSingleton::getTokoDb();
-        $r=$db->query("select count(t2af.ID) as kol from T2_PHOTOS t2af where t2af.ART_ID='$art_id';"); $n=$db->result($r,0,"kol")+0;
+        $r=$db->query("SELECT COUNT(`ID`) as kol FROM `T2_PHOTOS` WHERE `ART_ID`='$art_id' AND `ACTIVE`=1;"); $n=$db->result($r,0,"kol")+0;
         return $n;
     }
 
@@ -3817,19 +4304,19 @@ class catalogue {
     }
 
     function getMaxIndex() {$db=DbSingleton::getTokoDb();
-        $r=$db->query("SELECT max(`ART_ID`) as max_art FROM `T2_ARTICLES` where `ART_ID`>100000000 and `ART_ID` <110000000");
+        $r=$db->query("SELECT MAX(`ART_ID`) as max_art FROM `T2_ARTICLES` WHERE `ART_ID`>100000000 AND `ART_ID`<110000000;");
         $art_id=intval($db->result($r,0,"max_art"))+1;
         return $art_id;
     }
 
     function getMaxSupplIndex() {$db=DbSingleton::getTokoDb();
-        $r=$db->query("SELECT max(`ART_ID`) as max_art FROM `T2_ARTICLES` where `ART_ID`>10000000");
+        $r=$db->query("SELECT MAX(`ART_ID`) as max_art FROM `T2_ARTICLES` WHERE `ART_ID`>10000000;");
         $art_id=intval($db->result($r,0,"max_art"))+1;
         return $art_id;
     }
 
-    function showBrandsSelect() { $db=DbSingleton::getTokoDb(); $list="";
-        $r=$db->query("select b.* from T2_BRANDS b order by b.BRAND_NAME asc");$n=$db->num_rows($r);
+    function showBrandsSelect() { $db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT * FROM `T2_BRANDS` ORDER BY `BRAND_NAME` ASC;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"BRAND_ID");
             $name=$db->result($r,$i-1,"BRAND_NAME");
@@ -3839,15 +4326,381 @@ class catalogue {
     }
 
     function saveIndexArticle($art_id,$article_nr_displ,$brand_id,$article_name,$article_name_ukr,$article_info) { $db=DbSingleton::getTokoDb();
-        $r=$db->query("select ART_ID from T2_ARTICLES where ART_ID=$art_id;"); $n=$db->num_rows($r);
+        session_start();$user_id=$_SESSION["media_user_id"]; $answer=0; $err="Помилка збереження!";
+        $r=$db->query("SELECT `ART_ID` FROM `T2_ARTICLES` WHERE `ART_ID`=$art_id;"); $n=$db->num_rows($r);
+        if ($n>0) $err="Такий номер індекса уже існує в системі!";
+        $r2=$db->query("SELECT `ART_ID` FROM `T2_ARTICLES` WHERE `ARTICLE_NR_DISPL`='$article_nr_displ' AND `BRAND_ID`='$brand_id';"); $n2=$db->num_rows($r2);
+        if ($n2>0) $err="Індекс з такою назвою та брендом вже існує!";
         $article_nr_search=str_replace(str_split('\\/:*?"<>|+-()[]., '), '', $article_nr_displ);
-        if ($art_id>0 && $art_id!="" && $n==0) {
-            $db->query("insert into T2_ARTICLES (ART_ID,ARTICLE_NR_DISPL,ARTICLE_NR_SEARCH,BRAND_ID) values ($art_id,'$article_nr_displ','$article_nr_search',$brand_id);");
-            $db->query("insert into T2_CROSS (ART_ID,SEARCH_NUMBER,`KIND`,BRAND_ID,DISPLAY_NR,`RELATION`) values ($art_id,'$article_nr_search',0,$brand_id,'$article_nr_displ',0);");
-            $db->query("insert into T2_NAMES (ART_ID,LANG_ID,`NAME`,`INFO`) values ($art_id,'16','$article_name','$article_info');");
-            $db->query("insert into T2_NAMES (ART_ID,LANG_ID,`NAME`,`INFO`) values ($art_id,'41','$article_name_ukr','$article_info');");
-            return true;
-        } else return false;
+        if ($art_id>0 && $art_id!="" && $n==0 && $n2==0) {
+            $db->query("INSERT INTO `T2_ARTICLES` (ART_ID,ARTICLE_NR_DISPL,ARTICLE_NR_SEARCH,BRAND_ID) VALUES ($art_id,'$article_nr_displ','$article_nr_search',$brand_id);");
+            $db->query("INSERT INTO `T2_CROSS` (ART_ID,SEARCH_NUMBER,`KIND`,BRAND_ID,DISPLAY_NR,`RELATION`) VALUES ($art_id,'$article_nr_search',0,$brand_id,'$article_nr_displ',0);");
+            $db->query("INSERT INTO `T2_NAMES` (ART_ID,LANG_ID,`NAME`,`INFO`) VALUES ($art_id,'16','$article_name','$article_info');");
+            $db->query("INSERT INTO `T2_NAMES` (ART_ID,LANG_ID,`NAME`,`INFO`) VALUES ($art_id,'41','$article_name_ukr','$article_info');");
+            $db->query("INSERT INTO `T2_ARTICLES_LOGS` (`user_id`,`art_id`,`article_nr_displ`,`brand_id`,`article_name_ru`,`article_name_ua`) 
+            VALUES ('$user_id','$art_id','$article_nr_displ','$brand_id','$article_name','$article_name_ukr');");
+            $answer=1; $err="";
+        }
+        return array($answer,$err);
+    }
+
+    function loadArticleCatalogue($art_id) {
+        $form="";$form_htm=RD."/tpl/catalogue_article_cat.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        $list=$this->loadTemplateList($art_id,0);
+        $template_list=$this->getTemplateList(0,$art_id);
+        $form=str_replace("{art_id}",$art_id,$form);
+        $form=str_replace("{params_list}",$list,$form);
+        $form=str_replace("{catalogue_template_list}",$template_list,$form);
+        return $form;
+    }
+
+    function getTemplateList($sel_id=0,$art_id=0) { $db=DbSingleton::getTokoDb();
+        $list="";$sel_template="";
+        $r=$db->query("SELECT * FROM `T2_CATALOGUES_TEMPLATES`;"); $n=$db->num_rows($r);
+        for ($i=1;$i<=$n;$i++) {
+            $template_id = $db->result($r, $i - 1, "TEMPLATE_ID");
+            $template_name = $db->result($r, $i - 1, "TEMPLATE_NAME");
+            if ($template_id==$sel_id) $sel="selected"; else $sel="";
+            if ($art_id>0) {
+                $rs=$db->query("SELECT * FROM `T2_CATALOGUES_ARTS` WHERE `ART_ID`='$art_id' AND `TEMPLATE_ID`='$template_id' GROUP BY `TEMPLATE_ID`;"); $ns=$db->num_rows($rs);
+                if ($ns>0) $sel_template="(*)"; else $sel_template="";
+            }
+            $list.="<option value='$template_id' $sel>$template_name $sel_template</option>";
+        }
+        return $list;
+    }
+
+    function getParamsList($template_id,$sel_id=0) { $db=DbSingleton::getTokoDb();
+        $list="";
+        if ($template_id>0) {
+            $r=$db->query("SELECT * FROM `T2_CATALOGUES_PARAMS` WHERE `TEMPLATE_ID`='$template_id';"); $n=$db->num_rows($r);
+            for ($i=1;$i<=$n;$i++) {
+                $param_id = $db->result($r, $i - 1, "PARAM_ID");
+                $param_name = $db->result($r, $i - 1, "PARAM_NAME");
+                if ($param_id==$sel_id) $sel="selected"; else $sel="";
+                $list.="<option value='$param_id' $sel>$param_name</option>";
+            }
+        }
+        return $list;
+    }
+
+    function getValuesList($template_id,$param_id,$sel_id=0) { $db=DbSingleton::getTokoDb();
+        $list="";
+        if ($template_id>0 && $param_id>0) {
+            $r=$db->query("SELECT * FROM `T2_CATALOGUES_VALUES` WHERE `TEMPLATE_ID`='$template_id' AND `PARAM_ID`='$param_id';"); $n=$db->num_rows($r);
+            for ($i=1;$i<=$n;$i++) {
+                $value_id = $db->result($r, $i - 1, "VALUE_ID");
+                $param_value = $db->result($r, $i - 1, "PARAM_VALUE");
+                if ($value_id==$sel_id) $sel="selected"; else $sel="";
+                $list.="<option value='$value_id' $sel>$param_value</option>";
+            }
+        }
+        return $list;
+    }
+
+    function loadTemplateList($art_id,$template_id) { $db=DbSingleton::getTokoDb();
+        if ($template_id==0) $where=""; else $where=" AND ca.TEMPLATE_ID='$template_id'";
+
+        $r=$db->query("SELECT ca.ID, cp.PARAM_ID, ca.VALUE_ID, cp.PARAM_NAME 
+        FROM `T2_CATALOGUES_PARAMS` cp
+            LEFT OUTER JOIN `T2_CATALOGUES_ARTS` ca ON (ca.PARAM_ID=cp.PARAM_ID)
+        WHERE ca.ART_ID='$art_id' $where;"); $n=$db->num_rows($r); $list="";
+
+        for ($i=1;$i<=$n;$i++) {
+            $id = $db->result($r, $i - 1, "ID");
+            $param_id = $db->result($r, $i - 1, "PARAM_ID");
+            $value_id = $db->result($r, $i - 1, "VALUE_ID");
+            $param_name = $db->result($r, $i - 1, "PARAM_NAME");
+
+            if ($id>0) $param_value=$this->loadParamSelectList($param_id,$value_id,$id);
+            else $param_value="<select title='Пусто' class='form-control' disabled><option>-Не вибрано-</option></select>";
+
+            if ($id>0) $btns="<button class='btn btn-xs btn-primary' onclick='saveCatalogueTemplateParamsValue($id)' title='Зберегти значення параметра'><i class='fa fa-save'></i></button>";
+            else $btns="<button class='btn btn-xs btn-info' onclick='showCatalogueParamValueForm($param_id)' title='Додати нове значення параметра'><i class='fa fa-plus-square'></i></button>";
+
+            $btns1="<button class='btn btn-xs btn-warning' onclick='showCatalogueTemplateParamsForm($param_id)' title='Редагувати параметр'><i class='fa fa-pencil'></i></button>";
+            $btns2="
+                <button class='btn btn-xs btn-success' onclick='showCatalogueTemplateParamsValueForm($template_id,$param_id)' title='Додати значення параметра'><i class='fa fa-plus'></i></button>
+                $btns
+                <button class='btn btn-xs btn-danger' onclick='dropCatalogueTemplateParamsValue($id)' title='Видалити значення параметра'><i class='fa fa-trash'></i></button>";
+            $list.="<tr>
+                <td>$i</td>
+                <td>$btns1 $param_name</td>
+                <td>$param_value</td>
+                <td>$btns2</td>
+            </tr>";
+        }
+        return $list;
+    }
+
+    function loadParamSelectList($param_id,$sel_id,$id) { $db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT * FROM `T2_CATALOGUES_VALUES` WHERE `PARAM_ID`='$param_id';"); $n=$db->num_rows($r);
+        $list="<select title=\"Параметр\" class=\"form-control\" id=\"catalogue_params_id_$id\"><option value='0'></option>";
+        for ($i=1;$i<=$n;$i++) {
+            $value_id = $db->result($r, $i - 1, "VALUE_ID");
+            $param_value = $db->result($r, $i - 1, "PARAM_VALUE");
+            if ($value_id==$sel_id) $sel="selected"; else $sel="";
+            $list.="<option value='$value_id' $sel>$param_value</option>";
+        }
+        $list.="</select>";
+        return $list;
+    }
+
+    //TEMPLATE
+    function showCatalogueTemplateForm($template_id) { $db=DbSingleton::getTokoDb();
+        $form="";$form_htm=RD."/tpl/catalogue_article_cat_template.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        if ($template_id>0) {
+            $r=$db->query("SELECT * FROM `T2_CATALOGUES_TEMPLATES` WHERE `TEMPLATE_ID`='$template_id' LIMIT 1;");
+            $template_name=$db->result($r,0,"TEMPLATE_NAME");
+            $child_status=$db->result($r,0,"CHILD_STATUS");
+            $parent_id=$db->result($r,0,"PARENT_ID");
+            $status=$db->result($r,0,"STATUS");
+            $disable_delete="";
+        } else {
+            $template_name="";
+            $child_status=0;
+            $parent_id=0;
+            $status=0;
+            $disable_delete="style='display:none;'";
+        }
+        $form=str_replace("{template_id}",$template_id,$form);
+        $form=str_replace("{template_name}",$template_name,$form);
+        $form=str_replace("{child_status}",$child_status ? "checked" : "",$form);
+        $form=str_replace("{parent_template_list}",$this->getTemplateList($parent_id),$form);
+        $form=str_replace("{template_status}",$status ? "checked" : "",$form);
+        $form=str_replace("{disable_delete}",$disable_delete,$form);
+        return $form;
+    }
+
+    function saveCatalogueTemplateForm($template_id,$template_name,$child_status,$parent_id,$template_status) { $db=DbSingleton::getTokoDb();
+        if ($template_id>0) {
+            $db->query("UPDATE `T2_CATALOGUES_TEMPLATES` SET `TEMPLATE_NAME`='$template_name', `CHILD_STATUS`='$child_status', `PARENT_ID`='$parent_id', `STATUS`='$template_status' WHERE `TEMPLATE_ID`='$template_id';");
+            $answer=1; $err="Успішно збережено";
+        } else {
+            $r=$db->query("SELECT MAX(`TEMPLATE_ID`) as mid FROM `T2_CATALOGUES_TEMPLATES`;");
+            $template_id=$db->result($r,0,"mid")+1;
+            $db->query("INSERT INTO `T2_CATALOGUES_TEMPLATES` (`TEMPLATE_ID`, `TEMPLATE_NAME`, `CHILD_STATUS`, `PARENT_ID`, `STATUS`) 
+            VALUES ('$template_id', '$template_name', '$child_status', '$parent_id', '$template_status');");
+            $answer=1; $err="Успішно додано";
+        }
+        return array($answer,$err);
+    }
+
+    function dropCatalogueTemplate($template_id) { $db=DbSingleton::getTokoDb();
+        $answer=0; $err="Помилка видалення!";
+        if ($template_id>0) {
+            $db->query("DELETE FROM `T2_CATALOGUES_TEMPLATES` WHERE `TEMPLATE_ID`='$template_id';");
+            $answer=1; $err="";
+        }
+        return array($answer,$err);
+    }
+
+    function dropCatalogueTemplateArticle($template_id,$art_id) { $db=DbSingleton::getTokoDb();
+        $answer=0; $err="Помилка видалення!";
+        if ($template_id>0) {
+            $db->query("DELETE FROM `T2_CATALOGUES_ARTS` WHERE `TEMPLATE_ID`='$template_id' AND `ART_ID`='$art_id';");
+            $answer=1; $err="";
+        }
+        return array($answer,$err);
+    }
+
+    //PARAMS
+    function showCatalogueTemplateParamsForm($param_id,$template_id) { $db=DbSingleton::getTokoDb();
+        $form="";$form_htm=RD."/tpl/catalogue_article_cat_params.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        if ($param_id>0) {
+            $r=$db->query("SELECT * FROM `T2_CATALOGUES_PARAMS` WHERE `PARAM_ID`='$param_id' LIMIT 1;");
+            $template_id=$db->result($r,0,"TEMPLATE_ID");
+            $param_name=$db->result($r,0,"PARAM_NAME");
+            $template_list=$this->getTemplateList($template_id);
+            $disable_delete="";
+        } else {
+            $template_list=$this->getTemplateList($template_id);
+            $param_name="";
+            $disable_delete="style='display:none;'";
+        }
+        $form=str_replace("{param_id}",$param_id,$form);
+        $form=str_replace("{template_list}",$template_list,$form);
+        $form=str_replace("{param_name}",$param_name,$form);
+        $form=str_replace("{disable_delete}",$disable_delete,$form);
+        return $form;
+    }
+
+    function saveCatalogueTemplateParamsForm($param_id,$template_id,$param_name) { $db=DbSingleton::getTokoDb();
+        $answer=0; $err="Помилка збереження!";
+        if ($param_id>0) {
+            $r=$db->query("SELECT * FROM `T2_CATALOGUES_PARAMS` WHERE `PARAM_ID`='$param_id' LIMIT 1;"); $n=$db->num_rows($r);
+            if ($n>0) {
+                $db->query("UPDATE `T2_CATALOGUES_PARAMS` SET `TEMPLATE_ID`='$template_id', `PARAM_NAME`='$param_name' WHERE `PARAM_ID`='$param_id';");
+            } else {
+                $db->query("INSERT INTO `T2_CATALOGUES_PARAMS` (`PARAM_ID`, `TEMPLATE_ID`, `PARAM_NAME`) VALUES ('$param_id','$template_id','$param_name');");
+            }
+            $answer=1; $err="";
+        }
+        if ($param_id==0) {
+            $r=$db->query("SELECT MAX(`PARAM_ID`) as mid FROM `T2_CATALOGUES_PARAMS`;");
+            $param_id=$db->result($r,0,"mid")+1;
+            $db->query("INSERT INTO `T2_CATALOGUES_PARAMS` (`PARAM_ID`, `TEMPLATE_ID`, `PARAM_NAME`) VALUES ('$param_id','$template_id','$param_name');");
+            $answer=1; $err="";
+        }
+        return array($answer,$err);
+    }
+
+    function dropCatalogueTemplateParams($param_id) { $db=DbSingleton::getTokoDb();
+        $answer=0; $err="Помилка збереження!";
+        if ($param_id>0) {
+            $db->query("DELETE FROM `T2_CATALOGUES_PARAMS` WHERE `PARAM_ID`='$param_id';");
+            $answer=1; $err="";
+        }
+        return array($answer,$err);
+    }
+
+    //VALUE
+    function showCatalogueTemplateParamsValueForm($template_id) { $db=DbSingleton::getTokoDb();
+        $form="";$form_htm=RD."/tpl/catalogue_article_cat_value.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        $r=$db->query("SELECT MAX(`VALUE_ID`) as mid FROM `T2_CATALOGUES_VALUES`;");
+        $value_id=$db->result($r,0,"mid")+1;
+        $template_list=$this->getTemplateList($template_id);
+        $params_list=$this->getParamsList($template_id);
+        $form=str_replace("{value_id}",$value_id,$form);
+        $form=str_replace("{template_list}",$template_list,$form);
+        $form=str_replace("{params_list}",$params_list,$form);
+        $form=str_replace("{param_value}","",$form);
+        return $form;
+    }
+
+    function saveCatalogueTemplateParamsValue($id,$value_id) { $db=DbSingleton::getTokoDb();
+        $answer=0; $err="Помилка збереження!";
+        if ($id>0 && $value_id>0) {
+            $db->query("UPDATE `T2_CATALOGUES_ARTS` SET `VALUE_ID`='$value_id' WHERE `ID`='$id';");
+            $answer=1; $err="";
+        }
+        return array($answer,$err);
+    }
+
+    function saveCatalogueTemplateParamsValueForm($template_id,$param_id,$param_value) { $db=DbSingleton::getTokoDb();
+        $answer=0; $err="Помилка збереження!";
+        if ($template_id>0 && $param_id>0) {
+            $db->query("INSERT INTO `T2_CATALOGUES_VALUES` (`TEMPLATE_ID`, `PARAM_ID`, `PARAM_VALUE`) VALUES ('$template_id','$param_id','$param_value');");
+            $answer=1; $err="";
+        }
+        return array($answer,$err);
+    }
+
+    function dropCatalogueTemplateParamsValue($id) { $db=DbSingleton::getTokoDb();
+        $answer=0; $err="Помилка збереження!";
+        if ($id>0) {
+            $db->query("DELETE FROM `T2_CATALOGUES_ARTS` WHERE `ID`='$id';");
+            $answer=1; $err="";
+        }
+        return array($answer,$err);
+    }
+
+    function showCatalogueParamValueForm($template_id,$param_id=0) { $db=DbSingleton::getTokoDb();
+        $form="";$form_htm=RD."/tpl/catalogue_article_cat_params_value.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        $r=$db->query("SELECT MAX(`ID`) as mid FROM `T2_CATALOGUES_ARTS`;");
+        $id=$db->result($r,0,"mid")+1;
+        $template_list=$this->getTemplateList($template_id);
+        $params_list=$this->getParamsList($template_id,$param_id);
+        $value_list=$this->getValuesList($template_id,$param_id);
+        $form=str_replace("{new_id}",$id,$form);
+        $form=str_replace("{value_id}",0,$form);
+        $form=str_replace("{template_list}",$template_list,$form);
+        $form=str_replace("{params_list}",$params_list,$form);
+        $form=str_replace("{value_list}",$value_list,$form);
+        return $form;
+    }
+
+    function saveCatalogueParamValueForm($art_id,$template_id,$param_id,$value_id) { $db=DbSingleton::getTokoDb();
+        $answer=0; $err="Помилка збереження!";
+        if ($template_id>0 && $param_id>0) {
+            $db->query("INSERT INTO `T2_CATALOGUES_ARTS` (`ART_ID`, `TEMPLATE_ID`, `PARAM_ID`, `VALUE_ID`) VALUES ('$art_id','$template_id','$param_id','$value_id');");
+            $answer=1; $err="";
+        }
+        return array($answer,$err);
+    }
+
+    // NON PRICED PAGE
+    function showNonPricedGoods() { $db=DbSingleton::getTokoDb();
+        $list=""; $i=0;
+        $r=$db->query("SELECT t2p.art_id FROM `T2_ARTICLES_PRICE_RATING` t2p
+		    LEFT OUTER JOIN `T2_ARTICLES_STOCK` t2s ON (t2s.ART_ID = t2p.ART_ID)
+		WHERE t2s.amount>0 and t2p.price_1=0 GROUP BY t2p.art_id;"); $n=$db->num_rows($r);
+        if ($n>0) {
+            for ($i=1;$i<=$n;$i++){
+                $art_id=$db->result($r,$i-1,"art_id");
+                list($article_nr_displ,,$brand_name,)=$this->getArticleNrDisplBrand($art_id);
+                $list.="<tr>
+					<td>$i</td>
+					<td>$art_id</td>
+					<td>$article_nr_displ</td>
+					<td>$brand_name</td>
+				</tr>";
+            }
+        }
+        $maxi=$i;
+        $r=$db->query("SELECT `art_id` FROM `T2_SUPPL_IMPORT` WHERE `price_suppl`=0 AND `stock_suppl`>0 AND `art_id`!=0 GROUP BY `art_id`;"); $n=$db->num_rows($r);
+        if ($n>0) {
+            for ($i=1;$i<=$n;$i++){$maxi++;
+                $art_id=$db->result($r,$i-1,"art_id");
+                list($article_nr_displ,,$brand_name,)=$this->getArticleNrDisplBrand($art_id);
+                $list.="<tr>
+					<td>$maxi</td>
+					<td>$art_id</td>
+					<td>$article_nr_displ</td>
+					<td>$brand_name</td>
+				</tr>";
+            }
+        }
+        return $list;
+    }
+
+    // REPORT SALES PAGE
+    function showReportSales($date,$tpoint) { $db=DbSingleton::getTokoDb();
+        if ($tpoint=="0") $where_tpoint=""; else $where_tpoint="AND `TPOINT_ID`=$tpoint";
+        if ($date=="0") $where_date=""; else $where_date="AND `MONTH`='$date"."-00'";
+        $r=$db->query("SELECT * FROM `T2_ARTICLES_SALES` WHERE `art_id`>0 $where_tpoint $where_date;"); $n=$db->num_rows($r); $list="";
+        if ($n>0) {
+            for ($i=1;$i<=$n;$i++){
+                $art_id=$db->result($r,$i-1,"ART_ID");
+                list($article,$brand_id)=$this->getArticle($art_id); $brand=$this->getBrandName($brand_id);
+                $tpoint_id=$db->result($r,$i-1,"TPOINT_ID"); $tpoint_name=$this->getTpointNameById($tpoint_id);
+                $amount=$db->result($r,$i-1,"AMOUNT");
+                $list.="<tr>
+					<td>$i</td>
+					<td>$article</td>
+					<td>$brand</td>
+					<td>$art_id</td>
+					<td>$tpoint_name</td>
+					<td>$amount</td>
+				</tr>";
+            }
+        }
+        return $list;
+    }
+
+    function getTpointNameById($sel_id,$field="name") { $db=DbSingleton::getDb();
+        $r=$db->query("SELECT `$field` FROM `T_POINT` WHERE `id`='$sel_id' LIMIT 1;");$n=$db->num_rows($r); $name="";
+        if ($n==1){$name=$db->result($r,0,"$field");}
+        return $name;
+    }
+
+    function getArticle($art_id) { $db=DbSingleton::getTokoDb();
+        $r=$db->query("SELECT `ARTICLE_NR_DISPL`, `BRAND_ID` FROM `T2_ARTICLES` WHERE `ART_ID`='$art_id' LIMIT 1;");
+        $article=$db->result($r,0,"ARTICLE_NR_DISPL");
+        $brand_id=$db->result($r,0,"BRAND_ID");
+        return array($article,$brand_id);
+    }
+
+    function getTpointList() { $db=DbSingleton::getDb();
+        $list="<option value='0'>Всі торгові точки</option>";
+        $r=$db->query("SELECT * FROM `T_POINT` WHERE `status`=1 ORDER BY `id` ASC;"); $n=$db->num_rows($r);
+        for ($i=1;$i<=$n;$i++){
+            $id=$db->result($r,$i-1,"id");
+            $name=$db->result($r,$i-1,"name");
+            $caption=$db->result($r,$i-1,"full_name");
+            $list.="<option value='$id'>$caption ($name)</option>";
+        }
+        return $list;
     }
 	
 }

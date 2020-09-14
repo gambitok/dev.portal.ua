@@ -1,7 +1,9 @@
 <div class="tabs-container">
+
     <ul class="nav nav-tabs" id="trusted_tabs">
         <li class="active"><a data-toggle="tab" href="#us_tab1"><i class="fa fa-bars"></i> <span class="hidden-sm-down not-visible">Загальна інформація</span></a></li>
     </ul>
+
     <div class="tab-content">
         <div id="us_tab1" class="tab-pane active">
             <div class="panel-body">
@@ -11,11 +13,11 @@
                         <form method="get" class="form-horizontal">
                             <div class="form-group">
                             	<label class="col-sm-2 control-label">Код</label>
-                                <div class="col-sm-1"><input class="form-control" type="text" readonly name="trusted_id" id="trusted_id" value="{trusted_id}" placeholder=""></div>
+                                <div class="col-sm-1"><input class="form-control" type="text" readonly name="trusted_id" id="trusted_id" value="{trusted_id}" placeholder="Код"></div>
                                 <label class="col-sm-2 control-label">IP</label>
-                                <div class="col-sm-3"><input class="form-control" type="text" name="trusted_ip" id="trusted_ip" value="{trusted_ip}" placeholder=""></div>
+                                <div class="col-sm-3"><input class="form-control" type="text" name="trusted_ip" id="trusted_ip" value="{trusted_ip}" placeholder="IP"></div>
                                 <label class="col-sm-2 control-label">Опис</label>
-                                <div class="col-sm-2"><input class="form-control" type="text" name="trusted_descr" id="trusted_descr" value="{trusted_descr}" placeholder=""></div>
+                                <div class="col-sm-2"><input class="form-control" type="text" name="trusted_descr" id="trusted_descr" value="{trusted_descr}" placeholder="Опис"></div>
                             </div>
 							
                             <div class="hr-line-dashed"></div>
@@ -24,7 +26,7 @@
                                 <div class="col-sm-10 text-right col-sm-offset-2">
                                     <button class="btn btn-primary" type="button" onClick="saveTrustedIPGeneralInfo();">Зберегти зміни</button>
                                     <button class="btn btn-danger" type="button" onClick="dropTrustedIP('{trusted_id}');">Видалити</button>
-                                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                                    <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
                                 </div>
                             </div>
                         </form>

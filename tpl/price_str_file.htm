@@ -1,18 +1,22 @@
 <div class="form-group">
 	<label class="col-md-1 control-label">Валюта</label>
-    <div class="col-md-1"><select class="form-control input-xs" size="1" id="import_cash"><option value="0">Мультивалюта</option>{cash_list}</select></div>
+    <div class="col-md-2"><select title="Валюта" class="form-control input-sm" size="1" id="import_cash"><option value="0">Мультивалюта</option>{cash_list}</select></div>
     <label class="col-md-1 control-label">Курс USD</label>
-    <div class="col-md-1"><input class="form-control input-xs numberOnly" type="text" id="import_kours_usd" value="1" placeholder=""></div>
+    <div class="col-md-1"><input class="form-control input-sm numberOnly" type="text" id="import_kours_usd" value="1" placeholder=""></div>
     <label class="col-md-1 control-label">Курс EUR</label>
-    <div class="col-md-1"><input class="form-control input-xs numberOnly" type="text" id="import_kours_eur" value="1" placeholder=""></div>
+    <div class="col-md-1"><input class="form-control input-sm numberOnly" type="text" id="import_kours_eur" value="1" placeholder=""></div>
     
-    <label class="col-md-1 control-label">Початковий ряд</label>
-    <div class="col-md-1"><input class="form-control input-xs numberOnly" type="text" id="start_row" value="0" placeholder=""></div>
+    <label class="col-md-2 control-label">Початковий ряд</label>
+    <div class="col-md-1"><input class="form-control input-sm numberOnly" type="number" id="start_row" value="1" placeholder="0"></div>
     <div class="col-md-2"><button class="btn btn-primary btn-sm" onClick="finishSupplPriceImport('{suppl_id}');">Завершити імпорт даних</button></div>
+    <!--<div class="col-md-2 text-right"><button class="btn btn-info btn-sm" onclick="saveCsvSupplPriceImport('{suppl_id}');"><i class="fa fa-save"></i> Зберегти імпорт даних</button></div>-->
 </div>
+
 <input type="hidden" id="kol_cols" value="{kol_cols}">
 
 <div id="waveSpinner_place"></div>
+
+<br><br>
 
 <table id="csv_table" class="table table-bordered table-hovered" style="width:100%">
     <thead>

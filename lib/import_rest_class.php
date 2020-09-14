@@ -11,8 +11,9 @@ class import_rest {
         return $form;
     }
 
-    function showCsvPreview(){$db=DbSingleton::getDb();$csv_exist=0;$csv_file_name="Оберіть файл";$pre_table="<h3 align='center'>Записи не завантажено</h3>"; session_start();$user_id=$_SESSION["media_user_id"];$fn=0;$kol_cols=0;
-        $r=$db->query("select * from J_IMPORT_REST_CSV where user_id='$user_id' order by id desc limit 0,1;");$n=$db->num_rows($r);
+    function showCsvPreview(){$db=DbSingleton::getDb();
+        $csv_exist=0;$csv_file_name="Оберіть файл";$pre_table="<h3 align='center'>Записи не завантажено</h3>"; session_start();$user_id=$_SESSION["media_user_id"];$fn=0;$kol_cols=0;
+        $r=$db->query("SELECT * FROM `J_IMPORT_REST_CSV` WHERE `user_id`='$user_id' ORDER BY `id` desc LIMIT 1;");$n=$db->num_rows($r);
         if ($n==1){
             $file_name=$db->result($r,0,"file_name");
             $file_path=RD."/cdn/import_rest_files/$user_id/$file_name";
@@ -20,7 +21,7 @@ class import_rest {
                 $form="";$form_htm=RD."/tpl/csv_rest_str_file.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
                 $cols_list=""; $records_list="";
                 $handle = @fopen($file_path, "r");
-                if ($handle) { //$db->query("delete from catalogue_price where provider='$provider';");
+                if ($handle) { //$db->query("delete FROM catalogue_price WHERE provider='$provider';");
                     set_time_limit(0);$max_cols=0;
                     while (($buffer = fgets($handle, 4096)) !== false) {$fn+=1;
                         $buf=explode(";",$buffer);
@@ -48,8 +49,9 @@ class import_rest {
         return array($csv_exist,$csv_file_name,$pre_table);
     }
 
-    function finishRestCsvImport(){$db=DbSingleton::getDb();$slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка збереження даних!";$fn=0;
-        $r=$db->query("select * from J_IMPORT_REST_CSV where user_id='$user_id' order by id desc limit 0,1;");$n=$db->num_rows($r);
+    function finishRestCsvImport(){$db=DbSingleton::getDb();
+        $slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка збереження даних!";$fn=0;
+        $r=$db->query("SELECT * FROM `J_IMPORT_REST_CSV` WHERE `user_id`='$user_id' ORDER BY `id` desc LIMIT 1;");$n=$db->num_rows($r);
         $price_buh_cashin=$price_man_cashin=$price_man_uah=$price_buh_uah=$price_man_usd=0;$costum_id=$brand_id=0;
         if ($n==1){
             $file_name=$db->result($r,0,"file_name");
@@ -60,7 +62,7 @@ class import_rest {
                 $income_id=0;$prev_income_name="";$cash_id=1;$firm_id=0;$cours_to_uah=0;$storage_id=0;$prev_brand="";$prev_tam_code="";$invoice_summ=0;
                 list($usd_to_uah,$eur_to_uah)=$this->loadIncomeKours(date("Y-m-d"));
                 $handle = @fopen($file_path, "r");
-                if ($handle) { //$db->query("delete from catalogue_price where provider='$provider';");
+                if ($handle) { //$db->query("delete FROM catalogue_price WHERE provider='$provider';");
                     set_time_limit(0);
                     while (($buffer = fgets($handle, 4096)) !== false) {$fn+=1;
                         if ($buffer!=""){
@@ -71,7 +73,7 @@ class import_rest {
                                 if ($income_name!=$prev_income_name){
                                     if ($prev_income_name!=""){
                                         list($prefix,$doc_nom)=$income->getIncomeClientPrefixDocument($firm_id);
-                                        $db->query("update J_INCOME set invoice_summ='$invoice_summ', summ_end='$invoice_summ', oper_status='31', `prefix`='$prefix', `doc_nom`='$doc_nom' where id='$income_id';");
+                                        $db->query("UPDATE `J_INCOME` SET `invoice_summ`='$invoice_summ', `summ_end`='$invoice_summ', `oper_status`='31', `prefix`='$prefix', `doc_nom`='$doc_nom' WHERE `id`='$income_id';");
                                         $this->recalculatePrice($income_id,$invoice_summ,$cours_to_uah,$cash_id,$usd_to_uah,$eur_to_uah,$storage_id);
                                         $invoice_summ=0;
                                     }
@@ -113,19 +115,19 @@ class import_rest {
                                         $price_man_uah=$price_su; $price_buh_uah=$price_man_uah;
                                     }
                                     $invoice_summ+=$price_su*$amount;
-                                    $db->query("insert into J_INCOME_STR (`income_id`,`art_id`,`article_nr_displ`,`brand_id`,`costums_id`,`amount`,`price_buh_cashin`,`price_man_cashin`,`price_man_uah`,`price_buh_uah`,`price_man_usd`,`import_cell_id`) values ('$income_id','$art_id','$index','$brand_id','$costum_id','$amount','$price_buh_cashin','$price_man_cashin','$price_man_uah','$price_buh_uah','$price_man_usd','$cell_id');");
+                                    $db->query("INSERT INTO `J_INCOME_STR` (`income_id`,`art_id`,`article_nr_displ`,`brand_id`,`costums_id`,`amount`,`price_buh_cashin`,`price_man_cashin`,`price_man_uah`,`price_buh_uah`,`price_man_usd`,`import_cell_id`) 
+                                    VALUES ('$income_id','$art_id','$index','$brand_id','$costum_id','$amount','$price_buh_cashin','$price_man_cashin','$price_man_uah','$price_buh_uah','$price_man_usd','$cell_id');");
                                     $slave->addJuornalArtDocs(1,$income_id,$art_id,$amount);
                                 }
                             }
-                            //if ($fn==30){break;}
                         }
                     }
                     list($prefix,$doc_nom)=$income->getIncomeClientPrefixDocument($firm_id);
-                    $db->query("update J_INCOME set invoice_summ='$invoice_summ', summ_end='$invoice_summ', oper_status='31', `prefix`='$prefix', `doc_nom`='$doc_nom' where id='$income_id';");
+                    $db->query("UPDATE `J_INCOME` SET `invoice_summ`='$invoice_summ', `summ_end`='$invoice_summ', `oper_status`='31', `prefix`='$prefix', `doc_nom`='$doc_nom' WHERE `id`='$income_id';");
                     $this->recalculatePrice($income_id,$invoice_summ,$cours_to_uah,$cash_id,$usd_to_uah,$eur_to_uah,$storage_id);
                     fclose($handle);
                     if (file_exists(RD."/cdn/import_rest_files/$user_id/$file_name")){unlink(RD."/cdn/import_rest_files/$user_id/$file_name");}
-                    $db->query("update J_IMPORT_REST_CSV set status=0 where `user_id`='$user_id';");
+                    $db->query("UPDATE `J_IMPORT_REST_CSV` SET `status`=0 WHERE `user_id`='$user_id';");
                     $answer=1;$err="";
                 }
             }
@@ -133,9 +135,11 @@ class import_rest {
         return array($answer,$err);
     }
 
-    function getKourForDate($cash_id_to,$cash_id_from,$data){$db=DbSingleton::getDb(); $kours=1; if ($data=="0000-00-00"){$data=date("Y-m-d");}
+    function getKourForDate($cash_id_to,$cash_id_from,$data){$db=DbSingleton::getDb();
+        $kours=1; if ($data=="0000-00-00"){$data=date("Y-m-d");}
         if ($cash_id_from!=$cash_id_to){
-            $r=$db->query("select `kours_value` from `J_KOURS` where `cash_id`='$cash_id_from' and `data_from`<='$data' and (`data_to`='0000-00-00' or `data_to`>='$data') and in_use in (0,1) order by id desc limit 0,1;");$n=$db->num_rows($r);if ($n==1){$kours=$db->result($r,0,"kours_value");}
+            $r=$db->query("SELECT `kours_value` FROM `J_KOURS` WHERE `cash_id`='$cash_id_from' and `data_from`<='$data' and (`data_to`='0000-00-00' or `data_to`>='$data') and `in_use` in (0,1) ORDER BY `id` desc LIMIT 1;");
+            $n=$db->num_rows($r);if ($n==1){$kours=$db->result($r,0,"kours_value");}
         }
         return $kours;
     }
@@ -147,58 +151,56 @@ class import_rest {
     }
 
     function get_df_doc_nom_new(){ $db=DbSingleton::getDb();
-        $r=$db->query("select max(doc_nom) as mid from J_INCOME where oper_status='30' and status='1' limit 0,1;");$doc_nom=0+$db->result($r,0,"mid")+1;
+        $r=$db->query("SELECT MAX(`doc_nom`) as mid FROM `J_INCOME` WHERE `oper_status`='30' and `status`='1' LIMIT 1;");$doc_nom=0+$db->result($r,0,"mid")+1;
         return $doc_nom;
     }
 
     function getNewIncomeId($income_name,$suppl_id,$firm_id,$cash_id,$cours_to_uah,$storage_id,$cell_id){$db=DbSingleton::getDb();session_start();$user_id=$_SESSION["media_user_id"];
-        $r=$db->query("select max(id) as mid from J_INCOME;");$income_id=0+$db->result($r,0,"mid")+1;
+        $r=$db->query("SELECT MAX(`id`) as mid FROM `J_INCOME`;");$income_id=0+$db->result($r,0,"mid")+1;
         $doc_nom=$this->get_df_doc_nom_new();
-        $db->query("insert into J_INCOME (`id`,`type_id`,`prefix`,`doc_nom`,`import_1c`,`user_id`,`data`,`invoice_income`,`invoice_data`,`client_id`,`client_seller`,`cash_id`,`cours_to_uah`,`storage_id`,`storage_cells_id`) values ('$income_id','0','ДФ','$doc_nom','1','$user_id',CURDATE(),'$income_name',CURDATE(),'$firm_id','$suppl_id','$cash_id','$cours_to_uah','$storage_id','$cell_id');");
+        $db->query("INSERT INTO `J_INCOME` (`id`,`type_id`,`prefix`,`doc_nom`,`import_1c`,`user_id`,`data`,`invoice_income`,`invoice_data`,`client_id`,`client_seller`,`cash_id`,`cours_to_uah`,`storage_id`,`storage_cells_id`) 
+        VALUES ('$income_id','0','ДФ','$doc_nom','1','$user_id',CURDATE(),'$income_name',CURDATE(),'$firm_id','$suppl_id','$cash_id','$cours_to_uah','$storage_id','$cell_id');");
         return $income_id;
     }
 
-    function getArtId($code,$brand_id){$db=DbSingleton::getTokoDb();$slave=new slave;$cat=new catalogue;$id=0; $code=$slave->qq($code); $code=$cat->clearArticle($code);
-        $r=$db->query("select ART_ID from T2_ARTICLES where ARTICLE_NR_SEARCH='$code' and BRAND_ID='$brand_id' limit 0,1;");$n=$db->num_rows($r);
+    function getArtId($code,$brand_id){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$cat=new catalogue;$id=0; $code=$slave->qq($code); $code=$cat->clearArticle($code);
+        $r=$db->query("SELECT `ART_ID` FROM `T2_ARTICLES` WHERE `ARTICLE_NR_SEARCH`='$code' and `BRAND_ID`='$brand_id' LIMIT 1;");$n=$db->num_rows($r);
         if ($n==1){	$id=$db->result($r,0,"ART_ID");	}
         return $id;
     }
 
-    function getCostumsId($code){$db=DbSingleton::getTokoDb();$slave=new slave;$id=0; $code=$slave->qq($code);
-        $r=$db->query("select COSTUMS_ID from T2_COSTUMS where COSTUMS_CODE='$code' limit 0,1;");$n=$db->num_rows($r);
+    function getCostumsId($code){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$id=0; $code=$slave->qq($code);
+        $r=$db->query("SELECT `COSTUMS_ID` FROM `T2_COSTUMS` WHERE `COSTUMS_CODE`='$code' LIMIT 1;");$n=$db->num_rows($r);
         if ($n==1){	$id=$db->result($r,0,"COSTUMS_ID");	}
         return $id;
     }
 
-    function getCountryId($code){$db=DbSingleton::getTokoDb();$slave=new slave;$id=0; $code=$slave->qq($code);
-        $r=$db->query("select COUNTRY_ID from T2_COUNTRIES where COUNTRY_NAME='$code' or (`ALFA2`='$code' and `ALFA2`!='') or (`ALFA3`='$code' and `ALFA3`!='') limit 0,1;");$n=$db->num_rows($r);
-        if ($n==1){	$id=$db->result($r,0,"COUNTRY_ID");	}
-        return $id;
-    }
-
-    function getBrandId($code){$db=DbSingleton::getTokoDb();$slave=new slave;$id=0; $code=$slave->qq($code);
-        $r=$db->query("select BRAND_ID from T2_BRANDS where BRAND_NAME='$code' limit 0,1;");$n=$db->num_rows($r);
+    function getBrandId($code){$db=DbSingleton::getTokoDb();
+        $slave=new slave;$id=0;$code=$slave->qq($code);
+        $r=$db->query("SELECT `BRAND_ID` FROM `T2_BRANDS` WHERE `BRAND_NAME`='$code' LIMIT 1;");$n=$db->num_rows($r);
         if ($n==1){	$id=$db->result($r,0,"BRAND_ID");	}
         return $id;
     }
 
     function checkArtCostumCode($art_id,$costum_id)	{$db=DbSingleton::getTokoDb();
-        $r=$db->query("select COSTUMS_ID from T2_ZED where ART_ID='$art_id' limit 0,1;");$n=$db->num_rows($r);
+        $r=$db->query("SELECT `COSTUMS_ID` FROM `T2_ZED` WHERE `ART_ID`='$art_id' LIMIT 1;");$n=$db->num_rows($r);
         if ($n==0){
-            $db->query("insert into T2_ZED (ART_ID,COSTUMS_ID) values ('$art_id','$costum_id');");
+            $db->query("INSERT INTO `T2_ZED` (`ART_ID`,`COSTUMS_ID`) VALUES ('$art_id','$costum_id');");
         }
         if ($n==1){
             $ex_costums_id=$db->result($r,0,"COSTUMS_ID");
             if ($ex_costums_id!=$costum_id){
-                $db->query("update T2_ZED set COSTUMS_ID='$costum_id' where ART_ID='$art_id';");
+                $db->query("UPDATE `T2_ZED` SET `COSTUMS_ID`='$costum_id' WHERE `ART_ID`='$art_id';");
             }
         }
         return ;
     }
 
-    function recalculatePrice($income_id,$invoice_summ,$cours_to_uah,$cash_id,$usd_to_uah,$eur_to_uah,$storage_id){$db=DbSingleton::getDb(); $dbt=DbSingleton::getTokoDb();$cat=new catalogue;
-        $tl=0;	$rb=0;	$ro=0;
-        $r=$db->query("select * from J_INCOME_STR where income_id='$income_id';");$n=$db->num_rows($r);
+    function recalculatePrice($income_id,$invoice_summ,$cours_to_uah,$cash_id,$usd_to_uah,$eur_to_uah,$storage_id){$db=DbSingleton::getDb(); $dbt=DbSingleton::getTokoDb();
+        $cat=new catalogue; $tl=0; $rb=0; $ro=0;
+        $r=$db->query("SELECT * FROM `J_INCOME_STR` WHERE `income_id`='$income_id';");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $art_id=$db->result($r,$i-1,"art_id");
@@ -216,9 +218,7 @@ class import_rest {
                 $rb_uah=round($rb*$p_money/100,4);
                 $ro_uah=round($ro*$p_money/100,4);
 
-                $nds_uah=0;
-                //if (vat_use==1){ nds_uah=round(parseFloat(price_income*amount*cours_to_uah*0.2),4);nds_uah=nds_uah.toFixed(4); }
-                $kurs=1; $kurs_usd=$usd_to_uah;
+                $nds_uah=0; $kurs=1; $kurs_usd=$usd_to_uah;
                 if ($cash_id==1){$kurs=1;}if ($cash_id==2){$kurs=$usd_to_uah;}if ($cash_id==3){$kurs=$eur_to_uah;}
 
                 $suvsdo=$price_income*$amount+(($tl_uah+$rb_uah+$ro_uah+$nds_uah)/$kurs);
@@ -237,33 +237,35 @@ class import_rest {
                 $su_uah=($price_income*$amount*$cours_to_uah)+($tl_uah+$rb_uah+$ro_uah+$nds_uah);
                 $su_uah=round($su_uah/$amount,4);
                 $price_man_uah=$su_uah;
-                $db->query("update J_INCOME_STR set price_man_cashin='$price_man_cashin', price_man_usd='$price_man_usd', price_buh_uah='$price_buh_uah', price_man_uah='$price_man_uah' where id='$id';");
+                $db->query("UPDATE `J_INCOME_STR` SET price_man_cashin='$price_man_cashin', price_man_usd='$price_man_usd', price_buh_uah='$price_buh_uah', price_man_uah='$price_man_uah' WHERE `id`='$id';");
 
                 list($oper_price,$general_stock)=$cat->getArticleOperPriceGeneralStock($art_id);
                 $new_oper_price=round((($oper_price*$general_stock)+($amount*$price_man_usd))/($amount+$general_stock),2);
                 $new_general_stock=$amount+$general_stock;
                 $cat->setArticleOperPriceGeneralStock($art_id,$new_oper_price,$new_general_stock);
 
-                $dbt->query("insert into T2_ARTICLES_STOCK (`art_id`,`income_id`,`amount`,`price`,`oper_price`) value ('$art_id','$income_id','$amount','$price_man_usd','$new_oper_price')");
+                $dbt->query("INSERT INTO `T2_ARTICLES_STOCK` (`art_id`,`income_id`,`amount`,`price`,`oper_price`) 
+                VALUES ('$art_id','$income_id','$amount','$price_man_usd','$new_oper_price')");
 
-                $db->query("insert into T2_ARTICLES_PARTITIONS (`art_id`,`op_type`,`parrent_type_id`,`parrent_doc_id`,`amount`,`rest`,`price`,`oper_price`,`price_buh_uah`,`price_man_uah`) value ('$art_id','1','1','$income_id','$amount','$amount','$price_man_usd','$new_oper_price','$price_buh_uah','$price_man_uah')");
+                $db->query("INSERT INTO `T2_ARTICLES_PARTITIONS` (`art_id`,`op_type`,`parrent_type_id`,`parrent_doc_id`,`amount`,`rest`,`price`,`oper_price`,`price_buh_uah`,`price_man_uah`) 
+                VALUES ('$art_id','1','1','$income_id','$amount','$amount','$price_man_usd','$new_oper_price','$price_buh_uah','$price_man_uah')");
 
-                $r2=$dbt->query("select `AMOUNT` from T2_ARTICLES_STRORAGE_CELLS where `ART_ID`='$art_id' and `STORAGE_ID`='$storage_id' and `STORAGE_CELLS_ID`='$storage_cells_id' limit 0,1;");$n2=$dbt->num_rows($r2);
+                $r2=$dbt->query("SELECT `AMOUNT` FROM `T2_ARTICLES_STRORAGE_CELLS` WHERE `ART_ID`='$art_id' and `STORAGE_ID`='$storage_id' and `STORAGE_CELLS_ID`='$storage_cells_id' LIMIT 1;");$n2=$dbt->num_rows($r2);
                 if ($n2==1){
                     $amount_ex=$dbt->result($r2,0,"AMOUNT");
                     $amount_ex+=$amount;
-                    $dbt->query("update T2_ARTICLES_STRORAGE_CELLS set `AMOUNT`='$amount_ex' where `ART_ID`='$art_id' and `STORAGE_ID`='$storage_id' and `STORAGE_CELLS_ID`='$storage_cells_id' limit 1;");
+                    $dbt->query("UPDATE `T2_ARTICLES_STRORAGE_CELLS` SET `AMOUNT`='$amount_ex' WHERE `ART_ID`='$art_id' and `STORAGE_ID`='$storage_id' and `STORAGE_CELLS_ID`='$storage_cells_id' LIMIT 1;");
                 }
                 if ($n2==0){
-                    $dbt->query("insert into T2_ARTICLES_STRORAGE_CELLS (`ART_ID`,`AMOUNT`,`STORAGE_ID`,`STORAGE_CELLS_ID`) values ('$art_id','$amount','$storage_id','$storage_cells_id');");
+                    $dbt->query("INSERT INTO `T2_ARTICLES_STRORAGE_CELLS` (`ART_ID`,`AMOUNT`,`STORAGE_ID`,`STORAGE_CELLS_ID`) VALUES ('$art_id','$amount','$storage_id','$storage_cells_id');");
                 }
 
-                $rs=$dbt->query("select SUM(`AMOUNT`) as `amount` from T2_ARTICLES_STRORAGE where `ART_ID`='$art_id' and `STORAGE_ID`='$storage_id';");$amount_ex=$db->result($rs,0,"amount")+0;$ers=0;
+                $rs=$dbt->query("SELECT SUM(`AMOUNT`) as `amount` FROM `T2_ARTICLES_STRORAGE` WHERE `ART_ID`='$art_id' and `STORAGE_ID`='$storage_id';");$amount_ex=$db->result($rs,0,"amount")+0;$ers=0;
                 if ($amount_ex!=0){$amount_ex+=$amount;$ers=1;
-                    $dbt->query("update T2_ARTICLES_STRORAGE set `AMOUNT`='$amount_ex' where `ART_ID`='$art_id' and `STORAGE_ID`='$storage_id';");
+                    $dbt->query("UPDATE `T2_ARTICLES_STRORAGE` SET `AMOUNT`='$amount_ex' WHERE `ART_ID`='$art_id' and `STORAGE_ID`='$storage_id';");
                 }
                 if ($amount_ex==0 && $ers==0){
-                    $dbt->query("insert into T2_ARTICLES_STRORAGE (`ART_ID`,`AMOUNT`,`RESERV_AMOUNT`,`STORAGE_ID`) values ('$art_id','$amount','0','$storage_id');");
+                    $dbt->query("INSERT INTO `T2_ARTICLES_STRORAGE` (`ART_ID`,`AMOUNT`,`RESERV_AMOUNT`,`STORAGE_ID`) VALUES ('$art_id','$amount','0','$storage_id');");
                 }
 
             }

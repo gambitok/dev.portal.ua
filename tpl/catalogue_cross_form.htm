@@ -7,24 +7,22 @@
 		<input type="hidden" value="{cross_value}" id="cross_value">
 	</div>
 	<div class="col-lg-4 col-sm-4"><button class="btn btn-primary" onClick="saveArticleCross();">Зберегти</button></div>
+</div><hr>
+
+<div class="table-responsive">
+	<table class="table table-striped table-bordered">
+		<thead>
+			<tr>
+				<td>#</td>
+				<td>ART_ID</td>
+				<td>Індекс</td>
+				<td>Бренд</td>
+				<td>Кількість</td>
+				<td>Резерв</td>
+			</tr>
+		</thead>
+		<tbody>
+			{cross_range}
+		</tbody>
+	</table>
 </div>
-
-<hr>
-
-<table class="table table-striped table-bordered">
-	<thead>
-		<tr>
-			<td>#</td>
-			<td>ART_ID</td>
-			<td>Індекс</td>
-			<td>Бренд</td>
-			<td>Кількість</td>
-			<td>Резерв</td>
-		</tr>
-	</thead>
-	<tbody>
-		{cross_range}
-	</tbody>
-</table>
-
-

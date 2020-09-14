@@ -1,12 +1,28 @@
 function exportStocks() {
-    var url = "/ExportStockPrice/download-stocks/";
+    let url = "/ExportStockPrice/download-stocks/";
     window.open(url, '_blank');
 }
 
 function exportPrices() {
-    var price=$("#price_list option:selected").val();
-    if (price=="0") alert("Виберіть прайс"); else {
-        var url = "/ExportStockPrice/download-prices/"+price;
+    let price=$("#price_list option:selected").val();
+    if (price==="0") alert("Виберіть прайс"); else {
+        let url = "/ExportStockPrice/download-prices/"+price;
         window.open(url, '_blank');
     }
 }
+
+function exportClients() {
+    let url = "/ExportStockPrice/download-clients/";
+    window.open(url, '_blank');
+}
+
+function exportSupplClients() {
+    let url = "/ExportStockPrice/download-suppl-clients/";
+    window.open(url, '_blank');
+}
+
+function exportClientsAll() {
+    let url = "/ExportStockPrice/download-clients-all/";
+    window.open(url, '_blank');
+}
+

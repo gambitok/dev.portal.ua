@@ -1,40 +1,50 @@
 <div class="tabs-container">
+
     <ul class="nav nav-tabs" id="suppl_tabs">
         <li class="active"><a data-toggle="tab" href="#tp_tab1"><i class="fa fa-bars"></i> <span class="hidden-sm-down not-visible">Загальна інформація</span></a></li>
-        <li><a data-toggle="tab" href="#tp_tab2" onClick="loadSupplPrice('{suppl_id}');"><i class="fa fa-asterisk"></i> <span class="hidden-sm-down">Завантаження прайсу</span></a></li>
-		<li><a data-toggle="tab" href="#tp_tab3" onClick="loadSupplIndex('{suppl_id}');"><i class="fa fa-asterisk"></i> <span class="hidden-sm-down">Завантаження індексів</span></a></li>
-        <li><a data-toggle="tab" href="#tp_tab4" onClick="loadSupplVat('{suppl_id}');"><i class="fa fa-asterisk"></i> <span class="hidden-sm-down">Умови роботи з ПДВ</span></a></li>
-        <li><a data-toggle="tab" href="#tp_tab5" onClick="loadSupplOrderInfo('{suppl_id}');"><i class="fa fa-asterisk"></i> <span class="hidden-sm-down">Алгоритм замовлення</span></a></li>
+        <li><a data-toggle="tab" href="#tp_tab2" onClick="loadSupplPrice('{suppl_id}');"><i class="fa fa-dollar"></i> <span class="hidden-sm-down">Завантаження прайсу</span></a></li>
+		<li><a data-toggle="tab" href="#tp_tab3" onClick="loadSupplIndex('{suppl_id}');"><i class="fa fa-tag"></i> <span class="hidden-sm-down">Завантаження індексів</span></a></li>
+        <li><a data-toggle="tab" href="#tp_tab4" onClick="loadSupplVat('{suppl_id}');"><i class="fa fa-calculator"></i> <span class="hidden-sm-down">Умови роботи з ПДВ</span></a></li>
+        <li><a data-toggle="tab" href="#tp_tab5" onClick="loadSupplOrderInfo('{suppl_id}');"><i class="fa fa-percent"></i> <span class="hidden-sm-down">Алгоритм замовлення</span></a></li>
+        <li><a data-toggle="tab" href="#tp_tab6" onClick="loadSupplPricePrefix('{suppl_id}');"><i class="fa fa-star"></i> <span class="hidden-sm-down">Префікси постачальника</span></a></li>
     </ul>
+
     <div class="tab-content">
         <div id="tp_tab1" class="tab-pane active">
             <div class="panel-body">
                 <div class="ibox float-e-margins">
                     <div class="ibox-content">
                         <form method="get" class="form-horizontal">
+
                             <div class="form-group">
-                            	<label class="col-sm-2 control-label">Код контрагента</label>
-                                <div class="col-sm-1"><input class="form-control" type="text" readonly id="suppl_id" value="{suppl_id}" placeholder=""></div>
+                            	<label class="col-sm-1 control-label">Код контрагента</label>
+                                <div class="col-sm-2"><input class="form-control" type="text" id="suppl_id" readonly value="{suppl_id}" placeholder="Код контрагента"></div>
                                 <label class="col-sm-2 control-label">Форма власності</label>
-                                <div class="col-sm-2"><input class="form-control" type="text" readonly id="org_type" value="{org_type_name}" placeholder=""></div>
+                                <div class="col-sm-2"><input class="form-control" type="text" id="org_type" readonly value="{org_type_name}" placeholder="Форма власності"></div>
                                 <label class="col-sm-2 control-label">Назва скорочена</label>
-                                <div class="col-sm-3"><input class="form-control" type="text" id="client_name" value="{client_name}" placeholder=""></div>
+                                <div class="col-sm-3"><input class="form-control" type="text" id="client_name" readonly value="{client_name}" placeholder="Назва скорочена"></div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
+
                             <div class="form-group">
-                            	<label class="col-sm-2 control-label">Назва повна</label>
-                                <div class="col-sm-10"><input class="form-control" type="text" id="client_full_name" readonly value="{client_full_name}" placeholder=""></div>
+                            	<label class="col-sm-1 control-label">Назва повна</label>
+                                <div class="col-sm-11"><input class="form-control" type="text" id="client_full_name" readonly value="{client_full_name}" placeholder="Назва повна"></div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
+
                             <div class="form-group">
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">Телефон</label>
                                 <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" id="phone" readonly value="{phone}" placeholder="Контактний телефон"></div>
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">E-mail</label>
                                 <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" id="email" readonly value="{email}" placeholder="Контактний e-mail"></div>
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">Належить контрагенту</label>
-                                <div class="col-lg-5 col-md-2 col-sm-7"><input class="form-control" type="text" readonly id="parrent_name" value="{parrent_name}" placeholder="Контрагент власник"></div>
+                                <div class="col-lg-5 col-md-2 col-sm-7"><input class="form-control" type="text" id="parrent_name" readonly value="{parrent_name}" placeholder="Контрагент власник"></div>
                             </div>
+
 							<div class="hr-line-dashed"></div>
+
                             <div class="form-group">
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">Країна</label>
                                 <div class="col-lg-2 col-md-4 col-sm-8"><input type="text" class="form-control" id="country_id" readonly placeholder="Країна" value="{country}" style="width:100%;"></div>
@@ -43,35 +53,45 @@
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">Район</label>
                                 <div class="col-lg-2 col-md-4 col-sm-8"><input type="text" class="form-control" id="region_id" readonly placeholder="Район" value="{region}" style="width:100%;"></div>
                                 <label class="col-lg-1 col-md-2 col-sm-4 control-label">Населений пункт</label>
-                                <div class="col-lg-2 col-md-4 col-sm-8"><input type="text" class="form-control" readonly id="city_id" placeholder="Місто, село, смт" value="{city}" style="width:100%;"></div>
+                                <div class="col-lg-2 col-md-4 col-sm-8"><input type="text" class="form-control" id="city_id" readonly placeholder="Місто, село, смт" value="{city}" style="width:100%;"></div>
                             </div>
                             
                         </form>
                     </div>
                 </div>
                 
-                
             </div>
         </div>
+
         <div id="tp_tab2" class="tab-pane">
             <div class="panel-body" id="price_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
         <div id="tp_tab3" class="tab-pane">
             <div class="panel-body" id="index_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
         <div id="tp_tab4" class="tab-pane">
             <div class="panel-body" id="vat_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
 		<div id="tp_tab5" class="tab-pane">
             <div class="panel-body" id="info_suppl_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
+
+        <div id="tp_tab6" class="tab-pane">
+            <div class="panel-body" id="prefix_suppl_place">
+                <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
+            </div>
+        </div>
+
     </div>
 </div>

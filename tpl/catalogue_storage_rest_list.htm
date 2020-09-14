@@ -1,17 +1,19 @@
 <h2 align="center">Наявність на складах</h2>
 <h3>Артикул: {article_nr_displ}</h3>
-<table  id="datatable_costums" class="table table-striped table-hover table-bordered" width="100%">
-    <thead>
-        <tr>
-            <th style="text-align:center">№</th>
-            <th style="text-align:center">Склад</th>
-            <th style="text-align:center">Наявність</th>
-            <th style="text-align:center">Резерв</th>
-            <th style="text-align:center" width="50">Перегляд резерву</th>
-            <th style="text-align:center" width="50">Перегляд по коміркам</th>
-        </tr>
-    </thead>
-    <tbody id="t2sc_list_range">
-        {list}
-    </tbody>
-</table>
+<div class="table-responsive">
+    <table id="datatable_costums" class="table table-striped table-hover table-bordered" width="100%">
+        <thead>
+            <tr>
+                <th style="text-align:center">№</th>
+                <th style="text-align:center">Склад</th>
+                <th style="text-align:center">Наявність</th>
+                <th style="text-align:center">Резерв</th>
+                <th style="text-align:center" width="50">Перегляд резерву</th>
+                <th style="text-align:center" width="50">Перегляд по коміркам</th>
+            </tr>
+        </thead>
+        <tbody id="t2sc_list_range">
+            {list}
+        </tbody>
+    </table>
+</div>

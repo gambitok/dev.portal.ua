@@ -20,7 +20,7 @@ if(!empty($_FILES)){
 		$targetFile = $targetDir.$fileName;
 		
 		if(move_uploaded_file($_FILES['file']['tmp_name'],$targetFile)){session_start(); 
-			$dbt->query("insert into T2_ARTICLES_CDN (`ART_ID`,`USER_ID`,`FILE_NAME`,`NAME`) values ('$art_id','$user_id','$fileName','$real_file_name');");
+			$dbt->query("INSERT INTO `T2_ARTICLES_CDN` (`ART_ID`,`USER_ID`,`FILE_NAME`,`NAME`) VALUES ('$art_id','$user_id','$fileName','$real_file_name');");
 		}
 	}
 
@@ -31,7 +31,7 @@ if(!empty($_FILES)){
 		$targetFile = $targetDir.$fileName;
 		
 		if(move_uploaded_file($_FILES['file']['tmp_name'],$targetFile)){session_start(); 
-			$db->query("insert into A_CLIENTS_CDN (`CLIENT_ID`,`USER_ID`,`FILE_NAME`,`NAME`) values ('$client_id','$user_id','$fileName','$real_file_name');");
+			$db->query("INSERT INTO `A_CLIENTS_CDN` (`CLIENT_ID`,`USER_ID`,`FILE_NAME`,`NAME`) VALUES ('$client_id','$user_id','$fileName','$real_file_name');");
 		}
 	}
 
@@ -44,7 +44,7 @@ if(!empty($_FILES)){
 		$targetFile = $targetDir.$fileName;
 		
 		if(move_uploaded_file($_FILES['file']['tmp_name'],$targetFile)){session_start(); 
-			$db->query("insert into A_CLIENTS_DTLS (`CLIENT_ID`,`FILE_TYPE`,`USER_ID`,`FILE_NAME`,`NAME`) values ('$client_id','$file_type','$user_id','$fileName','$real_file_name');");
+			$db->query("INSERT INTO `A_CLIENTS_DTLS` (`CLIENT_ID`,`FILE_TYPE`,`USER_ID`,`FILE_NAME`,`NAME`) VALUES ('$client_id','$file_type','$user_id','$fileName','$real_file_name');");
 		}
 	}
 	
@@ -56,7 +56,7 @@ if(!empty($_FILES)){
 		$targetFile = $targetDir.$fileName;
 		
 		if(move_uploaded_file($_FILES['file']['tmp_name'],$targetFile)){session_start(); 
-			$db->query("insert into J_INCOME_CDN (`income_id`,`user_id`,`file_name`,`name`) values ('$income_id','$user_id','$fileName','$real_file_name');");
+			$db->query("INSERT INTO `J_INCOME_CDN` (`income_id`,`user_id`,`file_name`,`name`) VALUES ('$income_id','$user_id','$fileName','$real_file_name');");
 		}
 	}
 
@@ -68,8 +68,8 @@ if(!empty($_FILES)){
 		$targetFile = $targetDir.$fileName;
 		
 		if(move_uploaded_file($_FILES['file']['tmp_name'],$targetFile)){session_start(); 
-			$db->query("update J_IMPORT_ARTPRICE_CSV set status=0 where user_id='$user_id';");
-			$db->query("insert into J_IMPORT_ARTPRICE_CSV (`user_id`,`file_name`,`name`) values ('$user_id','$fileName','$real_file_name');");
+			$db->query("update `J_IMPORT_ARTPRICE_CSV` set `status`=0 WHERE `user_id`='$user_id';");
+			$db->query("INSERT INTO `J_IMPORT_ARTPRICE_CSV` (`user_id`,`file_name`,`name`) VALUES ('$user_id','$fileName','$real_file_name');");
 		}
 	}
 
@@ -81,8 +81,8 @@ if(!empty($_FILES)){
 		$targetFile = $targetDir.$fileName;
 		
 		if(move_uploaded_file($_FILES['file']['tmp_name'],$targetFile)){session_start(); 
-			$db->query("update J_IMPORT_REST_CSV set status=0 where user_id='$user_id';");
-			$db->query("insert into J_IMPORT_REST_CSV (`user_id`,`file_name`,`name`) values ('$user_id','$fileName','$real_file_name');");
+			$db->query("update `J_IMPORT_REST_CSV` set `status`=0 WHERE `user_id`='$user_id';");
+			$db->query("INSERT INTO `J_IMPORT_REST_CSV` (`user_id`,`file_name`,`name`) VALUES ('$user_id','$fileName','$real_file_name');");
 		}
 	}
 
@@ -94,7 +94,7 @@ if(!empty($_FILES)){
 		$targetFile = $targetDir.$fileName;
 		
 		if(move_uploaded_file($_FILES['file']['tmp_name'],$targetFile)){session_start(); 
-			$db->query("insert into J_MOVING_CDN (`jmoving_id`,`user_id`,`file_name`,`name`) values ('$jmoving_id','$user_id','$fileName','$real_file_name');");
+			$db->query("INSERT INTO `J_MOVING_CDN` (`jmoving_id`,`user_id`,`file_name`,`name`) VALUES ('$jmoving_id','$user_id','$fileName','$real_file_name');");
 		}
 	}
 
@@ -106,7 +106,7 @@ if(!empty($_FILES)){
 		$targetFile = $targetDir.$fileName;
 		
 		if(move_uploaded_file($_FILES['file']['tmp_name'],$targetFile)){session_start(); 
-			$db->query("insert into MONEY_SPEND_CDN (`spend_id`,`user_id`,`file_name`,`name`) values ('$spend_id','$user_id','$fileName','$real_file_name');");
+			$db->query("INSERT INTO `MONEY_SPEND_CDN` (`spend_id`,`user_id`,`file_name`,`name`) VALUES ('$spend_id','$user_id','$fileName','$real_file_name');");
 		}
 	}
 	
@@ -118,7 +118,7 @@ if(!empty($_FILES)){
 		$targetFile = $targetDir.$fileName;
 		
 		if(move_uploaded_file($_FILES['file']['tmp_name'],$targetFile)){session_start(); 
-			$db->query("insert into J_DP_CDN (`dp_id`,`user_id`,`file_name`,`name`) values ('$dp_id','$user_id','$fileName','$real_file_name');");
+			$db->query("INSERT INTO `J_DP_CDN` (`dp_id`,`user_id`,`file_name`,`name`) VALUES ('$dp_id','$user_id','$fileName','$real_file_name');");
 		}
 	}
 	
@@ -131,7 +131,7 @@ if(!empty($_FILES)){
 		$targetFile = $targetDir.$fileName;
 		
 		if(move_uploaded_file($_FILES['file']['tmp_name'],$targetFile)){session_start(); 
-			$dbt->query("insert into T2_ARTICLES_SCHEME (`TEMPLATE_ID`,`USER_ID`,`FILE_NAME`,`NAME`) values ('$scheme_template_id','$user_id','$fileName','$real_file_name');");
+			$dbt->query("INSERT INTO `T2_ARTICLES_SCHEME` (`TEMPLATE_ID`,`USER_ID`,`FILE_NAME`,`NAME`) VALUES ('$scheme_template_id','$user_id','$fileName','$real_file_name');");
 		}
 	}
 	
@@ -143,7 +143,7 @@ if(!empty($_FILES)){
 		$targetFile = $targetDir.$fileName;
 		
 		if(move_uploaded_file($_FILES['file']['tmp_name'],$targetFile)){session_start(); 
-			$db->query("insert into J_INCOME_SPEND_FILES (`str_id`,`user_id`,`file_name`,`name`) values ('$income_str_id','$user_id','$fileName','$real_file_name');");
+			$db->query("INSERT INTO `J_INCOME_SPEND_FILES` (`str_id`,`user_id`,`file_name`,`name`) VALUES ('$income_str_id','$user_id','$fileName','$real_file_name');");
 		}
 	}
 	
@@ -155,13 +155,13 @@ if(!empty($_FILES)){
 		$targetFile = $targetDir.$fileName;
 		
 		if(move_uploaded_file($_FILES['file']['tmp_name'],$targetFile)){session_start(); 
-			$r=$db->query("select file_name from J_INCOME_CSV where `income_id`='$csv_income_id' limit 0,1;");$n=$db->num_rows($r);
+			$r=$db->query("SELECT `file_name` FROM `J_INCOME_CSV` WHERE `income_id`='$csv_income_id' LIMIT 0,1;");$n=$db->num_rows($r);
 			if ($n==1){
 				$e_file_name=$db->result($r,0,"file_name");
 				if (file_exists(RD."/cdn/income_files/csv/$csv_income_id/$e_file_name")){unlink(RD."/cdn/income_files/csv/$csv_income_id/$e_file_name");}
-				$db->query("delete from J_INCOME_CSV  where `income_id`='$csv_income_id';");
+				$db->query("DELETE FROM `J_INCOME_CSV` WHERE `income_id`='$csv_income_id';");
 			}
-			$db->query("insert into J_INCOME_CSV (`income_id`,`user_id`,`file_name`,`name`) values ('$csv_income_id','$user_id','$fileName','$real_file_name');");
+			$db->query("INSERT INTO `J_INCOME_CSV` (`income_id`,`user_id`,`file_name`,`name`) VALUES ('$csv_income_id','$user_id','$fileName','$real_file_name');");
 		}
 	}
 	
@@ -173,13 +173,13 @@ if(!empty($_FILES)){
 		$targetFile = $targetDir.$fileName; 
 		
 		if(move_uploaded_file($_FILES['file']['tmp_name'],$targetFile)){
-			$r=$db->query("select file_name from T2_SUPPL_CSV where `suppl_id`='$csv_suppl_id' and ftype='price' limit 0,1;");$n=$db->num_rows($r);
+			$r=$db->query("SELECT `file_name` FROM `T2_SUPPL_CSV` WHERE `suppl_id`='$csv_suppl_id' and `ftype`='price' LIMIT 0,1;");$n=$db->num_rows($r);
 			if ($n==1){
 				$e_file_name=$db->result($r,0,"file_name");
 				if (file_exists(RD."/cdn/suppl_files/price/$csv_suppl_id/$e_file_name")){unlink(RD."/cdn/suppl_files/price/$csv_suppl_id/$e_file_name");}
-				$db->query("delete from T2_SUPPL_CSV  where `suppl_id`='$csv_suppl_id' and ftype='price';");
+				$db->query("DELETE FROM `T2_SUPPL_CSV` WHERE `suppl_id`='$csv_suppl_id' and `ftype`='price';");
 			}
-			$db->query("insert into T2_SUPPL_CSV (`suppl_id`,`ftype`,`user_id`,`file_name`,`name`) values ('$csv_suppl_id','price','$user_id','$fileName','$real_file_name');");
+			$db->query("INSERT INTO `T2_SUPPL_CSV` (`suppl_id`,`ftype`,`user_id`,`file_name`,`name`) VALUES ('$csv_suppl_id','price','$user_id','$fileName','$real_file_name');");
 		}
 	}
 
@@ -190,13 +190,13 @@ if(!empty($_FILES)){
 		$targetFile = $targetDir.$fileName; 
 		
 		if(move_uploaded_file($_FILES['file']['tmp_name'],$targetFile)){session_start(); 
-			$r=$db->query("select file_name from T2_SUPPL_CSV where `suppl_id`='$csv_suppl_id' and ftype='index' limit 0,1;");$n=$db->num_rows($r);
+			$r=$db->query("SELECT `file_name` FROM `T2_SUPPL_CSV` WHERE `suppl_id`='$csv_suppl_id' and `ftype`='index' LIMIT 0,1;");$n=$db->num_rows($r);
 			if ($n==1){
 				$e_file_name=$db->result($r,0,"file_name");
 				if (file_exists(RD."/cdn/suppl_files/index/$csv_suppl_id/$e_file_name")){unlink(RD."/cdn/suppl_files/index/$csv_suppl_id/$e_file_name");}
-				$db->query("delete from T2_SUPPL_CSV  where `suppl_id`='$csv_suppl_id' and ftype='index';");
+				$db->query("DELETE FROM `T2_SUPPL_CSV` WHERE `suppl_id`='$csv_suppl_id' and `ftype`='index';");
 			}
-			$db->query("insert into T2_SUPPL_CSV (`suppl_id`,`ftype`,`user_id`,`file_name`,`name`) values ('$csv_suppl_id','index','$user_id','$fileName','$real_file_name');");
+			$db->query("INSERT INTO `T2_SUPPL_CSV` (`suppl_id`,`ftype`,`user_id`,`file_name`,`name`) VALUES ('$csv_suppl_id','index','$user_id','$fileName','$real_file_name');");
 		}
 	}
 	

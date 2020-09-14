@@ -25,8 +25,8 @@ function showManualD(key,fldVal,fldText,fldDesc) {
 		document.getElementById("valDDesc").value=fldDesc;
 		showAlertForm();
 	}}, true);
-	
 }
+
 function addManualD(){
 	var key=document.getElementById("keyD").value;
 	var fldVal=document.getElementById("valD").value;
@@ -44,6 +44,7 @@ function addManualD(){
 		}
 	}}, true);
 }
+
 function setValueD(id){
 	var fldVal=document.getElementById("valD").value;
 	var fldText=document.getElementById("valDText").value;
@@ -56,6 +57,7 @@ function setValueD(id){
 	}}, true);
 	closeAlertForm();
 }
+
 function showManualDForm(){
 	document.getElementById("manualDEditB").style.visibility="hidden";
 		document.getElementById("manualDAddB").style.visibility="visible";
@@ -71,6 +73,7 @@ function showManualDForm(){
 		filebrowserImageUploadUrl : 'ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images'
 	});
 }
+
 function hideManualDForm(){
 	document.getElementById("ManualDCaptionIn").value="";
 	document.getElementById("ManualDDescIn").value="";
@@ -79,6 +82,7 @@ function hideManualDForm(){
 	document.getElementById("ManualDDescPlace").innerHTML="";
 	document.getElementById("ManualDForm").className="hiddenDoc";
 }
+
 function editManualDForm(id){
 	JsHttpRequest.query('content.php',{ 'w': 'getManualDInfo','id':id}, 
 	function (result, errors){ if (errors) {alert (errors);} if (result){ 
@@ -99,6 +103,7 @@ function editManualDForm(id){
 		});
 	}}, true);
 }
+
 function saveManualD(){
 	var id=document.getElementById("ManualDIdIn").value;
 	var key=document.getElementById("keyD").value;

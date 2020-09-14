@@ -10,10 +10,12 @@ if ($accss=="1"){
 	$link=gnLink; if (substr($link,-1)=="/"){$link=substr($link,0,strlen($link)-1);} $links=explode("/", $link);$w=$links[1];
 
 	if ($w==""){
+	    // $income->recalculateIncome();
+        // $income->recalculateIncomeOperPrice();
 		 $range_list=$income->show_income_list();
 		 $content=str_replace("{income_range}", $range_list, $content);
 		 $content=str_replace("{date_today}", date("Y-m-d"), $content);
-		 //$content=str_replace("{doc_prefix}", $income->get_doc_prefix(), $content);
+		 // $content=str_replace("{doc_prefix}", $income->get_doc_prefix(), $content);
 		 $content=str_replace("{doc_prefix}", "", $content);
 	}
 

@@ -16,36 +16,38 @@
 
                             <div class="form-group">
                             	<label class="col-sm-2 control-label">Код користувача</label>
-                                <div class="col-sm-1"><input class="form-control" type="text" readonly name="users_id" id="users_id" value="{users_id}" placeholder=""></div>
+                                <div class="col-sm-1"><input class="form-control" type="text" readonly name="users_id" id="users_id" value="{users_id}" placeholder="Код користувача"></div>
                                 <label class="col-sm-2 control-label">ПІБ користувача</label>
-                                <div class="col-sm-3"><input class="form-control" type="text" name="users_name" id="users_name" value="{users_name}" placeholder=""></div>
+                                <div class="col-sm-3"><input class="form-control" type="text" name="users_name" id="users_name" value="{users_name}" placeholder="ПІБ користувача"></div>
                                 <label class="col-sm-2 control-label">Посада</label>
-                                <div class="col-sm-2"><input class="form-control" type="text" name="users_post" id="users_post" value="{post}" placeholder=""></div>
+                                <div class="col-sm-2"><input class="form-control" type="text" name="users_post" id="users_post" value="{post}" placeholder="Посада"></div>
                             </div>
 
                             <div class="hr-line-dashed"></div>
 
                             <div class="form-group">
 	                            <label class="col-sm-2 control-label">Торгова точка</label>
-                                <div class="col-sm-2"><select class="form-control" id="users_tpoint_id" name="users_tpoint_id" placeholder="Торгова точка" style="width:100%;">{tpoints_list}</select></div>
+                                <div class="col-sm-2"><select class="form-control" id="users_tpoint_id" name="users_tpoint_id" title="Торгова точка" style="width:100%;">{tpoints_list}</select></div>
                                 <label class="col-sm-2 control-label">Роль користувача</label>
-                                <div class="col-sm-2"><select class="form-control" id="users_role_id" name="users_role_id" placeholder="Роль" style="width:100%;">{role_list}</select></div>
+                                <div class="col-sm-2"><select class="form-control" id="users_role_id" name="users_role_id" title="Роль" style="width:100%;">{role_list}</select></div>
                                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Телефон</label>
-                                <div class="col-sm-2"><input class="form-control" type="text" name="users_phone2" id="users_phone2" value="{phone2}" placeholder=""></div>
+                                <div class="col-sm-2"><input class="form-control" type="text" name="users_phone2" id="users_phone2" value="{phone2}" placeholder="Телефон"></div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Логін користувача</label>
-                                <div class="col-sm-2"><input class="form-control" type="text" name="users_login" id="users_login" value="{phone}" placeholder=""></div>
+                                <div class="col-sm-2"><input class="form-control" type="text" name="users_login" id="users_login" value="{phone}" placeholder="Логін користувача"></div>
                                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Пароль</label>
-                                <div class="col-sm-2"><input class="form-control" type="password" name="users_pass" id="users_pass" value="{users_pass}" placeholder=""></div>
+                                <div class="col-sm-2"><input class="form-control" type="text" name="users_pass" id="users_pass" value="{users_pass}" placeholder="Пароль"></div>
 								<label class="col-sm-2 control-label">Статус</label>
-                                <div class="col-sm-2"><select class="form-control" id="users_status" name="users_status" placeholder="Статус" style="width:100%;">{status_list}</select></div>
+                                <div class="col-sm-2"><select class="form-control" id="users_status" name="users_status" title="Статус" style="width:100%;">{status_list}</select></div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Email</label>
-                                <div class="col-sm-2"><input class="form-control" type="text" name="users_email" id="users_email" value="{email}" placeholder=""></div>
+                                <div class="col-sm-2"><input class="form-control" type="text" name="users_email" id="users_email" value="{email}" placeholder="Email"></div>
+                                <label class="col-sm-2 control-label">Статус ДП</label>
+                                <div class="col-sm-2"><select class="form-control" id="users_access_dp" name="users_access_dp" title="Статус ДП" style="width:100%;">{users_access_dp_list}</select></div>
                             </div>
                             
                             <div class="hr-line-dashed"></div>
@@ -53,7 +55,7 @@
                             <div class="form-group">
                                 <div class="col-sm-10 text-right col-sm-offset-2">
                                     <button class="btn btn-primary" type="button" onClick="saveUsersGeneralInfo();">Зберегти зміни</button>
-                                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                                    <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
                                 </div>
                             </div>
 

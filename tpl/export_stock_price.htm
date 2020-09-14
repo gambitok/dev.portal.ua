@@ -5,8 +5,7 @@
 <link rel="stylesheet" href="/css/plugins/chosen-1.8.3/docsupport/prism.css">
 <link rel="stylesheet" href="/css/plugins/chosen-1.8.3/chosen.css">
 
-
-<h2 class=" border-bottom white-bg dashboard-header">Експорт залишків та прайсів</h2>
+<h2 class="border-bottom white-bg dashboard-header">Експорт залишків та прайсів</h2>
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -16,24 +15,25 @@
                     <div class="tabs-container">
 						<div class="panel-body">
 							<div class="ibox float-e-margins">
-								
 								<div class="row">
 									<div class="col-sm-2 col-lg-2">
 										<button class="btn btn-primary" onClick="exportStocks();">Експорт залишків</button>	
 									</div>
-
 									<div class="col-sm-2 col-lg-2">
 										<select title="Виберіть прайс" name="price_list" id="price_list" class="form-control">
 											<option value="0">Виберіть прайс</option>
 											{price_list}
 										</select>
 									</div>
-									
 									<div class="col-sm-2 col-lg-2">
 										<button class="btn btn-primary" onClick="exportPrices();">Експорт прайс</button>
 									</div>
+									<div class="col-sm-2 col-lg-2">
+										<button class="btn btn-primary" onClick="exportClients();">Експорт РОЗЕТКА власні</button>
+										<button class="btn btn-primary" onClick="exportSupplClients();">Експорт РОЗЕТКА постачальники</button>
+										<button class="btn btn-primary" onClick="exportClientsAll();">Експорт РОЗЕТКА ВСІ</button>
+									</div>
 								</div>
-								
 							</div>
 						</div>
 					</div>
@@ -62,7 +62,7 @@
 
 <script language="javascript">
 $(document).ready(function() {
-	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+	$("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
 });
 </script>
 

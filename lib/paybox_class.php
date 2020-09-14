@@ -2,17 +2,12 @@
 
 class paybox {
 
-    function getMediaUserName($user_id){$db=DbSingleton::getDb();$name="";
-        $r=$db->query("select name from media_users where id='$user_id' limit 0,1;");$n=$db->num_rows($r);
-        if ($n==1){$name=$db->result($r,0,"name");}
-        return $name;
-    }
-
     function show_paybox_list(){$db=DbSingleton::getDb();
-        $r=$db->query("select pb.*, cl.name as client_name, cst.mcaption as doc_type_name from PAY_BOX pb 
-            left outer join A_CLIENTS cl on cl.id=pb.firm_id
-            left outer join manual cst on cst.id=pb.doc_type_id and cst.`key`='client_sale_type'
-        where pb.status=1 order by pb.firm_id asc, pb.id asc;");$n=$db->num_rows($r);$list="";
+        $r=$db->query("SELECT pb.*, cl.name as client_name, cst.mcaption as doc_type_name 
+        FROM `PAY_BOX` pb 
+            LEFT OUTER JOIN `A_CLIENTS` cl on cl.id=pb.firm_id
+            LEFT OUTER JOIN `manual` cst on cst.id=pb.doc_type_id and cst.`key`='client_sale_type'
+        WHERE pb.status=1 ORDER BY pb.firm_id asc, pb.id asc;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $paybox_name=$paybox_name=$db->result($r,$i-1,"name");
@@ -20,7 +15,7 @@ class paybox {
             $client_name=$db->result($r,$i-1,"client_name");
             $doc_type_name=$db->result($r,$i-1,"doc_type_name");
             $saldo=$this->getPayboxSaldo($id);
-            $list.="<tr style='cursor:pointer'  onClick='showPayboxCard(\"$id\",\"$paybox_name\")'>
+            $list.="<tr style='cursor:pointer' onClick='showPayboxCard(\"$id\",\"$paybox_name\")'>
                 <td>$i</td>
                 <td align='center'>$doc_type_name</td>
                 <td>$paybox_name</td>
@@ -33,20 +28,19 @@ class paybox {
     }
 
     function newPayboxCard(){$db=DbSingleton::getDb();
-        $r=$db->query("select max(id) as mid from PAY_BOX;");$paybox_id=0+$db->result($r,0,"mid")+1;
-        //$db->query("insert into PAY_BOX (`id`) values ('$paybox_id');");
+        $r=$db->query("SELECT MAX(`id`) as mid FROM `PAY_BOX`;");$paybox_id=0+$db->result($r,0,"mid")+1;
         return $paybox_id;
     }
 
-    function showPayboxCard($paybox_id){$db=DbSingleton::getDb();session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
+    function showPayboxCard($paybox_id){$db=DbSingleton::getDb();
+        session_start();$user_id=$_SESSION["media_user_id"];$user_name=$_SESSION["user_name"];
         $form="";$form_htm=RD."/tpl/paybox_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select pb.*, cl.name as firm_name 
-        from PAY_BOX pb 
-            left outer join A_CLIENTS cl on cl.id=pb.firm_id
-        where pb.id='$paybox_id' and pb.status=1 limit 0,1;");$n=$db->num_rows($r);
-        //	if ($n==0){$form_htm=RD."/tpl/access_deny.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);} }
+        $r=$db->query("SELECT pb.*, cl.name as firm_name 
+        FROM `PAY_BOX` pb 
+            LEFT OUTER JOIN `A_CLIENTS` cl on cl.id=pb.firm_id
+        WHERE pb.id='$paybox_id' and pb.status=1 LIMIT 1;");$n=$db->num_rows($r);
         if ($n==0){
-            $r2=$db->query("select max(id) as mid from PAY_BOX;"); $paybox_id=0+$db->result($r2,0,"mid")+1;
+            $r2=$db->query("SELECT MAX(id) as mid FROM PAY_BOX;"); $paybox_id=0+$db->result($r2,0,"mid")+1;
             $form=str_replace("{paybox_id}",$paybox_id,$form);
             $form=str_replace("{paybox_name}","",$form);
             $form=str_replace("{paybox_full_name}","",$form);
@@ -58,7 +52,6 @@ class paybox {
             $form=str_replace("{my_user_name}",$user_name,$form);
             $form=str_replace("{oper_visible}"," disabled style=\"display:none;\"",$form);
         }
-
         if ($n==1){
             $paybox_id=$db->result($r,0,"id");
             $name=$db->result($r,0,"name");
@@ -66,7 +59,6 @@ class paybox {
             $firm_id=$db->result($r,0,"firm_id");
             $firm_name=$db->result($r,0,"firm_name");
             $doc_type_id=$db->result($r,0,"doc_type_id");
-            //$doc_type_name=$db->result($r,0,"doc_type_name");
             $in_use=$db->result($r,0,"in_use"); $inuse_checked=""; if ($in_use==1){$inuse_checked=" checked"; }
             $form=str_replace("{paybox_id}",$paybox_id,$form);
             $form=str_replace("{paybox_name}",$name,$form);
@@ -85,23 +77,25 @@ class paybox {
         return $form;
     }
 
-    function savePayboxGeneralInfo($paybox_id,$name,$full_name,$firm_id,$doc_type_id,$in_use){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
+    function savePayboxGeneralInfo($paybox_id,$name,$full_name,$firm_id,$doc_type_id,$in_use){$db=DbSingleton::getDb();
+        $slave=new slave;$answer=0;$err="Помилка збереження даних!";
         $paybox_id=$slave->qq($paybox_id);$name=$slave->qq($name);$full_name=$slave->qq($full_name);$firm_id=$slave->qq($firm_id);$doc_type_id=$slave->qq($doc_type_id);$in_use=$slave->qq($in_use);
         if ($paybox_id>0){
-            $r=$db->query("select * from PAY_BOX where id='$paybox_id';"); $n=$db->num_rows($r);
+            $r=$db->query("SELECT * FROM `PAY_BOX` WHERE `id`='$paybox_id';"); $n=$db->num_rows($r);
             if ($n>0) {
-                $db->query("update PAY_BOX set `name`='$name', `full_name`='$full_name', `firm_id`='$firm_id', `doc_type_id`='$doc_type_id', `in_use`='$in_use' where `id`='$paybox_id';");
+                $db->query("UPDATE `PAY_BOX` SET `name`='$name', `full_name`='$full_name', `firm_id`='$firm_id', `doc_type_id`='$doc_type_id', `in_use`='$in_use' WHERE `id`='$paybox_id';");
                 $answer=1;$err="";
             } else {
-                $db->query("insert into PAY_BOX (`name`,`full_name`,`firm_id`,`doc_type_id`,`in_use`) values ('$name','$full_name','$firm_id','$doc_type_id','$in_use');");
+                $db->query("INSERT INTO `PAY_BOX` (`name`,`full_name`,`firm_id`,`doc_type_id`,`in_use`) VALUES ('$name','$full_name','$firm_id','$doc_type_id','$in_use');");
                 $answer=1;$err="";
             }
         }
         return array($answer,$err);
     }
 
-    function getDocTypeSelectList($sel_id){$db=DbSingleton::getDb();$list="<option value=0>Оберіть зі списку</option>";
-        $r=$db->query("select id,mcaption from `manual` where ison='1' and `key`='client_sale_type' order by mid,id asc;");$n=$db->num_rows($r);
+    function getDocTypeSelectList($sel_id){$db=DbSingleton::getDb();
+        $list="<option value=0>Оберіть зі списку</option>";
+        $r=$db->query("SELECT `id`, `mcaption` FROM `manual` WHERE `ison`='1' and `key`='client_sale_type' ORDER BY `mid`, `id` asc;");$n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $name=$db->result($r,$i-1,"mcaption");
@@ -111,8 +105,8 @@ class paybox {
         return $list;
     }
 
-    function showWorkersSelectList($sel_id){$db=DbSingleton::getDb();$list="";;
-        $r=$db->query("select * from media_users order by name,id asc;");$n=$db->num_rows($r);
+    function showWorkersSelectList($sel_id){$db=DbSingleton::getDb();
+        $r=$db->query("SELECT * FROM `media_users` ORDER BY `name`, `id` ASC;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $name=$db->result($r,$i-1,"name");
@@ -122,31 +116,29 @@ class paybox {
         return $list;
     }
 
-    function showPayboxClientList($sel_id){$db=DbSingleton::getDb();$slave=new slave;
-        $form="";$form_htm=RD."/tpl/clients_parrent_tree.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select c.*,ot.name as org_type_name, t2cn.COUNTRY_NAME, t2st.STATE_NAME, t2rg.REGION_NAME, t2ct.CITY_NAME  
-        from A_CLIENTS c 
-            left outer join A_ORG_TYPE ot on ot.id=c.org_type 
-            left outer join T2_COUNTRIES t2cn on t2cn.COUNTRY_ID=c.country 
-            left outer join T2_STATE t2st on t2st.STATE_ID=c.state
-            left outer join T2_REGION t2rg on t2rg.REGION_ID=c.region
-            left outer join T2_CITY t2ct on t2ct.CITY_ID=c.city
-            left outer join A_CLIENTS_CATEGORY cc on cc.client_id=c.id
-            left outer join A_CATEGORY ac on ac.id=cc.category_id
-        where c.status=1 and ac.id=3;");$n=$db->num_rows($r);$list="";
+    function showPayboxClientList($sel_id){$db=DbSingleton::getDb();
+        $slave=new slave;$form="";$form_htm=RD."/tpl/clients_parrent_tree.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        $r=$db->query("SELECT c.*, ot.name as org_type_name, t2cn.COUNTRY_NAME, t2st.STATE_NAME, t2rg.REGION_NAME, t2ct.CITY_NAME  
+        FROM `A_CLIENTS` c 
+            LEFT OUTER JOIN A_ORG_TYPE ot on ot.id=c.org_type 
+            LEFT OUTER JOIN T2_COUNTRIES t2cn on t2cn.COUNTRY_ID=c.country 
+            LEFT OUTER JOIN T2_STATE t2st on t2st.STATE_ID=c.state
+            LEFT OUTER JOIN T2_REGION t2rg on t2rg.REGION_ID=c.region
+            LEFT OUTER JOIN T2_CITY t2ct on t2ct.CITY_ID=c.city
+            LEFT OUTER JOIN A_CLIENTS_CATEGORY cc on cc.client_id=c.id
+            LEFT OUTER JOIN A_CATEGORY ac on ac.id=cc.category_id
+        WHERE c.status=1 and ac.id=3;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $name=$db->result($r,$i-1,"name");
             $org_type_name=$db->result($r,$i-1,"org_type_name");
             $email=$db->result($r,$i-1,"email");
             $phone=$db->result($r,$i-1,"phone");
-            $country=$slave->showTableFieldDBT("T2_COUNTRIES","NAME","ID",$db->result($r,$i-1,"country"));
-            $state=$slave->showTableFieldDBT("T2_STATE","NAME","ID",$db->result($r,$i-1,"state"));
-            $region=$slave->showTableFieldDBT("T2_REGION","NAME","ID",$db->result($r,$i-1,"region"));
-            $city=$slave->showTableFieldDBT("T2_CITY","NAME","ID",$db->result($r,$i-1,"city"));
-            //$address=$db->result($r,$i-1,"address");
+            $country=$slave->showTableFieldDBT("T2_COUNTRIES","COUNTRY_NAME","COUNTRY_ID",$db->result($r,$i-1,"country"));
+            $state=$slave->showTableFieldDBT("T2_STATE","STATE_NAME","STATE_ID",$db->result($r,$i-1,"state"));
+            $region=$slave->showTableFieldDBT("T2_REGION","REGION_NAME","REGION_ID",$db->result($r,$i-1,"region"));
+            $city=$slave->showTableFieldDBT("T2_CITY","CITY_NAME","CITY_ID",$db->result($r,$i-1,"city"));
             $cur="";$fn="<i class='fa fa-thumb-tack' onClick='setPayboxClient(\"$id\", \"$name\")'></i>";
-            //if ($id==$prnt_id){$cur="style='background-color:#FFFF00'";}
             if ($id==$sel_id){$fn="";$cur="style='background-color:#ccc; disabled:disabled;'";}
             $list.="<tr $cur>
                 <td>$fn</td>
@@ -166,11 +158,12 @@ class paybox {
     }
 
     function loadPayboxWorkersSaldo($paybox_id){$db=DbSingleton::getDb();
+        $media_users=new media_users;
         $form="";$form_htm=RD."/tpl/paybox_workers_saldo_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select sum(saldo) as summ, cash_id, user_id, last_update from B_PAYBOX_BALANS 
-        where paybox_id='$paybox_id' group by user_id,cash_id order by user_id asc;");$n=$db->num_rows($r);$list="";
+        $r=$db->query("SELECT sum(`saldo`) as summ, `cash_id`, `user_id`, `last_update` FROM `B_PAYBOX_BALANS` 
+        WHERE `paybox_id`='$paybox_id' GROUP BY `user_id`, `cash_id` ORDER BY `user_id` asc;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
-            $worker_id=$db->result($r,$i-1,"user_id");$worker_name=$this->getMediaUserName($worker_id);
+            $worker_id=$db->result($r,$i-1,"user_id");$worker_name=$media_users->getMediaUserName($worker_id);
             $summ=$db->result($r,$i-1,"summ");
             $cash_id=$db->result($r,$i-1,"cash_id");$cash_abr=$this->getCashAbr($cash_id);
             $list.="<tr>
@@ -191,7 +184,7 @@ class paybox {
 
     function showPayboxWorkerSaldoJournal($paybox_id,$user_id,$cash_id){$db=DbSingleton::getDb();
         $form="";$form_htm=RD."/tpl/paybox_workers_saldo_journal.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select bj.* from B_PAYBOX_JOURNAL bj where paybox_id='$paybox_id' and cash_id='$cash_id' and user_id='$user_id' order by id desc limit 0,20;");$n=$db->num_rows($r);$list="";
+        $r=$db->query("SELECT * FROM `B_PAYBOX_JOURNAL` WHERE `paybox_id`='$paybox_id' AND `cash_id`='$cash_id' AND `user_id`='$user_id' ORDER BY `id` DESC LIMIT 0,20;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $saldo_before=$db->result($r,$i-1,"saldo_before");
             $amount=$db->result($r,$i-1,"amount");
@@ -214,12 +207,13 @@ class paybox {
     }
 
     function loadPayboxWorkers($paybox_id){$db=DbSingleton::getDb();
+        $media_users=new media_users;
         $form="";$form_htm=RD."/tpl/paybox_workers_list.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from PAY_BOX_WORKERS where paybox_id='$paybox_id' and status='1' order by id asc;");$n=$db->num_rows($r);$list="";
+        $r=$db->query("SELECT * FROM `PAY_BOX_WORKERS` WHERE `paybox_id`='$paybox_id' and `status`='1' ORDER BY `id` asc;");$n=$db->num_rows($r);$list="";
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $worker_id=$db->result($r,$i-1,"worker_id");
-            $worker_name=$this->getMediaUserName($worker_id);
+            $worker_name=$media_users->getMediaUserName($worker_id);
             $list.="<tr>
                 <td>
                     <button class='btn btn-sm btn-default' onClick='showPayboxWorkerForm(\"$paybox_id\",\"$id\");'><i class='fa fa-edit'></i></button>
@@ -235,9 +229,10 @@ class paybox {
         return $form;
     }
 
-    function showPayboxWorkerForm($paybox_id,$s_id){$db=DbSingleton::getDb();$worker_id=0;
+    function showPayboxWorkerForm($paybox_id,$s_id){$db=DbSingleton::getDb();
+        $worker_id=0;
         $form="";$form_htm=RD."/tpl/paybox_workers_form.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("select * from PAY_BOX_WORKERS where id='$s_id' and paybox_id='$paybox_id' limit 0,1;");$n=$db->num_rows($r);
+        $r=$db->query("SELECT * FROM `PAY_BOX_WORKERS` WHERE `id`='$s_id' AND `paybox_id`='$paybox_id' LIMIT 1;");$n=$db->num_rows($r);
         if ($n==1){
             $worker_id=$db->result($r,0,"worker_id");
         }
@@ -247,40 +242,43 @@ class paybox {
         return $form;
     }
 
-    function savePayboxWorkerForm($paybox_id,$s_id,$worker_id){ $db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
+    function savePayboxWorkerForm($paybox_id,$s_id,$worker_id){ $db=DbSingleton::getDb();
+        $slave=new slave;$answer=0;$err="Помилка збереження даних!";
         $paybox_id=$slave->qq($paybox_id);$s_id=$slave->qq($s_id);$worker_id=$slave->qq($worker_id);
         if ($paybox_id>0){
-            if ($s_id==0 ){
-                $r=$db->query("select max(id) as mid from PAY_BOX_WORKERS;");$s_id=0+$db->result($r,0,"mid")+1;
-                $db->query("insert into PAY_BOX_WORKERS (id,paybox_id,status) values ('$s_id','$paybox_id','1');");
+            if ($s_id==0){
+                $r=$db->query("SELECT MAX(`id`) as mid FROM `PAY_BOX_WORKERS`;");$s_id=0+$db->result($r,0,"mid")+1;
+                $db->query("INSERT INTO `PAY_BOX_WORKERS` (`id`,`paybox_id`,`status`) VALUES ('$s_id','$paybox_id','1');");
             }
-            if  ($s_id>0){
-                $db->query("update PAY_BOX_WORKERS set worker_id='$worker_id' where id='$s_id' and paybox_id='$paybox_id';");
+            if ($s_id>0){
+                $db->query("UPDATE `PAY_BOX_WORKERS` SET `worker_id`='$worker_id' WHERE `id`='$s_id' AND `paybox_id`='$paybox_id';");
                 $answer=1;$err="";
             }
-        }else{$answer=0;}
+        } else {$answer=0;}
         return array($answer,$err);
     }
 
-    function dropPaybox($paybox_id){$db=DbSingleton::getDb();$answer=0;$err="Помилка збереження даних!";
+    function dropPaybox($paybox_id){$db=DbSingleton::getDb();
+        $answer=0;$err="Помилка збереження даних!";
         if ($paybox_id>0){
-            $db->query("update PAY_BOX set status='0' where id='$paybox_id';");
+            $db->query("UPDATE `PAY_BOX` SET `status`='0' WHERE `id`='$paybox_id';");
             $answer=1;$err="";
         }
         return array($answer,$err);
     }
 
-    function dropPayboxWorker($paybox_id,$s_id){$db=DbSingleton::getDb();$slave=new slave;$answer=0;$err="Помилка збереження даних!";
+    function dropPayboxWorker($paybox_id,$s_id){$db=DbSingleton::getDb();
+        $slave=new slave;$answer=0;$err="Помилка збереження даних!";
         $paybox_id=$slave->qq($paybox_id);$s_id=$slave->qq($s_id);
         if ($paybox_id>0 && $s_id>0){
-            $db->query("update PAY_BOX_WORKERS set status='0' where id='$s_id' and paybox_id='$paybox_id';");
+            $db->query("UPDATE `PAY_BOX_WORKERS` SET `status`='0' WHERE `id`='$s_id' AND `paybox_id`='$paybox_id';");
             $answer=1;$err="";
         }
         return array($answer,$err);
     }
 
-    function getPayboxSaldo($paybox_id){$db=DbSingleton::getDb();$saldo="";
-        $r=$db->query("select sum(saldo) as summ, cash_id from B_PAYBOX_BALANS where paybox_id='$paybox_id' group by cash_id order by cash_id asc;");$n=$db->num_rows($r);
+    function getPayboxSaldo($paybox_id){$db=DbSingleton::getDb();
+        $r=$db->query("SELECT SUM(`saldo`) as summ, `cash_id` FROM `B_PAYBOX_BALANS` WHERE `paybox_id`='$paybox_id' GROUP BY `cash_id` ORDER BY `cash_id` ASC;");$n=$db->num_rows($r);$saldo="";
         if ($n==0){ $saldo="0";}
         for ($i=1;$i<=$n;$i++){
             $summ=$db->result($r,$i-1,"summ");
@@ -290,10 +288,186 @@ class paybox {
         return $saldo;
     }
 
-    function getCashAbr($cash_id){$db=DbSingleton::getDb();$name="";
-        $r=$db->query("select abr from CASH where id ='$cash_id' limit 0,1;");$n=$db->num_rows($r);
+    function getCashAbr($cash_id){$db=DbSingleton::getDb();
+        $r=$db->query("SELECT `abr` FROM `CASH` WHERE `id`='$cash_id' LIMIT 1;");$n=$db->num_rows($r);$name="";
         if ($n==1){$name=$db->result($r,0,"abr");}
         return $name;
+    }
+
+    /* CASH REPORTS */
+
+    function getCashReportsFilters() {
+        $form_htm=RD."/tpl/cash_reports.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        $form=str_replace("{date}",date("Y-m-d"),$form);
+        $form=str_replace("{paybox_list}", $this->showPayBoxSelect(), $form);
+        return $form;
+    }
+
+    function showPayBoxSelect() { $db=DbSingleton::getDb();
+        $r=$db->query("SELECT * FROM `PAY_BOX` WHERE `status`=1 AND `in_use`=1;"); $n=$db->num_rows($r);$list="";
+        for ($i=1;$i<=$n;$i++){
+            $id=$db->result($r,$i-1,"id");
+            $name=$db->result($r,$i-1,"name");
+            $list.="<option value=$id>$name</option>";
+        }
+        return $list;
+    }
+
+    function getPayBoxName($id) { $db=DbSingleton::getDb();
+        $r=$db->query("SELECT `name` FROM `PAY_BOX` WHERE `id`='$id';");
+        $name=$db->result($r,0,"name");
+        return $name;
+    }
+
+    function showCashReportsList($date_start,$date_end,$payboxes,$cash_id) { $db=DbSingleton::getDb();
+        // КАСА
+        $list=""; $summ_kasa=0;
+        $r=$db->query("SELECT `id`, `paybox_id`, `pay_type_id` FROM `J_PAY` 
+		WHERE `paybox_id` in ($payboxes) 
+		AND `pay_type_id` in (89,90,91,98)
+		AND `data_time`>='$date_start 00:00:00' AND `data_time`<='$date_end 23:59:59'
+		AND `cash_id`='$cash_id'
+		GROUP BY `paybox_id`;"); $n=$db->num_rows($r);
+        for ($i=1;$i<=$n;$i++){
+            $paybox_id=$db->result($r,$i-1,"paybox_id");
+            $name=$this->getPayBoxName($paybox_id);
+            $summ_1=$this->getSummPayBox($date_start,$date_end,$paybox_id,"89",$cash_id);
+            $summ_2=$this->getSummPayBox($date_start,$date_end,$paybox_id,"90",$cash_id);
+            $summ_3=$this->getSummPayBox($date_start,$date_end,$paybox_id,"98",$cash_id);
+            $summ_4=($this->getSummPayBox($date_start,$date_end,$paybox_id,"91",$cash_id))*(-1);
+            $summ=$summ_1+$summ_2+$summ_3+$summ_4;
+            $summ_prixod=$summ_1+$summ_2+$summ_3;
+            $summ_vidacha=$summ_4;
+            $summ_kasa+=$summ;
+            $list.="<tr>
+				<td>$name</td>
+				<td>$summ_prixod</td>
+				<td>$summ_vidacha</td>
+				<td>$summ</td>
+			</tr>";
+        }
+
+        $list.="<tr style='background:lightgreen;'>
+			<td><b>Каси</b></td>
+			<td></td>
+			<td></td>
+			<td>$summ_kasa</td>
+		</tr>";
+
+        // RASXODI
+        $array_spend=$this->getSpendTypes(); $summ_vidatki=0;
+        $r=$db->query("SELECT `id`, `paybox_id_from` FROM `J_MONEY_SPEND` 
+		WHERE `paybox_id_from` in ($payboxes) 
+		AND `data`>='$date_start 00:00:00' AND `data`<='$date_end 23:59:59'
+		AND `cash_id`='$cash_id'
+		GROUP BY `paybox_id_from`;"); $n=$db->num_rows($r);
+        for ($i=1;$i<=$n;$i++){
+            $paybox_id=$db->result($r,$i-1,"paybox_id_from");
+            $name=$this->getPayBoxName($paybox_id);
+            $summ_spend=0;
+            foreach ($array_spend as $spend_type_id) {
+                $caption=$this->getSpendTypesCaption($spend_type_id);
+                $summ_type=$this->getSummMoneySpendType($date_start,$date_end,$paybox_id,$spend_type_id,$cash_id);
+                $summ_spend+=$summ_type;
+                if ($summ_type>0)
+                    $list.="<tr>
+                        <td>$caption</td>
+                        <td>-</td>
+                        <td>$summ_type</td>
+                        <td>$summ_type</td>
+                    </tr>";
+            }
+
+            $summ_vidatki+=$summ_spend;
+            $list.="<tr>
+				<td><b>$name</b></td>
+				<td>-</td>
+				<td>-</td>
+				<td>$summ_spend</td>
+			</tr>";
+        }
+
+        $list.="<tr style='background:pink;'>
+			<td><b>Видатки</b></td>
+			<td></td>
+			<td></td>
+			<td>$summ_vidatki</td>
+		</tr>";
+
+        if ($date_start!=null) {
+            $date_start = strtotime($date_start);
+            $date_convert_start=date('d.m.Y', $date_start); } else $date_convert_start=$date_start;
+
+        if ($date_end!=null) {
+            $date_end = strtotime($date_end);
+            $date_convert_end=date('d.m.Y', $date_end); } else $date_convert_end=$date_end;
+
+        $form="";
+        if ($cash_id==1) {
+            $form_htm=RD."/tpl/cash_reports_table.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+            $form=str_replace("{cash_abr}","UAH",$form);
+        }
+        if ($cash_id==2) {
+            $form_htm=RD."/tpl/cash_reports_table_usd.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+            $form=str_replace("{cash_abr}","USD",$form);
+        }
+        if ($cash_id==3) {
+            $form_htm=RD."/tpl/cash_reports_table_eur.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+            $form=str_replace("{cash_abr}","EUR",$form);
+        }
+
+        $form=str_replace("{date_start}",$date_convert_start,$form);
+        $form=str_replace("{date_end}",$date_convert_end,$form);
+        $form=str_replace("{reports_range}",$list,$form);
+        return $form;
+    }
+
+    function getSpendTypes() { $db=DbSingleton::getDb();
+        $array=[];
+        $r=$db->query("SELECT `id` FROM `manual` WHERE `key`='spend_type_id';"); $n=$db->num_rows($r);
+        for ($i=1;$i<=$n;$i++){
+            $id=$db->result($r,$i-1,"id");
+            array_push($array,$id);
+        }
+        return $array;
+    }
+
+    function getSpendTypesCaption($id) { $db=DbSingleton::getDb();
+        $r=$db->query("SELECT * FROM `manual` WHERE `id`='$id';");
+        $caption=$db->result($r,0,"mcaption");
+        return $caption;
+    }
+
+    function getSummPayBox($date_start,$date_end,$paybox_id,$pay_type_id,$cash_id) { $db=DbSingleton::getDb();
+        $r=$db->query("SELECT SUM(`summ`) as pay_summ FROM `J_PAY` 
+		WHERE `paybox_id`=$paybox_id 
+		AND `pay_type_id`=$pay_type_id
+		AND `data_time`>='$date_start 00:00:00' AND `data_time`<='$date_end 23:59:59'
+		AND `cash_id`='$cash_id'
+		GROUP BY `paybox_id`;");
+        $summ=$db->result($r,0,"pay_summ");
+        return $summ;
+    }
+
+    function getSummMoneySpend($date_start,$date_end,$paybox_id,$cash_id) { $db=DbSingleton::getDb();
+        $r=$db->query("SELECT `id`, `paybox_id_from`, SUM(`summ`) as summa FROM `J_MONEY_SPEND` 
+		WHERE `paybox_id_from`=$paybox_id
+		AND `data`>='$date_start 00:00:00' AND `data`<='$date_end 23:59:59'
+		AND `cash_id`='$cash_id'
+		GROUP BY `paybox_id_from`;");
+        $summ=$db->result($r,0,"summa");
+        return $summ;
+    }
+
+    function getSummMoneySpendType($date_start,$date_end,$paybox_id,$spend_type_id,$cash_id) { $db=DbSingleton::getDb();
+        $r=$db->query("SELECT `id`, `paybox_id_from`, SUM(`summ`) as summa FROM `J_MONEY_SPEND` 
+		WHERE `paybox_id_from`=$paybox_id
+		AND `data`>='$date_start 00:00:00' AND `data`<='$date_end 23:59:59'
+		AND `spend_type_id`='$spend_type_id'
+		AND `cash_id`='$cash_id'
+		GROUP BY `paybox_id_from`;");
+        $summ=$db->result($r,0,"summa");
+        return $summ;
     }
 
 }

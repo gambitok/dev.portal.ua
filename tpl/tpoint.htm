@@ -3,7 +3,7 @@
 <link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
 <link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
 
-<h2 class=" border-bottom white-bg dashboard-header">Торгові точки</h2>
+<h2 class="border-bottom white-bg dashboard-header">Торгові точки</h2>
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -11,13 +11,13 @@
             <div class="ibox">
                 <div class="ibox-title">
                     <div class="row">
-                        <div class="col-md-6"><a class="btn btn-success"  href="#newTpoint" onClick="newTpointCard();"><i class='fa fa-plus'></i> Нова торгова точка</a></div>
+                        <div class="col-md-6"><a class="btn btn-success" href="#newTpoint" onClick="newTpointCard();"><i class='fa fa-plus'></i> Нова торгова точка</a></div>
                         <div class="col-md-6 text-right"></div>
 	                </div>
                 </div>
                 <div class="ibox-content">
                     <div class="table-responsive">
-                        <table  id="datatable" class="table table-striped table-hover table-bordered" width="100%">
+                        <table id="datatable" class="table table-striped table-hover table-bordered" width="100%">
                             <thead>
                                 <tr align="center">
                                     <th>Код</th>
@@ -32,7 +32,7 @@
                                 </tr>
                             </thead>
                             <tbody id="tpoint_range">
-							{tpoint_range}
+							    {tpoint_range}
                             </tbody>
                             <tfoot>
                                 <tr align="center">
@@ -51,18 +51,16 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
 
-
-<div id="TpointCard" class="modal inmodal fade" tabindex="-1" role="dialog"  aria-hidden="true">
+<div id="TpointCard" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
-                <h3 id="myModalLabel text-left">Карта торгової точки <span id="TpointCardLabel"></span></h3>
+                <h3 class="myModalLabel text-left">Карта торгової точки <span id="TpointCardLabel"></span></h3>
             </div>
             <div class="modal-body" id="TpointCardBody">
 	        </div>
@@ -70,12 +68,12 @@
     </div>
 </div>
 
-<div id="fileUploadForm2" class="modal inmodal fade" tabindex="-1" role="dialog"  aria-hidden="true">
+<div id="fileUploadForm2" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
-                <h3 id="myModalLabel text-left">Карта контрагента</h3>
+                <h3 class="myModalLabel text-left">Карта контрагента</h3>
             </div>
             <div class="modal-body" id="TpointFilesBody">
                  <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
@@ -100,7 +98,8 @@
         </div>
     </div>
 </div>
-<div id="viewDetailsForm" class="modal inmodal fade viewDetailsForm" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div id="viewDetailsForm" class="modal inmodal fade viewDetailsForm" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
 			<div class="modal-header">
@@ -119,6 +118,7 @@
         </div>
     </div>
 </div>
+
 <div style="display: none;" class="modal inmodal fade fileTpointDetailsUploadForm" id="fileTpointDetailsUploadForm" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -137,7 +137,7 @@
     </div>
 </div>
 
-<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog"  aria-hidden="true">
+<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel" class="text-left"></h3></div>
@@ -146,7 +146,7 @@
     </div>
 </div>
 
-<div style="display: none;" id="FormModalWindow2" class="modal fade FormModalWindow2" tabindex="-1" role="dialog"  aria-hidden="true">
+<div style="display: none;" id="FormModalWindow2" class="modal fade FormModalWindow2" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel2" class="text-left"></h3></div>
@@ -154,7 +154,8 @@
         </div>
     </div>
 </div>
-<div style="display: none;" id="FormModalWindow3" class="modal fade FormModalWindow3" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none;" id="FormModalWindow3" class="modal fade FormModalWindow3" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel3" class="text-left"></h3></div>
@@ -162,6 +163,7 @@
         </div>
     </div>
 </div>
+
 <script type="text/javascript" src="/js/plugins/barcode-generator/jquery-barcode.js"></script>
 <!-- Bootstrap markdown -->
 <script src="/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>
@@ -175,17 +177,12 @@
 <script src="/js/tpoint/tpoint.js"></script>
 <script language="javascript">
 $(document).ready(function() {
-	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
-							
-			$('#datatable_storage').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}, "dom": '<"top">frt<"bottom"lpi><"clear">'});
-			
-			$('#datatable_suppl_storage').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}, "dom": '<"top">frt<"bottom"lpi><"clear">'});
-					
-			$('#datatable_delivery').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}, "dom": '<"top">frt<"bottom"lpi><"clear">'});
-					
-			$('#datatable_suppl_delivery').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}, "dom": '<"top">frt<"bottom"lpi><"clear">'});
-			
-			$('#datatable_suppl_fm').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}, "dom": '<"top">frt<"bottom"lpi><"clear">'});
+	$("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
+    $("#datatable_storage").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}, "dom": '<"top">frt<"bottom"lpi><"clear">'});
+    $("#datatable_suppl_storage").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}, "dom": '<"top">frt<"bottom"lpi><"clear">'});
+    $("#datatable_delivery").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}, "dom": '<"top">frt<"bottom"lpi><"clear">'});
+    $("#datatable_suppl_delivery").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}, "dom": '<"top">frt<"bottom"lpi><"clear">'});
+    $("#datatable_suppl_fm").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}, "dom": '<"top">frt<"bottom"lpi><"clear">'});
 });
 </script>
 <script type="text/javascript">

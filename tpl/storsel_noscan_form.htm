@@ -16,15 +16,14 @@
         <label class="col-sm-4 control-label">Кількість</label>
         <div class="col-sm-8">
             <input type="hidden" id="dif_amount_barcode" value="{dif_amount_barcode}">
-            <input type="text" class="form-control numberOnly" id="amount_barcode_noscan" value="{amount_barcode_noscan}">
+            <input type="text" class="form-control numberOnly" id="amount_barcode_noscan" value="{amount_barcode_noscan}" title="Кількість">
         </div>
     </div>
-
     <div class="hr-line-dashed"></div>
     <div class="form-group">
         <div class="col-sm-10 text-right col-sm-offset-2">
             <button class="btn btn-primary" type="button" onClick="saveStorselNoscanForm('{select_id}','{art_id}','{str_id}');">Зберегти</button>
-            <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+            <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
         </div>
     </div>
 </form>

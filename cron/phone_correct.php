@@ -3,6 +3,7 @@ error_reporting(E_ERROR);
 @ini_set('display_errors', true);
 @ini_set('html_errors', false);
 define('RD', dirname (__FILE__));
+date_default_timezone_set("Europe/Kiev");
 require_once (RD."/../lib/DbSingleton.php");$db=DbSingleton::getDb();
 require_once (RD."/../lib/sms_class.php");$sms=new sms;
 /*

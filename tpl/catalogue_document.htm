@@ -17,7 +17,6 @@ td.group{
                         	<input type="hidden" id="search_brand_id" value="{brand_id}">
                             <div class="form-group" id="srchInG">
                                 <div class="input-group">
-                                	
                                     <input type="text" class="form-control control-label required" style="width:250px;" id="catalogue_art" name="catalogue_art" value="{art}" placeholder="Введите артикул (F2)">
                                 	<div class="input-group-btn"> 
                                     	<button type="submit" tabindex="-1" class="btn btn-primary"><i class="fa fa-search"></i></button> 
@@ -32,11 +31,10 @@ td.group{
 								</div>
                             </div>
                             <div class="form-group">
-                                <a class="btn btn-primary collapsed"  title="Фільтр по номенклатурі" aria-expanded="false" data-toggle="collapse" data-parent="#accordion1" href="#collapseCatFilter4" onClick="$('#collapseCatFilter2').collapse('hide');"><i class='fa fa-glass'></i></a>
-                            
-                                <a class="btn btn-primary collapsed"  title="Фільтр по авто" aria-expanded="false" data-toggle="collapse" data-parent="#accordion2" href="#collapseCatFilter2" onClick="$('#collapseCatFilter4').collapse('hide');"><i class='fa fa-car'></i></a>
+                                <a class="btn btn-primary collapsed" title="Фільтр по номенклатурі" aria-expanded="false" data-toggle="collapse" data-parent="#accordion1" href="#collapseCatFilter4" onClick="$('#collapseCatFilter2').collapse('hide');"><i class='fa fa-glass'></i></a>
+                                <a class="btn btn-primary collapsed" title="Фільтр по авто" aria-expanded="false" data-toggle="collapse" data-parent="#accordion2" href="#collapseCatFilter2" onClick="$('#collapseCatFilter4').collapse('hide');"><i class='fa fa-car'></i></a>
                             </div>
-                            <button class="btn btn-default  pull-right"  title="Налаштування таблиці"  onClick="showCatFieldsViewForm(); return false;"><i class='fa fa-eye'></i></button>&nbsp; 
+                            <button class="btn btn-default pull-right" title="Налаштування таблиці" onClick="showCatFieldsViewForm(); return false;"><i class='fa fa-eye'></i></button>&nbsp;
                         </form><br>
                     </div>
 
@@ -47,13 +45,13 @@ td.group{
                         	<div class="col-md-4">
                                 <div class="row">
                                    <div class="col-md-3 text-right"><strong>Постачальник</strong></div>
-                                    <div class="col-md-9"><select class="form-control select2-multiple selectpicker"  multiple="multiple" data-actions-box="true" data-selected-text-format="count > 3" id="fil4SupplId" name="fil4SupplId" placeholder="Постачальник" style="width:100%;">
+                                    <div class="col-md-9"><select class="form-control select2-multiple selectpicker" multiple="multiple" data-actions-box="true" data-selected-text-format="count > 3" id="fil4SupplId" name="fil4SupplId" placeholder="Постачальник" style="width:100%;">
                                     	{fil4SupplList}
                                     </select></div>
                                 </div><br>
                                 <div class="row">
                                     <div class="col-md-3 text-right"><strong>Бренд</strong></div>
-                                    <div class="col-md-9"><select class="form-control select2-multiple selectpicker"  multiple="multiple" data-actions-box="true" data-selected-text-format="count > 3" id="fil4BrandId" name="fil4BrandId" placeholder="Виробник" style="width:100%;">
+                                    <div class="col-md-9"><select class="form-control select2-multiple selectpicker" multiple="multiple" data-actions-box="true" data-selected-text-format="count > 3" id="fil4BrandId" name="fil4BrandId" placeholder="Виробник" style="width:100%;">
                                     	{fil4BrandList}
                                     </select></div>
                                 </div>
@@ -62,7 +60,7 @@ td.group{
 	                            <div class="row">
                                     <div class="col-md-3 text-right"><strong>Товарна група</strong></div>
 									<div class="col-md-9">
-                                    	<select class="form-control select2-multiple" id="fil4GoodsGroupId" name="fil4GoodsGroupId"  multiple="multiple" data-actions-box="true"placeholder="Товарна група" style="width:100%;">
+                                    	<select class="form-control select2-multiple" id="fil4GoodsGroupId" name="fil4GoodsGroupId" multiple="multiple" data-actions-box="true"placeholder="Товарна група" style="width:100%;">
                                     	{fil4GoodsGroupList}
                                     </select>
                                     </div>
@@ -90,7 +88,6 @@ td.group{
                         </form>
 					</div>
 
-
 					<div aria-expanded="false" id="collapseCatFilter2" class="panel-collapse collapse">
                     	<h3 align="center">Фільтр по авто</h3>
                         <form method="post" id="CatFilterSearch" class="form-inline border-bottom " onSubmit="fil2Search(); return false;">
@@ -100,19 +97,19 @@ td.group{
 	                        <div class="form-group col-md-2">
                                 <div class="input-group col-md-12">
                                     <label class="font-noraml">Виробник</label>
-                                    <select id="fil2Manufacture" data-placeholder="Вибрати марку" class="form-control" style="width:100%" onChange="loadFilterModelSelectList()"><option value="0"></option>{fil2ManufactureList}</select>
+                                    <select title="Виробник" id="fil2Manufacture" data-placeholder="Вибрати марку" class="form-control" style="width:100%" onChange="loadFilterModelSelectList()"><option value="0"></option>{fil2ManufactureList}</select>
                                 </div>
                             </div>
 							<div class="form-group col-md-3">
                                 <div class="input-group col-md-12">
                                     <label class="font-noraml">Модель</label>
-                                    <select id="fil2Model" data-placeholder="Вибрати модель" class="form-control" style="width:100%" onChange="loadFilterModificationSelectList()"><option value="0"></option>{fil2ModelList}</select>
+                                    <select title="Модель" id="fil2Model" data-placeholder="Вибрати модель" class="form-control" style="width:100%" onChange="loadFilterModificationSelectList()"><option value="0"></option>{fil2ModelList}</select>
                                 </div>
                             </div>
                             <div class="form-group col-md-5">
                                 <div class="input-group col-md-12">
                                     <label class="font-noraml">Модифікація <small>(Тип палива  |  Двигун  |  Рік | К.С./кВт  | Об'єм двигуна, cm3  | Код двигуна)</small></label>
-                                    <select id="fil2Modification" data-placeholder="Вибрати модифікацію" class="form-control" style="width:100%" onChange="loadFilterGroupTreeListSide()"><option value="0"></option>{fil2ModificationList}</select>                                </div>
+                                    <select title="Модифікація" id="fil2Modification" data-placeholder="Вибрати модифікацію" class="form-control" style="width:100%" onChange="loadFilterGroupTreeListSide()"><option value="0"></option>{fil2ModificationList}</select>                                </div>
                             </div>
                             <!--<div class="form-group col-md-1">
                                 <div class="input-group col-md-6 pull-right">
@@ -135,7 +132,7 @@ td.group{
                             <div class="col-md-2 col-sm-6 col-xs-12 pull-right">
 	                            <input type="text" class="form-control input-sm m-b-xs" id="filter2" placeholder="Пошук у результатах">
                             </div>
-                            <table  id="datatable_catalogue" class="footable table table-stripped table-bordered" data-sorting="true" data-page-size="20" data-filter="#filter2">
+                            <table id="datatable_catalogue" class="footable table table-stripped table-bordered" data-sorting="true" data-page-size="20" data-filter="#filter2">
                                 <thead id="catalogue_header">
                                    {header_list}
                                 </thead>

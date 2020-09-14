@@ -1,6 +1,7 @@
 {
     "require": {
         "mpdf/mpdf": "^8.0",
-        "ext-iconv": "*"
+        "ext-iconv": "*",
+        "ext-imap": "*"
     }
 }

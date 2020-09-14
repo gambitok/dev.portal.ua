@@ -12,8 +12,8 @@ $group_str_id=$_POST["group_str_id"];
 
 if ($group_type_id=="group") {
     $storeFolder="uploads/images/group_tree_str";
-    $table="T2_GROUP_TREE_HEAD_STR";
-    $param="GROUP_ID";
+    $table="T2_GROUP_TREE_STR";
+    $param="ID";
 }
 
 if ($group_type_id=="head") {
@@ -24,19 +24,19 @@ if ($group_type_id=="head") {
 
 if (!empty($_FILES)) {
 
-    $nameFile=$_FILES['file']['name'];
+    $nameFile=$_FILES["file"]["name"];
     $nameFile=str_replace(" ","_",$nameFile);
     $nameFile=str_replace(str_split('\\/:*?"<>|+-()[], '), '', $nameFile);
 
-    $tempFile = $_FILES['file']['tmp_name'];
+    $tempFile = $_FILES["file"]["tmp_name"];
 
-    $targetPath = dirname( __FILE__ ) . $ds. $storeFolder . $ds;
+    $targetPath = dirname( __FILE__ ) . $ds . $storeFolder . $ds;
 
     $targetFile =  $targetPath. $nameFile;
 
     move_uploaded_file($tempFile,$targetFile);
 
-    $db->query("update $table set IMAGES='$nameFile' where $param='$group_str_id';");
+    $db->query("UPDATE $table SET `IMAGES`='$nameFile' WHERE $param='$group_str_id';");
 
 }
 

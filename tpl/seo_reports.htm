@@ -5,8 +5,7 @@
 <link rel="stylesheet" href="/css/plugins/chosen-1.8.3/docsupport/prism.css">
 <link rel="stylesheet" href="/css/plugins/chosen-1.8.3/chosen.css">
 
-
-<h2 class=" border-bottom white-bg dashboard-header">Продажі по менеждеру</h2>
+<h2 class="border-bottom white-bg dashboard-header">Продажі по менеждеру</h2>
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -18,51 +17,49 @@
 							<div class="ibox float-e-margins">
 								
 								<div class="row">
-								
-									<div class="col-sm-5 col-lg-5">
-										<label for="date_start" style="padding-right: 15px; padding-left: 30px;">Дата від</label>
-										<input id="date_start" type="date" value="{date}" class="form-control" style="width: 200px; display: inline; padding: 0px 5px;">
 
-										<label for="date_end" style="padding-right: 15px; padding-left: 30px;">Дата до</label>
-										<input id="date_end" type="date" value="{date}" class="form-control" style="width: 200px; display: inline; padding: 0px 5px;">
-								    </div>								
-									
-									<div class="col-lg-3 col-sm-3">
-										<label style="padding-right: 15px; padding-left: 30px;">Валюта</label>
-										<select class="form-control" name=cash_select"" id="cash_select" style="display: inline; width: 200px;">
+									<div class="col-sm-2 col-lg-2">
+										<label for="date_start">Дата від</label>
+										<input title="Дата від" id="date_start" type="date" value="{date}" class="form-control" style="width: 200px; display: inline; padding: 0 5px;">
+									</div>
+
+									<div class="col-sm-2 col-lg-2">
+										<label for="date_end">Дата до</label>
+										<input title="Дата до" id="date_end" type="date" value="{date}" class="form-control" style="width: 200px; display: inline; padding: 0 5px;">
+									</div>
+
+									<div class="col-lg-2 col-sm-2">
+										<label for="cash_select">Валюта</label>
+										<select title="Валюта" class="form-control" name=cash_select"" id="cash_select" style="display: inline; width: 200px;">
 											<option value="0">-</option>
 											{cash_select}
 										</select>
 									</div>
 									
-									<div class="col-lg-2 col-sm-2">
-										<label style="padding-right: 15px; padding-top: 7px; float: left;">Клієнти</label>
+									<div class="col-lg-1 col-sm-1">
+										<label for="client_status" style="display: block">Клієнти</label>
 										<span class="buttons-inline pull-left">
 											<input type="checkbox" class="js-switch" data-size="small" placeholder="Клієнти" id="client_status"/>
 										</span>
 									</div>
 
-									<div class="col-sm-2 col-lg-2">
-										<button class="btn btn-primary" onClick="showSeoReports();">Сформувати</button>	
-									</div>
-								
-											
-								</div>
-								
-								<div class="row"  style="padding-top: 30px;">
-									<div class="col-sm-10 col-lg-10">
-									    <label style="padding-right: 15px; padding-left: 30px;">Менеджери</label>
-										<select id="managers" name="managers[]" data-placeholder="Вибрати менеджерів" class="chosen-select" multiple tabindex="4" style="width: 250px;">
+									<div class="col-lg-3 col-sm-3">
+										<label for="managers" style="display: block">Менеджери</label>
+										<select title="Менеджери" id="managers" name="managers[]" data-placeholder="Вибрати менеджерів" class="chosen-select" multiple tabindex="4" style="display: inline; width: 250px;">
 											{managers_list}
 										</select>
 									</div>
-										
+
 									<div class="col-sm-2 col-lg-2">
+										<button class="btn btn-primary" onClick="showSeoReports();"><i class="fa fa-table"></i> Сформувати</button>
 										<button type="button" class="btn btn-info" onClick="exportSeoReports();"><i class="fa fa-print"></i> Експорт</button>
-									</div>	
+									</div>
+
 								</div>
+
+								<hr class="row">
 								
-								<div class="row">
+								<div class="row" style="margin:0">
 									<div id="seo_reports_range"></div>
 								</div>
 								

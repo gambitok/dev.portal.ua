@@ -5,8 +5,7 @@
 <link rel="stylesheet" href="/css/plugins/chosen-1.8.3/docsupport/prism.css">
 <link rel="stylesheet" href="/css/plugins/chosen-1.8.3/chosen.css">
 
-
-<h2 class=" border-bottom white-bg dashboard-header">Продажі по клієнтам</h2>
+<h2 class="border-bottom white-bg dashboard-header">Продажі по клієнтам</h2>
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -18,55 +17,61 @@
 							<div class="ibox float-e-margins">
 								
 								<div class="row">
-								
-									<div class="col-sm-5 col-lg-5">
-										<label for="date_start" style="padding-right: 15px; padding-left: 30px;">Дата від</label>
-										<input id="date_start" type="date" value="{date}" class="form-control" style="width: 200px; display: inline; padding: 0px 5px;">
 
-										<label for="date_end" style="padding-right: 15px; padding-left: 30px;">Дата до</label>
-										<input id="date_end" type="date" value="{date}" class="form-control" style="width: 200px; display: inline; padding: 0px 5px;">
-								    </div>								
-									
-									<div class="col-lg-3 col-sm-3">
-										<label style="padding-right: 15px; padding-left: 30px;">Валюта</label>
-										<select class="form-control" name=cash_select"" id="cash_select" style="display: inline; width: 200px;">
+									<div class="col-sm-2 col-lg-2">
+										<label for="date_start">Дата від</label>
+										<input title="Дата від" id="date_start" type="date" value="{date}" class="form-control" style="width: 200px; display: inline; padding: 0 5px;">
+									</div>
+
+									<div class="col-sm-2 col-lg-2">
+										<label for="date_end">Дата до</label>
+										<input title="Дата до" id="date_end" type="date" value="{date}" class="form-control" style="width: 200px; display: inline; padding: 0 5px;">
+									</div>
+
+									<div class="col-lg-2 col-sm-2">
+										<label for="cash_select">Валюта</label>
+										<select title="Валюта" class="form-control" name=cash_select"" id="cash_select" style="display: inline; width: 200px;">
 											<option value="0">-</option>
 											{cash_select}
 										</select>
 									</div>
-									
-									<div class="col-lg-4 col-sm-4">
-										<label style="padding-right: 15px; padding-top: 7px; float: left;">Торгова точка</label>
-										<select class="form-control" name="tpoint_select" id="tpoint_select" style="display: inline; width: 200px;">
+
+									<div class="col-lg-2 col-sm-2">
+										<label for="tpoint_select">Торгова точка</label>
+										<select title="Торгова точка" class="form-control" name="tpoint_select" id="tpoint_select" style="display: inline; width: 200px;">
 											<option value="0">Усі торгові точки</option>
 											{tpoint_select}
 										</select>
 									</div>
 
-									
-											
-								</div>
-								
-								<div class="row"  style="padding-top: 30px;">
-									<div class="col-sm-8 col-lg-8">
-									    <label style="padding-right: 15px; padding-left: 30px;">Клієнти</label>
-										<select id="clients" name="clients[]" data-placeholder="Вибрати клієнтів" class="chosen-select" multiple tabindex="4" style="width: 250px;">
+									<div class="col-sm-2 col-lg-2">
+										<label for="clients" style="display: block">Клієнти</label>
+										<select id="clients" name="clients[]" data-placeholder="Вибрати клієнтів" class="chosen-select" multiple tabindex="4" title="Клієнти" style="width: 250px;">
 											{clients_list}
 										</select>
 									</div>
-									
-									<div class="col-sm-2 col-lg-2">
-										<button class="btn btn-primary" onClick="showReportClients();">Сформувати</button>	
+
+									<div class="col-lg-2 col-sm-2">
+										<label for="category_select">Категорія клієнта</label>
+										<select title="Категорія клієнта" class="form-control" name="category_select" id="category_select" style="display: inline; width: 100%;">
+											<option value="0">-Не вибрано-</option>
+											{category_select}
+										</select>
 									</div>
-										
-									<div class="col-sm-2 col-lg-2">
-										<button type="button" class="btn btn-info" onClick="exportReportClients();"><i class="fa fa-print"></i> Експорт</button>
-									</div>	
+
+								</div>
+
+                                <hr class="row">
+
+								<div class="row">
+									<div class="col-sm-12 col-lg-12 text-right">
+										<button class="btn btn-primary" onClick="showReportClients();"><i class="fa fa-table"></i> Сформувати</button>
+									</div>
 								</div>
 								
-								<hr>
+								<hr class="row">
 								
-								<div class="row">
+								<div class="row" style="margin: 0">
 									<div id="report_clients_range"></div>
 								</div>
 								

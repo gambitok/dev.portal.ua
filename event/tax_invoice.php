@@ -14,10 +14,10 @@ if ($accss=="1"){
 		$content=str_replace("{tax_invoice_range}", $range_list, $content);
 	}
 
-	if ($w=="printSlIvBuh"){ 
-		$tax_id=$links[2];
-		$form=$tax_invoice->printTaxInvoice($tax_id);
-	}
+//	if ($w=="printSlIvBuh"){
+//		$tax_id=$links[2];
+//		$form=$tax_invoice->printTaxInvoice($tax_id);
+//	}
 
 	if ($w=="exportTIvXML"){ 
 		$tax_id=$links[2];

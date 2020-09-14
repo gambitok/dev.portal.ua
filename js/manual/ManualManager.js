@@ -11,6 +11,7 @@ function filterManualManagerList(){
 		$('#ManualScroll').append(result["content"]);
 	}}, true); 
 }
+
 function showManualManager(fldVal,fldText) {
 	var manValue =document.getElementById(fldVal).value;
 	var manText =document.getElementById(fldText).value;
@@ -22,8 +23,8 @@ function showManualManager(fldVal,fldText) {
 		document.getElementById("valText").value=fldText;
 		showAlertForm();
 	}}, true);
-	
 }
+
 function AddManualManagerValue(){
 	var name =document.getElementById("NewManagerName").value;
 	var city =document.getElementById("NewManagerCity").value;
@@ -31,12 +32,12 @@ function AddManualManagerValue(){
 	var email =document.getElementById("NewManagerEmail").value;
 	var persent =document.getElementById("NewManagerPersent").value;
 	var bankOc =document.getElementById("bankOc").value;
-
 	JsHttpRequest.query('content.php',{ 'w': 'AddManualManagerValue','name':name,'city':city,'phone':phone,'email':email,'persent':persent,'bankOc':bankOc}, 
 	function (result, errors){ if (errors) {alert (errors);} if (result){ 
 		showManualManager(document.getElementById("val").value,document.getElementById("valText").value);
 	}}, true);
 }
+
 function setManualManager(id){
 	var fValue =document.getElementById("v"+id).innerHTML;
 	var fldVal=document.getElementById("val").value;

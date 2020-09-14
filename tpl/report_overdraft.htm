@@ -3,7 +3,7 @@
 <link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
 <link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
 
-<h2 class=" border-bottom white-bg dashboard-header">Прострочені накладні</h2>
+<h2 class="border-bottom white-bg dashboard-header">Прострочені накладні</h2>
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -37,7 +37,7 @@
                 </div>
                 <div class="ibox-content">
                     <div class="table-responsive">
-                        <table  id="datatable" class="table table-striped table-hover table-bordered" width="100%">
+                        <table id="datatable" class="table table-striped table-hover table-bordered" width="100%">
                             <thead>
                                 <tr align="center">
                                     <th style="text-align:left">Клієнт / Документ</th>
@@ -61,8 +61,7 @@
     </div>
 </div>
 
-
-<div id="SaleInvoiceCard" class="modal inmodal fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog"  aria-hidden="true">
+<div id="SaleInvoiceCard" class="modal inmodal fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header">
@@ -92,7 +91,7 @@
     </div>
 </div>
 
-<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog"  aria-hidden="true">
+<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel" class="text-left"></h3></div>
@@ -100,7 +99,8 @@
         </div>
     </div>
 </div>
-<div style="display: none;" id="FormModalWindow2" class="modal fade FormModalWindow2" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none;" id="FormModalWindow2" class="modal fade FormModalWindow2" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel2" class="text-left"></h3></div>
@@ -108,6 +108,7 @@
         </div>
     </div>
 </div>
+
 <div style="display: none;" id="FormModalWindow3" class="modal fade FormModalWindow3" tabindex="-1" role="dialog" data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -116,6 +117,7 @@
         </div>
     </div>
 </div>
+
 <div style="display: none;" id="FormModalWindow4" class="modal fade FormModalWindow3" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog modal-wide2">
         <div class="modal-content">
@@ -124,7 +126,8 @@
         </div>
     </div>
 </div>
-<div style="display: none;" id="FormModalWindow5" class="modal fade FormModalWindow5" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none;" id="FormModalWindow5" class="modal fade FormModalWindow5" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel5" class="text-left"></h3></div>
@@ -133,7 +136,7 @@
     </div>
 </div>
 
-<div style="display: none;" id="ModalPartiotionAmount" class="modal fade FormModalWindow" tabindex="-1" role="dialog"  aria-hidden="true">
+<div style="display: none;" id="ModalPartiotionAmount" class="modal fade FormModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" style="width: 500px;">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
@@ -150,32 +153,32 @@
 					<input type="hidden" id="invoice_id_tab" name="invoice_id_tab">
 					<button style="float:right;" class="btn btn-primary" onClick="savePartitionsInvoiceAmount()">Зберегти</button>
 				</div>
-				
 			</div>
         </div>
     </div>
 </div>
 
-<div style="display: none;" id="FormModalWindowAll" class="modal inmodal fade FormModalWindowAll" tabindex="-1" role="dialog"  aria-hidden="true">
+<div style="display: none;" id="FormModalWindowAll" class="modal inmodal fade FormModalWindowAll" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
-				<h3 id="FormModalWindowAll" class="text-left">Визначення знижки для усіх обраних брендів</h3></div>
-            <div class="modal-body" id="FormModalWindowAll">
+				<h3 id="FormModalWindowAllLabel" class="text-left">Визначення знижки для усіх обраних брендів</h3></div>
+            <div class="modal-body" id="FormModalWindowAllBody">
 			<form method="get" class="form-horizontal" onsubmit="" enctype="multipart/form-data">
 				<div class="form-group">
-						<div class="col-sm-3 text-left">
-							<input id="discountStr" type="text" class="form-control" placeholder="Введіть знижку (F2)" onKeyPress="return runScript(event)">
-						</div>
-						<div class="col-sm-3 text-left">
-							<button class="btn btn-white" type="button" data-dismiss="modal" onClick="calculateDiscountPriceAll();">Визначити ціну</button>
-						</div>
+                    <div class="col-sm-3 text-left">
+                        <input id="discountStr" type="text" class="form-control" placeholder="Введіть знижку (F2)" onKeyPress="return runScript(event)">
+                    </div>
+                    <div class="col-sm-3 text-left">
+                        <button class="btn btn-white" type="button" data-dismiss="modal" onClick="calculateDiscountPriceAll();">Визначити ціну</button>
+                    </div>
 				</div>
         	</form>
 			</div>
         </div>
     </div>
 </div>
+
 <script type="text/javascript" src="/js/plugins/barcode-generator/jquery-barcode.js"></script>
 <!-- Bootstrap markdown -->
 <script src="/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>
@@ -193,7 +196,7 @@
 
 <script language="javascript">
 $(document).ready(function() {
-	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+	$("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
 });
 </script>
 <script type="text/javascript">

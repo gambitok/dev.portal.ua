@@ -3,7 +3,7 @@
 <link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
 <link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
 
-<h2 class=" border-bottom white-bg dashboard-header">Журнал накладних надходжень</h2>
+<h2 class="border-bottom white-bg dashboard-header">Журнал накладних надходжень</h2>
 <input type="hidden" id="doc_prefix" value="{doc_prefix}">
 
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -13,7 +13,7 @@
                 <div class="ibox-title">
                     <div class="row">
                         <div class="col-md-8">
-							<a class="btn btn-success"  href="#newIncome" onClick="preNewIncomeCard();"><i class='fa fa-plus'></i> Нова накладна</a>
+							<a class="btn btn-success" href="#newIncome" onClick="preNewIncomeCard();"><i class='fa fa-plus'></i> Нова накладна</a>
 							<label for="date_start" style="padding-right: 15px; padding-left: 30px;">Дата від</label><input id="date_start" type="date" value="{date_today}" class="form-control" style="width: 200px; display: inline; padding: 0px 5px;">
 							<label for="date_end" style="padding-right: 15px; padding-left: 30px;">Дата до</label><input id="date_end" type="date" value="{date_today}" class="form-control" style="width: 200px; display: inline; padding: 0px 5px;">
 							<button class="btn btn-primary" onClick="filterIncomesList();"><i class='fa fa-search'></i></button>
@@ -40,7 +40,7 @@
                                 </div><br>
 								<div class="row">
                                     <div class="col-md-3 text-right"><strong>Статус</strong></div>
-                                    <div class="col-md-9"><select class="form-control" size="1" id="filStatusMain"><option value="0">-- -- --</option>{status_main_list}</select></div>
+                                    <div class="col-md-9"><select class="form-control" size="1" id="filStatusMain" title="Статус"><option value="0">-- -- --</option>{status_main_list}</select></div>
                                 </div><br>
                                 <div class="row">
 	                                <div class="col-md-3"></div>
@@ -52,7 +52,7 @@
                         </form>
 					</div>
                     <div class="table-responsive">
-                        <table  id="datatable" class="table table-striped table-hover table-bordered" width="100%">
+                        <table id="datatable" class="table table-striped table-hover table-bordered" width="100%">
                             <thead>
                                 <tr align="center">
                                     <th>Номер</th>
@@ -62,38 +62,34 @@
                                     <th>Інвойс вхідний </th>
                                     <th>Інвойс дата</th>
                                     <th>Інвойс сума</th>
-                                    <!--<th>Сума кінцева</th>-->
                                     <th>Валюта</th>
                                     <th>Статус</th>
                                     <th>Автор</th>
                                 </tr>
                             </thead>
                             <tbody id="income_range">
-							{income_range}
+							    {income_range}
                             </tbody>
 						</table>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
 
-
-<div id="IncomeCard" class="modal inmodal fade" tabindex="-1" role="dialog"  aria-hidden="true">
+<div id="IncomeCard" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
-                <h3 id="myModalLabel text-left">Накладна №<span id="IncomeCardLabel"></span></h3>
+                <h3 class="myModalLabel text-left">Накладна №<span id="IncomeCardLabel"></span></h3>
             </div>
             <div class="modal-body" id="IncomeCardBody">
 	        </div>
         </div>
     </div>
 </div>
-
 
 <div style="display: none;" class="modal inmodal fade fileIncomeStrUploadForm" id="fileIncomeStrUploadForm" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
@@ -112,9 +108,7 @@
     </div>
 </div>
 
-
-
-<div id="fileUploadForm2" class="modal inmodal fade" tabindex="-1" role="dialog"  aria-hidden="true">
+<div id="fileUploadForm2" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header">
@@ -145,10 +139,7 @@
     </div>
 </div>
 
-
-
-
-<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog"  aria-hidden="true">
+<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel" class="text-left"></h3></div>
@@ -156,7 +147,8 @@
         </div>
     </div>
 </div>
-<div style="display: none;" id="FormModalWindow2" class="modal fade FormModalWindow2" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none;" id="FormModalWindow2" class="modal fade FormModalWindow2" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel2" class="text-left"></h3></div>
@@ -164,7 +156,8 @@
         </div>
     </div>
 </div>
-<div style="display: none;" id="FormModalWindow3" class="modal fade FormModalWindow3" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none;" id="FormModalWindow3" class="modal fade FormModalWindow3" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel3" class="text-left"></h3></div>
@@ -172,6 +165,7 @@
         </div>
     </div>
 </div>
+
 <div style="display: none;" class="modal inmodal fade fileIncomesCsvUploadForm" id="fileIncomesCsvUploadForm" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -188,6 +182,7 @@
         </div>
     </div>
 </div>
+
 <script type="text/javascript" src="/js/plugins/barcode-generator/jquery-barcode.js"></script>
 <!-- Bootstrap markdown -->
 <script src="/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>
@@ -204,7 +199,7 @@
 <script src="/js/income/income.js?201705301435"></script>
 <script language="javascript">
 $(document).ready(function() {
-	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+	$("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
 });
 </script>
 <script type="text/javascript">

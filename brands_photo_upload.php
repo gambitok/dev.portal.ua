@@ -14,12 +14,12 @@ if(!empty($_FILES)){
 	$filename = $targetDir.'/'.$_FILES['file']['name'];
 	move_uploaded_file($tmpFile,$filename);
 	$f=$_FILES['file']['name'];
-	$db->query("update T2_BRAND_LINK set logo_name='$f' where brand_id='$brands_id';");
+	$db->query("UPDATE `T2_BRAND_LINK` SET `logo_name`='$f' WHERE `brand_id`='$brands_id';");
 	
-	$r=$db->query("select brand_id from T2_BRAND_LINK where brand_id='$brands_id';"); $n=$db->num_rows($r);
+	$r=$db->query("SELECT `brand_id` FROM `T2_BRAND_LINK` WHERE `brand_id`='$brands_id';"); $n=$db->num_rows($r);
 
-	$r2=$db->query("select BRAND_NAME from T2_BRANDS where BRAND_ID='$brands_id';");
+	$r2=$db->query("SELECT `BRAND_NAME` FROM `T2_BRANDS` WHERE `BRAND_ID`='$brands_id';");
 	$name=$db->result($r2,0,"BRAND_NAME");
 	
-	if($n==0) $db->query("insert into T2_BRAND_LINK (`brand_id`,`name`,`logo_name`) values ('$brands_id','$name','$f');");
+	if($n==0) $db->query("INSERT INTO `T2_BRAND_LINK` (`brand_id`,`name`,`logo_name`) VALUES ('$brands_id','$name','$f');");
 }

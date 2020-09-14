@@ -3,7 +3,7 @@
 <link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
 <link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
 
-<h2 class=" border-bottom white-bg dashboard-header">Склади</h2>
+<h2 class="border-bottom white-bg dashboard-header">Склади</h2>
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -11,65 +11,13 @@
             <div class="ibox">
                 <div class="ibox-title">
                     <div class="row">
-                        <div class="col-md-6"><a class="btn btn-success"  href="#newStorage" onClick="newStorageCard();"><i class='fa fa-plus'></i> Новий склад</a></div>
-                        <div class="col-md-6 text-right"><!--<a class="btn btn-info collapsed" aria-expanded="false" data-toggle="collapse" data-parent="#accordion" href="#collapseSearch"><i class='fa fa-search'></i> Пошук у реєстрі</a>--></div>
+                        <div class="col-md-6"><a class="btn btn-success" href="#newStorage" onClick="newStorageCard();"><i class='fa fa-plus'></i> Новий склад</a></div>
+                        <div class="col-md-6 text-right"></div>
 	                </div>
                 </div>
                 <div class="ibox-content">
-                	 <!--<div aria-expanded="false" id="collapseSearch" class="panel-collapse collapse">
-                    	<h3 align="center">Пошук записів за параметрами</h3>
-                        <form method="get" id="storageSearch" onSubmit="filterStorageList(); return false;">
-                        <div class="row">
-                        	<div class="col-md-4">
-                        		<div class="row">
-                                    <div class="col-md-3 text-right"><strong>Найменування</strong></div>
-                                    <div class="col-md-9"><input class="form-control" name="filStorageName" id="filStorageName" placeholder="Повна або часткова назва" value="{filStorageName}"></div>
-                                </div><br>
-                                <div class="row">
-                                   <div class="col-md-3 text-right"><strong>Країна</strong></div>
-                                    <div class="col-md-9"><select class="form-control" size="1" id="filCountry"><option value="0">-- -- --</option>{firm_executor_list}</select></div>
-                                </div><br>
-                                <div class="row">
-                                    <div class="col-md-3 text-right"><strong>Область</strong></div>
-                                    <div class="col-md-9"><select class="form-control" size="1" id="filState"><option value="0">-- -- --</option>{manager_list}</select></div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-	                            <div class="row">
-                                    <div class="col-md-3 text-right"><strong>Номер договору</strong></div>
-									<div class="col-md-9"><input class="form-control" name="filDocNom" id="filDocNom" placeholder="" value="{filDocNom}"></div>
-                                </div><br>
-                        		<div class="row">
-                                    <div class="col-md-3 text-right"><strong>Адреса</strong></div>
-                                    <div class="col-md-9"><select class="form-control" size="1" id="filCity"><option value="0">-- -- --</option>{city_list}</select></div>
-                                </div><br>
-                                <div class="row">
-                                    <div class="col-md-3 text-right"><strong>Email</strong></div>
-                                    <div class="col-md-9"><select class="form-control" size="1" id="filReason"><option value="0">-- -- --</option>{reason_list}</select></div>
-                                </div><br>
-                                
-                            </div>
-                            <div class="col-md-4">
-                        		<div class="row">
-                                    <div class="col-md-3 text-right"><strong>Дата</strong></div>
-                                    <div class="col-md-4"><input class="form-control" name="filDataFrom" id="filDataFrom" placeholder="рррр-мм-дд" value="{filDataFrom}"></div>
-                                    <div class="col-md-4"><input class="form-control" name="filDataTo" id="filDataTo" placeholder="рррр-мм-дд" value="{filDataTo}"></div>
-                                </div><br>
-								<div class="row">
-                                    <div class="col-md-3 text-right"><strong>Статус</strong></div>
-                                    <div class="col-md-9"><select class="form-control" size="1" id="filStatusMain"><option value="0">-- -- --</option>{status_main_list}</select></div>
-                                </div><br>
-                                <div class="row">
-	                                <div class="col-md-3"></div>
-                                    <div class="col-md-5"><button class="form-control btn btn-success"><i class='fa fa-search'></i> Пошук</button></div>
-                                    <div class="col-md-4"><a onClick="ClearStorageSearch();" class="btn btn-info"><i class='fa fa-eraser'></i></a></div>
-                                </div>
-                            </div>
-                        </div>
-                        </form>
-					</div>-->
                     <div class="table-responsive">
-                        <table  id="datatable" class="table table-striped table-hover table-bordered" width="100%">
+                        <table id="datatable" class="table table-striped table-hover table-bordered" width="100%">
                             <thead>
                                 <tr align="center">
                                     <th>Код</th>
@@ -84,7 +32,7 @@
                                 </tr>
                             </thead>
                             <tbody id="storage_range">
-							{storage_range}
+							    {storage_range}
                             </tbody>
                             <tfoot>
                                 <tr align="center">
@@ -109,12 +57,12 @@
 </div>
 
 
-<div id="StorageCard" class="modal inmodal fade" tabindex="-1" role="dialog"  aria-hidden="true">
+<div id="StorageCard" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
-                <h3 id="myModalLabel text-left">Карта складу <span id="StorageCardLabel"></span></h3>
+                <h3 class="myModalLabel text-left">Карта складу <span id="StorageCardLabel"></span></h3>
             </div>
             <div class="modal-body" id="StorageCardBody">
 	        </div>
@@ -122,12 +70,12 @@
     </div>
 </div>
 
-<div id="fileUploadForm2" class="modal inmodal fade" tabindex="-1" role="dialog"  aria-hidden="true">
+<div id="fileUploadForm2" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
-                <h3 id="myModalLabel text-left">Карта контрагента</h3>
+                <h3 class="myModalLabel text-left">Карта контрагента</h3>
             </div>
             <div class="modal-body" id="StorageFilesBody">
                  <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
@@ -152,12 +100,13 @@
         </div>
     </div>
 </div>
-<div id="viewDetailsForm" class="modal inmodal fade viewDetailsForm" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div id="viewDetailsForm" class="modal inmodal fade viewDetailsForm" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
 			<div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
-                <h3 id="myModalLabel text-left">Перегляд файлу</h3>
+                <h3 class="myModalLabel text-left">Перегляд файлу</h3>
             </div>
             <div class="modal-body" id="viewStorageDetailsFileBody">
 	            <div class="row"><div class="col-lg-12 animated fadeInRight">
@@ -171,6 +120,7 @@
         </div>
     </div>
 </div>
+
 <div style="display: none;" class="modal inmodal fade fileStorageDetailsUploadForm" id="fileStorageDetailsUploadForm" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -189,17 +139,12 @@
     </div>
 </div>
 
-
-
-
-
-
-<div style="display: none;" id="CountryModalWindow" class="modal fade CountryModalWindow" tabindex="-1" role="dialog"  aria-hidden="true">
+<div style="display: none;" id="CountryModalWindow" class="modal fade CountryModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 			<div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
-                <h3 id="myModalLabel text-left">Довідник країн походження</h3>
+                <h3 class="myModalLabel text-left">Довідник країн походження</h3>
             </div>
             <div class="modal-body" id="CountryBody">
                 <div class="sk-spinner sk-spinner-cube-grid"><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div></div>
@@ -207,12 +152,13 @@
         </div>
     </div>
 </div>
-<div style="display: none;" id="CostumsModalWindow" class="modal fade CostumsModalWindow" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none;" id="CostumsModalWindow" class="modal fade CostumsModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 			<div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
-                <h3 id="myModalLabel text-left">Довідник митних кодів</h3>
+                <h3 class="myModalLabel text-left">Довідник митних кодів</h3>
             </div>
             <div class="modal-body" id="CostumsBody">
                 <div class="sk-spinner sk-spinner-cube-grid"><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div></div>
@@ -220,7 +166,8 @@
         </div>
     </div>
 </div>
-<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog"  aria-hidden="true">
+
+<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel" class="text-left"></h3></div>
@@ -241,7 +188,7 @@
 <script src="/js/storage/storage.js?201705301435"></script>
 <script language="javascript">
 $(document).ready(function() {
-	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": false,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
+	$("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": false,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
 });
 </script>
 <script type="text/javascript">

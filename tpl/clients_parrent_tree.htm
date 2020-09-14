@@ -1,45 +1,47 @@
 <div class="row col-md-12 text-center"><a class="btn btn-info collapsed" aria-expanded="false" data-toggle="collapse" data-parent="#accordion" href="#collapseClientSearch"><i class='fa fa-search'></i> Пошук у реєстрі</a></div>
+
 <div class="row col-sm-12">
- <div aria-expanded="false" id="collapseClientSearch" class="panel-collapse collapse">
-	<h3 align="center">Пошук записів за параметрами</h3>
-	<form method="get" id="clientsSearch" onSubmit="filterMdlClientsList(); return false;">
-	<div class="row">
-		<div class="col-md-4">
+	<div aria-expanded="false" id="collapseClientSearch" class="panel-collapse collapse">
+		<h3 align="center">Пошук записів за параметрами</h3>
+		<form method="get" id="clientsSearch" onSubmit="filterMdlClientsList(); return false;">
 			<div class="row">
-				<div class="col-md-3 text-right"><strong>Код клієнта</strong></div>
-				<div class="col-md-9"><input class="form-control" name="filMdlClientId" id="filMdlClientId" placeholder="id клієнта" value=""></div>
-			</div><br>
-			<div class="row">
-				<div class="col-md-3 text-right"><strong>Найменування</strong></div>
-				<div class="col-md-9"><input class="form-control" name="filMdlClientName" id="filMdlClientName" placeholder="Повна або часткова назва" value=""></div>
+				<div class="col-md-4">
+					<div class="row">
+						<div class="col-md-3 text-right"><strong>Код клієнта</strong></div>
+						<div class="col-md-9"><input class="form-control" name="filMdlClientId" id="filMdlClientId" placeholder="Код клієнта" value=""></div>
+					</div><br>
+					<div class="row">
+						<div class="col-md-3 text-right"><strong>Найменування</strong></div>
+						<div class="col-md-9"><input class="form-control" name="filMdlClientName" id="filMdlClientName" placeholder="Повна або часткова назва" value=""></div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="row">
+						<div class="col-md-3 text-right"><strong>Номер телефона</strong></div>
+						<div class="col-md-9"><input class="form-control" name="filMdlPhone" id="filMdlPhone" placeholder="Номер телефона" value=""></div>
+					</div><br>
+					<div class="row">
+						<div class="col-md-3 text-right"><strong>Email</strong></div>
+						<div class="col-md-9"><input class="form-control" name="filMdlEmail" id="filMdlEmail" placeholder="Email" value=""></div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="row">
+						<div class="col-md-3 text-right"><strong>Область</strong></div>
+						<div class="col-md-9"><select class="form-control" size="1" id="filMdlState" title="Область"><option value="0">-- -- --</option>{state_list}</select></div>
+					</div><br>
+					<div class="row">
+						<div class="col-md-3"></div>
+						<div class="col-md-5"><button class="form-control btn btn-success"><i class='fa fa-search'></i> Пошук</button></div>
+						<div class="col-md-4"><a onClick="ClearMdlClientSearch();" class="btn btn-info"><i class='fa fa-eraser'></i></a></div>
+					</div>
+				</div>
 			</div>
-		</div>
-		<div class="col-md-4">
-			<div class="row">
-				<div class="col-md-3 text-right"><strong>Номер телефона</strong></div>
-				<div class="col-md-9"><input class="form-control" name="filMdlPhone" id="filMdlPhone" placeholder="" value=""></div>
-			</div><br>
-			<div class="row">
-				<div class="col-md-3 text-right"><strong>Email</strong></div>
-				<div class="col-md-9"><input class="form-control" name="filMdlEmail" id="filMdlEmail" placeholder="" value=""></div>
-			</div>
-		</div>
-		<div class="col-md-4">
-			<div class="row">
-				<div class="col-md-3 text-right"><strong>Область</strong></div>
-				<div class="col-md-9"><select class="form-control" size="1" id="filMdlState"><option value="0">-- -- --</option>{state_list}</select></div>
-			</div><br>
-			<div class="row">
-				<div class="col-md-3"></div>
-				<div class="col-md-5"><button class="form-control btn btn-success"><i class='fa fa-search'></i> Пошук</button></div>
-				<div class="col-md-4"><a onClick="ClearMdlClientSearch();" class="btn btn-info"><i class='fa fa-eraser'></i></a></div>
-			</div>
-		</div>
+		</form>
 	</div>
-	</form>
- </div>
+	<hr>
 </div>
-<table  id="datatable_parrent" class="table table-striped table-hover table-bordered" width="100%">
+<table id="datatable_parrent" class="table table-striped table-hover table-bordered" width="100%">
     <thead>
         <tr align="center">
             <th>#</th>
@@ -55,6 +57,6 @@
         </tr>
     </thead>
     <tbody id="client_range">
-    {list}
+    	{list}
     </tbody>
 </table>

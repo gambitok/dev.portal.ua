@@ -5,9 +5,8 @@ errs[1]="Занадто короткий запит для пошуку";
 function changeDeliveryTime(){
 	let time_from_ = $("#time_from_del").val();
 	let time_to = $("#time_to_del").val();
-	if(time_from_!==0 || time_to!==0)
-    $("#giveout_time").val('з '+time_from_+' по '+time_to);
-		else $("#giveout_time").val('');
+	if (time_from_!==0 || time_to!==0) $("#giveout_time").val('з '+time_from_+' по '+time_to);
+	else $("#giveout_time").val("");
 }
 
 function loadTpointList(){
@@ -26,8 +25,6 @@ function newTpointCard(){
 		showTpointCard(tpoint_id);
 	}}, true);
 }
-
-var barcode_settings = {barWidth: 1,barHeight: 50,moduleSize: 5,showHRI: true,addQuietZone: true,marginHRI: 5,bgColor: "#FFFFFF",color: "#000000",fontSize: 14,output: "css",posX: 0,posY: 0};
 
 function showTpointCard(tpoint_id){
 	if (tpoint_id<=0 || tpoint_id===""){toastr["error"](errs[0]);}
@@ -55,16 +52,15 @@ function saveTpointGeneralInfo(){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			var tpoint_id=$("#tpoint_id").val();
-			var name=$("#tpoint_name").val();
-			var full_name=$("#tpoint_full_name").val();
-			var address=$("#address").val();
-			var chief=$("#chief option:selected").val();
-			var country_id=$("#country_id option:selected").val();
-			var state_id=$("#state_id option:selected").val();
-			var region_id=$("#region_id option:selected").val();
-			var city_id=$("#city_id option:selected").val(); 
-		
+            let tpoint_id=$("#tpoint_id").val();
+            let name=$("#tpoint_name").val();
+            let full_name=$("#tpoint_full_name").val();
+            let address=$("#address").val();
+            let chief=$("#chief option:selected").val();
+            let country_id=$("#country_id option:selected").val();
+            let state_id=$("#state_id option:selected").val();
+            let region_id=$("#region_id option:selected").val();
+            let city_id=$("#city_id option:selected").val();
 			if (tpoint_id.length>0){
 				JsHttpRequest.query($rcapi,{'w':'saveTpointGeneralInfo','tpoint_id':tpoint_id,'name':name,'full_name':full_name,'address':address,'chief':chief,'country_id':country_id,'state_id':state_id,'region_id':region_id,'city_id':city_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -72,8 +68,7 @@ function saveTpointGeneralInfo(){
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#TpointCard").modal('hide');
 						loadTpointList();
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -90,7 +85,7 @@ function deleteTpoint() {
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			var tpoint_id=$("#tpoint_id").val();
+            let tpoint_id=$("#tpoint_id").val();
 			if (tpoint_id.length>0){
 				JsHttpRequest.query($rcapi,{'w':'deleteTpoint','tpoint_id':tpoint_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -98,8 +93,7 @@ function deleteTpoint() {
 						swal("Видалено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#FormModalWindow").modal("hide");
 						loadTpointList();
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -141,8 +135,8 @@ function loadTpointStorage(tpoint_id){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadTpointStorage', 'tpoint_id':tpoint_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){
 			$("#storage_place").html(result.content);
-			$('#tpoint_tabs').tab();
-			$('#datatable_storage').DataTable( {searching: true,"language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}} );
+			$("#tpoint_tabs").tab();
+			$("#datatable_storage").DataTable( {searching: true,"language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}} );
 		}}, true);
 	}
 }
@@ -153,7 +147,7 @@ function showTpointStorageForm(tpoint_id, s_id){
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showTpointStorageForm', 'tpoint_id':tpoint_id, 's_id':s_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("FormModalBody").innerHTML=result["content"];
+			$("#FormModalBody").html(result["content"]);
 			var elem = document.querySelector('#default');if (elem){ var dflt = new Switchery(elem, { color: '#1AB394' });}
 		}}, true);
 	}
@@ -165,8 +159,8 @@ function showTpointSupplStorageForm(tpoint_id, s_id){
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showTpointSupplStorageForm', 'tpoint_id':tpoint_id, 's_id':s_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("FormModalBody").innerHTML=result["content"];
-		}}, true);
+            $("#FormModalBody").html(result["content"]);
+        }}, true);
 	}
 }
 
@@ -184,8 +178,7 @@ function dropTpointSupplStorageForm(tpoint_id,s_id){
 					if (result["answer"]==1){ 
 						swal("Видалено!", "", "success");
 						loadTpointSupplStorage(tpoint_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -208,8 +201,7 @@ function dropTpointStorage(tpoint_id,s_id){
 					if (result["answer"]==1){ 
 						swal("Відкріплено!", "", "success");
 						loadTpointStorage(tpoint_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -227,9 +219,9 @@ function saveTpointStorageForm(tpoint_id,s_id){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			var storage_id=$("#storage_id option:selected").val();
-			var local=$("#local option:selected").val();
-			var dflt=0;if (document.getElementById("default").checked){dflt=1;}
+            let storage_id=$("#storage_id option:selected").val();
+            let local=$("#local option:selected").val();
+            let dflt=0;if (document.getElementById("default").checked){dflt=1;}
 			if (tpoint_id.length>0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveTpointStorageForm','tpoint_id':tpoint_id,'s_id':s_id,'storage_id':storage_id,'local':local,'default':dflt},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -237,8 +229,7 @@ function saveTpointStorageForm(tpoint_id,s_id){
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#FormModalWindow").modal("hide");
 						loadTpointStorage(tpoint_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -256,8 +247,8 @@ function saveTpointSupplStorageForm(tpoint_id,s_id){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			var storage_id=$("#storage_id option:selected").val();
-			var suppl_id=$("#suppl_id option:selected").val();
+            let storage_id=$("#storage_id option:selected").val();
+            let suppl_id=$("#suppl_id option:selected").val();
 			if (tpoint_id.length>0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveTpointSupplStorageForm','tpoint_id':tpoint_id,'s_id':s_id,'storage_id':storage_id,'suppl_id':suppl_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -265,8 +256,7 @@ function saveTpointSupplStorageForm(tpoint_id,s_id){
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#FormModalWindow").modal("hide");
 						loadTpointSupplStorage(tpoint_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else{ swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -280,8 +270,8 @@ function loadTpointClients(tpoint_id){
 	if (tpoint_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadTpointClients', 'tpoint_id':tpoint_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("clients_place").innerHTML=result["content"];
-			$('#tpoint_tabs').tab();
+            $("#clients_place").html(result["content"]);
+            $("#tpoint_tabs").tab();
 		}}, true);
 	}
 }
@@ -292,8 +282,8 @@ function showTpointClientsForm(tpoint_id, s_id){
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showTpointClientsForm', 'tpoint_id':tpoint_id, 's_id':s_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("FormModalBody").innerHTML=result["content"];
-			var elem = document.querySelector('#in_use');if (elem){ var in_use = new Switchery(elem, { color: '#1AB394' });}
+            $("#FormModalBody").html(result["content"]);
+            var elem = document.querySelector('#in_use');if (elem){ var in_use = new Switchery(elem, { color: '#1AB394' });}
 		}}, true);
 	}
 }
@@ -301,19 +291,19 @@ function showTpointClientsForm(tpoint_id, s_id){
 function showTpointClientList(client_id){
 	JsHttpRequest.query($rcapi,{ 'w': 'showTpointClientList', 'client_id':client_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		$("#FormModalWindow2").modal('show');
-		document.getElementById("FormModalBody2").innerHTML=result["content"];
-		document.getElementById("FormModalLabel2").innerHTML="Контрагенти";
-		setTimeout(function() { $('#datatable_parrent').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}}); }, 500);
+		$("#FormModalWindow2").modal("show");
+        $("#FormModalBody2").html(result["content"]);
+        $("#FormModalLabel2").html("Контрагенти");
+		setTimeout(function() { $("#datatable_parrent").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}}); }, 500);
 	}}, true);
 }
 
 function setTpointClient(id,name){
-	$('#client_id').val(id);
-	$('#client_name').val(name);
-	$("#FormModalWindow2").modal('hide');
-	document.getElementById("FormModalBody2").innerHTML="";
-	document.getElementById("FormModalLabel2").innerHTML="";
+	$("#client_id").val(id);
+	$("#client_name").val(name);
+	$("#FormModalWindow2").modal("hide");
+    $("#FormModalBody2").html("");
+    $("#FormModalLabel2").html("");
 }
 
 function dropTpointClients(tpoint_id,s_id){
@@ -330,8 +320,7 @@ function dropTpointClients(tpoint_id,s_id){
 					if (result["answer"]==1){ 
 						swal("Відкріплено!", "", "success");
 						loadTpointStorage(tpoint_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -349,12 +338,11 @@ function saveTpointClientsForm(tpoint_id,s_id){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			var client_id=$("#client_id").val();
-			var sale_type=$("#sale_type option:selected").val();
-			var tax_credit=$("#tax_credit").val();
-			var tax_inform=$("#tax_inform").val();
-			var in_use=0;if (document.getElementById("in_use").checked){in_use=1;}
-
+            let client_id=$("#client_id").val();
+            let sale_type=$("#sale_type option:selected").val();
+            let tax_credit=$("#tax_credit").val();
+            let tax_inform=$("#tax_inform").val();
+            let in_use=0;if (document.getElementById("in_use").checked){in_use=1;}
 			if (tpoint_id.length>0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveTpointClientsForm','tpoint_id':tpoint_id,'s_id':s_id,'client_id':client_id,'sale_type':sale_type,'tax_credit':tax_credit,'tax_inform':tax_inform,'in_use':in_use},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -362,8 +350,7 @@ function saveTpointClientsForm(tpoint_id,s_id){
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#FormModalWindow").modal("hide");
 						loadTpointClients(tpoint_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -377,8 +364,8 @@ function loadTpointWorkers(tpoint_id){
 	if (tpoint_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadTpointWorkers', 'tpoint_id':tpoint_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("workers_place").innerHTML=result["content"];
-			$('#tpoint_tabs').tab();
+			$("#workers_place").html(result["content"]);
+			$("#tpoint_tabs").tab();
 		}}, true);
 	}
 }
@@ -408,8 +395,7 @@ function dropTpointWorkers(tpoint_id,s_id){
 					if (result["answer"]==1){ 
 						swal("Відкріплено!", "", "success");
 						loadTpointWorkers(tpoint_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -427,7 +413,7 @@ function saveTpointWorkersForm(tpoint_id,s_id){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			var worker_id=$("#worker_id option:selected").val();
+            let worker_id=$("#worker_id option:selected").val();
 			if (tpoint_id.length>0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveTpointWorkersForm','tpoint_id':tpoint_id,'s_id':s_id,'worker_id':worker_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -435,8 +421,7 @@ function saveTpointWorkersForm(tpoint_id,s_id){
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#FormModalWindow").modal("hide");
 						loadTpointWorkers(tpoint_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -450,12 +435,12 @@ function loadTpointDeliveryTime(tpoint_id){
 	if (tpoint_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadTpointDeliveryTime', 'tpoint_id':tpoint_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("delivery_place").innerHTML=result["content"];
-			$('#tpoint_tabs').tab();
-				$('#datatable_delivery').DataTable( {
-					searching: true,
-					"language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}
-				} );
+			$("#delivery_place").html(result["content"]);
+			$("#tpoint_tabs").tab();
+			$("#datatable_delivery").DataTable({
+				searching: true,
+				"language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}
+			});
 		}}, true);
 	}
 }
@@ -466,7 +451,7 @@ function showTpointDeliveryForm(tpoint_id, s_id){
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showTpointDeliveryForm', 'tpoint_id':tpoint_id, 's_id':s_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("FormModalBody").innerHTML=result["content"];
+			$("#FormModalBody").html(result["content"]);
 		}}, true);
 	}
 }
@@ -480,14 +465,14 @@ function saveTpointDeliveryForm(tpoint_id,s_id){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			var storage_id=$("#storage_id option:selected").val();
-			var week_day=$("#week_day option:selected").val();
-			var time_from=$("#time_from").val();
-			var time_to=$("#time_to").val();
-			var time_from_del=$("#time_from_del").val();
-			var time_to_del=$("#time_to_del").val();
-			var delivery_days=$("#delivery_days").val();
-			var giveout_time=$("#giveout_time").val();
+            let storage_id=$("#storage_id option:selected").val();
+            let week_day=$("#week_day option:selected").val();
+            let time_from=$("#time_from").val();
+            let time_to=$("#time_to").val();
+            let time_from_del=$("#time_from_del").val();
+            let time_to_del=$("#time_to_del").val();
+            let delivery_days=$("#delivery_days").val();
+            let giveout_time=$("#giveout_time").val();
 
 			if (storage_id.length>0 && week_day.length>0 && time_from.length>0 && time_to.length>0 && delivery_days.length>0 && giveout_time.length>0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveTpointDeliveryForm','tpoint_id':tpoint_id,'s_id':s_id,'storage_id':storage_id,'week_day':week_day,'time_from':time_from,'time_to':time_to,'delivery_days':delivery_days,'giveout_time':giveout_time,'time_from_del':time_from_del,'time_to_del':time_to_del},
@@ -496,10 +481,9 @@ function saveTpointDeliveryForm(tpoint_id,s_id){
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#FormModalWindow").modal("hide");
 						loadTpointDeliveryTime(tpoint_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
-			}else{ swal("Помилка!", "Не заповніне всі поля", "error");}
+			} else { swal("Помилка!", "Не заповніне всі поля", "error");}
 		} else {
 			swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
 		}
@@ -520,8 +504,7 @@ function dropTpointDelivery(tpoint_id,s_id){
 					if (result["answer"]==1){ 
 						swal("Відкріплено!", "", "success");
 						loadTpointDeliveryTime(tpoint_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -535,10 +518,10 @@ function loadTpointSupplDeliveryTime(tpoint_id){
 	if (tpoint_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadTpointSupplDeliveryTime', 'tpoint_id':tpoint_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("suppl_delivery_range").innerHTML=result["content"];
-			$('#tpoint_tabs').tab();
-			$('#tpoint_str_tabs').tab();
-			$('#datatable_suppl_delivery').DataTable( {searching: true,"language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}} );
+            $("#suppl_delivery_range").html(result["content"]);
+            $("#tpoint_tabs").tab();
+			$("#tpoint_str_tabs").tab();
+			$("#datatable_suppl_delivery").DataTable( {searching: true,"language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}} );
 		}}, true);
 	}
 }
@@ -548,30 +531,31 @@ function loadTpointSupplStorage(tpoint_id){
 	if (tpoint_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadTpointSupplStorage', 'tpoint_id':tpoint_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("suppl_storage_range").innerHTML=result["content"];
-			$('#tpoint_tabs').tab(); $('#tpoint_storage_tabs').tab();
-			$('#datatable_suppl_storage').DataTable( {searching: true,"language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}} );
+            $("#suppl_storage_range").html(result["content"]);
+            $("#tpoint_tabs").tab();
+            $("#tpoint_storage_tabs").tab();
+			$("#datatable_suppl_storage").DataTable( {searching: true,"language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}} );
 		}}, true);
 	}
 }
 
 function loadTpointSupplStorageSelectList(){
-	var suppl_id=$("#suppl_id option:selected").val(); 
+    let suppl_id=$("#suppl_id option:selected").val();
 	if (suppl_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadTpointSupplStorageSelectList', 'suppl_id':suppl_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("suppl_storage_id").innerHTML=result["content"];
+			$("#suppl_storage_id").html(result["content"]);
 		}}, true);
 	}
 }
 
 function loadSupplStorageList(){
-	var suppl_id=$("#suppl_id option:selected").val(); 
+    let suppl_id=$("#suppl_id option:selected").val();
 	if (suppl_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadSupplStorageList', 'suppl_id':suppl_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("storage_id").innerHTML=result["content"];
-		}}, true);
+			$("#storage_id").html(result["content"]);
+        }}, true);
 	}
 }
 
@@ -581,7 +565,7 @@ function showTpointSupplDeliveryForm(tpoint_id, s_id){
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showTpointSupplDeliveryForm', 'tpoint_id':tpoint_id, 's_id':s_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("FormModalBody").innerHTML=result["content"];
+            $("#FormModalBody").html(result["content"]);
 		}}, true);
 	}
 }
@@ -596,15 +580,15 @@ function saveTpointSupplDeliveryForm(tpoint_id,s_id){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			var suppl_id=$("#suppl_id option:selected").val();
-			var suppl_storage_id=$("#suppl_storage_id option:selected").val();
-			var week_day=$("#week_day option:selected").val();
-			var time_from=$("#time_from").val();
-			var time_to=$("#time_to").val();
-			var time_from_del=$("#time_from_del").val();
-			var time_to_del=$("#time_to_del").val();
-			var delivery_days=$("#delivery_days").val();
-			var giveout_time=$("#giveout_time").val();
+            let suppl_id=$("#suppl_id option:selected").val();
+            let suppl_storage_id=$("#suppl_storage_id option:selected").val();
+            let week_day=$("#week_day option:selected").val();
+            let time_from=$("#time_from").val();
+            let time_to=$("#time_to").val();
+            let time_from_del=$("#time_from_del").val();
+            let time_to_del=$("#time_to_del").val();
+            let delivery_days=$("#delivery_days").val();
+            let giveout_time=$("#giveout_time").val();
 
 			if (suppl_id.length>0 && suppl_storage_id.length>0 && week_day.length>0 && time_from.length>0 && time_to.length>0 && delivery_days.length>0 && giveout_time.length>0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveTpointSupplDeliveryForm','tpoint_id':tpoint_id,'s_id':s_id,'suppl_id':suppl_id,'suppl_storage_id':suppl_storage_id,'week_day':week_day,'time_from':time_from,'time_to':time_to,'delivery_days':delivery_days,'giveout_time':giveout_time,'time_from_del':time_from_del,'time_to_del':time_to_del},
@@ -613,10 +597,9 @@ function saveTpointSupplDeliveryForm(tpoint_id,s_id){
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#FormModalWindow").modal("hide");
 						loadTpointSupplDeliveryTime(tpoint_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
-			}else{ swal("Помилка!", "Не заповніне всі поля", "error");}
+			} else { swal("Помилка!", "Не заповніне всі поля", "error");}
 		} else {
 			swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
 		}
@@ -637,8 +620,7 @@ function dropTpointSupplDelivery(tpoint_id,s_id){
 					if (result["answer"]==1){ 
 						swal("Відкріплено!", "", "success");
 						loadTpointDeliveryTime(tpoint_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -652,12 +634,12 @@ function loadTpointSupplFm(tpoint_id){
 	if (tpoint_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadTpointSupplFm', 'tpoint_id':tpoint_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("fm_place").innerHTML=result["content"];
-			$('#tpoint_tabs').tab();
-			$('#datatable_suppl_fm').DataTable( {
+			$("#fm_place").html(result["content"]);
+			$("#tpoint_tabs").tab();
+			$("#datatable_suppl_fm").DataTable({
 				searching: true,
 				"language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}
-			} );
+			});
 		}}, true);
 	}
 }
@@ -683,14 +665,14 @@ function saveTpointSupplFmForm(tpoint_id,s_id){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			var suppl_id=$("#suppl_id option:selected").val();
-			var suppl_storage_id=$("#suppl_storage_id option:selected").val();
-			var price_rating_id=$("#price_rating_id option:selected").val();
-			var price_from=$("#price_from").val();
-			var price_to=$("#price_to").val();
-			var margin=$("#margin").val();
-			var delivery=$("#delivery").val();
-			var margin2=$("#margin2").val();
+            let suppl_id=$("#suppl_id option:selected").val();
+            let suppl_storage_id=$("#suppl_storage_id option:selected").val();
+            let price_rating_id=$("#price_rating_id option:selected").val();
+            let price_from=$("#price_from").val();
+            let price_to=$("#price_to").val();
+            let margin=$("#margin").val();
+            let delivery=$("#delivery").val();
+            let margin2=$("#margin2").val();
 
 			if (suppl_id.length>0 && suppl_storage_id.length>0 && price_rating_id.length>0 && price_from.length>0 && price_to.length>0 && margin.length>0 && delivery.length>0 && margin2.length>0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveTpointSupplFmForm','tpoint_id':tpoint_id,'s_id':s_id,'suppl_id':suppl_id,'suppl_storage_id':suppl_storage_id,'price_rating_id':price_rating_id,'price_from':price_from,'price_to':price_to,'margin':margin,'delivery':delivery,'margin2':margin2},
@@ -699,10 +681,9 @@ function saveTpointSupplFmForm(tpoint_id,s_id){
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#FormModalWindow").modal("hide");
 						loadTpointSupplFm(tpoint_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
-			}else{ swal("Помилка!", "Не заповніне всі поля", "error");}
+			} else { swal("Помилка!", "Не заповніне всі поля", "error");}
 		} else {
 			swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
 		}
@@ -723,8 +704,7 @@ function dropTpointSupplFm(tpoint_id,s_id){
                             if (result["answer"]==1){
                                 swal("Відкріплено!", "", "success");
                                 loadTpointDeliveryTime(tpoint_id);
-                            }
-                            else{ swal("Помилка!", result["error"], "error");}
+                            } else { swal("Помилка!", result["error"], "error");}
                         }}, true);
                 }
             } else {
@@ -738,8 +718,8 @@ function loadTpointPayBox(tpoint_id){
 	if (tpoint_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadTpointPayBox', 'tpoint_id':tpoint_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("pay_box_place").innerHTML=result["content"];
-			$('#tpoint_tabs').tab();
+			$("#pay_box_place").html(result["content"]);
+			$("#tpoint_tabs").tab();
 		}}, true);
 	}
 }
@@ -750,8 +730,8 @@ function showTpointPayBoxForm(tpoint_id, s_id){
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showTpointPayBoxForm', 'tpoint_id':tpoint_id, 's_id':s_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("FormModalBody").innerHTML=result["content"];
-			var elem = document.querySelector('#in_use');if (elem){ var in_use = new Switchery(elem, { color: '#1AB394' });}
+            $("#FormModalBody").html(result["content"]);
+            var elem = document.querySelector('#in_use');if (elem){ var in_use = new Switchery(elem, { color: '#1AB394' });}
 		}}, true);
 	}
 }
@@ -770,8 +750,7 @@ function dropTpointPayBox(tpoint_id,s_id){
 					if (result["answer"]==1){ 
 						swal("Видалено!", "", "success");
 						loadTpointPayBox(tpoint_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -789,9 +768,9 @@ function saveTpointPayBoxForm(tpoint_id,s_id){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			var client_id=$("#client_id").val();
-			var name=$("#name").val();
-			var in_use=0;if (document.getElementById("in_use").checked){in_use=1;}
+            let client_id=$("#client_id").val();
+            let name=$("#name").val();
+            let in_use=0;if (document.getElementById("in_use").checked){in_use=1;}
 
 			if (tpoint_id.length>0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveTpointPayBoxForm','tpoint_id':tpoint_id,'s_id':s_id,'client_id':client_id,'name':name,'in_use':in_use},
@@ -800,8 +779,7 @@ function saveTpointPayBoxForm(tpoint_id,s_id){
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#FormModalWindow").modal("hide");
 						loadTpointPayBox(tpoint_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {

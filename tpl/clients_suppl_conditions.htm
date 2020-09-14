@@ -1,4 +1,3 @@
-<!--   Size TAB BLOCK   -->
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <form method="get" class="form-horizontal">
@@ -7,13 +6,13 @@
                     <label class="col-sm-2 control-label">Предоплата</label>
                     <div class="col-sm-2">
                     	<span class="buttons-inline pull-left">
-                            <input type="checkbox" class="js-switch" data-size="small" placeholder="Предоплата" id="prepayment" {prepayment_checked}  onChange="changePrepayment();" />
+                            <input type="checkbox" class="js-switch" data-size="small" placeholder="Предоплата" id="prepayment" {prepayment_checked} onChange="changePrepayment();" />
                         </span>
 					</div>
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Весь товар-<input type="checkbox" id="prepay_all" value="1" class="i-checks" onChange="prepay_all_checked()" onClick="prepay_all_checked()" {prepay_all_checked}></label>
+                    <label class="col-sm-2 control-label">Весь товар - <input type="checkbox" id="prepay_all" value="1" class="i-checks" onChange="prepay_all_checked()" onClick="prepay_all_checked()" {prepay_all_checked}></label>
                     <div class="col-sm-2">від суми в USD: <input class="form-control" {prepay_summ_disabled} type="text" id="prepay_summ" value="{prepay_summ}" required placeholder="сума"></div>
                     <label class="col-sm-2 control-label">Тип передоплати</label>
                     <div class="col-sm-2"><select class="form-control" title="Тип передоплати" style="width:100%;" id="prepay_type" onChange="changePrepayType();">{prepay_type_list}</select></div>
@@ -21,11 +20,10 @@
                     <div class="col-sm-2"><input class="form-control" type="number" id="prepay_persent" {prepay_persent_readonly} max="100" min="0" value="{prepay_persent}" required placeholder="число"></div>
                 </div>
             </div>
-            <div class="hr-line-dashed"></div>
             <div class="form-group">
                 <div class="col-sm-10 text-right col-sm-offset-2">
-                    <button class="btn btn-primary" type="button" onClick="saveClientSupplConditions('{client_id}');">Зберегти зміни</button>
-                    <button class="btn btn-white" type="button" data-dismiss="modal" >Закрити</button>
+                    <button class="btn btn-primary" type="button" onClick="saveClientSupplConditions('{client_id}');"><i class="fa fa-save"></i> Зберегти зміни</button>
+                    <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
                 </div>
             </div>
         </form>

@@ -5,26 +5,27 @@
             	<h3>Документи оплати</h3>
             </div>
             <div class="col-lg-8 col-md-6 col-sm-12">
-                
             </div>
         </div>
 	</div>
 	<div class="ibox-content">
-        <table id="dp_storsel_str" class="table table-condensed table-striped table-hover table-bordered" width="100%">
-            <thead>
-                <tr>
-                    <th style="text-align:center">№ п/п</th>
-                    <th style="text-align:center">Дата</th>
-                    <th style="text-align:center">Вид оплати</th>
-                    <th style="text-align:center">Номер док</th>
-                    <th style="text-align:center">Каса</th>
-                    <th style="text-align:center">Сумма</th>
-                    <th style="text-align:center">Автор</th>
-                </tr>
-            </thead>
-            <tbody id="money_pay_select_range">
-	            {money_pay_list}
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table id="dp_storsel_str" class="table table-condensed table-striped table-hover table-bordered" width="100%">
+                <thead>
+                    <tr>
+                        <th style="text-align:center">№ п/п</th>
+                        <th style="text-align:center">Дата</th>
+                        <th style="text-align:center">Вид оплати</th>
+                        <th style="text-align:center">Номер док</th>
+                        <th style="text-align:center">Каса</th>
+                        <th style="text-align:center">Сумма</th>
+                        <th style="text-align:center">Автор</th>
+                    </tr>
+                </thead>
+                <tbody id="money_pay_select_range">
+                    {money_pay_list}
+                </tbody>
+            </table>
+        </div>
 	</div>
 </div>

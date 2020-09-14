@@ -966,7 +966,6 @@ function saveIncomeComment(income_id){
 function dropIncomeComment(income_id,cmt_id){
 	if (income_id<=0 || income_id==""){toastr["error"](errs[0]);}
 	if (income_id>0){
-		
 		if(confirm('Видалити запис?')){ 
 			JsHttpRequest.query($rcapi,{ 'w': 'dropIncomeComment', 'income_id':income_id, 'cmt_id':cmt_id}, 
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -1023,32 +1022,32 @@ function viewIncomeDetailsFile(income_id,file_type){
 	}
 }
 
-function fileIncomeDetailsUploadForm(income_id,file_type){
-	$("#dtls_income_id").val(income_id);
-	$("#dtls_file_type").val(file_type);
-	$("#fileIncomeDetailsUploadForm").modal("show");
-	var myDropzone3 = new Dropzone("#myDropzone3",{ dictDefaultMessage: "Натисніть для вибору файлів або перетягніть їх це поле!" });
-	myDropzone3.removeAllFiles(true);
-	myDropzone3.on("queuecomplete", function() {
-		toastr["info"]("Завантаження файлів завершено.");
-		this.removeAllFiles();
-		$('#fileIncomeDetailsUploadForm').modal('hide');
-		viewIncomeDetailsFile(income_id,file_type);
-	});
-}
+// function fileIncomeDetailsUploadForm(income_id,file_type){
+// 	$("#dtls_income_id").val(income_id);
+// 	$("#dtls_file_type").val(file_type);
+// 	$("#fileIncomeDetailsUploadForm").modal("show");
+// 	var myDropzone3 = new Dropzone("#myDropzone3",{ dictDefaultMessage: "Натисніть для вибору файлів або перетягніть їх це поле!" });
+// 	myDropzone3.removeAllFiles(true);
+// 	myDropzone3.on("queuecomplete", function() {
+// 		toastr["info"]("Завантаження файлів завершено.");
+// 		this.removeAllFiles();
+// 		$('#fileIncomeDetailsUploadForm').modal('hide');
+// 		viewIncomeDetailsFile(income_id,file_type);
+// 	});
+// }
 
-function showIncomeDetailsDropConfirmForm(income_id,file_type,file_id,file_name){
-	if (income_id<=0 || income_id==""){toastr["error"](errs[0]);}
-	if (income_id>0){
-		if(confirm('Видалити файл '+file_name+'?')){ 
-			JsHttpRequest.query($rcapi,{ 'w': 'incomeDetailsDropFile', 'income_id':income_id, 'file_type':file_type, 'file_id':file_id}, 
-			function (result, errors){ if (errors) {alert(errors);} if (result){  
-				if (result["answer"]==1){ viewIncomeDetailsFile(income_id,file_type); toastr["info"]("Файл успішно видалено"); }
-				else{ toastr["error"](result["error"]); }
-			}}, true);
-		}
-	}
-}
+// function showIncomeDetailsDropConfirmForm(income_id,file_type,file_id,file_name){
+// 	if (income_id<=0 || income_id==""){toastr["error"](errs[0]);}
+// 	if (income_id>0){
+// 		if(confirm('Видалити файл '+file_name+'?')){
+// 			JsHttpRequest.query($rcapi,{ 'w': 'incomeDetailsDropFile', 'income_id':income_id, 'file_type':file_type, 'file_id':file_id},
+// 			function (result, errors){ if (errors) {alert(errors);} if (result){
+// 				if (result["answer"]==1){ viewIncomeDetailsFile(income_id,file_type); toastr["info"]("Файл успішно видалено"); }
+// 				else{ toastr["error"](result["error"]); }
+// 			}}, true);
+// 		}
+// 	}
+// }
 
 function showCountryManual(){
 	var country_id=$("#country_id").val();

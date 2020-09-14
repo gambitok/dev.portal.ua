@@ -4,6 +4,7 @@ list($accss,$acc_lvl)=$access->check_user_access($mf);$alg_u=0;
 
 if ($accss=="1"){
     require_once (RD."/lib/storage_stock_class.php");
+    require_once (RD."/lib/storage_class.php");
 	$storage_stock=new storage_stock;
 	$content=str_replace("{work_window}", $storage_stock->showStorageStock(), $content);
 

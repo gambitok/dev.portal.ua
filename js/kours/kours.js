@@ -37,18 +37,17 @@ function saveKoursForm(){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			var kours_id=$("#kours_id").val();
-			var kours_value=$("#kours_value").val();
-			var cash_id=$("#cash_id option:selected").val();
+            let kours_id=$("#kours_id").val();
+            let kours_value=$("#kours_value").val();
+            let cash_id=$("#cash_id option:selected").val();
 			if (kours_id.length>0){
-				JsHttpRequest.query($rcapi,{'w':'saveKoursForm','kours_id':kours_id,'kours_value':kours_value,'cash_id':cash_id},
+				JsHttpRequest.query($rcapi,{'w':'saveKoursForm', 'kours_id':kours_id, 'kours_value':kours_value, 'cash_id':cash_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
-						$("#KoursCard").modal('hide');document.getElementById("KoursCardBody").innerHTML="";
+						$("#KoursCard").modal("hide");document.getElementById("KoursCardBody").innerHTML="";
 						showKoursList();
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -58,7 +57,7 @@ function saveKoursForm(){
 }
 
 function loadStateSelectList(){
-	var country_id=$("#country_id option:selected").val();
+    let country_id=$("#country_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientStateSelectList', 'country_id':country_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		document.getElementById("state_id").innerHTML=result["content"];
@@ -67,7 +66,7 @@ function loadStateSelectList(){
 }
 
 function loadRegionSelectList(){
-	var state_id=$("#state_id option:selected").val();
+    let state_id=$("#state_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientRegionSelectList', 'state_id':state_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		document.getElementById("region_id").innerHTML=result["content"];
@@ -76,7 +75,7 @@ function loadRegionSelectList(){
 }
 
 function loadCitySelectList(){
-	var region_id=$("#region_id option:selected").val();
+    let region_id=$("#region_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientCitySelectList', 'region_id':region_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		document.getElementById("city_id").innerHTML=result["content"];
@@ -120,8 +119,7 @@ function dropKoursStorage(kours_id,s_id){
 					if (result["answer"]==1){ 
 						swal("Відкріплено!", "", "success");
 						loadKoursStorage(kours_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -131,7 +129,7 @@ function dropKoursStorage(kours_id,s_id){
 }
 
 function saveKoursStorageForm(kours_id,s_id){
-	var storage_name=$("#storage_id option:selected").html();
+    let storage_name=$("#storage_id option:selected").html();
 	swal({
 		title: "Закріпити склад \""+storage_name+"\" за торговою точкою?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -139,10 +137,9 @@ function saveKoursStorageForm(kours_id,s_id){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			var storage_id=$("#storage_id option:selected").val();
-			var local=$("#local option:selected").val();
-			var delivery_days=$("#delivery_days").val();
-
+            let storage_id=$("#storage_id option:selected").val();
+            let local=$("#local option:selected").val();
+            let delivery_days=$("#delivery_days").val();
 			if (kours_id.length>0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveKoursStorageForm','kours_id':kours_id,'s_id':s_id,'storage_id':storage_id,'local':local,'delivery_days':delivery_days},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -150,8 +147,7 @@ function saveKoursStorageForm(kours_id,s_id){
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#FormModalWindow").modal("hide");
 						loadKoursStorage(kours_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -166,7 +162,7 @@ function loadKoursClients(kours_id){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadKoursClients', 'kours_id':kours_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			document.getElementById("clients_place").innerHTML=result["content"];
-			$('#kours_tabs').tab();
+			$("#kours_tabs").tab();
 		}}, true);
 	}
 }
@@ -178,10 +174,7 @@ function showKoursClientsForm(kours_id, s_id){
 		JsHttpRequest.query($rcapi,{ 'w': 'showKoursClientsForm', 'kours_id':kours_id, 's_id':s_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			document.getElementById("FormModalBody").innerHTML=result["content"];
-			var elem = document.querySelector('#vat_use');
-			if (elem){
-	            var vat_use = new Switchery(elem, { color: '#1AB394' });
-			}
+			var elem = document.querySelector('#vat_use'); if (elem){ new Switchery(elem, { color: '#1AB394' }); }
 		}}, true);
 	}
 }
@@ -189,19 +182,19 @@ function showKoursClientsForm(kours_id, s_id){
 function showKoursClientList(client_id){
 	JsHttpRequest.query($rcapi,{ 'w': 'showKoursClientList', 'client_id':client_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		$("#FormModalWindow2").modal('show');
+		$("#FormModalWindow2").modal("show");
 		document.getElementById("FormModalBody2").innerHTML=result["content"];
 		document.getElementById("FormModalLabel2").innerHTML="Контрагенти";
-		setTimeout(function() { $('#datatable_parrent').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}}); }, 500);
+		setTimeout(function() { $("#datatable_parrent").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}}); }, 500);
 	}}, true);
 }
 
 function setKoursClient(id,name){
-	$('#client_id').val(id);
-	$('#client_name').val(name);
-	$("#FormModalWindow2").modal('hide');
-	document.getElementById("FormModalBody2").innerHTML="";
-	document.getElementById("FormModalLabel2").innerHTML="";
+	$("#client_id").val(id);
+	$("#client_name").val(name);
+	$("#FormModalWindow2").modal("hide");
+	$("#FormModalBody2").html("");
+	$("#FormModalLabel2").html("");
 }
 
 function dropKoursClients(kours_id,s_id){
@@ -218,8 +211,7 @@ function dropKoursClients(kours_id,s_id){
 					if (result["answer"]==1){ 
 						swal("Відкріплено!", "", "success");
 						loadKoursStorage(kours_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -229,7 +221,7 @@ function dropKoursClients(kours_id,s_id){
 }
 
 function saveKoursClientsForm(kours_id,s_id){
-	var client_name=$("#client_name").val();
+    let client_name=$("#client_name").val();
 	swal({
 		title: "Закріпити контагента \""+client_name+"\" за торговою точкою?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -237,9 +229,8 @@ function saveKoursClientsForm(kours_id,s_id){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			var client_id=$("#client_id").val();
-			var vat_use=0;if (document.getElementById("vat_use").checked){vat_use=1;}
-
+            let client_id=$("#client_id").val();
+            let vat_use=0;if (document.getElementById("vat_use").checked){vat_use=1;}
 			if (kours_id.length>0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveKoursClientsForm','kours_id':kours_id,'s_id':s_id,'client_id':client_id,'vat_use':vat_use},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -247,8 +238,7 @@ function saveKoursClientsForm(kours_id,s_id){
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#FormModalWindow").modal("hide");
 						loadKoursClients(kours_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -263,7 +253,7 @@ function loadKoursWorkers(kours_id){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadKoursWorkers', 'kours_id':kours_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			document.getElementById("workers_place").innerHTML=result["content"];
-			$('#kours_tabs').tab();
+			$("#kours_tabs").tab();
 		}}, true);
 	}
 }
@@ -288,13 +278,12 @@ function dropKoursWorkers(kours_id,s_id){
 	function (isConfirm) {
 		if (isConfirm) {
 			if (kours_id.length>0){
-				JsHttpRequest.query($rcapi,{ 'w':'dropKoursWorkers','kours_id':kours_id,'s_id':s_id},
+				JsHttpRequest.query($rcapi,{ 'w':'dropKoursWorkers', 'kours_id':kours_id, 's_id':s_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						swal("Відкріплено!", "", "success");
 						loadKoursWorkers(kours_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -304,7 +293,7 @@ function dropKoursWorkers(kours_id,s_id){
 }
 
 function saveKoursWorkersForm(kours_id,s_id){
-	var worker_name=$("#worker_id option:selected").html();
+    let worker_name=$("#worker_id option:selected").html();
 	swal({
 		title: "Закріпити працівника \""+worker_name+"\" за торговою точкою?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -312,8 +301,7 @@ function saveKoursWorkersForm(kours_id,s_id){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			var worker_id=$("#worker_id option:selected").val();
-
+            let worker_id=$("#worker_id option:selected").val();
 			if (kours_id.length>0){
 				JsHttpRequest.query($rcapi,{ 'w':'saveKoursWorkersForm','kours_id':kours_id,'s_id':s_id,'worker_id':worker_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -321,8 +309,7 @@ function saveKoursWorkersForm(kours_id,s_id){
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#FormModalWindow").modal("hide");
 						loadKoursWorkers(kours_id);
-					}
-					else{ swal("Помилка!", result["error"], "error");}
+					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {

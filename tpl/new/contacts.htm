@@ -15,7 +15,7 @@
 							<a class="btn btn-success"  href="#newContacts" onClick="newContactsCard();"><i class='fa fa-plus'></i> Новий контакт</a>
 						</div>
 						<div class="col-md-3">
-							<select name="lang_select" class="form-control" id="lang_select">
+							<select title="Мова" name="lang_select" class="form-control" id="lang_select">
 								<option value="1">Російська</option>
 								<option value="2">Українська</option>
 								<option value="3">Англійська</option>	
@@ -42,12 +42,11 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
 
-<div id="ContactsCard" class="modal inmodal fade" tabindex="-1" role="dialog"  aria-hidden="true">
+<div id="ContactsCard" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header">
@@ -73,7 +72,7 @@
 
 <script language="javascript">
 $(document).ready(function() {
-	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
+	$("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
 });
 </script>
 

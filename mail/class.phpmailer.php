@@ -1,5 +1,5 @@
 <?php
-class PHPMailer{
+class PHPMailer2{
     public $Version = '5.2.8';
     public $Priority = 3;
     public $CharSet = 'windows-1251'; 

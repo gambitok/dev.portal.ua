@@ -4,13 +4,13 @@ class gmanual {
 
 	function get_name(){ if ($_POST["name"]==""){return $_GET["name"];} if ($_POST["name"]!=""){return $_POST["name"];} }
 
-	function get_max_gmanual_id(){$db=DbSingleton::getDb();  $r=$db->query("select max(id) as mid from manual;");return $db->result($r,0,"mid")+1; }
+	function get_max_gmanual_id(){$db=DbSingleton::getDb();  $r=$db->query("select max(`id`) as mid from `manual`;");return $db->result($r,0,"mid")+1; }
 
-	function get_manMid_id($key){$db=DbSingleton::getDb(); $r=$db->query("select max(mid) as mid from manual where `key`='$key';");$mid=0+$db->result($r,0,"mid")+1;return $mid;}
+	function get_manMid_id($key){$db=DbSingleton::getDb(); $r=$db->query("select max(`mid`) as mid from `manual` where `key`='$key';");$mid=0+$db->result($r,0,"mid")+1;return $mid;}
 
 	function show_key_list(){	$db=DbSingleton::getDb();$mdl=new module;$url=$mdl->get_file_url("Gmanual");session_start();
 		$form_htm=RD."/tpl/gmanual_key_list.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-		$r=$db->query("SELECT * FROM manual_keys where status='1' order by caption asc;");$n=$db->num_rows($r);$list="";
+		$r=$db->query("SELECT * FROM `manual_keys` where `status`='1' order by `caption` asc;");$n=$db->num_rows($r);$list="";
 		if ($n>0){
 			for ($i=1;$i<=$n;$i++){
 				$id=$db->result($r,$i-1,"id");
@@ -42,7 +42,7 @@ class gmanual {
 	
 	function show_gmanual_list($key){$db=DbSingleton::getDb();$mdl=new module;$url=$mdl->get_file_url("Gmanual");session_start();
 		$form_htm=RD."/tpl/gmanual_list.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}$list="";
-		$r=$db->query("SELECT * FROM manual where ison='1' and `key`='$key' order by mcaption asc;"); $n=$db->num_rows($r);
+		$r=$db->query("SELECT * FROM `manual` where `ison`='1' and `key`='$key' order by `mcaption` asc;"); $n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
 			//$mid=$db->result($r,$i-1,"mid");
@@ -68,10 +68,10 @@ class gmanual {
 		if ($caption==""){$label="error"; $message="Не заповнено поле назва змінної";}
 		else{$caption=$slave->qq($caption);
 			if ($id==0 || $id==""){ $mid=$this->get_manMid_id($gkey); 
-				$db->query("insert into manual (`key`,`mid`,`mcaption`) values ('$gkey','$mid','$caption');");
+				$db->query("insert into `manual` (`key`,`mid`,`mcaption`) values ('$gkey','$mid','$caption');");
 				$message="Нову значення &quot;$caption&quot; успішно додано!";
 			}else{
-				$db->query("update manual set `mcaption`='$caption' where id='$id';");
+				$db->query("update `manual` set `mcaption`='$caption' where `id`='$id';");
 				$message="Значення довідника &quot;$caption&quot; успішно відредаговано!";
 			}
 		}
@@ -80,12 +80,12 @@ class gmanual {
 
 	function checkGkey($gkey,$id){$db=DbSingleton::getDb();session_start();$answer=1;$message="";//$mdl=new module;$url=$mdl->get_file_url("Gmanual");
 		if ($id>0 || $id!=""){ 
-			$r=$db->query("select count(id) as `kol` from manual_keys where id='$id' and gkey='$gkey';");$ex=$db->result($r,0,"kol");
+			$r=$db->query("select count(`id`) as `kol` from `manual_keys` where `id`='$id' and `gkey`='$gkey';");$ex=$db->result($r,0,"kol");
 			if ($ex==1){$answer=0;}
 			if ($ex==0){$answer=1; $message="Помилка ключа";}
 		}
 		if ($id==0 || $id==""){ 
-			$r=$db->query("select count(id) as `kol` from manual_keys where gkey='$gkey' limit 0,1");$ex=$db->result($r,0,"kol");
+			$r=$db->query("select count(`id`) as `kol` from `manual_keys` where `gkey`='$gkey' limit 1;");$ex=$db->result($r,0,"kol");
 			if ($ex==0){$answer=0;}
 			if ($ex==1){$answer=1; $message="Вказаний вами ключ вже існує в системі. Придумайте інший.";}
 		}
@@ -95,7 +95,7 @@ class gmanual {
 	function showGmanualList($key,$scaption){$db=DbSingleton::getDb();
 		$where="";if ($scaption!=""){$where=" and mcaption LIKE '%$scaption%'";}
         $form="";$form_htm=RD."/tpl/gmanual_list_content.htm";if (file_exists("$form_htm")){ $form=file_get_contents($form_htm);}$mdl=new module;$url=$mdl->get_file_url("gmanual");
-		$r=$db->query("SELECT * FROM manual where ison='1' and `key`='$key' $where order by mcaption asc limit 0,100;");$n=$db->num_rows($r);$list="";
+		$r=$db->query("SELECT * FROM `manual` where `ison`='1' and `key`='$key' $where order by `mcaption` asc limit 0,100;");$n=$db->num_rows($r);$list="";
 		for ($i=1;$i<=$n;$i++){
 			$id=$db->result($r,$i-1,"id");
 			//$mid=$db->result($r,$i-1,"mid");
@@ -132,7 +132,7 @@ class gmanual {
 
 	function add_gmanual_form(){$db=DbSingleton::getDb(); $slave=new slave; $mdl=new module;$url=$mdl->get_file_url("gmanual");
 		$gmanual_id=$this->get_max_gmanual_id();$caption=$slave->qq($_POST["caption"]);$gkey=$slave->qq($_POST["gkey"]);
-		$db->query("insert into manual_keys (`id`,`gkey`,`caption`) values ('$gmanual_id','$gkey','$caption');");
+		$db->query("insert into `manual_keys` (`id`,`gkey`,`caption`) values ('$gmanual_id','$gkey','$caption');");
 		$form_htm=RD."/tpl/gmanual_save.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
 		$message="Довідник \"$caption\" успішно створено";
 		$form=str_replace("{ModuleCaption}","Довідники системи",$form);
@@ -145,7 +145,7 @@ class gmanual {
 
 	function edit_gmanual_form($gmanual_id){$db=DbSingleton::getDb(); $slave=new slave;$mdl=new module;$url=$mdl->get_file_url("Gmanual");session_start();$org_id="";$alert="";$visibility="";
 		$form_htm=RD."/tpl/gmanual_key_form.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-		$r=$db->query("select * from manual_keys where id='$gmanual_id' and status='1';");$n=$db->num_rows($r);
+		$r=$db->query("select * from `manual_keys` where `id`='$gmanual_id' and `status`='1';");$n=$db->num_rows($r);
 		if ($n>0){
 			//$mid=$db->result($r,0,"mid");
 			$caption=$slave->qqback_in($db->result($r,0,"caption"));
@@ -185,32 +185,32 @@ class gmanual {
 	function DropGmanual($key,$gmanual_id){$db=DbSingleton::getDb();$db->query("update manual set ison='0' where id='$gmanual_id';");$answer=1;return $answer;}
 	
 	function getGmanualCaptionByKey($key){$db=DbSingleton::getDb();$caption="";
-		$r=$db->query("select caption from manual_keys where gkey='$key' limit 0,1;");$n=$db->num_rows($r);
+		$r=$db->query("select `caption` from `manual_keys` where `gkey`='$key' limit 1;");$n=$db->num_rows($r);
 		if ($n==1) {$caption=$db->result($r,0,"caption");}
 		return $caption;
 	}
 
 	function get_gmanual_caption($gmanual){$db=DbSingleton::getDb();$caption="";
-		$r=$db->query("select mcaption from manual where id='$gmanual' limit 0,1;");$n=$db->num_rows($r);
+		$r=$db->query("select `mcaption` from `manual` where `id`='$gmanual' limit 1;");$n=$db->num_rows($r);
 		if ($n==1) {$caption=$db->result($r,0,"mcaption");}
 		return $caption;
 	}
 
 	function get_gmanual_cell($gmanual,$cellName){$db=DbSingleton::getDb();$value="";
-		$r=$db->query("select `$cellName` from gmanual where id='$gmanual' limit 0,1;");$n=$db->num_rows($r);
+		$r=$db->query("select `$cellName` from gmanual where id='$gmanual' limit 1;");$n=$db->num_rows($r);
 		if ($n==1) {$value=$db->result($r,0,"$cellName");}
 		return $value;
 	}
 
 	function showGmanualSelectList($gkey,$selId){$db=DbSingleton::getDb();$form="";
-		$r=$db->query("select `id`,`mcaption` from `manual` where `key`='$gkey' order by mcaption,id asc;");$n=$db->num_rows($r);
+		$r=$db->query("select `id`, `mcaption` from `manual` where `key`='$gkey' order by `mcaption`, `id` asc;");$n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++) {$id=$db->result($r,$i-1,"id");
 			$form.="<option value='".$id."' ";if ($selId==$id){$form.=" selected='selected'";} $form.=">".$db->result($r,$i-1,"mcaption")."</option>";}
 		return $form;
 	}
 
 	function showTableForm($tableName,$selId,$tableField){$db=DbSingleton::getDb();$form="";
-		$r=$db->query("select `id`,`$tableField` from `$tableName` order by id asc;");$n=$db->num_rows($r);
+		$r=$db->query("select `id`, `$tableField` from `$tableName` order by `id` asc;");$n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++) {$id=$db->result($r,$i-1,"id");
 			$form.="<option value='".$id."' ";if ($selId==$id){$form.=" selected='selected'";} $form.=">".$db->result($r,$i-1,"$tableField")."</option>";}
 		return $form;
@@ -229,11 +229,11 @@ class gmanual {
 	
 	function printGmanualCard($id){$db=DbSingleton::getDb(); $slave=new slave;
 		$form_htm=RD."/tpl/gmanualCardPrint.htm";$form="";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-		$r=$db->query("select c.*,ct.caption as ctype_caption,ot.caption as otype_caption 
-		FROM gmanual c 
-		    left outer join gmanual_type ct on (ct.id=c.gmanual_type) 
-            left outer join org_type ot on (ot.id=c.org_type) 
-        where c.id='$id' and c.ison='1' limit 0,1;");
+		$r=$db->query("SELECT c.*, ct.caption as ctype_caption, ot.caption as otype_caption 
+		FROM `gmanual` c 
+		    left outer join `gmanual_type` ct on (ct.id=c.gmanual_type) 
+            left outer join `org_type` ot on (ot.id=c.org_type) 
+        WHERE c.id='$id' AND c.ison='1' LIMIT 1;");
         $gmanual_type=$db->result($r,0,"ctype_caption");
         $org_type=$db->result($r,0,"otype_caption");
         $caption=$slave->qqback($db->result($r,0,"caption"));
@@ -276,7 +276,7 @@ class gmanual {
 	}
 
 	function getManualList($filter){$db=DbSingleton::getDb();$list="";$where="";if ($filter!=""){$where=" and caption like '%$filter%' ";}$k=0;
-		$r=$db->query("SELECT * FROM gmanual where ison='1' $where order by caption asc limit 0,50;");$n=$db->num_rows($r);
+		$r=$db->query("SELECT * FROM `gmanual` where `ison`='1' $where order by `caption` asc limit 0,50;");$n=$db->num_rows($r);
 		for ($i=1;$i<=$n;$i++){$k++;
 			$id=$db->result($r,$i-1,"id");
 			$caption=$db->result($r,$i-1,"caption");
@@ -291,13 +291,13 @@ class gmanual {
 	}
 
 	function getManualCaption($id){$db=DbSingleton::getDb();$slave=new slave;$caption="";
-	    $r=$db->query("SELECT caption FROM gmanual where id='$id' limit 0,1;");$n=$db->num_rows($r);
+	    $r=$db->query("SELECT `caption` FROM `gmanual` where `id`='$id' limit 1;");$n=$db->num_rows($r);
 	    if ($n==1){$caption=$slave->qqback_in($db->result($r,0,"caption"));}
 	    return $caption;
 	}
 	
 	function getFileCaption($key){$db=DbSingleton::getDb();$slave=new slave;$caption="";
-	    $r=$db->query("SELECT caption FROM module_files where file='$key' limit 0,1;");$n=$db->num_rows($r);
+	    $r=$db->query("SELECT `caption` FROM `module_files` where `file`='$key' limit 1;");$n=$db->num_rows($r);
 	    if ($n==1){$caption=$slave->qqback_in($db->result($r,0,"caption"));}
 	    return $caption;
 	}
