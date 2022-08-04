@@ -74,25 +74,14 @@ function dropDpNote(dp_id) {
 }
 
 function setDpPauseAccessStatus() {
-	// let status_field = $("#update_status");
-	// let status = status_field.val();
 	let media_user_id = $("#media_user_id").val();
 	let access_dp_pause = $("#update_status").val();
 	if (access_dp_pause) {
-        // status === "true" ? status = true : status = false;
-		// if (status) {
-        //     status_field.val("false");
-		// 	$("#toggle_update").html("<i class='fa fa-play'></i> Включити");
-		// } else {
-        //     status_field.val("true");
-		// 	$("#toggle_update").html("<i class='fa fa-stop-circle'></i> Виключити");
-		// }
 		JsHttpRequest.query($rcapi,{ 'w': 'setDpPauseAccessStatus', 'media_user_id':media_user_id, 'access_dp_pause':access_dp_pause},
 			function (result, errors){ if (errors) {alert(errors);} if (result){
 				location.reload();
 			}}, true);
 	}
-	// updateDpRange();
 }
 
 function filterDpsList() {
@@ -138,7 +127,7 @@ function updateDpRange(press_btn) {
 	let prevRange = $("#dp_range").html();
 	JsHttpRequest.query($rcapi,{ 'w': 'show_dp_search', 'status':status}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){
-			if (prevRange.length != result["content"].length) {
+			if (prevRange.length !== result["content"].length) {
 				let dt = $("#datatable");
 				dt.DataTable().destroy();
 				$("#dp_range").html(result["content"]);
@@ -189,28 +178,12 @@ function show_dp_search(inf) {
 
 function fixDeliveryCarrier() {
 	let delivery_id = $("#delivery_type_id option:selected").val();
-	// let delivery_address = $("#delivery_address");
-	// if (delivery_id === "58") {
-		// самовивіз
-		// $("#delivery_type_storage").removeClass("disabled").removeClass("hidden");
-        // delivery_address.addClass("disabled").addClass("hidden");
-        // delivery_address.val($("#delivery_type_storage option:selected").text());
-	// } else {
-        // delivery_address.removeClass("disabled").removeClass("hidden");
-		// $("#delivery_type_storage").addClass("disabled").addClass("hidden");
-        // delivery_address.val("");
-	// }
 	if (delivery_id !== "60") {
 		$("#carrier_id").addClass("disabled").addClass("hidden");
 	} else {
 		$("#carrier_id").removeClass("disabled").removeClass("hidden");
     }
 }
-
-// function setDeliveryAddress() {
-// 	let text = $("#delivery_type_storage option:selected").text();
-// 	$("#delivery_address").val(text);
-// }
 
 function newDpCard() {
 	$("#FormModalWindow3").modal("hide");
@@ -236,7 +209,6 @@ function showDpCard(dp_id) {
 			$(".js-switch").each(function() {
 				new Switchery(this, { color: '#1AB394' });
 			});
-			// $("#data_pay").datepicker({format: "yyyy-mm-dd", autoclose:true});
 			$(".i-checks").iCheck({checkboxClass: 'icheckbox_square-green',radioClass: 'iradio_square-green',});
             $(".tooltips").tooltip();
             setTimeout(function() {
@@ -438,7 +410,7 @@ function loadDpCDN(dp_id) {
 
 function showDpCDNUploadForm(dp_id) {
 	$("#cdn_dp_id").val(dp_id);
-	var myDropzone2 = new Dropzone("#myDropzone2",{ dictDefaultMessage: "Натисніть для вибору файлів або перетягніть їх це поле!" });
+	let myDropzone2 = new Dropzone("#myDropzone2",{ dictDefaultMessage: "Натисніть для вибору файлів або перетягніть їх це поле!" });
 	myDropzone2.removeAllFiles(true);
 	myDropzone2.on("queuecomplete", function() {
 		toastr["info"]("Завантаження файлів завершено.");
@@ -557,13 +529,14 @@ function showDpClientList(client_id) {
 }
 
 function filterMdlClientsList() {
-	let sel_id = $("#client_id").val();
-    let client_id = $("#filMdlClientId").val();
+	let sel_id 		= $("#client_id").val();
+    let client_id 	= $("#filMdlClientId").val();
     let client_name = $("#filMdlClientName").val();
-    let phone = $("#filMdlPhone").val();
-    let email = $("#filMdlEmail").val();
-    let state_id = $("#filMdlState option:selected").val();
+    let phone 		= $("#filMdlPhone").val();
+    let email 		= $("#filMdlEmail").val();
+    let state_id 	= $("#filMdlState option:selected").val();
 	$("#client_range").empty();
+
 	JsHttpRequest.query($rcapi,{ 'w': 'filterDpClientsList', 'sel_id':sel_id, 'client_id':client_id, 'client_name':client_name, 'phone':phone, 'email':email, 'state_id':state_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#client_range").html(result["content"]);
@@ -829,14 +802,20 @@ function countSumm(pf1, pf2, rf) {
 function calculateDiscountPrice(pos) {
 	let dp_id = $("#dp_id").val();
     var rId = $("#idStr_" + pos).val();
-	var amount = parseFloat($("#amountStr_"+pos).val().replace(',', '.'));$("#amountStr_"+pos).val(amount);
-	var price = parseFloat($("#priceStr_"+pos).val().replace(',', '.'));$("#priceStr_"+pos).val(price);
-	var discount = parseFloat($("#discountStr_"+pos).val().replace(',', '.'));$("#priceEndStr_"+pos).val(price_end);
-	var max_discount_persent = parseFloat($("#maxDiscountPersentStr_"+pos).val().replace(',', '.'));$("#maxDiscountPersentStr_"+pos).val(max_discount_persent);
-	var max_discount_price = parseFloat($("#maxDiscountPriceStr_"+pos).val().replace(',', '.'));$("#maxDiscountPriceStr_"+pos).val(max_discount_price);
+	var amount = parseFloat($("#amountStr_"+pos).val().replace(',', '.'));
+	var price = parseFloat($("#priceStr_"+pos).val().replace(',', '.'));
+	var discount = parseFloat($("#discountStr_"+pos).val().replace(',', '.'));
+	var max_discount_persent = parseFloat($("#maxDiscountPersentStr_"+pos).val().replace(',', '.'));
+	var max_discount_price = parseFloat($("#maxDiscountPriceStr_"+pos).val().replace(',', '.'));
 	var price_end = 0;
 	var summ = 0;
 	var cash_id = $("#cash_id option:selected").val();
+
+	$("#amountStr_" + pos).val(amount);
+	$("#priceStr_" + pos).val(price);
+	$("#priceEndStr_" + pos).val(price_end);
+	$("#maxDiscountPersentStr_" + pos).val(max_discount_persent);
+	$("#maxDiscountPriceStr_" + pos).val(max_discount_price);
 
 	if ((discount <= max_discount_persent && max_discount_persent >= 0) || (discount == 0)) {
 		price_end = parseFloat(price - price * discount / 100).toFixed(2);
@@ -875,13 +854,12 @@ function calculateDiscountPrice(pos) {
 
 function calculateDiscountPriceAll() {
     let dp_id = $("#dp_id").val();
-    var pos = 0;
     var max = 0;
     var list2 = "";
 	$(".check_dp").each(function() {max = Math.max(this.id, max);});
 	var ud = $("#uncontrolUserDiscount").val();
-	console.log("ud="+ud);
-	for (pos = 1; pos <= max; pos++) {
+
+	for (let pos = 1; pos <= max; pos++) {
 		if ($("#" + pos).is(":checked")) {
 			var discount2 = parseFloat($("#discountStr_"+pos).val().replace(',', '.'));
 			var rId = $("#idStr_"+pos).val();
@@ -921,11 +899,13 @@ function calculateDiscountPriceAll() {
 			}
 		}
 	}
-	if (list2 == "") {
+
+	if (list2 === "") {
 		swal("Операцію виконано!", "Знижка " + discount + " була встановлена для усіх помічених позицій!", "success");
 	} else {
 		swal("Увага", "Знижка " + discount + "% не була встановлена для усіх помічених позицій. Товар відсортований згідно встановленої додаткової знижки, будь ласка, ознайомтесь з результатом.", "error");
 	}
+
 	$("#discountStr").val("");
     setTimeout(function() {
     	showDpCard(dp_id);
@@ -942,6 +922,7 @@ function calculateDiscountPersent(pos) {
 	var max_discount_price=parseFloat($("#maxDiscountPriceStr_"+pos).val().replace(',', '.'));$("#maxDiscountPriceStr_"+pos).val(max_discount_price);
 	var summ=0;	var discount=0;
 	var cash_id=$("#cash_id option:selected").val();
+
 	if (price_end>=max_discount_price){
 		discount=parseFloat(((price_end/price)-1)*100*(-1)).toFixed(2);
 		if (discount<=max_discount_persent) {
@@ -1159,7 +1140,7 @@ function showDPDocErrorForm(dp_id) {
 }
 
 /*
-* Передати в складський відбір
+* send to J_SELECT
 * */
 function startDpExecute() {
 	let dp_id = $("#dp_id").val();
@@ -1433,17 +1414,11 @@ function sendDpStorselToSaleInvoice(dp_id) {
 								closeDpCard();
 								updateDpRange();
 							} else {
-								// if (result["sale_invoice_doc_type_id"] === 61 || result["sale_invoice_doc_type_id"] === "61") {
-								// 	printSaleInvoceFromDp2(result["sale_invoice_nom"]);
-								// }
 								if (result["sale_invoice_doc_type_id"] === 61 || result["sale_invoice_doc_type_id"] === "61") {
 									printSaleInvoceFromDp(result["sale_invoice_nom"], 1);
 								} else {
 									printSaleInvoceFromDp(result["sale_invoice_nom"], 2);
 								}
-								// if (result["sale_invoice_doc_type_id"] === 61 || result["sale_invoice_doc_type_id"] === "61") {
-								// 	printSaleInvoceFromDp2(result["sale_invoice_nom"]);
-								// }
 							}
 						}
 					);
@@ -1583,7 +1558,9 @@ function printStorselView(select_id) {
 	}
 }
 
-/*==== ORDER SITE ====*/
+/*
+ORDER SITE
+ */
 function showOrdersSite() {
 	JsHttpRequest.query($rcapi,{ 'w': 'showOrdersSite'}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -1737,8 +1714,6 @@ function loadDpSiteOrder(dp_id) {
 	}
 }
 
-/*==== /ORDER SITE ====*/
-
 function showSupplToLocalChangeForm(pos, art_id, article_nr_displ, dp_id, dp_str_id) {
 	if (art_id > 0 && dp_id > 0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'showSupplToLocalChangeForm', 'art_id':art_id, 'dp_id':dp_id, 'dp_str_id':dp_str_id},
@@ -1784,7 +1759,9 @@ function saveDpSupplToLocalChangeForm(dp_id, dp_str_id, art_id) {
 	}
 }
 
-/*===== IMPORT =======================================================================================================*/
+/*
+import files
+ */
 
 function showCsvUploadForm(dp_id) {
     $("#fileDpCsvUploadForm").modal("show");
@@ -1898,8 +1875,6 @@ function clearDpUnknown(dp_id) {
         }}, true);
 }
 
-/*==== END IMPORT ====*/
-
 function showStorageFieldsViewForm() {
     JsHttpRequest.query($rcapi,{ 'w':'showStorageFieldsViewForm'},
         function (result, errors){ if (errors) {alert(errors);} if (result){
@@ -1949,7 +1924,9 @@ function exportDpCard(dp_id, type_id=0) {
     window.open(url, '_blank');
 }
 
-/*==== DP ORDER INFO ====*/
+/*
+DP ORDER INFO
+ */
 function saveDpOrderInfo() {
 	let dp_id = $("#dp_id").val();
 	let order_info_id = $("#order_info_id").val();
@@ -2100,29 +2077,6 @@ function setClientOrderInfo(order_info_id) {
 	let dp_id = $("#dp_id").val();
 	JsHttpRequest.query($rcapi,{'w':'setClientOrderInfo', 'order_info_id':order_info_id, 'dp_id':dp_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result) {
-			// $("#order_user_id").val(result.content["user_id"]);
-			// $("#order_del_name").val(result.content["recipient_name"]);
-			// $("#order_del_phone").val(result.content["recipient_phone"]);
-			//
-			// let user_city = $("#user_city");
-			// user_city.val(result.content["city_id"]);
-			// user_city.select2();
-			//
-			// $("#order_delivery").val(result.content["delivery_id"]);
-			// $("#order_payment").val(result.content["payment_id"]);
-			// $("#delivery_charge").val(result.content["delivery_charge_id"]);
-			//
-			// $("#order_del_street").val(result.content["delivery_info"]["street"]);
-			// $("#order_del_house").val(result.content["delivery_info"]["house"]);
-			// $("#order_del_porch").val(result.content["delivery_info"]["porch"]);
-			//
-			// $("#department_ref").val(result.content["delivery_info"]["department"]);
-			//
-			// $("#order_del_express").val(result.content["delivery_info"]["express"]);
-			// $("#order_del_express_info").val(result.content["delivery_info"]["express_info"]);
-			//
-			// setOrderInfoFields();
-			// setCityVal();
 			$("#DeliveryCard").modal("hide");
 			showDpCard(dp_id);
 		}}, true);
@@ -2299,31 +2253,3 @@ function dropDeliveryCard() {
 			}
 		}}, true);
 }
-
-// function showClientCard(client_id) {
-// 	JsHttpRequest.query($rcapi,{ 'w': 'showClientCard', 'client_id':client_id},
-// 		function (result, errors){ if (errors) {alert(errors);} if (result){
-// 			let client_card = $("#ClientCard");
-// 			client_card.modal("show");
-// 			$("#ClientCardBody").html(result["content"]);
-// 			$("#ClientCardLabel").html($("#client_name").val()+" (ID:"+$("#client_id").val()+")");
-// 			$("#client_tabs").tab();
-// 			$("#comment_info").markdown({autofocus:false,savable:false});
-// 			$("#country_id").select2({placeholder: "Виберіть країну",dropdownParent: client_card});
-// 			$("#state_id").select2({placeholder: "Виберіть область",dropdownParent: client_card});
-// 			$("#region_id").select2({placeholder: "Виберіть район",dropdownParent: client_card});
-// 			$("#city_id").select2({placeholder: "Виберіть населений пункт",dropdownParent: client_card}).on('select2:close', function() {var el = $(this);
-// 				if(el.val() === "NEW") {
-// 					var newval = prompt("Введіть нове значення: ");
-// 					if(newval !== null) {
-// 						let region_id=$("#region_id option:selected").val();
-// 						JsHttpRequest.query($rcapi,{ 'w': 'addNewCity', 'region_id':region_id, 'name':newval},
-// 							function (result, errors){ if (errors) {alert(errors);} if (result){
-// 								el.append('<option id="'+result["id"]+'">'+newval+'</option>').val(newval);
-// 							}}, true);
-// 					}
-// 				}
-// 			});
-// 			$(".i-checks").iCheck({checkboxClass: 'icheckbox_square-green',radioClass: 'iradio_square-green',});
-// 		}}, true);
-// }
