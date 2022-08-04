@@ -1,0 +1,43 @@
+<div class="row">
+    <div class="col-sm-12">
+        <label for="">PrefixID</label>
+        <input class="form-control" id="prefix_id" type="text" title="PrefixID" value="{prefix_id}" readonly>
+    </div>
+
+    <div class="col-sm-12">
+        <label for="suppl_brand">Бренд постачальника</label>
+        <input class="form-control" id="suppl_brand" type="text" title="Бренд постачальника" value="{suppl_brand}">
+    </div>
+
+    <div class="col-sm-12">
+        <label for="brand_select">Бренд</label>
+        <select class="form-control" id="brand_select" title="Бренд">
+            <option value="0">-Не вибрано-</option>
+            {brand_select}
+        </select>
+    </div>
+
+    <div class="col-sm-12">
+        <label for="prefix">Префікс</label>
+        <input class="form-control" id="prefix" type="text" title="Префікс" value="{prefix}">
+    </div>
+
+    <div class="col-sm-12">
+        <label for="prefix">Повернення</label>
+        <input class="form-control" id="return_delay" type="text" title="Повернення" value="{return_delay}">
+    </div>
+
+    <div class="col-sm-12">
+        <label for="prefix">Гарантійна інформація</label>
+        <input class="form-control" id="warranty_info" type="text" title="Гарантійна інформація" value="{warranty_info}">
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-sm-offset-8 col-sm-4 text-right">
+        <button class="btn btn-primary" onclick="saveSupplPricePrefix()">Зберегти</button>
+        <button class="btn btn-danger" onclick="dropSupplPricePrefix()">Видалити</button>
+        <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+    </div>
+</div>
+

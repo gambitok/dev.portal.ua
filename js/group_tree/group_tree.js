@@ -301,7 +301,7 @@ function showUploadPhotoForm(type_id,group_id) {
         }}, true);
 }
 
-function dropUploadPhotoForm(type_id,group_id) {
+function dropUploadPhotoForm(type_id, group_id) {
     swal({
             title: "Видалити зображення?",
             text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -309,15 +309,20 @@ function dropUploadPhotoForm(type_id,group_id) {
         },
         function (isConfirm) {
             if (isConfirm) {
-                if (group_id.length>0){
+                if (group_id.length > 0) {
                     JsHttpRequest.query($rcapi,{'w':'dropUploadPhotoForm', 'type_id':type_id, 'group_id':group_id},
                         function (result, errors){ if (errors) {alert(errors);} if (result){
-                            if (result["answer"]==1){
+                            if (result["answer"] == 1) {
                                 swal("Видалено!", "Внесені Вами зміни успішно збережені.", "success");
-                                if (type_id=="group") updateGroupTreeHeadStr(group_id);
-                                if (type_id=="head") updateGroupTreeHeadCard(group_id);
+                                if (type_id == "group") {
+                                    updateGroupTreeHeadStr(group_id);
+                                }
+                                if (type_id == "head") {
+                                    updateGroupTreeHeadCard(group_id);
+                                }
+                            } else {
+                                swal("Помилка!", result["error"], "error");
                             }
-                            else{ swal("Помилка!", result["error"], "error");}
                         }}, true);
                 }
             } else {
@@ -325,3 +330,208 @@ function dropUploadPhotoForm(type_id,group_id) {
             }
         });
 }
+
+/*
+* =================================================================================
+* */
+
+function loadTreeCons() {
+    JsHttpRequest.query($rcapi,{ 'w': 'loadTreeCons'},
+        function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#form_range").html(result.content);
+            loadTreeConsHeader();
+            loadTreeConsView();
+        }}, true);
+}
+
+function loadTreeConsHeader() {
+    JsHttpRequest.query($rcapi,{ 'w': 'loadTreeConsHeader'},
+        function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#form_header").html(result.content);
+        }}, true);
+}
+
+function loadTreeConsView() {
+    JsHttpRequest.query($rcapi,{ 'w': 'loadTreeConsView'},
+        function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#form_view").html(result.content);
+        }}, true);
+}
+
+function addTreeConsColumn() {
+    let head_id = $("#select_head option:selected").val();
+    if (head_id !== "0") {
+        JsHttpRequest.query($rcapi,{ 'w': 'addTreeConsColumn', 'head_id':head_id},
+            function (result, errors){ if (errors) {alert(errors);} if (result){
+                if (result["answer"] == 1) {
+                    loadTreeCons();
+                } else {
+                    swal("Помилка!", result["error"], "error");
+                }
+            }}, true);
+    } else {
+        swal("Помилка!", "Не вибрані дані!", "error");
+    }
+}
+
+function dropTreeConsColumn(head_id) {
+    JsHttpRequest.query($rcapi,{ 'w': 'dropTreeConsColumn', 'head_id':head_id},
+        function (result, errors){ if (errors) {alert(errors);} if (result){
+            if (result["answer"] == 1) {
+                loadTreeCons();
+            } else {
+                swal("Помилка!", result["error"], "error");
+            }
+        }}, true);
+}
+
+function moveTreeConsColumn(head_id, status) {
+    JsHttpRequest.query($rcapi,{ 'w': 'moveTreeConsColumn', 'head_id':head_id, 'status':status},
+        function (result, errors){ if (errors) {alert(errors);} if (result){
+            loadTreeCons();
+        }}, true);
+}
+
+function addTreeConsCatForm(head_id) {
+    $("#FormModalWindow").modal("show");
+    JsHttpRequest.query($rcapi,{ 'w': 'addTreeConsCatForm', 'head_id':head_id},
+        function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#FormModalBody").html(result.content);
+        }}, true);
+}
+
+function addTreeConsCat(head_id) {
+    let cat_id = $("#select_cat option:selected").val();
+    let cat_col = $("#cat_col").val();
+    let cat_row = $("#cat_row").val();
+    JsHttpRequest.query($rcapi,{'w':'addTreeConsCat', 'head_id':head_id, 'cat_id':cat_id, 'cat_col':cat_col, 'cat_row':cat_row},
+        function (result, errors){ if (errors) {alert(errors);} if (result){
+            if (result["answer"] == 1) {
+                addTreeConsCatForm(head_id);
+                loadTreeCons();
+            } else {
+                swal("Помилка!", result["error"], "error");
+            }
+        }}, true);
+}
+
+function dropTreeConsCat(head_id, cat_id) {
+    JsHttpRequest.query($rcapi,{'w':'dropTreeConsCat', 'head_id':head_id, 'cat_id':cat_id},
+        function (result, errors){ if (errors) {alert(errors);} if (result){
+            if (result["answer"] == 1) {
+                loadTreeCons();
+            } else {
+                swal("Помилка!", result["error"], "error");
+            }
+        }}, true);
+}
+
+function saveTreeConsCatPos(head_id, cat_id) {
+    let cat_col = $("#cat_col_" + cat_id).val();
+    let cat_row = $("#cat_row_" + cat_id).val();
+    JsHttpRequest.query($rcapi,{'w':'saveTreeConsCatPos', 'head_id':head_id, 'cat_id':cat_id, 'cat_col':cat_col, 'cat_row':cat_row},
+        function (result, errors){ if (errors) {alert(errors);} if (result){
+            if (result["answer"] == 1) {
+                loadTreeCons();
+            } else {
+                swal("Помилка!", result["error"], "error");
+            }
+        }}, true);
+}
+
+function loadTreeConsViewList(head_id) {
+    $("#nav-hide").html("");
+    JsHttpRequest.query($rcapi,{ 'w': 'loadTreeConsViewList', 'head_id':head_id},
+        function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#nav-hide").html(result.content);
+        }}, true);
+}
+
+function addHeadPopular(head_id) {
+    JsHttpRequest.query($rcapi,{ 'w': 'addHeadPopular', 'head_id':head_id},
+        function (result, errors){ if (errors) {alert(errors);} if (result){
+            loadTreeCons();
+        }}, true);
+}
+
+function moveTreeConsCat(head_id, cat_id, status) {
+    JsHttpRequest.query($rcapi,{ 'w': 'moveTreeConsCat', 'head_id':head_id, 'cat_id':cat_id, 'status':status},
+        function (result, errors){ if (errors) {alert(errors);} if (result){
+            loadTreeCons();
+            console.log(result.content);
+        }}, true);
+}
+
+function loadCatalogExist(status) {
+    $("#form_cron_content").html("");
+    JsHttpRequest.query($rcapi,{ 'w': 'loadCatalogExist', 'status':status},
+        function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#form_cron_content").html(result.content);
+        }}, true);
+}
+
+function saveGroupStatus(type, group_id) {
+    let field = $("#status_group_" + group_id);
+    if (type == 1) {
+        field = $("#status_auto_group_" + group_id);
+    }
+    let status = field.val();
+    JsHttpRequest.query($rcapi,{ 'w': 'saveGroupStatus', 'type':type, 'group_id':group_id, 'status':status},
+        function (result, errors){ if (errors) {alert(errors);} if (result){
+            toastr["success"]("Збережено!");
+            console.log('done: ' + type + " - " + group_id + " - " + result.content);
+            field.val(result.content);
+        }}, true);
+}
+
+function showGroupExistCard(group_id) {
+    $("#FormModalWindow").modal("show");
+    JsHttpRequest.query($rcapi,{ 'w': 'showGroupExistCard', 'group_id':group_id},
+        function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#FormModalBody").html(result.content);
+            $("#FormModalLabel").text("Картка групи");
+            $("#reviews").chosen();
+        }}, true);
+}
+
+function saveGroupExistCard() {
+    let group_id = $("#group_id").val();
+    let text_ru = $("#text_ru").val();
+    let text_ua = $("#text_ua").val();
+    let text_en = $("#text_en").val();
+    let one_ru = $("#one_ru").val();
+    let one_ua = $("#one_ua").val();
+    let one_en = $("#one_en").val();
+    let h1_ru = $("#h1_ru").val();
+    let h1_ua = $("#h1_ua").val();
+    let h1_en = $("#h1_en").val();
+    let descr_ru = $("#descr_ru").val();
+    let descr_ua = $("#descr_ua").val();
+    let descr_en = $("#descr_en").val();
+    let text_link = $("#text_link").val();
+    let status = $("#group_status").val();
+    let status_auto = $("#group_status_auto").val();
+    let reviews = $("#reviews").chosen().val();
+
+    if (group_id.length > 0) {
+        JsHttpRequest.query($rcapi,{'w':'saveGroupExistCard', 'group_id':group_id, 'text_ru':text_ru, 'text_ua':text_ua, 'text_en':text_en, 'one_ru':one_ru, 'one_ua':one_ua, 'one_en':one_en, 'h1_ru':h1_ru, 'h1_ua':h1_ua, 'h1_en':h1_en, 'descr_ru':descr_ru, 'descr_ua':descr_ua, 'descr_en':descr_en, 'text_link':text_link, 'status':status, 'status_auto':status_auto, 'reviews':reviews},
+            function (result, errors){ if (errors) {alert(errors);} if (result){
+                if (result["answer"] == 1) {
+                    swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
+                    $("#FormModalWindow").modal("hide");
+                } else {
+                    swal("Помилка!", result["error"], "error");
+                }
+            }}, true);
+    } else {
+        swal("Помилка!", result["error"], "error");
+    }
+}
+
+var review_ids = [];
+
+$(document).ready(function() {
+    $("select#reviews option").each(function() {
+        review_ids.push($(this).val());
+    });
+});

@@ -1,0 +1,101 @@
+<div class="tabs-container">
+
+    <ul class="nav nav-tabs" id="action_clients_tabs">
+        <li class="active"><a data-toggle="tab" href="#action_clients_tab1" onClick="showActionClientsCard('{action_id}');"><i class="fa fa-bars"></i> <span class="hidden-sm-down">Структура</span></a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="action_clients_tab1" class="tab-pane active">
+            <div class="panel-body">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+
+                        <form method="get" class="form-horizontal" onSubmit="return false;">
+                            <input type="hidden" id="action_id" value="{action_id}">
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Індекс</label>
+                                <div class="col-sm-4">
+                                    <div class="input-group">
+                                        <input title="Індекс" class="form-control" type="text" id="article_nr_displ" name="article_nr_displ" value="{article_nr_displ}">
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-primary" onclick="showSearchIndexForm();"><i class="fa fa-bars"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">ART_ID</label>
+                                <div class="col-sm-4">
+                                    <div class="input-group">
+                                        <input id="action_art_id" title="ART_ID" disabled type="number" value="{art_id}" class="form-control">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-info" type="button" title="Історія" onclick="showArticleJDocs('{art_id}');"><i class="fa fa-history"></i></button>
+                                            <button class="btn btn-warning" type="button" title="Карта товару" onclick="showCatalogueCard('{art_id}');"><i class="fa fa-codepen"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <label class="col-sm-2 control-label">Останні зміни</label>
+                                <div class="col-sm-4 control-label"><span>{user_update}</span></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Кількість</label>
+                                <div class="col-sm-4"><input id="action_amount" title="Кількість" type="number" value="{amount}" class="form-control"></div>
+                                <label class="col-sm-2 control-label">Максимальна кількість</label>
+                                <div class="col-sm-4"><input id="action_max_amount" title="Максимальна кількість" type="number" value="{max_amount}" class="form-control"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Вартість</label>
+                                <div class="col-sm-4"><input id="action_price" title="Максимальна кількість" type="number" value="{price}" class="form-control"></div>
+                                <label class="col-sm-2 control-label">Операційна вартість</label>
+                                <div class="col-sm-4">
+                                    <input id="action_oper_price" disabled title="ОС" type="number" value="{oper_price}" class="form-control">
+                                    {actual_oper_price}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Дата</label>
+                                <div class="col-sm-4"><input id="action_data" title="Дата" type="date" value="{action_data}" class="form-control"></div>
+                                <label class="col-sm-2 control-label">Повернення товару</label>
+                                <div class="col-sm-4"><input id="action_return_delay" title="Повернення товару" type="number" value="{return_delay}" class="form-control"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Клієнти</label>
+                                <div class="col-sm-4">
+                                    <select title="Клієнти" id="action_clients" name="action_clients[]" data-placeholder="Вибрати клієнтів" class="chosen-select" multiple tabindex="4" style="width: 250px;">
+                                        {clients_list}
+                                    </select>
+                                </div>
+                                <label class="col-sm-2 control-label">Категорія клієнта</label>
+                                <div class="col-sm-4">
+                                    <select title="Категорія" id="action_category" name="action_category[]" data-placeholder="Вибрати категорію" class="chosen-select" multiple tabindex="4" style="width: 250px;">
+                                        {category_list}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <div class="col-sm-offset-6 col-sm-6 text-right">
+                                    <button class="btn btn-primary" type="button" id="acceptBtn" onClick="saveActionClients('{action_id}');"><i class="fa fa-save"></i> Зберегти</button>
+                                    <button class="btn btn-warning" type="button" id="disableBtn" onClick="disableActionClients('{action_id}','{status_disable}');"><i class="fa fa-lock"></i> {status_cap}</button>
+                                    <button class="btn btn-danger" type="button" id="dropBtn" onClick="dropActionClients('{action_id}');"><i class="fa fa-trash"></i> Видалити</button>
+                                    <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+</div>

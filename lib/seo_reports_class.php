@@ -65,8 +65,10 @@ class seo_reports {
 	}
 	
 	function exportSeoReports($date_start,$date_end,$managers,$cash_id,$client_status) {
-		header('Content-Type: text/csv; charset=utf-8');
-		header('Content-Disposition: attachment; filename=export_reports.csv'); ob_clean();
+//		header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Type: text/csv; charset=windows-1251');
+		header('Content-Disposition: attachment; filename=export_reports.csv');
+//		ob_clean();
 		$output = fopen('php://output', 'w');
 		fputcsv($output, array("Менежер/Вид документу","Продажі","Повернення","Сума"),$delimiter = ';');
 		$reports_array=$this->getSeoReportsData($date_start,$date_end,$managers,$cash_id,$client_status); 

@@ -1,0 +1,60 @@
+
+<div class="tabs-container">
+
+    <ul class="nav nav-tabs" id="navs_tabs">
+        <li class="active"><a data-toggle="tab" href="#nav_tab1"><i class="fa fa-bars"></i> <span class="hidden-sm-down not-visible">Загальна інформація</span></a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="nav_tab1" class="tab-pane active">
+            <div class="panel-body">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <form method="get" class="form-horizontal">
+
+                            <div class="form-group">
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Код навігації</label>
+                                <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" name="nav_id" id="nav_id" value="{nav_id}" readonly placeholder="ID"></div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Назва</label>
+                                <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" name="nav_text" id="nav_text" value="{nav_text}" placeholder="Назва"></div>
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Назва (РУС)</label>
+                                <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" name="nav_text" id="nav_text_ru" value="{nav_text_ru}" placeholder="Назва (РУС)"></div>
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Посилання</label>
+                                <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" id="nav_link" value="{nav_link}" placeholder="Посилання"></div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Позиція</label>
+                                <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="number" id="nav_pos" value="{nav_pos}" placeholder="Позиція"></div>
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Видимість</label>
+                                <div class="col-lg-2 col-md-4 col-sm-8">
+									<span class="buttons-inline pull-left">
+										<input type="checkbox" class="js-switch" data-size="small" id="nav_status" {nav_status} title="Видимість">
+									</span>
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <div class="col-sm-10 text-right col-sm-offset-2">
+                                    <button class="btn btn-primary" type="button" onClick="saveNavCard();"><i class="fa fa-save"></i> Зберегти зміни</button>
+                                    <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

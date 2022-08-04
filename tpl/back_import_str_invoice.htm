@@ -1,0 +1,79 @@
+<input type="hidden" id="client_id_sel" value="{client_id_sel}">
+<input type="hidden" id="storage_id_sel" value="{storage_id_sel}">
+<input type="hidden" id="cell_id_sel" value="{cell_id_sel}">
+
+<div class="row">
+    <div class="col-sm-10">
+        <h2>Для клієнта: <b>{client_name}</b></h2>
+    </div>
+    <div class="col-sm-2">
+        <div class="btn-group" role="group">
+            <button class="btn btn-warning btn-sm" onClick="loadBackImport();"><i class="fa fa-arrow-left"></i> Назад</button>
+            <button class="btn btn-primary btn-sm" onClick="finishBackImport();"><i class="fa fa-eye"></i> Виконати повернення</button>
+        </div>
+    </div>
+</div>
+
+<div class="hr-line-dashed"></div>
+
+<div class="row">
+    <div class="col-sm-10">
+        <h2>Не визначені артикули</h2>
+    </div>
+    <div class="col-sm-2 text-right">
+        <button class="btn btn-primary btn-sm" onClick="exportBackImportArtilces(0);"><i class="fa fa-download"></i> Експорт</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hovered">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Артикул</th>
+                    <th>Кількість</th>
+                    <th>ART_ID</th>
+                    <th>Бренд</th>
+                </tr>
+                </thead>
+                <tbody>
+                {records_list_unknown}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="hr-line-dashed"></div>
+
+<div class="row">
+    <div class="col-sm-10">
+        <h2>Видаткові накладні:</h2>
+    </div>
+    <div class="col-sm-2 text-right">
+        <button class="btn btn-primary btn-sm" onClick="exportBackImportArtilces(1);"><i class="fa fa-download"></i> Експорт</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hovered">
+                <thead>
+                <tr>
+                    <th>Артикул</th>
+                    <th>Кількість</th>
+                    <th>ART_ID</th>
+                    <th>Бренд</th>
+                    <th>Накладна (invoice_str_id)</th>
+                    <th>Склад/комірка</th>
+                </tr>
+                </thead>
+                <tbody>
+                {records_list_invoice}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

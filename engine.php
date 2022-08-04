@@ -27,6 +27,7 @@ require_once RD.'/lib/money_move_class.php';$money_move=new money_move;
 require_once RD.'/lib/money_spend_class.php';$money_spend=new money_spend;
 require_once (RD."/js/JsHttpRequest/JsHttpRequest.php");
 require_once (RD."/lib/nova-poshta-api-2/src/Delivery/NovaPoshtaApi2.php");
+require_once (RD . "/checkbox-in-ua-php-sdk/vendor/autoload.php");
 
 $JsHttpRequest = new JsHttpRequest("windows-1251");
 session_start();
@@ -38,7 +39,7 @@ if ($_REQUEST["w"]=="logOutUser"){ $GLOBALS['_RESULT'] = array("answer"=>$media_
 if ($_REQUEST["w"]=="setCookieNavBarMini"){ $GLOBALS['_RESULT'] = array("answer"=>$media_users->setCookieNavBarMini());}
 if ($_REQUEST["w"]=="getNBUKours"){ $GLOBALS['_RESULT'] = array("content"=>$income->getNBUKours($_REQUEST["data"],$_REQUEST["valuta"]));}
 
-if ($media_user_id>0 && $media_user_id!=""){
+if ($media_user_id>0 && $media_user_id!="") {
 
 if ($_REQUEST["w"]=="showCatNewArticle"){ list($content,$header)=$cat->showCatNewArticle();$GLOBALS['_RESULT'] = array("content"=>$content,"header"=>$header);}
 if ($_REQUEST["w"]=="showGoodsGroupLetterListSelect"){ $content=$cat->showGoodsGroupLetterListSelect($_REQUEST["prnt_id"]);$GLOBALS['_RESULT'] = array("content"=>$content);}
@@ -72,8 +73,8 @@ if ($_REQUEST["w"]=="loadArticleCommets"){ $GLOBALS['_RESULT'] = array("content"
 if ($_REQUEST["w"]=="saveArticleComment"){ list($answer,$err)=$cat->saveArticleComment($_REQUEST["art_id"],$_REQUEST["comment"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 if ($_REQUEST["w"]=="dropArticleComment"){ list($answer,$err)=$cat->dropArticleComment($_REQUEST["art_id"],$_REQUEST["cmt_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
-if ($_REQUEST["w"]=="loadArticleCDN"){ $GLOBALS['_RESULT'] = array("content"=>$cat->loadArticleCDN($_REQUEST["art_id"]));}
-if ($_REQUEST["w"]=="articlesCDNDropFile"){ list($answer,$err)=$cat->articlesCDNDropFile($_REQUEST["art_id"],$_REQUEST["file_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+//if ($_REQUEST["w"]=="loadArticleCDN"){ $GLOBALS['_RESULT'] = array("content"=>$cat->loadArticleCDN($_REQUEST["art_id"]));}
+//if ($_REQUEST["w"]=="articlesCDNDropFile"){ list($answer,$err)=$cat->articlesCDNDropFile($_REQUEST["art_id"],$_REQUEST["file_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
 if ($_REQUEST["w"]=="showArtilceGallery"){ list($content,$header)=$cat->showArtilceGallery($_REQUEST["art_id"],$_REQUEST["article_nr_displ"]); $GLOBALS['_RESULT'] = array("content"=>$content, "header"=>$header);}
 if ($_REQUEST["w"]=="loadArticleFoto"){ $GLOBALS['_RESULT'] = array("content"=>$cat->loadArticleFoto($_REQUEST["art_id"]));}
@@ -205,8 +206,9 @@ if ($_REQUEST["w"]=="saveJmovingCardLocal"){ list($answer,$err)=$jmoving->saveJm
 
 if ($_REQUEST["w"]=="loadJmovingStorageCellsSelectList"){ list($content,$cells_show)=$jmoving->showStorageCellsSelectList($_REQUEST["storage_id"],0); $GLOBALS['_RESULT'] = array("content"=>$content,"cells_show"=>$cells_show);}
 
-if ($_REQUEST["w"]=="showJmovingLocalAutoCellForm"){ $GLOBALS['_RESULT'] = array("content"=>$jmoving->showJmovingLocalAutoCellForm($_REQUEST["jmoving_id"],$_REQUEST["storage_id_to"]));}
-if ($_REQUEST["w"]=="saveJmovingLocalAutoCell"){ list($answer,$err,$no_row)=$jmoving->saveJmovingLocalAutoCell($_REQUEST["jmoving_id"],$_REQUEST["storage_id_to"],$_REQUEST["cell_id_from"],$_REQUEST["cell_id_to"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err,"no_row"=>$no_row);}
+if ($_REQUEST["w"]=="showJmovingLocalAutoCellForm") { $GLOBALS['_RESULT'] = array("content"=>$jmoving->showJmovingLocalAutoCellForm($_REQUEST["jmoving_id"], $_REQUEST["storage_id_to"]));}
+if ($_REQUEST["w"]=="saveJmovingLocalAutoCell") { list($answer, $err, $no_row) = $jmoving->saveJmovingLocalAutoCell($_REQUEST["jmoving_id"], $_REQUEST["storage_id_to"], $_REQUEST["cell_id_from"], $_REQUEST["cell_id_to"]); $GLOBALS['_RESULT'] = array("answer" => $answer,"error" => $err,"text" => $text);}
+if ($_REQUEST["w"]=="saveJmovingLocalAutoCell2") { list($answer, $err, $descr) = $jmoving->saveJmovingLocalAutoCell2($_REQUEST["jmoving_id"], $_REQUEST["storage_id_to"], $_REQUEST["cell_ids_from"], $_REQUEST["cell_id_to"]); $GLOBALS['_RESULT'] = array("answer" => $answer,"error" => $err,"descr" => $descr);}
 
 if ($_REQUEST["w"]=="showJmovingArticleSearchForm"){ $GLOBALS['_RESULT'] = array("content"=>$jmoving->showJmovingArticleSearchForm($_REQUEST["brand_id"],$_REQUEST["article_nr_displ"],$_REQUEST["jmoving_id"]));}
 if ($_REQUEST["w"]=="showJmovingArticleLocalSearchForm"){ $GLOBALS['_RESULT'] = array("content"=>$jmoving->showJmovingArticleLocalSearchForm($_REQUEST["brand_id"],$_REQUEST["article_nr_displ"],$_REQUEST["jmoving_id"],$_REQUEST["storage_id_from"]));}
@@ -361,7 +363,7 @@ if ($_REQUEST["w"]=="dropClientContact"){ list($answer,$err)=$cl->dropClientCont
 
 if ($_REQUEST["w"]=="loadClientUsers"){ $GLOBALS['_RESULT'] = array("content"=>$cl->loadClientUsers($_REQUEST["client_id"]));}
 if ($_REQUEST["w"]=="showClientUserForm"){ $GLOBALS['_RESULT'] = array("content"=>$cl->showClientUserForm($_REQUEST["client_id"],$_REQUEST["user_id"]));}
-if ($_REQUEST["w"]=="saveClientUserForm"){ list($answer,$err)=$cl->saveClientUserForm($_REQUEST["client_id"],$_REQUEST["user_id"],$_REQUEST["user_name"],$_REQUEST["user_email"],$_REQUEST["user_phone"],$_REQUEST["user_pass"],$_REQUEST["user_main"],$_REQUEST["price_main"],$_REQUEST["export_main"],$_REQUEST["user_invoice"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+if ($_REQUEST["w"]=="saveClientUserForm"){ list($answer,$err)=$cl->saveClientUserForm($_REQUEST["client_id"],$_REQUEST["user_id"],$_REQUEST["user_name"],$_REQUEST["user_email"],$_REQUEST["user_phone"],$_REQUEST["user_pass"],$_REQUEST["user_main"],$_REQUEST["price_main"],$_REQUEST["export_main"],$_REQUEST["user_nulls"],$_REQUEST["user_invoice"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 if ($_REQUEST["w"]=="dropClientUser"){ list($answer,$err)=$cl->dropClientUser($_REQUEST["client_id"],$_REQUEST["user_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
 if ($_REQUEST["w"]=="loadClientDocumentPrefix"){ $GLOBALS['_RESULT'] = array("content"=>$cl->loadClientDocumentPrefix($_REQUEST["client_id"]));}
@@ -374,7 +376,7 @@ if ($_REQUEST["w"]=="showClientStorageForm"){ list($content,$header)=$cl->showCl
 if ($_REQUEST["w"]=="saveClientStorageForm"){ list($answer,$err)=$cl->saveClientStorageForm($_REQUEST["client_id"],$_REQUEST["storage_id"],$_REQUEST["name"],$_REQUEST["email"],$_REQUEST["phone"],$_REQUEST["contact_person"],$_REQUEST["country"],$_REQUEST["state"],$_REQUEST["region"],$_REQUEST["city"],$_REQUEST["client_visible"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
 if ($_REQUEST["w"]=="showClientGeneralSaldoForm"){ list($content,$header)=$cl->showClientGeneralSaldoForm($_REQUEST["client_id"]);$GLOBALS['_RESULT'] = array("content"=>$content, "header"=>$header);}
-if ($_REQUEST["w"]=="filterClientGeneralSaldoForm"){ list($range,$saldo_start,$saldo_end,$saldo_data_start,$saldo_data_end)=$cl->filterClientGeneralSaldoForm($_REQUEST["client_id"],$_REQUEST["from"],$_REQUEST["to"]);$GLOBALS['_RESULT'] = array("range"=>$range, "saldo_start"=>$saldo_start, "saldo_end"=>$saldo_end, "saldo_data_start"=>$saldo_data_start, "saldo_data_end"=>$saldo_data_end);}
+if ($_REQUEST["w"]=="filterClientGeneralSaldoForm"){ list($range,$saldo_start,$saldo_end,$saldo_data_start,$saldo_data_end)=$cl->filterClientGeneralSaldoForm($_REQUEST["client_id"],$_REQUEST["from"],$_REQUEST["to"],$_REQUEST["saldo_articles"]);$GLOBALS['_RESULT'] = array("range"=>$range, "saldo_start"=>$saldo_start, "saldo_end"=>$saldo_end, "saldo_data_start"=>$saldo_data_start, "saldo_data_end"=>$saldo_data_end);}
 
 //------------              END CLIENTS          --------------------------
 
@@ -384,7 +386,7 @@ if ($_REQUEST["w"]=="finishSupplPriceImport"){list($answer,$err)=$suppl->finishS
 if ($_REQUEST["w"]=="loadSupplIndex"){ $GLOBALS['_RESULT'] = array("content"=>$suppl->loadSupplIndex($_REQUEST["suppl_id"]));}
 if ($_REQUEST["w"]=="finishSupplIndexImport"){list($answer,$err)=$suppl->finishSupplIndexImport($_REQUEST["suppl_id"],$_REQUEST["start_row"],$_REQUEST["kol_cols"],$_REQUEST["cols"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
 if ($_REQUEST["w"]=="loadSupplVat"){ $GLOBALS['_RESULT'] = array("content"=>$suppl->loadSupplVat($_REQUEST["suppl_id"]));}
-if ($_REQUEST["w"]=="saveSupplVat"){list($answer,$err)=$suppl->saveSupplVat($_REQUEST["suppl_id"],$_REQUEST["price_in_vat"],$_REQUEST["show_in_vat"],$_REQUEST["price_add_vat"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
+if ($_REQUEST["w"]=="saveSupplVat"){list($answer,$err)=$suppl->saveSupplVat($_REQUEST["suppl_id"],$_REQUEST["price_in_vat"],$_REQUEST["show_in_vat"],$_REQUEST["price_add_vat"],$_REQUEST["return_delay"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
 if ($_REQUEST["w"]=="loadSupplOrderInfo"){ $GLOBALS['_RESULT'] = array("content"=>$suppl->loadSupplOrderInfo($_REQUEST["suppl_id"]));}
 if ($_REQUEST["w"]=="saveSupplOrderInfo"){list($answer,$err)=$suppl->saveSupplOrderInfo($_REQUEST["suppl_id"],$_REQUEST["info"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
 
@@ -515,7 +517,7 @@ if ($_REQUEST["w"]=="closeDpCard"){ $answer=$dp->closeDpCard($_REQUEST["dp_id"])
 if ($_REQUEST["w"]=="unlockDpCard"){ $answer=$dp->unlockDpCard($_REQUEST["dp_id"]);  $GLOBALS['_RESULT'] = array("answer"=>$answer);}
 if ($_REQUEST["w"]=="clearDpStr"){ list($answer,$err)=$dp->clearDpStr($_REQUEST["dp_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 if ($_REQUEST["w"]=="dropDpStr"){ list($answer,$err,$dp_summ)=$dp->dropDpStr($_REQUEST["dp_id"],$_REQUEST["dp_str_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err,"dp_summ"=>$dp_summ);}
-if ($_REQUEST["w"]=="saveDpCard"){ list($answer,$err)=$dp->saveDpCard($_REQUEST["dp_id"],$_REQUEST["data_pay"],$_REQUEST["cash_id"],$_REQUEST["dp_summ"],$_REQUEST["doc_type_id"],$_REQUEST["tpoint_id"],$_REQUEST["client_id"],$_REQUEST["client_conto_id"],$_REQUEST["delivery_type_id"],$_REQUEST["carrier_id"],$_REQUEST["delivery_address"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+if ($_REQUEST["w"]=="saveDpCard"){ list($answer,$err)=$dp->saveDpCard($_REQUEST["dp_id"],$_REQUEST["cash_id"],$_REQUEST["dp_summ"],$_REQUEST["doc_type_id"],$_REQUEST["tpoint_id"],$_REQUEST["client_id"],$_REQUEST["client_conto_id"],$_REQUEST["delivery_type_id"],$_REQUEST["carrier_id"],$_REQUEST["processed_status"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 if ($_REQUEST["w"]=="saveDpCardData"){ list($answer,$err)=$dp->saveDpCardData($_REQUEST["dp_id"],$_REQUEST["cash_id"],$_REQUEST["frm"],$_REQUEST["tto"],$_REQUEST["idStr"],$_REQUEST["artIdStr"],$_REQUEST["article_nr_displStr"],$_REQUEST["brandIdStr"],$_REQUEST["amountStr"],$_REQUEST["priceStr"],$_REQUEST["priceEndStr"],$_REQUEST["discountStr"],$_REQUEST["summStr"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 if ($_REQUEST["w"]=="setDpClient"){ list($answer,$err)=$dp->setDpClient($_REQUEST["dp_id"],$_REQUEST["client_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
@@ -545,20 +547,23 @@ if ($_REQUEST["w"]=="unlinkDpTpoint"){ list($answer,$err)=$dp->unlinkDpTpoint($_
 if ($_REQUEST["w"]=="catalogue_article_storage_rest_search_dp"){list($range_list,$brand_list)=$dp->showArticlesSearchDocumentList($_REQUEST["art"],$_REQUEST["brand_id"],$_REQUEST["search_type"],$_REQUEST["dp_id"],$_REQUEST["tpoint_id"]);$GLOBALS['_RESULT']=array("content"=>$range_list,"brand_list"=>$brand_list);}
 if ($_REQUEST["w"]=="setArticleToSelectAmountDp"){ $GLOBALS['_RESULT'] = array("content"=>$dp->setArticleToSelectAmountDp($_REQUEST["art_id"],$_REQUEST["dp_id"]));}
 if ($_REQUEST["w"]=="showDpAmountInputWindow"){ $GLOBALS['_RESULT'] = array("content"=>$dp->showDpAmountInputWindow($_REQUEST["art_id"],$_REQUEST["dp_id"],$_REQUEST["storage_id"]));}
-if ($_REQUEST["w"]=="setArticleToDp"){ list($answer,$err,$idS,$weight,$volume,$empty_kol,$label_empty,$dp_summ)=$dp->setArticleToDp($_REQUEST["dp_id"],$_REQUEST["tpoint_id"],$_REQUEST["artIdStr"],$_REQUEST["article_nr_displStr"],$_REQUEST["brandIdStr"],$_REQUEST["storageIdStr"],$_REQUEST["amountStr"],0,0,0); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err,"weight"=>$weight,"volume"=>$volume,"empty_kol"=>$empty_kol,"label_empty"=>$label_empty,"dp_summ"=>$dp_summ); }
+if ($_REQUEST["w"]=="setArticleToDp"){ list($answer,$err,$idS,$weight,$volume,$empty_kol,$label_empty,$dp_summ,$time)=$dp->setArticleToDp($_REQUEST["dp_id"],$_REQUEST["tpoint_id"],$_REQUEST["artIdStr"],$_REQUEST["article_nr_displStr"],$_REQUEST["brandIdStr"],$_REQUEST["storageIdStr"],$_REQUEST["amountStr"],0,0,0,0); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err,"weight"=>$weight,"volume"=>$volume,"empty_kol"=>$empty_kol,"label_empty"=>$label_empty,"dp_summ"=>$dp_summ,"time"=>$time); }
 
 if ($_REQUEST["w"]=="showDpSupplAmountInputWindow"){ $GLOBALS['_RESULT'] = array("content"=>$dp->showDpSupplAmountInputWindow($_REQUEST["art_id"],$_REQUEST["article_nr_displ"],$_REQUEST["brand_id"],$_REQUEST["dp_id"],$_REQUEST["suppl_id"],$_REQUEST["suppl_storage_id"],$_REQUEST["price"]));}
-if ($_REQUEST["w"]=="setArticleSupplToDp"){ list($answer,$err,$idS,$weight,$volume,$empty_kol,$label_empty,$dp_summ)=$dp->setArticleSupplToDp($_REQUEST["dp_id"],$_REQUEST["art_id"],$_REQUEST["article_nr_displ"],$_REQUEST["brandId"],$_REQUEST["supplId"],$_REQUEST["supplStorageId"],$_REQUEST["amountStr"],0,0,0); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err,"weight"=>$weight,"volume"=>$volume,"empty_kol"=>$empty_kol,"label_empty"=>$label_empty,"dp_summ"=>$dp_summ); }
+if ($_REQUEST["w"]=="setArticleSupplToDp"){ list($answer,$err,$idS,$weight,$volume,$empty_kol,$label_empty,$dp_summ)=$dp->setArticleSupplToDp($_REQUEST["dp_id"],$_REQUEST["art_id"],$_REQUEST["article_nr_displ"],$_REQUEST["brandId"],$_REQUEST["supplId"],$_REQUEST["supplStorageId"],$_REQUEST["amountStr"],0,0,0,0); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err,"weight"=>$weight,"volume"=>$volume,"empty_kol"=>$empty_kol,"label_empty"=>$label_empty,"dp_summ"=>$dp_summ); }
 
 if ($_REQUEST["w"]=="showArticleSearchDocumentForm"){ $GLOBALS['_RESULT'] = array("content"=>$cat->showArticleSearchDocumentForm($_REQUEST["brand_id"],$_REQUEST["article_nr_displ"],$_REQUEST["doc_type"], $_REQUEST["doc_id"]));}
 if ($_REQUEST["w"]=="showSupplStorageSelectWindow"){ $GLOBALS['_RESULT'] = array("content"=>$cat->showSupplStorageSelectWindow($_REQUEST["art_id"],$_REQUEST["article_nr_displ"],$_REQUEST["doc_type"],$_REQUEST["doc_id"]));}
 
-if ($_REQUEST["w"]=="startDpExecute"){ list($answer,$err,$suppl_ex)=$dp->startDpExecute($_REQUEST["dp_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err,"suppl_ex"=>$suppl_ex); }
-if ($_REQUEST["w"]=="makeDpJmovingStorselPreorder"){ list($answer,$err)=$dp->makeDpJmovingStorselPreorder($_REQUEST["dp_id"],$_REQUEST["local"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
+if ($_REQUEST["w"]=="startDpExecute"){ list($answer,$err,$suppl_ex,$doc_err)=$dp->startDpExecute($_REQUEST["dp_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err,"suppl_ex"=>$suppl_ex,"doc_err"=>$doc_err); }
+if ($_REQUEST["w"]=="makeDpJmovingStorselPreorder"){ list($answer,$err)=$dp->makeDpJmovingStorselPreorder($_REQUEST["dp_id"],$_REQUEST["local"],$_REQUEST["dp_note"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
 if ($_REQUEST["w"]=="loadDpStorsel"){ $GLOBALS['_RESULT'] = array("content"=>$dp->loadDpStorsel($_REQUEST["dp_id"]));}
 if ($_REQUEST["w"]=="viewDpStorageSelect"){ list($content,$header)=$dp->viewDpStorageSelect($_REQUEST["dp_id"],$_REQUEST["select_id"],$_REQUEST["select_status"]); $GLOBALS['_RESULT'] = array("content"=>$content,"header"=>$header);}
 
 if ($_REQUEST["w"]=="loadDpJmoving"){ $GLOBALS['_RESULT'] = array("content"=>$dp->loadDpJmoving($_REQUEST["dp_id"]));}
+
+if ($_REQUEST["w"]=="showDeliveryCard"){ $GLOBALS['_RESULT'] = array("content"=>$dp->showDeliveryCard($_REQUEST["dp_id"]));}
+if ($_REQUEST["w"]=="dropDeliveryCard"){list($answer,$err)=$dp->dropDeliveryCard($_REQUEST["dp_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
 
 /* import DP */
 
@@ -568,7 +573,7 @@ if ($_REQUEST["w"]=="saveTablePreview"){list($answer,$err)=$dp->saveTablePreview
 
 if ($_REQUEST["w"]=="finishDpImport"){list($answer,$err)=$dp->finishDpImport($_REQUEST["dp_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
 if ($_REQUEST["w"]=="clearDpImport"){list($answer,$err)=$dp->clearDpImport($_REQUEST["dp_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
-if ($_REQUEST["w"]=="saveCsvDpImport"){list($answer,$err)=$dp->saveCsvDpImport($_REQUEST["dp_id"],$_REQUEST["start_row"],$_REQUEST["kol_cols"],$_REQUEST["cols"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
+if ($_REQUEST["w"]=="saveCsvDpImport"){list($answer,$err,$message)=$dp->saveCsvDpImport($_REQUEST["dp_id"],$_REQUEST["start_row"],$_REQUEST["kol_cols"],$_REQUEST["cols"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err,"message"=>$message); }
 
 if ($_REQUEST["w"]=="loadDpUnknownArticles"){$GLOBALS['_RESULT'] = array("content"=>$dp->loadDpUnknownArticles($_REQUEST["dp_id"]));}
 if ($_REQUEST["w"]=="clearDpUnknown"){list($answer,$err)=$dp->clearDpUnknown($_REQUEST["dp_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
@@ -664,6 +669,8 @@ if ($_REQUEST["w"]=="loadTaxBackSellerClient"){ list($answer,$err,$client_id,$cl
 if ($_REQUEST["w"]=="findTaxStr"){ $GLOBALS['_RESULT'] = array("content"=>$tax_invoice->findTaxStr($_REQUEST["tax_to_back_id"]));}
 if ($_REQUEST["w"]=="saveTaxBackCard"){ list($answer,$err,$tax_id)=$tax_invoice->saveTaxBackCard($_REQUEST["tax_id"],$_REQUEST["tax_to_back_id"],$_REQUEST["data_create"],$_REQUEST["data_send"],$_REQUEST["cash_id"],$_REQUEST["tax_summ"],$_REQUEST["tax_type_id"],$_REQUEST["tpoint_id"],$_REQUEST["seller_id"],$_REQUEST["client_id"],$_REQUEST["status_tax"],$_REQUEST["doc_xml_nom"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err,"tax_id"=>$tax_id);}
 if ($_REQUEST["w"]=="saveTaxBackCardData"){ list($answer,$err)=$tax_invoice->saveTaxBackCardData($_REQUEST["tax_id"],$_REQUEST["frm"],$_REQUEST["tto"],$_REQUEST["idStr"],$_REQUEST["tsidStr"],$_REQUEST["nomStr"],$_REQUEST["zedStr"],$_REQUEST["goods_nameStr"],$_REQUEST["amountStr"],$_REQUEST["priceStr"],$_REQUEST["summStr"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+
+if ($_REQUEST["w"]=="fillTaxDocRows"){ $GLOBALS['_RESULT'] = array("content"=>$tax_invoice->fillTaxDocRows($_REQUEST["tax_id"]));}
 
 //------------              JPAY              --------------------------
 
@@ -792,6 +799,7 @@ if ($_REQUEST["w"]=="setIncomeVat"){ list($answer,$err)=$income->setIncomeVat($_
 if ($_REQUEST["w"]=="makeIncomeCardFinish"){ list($answer,$err)=$income->makeIncomeCardFinish($_REQUEST["income_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
 if ($_REQUEST["w"]=="checkInvoiceIncome"){ $content=$income->checkInvoiceIncome($_REQUEST["invoice_income"],$_REQUEST["seller"],$_REQUEST["date"]); $GLOBALS['_RESULT'] = array("content"=>$content);}
+if ($_REQUEST["w"]=="checkInvoiceIncome"){list($content,$uktzed_status)=$income->checkInvoiceIncome($_REQUEST["invoice_income"],$_REQUEST["seller"],$_REQUEST["date"]); $GLOBALS['_RESULT'] = array("content"=>$content,"uktzed_status"=>$uktzed_status); }
 
 if ($_REQUEST["w"]=="showImportIncomeStrCSVform"){list($content,$header)=$income->showImportIncomeStrCSVform($_REQUEST["income_id"]); $GLOBALS['_RESULT'] = array("content"=>$content,"header"=>$header); }
 if ($_REQUEST["w"]=="finishCsvImport"){list($answer,$err)=$income->finishCsvImport($_REQUEST["income_id"],$_REQUEST["start_row"],$_REQUEST["kol_cols"],$_REQUEST["cols"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
@@ -858,8 +866,7 @@ if ($_REQUEST["w"]=="AddManualManagerValue"){ list($manValue,$manText)=$manualMa
 if ($_REQUEST["w"]=="sendGmanualRequest1"){ list($content,$label)=$gmanual->sendGmanualRequest1($_REQUEST["gkey"],$_REQUEST["id"],$_REQUEST["caption"]); $GLOBALS['_RESULT'] = array("content"=>$content,"label"=>$label);}
 if ($_REQUEST["w"]=="checkGkey"){ list($content,$answer)=$gmanual->checkGkey($_REQUEST["gkey"],$_REQUEST["id"]); $GLOBALS['_RESULT'] = array("content"=>$content,"answer"=>$answer);}
 
-
-include_once require_once RD.'/engine2.php';
+require_once RD.'/engine2.php';
 
 }
 ?>

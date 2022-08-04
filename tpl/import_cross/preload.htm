@@ -1,0 +1,100 @@
+<input type="hidden" id="kol_cols" value="{kol_cols}">
+<input type="hidden" id="status_check" value="{status_check}">
+
+<div class="hr-line-dashed"></div>
+
+<div class="container" style="width: auto">
+    <div class="row">
+        <button class="btn btn-primary" onclick="loadCrossTablePreview('{user_id}');">Показати / Сховати артикули</button>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <label for="brand_result_from">Виберіть бренд загрузки</label>
+            <select name="brand_result_from" id="brand_result_from" class="form-control" title="brands" onchange="getUnknownBrandsCatalog('result_brand');">
+                <option value="0">-Не визначено-</option>
+                {brand_result_select}
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label for="brand_result_to">Виберіть бренд з каталогу</label>
+            <select name="brand_result_to" id="brand_result_to" class="form-control" title="brands">
+                <option value="0">-Не визначено-</option>
+            </select>
+        </div>
+        <div class="col-sm-2">
+            <label class="block">&nbsp;</label>
+            <button class="btn btn-info btn-sm" onclick="setUnknownBrands('{user_id}', 'result_brand');"><i class="fa fa-upload"></i> RESULT_BRAND</button>
+        </div>
+        <div class="col-sm-2">
+            <label class="block">&nbsp;</label>
+            <button class="btn btn-sm" onclick="getUnknownBrandsAll('result_brand');" title="Показати усі бренди"><i class="fa fa-list"></i> Всі бренди</button>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <label for="brand_cross_from">Виберіть бренд загрузки</label>
+            <select name="brand_cross_from" id="brand_cross_from" class="form-control" title="brands" onchange="getUnknownBrandsCatalog('cross_brand');">
+                <option value="0">-Не визначено-</option>
+                {brand_cross_select}
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label for="brand_cross_to">Виберіть бренд з каталогу</label>
+            <select name="brand_cross_to" id="brand_cross_to" class="form-control" title="brands">
+                <option value="0">-Не визначено-</option>
+            </select>
+        </div>
+        <div class="col-sm-2">
+            <label class="block">&nbsp;</label>
+            <button class="btn btn-info btn-sm" onclick="setUnknownBrands('{user_id}', 'cross_brand');"><i class="fa fa-upload"></i> CROSS_BRAND</button>
+        </div>
+        <div class="col-sm-2">
+            <label class="block">&nbsp;</label>
+            <button class="btn btn-sm" onclick="getUnknownBrandsAll('cross_brand');" title="Показати усі бренди"><i class="fa fa-list"></i> Всі бренди</button>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-sm-offset-8 col-sm-4">
+            <div class="btn-group pull-right" role="group">
+                <button class="btn btn-warning btn-sm" onClick="clearImportCross('{user_id}');"><i class="fa fa-trash"></i> Очистити дані</button>
+                <button class="btn btn-primary btn-sm" onClick="finishImportCross('{user_id}');"><i class="fa fa-save"></i> Зберегти дані</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="hr-line-dashed"></div>
+
+<div class="table-responsive">
+    <table id="datatable" class="table table-striped table-hover table-bordered" width="100%">
+        <thead>
+        <tr align="center">
+            <th>#</th>
+            <th>ART_ID</th>
+            <th>CROSS_ARTICLE</th>
+            <th>CROSS_ARTICLE_SEARCH</th>
+            <th>CROSS_BRAND</th>
+            <th>CROSS_BRAND_ID</th>
+            <th>CROSS_BRAND_KIND</th>
+            <th>CROSS_RELATION</th>
+            <th>RESULT_ARTICLE</th>
+            <th>RESULT_BRAND</th>
+            <th>RESULT_BRAND_ID</th>
+            <th>STATUS</th>
+        </tr>
+        </thead>
+        <tbody id="range_table_import">
+        {records_list}
+        </tbody>
+    </table>
+</div>
+

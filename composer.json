@@ -2,6 +2,8 @@
     "require": {
         "mpdf/mpdf": "^8.0",
         "ext-iconv": "*",
-        "ext-imap": "*"
+        "ext-imap": "*",
+      "ext-mysqli": "*",
+      "ext-json": "*"
     }
 }

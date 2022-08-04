@@ -1,0 +1,27 @@
+<input type="hidden" id="kol_cols" value="{kol_cols}">
+
+<div class="row">
+    <div class="col-sm-offset-7 col-sm-2">
+        <label class="control-label">Початковий ряд</label>
+    </div>
+    <div class="col-sm-1">
+        <input class="form-control input-sm numberOnly" type="number" name="csv_from_row" id="csv_from_row" value="1" title="Введіть початковий ряд">
+    </div>
+    <div class="col-sm-2 text-right">
+        <button class="btn btn-info btn-sm" onClick="saveImportPhotoCsv('{user_id}');"><i class="fa fa-save"></i> Зберегти імпорт даних</button>
+    </div>
+</div>
+<div class="hr-line-dashed"></div>
+<div class="table-responsive">
+    <table id="csv_table" class="table table-bordered table-hovered" style="width:100%">
+        <thead>
+            <tr>
+                <th>№</th>
+                {cols_list}
+            </tr>
+        </thead>
+        <tbody>
+            {records_list}
+        </tbody>
+    </table>
+</div>

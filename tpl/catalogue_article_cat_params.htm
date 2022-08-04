@@ -1,0 +1,23 @@
+<div class="row">
+    <label title="param_id" class="col-sm-2 control-label">PARAM_ID</label>
+    <div class="col-sm-4"><input type="text" class="form-control" readonly value="{param_id}" id="param_id" name="param_id" title="param_id"></div>
+    <label title="param_template_id" class="col-sm-2 control-label">Шаблон</label>
+    <div class="col-sm-4">
+        <select title="Шаблон" class="form-control" id="param_template_id" size="1">
+            <option value="0">Не вибрано</option>
+            {template_list}
+        </select>
+    </div>
+    <label title="param_name" class="col-sm-2 control-label">Назва параметру</label>
+    <div class="col-sm-4"><input type="text" class="form-control" id="param_name" value="{param_name}" name="param_name" title="param_name"></div>
+</div>
+
+<hr>
+
+<div class="row">
+    <div class="col-sm-10 text-right col-sm-offset-2">
+        <button class="btn btn-primary" type="button" onClick="saveCatalogueTemplateParamsForm('{param_id}');">Зберегти зміни</button>
+        <button class="btn btn-danger" type="button" onClick="dropCatalogueTemplateParams('{param_id}');" {disable_delete}>Видалити</button>
+        <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+    </div>
+</div>

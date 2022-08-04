@@ -1,0 +1,94 @@
+
+<div class="panel-body">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+
+            <form method="get" class="form-horizontal" onSubmit="return false;">
+
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">ID типу</label>
+                    <div class="col-sm-3">
+                        <input title="ID типу" readonly class="form-control" type="text" id="typ_id" name="typ_id" value="{typ_id}">
+                    </div>
+                    <label class="col-sm-1 control-label">Номер моделі</label>
+                    <div class="col-sm-3">
+                        <input title="Номер моделі" readonly class="form-control" type="text" id="typ_mod" name="typ_mod" value="{typ_mod}">
+                    </div>
+                    <label class="col-sm-1 control-label">Активність</label>
+                    <div class="col-sm-2">
+                        <span class="buttons-inline pull-left">
+                            <input {typ_active} type="checkbox" class="js-switch" data-size="small" placeholder="Активність" id="typ_active"/>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">Позиція</label>
+                    <div class="col-sm-3">
+                        <input title="Позиція" class="form-control" type="number" id="typ_sort" name="typ_sort" value="{typ_sort}">
+                    </div>
+                    <label class="col-sm-1 control-label">Дата від</label>
+                    <div class="col-sm-3">
+                        <input title="Дата від" class="form-control" type="month" id="typ_pcon_start" name="typ_pcon_start" value="{typ_pcon_start}">
+                    </div>
+                    <label class="col-sm-1 control-label">Дата до</label>
+                    <div class="col-sm-3">
+                        <input title="Дата до" class="form-control" type="month" id="typ_pcon_end" name="typ_pcon_end" value="{typ_pcon_end}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">Eng code</label>
+                    <div class="col-sm-3">
+                        <input title="Eng code" class="form-control" type="text" id="eng_cod" name="eng_cod" value="{eng_cod}">
+                    </div>
+                    <label class="col-sm-1 control-label">Номер типу моделі</label>
+                    <div class="col-sm-3">
+                        <input title="Номер типу моделі" class="form-control" type="text" id="typ_text" name="typ_text" value="{typ_text}">
+                    </div>
+                    <label class="col-sm-1 control-label">Назва типу моделі</label>
+                    <div class="col-sm-3">
+                        <input title="Назва типу моделі" class="form-control" type="text" id="typ_mmt" name="typ_mmt" value="{typ_mmt}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">Потужність, л.с.</label>
+                    <div class="col-sm-3">
+                        <input title="Потужність, л.с." class="form-control" type="text" id="typ_kw_from" name="typ_kw_from" value="{typ_kw_from}">
+                    </div>
+                    <label class="col-sm-1 control-label">Потужність, кВт</label>
+                    <div class="col-sm-3">
+                        <input title="Потужність, кВт" class="form-control" type="text" id="typ_hp_from" name="typ_hp_from" value="{typ_hp_from}">
+                    </div>
+                    <label class="col-sm-1 control-label">Об'єм двигуна</label>
+                    <div class="col-sm-3">
+                        <input title="Об'єм двигуна" class="form-control" type="text" id="typ_ccm" name="typ_ccm" value="{typ_ccm}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">Тип топлива</label>
+                    <div class="col-sm-3">
+                        <input title="Тип топлива" class="form-control" type="text" id="fuel_id" name="fuel_id" value="{fuel_id}">
+                    </div>
+                    <label class="col-sm-1 control-label">Код двигуна</label>
+                    <div class="col-sm-3">
+                        <input title="Код двигуна" class="form-control" type="text" id="body_id" name="body_id" value="{body_id}">
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-6 col-sm-6 text-right">
+                        <button class="btn btn-primary" type="button" id="acceptBtn" onClick="saveTypesCard('{typ_id}');"><i class="fa fa-save"></i> Зберегти</button>
+                        <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,182 @@
+<input type="hidden" id="order_info_id" value="{order_info_id}">
+
+<div id="order_delivery_block">
+    <div class="form-delivery">
+
+        <div class="form-delivery__item" style="width: 100%;">
+            <div class="form-delivery__item-label">
+                Збережені адреси
+            </div>
+            <div class="form-delivery__item-input">
+                <div id="delivery_user_saved">
+                    {delivery_user_saved}
+                </div>
+            </div>
+        </div>
+
+        <!--Тип доставки-->
+        <div class="form-delivery__item" style="width: 100%;">
+            <div class="form-delivery__item-label">
+                Тип доставки
+            </div>
+            <div class="form-delivery__item-input">
+                <select title="Тип доставки" class="form-control" id="order_delivery" onchange="setOrderInfoFields();">
+                    {order_delivery_list}
+                </select>
+            </div>
+        </div>
+
+        <!--Контрагент-->
+        <div class="form-delivery__item">
+            <div class="form-delivery__item-label">
+                Веб-користувач
+            </div>
+            <div class="form-delivery__item-input">
+                <select title="Веб-користувач" class="form-control" id="order_user_id">
+                    {order_user_list}
+                </select>
+            </div>
+        </div>
+
+        <!--Отримувач (контрагент)-->
+        <div class="form-delivery__item">
+            <div class="form-delivery__item-label">
+                Отримувач (ФІО)
+            </div>
+            <div class="form-delivery__item-input">
+                <input type="text" class="form-control" id="order_del_name" value="{order_del_name}" title="Отримувач (ФІО)">
+            </div>
+        </div>
+
+        <!--Телефон отримувача (контрагента)-->
+        <div class="form-delivery__item">
+            <div class="form-delivery__item-label">
+                Отримувач (телефон)
+            </div>
+            <div class="form-delivery__item-input">
+                <input type="text" class="form-control" id="order_del_phone" value="{order_del_phone}" title="Отримувач (телефон)">
+            </div>
+        </div>
+
+        <!--Місто-->
+        <div class="form-delivery__item">
+            <div class="form-delivery__item-label">
+                Місто
+            </div>
+            <div class="form-delivery__item-input">
+                <select class="select2-block" id="user_city" name="user_city" data-attr="select" onchange="setCityVal();" oninput="getCityVal();" title="Місто">
+                    {order_city_list}
+                </select>
+                <select id="user_city_np" name="user_city_np" data-attr="select" title="NovaPoshta" style="display: none">
+                    <option value="0">{not_chosen}</option>
+                </select>
+            </div>
+        </div>
+
+        <!--Тип доставки-->
+        <div class="form-delivery__item">
+            <div class="form-delivery__item-label">
+                Тип оплати
+            </div>
+            <div class="form-delivery__item-input">
+                <select title="Тип оплати" class="form-control" id="order_payment" onchange="setOrderInfoPamymentFields();">
+                    {order_payment_list}
+                </select>
+            </div>
+        </div>
+
+        <!--Плата за доставку-->
+        <div class="form-delivery__item">
+            <div class="form-delivery__item-label">
+                Плата за доставку
+            </div>
+            <div class="form-delivery__item-input">
+                <select title="Плата за доставку" class="form-control" id="delivery_charge">
+                    {delivery_charge_list}
+                </select>
+            </div>
+        </div>
+
+        <!--Вулиця-->
+        <div class="form-delivery__item" id="order_del_street_visible">
+            <div class="form-delivery__item-label">
+                Вулиця
+            </div>
+            <div class="form-delivery__item-input">
+                <input type="text" class="form-control" id="order_del_street" value="{order_del_street}" title="Вулиця">
+            </div>
+        </div>
+
+        <!--Будинок-->
+        <div class="form-delivery__item" id="order_del_house_visible">
+            <div class="form-delivery__item-label">
+                Будинок
+            </div>
+            <div class="form-delivery__item-input">
+                <input type="text" class="form-control" id="order_del_house" value="{order_del_house}" title="Будинок">
+            </div>
+        </div>
+
+        <!--Підїзд-->
+        <div class="form-delivery__item" id="order_del_porch_visible">
+            <div class="form-delivery__item-label">
+                Підїзд
+            </div>
+            <div class="form-delivery__item-input">
+                <input type="text" class="form-control" id="order_del_porch" value="{order_del_porch}" title="Підїзд">
+            </div>
+        </div>
+
+        <!--Відділення-->
+        <div class="form-delivery__item" id="order_del_department_visible">
+            <div class="form-delivery__item-label">
+                Відділення
+            </div>
+            <div class="form-delivery__item-input">
+                <input type="hidden" id="department_ref" value="{department_ref}">
+                <select title="Відділеня" class="form-control" id="order_del_department">
+                    {order_del_department_list}
+                </select>
+            </div>
+        </div>
+
+        <!--Тип експрес доставки-->
+        <div class="form-delivery__item" id="order_del_express_visible">
+            <div class="form-delivery__item-label">
+                Тип експрес доставки
+            </div>
+            <div class="form-delivery__item-input">
+                <select title="Тип експрес доставки" class="form-control" id="order_del_express">
+                    {order_del_express_list}
+                </select>
+            </div>
+        </div>
+
+        <!--Інформація експрес доставки-->
+        <div class="form-delivery__item" id="order_del_express_info_visible">
+            <div class="form-delivery__item-label">
+                Інформація експрес доставки
+            </div>
+            <div class="form-delivery__item-input">
+                <input type="text" class="form-control" id="order_del_express_info" value="{order_del_express_info}" title="Інформація експрес доставки">
+            </div>
+        </div>
+
+        <!--Сума наложеного платежу-->
+        <div class="form-delivery__item" id="order_del_express_payment_visible" style="display: none;">
+            <div class="form-delivery__item-label">
+                Сума наложеного платежу
+            </div>
+            <div class="form-delivery__item-input">
+                <input type="text" class="form-control" id="order_del_express_payment" value="{order_del_express_payment}" title="Сума наложеного платежу">
+            </div>
+        </div>
+
+    </div>
+
+    <div style="display: block; text-align: right;">
+        <button id="save_dp_order_info" class="btn btn-primary" onclick="saveDpOrderInfo();"><i class="fa fa-save"></i> Зберегти дані</button>
+        <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+    </div>
+
+</div>

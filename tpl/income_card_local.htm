@@ -1,6 +1,6 @@
 <div class="tabs-container">
 
-    <ul class="nav nav-tabs" id="catalogue_tabs">
+    <ul class="nav nav-tabs" id="income_tabs">
         <li class="active"><a data-toggle="tab" href="#cat_tab1" onClick="showIncomeCard('{income_id}');"><i class="fa fa-bars"></i> <span class="hidden-sm-down">Структура накладної</span></a></li>
         <li><a data-toggle="tab" href="#cat_tab7" onClick="loadIncomeUnknownArticles('{income_id}');"><i class="fa fa-bug"></i> <span class="hidden-sm-down">Не визначені артикули <span id="label_un_articles">{labelArticlesUnKnownCount}</span></span></a></li>
         <li><a data-toggle="tab" href="#cat_tab2" onClick="loadIncomeSpend('{income_id}');"><i class="fa fa-slack"></i> <span class="hidden-sm-down">Витрати за прихід</span></a></li>
@@ -28,7 +28,9 @@
 							
                             <div class="form-group">
                             	<label class="col-sm-2 control-label">Дата</label>
-                                <div class="col-sm-3"><input class="form-control" type="text" name="income_data" id="income_data" readonly value="{data}" placeholder="РРРР-ММ-ДД"></div>
+                                <div class="col-sm-3">
+                                    <input class="form-control" type="text" name="income_data" id="income_data" readonly value="{data}" placeholder="РРРР-ММ-ДД">
+                                </div>
                                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Постачальник</label>
                                 <div class="col-lg-3 col-md-2 col-sm-7">
                                     <input type="hidden" id="client_seller" name="client_seller" value="{client_seller}">
@@ -116,6 +118,7 @@
                                     <button class="btn btn-primary" type="button" {oper_disabled} onClick="saveIncomeCard();"><i class="fa fa-save"></i> Зберегти зміни</button>
 									<button id="make_income" class="btn btn-warning" type="button" {oper_disabled} onClick="makeIncomeCardFinish();"><i class="fa fa-code"></i> Провести накладну</button>
                                     <button class="btn btn-primary" onclick="exportIncomeStr('{income_id}');"><i class="fa fa-file-excel-o"></i> Експорт позицій</button>
+                                    <button class="btn btn-primary" onclick="backIncome('{income_id}');">ПОВЕРНУТИ</button>
                                     <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
                                 </div>
                             </div>

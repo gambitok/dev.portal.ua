@@ -977,6 +977,9 @@ fieldset[disabled] .btn-white.active {
   height: 90px;
   font-size: 42px;
 }
+button {
+  overflow: hidden!important;
+}
 button.dim {
   display: inline-block;
   text-decoration: none;

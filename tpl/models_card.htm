@@ -1,0 +1,112 @@
+<div class="panel-body">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+
+            <form method="get" class="form-horizontal" onSubmit="return false;">
+
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">ID моделі</label>
+                    <div class="col-sm-3">
+                        <input title="ID моделі" readonly class="form-control" type="text" id="mod_id" name="mod_id" value="{mod_id}">
+                    </div>
+                    <label class="col-sm-1 control-label">ID машини</label>
+                    <div class="col-sm-3">
+                        <input title="ID машини" readonly class="form-control" type="text" id="mod_mfa_id" name="mod_mfa_id" value="{mod_mfa_id}">
+                    </div>
+                    <label class="col-sm-1 control-label">Активність</label>
+                    <div class="col-sm-2">
+                        <span class="buttons-inline pull-left">
+                              <input {mod_active} type="checkbox" class="js-switch" data-size="small" placeholder="Активність" id="mod_active"/>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">Повна модель</label>
+                    <div class="col-sm-3">
+                        <input title="Повна модель" class="form-control" type="text" id="mod_tex_text" name="mod_tex_text" value="{mod_tex_text}">
+                    </div>
+                    <label class="col-sm-1 control-label">Дата від</label>
+                    <div class="col-sm-3">
+                        <input title="Дата від" class="form-control" type="month" id="mod_date_start" name="mod_date_start" value="{mod_date_start}">
+                    </div>
+                    <label class="col-sm-1 control-label">Дата до</label>
+                    <div class="col-sm-3">
+                        <input title="Дата до" class="form-control" type="month" id="mod_date_end" name="mod_date_end" value="{mod_date_end}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">Назва моделі</label>
+                    <div class="col-sm-3">
+                        <input title="Назва моделі" class="form-control" type="text" id="mod_model" name="mod_model" value="{mod_model}">
+                    </div>
+                    <label class="col-sm-3 control-label">Вкл/Викл логотип</label>
+                    <div class="col-sm-1">
+                       <span class="buttons-inline pull-left">
+                              <input {mod_img_status} type="checkbox" class="js-switch" data-size="small" placeholder="Статус логотипа" id="mod_img_status"/>
+                        </span>
+                    </div>
+                    <label class="col-sm-1 control-label">Логотип</label>
+                    <div class="col-sm-3">
+                        <input title="Логотип" class="form-control" type="text" id="mod_img" name="mod_img" value="{mod_img}">
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#fileModelPhotoUploadForm" onclick="showModelsUploadForm({mod_id});" {model_remove_disabled}><i class="fa fa-picture-o"></i> Завантажити фото</button>
+                    </div>
+                    <div class="col-sm-12 text-center">
+                        <img src="https://toko.ua/uploads/images/models/{mod_img}" alt="{mod_img}" width="300">
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-6 col-sm-6 text-right">
+                        <button class="btn btn-primary" type="button" id="acceptBtn" onClick="saveModelsCard('{mod_id}');"><i class="fa fa-save"></i> Зберегти</button>
+                        <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <h4 class="text-center">Типи моделей машини</h4>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="types_str" class="table table-striped table-hover table-bordered" width="100%">
+                        <thead>
+                            <tr align="center">
+                                <td>ID типу</td>
+                                <td>ID моделі</td>
+                                <td>Номер типу моделі</td>
+                                <td>Назва типу моделі</td>
+                                <td>Дата від</td>
+                                <td>Дата до</td>
+                                <td>Потужність, л.с.</td>
+                                <td>Потужність, кВт</td>
+                                <td>Об'єм двигуна</td>
+                                <td>Топливо</td>
+                                <td>Двигун</td>
+                                <td>Eng cod</td>
+                                <td>Позиція</td>
+                                <td>Активність</td>
+                            </tr>
+                        </thead>
+                        <tbody id="types_range">
+                            {types_range}
+                        </tbody>
+                    </table>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>

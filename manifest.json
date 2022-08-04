@@ -1,0 +1,15 @@
+{
+  "name": "MYPARTS.PRO",
+  "short_name": "MYPARTS",
+  "display": "standalone",
+  "start_url": "/",
+  "theme_color": "#023499",
+  "background_color": "#111111",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    }
+  ]
+}

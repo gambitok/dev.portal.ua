@@ -1,0 +1,32 @@
+<div class="row">
+    <label title="value_id" class="col-sm-2 control-label">VALUE_ID</label>
+    <div class="col-sm-4"><input type="text" class="form-control" readonly value="{value_id}" id="value_id" name="value_id" title="value_id"></div>
+    <label title="param_template_id" class="col-sm-2 control-label">Шаблон</label>
+    <div class="col-sm-4">
+        <select title="Шаблон" class="form-control" id="param_template_id" size="1" onchange="getCatalogueParamsList();">
+            <option value="0">Не вибрано</option>
+            {template_list}
+        </select>
+    </div>
+    <label title="param_param_id" class="col-sm-2 control-label">Параметр</label>
+    <div class="col-sm-4">
+        <select title="Параметр" class="form-control" id="param_param_id" size="1" onchange="getCatalogueValuesList()">
+            <option value="0">Не вибрано</option>
+            {params_list}
+        </select>
+    </div>
+    <label title="param_value" class="col-sm-2 control-label">Назва значення</label>
+    <div class="col-sm-4">
+        <input type="text" class="form-control" id="param_value" value="{param_value}" name="param_value" title="param_value">
+    </div>
+</div>
+
+<hr>
+
+<div class="row">
+    <div class="col-sm-10 text-right col-sm-offset-2">
+        <button class="btn btn-primary" type="button" onClick="saveCatalogueTemplateParamsValueForm();">Зберегти зміни</button>
+        <!--<button class="btn btn-danger" type="button" onClick="dropCatalogueTemplateParams('{param_id}');" {disable_delete}>Видалити</button>-->
+        <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+    </div>
+</div>

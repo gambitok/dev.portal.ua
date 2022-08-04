@@ -1,0 +1,36 @@
+
+<div class="panel-body">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <form method="get" class="form-horizontal">
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Код файла</label>
+                    <div class="col-sm-1"><input class="form-control" type="text" name="file_id" id="file_id" value="{file_id}" readonly placeholder="ID"></div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-lg-1 col-md-2 col-sm-4 control-label">Назва</label>
+                    <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" id="file_caption" value="{file_caption}" placeholder="Назва"></div>
+                    <label class="col-lg-1 col-md-2 col-sm-4 control-label">Файл</label>
+                    <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" id="file_file" value="{file_file}" placeholder="Файл"></div>
+                    <label class="col-lg-1 col-md-2 col-sm-4 control-label">Система</label>
+                    <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" id="file_system" value="{file_system}" placeholder="Система"></div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <div class="col-sm-10 text-right col-sm-offset-2">
+                        <button class="btn btn-primary" type="button" onClick="saveModuleFileCard();"><i class="fa fa-save"></i> Зберегти зміни</button>
+                        <button class="btn btn-danger" type="button" onClick="dropModuleFileCard();"><i class="fa fa-trash"></i> Видалити</button>
+                        <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

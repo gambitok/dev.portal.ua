@@ -1,0 +1,88 @@
+<script src="/js/plugins/ckeditor/ckeditor.js"></script>
+<script src="/js/plugins/ckeditor/samples/js/sample.js"></script>
+
+<div class="tabs-container">
+
+    <ul class="nav nav-tabs" id="faq_tabs">
+        <li class="active"><a data-toggle="tab" href="#faq_tab1"><i class="fa fa-bars"></i> <span class="hidden-sm-down not-visible">Загальна інформація</span></a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="faq_tab1" class="tab-pane active">
+            <div class="panel-body">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <form method="get" class="form-horizontal">
+
+                            <div class="form-group">
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Код FAQ</label>
+                                <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" name="faq_id" id="faq_id" value="{faq_id}" readonly placeholder="ID"></div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Питання</label>
+                                <div class="col-lg-11 col-md-2 col-sm-8"><input class="form-control" type="text" name="faq_question" id="faq_question" value="{faq_question}" placeholder="Питання"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Відповідь</label>
+                                <div class="col-lg-11">
+                                    <div id="editor" name="faq_answer" class="editor">
+                                        {faq_answer}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Питання (РУС)</label>
+                                <div class="col-lg-11 col-md-2 col-sm-8"><input class="form-control" type="text" name="faq_question_ru" id="faq_question_ru" value="{faq_question_ru}" placeholder="Питання (РУС)"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Відповідь (РУС)</label>
+                                <div class="col-lg-11">
+                                    <div id="editor2" name="faq_answer_ru" class="editor">
+                                        {faq_answer_ru}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Позиція</label>
+                                <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="number" id="faq_pos" value="{faq_pos}" placeholder="Позиція"></div>
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Видимість</label>
+                                <div class="col-lg-2 col-md-4 col-sm-8">
+									<span class="buttons-inline pull-left">
+										<input type="checkbox" class="js-switch" data-size="small" id="faq_status" {faq_status} title="Видимість">
+									</span>
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <div class="col-sm-10 text-right col-sm-offset-2">
+                                    <button class="btn btn-primary" type="button" onClick="saveFaqCard();"><i class="fa fa-save"></i> Зберегти зміни</button>
+                                    <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    initSample();
+    initSample2();
+</script>

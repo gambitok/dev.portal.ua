@@ -1,0 +1,15 @@
+<div class="row">
+    <label class="col-md-6 col-sm-12 control-label">Кількість для замовлення (максимум - {max_amount} шт.)</label>
+    <div class="col-md-6 col-sm-12">
+        <input type="number" id="input_amount" value="{max_amount}" min="0" max="{max_amount}" title="Кількість" class="form-control">
+        <input type="hidden" id="amount_storage_id" value="{max_amount}">
+    </div>
+</div>
+<div class="hr-line-dashed"></div>
+<div class="row">
+    <div class="col-sm-12 text-right">
+        <button class="btn btn-primary" id="saveBackSupplStr" onclick="saveBackSupplStr('{back_suppl_id}', '{income_id}', '{art_id}');"><i class="fa fa-plus"></i> Додати</button>
+        <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+    </div>
+</div>
+

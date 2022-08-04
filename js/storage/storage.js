@@ -414,3 +414,39 @@ function exportStorageAllList() {
     let url = "StorageCells/export3/"+storage_id+"/";
     window.open(url, '_blank');
 }
+
+var waveSpinner="<div class='sk-spinner sk-spinner-wave'><div class='sk-rect1'></div><div class='sk-rect2'></div><div class='sk-rect3'></div><div class='sk-rect4'></div><div class='sk-rect5'></div></div>";
+
+function getStorageReservDuplicates() {
+	let storage_id = $("#storage_list option:selected").val();
+	$("#waveSpinnerCat_place").html(waveSpinner);
+	JsHttpRequest.query($rcapi,{ 'w': 'getStorageReservDuplicates', 'storage_id':storage_id},
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+			let dt = $("#datatable7");
+			dt.DataTable().destroy();
+			$("#storage_reserv").html(result.content);
+			$("#waveSpinnerCat_place").html("");
+			dt.DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+		}}, true);
+}
+
+function loadStorageCostRange() {
+	let storage_id = $("#storage_list option:selected").val();
+	let kours_id = $("#kours_list option:selected").val();
+	let brand_id = $("#brands_list option:selected").val();
+	JsHttpRequest.query($rcapi,{ 'w': 'loadStorageCostRange', 'storage_id':storage_id, 'kours_id':kours_id, 'brand_id':brand_id},
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+			let dt = $("#datatable");
+			dt.DataTable().destroy();
+			$("#storage_range").html(result.content);
+			dt.DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+		}}, true);
+}
+
+function exportStorageCostList() {
+	let storage_id = $("#storage_list option:selected").val();
+	let kours_id = $("#kours_list option:selected").val();
+	let brand_id = $("#brands_list option:selected").val();
+	let url = "StorageCost/export/" + storage_id + "/" + kours_id + "/" + brand_id + "/";
+	window.open(url, '_blank');
+}

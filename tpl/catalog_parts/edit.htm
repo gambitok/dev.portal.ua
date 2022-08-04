@@ -1,0 +1,41 @@
+<style>
+    .dnone{
+        display: none;
+    }
+    .pointer {
+        cursor: pointer;
+    }
+    .pointer:hover {
+        text-decoration: underline;
+    }
+    .check-head {
+        color: lightcoral;
+    }
+</style>
+
+<div class="ibox float-e-margins">
+    <form method="get" class="form-horizontal">
+        <h2>Історія дерева запчастин</h2>
+        <div class="row">
+            <div class="col-md-3">
+                <input class="text-filter" type="text" id="searchInput" onkeyup="searchCatInput();" placeholder="Пошук по назві" title="{search_by_brand}">
+                {selected_category_list}
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12 text-right">
+                <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".tree-head").on('click', function(){
+            $(this).next().toggleClass("dnone");
+            $(this).toggleClass("check-head");
+        });
+    });
+</script>

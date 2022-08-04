@@ -23,12 +23,12 @@ $(document).ready(function() {
 
 function ShowCheckAll() {$("#checkAll").change(function () {$("input:checkbox").prop("checked", $(this).prop("checked"));});}
 
-function filterClientsList(){
-	let client_id=$("#filClientId").val();
-    let client_name=$("#filClientName").val();
-    let phone=$("#filPhone").val();
-    let email=$("#filEmail").val();
-    let state_id=$("#filState option:selected").val();
+function filterClientsList() {
+	let client_id = $("#filClientId").val();
+    let client_name = $("#filClientName").val();
+    let phone = $("#filPhone").val();
+    let email = $("#filEmail").val();
+    let state_id = $("#filState option:selected").val();
 	$("#clients_range").empty();
 	JsHttpRequest.query($rcapi,{ 'w': 'filterClientsList', 'client_id':client_id, 'client_name':client_name, 'phone':phone, 'email':email, 'state_id':state_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -37,18 +37,20 @@ function filterClientsList(){
 	}}, true);
 }
 
-function ClearClientSearch(){
-	$("#filClientId").val(""); $("#filClientName").val("");
-	$("#filPhone").val("");	$("#filEmail").val("");
+function ClearClientSearch() {
+	$("#filClientId").val("");
+	$("#filClientName").val("");
+	$("#filPhone").val("");
+	$("#filEmail").val("");
 	$("#filState option:selected").val(0);
 	filterClientsList();
 }
 
-function newClientCard(){
+function newClientCard() {
 	JsHttpRequest.query($rcapi,{ 'w': 'newClientCard'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){
-        let client_id=result["client_id"];
-		if (client_id==0) {
+        let client_id = result["client_id"];
+		if (client_id == 0) {
 			checkEmptyClients(client_id);
 		} else {
 			showClientCard(client_id);
@@ -59,7 +61,7 @@ function newClientCard(){
 function checkEmptyClients(client_id) {
 	JsHttpRequest.query($rcapi,{ 'w': 'checkEmptyClients'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){
-		if(!result.content) {
+		if (!result.content) {
 			showClientCard(client_id);
 		} else {
 			$("#ClientEmpty").modal("show");
@@ -68,7 +70,7 @@ function checkEmptyClients(client_id) {
 	}}, true);
 }
 
-function showClientCard(client_id){
+function showClientCard(client_id) {
 	JsHttpRequest.query($rcapi,{ 'w': 'showClientCard', 'client_id':client_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){
 		let client_card = $("#ClientCard");
@@ -81,25 +83,26 @@ function showClientCard(client_id){
 		$("#state_id").select2({placeholder: "Виберіть область",dropdownParent: client_card});
 		$("#region_id").select2({placeholder: "Виберіть район",dropdownParent: client_card});
 		$("#city_id").select2({placeholder: "Виберіть населений пункт",dropdownParent: client_card}).on('select2:close', function() {var el = $(this);
-			if(el.val()==="NEW") { var newval = prompt("Введіть нове значення: ");
-			  if(newval !== null) {
-				let region_id=$("#region_id option:selected").val();
-				JsHttpRequest.query($rcapi,{ 'w': 'addNewCity', 'region_id':region_id, 'name':newval},
+			if(el.val() === "NEW") {
+				var newval = prompt("Введіть нове значення: ");
+				if(newval !== null) {
+					let region_id=$("#region_id option:selected").val();
+					JsHttpRequest.query($rcapi,{ 'w': 'addNewCity', 'region_id':region_id, 'name':newval},
 				function (result, errors){ if (errors) {alert(errors);} if (result){
-					el.append('<option id="'+result["id"]+'">'+newval+'</option>').val(newval);
-				}}, true);
-			  }
+							el.append('<option id="'+result["id"]+'">'+newval+'</option>').val(newval);
+						}}, true);
+				}
 			}
 		  });
 		$(".i-checks").iCheck({checkboxClass: 'icheckbox_square-green',radioClass: 'iradio_square-green',});
 	}}, true);
 }
 
-function showClientRetailList(press_btn){
-	var status=$("#input_done").val();
+function showClientRetailList(press_btn) {
+	var status = $("#input_done").val();
 	if (press_btn) {
-		status==="true" ? status=true : status=false;
-		if (status){
+		status === "true" ? status = true : status = false;
+		if (status) {
             $("#input_done").val("false");
 			$("#toggle_done").html("<i class='fa fa-eye-slash'></i>");
 		} else  {
@@ -107,13 +110,13 @@ function showClientRetailList(press_btn){
 			$("#toggle_done").html("<i class='fa fa-eye'></i>");
 		}	
 	} else {
-        status==="true" ? status=false : status=true;
+        status === "true" ? status = false : status = true;
     }
-	var prevRange=$("#clients_range").html();
+	var prevRange = $("#clients_range").html();
 	JsHttpRequest.query($rcapi,{ 'w': 'showClientRetailList', 'status':status}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){
 		if (prevRange.length != result["content"].length){
-            let dt=$("#datatable");
+            let dt = $("#datatable");
             dt.DataTable().destroy();
             $("#clients_range").empty();
             $("#clients_range").html(result.content);
@@ -122,9 +125,9 @@ function showClientRetailList(press_btn){
 	}}, true);
 }
 
-function showClientRetailCard(user_id){
-	if (user_id<=0 || user_id==""){toastr["error"](errs[0]);}
-	if (user_id>0){
+function showClientRetailCard(user_id) {
+	if (user_id<=0 || user_id=="") {toastr["error"](errs[0]);}
+	if (user_id>0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'showClientRetailCard', 'user_id':user_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			let client_card = $("#ClientCard");
@@ -139,7 +142,7 @@ function showClientRetailCard(user_id){
 	}
 }
 
-function newClientRetailCard(){
+function newClientRetailCard() {
 	JsHttpRequest.query($rcapi,{ 'w': 'newClientRetailCard'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){
         let user_id=result["user_id"];
@@ -147,7 +150,7 @@ function newClientRetailCard(){
 	}}, true);
 }
 
-function saveClientRetailGeneralInfo(){
+function saveClientRetailGeneralInfo() {
     let user_id=$("#user_id").val();
     let user_name=$("#user_name").val();
     let country_id=$("#country_id option:selected").val();
@@ -165,14 +168,16 @@ function saveClientRetailGeneralInfo(){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			if (user_id.length>0){
+			if (user_id.length > 0) {
 				JsHttpRequest.query($rcapi,{ 'w':'saveClientRetailGeneralInfo', 'user_id':user_id, 'user_name':user_name, 'country_id':country_id, 'state_id':state_id, 'region_id':region_id, 'city_id':city_id, 'user_category':user_category, 'user_phone':user_phone, 'user_email':user_email, 'user_status':user_status},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
-					if (result["answer"]==1){ 
+					if (result["answer"] == 1) {
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#ClientCard").modal("hide");
 						showClientRetailList();
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -181,7 +186,7 @@ function saveClientRetailGeneralInfo(){
 	});
 }
 
-function moveClientsRetail(user_id,client_id){
+function moveClientsRetail(user_id, client_id) {
 	swal({
 		title: "Перемістити користувача №\""+user_id+"\" в контрагенти?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -189,14 +194,16 @@ function moveClientsRetail(user_id,client_id){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			if (user_id.length>0){
+			if (user_id.length > 0) {
 				JsHttpRequest.query($rcapi,{ 'w':'moveClientsRetail','user_id':user_id, 'client_id':client_id },
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
-					if (result["answer"]==1){ 
+					if (result["answer"] == 1) {
 						$("#ClientCard").modal("hide");
 						showClientRetailList();
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -205,9 +212,9 @@ function moveClientsRetail(user_id,client_id){
 	});
 }
 
-function setClientRetail(client_id,client_name) {
-    let user_id=$("#user_id").val();
-    let user_name=$("#user_name").val();
+function setClientRetail(client_id, client_name) {
+    let user_id = $("#user_id").val();
+    let user_name = $("#user_name").val();
 	swal({
 		title: "Привязати користувача \""+user_name+"\" за контрагентом \""+client_name+"\"?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -215,15 +222,17 @@ function setClientRetail(client_id,client_name) {
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			if (user_id.length>0){
+			if (user_id.length > 0) {
 				JsHttpRequest.query($rcapi,{ 'w':'setClientRetail','user_id':user_id, 'client_id':client_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
-					if (result["answer"]==1){ 
+					if (result["answer"] == 1) {
 						$("#FormModalWindow").modal("hide");
 						$("#ClientCard").modal("hide");
 						showClientRetailList();
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -232,8 +241,8 @@ function setClientRetail(client_id,client_name) {
 	});
 }
 
-function loadStateSelectList(){
-    let country_id=$("#country_id option:selected").val();
+function loadStateSelectList() {
+    let country_id = $("#country_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientStateSelectList', 'country_id':country_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){
         $("#state_id").html(result["content"]);
@@ -241,8 +250,8 @@ function loadStateSelectList(){
 	}}, true);
 }
 
-function loadRegionSelectList(){
-    let state_id=$("#state_id option:selected").val();
+function loadRegionSelectList() {
+    let state_id = $("#state_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientRegionSelectList', 'state_id':state_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){
         $("#region_id").html(result["content"]);
@@ -250,17 +259,17 @@ function loadRegionSelectList(){
 	}}, true);
 }
 
-function loadCitySelectList(){
-    let region_id=$("#region_id option:selected").val();
+function loadCitySelectList() {
+    let region_id = $("#region_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientCitySelectList', 'region_id':region_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		document.getElementById("city_id").innerHTML=result["content"];
 		$("#city_id").select2({placeholder: "Виберіть населений пункт",dropdownParent: $("#ClientCard")}).on('select2:close', function() {
 			var el = $(this);
-			if(el.val()==="NEW") {
+			if(el.val() === "NEW") {
 				var newval = prompt("Введіть нове місто: ");
 				if(newval !== null) {
-                    let region_id=$("#region_id option:selected").val();
+                    let region_id = $("#region_id option:selected").val();
                     JsHttpRequest.query($rcapi,{ 'w': 'addNewCity', 'region_id':region_id, 'name':newval},
                         function (result, errors){ if (errors) {alert(errors);} if (result){
                             el.append('<option id="'+result["id"]+'">'+newval+'</option>').val(newval);
@@ -272,8 +281,10 @@ function loadCitySelectList(){
 }
 
 function loadClientConditions(client_id){
-	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
-	if (client_id>0){
+	if (client_id <= 0 || client_id == "") {
+		toastr["error"](errs[0]);
+	}
+	if (client_id > 0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'loadClientConditions', 'client_id':client_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){
 			$("#conditions_place").html(result["content"]);
@@ -293,8 +304,10 @@ function loadClientConditions(client_id){
 /* TRUE DETAILS*/
 
 function loadClientDetailsList(client_id) {
-    if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
-    if (client_id>0){
+    if (client_id <= 0 || client_id == "") {
+    	toastr["error"](errs[0]);
+    }
+    if (client_id > 0) {
         JsHttpRequest.query($rcapi,{ 'w': 'loadClientDetailsList', 'client_id':client_id},
             function (result, errors){ if (errors) {alert(errors);} if (result){
                 $("#details_place_list").html(result["content"]);
@@ -304,7 +317,7 @@ function loadClientDetailsList(client_id) {
 }
 
 function loadClientDetailsCard(detail_id) {
-	let client_id=$("#client_id").val();
+	let client_id = $("#client_id").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadClientDetailsCard', 'detail_id':detail_id, 'client_id':client_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){
             $("#DetailsCard").modal("show");
@@ -321,14 +334,16 @@ function dropClientDetailsCard(detail_id) {
         },
         function (isConfirm) {
             if (isConfirm) {
-                if (detail_id.length>0){
+                if (detail_id.length > 0) {
                     JsHttpRequest.query($rcapi,{ 'w':'dropClientDetailsCard','detail_id':detail_id},
                         function (result, errors){ if (errors) {alert(errors);} if (result){
-                            if (result["answer"]==1){
+                            if (result["answer"] == 1) {
                                 swal("Видалено!", "Внесені Вами зміни успішно збережені.", "success");
                                 $("#DetailsCard").modal("hide");
                                 loadClientDetailsList();
-                            } else { swal("Помилка!", result["error"], "error");}
+                            } else {
+                            	swal("Помилка!", result["error"], "error");
+                            }
                         }}, true);
                 }
             } else {
@@ -369,14 +384,16 @@ function saveClientDetailsCard(){
     let buh_name=$("#buh_name").val();
     let buh_edrpou=$("#buh_edrpou").val();
     let main_details=0; if (document.getElementById("main_details").checked){main_details=1;}
-    if (client_id.length>0){
+    if (client_id.length > 0) {
         JsHttpRequest.query($rcapi,{ 'w':'saveClientDetailsCard','detail_id':detail_id,'client_id':client_id,'address_jur':address_jur,'address_fakt':address_fakt,'edrpou':edrpou,'svidotctvo':svidotctvo,'vytjag':vytjag,'vat':vat,'mfo':mfo, 'bank':bank,'account':account,'not_resident':not_resident,'nr_details':nr_details,'buh_name':buh_name,'buh_edrpou':buh_edrpou,'main_details':main_details},
             function (result, errors){ if (errors) {alert(errors);} if (result){
-                if (result["answer"]==1){
+                if (result["answer"] == 1) {
                     swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
                     $("#DetailsCard").modal("hide");
                     loadClientDetailsList();
-                } else { swal("Помилка!", result["error"], "error");}
+                } else {
+                	swal("Помилка!", result["error"], "error");
+                }
             }}, true);
     }
 }
@@ -385,7 +402,7 @@ function saveClientDetailsCard(){
 
 function loadClientDetails(client_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
-	if (client_id>0){
+	if (client_id>0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'loadClientDetails', 'client_id':client_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){
             $("#details_place").html(result["content"]);
@@ -395,9 +412,11 @@ function loadClientDetails(client_id){
 }
 
 function norResidentAcive(){
-	if (document.getElementById("not_resident").checked){
+	if (document.getElementById("not_resident").checked) {
 		document.getElementById("nr_details").disabled="";
-	} else {document.getElementById("nr_details").disabled="disabled";}
+	} else {
+		document.getElementById("nr_details").disabled="disabled";
+	}
 }
 
 function preconfirmClientDetails(){
@@ -430,20 +449,22 @@ function saveClientDetails(){
     let not_resident=0; if (document.getElementById("not_resident").checked){not_resident=1;}else{nr_details="";}
     let buh_name=$("#buh_name").val();
     let buh_edrpou=$("#buh_edrpou").val();
-	if (client_id.length>0){
+	if (client_id.length > 0) {
 		JsHttpRequest.query($rcapi,{ 'w':'saveClientDetails','client_id':client_id,'address_jur':address_jur,'address_fakt':address_fakt,'edrpou':edrpou,'svidotctvo':svidotctvo,'vytjag':vytjag,'vat':vat,'mfo':mfo, 'bank':bank,'account':account,'not_resident':not_resident,'nr_details':nr_details,'buh_name':buh_name,'buh_edrpou':buh_edrpou},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			if (result["answer"]==1){ 
+			if (result["answer"] == 1) {
 				swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 				filterClientsList();
-			} else { swal("Помилка!", result["error"], "error");}
+			} else {
+				swal("Помилка!", result["error"], "error");
+			}
 		}}, true);
 	}
 }
 
-function loadClientDocumentPrefix(client_id){
+function loadClientDocumentPrefix(client_id) {
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
-	if (client_id>0){
+	if (client_id>0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'loadClientDocumentPrefix', 'client_id':client_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){
             $("#document_prefix_place").html(result["content"]);
@@ -452,9 +473,9 @@ function loadClientDocumentPrefix(client_id){
 	}
 }
 
-function showClientDocumentPrefixForm(client_id, prefix_id){
+function showClientDocumentPrefixForm(client_id, prefix_id) {
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
-	if (client_id>0){
+	if (client_id>0) {
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showClientDocumentPrefixForm', 'client_id':client_id, 'prefix_id':prefix_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){
@@ -463,7 +484,7 @@ function showClientDocumentPrefixForm(client_id, prefix_id){
 	}
 }
 
-function dropClientDocumentPrefix(client_id,prefix_id,prefix_name){
+function dropClientDocumentPrefix(client_id, prefix_id, prefix_name) {
 	swal({
 		title: "Видалити префікс документа\""+prefix_name+"\"?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -471,13 +492,15 @@ function dropClientDocumentPrefix(client_id,prefix_id,prefix_name){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			if (client_id.length>0){
+			if (client_id.length > 0) {
 				JsHttpRequest.query($rcapi,{ 'w':'dropClientDocumentPrefix', 'client_id':client_id, 'prefix_id':prefix_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						swal("Видалено!", "", "success");
 						loadClientDocumentPrefix(client_id);
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -487,7 +510,7 @@ function dropClientDocumentPrefix(client_id,prefix_id,prefix_name){
 }
 
 function saveClientDocumentPrefixForm(client_id,prefix_id){
-    let prefix=$("#prefix").val();
+    let prefix = $("#prefix").val();
 	swal({
 		title: "Зберегти префікс документа Користувача \""+prefix+"\"?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -495,15 +518,17 @@ function saveClientDocumentPrefixForm(client_id,prefix_id){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-            let doc_type_id=$("#doc_type_id option:selected").val();
-			if (client_id.length>0){
+            let doc_type_id = $("#doc_type_id option:selected").val();
+			if (client_id.length > 0) {
 				JsHttpRequest.query($rcapi,{ 'w':'saveClientDocumentPrefixForm','client_id':client_id,'prefix_id':prefix_id,'doc_type_id':doc_type_id,'prefix':prefix},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
-					if (result["answer"]==1){ 
+					if (result["answer"]==1) {
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#FormModalWindow").modal("hide");
 						loadClientDocumentPrefix(client_id);
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -514,7 +539,7 @@ function saveClientDocumentPrefixForm(client_id,prefix_id){
 
 function loadClientContacts(client_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
-	if (client_id>0){
+	if (client_id>0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'loadClientContacts', 'client_id':client_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){
             $("#contacts_place").html(result["content"]);
@@ -525,7 +550,7 @@ function loadClientContacts(client_id){
 
 function showClientContactForm(client_id, contact_id){
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
-	if (client_id>0){
+	if (client_id>0) {
 		$("#FormModalWindow").modal("show");
 		JsHttpRequest.query($rcapi,{ 'w': 'showClientContactForm', 'client_id':client_id, 'contact_id':contact_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){
@@ -548,7 +573,9 @@ function dropClientContact(client_id,contact_id,contact_name){
 					if (result["answer"]==1){ 
 						swal("Видалено!", "", "success");
 						loadClientContacts(client_id);
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -581,7 +608,9 @@ function saveClientContactForm(client_id,contact_id){
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#FormModalWindow").modal("hide");
 						loadClientContacts(client_id);
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -620,26 +649,23 @@ function saveClientGeneralInfo(){
     let c_category_kol=$("#c_category_kol").val();
     let user_category=$("#user_category").val();
 	var c_category=[]; var cc="";
-	for (var i=1;i<=c_category_kol;i++){var cc=0;if(document.getElementById("c_category_"+i).checked) { cc=$("#c_category_"+i).val(); }c_category[i]=cc;}
+	for (var i=1;i<=c_category_kol;i++) {
+		var cc=0;
+		if (document.getElementById("c_category_"+i).checked) {
+			cc=$("#c_category_"+i).val();
+		}
+		c_category[i]=cc;
+	}
 
-	if (client_id.length>0){
+	if (client_id.length > 0) {
 		JsHttpRequest.query($rcapi,{ 'w':'saveClientGeneralInfo', 'client_id':client_id, 'org_type':org_type, 'name':client_name, 'full_name':client_full_name, 'phone':phone, 'email':email, 'parrent_id':parrent_id, 'country_id':country_id, 'state_id':state_id, 'region_id':region_id, 'city_id':city_id, 'c_category_kol':c_category_kol, 'c_category':c_category, 'user_category':user_category},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			if (result["answer"]==1){ 
+			if (result["answer"] == 1) {
 				swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
-				// $("#ClientCard").modal("hide");
-				// $("#ClientCard").on('hidden.bs.modal', function () {
-				// 	let client_input = $("#client_id").val();
-				// 	if (client_input=="0") {
-				// 		showClientCard(result["client_id"]);
-				// 	}
-				// });
                 showClientCard(result["client_id"]);
-				//var art=$("#catalogue_art").val();
-				//if (art.length>0){
-				//	catalogue_client_search();
-				//}
-			} else { swal("Помилка!", result["error"], "error");}
+			} else {
+				swal("Помилка!", result["error"], "error");
+			}
 		}}, true);
 	}
 }
@@ -682,7 +708,9 @@ function saveClientConditions(client_id){
 			if (result["answer"]==1){ 
 				swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
                 loadClientConditions(client_id);
-			} else { swal("Помилка!", result["error"], "error");}
+			} else {
+				swal("Помилка!", result["error"], "error");
+			}
 		}}, true);
 	}
 }
@@ -722,7 +750,9 @@ function unlinkClientsParrent(client_id){
 					$("#parrent_id").val("0");
 					$("#parrent_name").val("");
 					swal("Виконано!", "Внесені Вами зміни успішно збережені.", "success");
-				} else { toastr["error"](result["error"]); }
+				} else {
+					toastr["error"](result["error"]);
+				}
 			}}, true);	
 		} else {
 			swal("Відмінено", "Операцію анульовано.", "error");
@@ -743,7 +773,9 @@ function unlinkClientsSubclient(client_id,subclient_id){
 				if (result["answer"]==1){ 
 					swal("Виконано!", "Внесені Вами зміни успішно збережені.", "success");
 					loadClientSubclients(client_id);
-				} else { toastr["error"](result["error"]); }
+				} else {
+					toastr["error"](result["error"]);
+				}
 			}}, true);	
 		} else {
 			swal("Відмінено", "Операцію анульовано.", "error");
@@ -795,7 +827,7 @@ function randString(id){
 	return text;
 }
 
-function dropClientUser(client_id,user_id,user_name){
+function dropClientUser(client_id, user_id, user_name) {
 	swal({
 		title: "Видалити користувача \""+user_name+"\"?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -803,13 +835,15 @@ function dropClientUser(client_id,user_id,user_name){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			if (client_id.length>0){
+			if (client_id.length > 0) {
 				JsHttpRequest.query($rcapi,{ 'w':'dropClientUser','client_id':client_id,'user_id':user_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
-					if (result["answer"]==1){ 
+					if (result["answer"] == 1){
 						swal("Видалено!", "", "success");
 						loadClientUsers(client_id);
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -818,7 +852,7 @@ function dropClientUser(client_id,user_id,user_name){
 	});
 }
 
-function saveClientUserForm(client_id,user_id){
+function saveClientUserForm(client_id, user_id) {
 	let user_name=$("#user_name").val();
 	swal({
 		title: "Зберегти зміни Користувача \""+user_name+"\"?",
@@ -833,15 +867,18 @@ function saveClientUserForm(client_id,user_id){
             let user_main=0; if(document.getElementById("user_main").checked) { user_main=1;}
             let price_main=0; if(document.getElementById("user_price").checked) { price_main=1;}
             let export_main=0; if(document.getElementById("user_export").checked) { export_main=1;}
+            let user_nulls=0; if(document.getElementById("user_nulls").checked) { user_nulls=1;}
             let user_invoice=$("#user_invoice").val();
-            if (client_id.length>0){
-				JsHttpRequest.query($rcapi,{ 'w':'saveClientUserForm','client_id':client_id,'user_id':user_id,'user_name':user_name,'user_email':user_email,'user_phone':user_phone,'user_pass':user_pass,'user_main':user_main,'price_main':price_main,'export_main':export_main, 'user_invoice':user_invoice},
+            if (client_id.length > 0) {
+				JsHttpRequest.query($rcapi,{ 'w':'saveClientUserForm','client_id':client_id,'user_id':user_id,'user_name':user_name,'user_email':user_email,'user_phone':user_phone,'user_pass':user_pass,'user_main':user_main,'price_main':price_main,'export_main':export_main,'user_nulls':user_nulls,'user_invoice':user_invoice},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
-					if (result["answer"]==1){ 
+					if (result["answer"] == 1) {
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#FormModalWindow").modal("hide");
 						loadClientUsers(client_id);
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -871,13 +908,15 @@ function saveClientComment(client_id){
 				if (result["answer"]==1){
 					loadClientCommets(client_id);
 					$("#client_comment_field").val("");
-				} else { toastr["error"](result["error"]); }
+				} else {
+					toastr["error"](result["error"]);
+				}
 			}}, true);
 		}
 	}
 }
 
-function dropClientComment(client_id,cmt_id){
+function dropClientComment(client_id, cmt_id) {
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
 		if(confirm('Видалити запис?')){ 
@@ -886,13 +925,15 @@ function dropClientComment(client_id,cmt_id){
 				if (result["answer"]==1){
 					loadClientCommets(client_id);
 					toastr["info"]("Запис успішно видалено");
-				} else { toastr["error"](result["error"]); }
+				} else {
+					toastr["error"](result["error"]);
+				}
 			}}, true);
 		}
 	}
 }
 
-function loadClientCDN(client_id){
+function loadClientCDN(client_id) {
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadClientCDN', 'client_id':client_id}, 
@@ -902,7 +943,7 @@ function loadClientCDN(client_id){
 	}
 }
 
-function showClientsCDNUploadForm(client_id){
+function showClientsCDNUploadForm(client_id) {
 	$("#cdn_client_id").val(client_id);
 	var myDropzone2 = new Dropzone("#myDropzone2",{ dictDefaultMessage: "Натисніть для вибору файлів або перетягніть їх це поле!" });
 	myDropzone2.removeAllFiles(true);
@@ -914,7 +955,7 @@ function showClientsCDNUploadForm(client_id){
 	});
 }
 
-function showClientsCDNDropConfirmForm(client_id,file_id,file_name){
+function showClientsCDNDropConfirmForm(client_id, file_id, file_name) {
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
 		if(confirm('Видалити файл '+file_name+'?')){ 
@@ -923,13 +964,15 @@ function showClientsCDNDropConfirmForm(client_id,file_id,file_name){
 				if (result["answer"]==1){
 					loadClientCDN(client_id);
 					toastr["info"]("Файл успішно видалено");
-				} else { toastr["error"](result["error"]); }
+				} else {
+					toastr["error"](result["error"]);
+				}
 			}}, true);
 		}
 	}
 }
 
-function viewClientsDetailsFile(client_id,file_type){
+function viewClientsDetailsFile(client_id, file_type) {
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
 		$("#viewDetailsForm").modal("show");
@@ -940,7 +983,7 @@ function viewClientsDetailsFile(client_id,file_type){
 	}
 }
 
-function fileClientsDetailsUploadForm(client_id,file_type){
+function fileClientsDetailsUploadForm(client_id, file_type) {
 	$("#dtls_client_id").val(client_id);
 	$("#dtls_file_type").val(file_type);
 	$("#fileClientsDetailsUploadForm").modal("show");
@@ -954,23 +997,25 @@ function fileClientsDetailsUploadForm(client_id,file_type){
 	});
 }
 
-function showClientsDetailsDropConfirmForm(client_id,file_type,file_id,file_name){
+function showClientsDetailsDropConfirmForm(client_id, file_type, file_id, file_name) {
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
-		if(confirm('Видалити файл '+file_name+'?')){ 
+		if(confirm('Видалити файл '+file_name+'?')) {
 			JsHttpRequest.query($rcapi,{ 'w': 'clientsDetailsDropFile', 'client_id':client_id, 'file_type':file_type, 'file_id':file_id}, 
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
-				if (result["answer"]==1){
+				if (result["answer"] == 1) {
 					viewClientsDetailsFile(client_id,file_type);
 					toastr["info"]("Файл успішно видалено");
-				} else { toastr["error"](result["error"]); }
+				} else {
+					toastr["error"](result["error"]);
+				}
 			}}, true);
 		}
 	}
 }
 
-function showCountryManual(){
-    let country_id=$("#country_id").val();
+function showCountryManual() {
+    let country_id = $("#country_id").val();
 	JsHttpRequest.query($rcapi,{ 'w':'showCountryManual', 'country_id':country_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#CountryModalWindow").modal("show");
@@ -987,7 +1032,7 @@ function selectCountry(id,name){
 	$("#CountryModalWindow").modal("hide");
 }
 
-function showCountryForm(country_id){
+function showCountryForm(country_id) {
 	JsHttpRequest.query($rcapi,{ 'w':'showCountryForm', 'country_id':country_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow").modal("show");
@@ -996,7 +1041,7 @@ function showCountryForm(country_id){
 	}}, true);
 }
 
-function saveClientCountryForm(){
+function saveClientCountryForm() {
     let id=$("#form_country_id").val();
     let name=$("#form_country_name").val();
     let alfa2=$("#form_country_alfa2").val();
@@ -1005,16 +1050,18 @@ function saveClientCountryForm(){
     let risk=$("#form_country_risk").val();
 	JsHttpRequest.query($rcapi,{ 'w':'saveClientCountryForm','id':id,'name':name,'alfa2':alfa2,'alfa3':alfa3,'duty':duty,'risk':risk},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		if (result["answer"]==1){ 
+		if (result["answer"]==1) {
 			swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 			$("#country_id").val(id);
 			showCountryManual();
-		} else { swal("Помилка!", result["error"], "error");}
+		} else {
+			swal("Помилка!", result["error"], "error");
+		}
 	}}, true);
 }
 
 function showCostumsManual(){
-    let costums_id=$("#costums_id").val();
+    let costums_id = $("#costums_id").val();
 	JsHttpRequest.query($rcapi,{ 'w':'showCostumsManual', 'costums_id':costums_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#CostumsModalWindow").modal("show");
@@ -1054,7 +1101,9 @@ function saveClientCostumsForm(){
 			swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 			$("#costums_id").val(id);
 			showCostumsManual();
-		} else { swal("Помилка!", result["error"], "error");}
+		} else {
+			swal("Помилка!", result["error"], "error");
+		}
 	}}, true);
 }
 
@@ -1098,7 +1147,9 @@ function saveClientStorageForm(client_id,storage_id){
 			$("#FormModalWindow").modal('hide');
 			swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 			loadClientStorage(client_id);
-		} else { swal("Помилка!", result["error"], "error");}
+		} else {
+			swal("Помилка!", result["error"], "error");
+		}
 	}}, true);
 }
 
@@ -1209,7 +1260,7 @@ function changePrepayType(){
 }
 
 function showClientGeneralSaldoForm(client_id){
-	if (client_id.length>0){
+	if (client_id.length > 0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'showClientGeneralSaldoForm', 'client_id':client_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow").modal("show");
@@ -1222,7 +1273,7 @@ function showClientGeneralSaldoForm(client_id){
 }
 
 function showClientSupplGeneralSaldoForm(client_id){
-    if (client_id.length>0){
+    if (client_id.length > 0) {
         JsHttpRequest.query($rcapi,{ 'w': 'showClientSupplGeneralSaldoForm', 'client_id':client_id},
             function (result, errors){ if (errors) {alert(errors);} if (result){
                 $("#FormModalWindow").modal("show");
@@ -1234,11 +1285,12 @@ function showClientSupplGeneralSaldoForm(client_id){
     }
 }
 
-function filterClientGeneralSaldoForm(client_id){
-	if (client_id.length>0){
-        let from=$("#saldo_data_start").val();
-        let to=$("#saldo_data_end").val();
-		JsHttpRequest.query($rcapi,{ 'w': 'filterClientGeneralSaldoForm', 'client_id':client_id, 'from':from, 'to':to},
+function filterClientGeneralSaldoForm(client_id) {
+	if (client_id.length > 0) {
+        let from = $("#saldo_data_start").val();
+        let to = $("#saldo_data_end").val();
+        let saldo_articles = $( "#saldo_articles" ).prop( "checked" );
+		JsHttpRequest.query($rcapi,{ 'w': 'filterClientGeneralSaldoForm', 'client_id':client_id, 'from':from, 'to':to, 'saldo_articles':saldo_articles},
 		function (result, errors){ if (errors) {alert(errors);} if (result){
 			$("#client_saldo_list_range").html(result["range"]);
 			$("#client_saldo_start").html(result["saldo_start"]);
@@ -1249,7 +1301,7 @@ function filterClientGeneralSaldoForm(client_id){
 	}
 }
 
-function viewJpayMoneyPay(pay_id){
+function viewJpayMoneyPay(pay_id) {
 	JsHttpRequest.query($rcapi,{ 'w': 'viewJpayMoneyPay', 'pay_id':pay_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow2").modal("show");
@@ -1261,9 +1313,9 @@ function viewJpayMoneyPay(pay_id){
 }
 
 function getSaleInvoceProlog() {
-    let client_id=$("#client_id").val();
-    let date_search=$("#data_search").val();
-	if (client_id.length>0){
+    let client_id = $("#client_id").val();
+    let date_search = $("#data_search").val();
+	if (client_id.length > 0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'getSaleInvoceProlog', 'client_id':client_id, 'date_search':date_search},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow").modal("show");
@@ -1274,10 +1326,10 @@ function getSaleInvoceProlog() {
 }
 
 function checkSaleInvoceProlog() {
-    let client_id=$("#client_id").val();
-    let date_start=$("#data_search").val();
-    let date_new=$("#data_pay").val();
-	if (client_id.length>0){
+    let client_id = $("#client_id").val();
+    let date_start = $("#data_search").val();
+    let date_new = $("#data_pay").val();
+	if (client_id.length > 0){
 		JsHttpRequest.query($rcapi,{ 'w': 'checkSaleInvoceProlog', 'client_id':client_id, 'date_start':date_start, 'date_new':date_new},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow").modal('show');
@@ -1288,8 +1340,8 @@ function checkSaleInvoceProlog() {
 }
 
 function getSaleInvocePrologHistory() {
-    let client_id=$("#client_id").val();
-	if (client_id.length>0){
+    let client_id = $("#client_id").val();
+	if (client_id.length > 0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'getSaleInvocePrologHistory', 'client_id':client_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow").modal("show");
@@ -1308,16 +1360,18 @@ function editSaleInvoceProlog() {
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-            let client_id=$("#client_id").val();
-            let date_start=$("#data_search").val();
-            let date_new=$("#data_pay").val();
-			if (client_id.length>0 && date_new.length>0){
+            let client_id = $("#client_id").val();
+            let date_start = $("#data_search").val();
+            let date_new = $("#data_pay").val();
+			if (client_id.length > 0 && date_new.length > 0) {
 				JsHttpRequest.query($rcapi,{ 'w':'editSaleInvoceProlog', 'client_id':client_id, 'date_start':date_start, 'date_new':date_new},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
-					if (result["answer"]==1){ 
+					if (result["answer"] == 1) {
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						getSaleInvoceProlog();
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			} else {
 				swal("Відмінено", "Спочатку введіть дату!", "error");
@@ -1363,7 +1417,7 @@ function loadClientSupplBasis(client_id) {
 	}
 }
 
-function showClientMandateForm(client_id,mandate_id){
+function showClientMandateForm(client_id, mandate_id) {
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
 	if (client_id>0){
 		JsHttpRequest.query($rcapi,{ 'w':'showClientMandateForm', 'client_id':client_id, 'mandate_id':mandate_id},
@@ -1375,7 +1429,7 @@ function showClientMandateForm(client_id,mandate_id){
 	}
 }
 
-function saveClientMandateForm(client_id,mandate_id){
+function saveClientMandateForm(client_id, mandate_id) {
 	let number=$("#mandate_number").val();
     let seria=$("#mandate_seria").val();
     let receiver=$("#mandate_receiver").val();
@@ -1383,15 +1437,17 @@ function saveClientMandateForm(client_id,mandate_id){
     let data_to=$("#mandate_data_to").val();
 	JsHttpRequest.query($rcapi,{ 'w':'saveClientMandateForm', 'client_id':client_id, 'mandate_id':mandate_id, 'number':number, 'seria':seria, 'receiver':receiver, 'data_from':data_from, 'data_to':data_to},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		if (result["answer"]==1){ 
+		if (result["answer"]==1) {
 			$("#FormModalWindow").modal("hide");
 			swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 			loadClientSupplDocuments(client_id);
-		} else { swal("Помилка!", result["error"], "error");}
+		} else {
+			swal("Помилка!", result["error"], "error");
+		}
 	}}, true);
 }
 
-function dropClientMandate(client_id,mandate_id){
+function dropClientMandate(client_id, mandate_id) {
 	swal({
 		title: "Видалити доручення документа\""+mandate_id+"\"?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -1399,13 +1455,15 @@ function dropClientMandate(client_id,mandate_id){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			if (client_id.length>0){
+			if (client_id.length > 0) {
 				JsHttpRequest.query($rcapi,{ 'w':'dropClientMandate', 'client_id':client_id, 'mandate_id':mandate_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						swal("Видалено!", "", "success");
 						loadClientSupplDocuments(client_id);
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -1414,9 +1472,9 @@ function dropClientMandate(client_id,mandate_id){
 	});
 }
 
-function showClientBasisForm(client_id,basis_id){
+function showClientBasisForm(client_id, basis_id) {
 	if (client_id<=0 || client_id==""){toastr["error"](errs[0]);}
-	if (client_id>0){
+	if (client_id>0) {
 		JsHttpRequest.query($rcapi,{ 'w':'showClientBasisForm', 'client_id':client_id, 'basis_id':basis_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow").modal("show");
@@ -1426,21 +1484,23 @@ function showClientBasisForm(client_id,basis_id){
 	}
 }
 
-function saveClientBasisForm(client_id,basis_id){
-    let number=$("#basis_number").val();
-    let data_from=$("#basis_data_from").val();
-    let data_to=$("#basis_data_to").val();
+function saveClientBasisForm(client_id, basis_id) {
+    let number = $("#basis_number").val();
+    let data_from = $("#basis_data_from").val();
+    let data_to = $("#basis_data_to").val();
 	JsHttpRequest.query($rcapi,{ 'w':'saveClientBasisForm', 'client_id':client_id, 'basis_id':basis_id, 'number':number, 'data_from':data_from, 'data_to':data_to},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		if (result["answer"]==1){ 
+		if (result["answer"] == 1) {
 			$("#FormModalWindow").modal("hide");
 			swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 			loadClientSupplDocuments(client_id);
-		} else { swal("Помилка!", result["error"], "error");}
+		} else {
+			swal("Помилка!", result["error"], "error");
+		}
 	}}, true);
 }
 
-function dropClientBasis(client_id,basis_id){
+function dropClientBasis(client_id, basis_id) {
 	swal({
 		title: "Видалити доручення документа\""+basis_id+"\"?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -1448,13 +1508,15 @@ function dropClientBasis(client_id,basis_id){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			if (client_id.length>0){
+			if (client_id.length > 0) {
 				JsHttpRequest.query($rcapi,{ 'w':'dropClientBasis', 'client_id':client_id, 'basis_id':basis_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
-					if (result["answer"]==1){ 
+					if (result["answer"] == 1) {
 						swal("Видалено!", "", "success");
 						loadClientSupplDocuments(client_id);
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -1464,14 +1526,15 @@ function dropClientBasis(client_id,basis_id){
 }
 
 function printGeneralSaldoList() {
-    let saldo_data_start=$("#saldo_data_start").val();
-    let saldo_data_end=$("#saldo_data_end").val();
-    let client_id=$("#client_id").val();
-	window.open("/Clients/printCl1/"+client_id+"/"+saldo_data_start+"/"+saldo_data_end,"_blank","printWindow");
+    let saldo_data_start = $("#saldo_data_start").val();
+    let saldo_data_end = $("#saldo_data_end").val();
+    let client_id = $("#client_id").val();
+    let saldo_articles = $( "#saldo_articles" ).prop( "checked" );
+	window.open("/Clients/printCl1/" + client_id + "/" + saldo_data_start + "/" + saldo_data_end + "/" + saldo_articles, "_blank", "printWindow");
 }
 
 function showClientConditionsHistory(client_id) {
-	if (client_id.length>0){
+	if (client_id.length > 0) {
 		JsHttpRequest.query($rcapi,{ 'w':'showClientConditionsHistory', 'client_id':client_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#ClientConditionsHistory").modal("show");
@@ -1482,7 +1545,7 @@ function showClientConditionsHistory(client_id) {
 
 function loadClientAddresses(client_id) {
     if (client_id<=0 || client_id===""){toastr["error"](errs[0]);}
-    if (client_id>0){
+    if (client_id>0) {
         JsHttpRequest.query($rcapi,{ 'w': 'loadClientAddresses', 'client_id':client_id},
             function (result, errors){ if (errors) {alert(errors);} if (result){
                 $("#client_addresses").html(result.content);
@@ -1491,25 +1554,27 @@ function loadClientAddresses(client_id) {
 }
 
 function addClientAddress(client_id) {
-    let address=$("#address_new").val();
+    let address = $("#address_new").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'addClientAddress', 'client_id':client_id, 'address':address},
 		function (result, errors){ if (errors) {alert(errors);} if (result){
 			loadClientAddresses(client_id);
 		}}, true);
 }
 
-function saveClientAddresss(address_id,client_id) {
-	let address=$("#address_"+address_id).val();
+function saveClientAddresss(address_id, client_id) {
+	let address = $("#address_"+address_id).val();
     JsHttpRequest.query($rcapi,{ 'w':'saveClientAddresss', 'address_id':address_id, 'address':address},
         function (result, errors){ if (errors) {alert(errors);} if (result){
-            if (result["answer"]==1){
+            if (result["answer"] == 1) {
                 swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
                 loadClientAddresses(client_id);
-            } else { swal("Помилка!", result["error"], "error");}
+            } else {
+            	swal("Помилка!", result["error"], "error");
+            }
         }}, true);
 }
 
-function dropClientAddresss(address_id,client_id) {
+function dropClientAddresss(address_id, client_id) {
     swal({
             title: "Видалити адресу?",
             text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -1520,10 +1585,12 @@ function dropClientAddresss(address_id,client_id) {
                 if (address_id.length>0){
                     JsHttpRequest.query($rcapi,{ 'w':'dropClientAddresss', 'address_id':address_id},
                         function (result, errors){ if (errors) {alert(errors);} if (result){
-                            if (result["answer"]==1){
+                            if (result["answer"] == 1) {
                                 swal("Видалено!", "", "success");
                                 loadClientAddresses(client_id);
-                            } else { swal("Помилка!", result["error"], "error");}
+                            } else {
+                            	swal("Помилка!", result["error"], "error");
+                            }
                         }}, true);
                 }
             } else {
@@ -1541,13 +1608,15 @@ function dropClient() {
         },
         function (isConfirm) {
             if (isConfirm) {
-                if (client_id.length>0) {
+                if (client_id.length > 0) {
                     JsHttpRequest.query($rcapi,{ 'w':'dropClient', 'client_id':client_id },
                         function (result, errors){ if (errors) {alert(errors);} if (result) {
-                            if (result["answer"]==1) {
+                            if (result["answer"] == 1) {
                                 swal("Видалено!", result["error"], "success");
                                 $("#ClientCard").modal("hide");
-                            } else { swal("Помилка!", result["error"], "error"); }
+                            } else {
+                            	swal("Помилка!", result["error"], "error");
+                            }
                         }}, true);
                 }
             } else {

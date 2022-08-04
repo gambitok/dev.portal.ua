@@ -1,7 +1,8 @@
 <div class="row">
 	<div class="col-md-3 col-sm-4"><label for="saldo_data_start">Дата від</label><input type="date" title="Сальдо на початок" class="form-control" id="saldo_data_start" value="{saldo_data_start}"></div>
 	<div class="col-md-3 col-sm-4"><label for="saldo_data_start">Дата до</label><input type="date" title="Сальдо на кінець" class="form-control" id="saldo_data_end" value="{saldo_data_end}"></div>
-	<div class="col-md-2 col-sm-4"><button class="btn btn-primary" onClick="filterClientGeneralSaldoForm('{client_id}')"><i class="fa fa-filter"></i> Фільтр</button></div>
+	<div class="col-md-2 col-sm-4"><label for="saldo_articles" class="block">Показати артикули</label><input type="checkbox" id="saldo_articles"></div>
+    <div class="col-md-2 col-sm-4"><label for="saldo_button" class="block">&nbsp</label><button id="saldo_button" class="btn btn-primary" onClick="filterClientGeneralSaldoForm('{client_id}')"><i class="fa fa-filter"></i> Фільтр</button></div>
 </div>
 <br>
 <h3>Сальдо на початок періоду: <span id="client_saldo_start">{saldo_start}</span> на <span id="client_saldo_data_start">{saldo_data_start}</span></h3>

@@ -17,14 +17,14 @@ $(window).bind('beforeunload', function(e){
     else e=null; 
 });
 
-function printTaxInvoice(tax_id){
+function printTaxInvoice(tax_id) {
 	if (tax_id=="" || tax_id==0){toastr["error"](errs[0]);}
 	if (tax_id>0){
 		window.open("/TaxInvoice/printTI/"+tax_id,"_blank","printWindow");
 	}
 }
 
-function showTaxInvoiceBackCard(tax_id){
+function showTaxInvoiceBackCard(tax_id) {
 	JsHttpRequest.query($rcapi,{ 'w': 'showTaxInvoiceBackCard','tax_id':tax_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#TaxBackCard").modal("show");
@@ -36,7 +36,7 @@ function showTaxInvoiceBackCard(tax_id){
 	}}, true);
 }
 
-function showTaxInvoiceCard(tax_id){
+function showTaxInvoiceCard(tax_id) {
 	JsHttpRequest.query($rcapi,{ 'w': 'showTaxInvoiceCard','tax_id':tax_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#TaxCard").modal("show");
@@ -337,7 +337,7 @@ function filterMdlClientsList(){
 	}}, true);
 }
 
-function ClearMdlClientSearch(){
+function ClearMdlClientSearch() {
 	$("#filMdlClientId").val("");
 	$("#filMdlClientName").val("");
 	$("#filMdlPhone").val("");
@@ -432,4 +432,11 @@ function showTaxInvoiceCDNDropConfirmForm(tax_id,file_id,file_name){
 			}}, true);
 		}
 	}
+}
+
+function fillTaxDocRows(tax_id) {
+	JsHttpRequest.query($rcapi,{ 'w': 'fillTaxDocRows', 'tax_id':tax_id},
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+			showTaxInvoiceBackCard(tax_id);
+		}}, true);
 }

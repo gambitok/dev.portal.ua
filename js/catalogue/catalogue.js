@@ -1,12 +1,15 @@
-var errs=[]; var mess=[];
-errs[0]="Помилка карти індексу";
-errs[1]="Занадто короткий запит для пошуку";
-mess[0]="Уточніть пошук";
+var errs = [];
+var mess = [];
+errs[0] = "Помилка карти індексу";
+errs[1] = "Занадто короткий запит для пошуку";
+mess[0] = "Уточніть пошук";
 
-function catalogue_article_search(view_op,search_type){
-    let art=$("#catalogue_art").val();
-	if (art.length<=2 && view_op==""){ $("#srchInG").addClass("has-error"); }
-	if (art.length>2 || view_op==1){
+function catalogue_article_search(view_op, search_type) {
+    let art = $("#catalogue_art").val();
+	if (art.length <= 2 && view_op == "") {
+		$("#srchInG").addClass("has-error");
+	}
+	if (art.length > 2 || view_op == 1) {
 		$("#srchInG").removeClass("has-error");
 		//var hash = $(location).attr('protocol')+"//"+$(location).attr('hostname')+"/Catalogue/"+art;
 		//$(window.location).attr('href',hash);
@@ -17,12 +20,12 @@ function catalogue_article_search(view_op,search_type){
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			//var table = $('#datatable').DataTable();
 			//table.destroy();
-			if (result["brand_list"]!="" && result["brand_list"]!=null && search_type==0){
+			if (result["brand_list"] != "" && result["brand_list"] != null && search_type == 0) {
 				$("#FormModalWindow").modal("show");
 				$("#FormModalBody").html(result["brand_list"]);
 				$("#FormModalLabel").html(mess[0]);
 			}
-			if (result["brand_list"]=="" || result["brand_list"]==null || search_type>0){
+			if (result["brand_list"] == "" || result["brand_list"] == null || search_type > 0) {
 				$("#catalogue_range").html(result["content"]);
 				$("#catalogue_header").html(result["header"]);
 				//$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": false,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
@@ -126,7 +129,9 @@ function loadFilterGroupTreeListSide(){
 					multiselect : true,expanded : true,
 				});
 			}}, true);
-	} else {swal("Помилка!", "Оберіть модифікацію", "error"); }
+	} else {
+		swal("Помилка!", "Оберіть модифікацію", "error");
+	}
 }
 
 function loadFilterGroupTreeList(){
@@ -144,7 +149,9 @@ function loadFilterGroupTreeList(){
 				});
 				$("#waveSpinner_place").html("");
 			}}, true);
-	} else { swal("Помилка!", "Оберіть модифікацію", "error"); }
+	} else {
+		swal("Помилка!", "Оберіть модифікацію", "error");
+	}
 }
 
 function clearFilterGroupTreeInput(){
@@ -192,7 +199,9 @@ function saveCatalogueFieldsViewForm(){
 				swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 				$("#FormModalWindow").modal("hide");
 				catalogue_article_search(1,0);
-			} else { swal("Помилка!", result["error"], "error"); }
+			} else {
+				swal("Помилка!", result["error"], "error");
+			}
 		}}, true);
 	}
 }
@@ -269,7 +278,9 @@ function saveCatalogueGeneralInfo(){
 			if (result["answer"]==1){ 
 				swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
                 showCatalogueCard(art_id);
-			} else { swal("Помилка!", result["error"], "error");}
+			} else {
+				swal("Помилка!", result["error"], "error");
+			}
 		}}, true);
 	}
 }
@@ -288,7 +299,8 @@ function saveCatalogueParams(art_id){
 		if (isConfirm) {
             let goods_group_id=$("#goods_group_id").val();
             let cn=$("#params_kol").val();
-			var fields_type=[];var params_value=[];
+			var fields_type=[];
+			var params_value=[];
 			for (var i=1;i<=cn;i++){
 				let param_id=$("#paramId_"+i).val();
 				fields_type[param_id]=$("#param_field_type_"+param_id+" option:selected").val();
@@ -297,12 +309,16 @@ function saveCatalogueParams(art_id){
 			if (art_id.length>0){//,'fields_type':fields_type
 				JsHttpRequest.query($rcapi,{ 'w':'saveCatalogueParams', 'art_id':art_id, 'goods_group_id':goods_group_id, 'template_id':template_id, 'params_value':params_value},
 				function (result, errors){ if (errors) {alert(errors);} if (result){
-					if (result["answer"]==1){
+					if (result["answer"]==1) {
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
-		} else {swal("Відмінено", "Внесені Вами зміни анульовано.", "error");}
+		} else {
+			swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
+		}
 	});
 }
 
@@ -319,40 +335,51 @@ function saveCatalogueParamsTemplate(art_id){
             let template_caption=$("#tmp_template_caption").val();
             let template_descr=$("#tmp_template_descr").val();
             let cn=$("#tmp_params_kol").val();
-			var params_id=[];var fields_type=[];var params_name=[];var params_type=[];
+			var params_id=[];
+			var fields_type=[];
+			var params_name=[];
+			var params_type=[];
 			
-			for (var i=1;i<=cn;i++){
+			for (var i=1;i<=cn;i++) {
 				params_id[i]=$("#tmp_param_id_"+i).val();
 				fields_type[i]=$("#tmp_param_field_type_"+i+" option:selected").val();
 				params_type[i]=$("#tmp_param_type_"+i+" option:selected").val();
 				params_name[i]=$("#tmp_param_name_"+i).val();
 			}
 			
-			if (art_id.length>0){
+			if (art_id.length>0) {
 				JsHttpRequest.query($rcapi,{ 'w':'saveCatalogueParamsTemplate', 'art_id':art_id, 'goods_group_id':goods_group_id, 'template_id':template_id, 'template_name':template_name, 'template_caption':template_caption, 'template_descr':template_descr, 'cn':cn, 'params_id':params_id, 'fields_type':fields_type, 'params_name':params_name, 'params_type':params_type},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#FormModalWindow").modal("hide");
 						loadArticleParams(art_id);
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
-		} else {swal("Відмінено", "Внесені Вами зміни анульовано.", "error");}
+		} else {
+			swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
+		}
 	});
 }
 
-function unlinkCatalogueGoodGroup(art_id){
-	if (art_id<=0 || art_id===""){toastr["error"](errs[0]);}
-	if (art_id>0){
-        let goods_group_id=$("#goods_group_id").val();
+function unlinkCatalogueGoodGroup(art_id) {
+	if (art_id<=0 || art_id==="") {
+		toastr["error"](errs[0]);
+	}
+	if (art_id>0) {
+        let goods_group_id = $("#goods_group_id").val();
 		JsHttpRequest.query($rcapi,{ 'w': 'unlinkCatalogueGoodGroup', 'art_id':art_id, 'goods_group_id':goods_group_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			if (result["answer"]==1){
 				$("#goods_group_id").val("");
 				$("#goods_group_name").val("");
 				swal("Виконано!", "Товарну групу відвязано", "success");
-			} else {swal("Помилка!", result["error"], "error");}
+			} else {
+				swal("Помилка!", result["error"], "error");
+			}
 		}}, true);
 	}
 }
@@ -398,8 +425,10 @@ function generateBarcodeIncart(){
 }
 
 function loadArticleCommets(art_id){
-	if (art_id<=0 || art_id===""){toastr["error"](errs[0]);}
-	if (art_id>0){
+	if (art_id<=0 || art_id==="") {
+		toastr["error"](errs[0]);
+	}
+	if (art_id>0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'loadArticleCommets', 'art_id':art_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#article_commets_place").html(result["content"]);
@@ -407,78 +436,92 @@ function loadArticleCommets(art_id){
 	}
 }
 
-function saveArticleComment(art_id){
-	if (art_id<=0 || art_id===""){toastr["error"](errs[0]);}
-	if (art_id>0){
+function saveArticleComment(art_id) {
+	if (art_id<=0 || art_id==="") {
+		toastr["error"](errs[0]);
+	}
+	if (art_id>0) {
         let comment=$("#article_comment_field").val();
-		if (comment.length<=0){toastr["error"]("Напишіть коментар спочатку");}
-		if (comment.length>0){
+		if (comment.length<=0) {
+			toastr["error"]("Напишіть коментар спочатку");
+		}
+		if (comment.length>0) {
 			JsHttpRequest.query($rcapi,{ 'w': 'saveArticleComment', 'art_id':art_id, 'comment':comment}, 
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
-				if (result["answer"]==1){
+				if (result["answer"]==1) {
 					loadArticleCommets(art_id);
 					$("#article_comment_field").val("");
-				} else { toastr["error"](result["error"]); }
+				} else {
+					toastr["error"](result["error"]);
+				}
 			}}, true);
 		}
 	}
 }
 
-function dropArticleComment(art_id,cmt_id){
-	if (art_id<=0 || art_id===""){toastr["error"](errs[0]);}
-	if (art_id>0){
-		if(confirm('Видалити запис?')){ 
+function dropArticleComment(art_id, cmt_id) {
+	if (art_id<=0 || art_id==="") {
+		toastr["error"](errs[0]);
+	}
+	if (art_id>0) {
+		if (confirm('Видалити запис?')){
 			JsHttpRequest.query($rcapi,{ 'w': 'dropArticleComment', 'art_id':art_id, 'cmt_id':cmt_id}, 
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
 				if (result["answer"]==1){
 					loadArticleCommets(art_id);
 					toastr["info"]("Запис успішно видалено");
-				} else { toastr["error"](result["error"]); }
+				} else {
+					toastr["error"](result["error"]);
+				}
 			}}, true);
 		}
 	}
 }
 
-function loadArticleCDN(art_id){
-	if (art_id<=0 || art_id===""){toastr["error"](errs[0]);}
-	if (art_id>0){
-		JsHttpRequest.query($rcapi,{ 'w': 'loadArticleCDN', 'art_id':art_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			$("#article_cdn_place").html(result["content"]);
-		}}, true);
-	}
-}
+// function loadArticleCDN(art_id){
+// 	if (art_id<=0 || art_id===""){toastr["error"](errs[0]);}
+// 	if (art_id>0){
+// 		JsHttpRequest.query($rcapi,{ 'w': 'loadArticleCDN', 'art_id':art_id},
+// 		function (result, errors){ if (errors) {alert(errors);} if (result){
+// 			$("#article_cdn_place").html(result["content"]);
+// 		}}, true);
+// 	}
+// }
 
-function showArticlesCDNUploadForm(art_id){
-	$("#cdn_art_id").val(art_id);
-	Dropzone.autoDiscover = false;
-	var myDropzone2 = new Dropzone("#myDropzone2",{ dictDefaultMessage: "Натисніть для вибору файлів або перетягніть їх це поле!" });
-	myDropzone2.removeAllFiles(true);
-	myDropzone2.on("queuecomplete", function() {
-		toastr["info"]("Завантаження файлів завершено.");
-		this.removeAllFiles();
-		$("#fileArticlesCDNUploadForm").modal("hide");
-		loadArticleCDN(art_id);
-	});
-}
+// function showArticlesCDNUploadForm(art_id){
+// 	$("#cdn_art_id").val(art_id);
+// 	Dropzone.autoDiscover = false;
+// 	var myDropzone2 = new Dropzone("#myDropzone2",{ dictDefaultMessage: "Натисніть для вибору файлів або перетягніть їх це поле!" });
+// 	myDropzone2.removeAllFiles(true);
+// 	myDropzone2.on("queuecomplete", function() {
+// 		toastr["info"]("Завантаження файлів завершено.");
+// 		this.removeAllFiles();
+// 		$("#fileArticlesCDNUploadForm").modal("hide");
+// 		// loadArticleCDN(art_id);
+// 	});
+// }
 
-function showArticlesCDNDropConfirmForm(art_id,file_id,file_name){
-	if (art_id<=0 || art_id===""){toastr["error"](errs[0]);}
-	if (art_id>0){	
-		if(confirm('Видалити файл '+file_name+'?')){ 
-			JsHttpRequest.query($rcapi,{ 'w': 'articlesCDNDropFile', 'art_id':art_id, 'file_id':file_id}, 
-			function (result, errors){ if (errors) {alert(errors);} if (result){  
-				if (result["answer"]==1){
-					loadArticleCDN(art_id);
-					toastr["info"]("Файл успішно видалено");
-				} else { toastr["error"](result["error"]); }
-			}}, true);
-		}
-	}
-}
+// function showArticlesCDNDropConfirmForm(art_id,file_id,file_name){
+// 	if (art_id<=0 || art_id===""){toastr["error"](errs[0]);}
+// 	if (art_id>0){
+// 		if(confirm('Видалити файл '+file_name+'?')){
+// 			JsHttpRequest.query($rcapi,{ 'w': 'articlesCDNDropFile', 'art_id':art_id, 'file_id':file_id},
+// 			function (result, errors){ if (errors) {alert(errors);} if (result){
+// 				if (result["answer"]==1){
+// 					// loadArticleCDN(art_id);
+// 					toastr["info"]("Файл успішно видалено");
+// 				} else {
+// 					toastr["error"](result["error"]);
+// 				}
+// 			}}, true);
+// 		}
+// 	}
+// }
 
 function showArtilceGallery(art_id,article_nr_displ){
-	if (art_id<=0 || art_id===""){toastr["error"](errs[0]);}
+	if (art_id<=0 || art_id===""){
+		toastr["error"](errs[0]);
+	}
 	if (art_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'showArtilceGallery', 'art_id':art_id,'article_nr_displ':article_nr_displ}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -490,7 +533,9 @@ function showArtilceGallery(art_id,article_nr_displ){
 }
 
 function loadArticleFoto(art_id){
-	if (art_id<=0 || art_id===""){toastr["error"](errs[0]);}
+	if (art_id<=0 || art_id===""){
+		toastr["error"](errs[0]);
+	}
 	if (art_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadArticleFoto', 'art_id':art_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -500,14 +545,18 @@ function loadArticleFoto(art_id){
 }
 
 function setArticlesFotoMain(art_id,file_id){
-	if (art_id<=0 || art_id===""){toastr["error"](errs[0]);}
+	if (art_id<=0 || art_id===""){
+		toastr["error"](errs[0]);
+	}
 	if (art_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'setArticlesFotoMain', 'art_id':art_id, 'file_id':file_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			if (result["answer"]==1){
 				loadArticleFoto(art_id);
 				toastr["info"]("Основне фото успішно призначено");
-			} else { toastr["error"](result["error"]); }
+			} else {
+				toastr["error"](result["error"]);
+			}
 		}}, true);
 	}
 }
@@ -525,7 +574,9 @@ function showArticlesFotoUploadForm(art_id){
 }
 
 function showArticlesFotoDropConfirmForm(art_id,file_id,file_name){
-	if (art_id<=0 || art_id===""){toastr["error"](errs[0]);}
+	if (art_id<=0 || art_id===""){
+		toastr["error"](errs[0]);
+	}
 	if (art_id>0){		
 		if(confirm('Видалити файл '+file_name+'?')){ 
 			JsHttpRequest.query($rcapi,{ 'w': 'articlesFotoDropFile', 'art_id':art_id, 'file_id':file_id}, 
@@ -533,7 +584,9 @@ function showArticlesFotoDropConfirmForm(art_id,file_id,file_name){
 				if (result["answer"]==1){
 					loadArticleFoto(art_id);
 					toastr["info"]("Файл успішно видалено");
-				} else { toastr["error"](result["error"]); }
+				} else {
+					toastr["error"](result["error"]);
+				}
 			}}, true);
 		}
 	}
@@ -553,7 +606,9 @@ function showArticlesSchemeUploadForm(){
 			$("#fileArticlesSchemeUploadForm").modal("hide");
 			loadArticleScheme(template_id);
 		});
-	} else {swal("Помилка", "Оберіть шаблон для завантаження схеми.", "error");}
+	} else {
+		swal("Помилка", "Оберіть шаблон для завантаження схеми.", "error");
+	}
 }
 
 function loadArticleScheme(template_id){
@@ -575,7 +630,9 @@ function showArticlesSchemeDropConfirmForm(template_id,file_id,file_name){
 				if (result["answer"]==1){
 					loadArticleScheme(template_id);
 					toastr["info"]("Файл успішно видалено");
-				} else { toastr["error"](result["error"]); }
+				} else {
+					toastr["error"](result["error"]);
+				}
 			}}, true);
 		}
 	}
@@ -639,6 +696,52 @@ function showArticleTreeNew() {
         }}, true);
 }
 
+function showArticleTreeExist() {
+    $("#CatalogAddCard").modal("show");
+    JsHttpRequest.query($rcapi,{ 'w': 'showArticleTreeExist'},
+        function (result, errors){ if (errors) {alert(errors);} if (result){
+            $("#CatalogAddCardBody").html(result.content);
+        }}, true);
+}
+
+function saveArticleTreeExist(group_id) {
+	let art_id = $("#art_id").val();
+	swal({
+			title: "Привязати індекс?", text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
+			confirmButtonText: "Так", cancelButtonText: "Відмінити!",  closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
+		},
+		function (isConfirm) {
+			if (isConfirm) {
+				JsHttpRequest.query($rcapi,{ 'w': 'saveArticleTreeExist', 'art_id':art_id, 'group_id':group_id},
+					function (result, errors){ if (errors) {alert(errors);} if (result){
+						swal("Виконано!", "", "success");
+						loadArticleTree();
+						$("#CatalogAddCard").modal("hide")
+					}}, true);
+			} else {
+				swal("Відмінено", "", "error");
+			}
+		});
+}
+
+function dropArticleTreeExist(art_id, group_id) {
+	swal({
+			title: "Відвязати індекс?", text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
+			confirmButtonText: "Так", cancelButtonText: "Відмінити!",  closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
+		},
+		function (isConfirm) {
+			if (isConfirm) {
+				JsHttpRequest.query($rcapi,{ 'w': 'dropArticleTreeExist', 'art_id':art_id, 'group_id':group_id},
+					function (result, errors){ if (errors) {alert(errors);} if (result){
+						swal("Виконано!", "", "success");
+						loadArticleTree();
+					}}, true);
+			} else {
+				swal("Відмінено", "", "error");
+			}
+		});
+}
+
 function saveArticleTreeTecdoc(str_id) {
     let art_id = $("#art_id").val();
     swal({
@@ -661,13 +764,14 @@ function saveArticleTreeTecdoc(str_id) {
 
 function saveArticleTreeNew(group_id) {
     let art_id = $("#art_id").val();
+    let brand_id = $("#brand_id").val();
     swal({
             title: "Привязати індекс?", text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
             confirmButtonText: "Так", cancelButtonText: "Відмінити!",  closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
         },
         function (isConfirm) {
             if (isConfirm) {
-                JsHttpRequest.query($rcapi,{ 'w': 'saveArticleTreeNew', 'art_id':art_id, 'group_id':group_id},
+                JsHttpRequest.query($rcapi,{ 'w': 'saveArticleTreeNew', 'art_id':art_id, 'brand_id':brand_id, 'group_id':group_id},
                     function (result, errors){ if (errors) {alert(errors);} if (result){
                         swal("Виконано!", "", "success");
                         loadArticleTree();
@@ -763,7 +867,9 @@ function unlinkArticleAplicabilityModel(mfa_id,art_id,typ_id,typ_text){
 				if (result["answer"]==1){
 					loadArticleAplicabilityModels(art_id,mfa_id);
 					swal("Виконано!", "", "success");
-				} else {swal("Помилка", result["answer"], "error");}
+				} else {
+					swal("Помилка", result["answer"], "error");
+				}
 			}}, true);
 		} else {
 			swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
@@ -1562,11 +1668,14 @@ function viewArticleCellsRest(art_id,storage_id){
 	}
 }
 
-function loadArticlePricing(art_id,brand_id){
-	if (art_id<=0 || art_id===""){toastr["error"](errs[0]);}
-	if (art_id>0){
+function loadArticlePricing(art_id, brand_id) {
+	console.log(art_id + " " + brand_id);
+	if (art_id <= 0 || art_id === "") {
+		toastr["error"](errs[0]);
+	}
+	if (art_id > 0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'loadArticlePricing', 'art_id':art_id, 'brand_id':brand_id},
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
+		function (result, errors){ if (errors) {alert(errors);} if (result) {
 			$("#pricing_place").html(result["content"]);
 			$("#catalogue_tabs").tab();
             $(".tooltips").tooltip();
@@ -1669,30 +1778,38 @@ function recalcPRArt(art_id,k,st){
 // 	}
 // }
 
-function saveArticlePriceRating(art_id){
+function saveArticlePriceRating(art_id) {
 	var kol_elm=12; var prc=[]; var prs=[];
-	if (art_id.length>0){
+	if (art_id.length>0) {
 		var minMarkup=$("#artMinMarkUp_"+art_id).val();var er=0;
 		var template_id=$("#priceRatingTemplate_"+art_id+" option:selected").val();
 		var cash_id=$("#priceRatingCash_"+art_id+" option:selected").val();
-		for (var i=0;i<=kol_elm;i++){
+		for (var i=0;i<=kol_elm;i++) {
 			var i0=parseInt(i)-1;
-			price=$("#artRatingPrice_"+art_id+"_"+i).val(); if (price=="" || price=="NaN"){price=prev_price;} prc[i]=price;
+			price=$("#artRatingPrice_"+art_id+"_"+i).val();
+			if (price=="" || price=="NaN"){price=prev_price;}
+			prc[i]=price;
 			percent=$("#artRatingPersent_"+art_id+"_"+i).val();
 			if (percent==""){percent=0;} prs[i]=percent;
 			if (i>1 && percent<0){er=1;}
 		}
-		if (cash_id==="0" || cash_id===undefined) er=1;
-		if (er==1){ swal("Помилка!","Збереження відмінено","error");}
-		if (er==0){
+		if (cash_id==="0" || cash_id===undefined) {
+			er=1;
+		}
+		if (er==1) {
+			swal("Помилка!","Збереження відмінено","error");
+		}
+		if (er==0) {
 			JsHttpRequest.query($rcapi,{ 'w':'saveArticlePriceRating', 'art_id':art_id, 'kol_elm':kol_elm, 'template_id':template_id, 'minMarkup':minMarkup, 'cash_id':cash_id, 'prc':prc, 'prs':prs},
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
-				if (result["answer"]==1){
+				if (result["answer"] == 1) {
 					swal("Збережено!", "", "success");
-					$("#artAuthorName_"+art_id).html(result["user_name"]);
-					$("#artDataUpdate_"+art_id).html(result["date"]);
-                    loadArticlePricing(art_id,$("#brand_id").val());
-				} else {swal("Помилка!", result["error"], "error");}
+					$("#artAuthorName_" + art_id).html(result["user_name"]);
+					$("#artDataUpdate_" + art_id).html(result["date"]);
+                    loadArticlePricing(art_id, $("#brand_id").val());
+				} else {
+					swal("Помилка!", result["error"], "error");
+				}
 			}}, true);	
 		}
 	}

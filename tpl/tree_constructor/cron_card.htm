@@ -1,0 +1,124 @@
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <input id="group_id" type="hidden" value="{group_id}">
+        <div class="row">
+            <div class="col-md-1">
+                <label for="text_ru">Текст RU</label>
+            </div>
+            <div class="col-md-3">
+                <input id="text_ru" type="text" class="form-control" title="TEXT_RU" value="{text_ru}">
+            </div>
+            <div class="col-md-1">
+                <label for="text_ua">Текст UA</label>
+            </div>
+            <div class="col-md-3">
+                <input id="text_ua" type="text" class="form-control" title="TEXT_UA" value="{text_ua}">
+            </div>
+            <div class="col-md-1">
+                <label for="text_en">Текст EN</label>
+            </div>
+            <div class="col-md-3">
+                <input id="text_en" type="text" class="form-control" title="TEXT_EN" value="{text_en}">
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-1">
+                <label for="one_ru">One RU</label>
+            </div>
+            <div class="col-md-3">
+                <input id="one_ru" type="text" class="form-control" title="ONE_RU" value="{one_ru}">
+            </div>
+            <div class="col-md-1">
+                <label for="one_ua">One UA</label>
+            </div>
+            <div class="col-md-3">
+                <input id="one_ua" type="text" class="form-control" title="ONE_UA" value="{one_ua}">
+            </div>
+            <div class="col-md-1">
+                <label for="one_en">One EN</label>
+            </div>
+            <div class="col-md-3">
+                <input id="one_en" type="text" class="form-control" title="ONE_EN" value="{one_en}">
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-sm-1">
+                <label for="h1_ru">H1 RU</label>
+            </div>
+            <div class="col-sm-3">
+                <input id="h1_ru" type="text" class="form-control" title="H1_RU" value="{h1_ru}">
+            </div>
+            <div class="col-sm-1">
+                <label for="h1_ua">H1 UA</label>
+            </div>
+            <div class="col-sm-3">
+                <input id="h1_ua" type="text" class="form-control" title="H1_UA" value="{h1_ua}">
+            </div>
+            <div class="col-sm-1">
+                <label for="h1_en">H1 EN</label>
+            </div>
+            <div class="col-sm-3">
+                <input id="h1_en" type="text" class="form-control" title="H1_EN" value="{h1_en}">
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-sm-1">
+                <label for="descr_ru">Опис RU</label>
+            </div>
+            <div class="col-sm-3">
+                <input id="descr_ru" type="text" class="form-control" title="DESCRIPTION_RU" value="{descr_ru}">
+            </div>
+            <div class="col-sm-1">
+                <label for="descr_ua">Опис UA</label>
+            </div>
+            <div class="col-sm-3">
+                <input id="descr_ua" type="text" class="form-control" title="DESCRIPTION_UA" value="{descr_ua}">
+            </div>
+            <div class="col-sm-1">
+                <label for="descr_en">Опис EN</label>
+            </div>
+            <div class="col-sm-3">
+                <input id="descr_en" type="text" class="form-control" title="DESCRIPTION_EN" value="{descr_en}">
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-sm-1">
+                <label for="text_link">Посилання</label>
+            </div>
+            <div class="col-sm-3">
+                <input id="text_link" type="text" class="form-control" title="TEXT_LINK" value="{text_link}">
+            </div>
+            <div class="col-sm-1">
+                <label for="group_status">Статус</label>
+            </div>
+            <div class="col-sm-3">
+                <input id="group_status" type="text" class="form-control" title="STATUS" value="{group_status}">
+            </div>
+            <div class="col-sm-1">
+                <label for="group_status_auto">Статус авто</label>
+            </div>
+            <div class="col-sm-3">
+                <input id="group_status_auto" type="text" class="form-control" title="STATUS AUTO" value="{group_status_auto}">
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-sm-8">
+                <label for="reviews">Статті</label>
+                <select title="Статті" id="reviews" name="reviews[]" data-placeholder="Вибрати статті" class="chosen-select" multiple tabindex="4" style="width: 250px;">
+                    {review_list}
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-2 text-right ">
+                <button id="save_btn" class="btn btn-primary" type="button" onClick="saveGroupExistCard();"><i class="fa fa-save"></i> Зберегти зміни</button>
+                <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+            </div>
+        </div>
+    </div>
+</div>

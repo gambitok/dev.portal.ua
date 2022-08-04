@@ -1,0 +1,193 @@
+<link href="/js/plugins/jsTree/jstree_style.min.css" rel="stylesheet">
+<link href="/js/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
+<link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
+
+<style>
+    .row {
+        margin-bottom: 15px;
+    }
+    .span-red {
+        color: red;
+        display: block;
+    }
+    .none {
+        display: none!important;
+    }
+</style>
+
+<h2 class="border-bottom white-bg dashboard-header">Конвертація валюти</h2>
+<input type="hidden" id="doc_prefix" value="{doc_prefix}">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h3>Користувач: <b>{user_name}</b></h3>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-1">1.</div>
+                                <div class="col-md-2">Каса</div>
+                                <div class="col-md-9">
+                                    <select name="paybox_id" id="paybox_id" class="form-control" title="Каса" onchange="changePayboxConvertSumm();">
+                                        <option value="0">-Не вибрано-</option>
+                                        {paybox_list}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">2.</div>
+                                <div class="col-md-2">Валюта</div>
+                                <div class="col-md-9">
+                                    <select name="cash_id_from" id="cash_id_from" class="form-control" title="Валюта" onchange="changePayboxConvertSumm(); showCashListSelected();">
+                                        <option value="0">-Не вибрано-</option>
+                                        {cash_list}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">3.</div>
+                                <div class="col-md-2">Сума</div>
+                                <div class="col-md-9">
+                                    <input id="price_from" type="number" class="form-control" value="0" title="Сума" onkeyup="changePayboxConvertSumm();">
+                                    <label for="price_from">максимально можлива сума - <span id="price_from_max">0 грн.</span></label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">4.</div>
+                                <div class="col-md-2">Конвертуємо в</div>
+                                <div class="col-md-9">
+                                    <select name="cash_id_to" id="cash_id_to" class="form-control" title="Валюта" onchange="changePayboxConvertSumm();">
+                                        <option value="0">-Не вибрано-</option>
+                                        {cash_list}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">5.</div>
+                                <div class="col-md-2">Курс обміну</div>
+                                <div class="col-md-9">
+                                    <input id="kours_to" type="number" class="form-control" value="0" title="Курс обміну" onkeyup="changePayboxConvertSumm();">
+                                    <label for="kours_to">поточний курс: <span id="kours_from">0 грн.</span></label>
+                                    <label for="kours_to" id="kours_to_err" class="span-red none">Увага!
+                                        Введений курс відрізняється від поточного більш ніж на 1%.
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">6.</div>
+                                <div class="col-md-2">Сума</div>
+                                <div class="col-md-9">
+                                    <input id="price_to" type="number" class="form-control" disabled value="0" title="Сума">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">7.</div>
+                                <div class="col-md-2">Примітка</div>
+                                <div class="col-md-9">
+                                    <input id="note" type="text" class="form-control" value="" title="Примітка">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button id="save_btn" class="btn btn-primary pull-right" disabled onclick="savePayboxConvert();"><i class="fa fa-save"></i> Зафіксувати</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label for="paybox_id_select">Каса</label>
+                            <select name="paybox_id_select" id="paybox_id_select" class="form-control" title="Каса">
+                                <option value="0">-Не вибрано-</option>
+                                {paybox_list}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="paybox_id_select">Дата з</label>
+                            <input type="date" id="date_start" title="Дата з" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="paybox_id_select">Дата до</label>
+                            <input type="date" id="date_end" title="Дата до" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary" onclick="loadPayboxConvertRange();"><i class="fa fa-filter"></i> Фільтр</button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="datatable" class="table table-striped table-hover table-bordered" width="100%">
+                            <thead>
+                                <tr align="center">
+                                    <th>#</th>
+                                    <th>Каса</th>
+                                    <th>Дата</th>
+                                    <th>Курс</th>
+                                    <th>Ціна з</th>
+                                    <th>Ціна в</th>
+                                    <th>Примітка</th>
+                                </tr>
+                            </thead>
+                                <tbody id="paybox_convert_range">
+                                    {paybox_convert_range}
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="PayboxCard" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
+                <h3 id="myModalLabel text-left">Каса <span id="PayboxCardLabel"></span></h3>
+            </div>
+            <div class="modal-body" id="PayboxCardBody">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel" class="text-left"></h3></div>
+            <div class="modal-body" id="FormModalBody"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/plugins/barcode-generator/jquery-barcode.js"></script>
+<!-- Bootstrap markdown -->
+<script src="/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>
+<script src="/js/plugins/bootstrap-markdown/markdown.js"></script>
+<script src="/vendors/jquery/generate-password.js"></script>
+<script src="/js/plugins/select2/js/select2.full.min.js"></script>
+<script src="/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/js/plugins/dropzone/dropzone.js"></script>
+<script src="/js/plugins/switchery/switchery.js"></script>
+<script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+<script src="/js/plugins/currency/currency.js"></script>
+
+<script src="/js/paybox/paybox.js?201805151435"></script>
+<script language="javascript">
+    $(document).ready(function() {
+        $("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": false,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
+    });
+</script>
+<script type="text/javascript">
+    //Disabling autoDiscover
+    Dropzone.autoDiscover = false;
+</script>
+<!-- Sweet alert -->
+<script src="/js/plugins/sweetalert/sweetalert.min.js"></script>

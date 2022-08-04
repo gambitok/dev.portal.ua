@@ -1,0 +1,96 @@
+<style>
+    .t2-catalog input {
+        display: block;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="row">
+
+    <div class="col-md-3">
+        <label for="select_tree_head">Виберіть заголовок:</label>
+        <select id="select_tree_head" name="select_tree_head" class="form-control" onchange="showCatalogItem('head');">
+            <option value="0">-Не вибрано-</option>
+            {select_tree_head}
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label for="select_tree_cat">Виберіть категорію:</label>
+        <select id="select_tree_cat" name="select_tree_cat" class="form-control" onchange="showCatalogItem('cat');">
+            <option value="0">-Не вибрано-</option>
+            {select_tree_cat}
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label for="select_tree_group">Введіть групу:</label>
+        <select id="select_tree_group" name="select_tree_group" class="form-control" onchange="showCatalogItem('group');">
+            <option value="0">-Не вибрано-</option>
+            {select_tree_group}
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label>&nbsp;</label><br>
+        <a class="btn btn-info" onclick="saveCatalogPartsAddCard();"><i class="fa fa-link"></i> Звязати групу</a>
+        <a class="btn btn-warning" onclick="untieCatalogGroup();"><i class="fa fa-link"></i> Відвязати групу</a>
+        <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+    </div>
+
+</div>
+
+<hr>
+
+<div class="row t2-catalog">
+
+    <div class="col-md-3">
+        <label>Додати заголовок</label>
+        <input type="text" class="form-control t2_head" name="text_ru" placeholder="Категорія RU">
+        <input type="text" class="form-control t2_head" name="text_ua" placeholder="Категорія UA">
+        <input type="text" class="form-control t2_head" name="text_en" placeholder="Категорія EN">
+        <input type="text" class="form-control t2_head" name="text_link" placeholder="Категорія Посилання">
+        <input type="text" class="form-control t2_head" name="status" placeholder="Статус">
+        <button id="add-btn-head" class="btn btn-info input-group-text" onclick="addCatalogItem('head');"><i class="fa fa-plus"></i> Додати нову</button>
+        <button id="edit-btn-head" disabled class="btn btn-primary input-group-text" onclick="editCatalogItem('head');"><i class="fa fa-save"></i> Зберегти</button>
+        <button id="drop-btn-head" disabled class="btn btn-danger input-group-text" onclick="dropCatalogItem('head');"><i class="fa fa-trash"></i> Видалити</button>
+    </div>
+
+    <div class="col-md-3">
+        <label>Додати категорію</label>
+        <input type="text" class="form-control t2_cat" name="text_ru" placeholder="Категорія RU">
+        <input type="text" class="form-control t2_cat" name="text_ua" placeholder="Категорія UA">
+        <input type="text" class="form-control t2_cat" name="text_en" placeholder="Категорія EN">
+        <input type="text" class="form-control t2_cat" name="text_link" placeholder="Категорія Посилання">
+        <input type="text" class="form-control t2_cat" name="status" placeholder="Статус">
+        <button id="add-btn-cat" class="btn btn-info input-group-text" onclick="addCatalogItem('cat');"><i class="fa fa-plus"></i> Додати нову</button>
+        <button id="edit-btn-cat" disabled class="btn btn-primary input-group-text" onclick="editCatalogItem('cat');"><i class="fa fa-save"></i> Зберегти</button>
+        <button id="drop-btn-cat" disabled class="btn btn-danger input-group-text" onclick="dropCatalogItem('cat');"><i class="fa fa-trash"></i> Видалити</button>
+    </div>
+
+    <div class="col-md-3">
+        <label>Додати групу</label>
+        <input type="text" class="form-control t2_group" name="text_ru" placeholder="Категорія RU">
+        <input type="text" class="form-control t2_group" name="text_ua" placeholder="Категорія UA">
+        <input type="text" class="form-control t2_group" name="text_en" placeholder="Категорія EN">
+        <input type="text" class="form-control t2_group" name="text_link" placeholder="Категорія Посилання">
+        <input type="text" class="form-control t2_group" name="status" placeholder="Статус">
+        <input type="text" class="form-control t2_group" name="status_auto" placeholder="Статус авто">
+        <input type="text" class="form-control t2_group" name="reviewed" placeholder="reviewed">
+        <input type="text" class="form-control t2_group" name="description_ru" placeholder="description_ru">
+        <input type="text" class="form-control t2_group" name="description_ua" placeholder="description_ua">
+        <input type="text" class="form-control t2_group" name="description_en" placeholder="description_en">
+        <button id="add-btn-group" class="btn btn-info input-group-text" onclick="addCatalogItem('group');"><i class="fa fa-plus"></i> Додати нову</button>
+        <button id="edit-btn-group" disabled class="btn btn-primary input-group-text" onclick="editCatalogItem('group');"><i class="fa fa-save"></i> Зберегти</button>
+        <button id="drop-btn-group" disabled class="btn btn-danger input-group-text" onclick="dropCatalogItem('group');"><i class="fa fa-trash"></i> Видалити</button>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function() {
+        $("#select_tree_head").select2({placeholder: "Виберіть категорію"});
+        $("#select_tree_cat").select2({placeholder: "Виберіть категорію"});
+        $("#select_tree_group").select2({placeholder: "Виберіть категорію"});
+    });
+</script>

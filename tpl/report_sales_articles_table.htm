@@ -1,0 +1,36 @@
+<h2>Кількість продаж: <b>{summ_reports} шт.</b></h2> <br>
+
+<style>
+    .table th {
+        background: #1ab394!important;
+    }
+</style>
+
+<div class="table-responsive">
+    <table id="datatable" class="table table-striped table-hover table-bordered" width="100%">
+        <thead style="background: #1ab394; color:white;">
+            <tr align="center">
+                <th>Артикул</th>
+                <th>Бренд</th>
+                <th>Група товару</th>
+                <th>Залишок, шт.</th>
+                {last_income_status}
+                {storage_rate_status}
+                {create_order_status}
+                <th>Загальний продаж, шт.</th>
+                {real_cost_status}
+                {real_sale_status}
+                {month_table}
+            </tr>
+        </thead>
+        <tbody id="report_sales_articles_range">
+            {report_sales_articles_range}
+        </tbody>
+    </table>
+</div>
+
+<script language="javascript">
+    $(document).ready(function() {
+        $("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+    });
+</script>

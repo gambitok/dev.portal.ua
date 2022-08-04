@@ -1,0 +1,31 @@
+<div class="ibox">
+	<div class="ibox-header">
+        <div class="row">
+	        <div class="col-lg-3 col-md-4 col-sm-5 pull-left">
+            	<h3>Не визначені артикули з передпродажу</h3>
+                <button class="btn btn-warning btn-sm" onClick="clearJmovingUnknown('{jmoving_id}');">Очистити дані</button>
+            </div>
+        </div>
+	</div>
+	<div class="ibox-content">
+    	<input type="hidden" id="kol_rows_un" value="{kol_rows}">
+        <div class="table-responsive">
+        <table id="jmoving_unknown_str" class="table table-condensed table-striped table-hover table-bordered" width="100%">
+            <thead>
+                <tr align="center">
+                	<th>#</th>
+                    <th>№</th>
+                    <th>Індекс</th>
+                    <th>Бренд</th>
+                    <th>Передана к-сть</th>
+                    <th>Відмінена к-сть</th>
+                    <th>Опис</th>
+                </tr>
+            </thead>
+            <tbody id="unknown_range">
+	            {UnknownArticlesList}
+            </tbody>
+        </table>
+        </div>
+	</div>
+</div>

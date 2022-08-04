@@ -2,6 +2,16 @@
 	<div class="col-md-2 col-sm-4">Дата від <label>{saldo_data_start}</label> до <label>{saldo_data_end}</label></div>
 </div>
 
+<div class="row">
+    <div class="text-center">
+        <b>Постачальник: {seller_name}</b><br>
+        р/р: {rr} в {bank} МФО {mfo} Код ЄДРПОУ: {edrpou}<br>
+        ІПН: {ipn_nom}<br>
+        Є платником податку на прибуток на загальних підставах<br>
+        <b>Покупець: {client_name}</b>
+    </div>
+</div>
+
 <h3>Сальдо на початок періоду: <span id="client_saldo_start">{saldo_start}</span> на <span id="client_saldo_data_start">{saldo_data_start}</span></h3>
 
 <table id="datatable_costums" class="table table-striped table-hover table-bordered" width="100%">

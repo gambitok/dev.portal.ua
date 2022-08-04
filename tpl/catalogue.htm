@@ -334,7 +334,6 @@
     </div>
 </div>
 
-
 <div id="CatalogAddCard" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
@@ -343,6 +342,61 @@
                 <h3 class="myModalLabel text-left">Привязка <span id="CatalogAddCardLabel"></span></h3>
             </div>
             <div class="modal-body" id="CatalogAddCardBody">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="SaleInvoiceCard" class="modal inmodal fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog" aria-hidden="true" style="
+    z-index: 99999 !important;">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
+                <h3 class="myModalLabel text-left">Накладна №<span id="SaleInvoiceCardLabel"></span></h3>
+            </div>
+            <div class="modal-body" id="SaleInvoiceCardBody">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="BackClientsCard" class="modal inmodal fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog" aria-hidden="true" style="
+    z-index: 99999 !important;">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" onClick="closeBackClientsCard();">х</button>
+                <h3 class="myModalLabel text-left">Повернення №<span id="BackClientsCardLabel"></span></h3>
+            </div>
+            <div class="modal-body" id="BackClientsCardBody"></div>
+        </div>
+    </div>
+</div>
+
+<div id="IncomeCard" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true" style="
+    z-index: 99999 !important;">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
+                <h3 class="myModalLabel text-left">Накладна №<span id="IncomeCardLabel"></span></h3>
+            </div>
+            <div class="modal-body" id="IncomeCardBody">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="WriteOffCard" class="modal inmodal fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog" aria-hidden="true" style="
+    z-index: 99999 !important;">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
+                <h3 class="myModalLabel text-left">Списання №<span id="WriteOffCardLabel"></span></h3>
+            </div>
+            <div class="modal-body" id="WriteOffCardBody">
             </div>
         </div>
     </div>
@@ -369,7 +423,12 @@
 <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
 <script src="/js/plugins/currency/currency.js"></script>
 <script src="/js/action_clients/action_clients.js"></script>
-<script src="/js/catalogue/catalogue.js?201705061435"></script>
+<script src="/js/catalogue/catalogue.js"></script>
+<script src="/js/sale_invoice/sale_invoice.js"></script>
+<script src="/js/back_clients/back_clients.js"></script>
+<script src="/js/income/income.js"></script>
+<script src="/js/write_off/write_off.js"></script>
+
 <script language="javascript">
 $(document).ready(function() {
 //	$('#datatable').DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,"searching": false,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}, "dom": '<"top">rt<"bottom"flpi><"clear">'});

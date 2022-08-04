@@ -1,0 +1,107 @@
+<link href="/js/plugins/jsTree/jstree_style.min.css" rel="stylesheet">
+<link href="/js/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
+<link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
+
+<h2 class="border-bottom white-bg dashboard-header">Залишки товарів (собівартість по ОС)</h2>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="storage_list">Склад</label>
+                            <select class="form-control" size="1" id="storage_list" title="Склад">
+                                <option value="0">-</option>
+                                {storage_list}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="kours_list">Валюта</label>
+                            <select class="form-control" size="1" id="kours_list" title="Валюта">
+                                <option value="0">-</option>
+                                {kours_list}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="brands_list">Бренд</label>
+                            <select class="form-control" size="1" id="brands_list" title="Бренд">
+                                <option value="0">-</option>
+                                {brands_list}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-primary" onclick="loadStorageCostRange();"><i class='fa fa-search'></i> Сформувати</button>
+                            <button class="btn btn-primary" onclick="exportStorageCostList();"><i class='fa fa-excel'></i> Експорт</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table id="datatable" class="table table-striped table-hover table-bordered" width="100%">
+                            <thead>
+                                <tr align="center">
+                                    <th>#</th>
+                                    <th>ART_ID</th>
+                                    <th>Артикул</th>
+                                    <th>Найменування</th>
+                                    <th>Склад</th>
+                                    <th>Залишок, шт</th>
+                                    <th>Ціна ОС</th>
+                                    <th>Сума ОС</th>
+                                    <th>Резерв, шт</th>
+                                    <th>Ціна ОС</th>
+                                    <th>Сума ОС</th>
+                                </tr>
+                            </thead>
+                            <tbody id="storage_range">
+                                {storage_range}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div id="StorageCard" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
+                <h3 class="myModalLabel text-left">Карта складу <span id="StorageCardLabel"></span></h3>
+            </div>
+            <div class="modal-body" id="StorageCardBody">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/plugins/barcode-generator/jquery-barcode.js"></script>
+<!-- Bootstrap markdown -->
+<script src="/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>
+<script src="/js/plugins/bootstrap-markdown/markdown.js"></script>
+<script src="/vendors/jquery/generate-password.js"></script>
+<script src="/js/plugins/select2/js/select2.full.min.js"></script>
+<script src="/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/js/plugins/dropzone/dropzone.js"></script>
+<script src="/js/plugins/switchery/switchery.js"></script>
+<script src="/js/storage/storage.js?201705301435"></script>
+<script language="javascript">
+    $(document).ready(function() {
+        $("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": false,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
+    });
+</script>
+<script type="text/javascript">
+    //Disabling autoDiscover
+    Dropzone.autoDiscover = false;
+</script>
+<script src="/js/plugins/jsTree/jstree.min.js"></script>
+<style>.jstree-open > .jstree-anchor > .fa-folder:before {content: "\f07c";}.jstree-default .jstree-icon.none {width: 0;}</style>
+<!-- Sweet alert -->
+<script src="/js/plugins/sweetalert/sweetalert.min.js"></script>

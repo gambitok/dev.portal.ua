@@ -1,0 +1,204 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".summernote").summernote({
+            height: 200,
+            callbacks: {
+                onImageUpload: function(files) {
+                    for(let i=0; i < files.length; i++) {
+                        $.upload(files[i]);
+                    }
+                }
+            }
+        });
+        $.upload = function (file) {
+            let out = new FormData();
+            out.append('file', file, file.name);
+
+            $.ajax({
+                method: 'POST',
+                url: 'https://portal.myparts.pro/upload_saved_images.php',
+                contentType: false,
+                cache: false,
+                processData: false,
+                data: out,
+                success: function (img) {
+                    $('.summernote').summernote('insertImage', img);
+                    console.log('inserted');
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error(textStatus + " " + errorThrown);
+                }
+            });
+        }
+    });
+</script>
+
+<style>
+    .tab-pane {
+        margin-top: 30px;
+    }
+</style>
+
+<div class="tabs-container">
+
+    <ul class="nav nav-tabs" id="review_tabs">
+        <li class="active"><a data-toggle="tab" href="#us_tab1"><i class="fa fa-bars"></i> <span class="hidden-sm-down not-visible">Загальна інформація</span></a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="us_tab1" class="tab-pane active">
+            <div class="panel-body">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+
+                        <div class="form-horizontal">
+
+                            <input type="hidden" id="review_id" value="{review_id}">
+
+                            <div class="form-group">
+                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Дата</label>
+                                <div class="col-sm-2">
+                                    <input class="form-control" type="text" name="review_data" id="review_data" value="{review_data}" disabled placeholder="Дата" title="Date">
+                                </div>
+                                <label class="col-sm-1 control-label">Статус</label>
+                                <div class="col-sm-1">
+                                    <input title="Статус" type="checkbox" class="js-switch" data-size="small" id="review_status" value="1" {review_status} />
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item active">
+                                            <a class="nav-link active" id="nav_ru-tab" data-toggle="tab" href="#tab_ru" role="tab" aria-controls="tab_ru" aria-selected="true">RU</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="nav_ua-tab" data-toggle="tab" href="#tab_ua" role="tab" aria-controls="tab_ua" aria-selected="false">UA</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="nav_en-tab" data-toggle="tab" href="#tab_en" role="tab" aria-controls="tab_en" aria-selected="false">EN</a>
+                                        </li>
+                                    </ul>
+
+                                    <div class="tab-content" id="myTabContent">
+                                        <div class="tab-pane active" id="tab_ru" role="tabpanel" aria-labelledby="nav_ru-tab">
+                                            <div class="form-group">
+                                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Заголовок</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" type="text" name="review_title" id="review_title" value="{review_title}" placeholder="Заголовок" title="Заголовок">
+                                                </div>
+                                            </div>
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Тайтл</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" type="text" name="review_t_ru" id="review_t_ru" value="{review_t_ru}" placeholder="Тайтл" title="Тайтл">
+                                                </div>
+                                            </div>
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Дескріптіон</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" type="text" name="review_d_ru" id="review_d_ru" value="{review_d_ru}" placeholder="Дескріптіон" title="Дескріптіон">
+                                                </div>
+                                            </div>
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Опис</label>
+                                                <div class="col-sm-10">
+                                                    <textarea id="summernote" class="summernote" title="Опис">{review_text}</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="tab_ua" role="tabpanel" aria-labelledby="nav_ua-tab">
+                                            <div class="form-group">
+                                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Заголовок</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" type="text" name="review_title_ua" id="review_title_ua" value="{review_title_ua}" placeholder="Заголовок" title="Заголовок">
+                                                </div>
+                                            </div>
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Тайтл</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" type="text" name="review_t_ua" id="review_t_ua" value="{review_t_ua}" placeholder="Тайтл" title="Тайтл">
+                                                </div>
+                                            </div>
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Дескріптіон</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" type="text" name="review_d_ua" id="review_d_ua" value="{review_d_ua}" placeholder="Дескріптіон" title="Дескріптіон">
+                                                </div>
+                                            </div>
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Опис</label>
+                                                <div class="col-sm-10">
+                                                    <textarea id="summernote_ua" class="summernote" title="Опис">{review_text_ua}</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="tab_en" role="tabpanel" aria-labelledby="nav_en-tab">
+                                            <div class="form-group">
+                                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Заголовок</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" type="text" name="review_title_en" id="review_title_en" value="{review_title_en}" placeholder="Заголовок" title="Заголовок">
+                                                </div>
+                                            </div>
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Тайтл</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" type="text" name="review_t_en" id="review_t_en" value="{review_t_en}" placeholder="Тайтл" title="Тайтл">
+                                                </div>
+                                            </div>
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Дескріптіон</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" type="text" name="review_d_en" id="review_d_en" value="{review_d_en}" placeholder="Дескріптіон" title="Дескріптіон">
+                                                </div>
+                                            </div>
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Опис</label>
+                                                <div class="col-sm-10">
+                                                    <textarea id="summernote_en" class="summernote" title="Опис">{review_text_en}</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <div class="col-lg-2 col-md-2 col-sm-4 text-right">
+                                    <button class="btn btn-primary" data-toggle="modal" data-target="#fileReviewsPhotoUploadForm" onclick="showReviewsUploadForm({review_id});" {review_remove_disabled}><i class="fa fa-picture-o"></i> Завантажити фото</button>
+                                </div>
+                                <div class="col-sm-10" style="max-width: 300px;">
+                                    <img src="https://portal.myparts.pro/uploads/images/saved/{review_image}" alt="Image" width="100%;">
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <div class="col-sm-10 text-right col-sm-offset-2">
+                                    <button class="btn btn-primary" type="button" onClick="saveReview();"><i class="fa fa-save"></i> Зберегти зміни</button>
+                                    <button class="btn btn-danger" type="button" onClick="dropReview();" {review_remove_disabled}><i class="fa fa-trash"></i> Видалити</button>
+                                    <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

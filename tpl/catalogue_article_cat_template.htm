@@ -1,0 +1,40 @@
+<div class="row">
+    <div class="col-sm-4">
+        <label title="template_id" class="control-label">ID Шаблону</label>
+        <input type="text" class="form-control" readonly value="{template_id}" id="template_id" name="template_id" title="ID Шаблону">
+    </div>
+    <div class="col-sm-4">
+        <label title="template_name" class="control-label">Назва шаблону</label>
+        <input type="text" class="form-control" id="template_name" value="{template_name}" name="template_name" title="Назва шаблону">
+    </div>
+</div>
+
+<hr>
+
+<div class="row">
+    <div class="col-sm-4">
+        <label title="template_id" class="control-label">Наслідування шаблону</label>
+        <input type="checkbox" class="js-switch" data-size="small" id="child_status" {child_status} name="child_status" title="Наслідування шаблону">
+    </div>
+    <div class="col-sm-4">
+        <label title="template_name" class="control-label">Наслідуваний шаблон</label>
+        <select title="Шаблон" class="form-control" id="parent_id" size="1">
+            <option value="0">-Не вибрано-</option>
+            {parent_template_list}
+        </select>
+    </div>
+    <div class="col-sm-4">
+        <label title="template_name" class="control-label">Статус шаблону</label>
+        <input type="checkbox" class="js-switch" data-size="small" id="template_status" {template_status} name="template_status" title="Статус шаблону">
+    </div>
+</div>
+
+<hr>
+
+<div class="row">
+    <div class="col-sm-10 text-right col-sm-offset-2">
+        <button class="btn btn-primary" type="button" onClick="saveCatalogueTemplateForm('{template_id}');">Зберегти зміни</button>
+        <button class="btn btn-danger" type="button" onClick="dropCatalogueTemplate('{template_id}');" {disable_delete}>Видалити</button>
+        <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+    </div>
+</div>

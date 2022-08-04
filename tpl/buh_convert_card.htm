@@ -1,0 +1,87 @@
+<div class="tabs-container">
+
+    <ul class="nav nav-tabs" id="buh_convert_tabs">
+        <li class="active"><a data-toggle="tab" href="#br_tab1"><i class="fa fa-bars"></i> <span class="hidden-sm-down not-visible">Загальна інформація</span></a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="br_tab1" class="tab-pane active">
+            <div class="panel-body">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <form method="get" class="form-horizontal">
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Код конвертації</label>
+                                <div class="col-sm-1"><input class="form-control" type="text" name="buh_convert_id" id="buh_convert_id" value="{buh_convert_id}" readonly placeholder=""></div>
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Коментар</label>
+                                <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" id="buh_convert_text" value="{buh_convert_text}" placeholder="Коментар"></div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Сума</label>
+                                <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" id="buh_convert_summ" value="{buh_convert_summ}" placeholder="Сума"></div>
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Дата</label>
+                                <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" id="buh_convert_data" value="{buh_convert_data}" readonly placeholder="Дата"></div>
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Користувач</label>
+                                <div class="col-lg-2 col-md-2 col-sm-8">
+                                    <input class="form-control" type="text" id="buh_convert_user_name" value="{buh_convert_user_name}" readonly placeholder="Користувач">
+                                    <input class="form-control" type="hidden" id="buh_convert_user_id" value="{buh_convert_user_id}" placeholder="Користувач">
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Долар</label>
+                                <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" id="buh_convert_kours_usd" value="{buh_convert_kours_usd}" placeholder="USD"></div>
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Євро</label>
+                                <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" id="buh_convert_kours_eur" value="{buh_convert_kours_eur}" placeholder="EUR"></div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Каса</label>
+                                <div class="col-lg-2 col-md-4 col-sm-8">
+                                    <select class="form-control" id="buh_convert_pay_id" name="buh_convert_pay_id" title="Не вибрано" style="width:100%;" onchange="getPayCashList();"><option value="0"></option>{buh_convert_pay_id}</select>
+                                </div>
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Валюта каси</label>
+                                <div class="col-lg-2 col-md-4 col-sm-8">
+                                    <select class="form-control" id="buh_convert_cash_id_pay" name="buh_convert_cash_id_pay" title="Не вибрано" style="width:100%;"><option value="0"></option>{buh_convert_cash_id_pay}</select>
+                                </div>
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Валюта конвертації</label>
+                                <div class="col-lg-2 col-md-4 col-sm-8">
+                                    <select class="form-control" id="buh_convert_cash_id_to" name="buh_convert_cash_id_to" title="Не вибрано" style="width:100%;"><option value="0"></option>{buh_convert_cash_id_to}</select>
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Видимість</label>
+                                <div class="col-lg-2 col-md-4 col-sm-8">
+                                    <input type="checkbox" id="buh_convert_status" value="{buh_convert_status}" {buh_convert_status} title="Видимість">
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <div class="col-sm-10 text-right col-sm-offset-2">
+                                    <button class="btn btn-primary" type="button" onClick="saveBuhConvertCard();"><i class="fa fa-save"></i> Зберегти зміни</button>
+                                    <!--<button class="btn btn-danger" type="button" onClick="dropBuhIncomeCard();" {drop_disabled}><i class="fa fa-trash"></i> Видалити</button>-->
+                                    <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

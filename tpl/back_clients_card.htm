@@ -103,7 +103,15 @@
                                     <button class="btn btn-info" type="button" {oper_disabled3} onClick="printBackClients();"><i class="fa fa-print"></i> Друк накладної</button>
                                     <button class="btn btn-info" type="button" {oper_disabled3} onClick="exportBackClientsExcel('{back_id}');"><i class="fa fa-file-excel-o"></i> Експорт</button>
                                 </div>
-                                <div class="col-sm-6 text-right">
+                                <div class="col-sm-2">
+                                    <span class="buttons-inline pull-left">
+                                        <input type="hidden" id="cb_check_invoice_id" value="{back_id}">
+                                        <input type="hidden" id="cb_check_doc_type_id" value="2">
+                                        <button id="btn-add-cb" class="btn btn-sm btn-warning {cb_check_visible_add}" onclick="showCbCheckForm();">Створити чек</button>
+                                        <button class="btn btn-sm btn-info {cb_check_visible_show}" onclick="showCbCheck();">Друкувати чек</button>
+                                    </span>
+                                </div>
+                                <div class="col-sm-4 text-right">
                                     <button class="btn btn-white" type="button" data-dismiss="modal" onClick="closeBackClientsCard();">Закрити</button>
                                 </div>
                             </div>

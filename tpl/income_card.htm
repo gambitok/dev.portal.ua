@@ -1,16 +1,16 @@
 <div class="tabs-container">
 
-    <ul class="nav nav-tabs" id="catalogue_tabs">
-        <li class="active"><a data-toggle="tab" href="#cat_tab1" onClick="showIncomeCard('{income_id}');"><i class="fa fa-bars"></i> <span class="hidden-sm-down">Структура накладної</span></a></li>
-        <li><a data-toggle="tab" href="#cat_tab7" onClick="loadIncomeUnknownArticles('{income_id}');"><i class="fa fa-bug"></i> <span class="hidden-sm-down">Не визначені артикули <span id="label_un_articles">{labelArticlesUnKnownCount}</span></span></a></li>
-        <li><a data-toggle="tab" href="#cat_tab2" onClick="loadIncomeSpend('{income_id}');"><i class="fa fa-slack"></i> <span class="hidden-sm-down">Витрати за прихід</span></a></li>
-<!--        <li><a data-toggle="tab" href="#cat_tab3" onClick="loadIncomeStorage('{income_id}');"><i class="fa fa-cubes"></i> <span class="hidden-sm-down">Розподіл по складам</span></a></li>-->
-        <li class="tab-count-info"><a data-toggle="tab" class="tab-count-info" href="#cat_tab8" onClick="loadIncomeCommets('{income_id}');"><i class="fa fa-edit"></i> Замітки <span id="label_comments">{labelCommentsCount}</span></a></li>
-        <li><a data-toggle="tab" href="#cat_tab9" onClick="loadIncomeCDN('{income_id}');"><i class="fa fa-cloud"></i> <span class="hidden-sm-down">CDN Файли</span></a></li>
+    <ul class="nav nav-tabs" id="income_tabs">
+        <li class="active"><a data-toggle="tab" href="#income_tab1" onClick="showIncomeCard('{income_id}');"><i class="fa fa-bars"></i> <span class="hidden-sm-down">Структура накладної</span></a></li>
+        <li><a data-toggle="tab" href="#income_tab7" onClick="loadIncomeUnknownArticles('{income_id}');"><i class="fa fa-bug"></i> <span class="hidden-sm-down">Не визначені артикули <span id="label_un_articles">{labelArticlesUnKnownCount}</span></span></a></li>
+        <li><a data-toggle="tab" href="#income_tab2" onClick="loadIncomeSpend('{income_id}');"><i class="fa fa-slack"></i> <span class="hidden-sm-down">Витрати за прихід</span></a></li>
+<!--        <li><a data-toggle="tab" href="#income_tab3" onClick="loadIncomeStorage('{income_id}');"><i class="fa fa-cubes"></i> <span class="hidden-sm-down">Розподіл по складам</span></a></li>-->
+        <li class="tab-count-info"><a data-toggle="tab" class="tab-count-info" href="#income_tab8" onClick="loadIncomeCommets('{income_id}');"><i class="fa fa-edit"></i> Замітки <span id="label_comments">{labelCommentsCount}</span></a></li>
+        <li><a data-toggle="tab" href="#income_tab9" onClick="loadIncomeCDN('{income_id}');"><i class="fa fa-cloud"></i> <span class="hidden-sm-down">CDN Файли</span></a></li>
     </ul>
 
     <div class="tab-content">
-        <div id="cat_tab1" class="tab-pane active">
+        <div id="income_tab1" class="tab-pane active">
             <div class="panel-body">
                 <div class="ibox float-e-margins">
                     <div class="ibox-content">
@@ -28,8 +28,9 @@
 							
 							<div class="form-group">
                             	<label class="col-sm-2 control-label">Дата</label>
-                                <div class="col-sm-3"><input class="form-control" type="text" name="income_data" id="income_data" readonly value="{data}" placeholder="РРРР-ММ-ДД"></div>
-								
+                                <div class="col-sm-3">
+                                    <input class="form-control" type="text" name="income_data" id="income_data" readonly value="{data}" placeholder="РРРР-ММ-ДД">
+                                </div>
                                 <label class="col-lg-2 col-md-2 col-sm-4 control-label">Постачальник</label>
                                 <div class="col-lg-3 col-md-2 col-sm-7">
                                     <input type="hidden" id="client_seller" name="client_seller" value="{client_seller}">
@@ -145,6 +146,7 @@
                                     <button class="btn btn-primary" type="button" {oper_disabled} onClick="saveIncomeCard();"><i class="fa fa-save"></i> Зберегти зміни</button>
 									<button id="make_income" class="btn btn-warning" type="button" {oper_disabled} onClick="makeIncomeCardFinish();"><i class="fa fa-code"></i> Провести накладну</button>
                                     <button class="btn btn-primary" onclick="exportIncomeStr('{income_id}');"><i class="fa fa-file-excel-o"></i> Експорт позицій</button>
+                                    <button class="btn btn-primary" onclick="backIncome('{income_id}');">ПОВЕРНУТИ</button>
                                     <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
                                 </div>
                             </div>
@@ -195,37 +197,37 @@
             </div>
         </div>
 
-        <div id="cat_tab2" class="tab-pane">
+        <div id="income_tab2" class="tab-pane">
             <div class="panel-body" id="spend_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
 <!--
-        <div id="cat_tab3" class="tab-pane">
+        <div id="income_tab3" class="tab-pane">
             <div class="panel-body" id="storage_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
 -->
-        <div id="cat_tab4" class="tab-pane">
+        <div id="income_tab4" class="tab-pane">
             <div class="panel-body" id="details_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
 
-        <div id="cat_tab5" class="tab-pane">
+        <div id="income_tab5" class="tab-pane">
             <div class="panel-body gray-bg" id="contacts_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
 
-        <div id="cat_tab7" class="tab-pane">
+        <div id="income_tab7" class="tab-pane">
             <div class="panel-body" id="unknown_articles_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>
         </div>
 
-        <div id="cat_tab8" class="tab-pane">
+        <div id="income_tab8" class="tab-pane">
             <div class="panel-body">
                 <div class="social-footer">
 					<div class="social-comment">
@@ -250,7 +252,7 @@
             </div>
         </div>
 
-        <div id="cat_tab9" class="tab-pane">
+        <div id="income_tab9" class="tab-pane">
             <div class="panel-body">
                 <div class="user-button">
                     <div class="row">
@@ -271,7 +273,7 @@
             </div>
         </div>
 
-        <div id="cat_tab10" class="tab-pane">
+        <div id="income_tab10" class="tab-pane">
             <div class="panel-body" id="supll_place">
                 <div class="sk-spinner sk-spinner-wave"><div class="sk-rect1"></div><div class="sk-rect2"></div><div class="sk-rect3"></div><div class="sk-rect4"></div><div class="sk-rect5"></div></div>
             </div>

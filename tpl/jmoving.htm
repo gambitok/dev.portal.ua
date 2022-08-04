@@ -12,14 +12,21 @@
             <div class="ibox">
                 <div class="ibox-title">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-3">
 							<a class="btn btn-success" href="#newJmoving" onClick="preNewJmovingCard();"><i class='fa fa-plus'></i> Нове переміщення</a>
 							<a id="toggle_done" class="btn btn-info" onclick="updateJmovingRange(true);" title="Показати/Сховати пусті замовлення зі статусом `Створення`"><i class="fa fa-eye"></i></a>
 							<input id="input_done" type="hidden" value="true">
 							<a id="toggle_update" class="btn btn-danger" onclick="autoUpdateJmoving(true);" title="Включити/виключити автооновлення таблиці"><i class="fa fa-stop-circle"></i></a>
 							<input id="update_status" type="hidden" value="true">
 						</div>
-                        <div class="col-md-6 text-right"><a class="btn btn-info collapsed" aria-expanded="false" data-toggle="collapse" data-parent="#accordion" href="#collapseSearch"><i class='fa fa-search'></i> Пошук у реєстрі</a></div>
+                        <div class="col-md-6">
+                            <button class="btn btn-primary" onclick="consolidateJmoving();"><i class="fa fa-sort"></i> Консолідувати</button>
+                            <select name="storage_list" id="storage_list" class="form-control" style="display: inline; width: auto;">
+                                <option value="0">-Не вибрано-</option>
+                                {storage_list_range}
+                            </select>
+                        </div>
+                        <div class="col-md-3 text-right"><a class="btn btn-info collapsed" aria-expanded="false" data-toggle="collapse" data-parent="#accordion" href="#collapseSearch"><i class='fa fa-search'></i> Пошук у реєстрі</a></div>
 	                </div>
                 </div>
                 <div class="ibox-content">
@@ -88,6 +95,19 @@
                 <h3 id="myModalLabel text-left">Переміщення №<span id="JmovingCardLabel"></span></h3>
             </div>
             <div class="modal-body" id="JmovingCardBody">
+	        </div>
+        </div>
+    </div>
+</div>
+
+<div id="JmovingConsolidateCard" class="modal inmodal fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+			<div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" onClick="">х</button>
+                <h3><span id="JmovingConsolidateLabel">Консолідація переміщень</span></h3>
+            </div>
+            <div class="modal-body" id="JmovingConsolidateBody">
 	        </div>
         </div>
     </div>
@@ -193,8 +213,8 @@
 <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
 <script src="/js/plugins/currency/currency.js"></script>
 
-<script src="/js/catalogue/catalogue.js?201705301435"></script>
-<script src="/js/jmoving/jmoving.js?201705301435"></script>
+<script src="/js/catalogue/catalogue.js"></script>
+<script src="/js/jmoving/jmoving.js"></script>
 <script language="javascript">
 $(document).ready(function() {
 	$("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});

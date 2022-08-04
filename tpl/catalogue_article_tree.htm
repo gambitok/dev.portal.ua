@@ -1,0 +1,33 @@
+<style>
+    .tree-list li {
+        margin-bottom: 5px;
+    }
+</style>
+
+<link href="/js/plugins/jsTree/jstree_style.min.css" rel="stylesheet">
+<link href="/js/plugins/jquery.treefilter/jquery.treefilter.custom.css" rel="stylesheet">
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>ТЕКДОК <a class="btn btn-primary btn-xs" onclick="showArticleTreeTecdoc();"><i class="fa fa-plus"></i> Привязати категорію</a></h2>
+        <div class="tree-list">
+            {tree_tecdoc}
+        </div>
+    </div>
+    <div class="col-md-4">
+        <h2>Нове дерево <a class="btn btn-primary btn-xs" onclick="showArticleTreeNew();"><i class="fa fa-plus"></i> Привязати категорію</a></h2>
+        <div class="tree-list">
+            {tree_new}
+        </div>
+    </div>
+    <div class="col-md-4">
+        <h2>EXIST Нове дерево <a class="btn btn-primary btn-xs" onclick="showArticleTreeExist();"><i class="fa fa-plus"></i> Привязати категорію</a></h2>
+        <div class="tree-list">
+            {tree_exist}
+        </div>
+    </div>
+</div>
+
+<script src="/js/plugins/jquery.treefilter/jquery.treefilter.js"></script>
+
+

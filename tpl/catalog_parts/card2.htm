@@ -1,0 +1,52 @@
+<style>
+    .dnone{
+        display: none;
+    }
+    .pointer {
+        cursor: pointer;
+    }
+    .pointer:hover {
+        text-decoration: underline;
+    }
+    .check-head {
+        color: lightcoral;
+    }
+</style>
+
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <form method="get" class="form-horizontal">
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Вибрана категорія:</label>
+                    <input id="selected_category" class="form-control" type="text" value="{selected_category}" title="cat" disabled>
+                    <input id="selected_category_id" type="hidden" value="0">
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-3">
+                    <label>Виберіть нову категорію</label>
+                    <input class="text-filter" type="text" id="searchInput" onkeyup="searchCatInput();" placeholder="Пошук по назві" title="{search_by_brand}">
+                    {selected_category_list}
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-10 col-md-offset-2 text-right ">
+                    <button id="save_btn" class="btn btn-primary" type="button" onClick="saveCatalogParts2();" disabled><i class="fa fa-save"></i> Зберегти зміни</button>
+                    <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".tree-head").on('click', function(){
+            $(this).next().toggleClass("dnone");
+            $(this).toggleClass("check-head");
+        });
+    });
+</script>

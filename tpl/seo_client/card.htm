@@ -1,0 +1,108 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".summernote").summernote({
+            height: 200,
+            callbacks: {
+                onImageUpload: function(files) {
+                    for(let i=0; i < files.length; i++) {
+                        $.upload(files[i]);
+                    }
+                }
+            }
+        });
+        $.upload = function (file) {
+            let out = new FormData();
+            out.append('file', file, file.name);
+
+            $.ajax({
+                method: 'POST',
+                url: 'https://portal.myparts.pro/upload_saved_images.php',
+                contentType: false,
+                cache: false,
+                processData: false,
+                data: out,
+                success: function (img) {
+                    $('.summernote').summernote('insertImage', img);
+                    console.log('inserted');
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error(textStatus + " " + errorThrown);
+                }
+            });
+        }
+    });
+</script>
+
+<div class="tabs-container">
+
+    <input type="hidden" id="seo_id" value="{seo_id}">
+
+    <div class="tab-pane active">
+        <div class="panel-body">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <form method="get" class="form-horizontal">
+
+                        <div class="form-group">
+                            <label for="seo_router" class="col-lg-1 col-md-2 col-sm-4 control-label">Router</label>
+                            <div class="col-lg-2 col-md-4 col-sm-8">
+                                <input type="text" class="form-control" id="seo_router" value="{seo_router}" placeholder="Router">
+                            </div>
+                            <label for="seo_link" class="col-lg-1 col-md-2 col-sm-4 control-label">Link</label>
+                            <div class="col-lg-2 col-md-4 col-sm-8">
+                                <input type="text" class="form-control" id="seo_link" value="{seo_link}" placeholder="Link">
+                            </div>
+                            <label for="seo_user" class="col-lg-1 col-md-2 col-sm-4 control-label">User</label>
+                            <div class="col-lg-2 col-md-4 col-sm-8">
+                                <input type="text" class="form-control" id="seo_user" disabled value="{seo_user}" placeholder="User">
+                            </div>
+                            <label for="seo_data" class="col-lg-1 col-md-2 col-sm-4 control-label">Data</label>
+                            <div class="col-lg-2 col-md-4 col-sm-8">
+                                <input type="text" class="form-control" id="seo_data" disabled value="{seo_data}" placeholder="Data">
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label for="seo_text_ru" class="col-lg-1 col-md-2 col-sm-4 control-label">Text RU</label>
+                            <div class="col-lg-11 col-md-10 col-sm-8">
+                                <textarea id="seo_text_ru" class="summernote" title="Text RU">{seo_text_ru}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label for="seo_text_ua" class="col-lg-1 col-md-2 col-sm-4 control-label">Text UA</label>
+                            <div class="col-lg-11 col-md-10 col-sm-8">
+                                <textarea id="seo_text_ua" class="summernote" title="Text UA">{seo_text_ua}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label for="seo_text_en" class="col-lg-1 col-md-2 col-sm-4 control-label">Text EN</label>
+                            <div class="col-lg-11 col-md-10 col-sm-8">
+                                <textarea id="seo_text_en" class="summernote" title="Text EN">{seo_text_en}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <div class="col-sm-10 text-right col-sm-offset-2">
+                                <button class="btn btn-primary" type="button" onClick="saveSeoText({seo_id});">Зберегти зміни</button>
+                                <button class="btn btn-danger" type="button" onClick="dropSeoText({seo_id});">Видалити</button>
+                                <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

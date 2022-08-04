@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-sm-12">
     	<input type="hidden" id="row_pos" value="">
-        <form method="post" onSubmit="doc_catalogue_article_search(0);return false;" class="form-inline">
+        <form method="post" onSubmit="doc_catalogue_article_search(0);return false;" class="form-inline" id="doc_catalogue_article_search">
         	<input type="hidden" id="list2_art" value="">
             <input type="hidden" id="list2_brand_id" value="">
             <div class="form-group" id="srchInG">
@@ -66,5 +66,9 @@ $(document).ready(function() {
 	$("#fil4BrandId").select2({placeholder: "Вибрати виробника"});
 	$("#fil4GoodsGroupId").select2({placeholder: "Вибрати товарну групу"});
 	checkBrandSelectList();
+
+    $("#doc_catalogue_article_search").submit(function(e) {
+        e.preventDefault();
+    });
 });
 </script>

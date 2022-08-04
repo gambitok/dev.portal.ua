@@ -1,0 +1,116 @@
+<link href="/js/plugins/jsTree/jstree_style.min.css" rel="stylesheet">
+<link href="/js/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
+<link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
+
+<style>
+    .green-img {
+        border: 2px solid green;
+    }
+    .photo-div {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+    }
+    .photo-div__item {
+        border: 1px solid black;
+        width: 100px;
+        height: 100px;
+        margin: 5px;
+    }
+    .photo-div__item img {
+        max-height: 100%;
+        width: 100%;
+    }
+</style>
+
+<h2 class="border-bottom white-bg dashboard-header">Імпорт фото</h2>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="ibox-header">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <span class="pull-left">
+                                    <button class="btn btn-primary btn-sm" onClick="showImportPhotoForm('{user_id}');"><i class="fa fa-plus"></i> Завантажити фото</button>
+                                    <button class="btn btn-info btn-sm" onClick="loadImportPhoto('{user_id}');"><i class="fa fa-eye"></i> Показати</button>
+                                    <button class="btn btn-danger btn-sm" onClick="dropImportPhoto('{user_id}');"><i class="fa fa-trash"></i> Видалити фото</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div id="import_photo">
+                        {import_photo}
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <span class="pull-left">
+                                <button class="btn btn-primary btn-sm" onClick="showImportPhotoCsvForm('{user_id}');"><i class="fa fa-plus"></i> Завантажити файл</button>
+                            </span>
+                        </div>
+                    </div>
+                    <hr>
+                    <div id="import_photo_csv">
+                        {import_photo_csv}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display: none;" class="modal inmodal fade" id="fileCsvUploadForm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">Х</button>
+                <h4 class="modal-title" id="myModalLabel">Завантаження файлів</h4>
+            </div>
+            <div class="modal-body" id="fileViewHolderDoc">
+                <p>Для завантаження файлів натисніть на форму або перетягніть файли у поле форми</p>
+                <form action="/cdn_file_photo_upload.php" class="dropzone" id="myDropzone" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csv_user_id" id="csv_user_id" value="">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display: none;" class="modal inmodal fade" id="fileCsvUploadForm2" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">Х</button>
+                <h4 class="modal-title" id="myModalLabel2">Завантаження файлів</h4>
+            </div>
+            <div class="modal-body" id="fileViewHolderDoc2">
+                <p>Для завантаження файлів натисніть на форму або перетягніть файли у поле форми</p>
+                <form action="/cdn_file_photo_csv_upload.php" class="dropzone" id="myDropzone2" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csv_user_id2" id="csv_user_id2" value="">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap markdown -->
+<script src="/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>
+<script src="/js/plugins/bootstrap-markdown/markdown.js"></script>
+<script src="/js/plugins/select2/js/select2.full.min.js"></script>
+<script src="/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/js/plugins/dropzone/dropzone.js"></script>
+<script src="/js/plugins/switchery/switchery.js"></script>
+<script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+<script src="/js/plugins/currency/currency.js"></script>
+<script src="/js/import_artprice/import_artprice.js"></script>
+<script type="text/javascript">
+    //Disabling autoDiscover
+    Dropzone.autoDiscover = false;
+</script>
+<!-- Sweet alert -->
+<script src="/js/plugins/sweetalert/sweetalert.min.js"></script>

@@ -4,30 +4,62 @@
 <link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
 <!--<link rel="stylesheet" href="/js/plugins/select2/select2.min.css" />-->
 
+<style>
+    .dp-title {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .dp-title__item {
+        margin-right: 15px;
+        margin-top: 15px;
+    }
+    .dp-title__item-right {
+        margin-left: auto;
+    }
+    .ibox-title .label {
+        float: unset;
+        margin: 0;
+        position: relative;
+        top: -10px;
+        right: 15px;
+    }
+</style>
+
 <h2 class="border-bottom white-bg dashboard-header">Журнал замовлень</h2>
 <input type="hidden" id="doc_prefix" value="{doc_prefix}">
+<input id="media_user_id" type="hidden" value="{media_user_id}">
+<input id="update_status" type="hidden" value="{update_user_status}">
+<input id="input_done" type="hidden" value="true">
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-sm-12">
             <div class="ibox">
                 <div class="ibox-title">
-                    <div class="row">
-                        <div class="col-md-8">
-							<a class="btn btn-success" href="#newDp" onClick="newDpCard();"><i class='fa fa-plus'></i> Нове замовлення</a>
-							<a id="toggle_done" class="btn btn-info" onClick="updateDpRange(true);" title="Показати/Сховати замовлення зі статусом `Виконано`"><i class='fa fa-eye'></i></a>
-							<input id="input_done" type="hidden" value="true">
-							<a id="toggle_update" class="btn btn-danger" onclick="autoUpdateDp(true);" title="Включити/виключити автооновлення таблиці"><i class="fa fa-stop-circle"></i></a>
-							<input id="update_status" type="hidden" value="true">
-						</div>
-						<div class="col-md-2 text-right">	
-							<a class="btn btn-warning" href="#siteOrders" onClick="showOrdersSite();"><i class='fa fa-slack'></i> Замовлення сайту </a>
-							<span title="Кількість замовлень" id="label_un_articles" class="label label-tab label-info" style="top:-10px;">{kilk_orders}</span>
-						</div>
-                        <div class="col-md-2 text-right">
-							<a class="btn btn-info collapsed" aria-expanded="false" data-toggle="collapse" data-parent="#accordion" href="#collapseSearch"><i class='fa fa-search'></i> Пошук у реєстрі</a>
-						</div>
-	                </div>
+
+                    <div class="dp-title">
+                        <div class="dp-title__item">
+                            <a class="btn btn-success" href="#newDp" onClick="newDpCard();"><i class='fa fa-plus'></i> Нове замовлення</a>
+                        </div>
+                        <div class="dp-title__item">
+                            <a id="toggle_done" class="btn btn-info" onClick="updateDpRange(true);" title="Показати/Сховати замовлення зі статусом `Виконано`"><i class='fa fa-eye'></i></a>
+                        </div>
+                        <div class="dp-title__item">
+                            <a id="toggle_update" class="btn btn-danger" onclick="setDpPauseAccessStatus();" title="Включити/виключити автооновлення таблиці">{update_user_status_class}</a>
+                        </div>
+                        <div class="dp-title__item dp-title__item-right">
+                            <button class="btn btn-info" onclick="showCombineDpForm();"><i class='fa fa-slack'></i> Об'єднати документи</button>
+                        </div>
+                        <div class="dp-title__item dp-title__item-right">
+                            <a class="btn btn-warning" href="#siteOrders" onClick="showOrdersSite();"><i class='fa fa-slack'></i> Замовлення сайту </a>
+                            <span title="Кількість замовлень" id="label_un_articles" class="label label-tab label-info">{kilk_orders}</span>
+                        </div>
+                        <div class="dp-title__item dp-title__item-right">
+                            <a class="btn btn-info collapsed" aria-expanded="false" data-toggle="collapse" data-parent="#accordion" href="#collapseSearch"><i class='fa fa-search'></i> Пошук у реєстрі</a>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="ibox-content">
@@ -37,7 +69,7 @@
                         	<div class="col-md-4">
                         		<div class="row">
                                     <div class="col-md-3 text-right"><strong>Найменування</strong></div>
-                                    <div class="col-md-9"><input class="form-control" name="filDpName" id="filDpName" placeholder="Повна або часткова назва" value=""></div>
+                                    <div class="col-md-9"><input class="form-control" name="filDpName" id="filDpName" title="Повна або часткова назва" value=""></div>
                                 </div><br>
 						   </div>
                             <div class="col-md-4">
@@ -50,13 +82,17 @@
                                     <div class="col-md-9"><select class="form-control" size="1" id="filTpointMain" title="Торгова точка"><option value="0">-- -- --</option>{tpoint_main_list}</select></div>
                                 </div><br>
 								<div class="row">
-                                    <div class="col-md-3 text-right"><strong>Автор</strong></div>
-                                    <div class="col-md-9"><select class="form-control" size="1" id="filAuthorMain" title="Автор"><option value="0">-- -- --</option>{author_main_list}</select></div>
+                                    <div class="col-md-3 text-right"><strong>Менеджер</strong></div>
+                                    <div class="col-md-9"><select class="form-control" size="1" id="filAuthorMain" title="Менеджер"><option value="0">-- -- --</option>{author_main_list}</select></div>
+                                </div><br>
+								<div class="row">
+                                    <div class="col-md-3 text-right"><strong>Тип клієнта</strong></div>
+                                    <div class="col-md-9"><select class="form-control" size="1" id="filClientTypeMain" title="Автор"><option value="0">-- -- --</option>{client_type_main_list}</select></div>
                                 </div><br>
                                 <div class="row">
 	                                <div class="col-md-3"></div>
-                                    <div class="col-md-5"><button class="form-control btn btn-success" onclick="filterDpsList();"><i class='fa fa-search'></i> Пошук</button></div>
-                                    <div class="col-md-4"><a onClick="ClearDpSearch();" class="btn btn-info"><i class='fa fa-eraser'></i></a></div>
+                                    <div class="col-md-6"><button class="form-control btn btn-success" onclick="filterDpsList();"><i class='fa fa-search'></i> Пошук</button></div>
+                                    <div class="col-md-3 text-right"><a onClick="clearDpsList();" class="btn btn-info"><i class='fa fa-eraser'></i> Очистити</a></div>
                                 </div>
                             </div>
                         </div>
@@ -64,20 +100,6 @@
                     <div class="table-responsive">
                         <table id="datatable" class="table table-striped table-hover table-bordered" width="100%">
                             <thead>
-                                <!--<tr align="center">-->
-	                                <!--<th>Тип документу</th>-->
-	                                <!--<th>ТТ</th>-->
-                                    <!--<th>Номер</th>-->
-                                    <!--<th>Дата</th>-->
-                                    <!--<th>Клієнт</th>-->
-                                    <!--<th>Валюта</th>-->
-                                    <!--<th>Сума</th>-->
-                                    <!--<th>Доставка</th>-->
-                                    <!--<th>Менеджер</th>-->
-                                    <!--<th width="200px">Примітка</th>-->
-                                    <!--<th>Статус</th>-->
-                                    <!--<th>% Виконання</th>-->
-                                <!--</tr>-->
                                 <tr align="center">
                                     <th>Дата</th>
                                     <th>ТТ <i class="fa fa-info-circle" title="Торгова точка"></i></th>
@@ -103,7 +125,7 @@
     </div>
 </div>
 
-<div id="DpCard" class="modal inmodal fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog" aria-hidden="true">
+<div id="DpCard" class="modal inmodal fade" data-keyboard="false" data-backdrop="static" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-wide">
         <div class="modal-content">
 			<div class="modal-header">
@@ -145,6 +167,18 @@
                     <input type="hidden" name="csv_dp_id" id="csv_dp_id" value="">
                 </form>
             </div>
+        </div>
+    </div>
+</div>
+
+<div style="display: none;" id="DeliveryCard" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+			<div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
+                <h4 id="DeliveryCardLabel" class="modal-title"></h4>
+            </div>
+            <div class="modal-body" id="DeliveryCardBody"></div>
         </div>
     </div>
 </div>
@@ -238,6 +272,18 @@
     </div>
 </div>
 
+<div id="ClientCard" class="modal inmodal fade" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
+                <h3 class="myModalLabel text-left">Карта контрагента <span id="ClientCardLabel"></span></h3>
+            </div>
+            <div class="modal-body" id="ClientCardBody"></div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript" src="/js/plugins/barcode-generator/jquery-barcode.js"></script>
 <!-- Bootstrap markdown -->
 <script src="/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>
@@ -253,6 +299,7 @@
 
 <script src="/js/catalogue/catalogue_doc.js?201801281547"></script>
 <script src="/js/dp/dp.js?201712131435"></script>
+<script src="/js/clients/clients.js"></script>
 <script language="javascript">
 $(document).ready(function() {
 	$("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true, "lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "pageLength": -1, "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});

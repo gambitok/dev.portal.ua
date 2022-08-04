@@ -65,9 +65,13 @@ class import_artprice {
     }
 
     function finishArtpriceCsvImport($start_row,$kol_cols,$cols){$db=DbSingleton::getDb();$dbt=DbSingleton::getTokoDb();
-        $slave=new slave;session_start();$user_id=$_SESSION["media_user_id"];$answer=0;$err="Помилка збереження даних!";
+        $slave=new slave;
+        session_start();
+        $user_id=$_SESSION["media_user_id"];
+        $answer=0;$err="Помилка збереження даних!";
         $start_row=$slave->qq($start_row);$kol_cols=$slave->qq($kol_cols);$cols=$slave->qq($cols);$fn=0;$Per=$Prc=[];
-        $r=$db->query("SELECT * FROM `J_IMPORT_ARTPRICE_CSV` WHERE `user_id`='$user_id' ORDER BY `id` DESC LIMIT 1;");$n=$db->num_rows($r);
+        $r=$db->query("SELECT * FROM `J_IMPORT_ARTPRICE_CSV` WHERE `user_id`='$user_id' ORDER BY `id` DESC LIMIT 1;");
+        $n=$db->num_rows($r);
         if ($n==1){
             $file_name=$db->result($r,0,"file_name");
             $file_path=RD."/cdn/import_artprice_files/$user_id/$file_name";
@@ -110,7 +114,8 @@ class import_artprice {
                                   $Per[$j]=trim($buf[$perc[$j]-1]);$Per[$j]=str_replace(",",".",$Per[$j]);$Per[$j]=str_replace(" ","",$Per[$j]);
                                 }
                                 if ($ArtId!=0 && $ArtId!="" && $MinPrice!=0 && $MinPrice!="" && $Prc[0]!="" && $Prc[0]!=0 && $Prc[1]!="" && $Prc[1]!=0){
-                                    $r=$dbt->query("SELECT * FROM `T2_ARTICLES_PRICE_RATING` WHERE `art_id`='$ArtId' AND `in_use`='1' LIMIT 1;");$n=$dbt->num_rows($r);
+                                    $r=$dbt->query("SELECT * FROM `T2_ARTICLES_PRICE_RATING` WHERE `art_id`='$ArtId' AND `in_use`='1' LIMIT 1;");
+                                    $n=$dbt->num_rows($r);
                                     if ($n==1){
                                         $dbt->query("UPDATE `T2_ARTICLES_PRICE_RATING` SET `in_use`='0' WHERE `art_id`='$ArtId' AND `in_use`='1';");
                                     }
@@ -127,37 +132,15 @@ class import_artprice {
                         }
                     }
                     fclose($handle);
-                    if (file_exists(RD."/cdn/import_artprice_files/$user_id/$file_name")){unlink(RD."/cdn/import_artprice_files/$user_id/$file_name");}
+                    if (file_exists(RD."/cdn/import_artprice_files/$user_id/$file_name")) {
+                        unlink(RD."/cdn/import_artprice_files/$user_id/$file_name");
+                    }
                     $db->query("UPDATE `J_IMPORT_ARTPRICE_CSV` SET `status`=0 WHERE `user_id`='$user_id';");
-                    $answer=1;$err="";
+                    $answer=1; $err="";
                 }
             }
         }
-        return array($answer,$err);
+        return array($answer, $err);
     }
-
-//    function getNBUKours($data,$val){$db=DbSingleton::getDb();
-//        $kours="";
-//        if ($val==1){$val="usd";} if ($val==2){$val="usd";} if ($val==3){$val="euro";}
-//        $r=$db->query("SELECT `$val` FROM `kours` WHERE `data`='$data' LIMIT 1;");$n=$db->num_rows($r);
-//        if ($n==1){$kours=$db->result($r,0,"$val"); }
-//        return $kours;
-//    }
-
-//    function getKourForDate($cash_id_to,$cash_id_from,$data){$db=DbSingleton::getDb();
-//        $kours=1; if ($data=="0000-00-00"){$data=date("Y-m-d");}
-//        if ($cash_id_from!=$cash_id_to){
-//            $r=$db->query("SELECT `kours_value` FROM `J_KOURS`
-//            WHERE `cash_id`='$cash_id_from' AND `data_from`<='$data' AND (`data_to`='0000-00-00' OR `data_to`>='$data') AND `in_use` IN (0,1) ORDER BY `id` DESC LIMIT 1;");$n=$db->num_rows($r);
-//            if ($n==1){$kours=$db->result($r,0,"kours_value");}
-//        }
-//        return $kours;
-//    }
-
-//    function loadIncomeKours($data){
-//        $usd_to_uah=$this->getKourForDate(1,2,$data);
-//        $eur_to_uah=$this->getKourForDate(1,3,$data);
-//        return array($usd_to_uah,$eur_to_uah);
-//    }
 
 }

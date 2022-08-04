@@ -1,0 +1,53 @@
+<input type="hidden" id="kol_cols" value="{kol_cols}">
+
+<div class="row">
+    <div class="col-sm-2">
+        <label class="control-label">Виберіть бренд із списку </label>
+    </div>
+    <div class="col-sm-2">
+        <select class="form-control" title="Назначити бренд" name="csv_brands" id="csv_brands" onchange="loadTablePreview('{jmoving_id}');" style="width: 200px;display: inline;">
+            <option value="0">-Не вибрано-</option>
+            {csv_brands}
+        </select>
+    </div>
+    <div class="col-sm-2">
+        <button class="btn btn-info btn-sm" onclick="saveTablePreview('{jmoving_id}');"><i class="fa fa-copyright"></i> Назначити бренд</button>
+    </div>
+    <div class="col-sm-2">
+        <label class="control-label">Назначити порядок складів </label>
+    </div>
+    <div class="col-sm-2">
+        <button class="btn btn-primary btn-sm" onclick="showStorageFieldsViewForm();" title="{storage_title}"><i class="fa fa-archive"></i> Змінити порядок складів</button>
+    </div>
+</div>
+
+<div class="hr-line-dashed"></div>
+
+<div class="row">
+    <div class="col-sm-offset-8 col-sm-4">
+        <div class="btn-group pull-right" role="group">
+            <button class="btn btn-warning btn-sm" onClick="clearJmovingImport('{jmoving_id}');"><i class="fa fa-trash"></i> Очистити дані</button>
+            <button class="btn btn-primary btn-sm" onClick="finishJmovingImport('{jmoving_id}');"><i class="fa fa-save"></i> Зберегти дані</button>
+        </div>
+    </div>
+</div>
+
+<div class="hr-line-dashed"></div>
+
+<div class="table-responsive">
+<table id="csv_table" class="table table-bordered table-hovered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Артикул</th>
+            <th>Кількість</th>
+            <th>ART_ID</th>
+            <th>Бренд</th>
+            <th>Наявність на складах</th>
+        </tr>
+    </thead>
+    <tbody id="range_table_import">
+        {records_list}
+    </tbody>
+</table>
+</div>

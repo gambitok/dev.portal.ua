@@ -1,8 +1,8 @@
-var errs=[];
-errs[0]="Помилка індексу";
-errs[1]="Занадто короткий запит для пошуку";
+var errs = [];
+errs[0] = "Помилка індексу";
+errs[1] = "Занадто короткий запит для пошуку";
 
-function filterIncomesList(){
+function filterIncomesList() {
 	let date_start=$("#date_start").val();
 	let date_end=$("#date_end").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'filterIncomeList', 'date_start':date_start, 'date_end':date_end},
@@ -14,7 +14,7 @@ function filterIncomesList(){
 	}}, true);
 } 
 
-function getKoursNbu(place,data_place,val_place){
+function getKoursNbu(place, data_place, val_place) {
 	let data=$("#"+data_place).val();
 	let valuta=$("#"+val_place+" option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'getNBUKours', 'data':data,'valuta':valuta}, 
@@ -24,7 +24,7 @@ function getKoursNbu(place,data_place,val_place){
 	return true;
 }
 
-function preNewIncomeCard(){
+function preNewIncomeCard() {
 	$("#FormModalWindow3").modal("show");
 	JsHttpRequest.query($rcapi,{ 'w': 'preNewIncomeCard'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){
@@ -33,7 +33,7 @@ function preNewIncomeCard(){
 	}}, true);
 }
 
-function newIncomeCard(type_id){
+function newIncomeCard(type_id) {
 	$("#FormModalWindow3").modal("hide");
 	JsHttpRequest.query($rcapi,{ 'w': 'newIncomeCard','type_id':type_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -41,7 +41,7 @@ function newIncomeCard(type_id){
 	}}, true);
 }
 
-function loadIncomeKours(){
+function loadIncomeKours() {
 	let data=$("#income_data").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'loadIncomeKours', 'data':data},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -52,12 +52,14 @@ function loadIncomeKours(){
 	}}, true);
 }
 
-function showIncomeCard(income_id){
-	if (income_id<=0 || income_id==""){toastr["error"](errs[0]);}
-	if (income_id>0){
+function showIncomeCard(income_id) {
+	if (income_id <= 0 || income_id == "") {
+		toastr["error"](errs[0]);
+	}
+	if (income_id > 0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'showIncomeCard', 'income_id':income_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){
-			let incomeCard=$("#IncomeCard");
+			let incomeCard = $("#IncomeCard");
             incomeCard.modal("show");
             $("#IncomeCardBody").html(result.content);
             $("#IncomeCardLabel").html(result["doc_prefix_nom"]);
@@ -68,7 +70,7 @@ function showIncomeCard(income_id){
 			$("#invoice_data").datepicker({format: "yyyy-mm-dd",autoclose:true});
 			$(".i-checks").iCheck({checkboxClass: 'icheckbox_square-green',radioClass: 'iradio_square-green',});
 			var elem = document.querySelector("#vat_use");
-			if (elem){
+			if (elem) {
 	            var vat_use = new Switchery(elem, { color: '#1AB394' });
 			}
 			numberOnly();
@@ -76,10 +78,11 @@ function showIncomeCard(income_id){
 	}
 }
 
-function addNewRow(){
+function addNewRow() {
 	var row=$("#incomeStrNewRow").html();
 	var kol_row=parseInt($("#kol_row").val());
-	kol_row+=1;$("#kol_row").val(kol_row);
+	kol_row+=1;
+	$("#kol_row").val(kol_row);
 	row=row.replace('nom_i', ''+kol_row);
 	row=row.replace('idStr_', 'idStr_'+kol_row);
 	row=row.replace('spendingStrId_', 'spendingStrId_'+kol_row);
@@ -93,7 +96,8 @@ function addNewRow(){
 function addNewRowLocal(){
 	var row=$("#incomeStrNewRow").html();
 	var kol_row=parseInt($("#kol_row").val());
-	kol_row+=1;$("#kol_row").val(kol_row);
+	kol_row+=1;
+	$("#kol_row").val(kol_row);
 	row=row.replace('nom_i', ''+kol_row);
 	row=row.replace('idStr_', 'idStr_'+kol_row);
 	row=row.replace('spendingStrId_', 'spendingStrId_'+kol_row);
@@ -104,8 +108,9 @@ function addNewRowLocal(){
 	return true;
 }
 
-function saveIncomeCard(){
-	var caption=$("#IncomeCardLabel").html(); var stop=false;
+function saveIncomeCard() {
+	var caption=$("#IncomeCardLabel").html();
+	var stop=false;
 	swal({
 		title: "Зберегти накладну \""+caption+"\"?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -133,7 +138,6 @@ function saveIncomeCard(){
 			var costums_summ_uah=$("#costums_summ_uah").val();
 			var storage_id=$("#storage_id option:selected").val();
 			var storage_cells_id=$("#storage_cells_id option:selected").val();
-			
 			var ikr=$("#kol_row").val(); ikr_p=Math.ceil(ikr/20);
 			
 			if (income_id.length>0 && storage_id.length>0){
@@ -141,24 +145,26 @@ function saveIncomeCard(){
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
+					} else {
+						swal("Помилка!", result["error"], "error");
 					}
-					else{ swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 			
-			if (income_id.length>0){
+			if (income_id.length>0) {
 				//console.log('w: saveIncomeCard; income_id='+income_id+'; type_id='+type_id+'; data='+data+'; client_seller='+client_seller+'; invoice_income='+invoice_income+'; cash_id='+cash_id+'; client_id='+client_id+'; invoice_data='+invoice_data+'; cours_to_uah='+cours_to_uah+'; cours_to_uah_nbu='+cours_to_uah_nbu+'; invoice_summ='+invoice_summ+'; comment='+comment+'; usd_to_uah='+usd_to_uah+'; eur_to_uah='+eur_to_uah+'; costums_pd_uah='+costums_pd_uah+'; costums_pp_uah='+costums_pp_uah+'; costums_summ_uah='+costums_summ_uah+'; kol_row='+ikr+'; ');
 				//console.log('idStr='+idStr+'; \nartIdStr='+artIdStr+'; \narticle_nr_displStr='+article_nr_displStr+'; \nbrandIdStr='+brandIdStr+'; \ncountryIdStr='+countryIdStr+'; \ncostumsIdStr='+costumsIdStr+'; \namountStr='+amountStr+'; \nprice_buh_cashinStr='+price_buh_cashinStr+'; \nweightNettoStr='+weightNettoStr+'; \nrateStr='+rateStr+'; \ntypeDeclarationIdStr='+typeDeclarationIdStr+'; \nprice_man_cashinStr='+price_man_cashinStr+'; \nprice_man_usdStr='+price_man_usdStr+'; \nprice_buh_uahStr='+price_buh_uahStr+'; \nprice_man_uahStr='+price_man_uahStr);
 				JsHttpRequest.query($rcapi,{ 'w':'saveIncomeCard','income_id':income_id,'data':data,'client_seller':client_seller,'invoice_income':invoice_income,'cash_id':cash_id,'client_id':client_id,'invoice_data':invoice_data,'cours_to_uah':cours_to_uah,'cours_to_uah_nbu':cours_to_uah_nbu,'invoice_summ':invoice_summ,'usd_to_uah':usd_to_uah,'eur_to_uah':eur_to_uah,'costums_pd_uah':costums_pd_uah,'costums_pp_uah':costums_pp_uah,'costums_summ_uah':costums_summ_uah},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
-						for(var p=1;p<=ikr_p;p++){
-							var idStr=[];var artIdStr=[]; var article_nr_displStr=[]; var brandIdStr=[]; var countryIdStr=[]; var costumsIdStr=[]; var amountStr=[]; var price_buh_cashinStr=[];  var weightNettoStr=[];  var rateStr=[]; 
-							var typeDeclarationIdStr=[];  var price_man_cashinStr=[];  var price_man_usdStr=[];  var price_buh_uahStr=[];  var price_man_uahStr=[]; 
+						for(var p=1; p<=ikr_p; p++) {
+							var idStr=[];var artIdStr=[]; var article_nr_displStr=[]; var brandIdStr=[]; var countryIdStr=[]; var costumsIdStr=[]; var amountStr=[]; var price_buh_cashinStr=[]; var weightNettoStr=[]; var rateStr=[];
+							var typeDeclarationIdStr=[]; var price_man_cashinStr=[]; var price_man_usdStr=[]; var price_buh_uahStr=[]; var price_man_uahStr=[];
 							
 							var frm=(p-1)*20; tto=frm+20; if (tto>ikr){tto=ikr;} 
 							var art_empty_count=0;
-							for (var i=frm;i<=tto;i++){
+							for (var i=frm; i<=tto; i++) {
+								console.log('clear field #'+i);
 								idStr[i]=$("#idStr_"+i).val(); artIdStr[i]=$("#artIdStr_"+i).val(); article_nr_displStr[i]=$("#article_nr_displStr_"+i).val(); 
 								if (article_nr_displStr[i]=="") art_empty_count++;	
 								brandIdStr[i]=$("#brandIdStr_"+i).val();
@@ -168,11 +174,11 @@ function saveIncomeCard(){
 							}
 							console.log(art_empty_count+" - "+tto);
 							
-							if (art_empty_count==tto) {swal("Помилка!", "Не заповнена таблиця!", "error"); stop=true; break; } else {
+							if (art_empty_count==tto) { swal("Помилка!", "Не заповнена таблиця!", "error"); stop=true; break; } else {
 								JsHttpRequest.query($rcapi,{ 'w':'saveIncomeCardData','income_id':income_id,'frm':frm,'tto':tto,'idStr':idStr,'artIdStr':artIdStr,'article_nr_displStr':article_nr_displStr,'brandIdStr':brandIdStr,'countryIdStr':countryIdStr,'costumsIdStr':costumsIdStr,'amountStr':amountStr,'price_buh_cashinStr':price_buh_cashinStr,'weightNettoStr':weightNettoStr,'rateStr':rateStr,'typeDeclarationIdStr':typeDeclarationIdStr,'price_man_cashinStr':price_man_cashinStr,'price_man_usdStr':price_man_usdStr,'price_buh_uahStr':price_buh_uahStr,'price_man_uahStr':price_man_uahStr},
 								function (result1, errors1){ if (errors1) {alert(errors1);} if (result1){  
-									if (result1["answer"]==1){showIncomeStrList(); }
-									else{ swal("Помилка!", result1["error"], "error");}
+									if (result1["answer"]==1){ showIncomeStrList(); }
+									else { swal("Помилка!", result1["error"], "error");}
 								}}, true);
 							}
 							
@@ -180,8 +186,12 @@ function saveIncomeCard(){
 						if (!stop) {
 							swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 							filterIncomesList();
-						} else { swal("Помилка!",  "Не заповнена таблиця!", "error");}
-					} else { swal("Помилка!", result["error"], "error");}
+						} else {
+							swal("Помилка!",  "Не заповнена таблиця!", "error");
+						}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -222,16 +232,21 @@ function finishCsvImport(income_id){
 	var kol_cols=parseInt($("#kol_cols").val());
 	var income_type_id=parseInt($("#income_type_id").val());
 	//var cls_kol=7; if (income_type_id==0){cls_kol=6;}
-	if (start_row<0 || start_row.length<=0){ swal("Помилка!", "Не вказано початковий ряд зчитування", "error");}
-	if (start_row>=0){ 
+	if (start_row<0 || start_row.length<=0) {
+		swal("Помилка!", "Не вказано початковий ряд зчитування", "error");
+	}
+	if (start_row>=0) {
 		var cols=[];var cl=0; var cls_sel=0;
 		for (var i=1;i<=kol_cols;i++){
 			cl=$("#clm-"+i+" option:selected").val();
 			if (cl>0){cls_sel+=1; cols[i]=cl;}
 		}
-		if (income_type_id==1 && cls_sel<7){swal("Помилка!", "Не вказані усі значення колонок", "error");}
-		if (income_type_id==0 && cls_sel<5){swal("Помилка!", "Не вказані усі значення колонок", "error");}
-		else {
+		if (income_type_id==1 && cls_sel<7){
+			swal("Помилка!", "Не вказані усі значення колонок", "error");
+		}
+		if (income_type_id==0 && cls_sel<5){
+			swal("Помилка!", "Не вказані усі значення колонок", "error");
+		} else {
 			$("#waveSpinner_place").html(waveSpinner);
 			JsHttpRequest.query($rcapi,{ 'w':'finishCsvImport','income_id':income_id,'start_row':start_row,'kol_cols':kol_cols,'cols':cols},
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -239,7 +254,9 @@ function finishCsvImport(income_id){
 					swal("Імпорт даних завершено!", "Перевірте нові дані накладної.", "success");
 					$("#FormModalWindow").modal("hide");
 					showIncomeCard(income_id);
-				} else { swal("Помилка!", result["error"], "error");}
+				} else {
+					swal("Помилка!", result["error"], "error");
+				}
 			}}, true);
 		}
 	}
@@ -260,16 +277,18 @@ function loadCitySelectList(){
 	JsHttpRequest.query($rcapi,{ 'w': 'loadIncomeCitySelectList', 'region_id':region_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#city_id").html(result.content);
-		$("#city_id").select2({placeholder: "Виберіть населений пункт",dropdownParent: $("#IncomeCard")}).on('select2:close', function() {var el = $(this);
-			if(el.val()==="NEW") { var newval = prompt("Введіть нове значення: ");
-			  if(newval !== null) {
-				JsHttpRequest.query($rcapi,{ 'w': 'addNewCity', 'region_id':region_id, 'name':newval}, 
-				function (result, errors){ if (errors) {alert(errors);} if (result){  
-					el.append('<option id="'+result["id"]+'">'+newval+'</option>').val(newval);
-				}}, true);
-			  }
+		$("#city_id").select2({placeholder: "Виберіть населений пункт",dropdownParent: $("#IncomeCard")}).on('select2:close', function() {
+			var el = $(this);
+			if(el.val()==="NEW") {
+				var newval = prompt("Введіть нове значення: ");
+				if (newval !== null) {
+					JsHttpRequest.query($rcapi,{ 'w': 'addNewCity', 'region_id':region_id, 'name':newval},
+					function (result, errors){ if (errors) {alert(errors);} if (result){
+						el.append('<option id="'+result["id"]+'">'+newval+'</option>').val(newval);
+					}}, true);
+				}
 			}
-		  });
+		});
 	}}, true);
 }
 
@@ -312,7 +331,9 @@ function checkIncomUnStr(income_id,pos,unknown_id,inf){
 			JsHttpRequest.query($rcapi,{ 'w': 'checkIncomUnStr', 'income_id':income_id,'unknown_id':unknown_id,'art_id':art_id,'article_nr_displ':article_nr_displ,'brand_id':brand_id,'country_id':country_id,'costums_id':costums_id,'amount':amount,'price':price,'weight':weight}, 
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
 				if (result["answer"]==1){
-					if (inf==0){swal("Успішно!", "Артикул "+article_nr_displ+" перенесено у основну структуру прихідної накладної!", "success");}
+					if (inf==0) {
+						swal("Успішно!", "Артикул "+article_nr_displ+" перенесено у основну структуру прихідної накладної!", "success");
+					}
 					$("#strUnRow_"+pos).html("");
 					$("#strUnRow_"+pos).attr('visibility','hidden');
 					//informer update
@@ -320,7 +341,9 @@ function checkIncomUnStr(income_id,pos,unknown_id,inf){
 				}
 			}}, true);
 		} else {
-			if (inf==0){swal("Помилка!", "Не заповнені всі поля для артикулу "+article_nr_displ+"!", "error");}
+			if (inf==0) {
+				swal("Помилка!", "Не заповнені всі поля для артикулу "+article_nr_displ+"!", "error");
+			}
 		}
 	}
 }
@@ -336,7 +359,7 @@ function dropIncomUnStr(income_id,pos,unknown_id){
 		},
 		function (isConfirm) {
 			if (isConfirm) {
-				if (income_id.length>0 && unknown_id.length>0){
+				if (income_id.length>0 && unknown_id.length>0) {
 					JsHttpRequest.query($rcapi,{ 'w':'dropIncomUnStr','income_id':income_id,'unknown_id':unknown_id},
 					function (result, errors){ if (errors) {alert(errors);} if (result){  
 						if (result["answer"]==1){ 
@@ -344,7 +367,9 @@ function dropIncomUnStr(income_id,pos,unknown_id){
 							$("#strUnRow_"+pos).html("");
 							$("#strUnRow_"+pos).attr('visibility','hidden');
 							updateInformerUnknownArticles(income_id);
-						} else { swal("Помилка!", result["error"], "error");}
+						} else {
+							swal("Помилка!", result["error"], "error");
+						}
 					}}, true);
 				}
 			} else {
@@ -374,8 +399,9 @@ function dropIncomeStr(pos,income_id,art_id){
 							$("#strRow_"+pos).attr('visibility','hidden');
 							showIncomeStrList();
 							//updateInformerUnknownArticles(income_id);
+						} else {
+							swal("Помилка!", result["error"], "error");
 						}
-						else{ swal("Помилка!", result["error"], "error");}
 					}}, true);
 				}
 			} else {
@@ -410,7 +436,9 @@ function clearIncomeStr(income_id){
 					if (result["answer"]==1){ 
 						swal("Успішно!", "Структуру накладної очищено!", "success");
 						showIncomeCard(income_id);
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			} else {
 				swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
@@ -475,7 +503,9 @@ function saveIncomeStorage(income_id){
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -542,7 +572,9 @@ function saveIncomeSpendStrForm(income_id,spend_item_id,str_id){
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#FormModalWindow").modal("hide");
 						loadIncomeSpend(income_id);
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -578,7 +610,9 @@ function dropIncomeSpendItemRow(income_id,spend_item_id,str_id){
 					if (result["answer"]==1){ 
 						swal("Видалено!", "", "success");
 						loadIncomeSpend(income_id);
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -600,7 +634,7 @@ function showIncomeCountrySearchForm(pos, art_id, country_id){
 }
 
 function selectCountryDocument(id,name){
-	var pos=$("#doc_pos").val();var un="";
+	var pos=$("#doc_pos").val(); var un="";
 	if($("#cat_tab7").attr("class")=="tab-pane active"){un="Un";}
 	$("#countryId"+un+"Str_"+pos).val(id);
 	$("#countryAbr"+un+"Str_"+pos).val(name);
@@ -620,7 +654,7 @@ function showIncomeCostumsSearchForm(pos, art_id, costums_id){
 	}}, true);
 }
 
-function selectCostumsDocument(id,name){
+function selectCostumsDocument(id, name){
 	var pos=$("#doc_pos").val();var un="";
 	if($("#cat_tab7").attr("class")=="tab-pane active"){un="Un";}
 	$("#costumsId"+un+"Str_"+pos).val(id);
@@ -630,14 +664,14 @@ function selectCostumsDocument(id,name){
 	var art_id=$("#artIdStr_"+pos).val();
 	var costums_id=$("#costumsIdStr_"+pos).val();
 	var article=$("#article_nr_displStr_"+pos).val();
-	checkArticleZed(art_id,costums_id,article);
+	checkArticleZed(art_id, costums_id, article);
 }
 
-function checkArticleZed(art_id,costums_id,article) {
+function checkArticleZed(art_id, costums_id, article) {
 	JsHttpRequest.query($rcapi,{ 'w': 'checkArticleZed', 'art_id':art_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){
 		if (result.content===false) {
-			saveArticleZed(art_id,costums_id);
+			saveArticleZed(art_id, costums_id);
 		} else {
 			swal({
 				title: "Для вибраного артикула ("+article+") уже прописаний Код УКТЗЕД - "+result.content,
@@ -647,7 +681,7 @@ function checkArticleZed(art_id,costums_id,article) {
 			function (isConfirm) {
 				if (isConfirm) {
 					swal.close();
-					saveArticleZed(art_id,costums_id);
+					saveArticleZed(art_id, costums_id);
 				} else {
 					swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
 				}
@@ -657,11 +691,13 @@ function checkArticleZed(art_id,costums_id,article) {
 }
 
 function saveArticleZed(art_id,costums_id) {
-	JsHttpRequest.query($rcapi,{ 'w': 'saveArticleZed', 'art_id':art_id,'costums_id':costums_id}, 
+	JsHttpRequest.query($rcapi,{ 'w': 'saveArticleZed', 'art_id':art_id, 'costums_id':costums_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){
 		if(result["answer"]==1){
 			swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
-		} else {swal("Помилка", result["err"], "error");}
+		} else {
+			swal("Помилка", result["err"], "error");
+		}
 	}}, true);
 }
 
@@ -684,12 +720,15 @@ function getRateTypeDeclarationdocumentPos(pos){
 
 function setIncomeVat(){
 	let income_id=$("#income_id").val();
-	let vat_use=0;if (document.getElementById("vat_use").checked){vat_use=1;}
+	let vat_use=0;
+	if (document.getElementById("vat_use").checked){vat_use=1;}
 	JsHttpRequest.query($rcapi,{ 'w': 'setIncomeVat', 'income_id':income_id, 'vat_use':vat_use},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		if(result["answer"]==1){
+		if (result["answer"]==1) {
 			recalculateIncomeStrLocal();
-		} else {swal("Помилка", result["err"], "error");}
+		} else {
+			swal("Помилка", result["err"], "error");
+		}
 	}}, true);
 }
 
@@ -706,13 +745,18 @@ function round(value, exp) {
 	return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
 }
 
-function getPWeight(ikr,weight_netto){ var ws=0;
-	for (var i=1;i<=ikr;i++){var wn=parseFloat($("#weightNettoStr_"+i).val().replace(/[,]+/g, '.')); if (wn>0){ws+=wn;}}
+function getPWeight(ikr,weight_netto){
+	var ws=0;
+	for (var i=1;i<=ikr;i++) {
+		var wn=parseFloat($("#weightNettoStr_"+i).val().replace(/[,]+/g, '.'));
+		if (wn>0){ws+=wn;}
+	}
 	let w=round(weight_netto/ws*100,4).toFixed(4);
 	return w;
 }
 
-function countInvoiceSumm(ikr){var invoice_summ=0;
+function countInvoiceSumm(ikr){
+	var invoice_summ=0;
 	var amount=0;var price_income=0;
 	for (var i=1;i<=ikr;i++){
 		amount=parseFloat($("#amountStr_"+i).val().replace(/[,]+/g, '.'));
@@ -726,6 +770,7 @@ function countInvoiceSumm(ikr){var invoice_summ=0;
 }
 
 function recalculateIncomeStr(){
+	console.log('recalculate income');
 	// var income_id=$("#income_id").val();
 	var ikr=$("#kol_row").val();
 	var invoice_summ=countInvoiceSumm(ikr);	$("#invoice_summ").val(invoice_summ); 
@@ -734,8 +779,10 @@ function recalculateIncomeStr(){
 	var rb=parseFloat($("#income_spend_item_3").val());
 	var ro=parseFloat($("#income_spend_item_4").val());
 	var sz=parseFloat($("#income_spend_item_5").val());
-	var cours_to_uah=parseFloat($("#cours_to_uah").val()); if (cours_to_uah==0 || cours_to_uah==""){cours_to_uah=1;$("#cours_to_uah").val(cours_to_uah);}
-	var cours_to_uah_nbu=parseFloat($("#cours_to_uah_nbu").val());if (cours_to_uah_nbu==0 || cours_to_uah_nbu==""){cours_to_uah_nbu=1;$("#cours_to_uah_nbu").val(cours_to_uah_nbu);}
+	var cours_to_uah=parseFloat($("#cours_to_uah").val());
+	if (cours_to_uah==0 || cours_to_uah==""){cours_to_uah=1;$("#cours_to_uah").val(cours_to_uah);}
+	var cours_to_uah_nbu=parseFloat($("#cours_to_uah_nbu").val());
+	if (cours_to_uah_nbu==0 || cours_to_uah_nbu==""){cours_to_uah_nbu=1;$("#cours_to_uah_nbu").val(cours_to_uah_nbu);}
 	var cash_id=$("#cash_id option:selected").val();
 	var costums_pd_uah=0;
 	var costums_pp_uah=0;
@@ -787,7 +834,9 @@ function recalculateIncomeStr(){
 			alrt+="step2.10) nds_uah="+nds_uah+"\n";
 			
 			var kurs=1; var kurs_usd=parseFloat($("#usd_to_uah").val());
-			if (cash_id==1){kurs=1;}if (cash_id==2){kurs=parseFloat($("#usd_to_uah").val());}if (cash_id==3){kurs=parseFloat($("#eur_to_uah").val());}
+			if (cash_id==1){kurs=1;}
+			if (cash_id==2){kurs=parseFloat($("#usd_to_uah").val());}
+			if (cash_id==3){kurs=parseFloat($("#eur_to_uah").val());}
 			alrt+="kurs="+kurs+"\n";
 			
 			var suvsdo=parseFloat(price_income*amount)+((parseFloat(tz_uah)+parseFloat(tl_uah)+parseFloat(sz_uah)+parseFloat(rb_uah)+parseFloat(ro_uah)+parseFloat(po_b_uah)+parseFloat(nds_uah))/parseFloat(kurs));
@@ -851,6 +900,7 @@ function showIncomeStrList() {
 }
 
 function recalculateIncomeStrLocal(){
+	console.log('recalculate income local');
 	// var income_id=$("#income_id").val();
 	var ikr=$("#kol_row").val();
 	var vat_use=0;if (document.getElementById("vat_use").checked){vat_use=1;}
@@ -860,7 +910,8 @@ function recalculateIncomeStrLocal(){
 	var rb=parseFloat($("#income_spend_item_3").val());
 	var ro=parseFloat($("#income_spend_item_4").val());
 	// var sz=parseFloat($("#income_spend_item_5").val());
-	var cours_to_uah=parseFloat($("#cours_to_uah").val()); if (cours_to_uah==0 || cours_to_uah==""){cours_to_uah=1;$("#cours_to_uah").val(cours_to_uah);}
+	var cours_to_uah=parseFloat($("#cours_to_uah").val());
+	if (cours_to_uah==0 || cours_to_uah==""){cours_to_uah=1;$("#cours_to_uah").val(cours_to_uah);}
 	var cash_id=$("#cash_id option:selected").val();
 	// var costums_pd_uah=0;
 	// var costums_pp_uah=0;
@@ -928,7 +979,6 @@ function recalculateIncomeStrLocal(){
 			if (suvsdo==0 || su_usd==0 || sb_uah==0 || su_uah==0) setIncomeCardPriceZero("1"); else setIncomeCardPriceZero("0");
 		}
 	}
-
     saveIncomeCard();
 }
 
@@ -936,7 +986,7 @@ function setIncomeCardPriceZero(status) {
 	$("#income_price_status").val(status);
 }
 
-function saveIncomeDetails(){
+function saveIncomeDetails() {
 	let income_id=$("#income_id").val();
     let address_jur=$("#address_jur").val();
     let address_fakt=$("#address_fakt").val();
@@ -948,29 +998,32 @@ function saveIncomeDetails(){
     let bank=$("#bank").val();
     let account=$("#account").val();
     let nr_details=$("#nr_details").val();
-    let not_resident=0; if (document.getElementById("not_resident").checked){not_resident=1;}else{nr_details="";}
-	if (income_id.length>0){
+    let not_resident=0;
+    if (document.getElementById("not_resident").checked){not_resident=1;}else{nr_details="";}
+	if (income_id.length>0) {
 		JsHttpRequest.query($rcapi,{ 'w':'saveIncomeDetails','income_id':income_id,'address_jur':address_jur,'address_fakt':address_fakt,'edrpou':edrpou,'svidotctvo':svidotctvo,'vytjag':vytjag,'vat':vat,'mfo':mfo, 'bank':bank,'account':account,'not_resident':not_resident,'nr_details':nr_details},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			if (result["answer"]==1){ 
 				swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
-			} else { swal("Помилка!", result["error"], "error");}
+			} else {
+				swal("Помилка!", result["error"], "error");
+			}
 		}}, true);
 	}
 }
 
-function loadIncomeContacts(income_id){
+function loadIncomeContacts(income_id) {
 	if (income_id<=0 || income_id==""){toastr["error"](errs[0]);}
 	if (income_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadIncomeContacts', 'income_id':income_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
             $("#contacts_place").html(result.content);
-			$("#catalogue_tabs").tab();
+			$("#income_tabs").tab();
 		}}, true);
 	}
 }
 
-function dropIncomeContact(income_id,contact_id,contact_name){
+function dropIncomeContact(income_id,contact_id,contact_name) {
 	swal({
 		title: "Видалити контакт \""+contact_name+"\"?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -978,14 +1031,15 @@ function dropIncomeContact(income_id,contact_id,contact_name){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			if (income_id.length>0){
+			if (income_id.length>0) {
 				JsHttpRequest.query($rcapi,{ 'w':'dropIncomeContact','income_id':income_id,'contact_id':contact_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						swal("Видалено!", "", "success");
 						loadIncomeContacts(income_id);
+					} else {
+						swal("Помилка!", result["error"], "error");
 					}
-					else{ swal("Помилка!", result["error"], "error");}
 				}}, true);
 			}
 		} else {
@@ -994,8 +1048,8 @@ function dropIncomeContact(income_id,contact_id,contact_name){
 	});
 }
 
-function saveIncomeContactForm(income_id,contact_id){
-	let contact_name=$("#contact_name").val();
+function saveIncomeContactForm(income_id, contact_id) {
+	let contact_name = $("#contact_name").val();
 	swal({
 		title: "Зберегти зміни контакту \""+contact_name+"\"?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -1005,21 +1059,22 @@ function saveIncomeContactForm(income_id,contact_id){
 		if (isConfirm) {
             let contact_post=$("#contact_post").val();
 			var cn=$("#contact_con_kol").val();
-
-			var con_id = []; var sotc_cont = []; var contact_value = []; 
+			var con_id = []; var sotc_cont = []; var contact_value = [];
 			for (var i=1;i<=cn;i++){
 				con_id[i]=$("#con_id_"+i).val();
 				sotc_cont[i]=$("#sotc_cont_"+i+" option:selected").val();
 				contact_value[i]=$("#contact_value_"+i).val();
 			}
-			if (income_id.length>0){
+			if (income_id.length>0) {
 				JsHttpRequest.query($rcapi,{ 'w':'saveIncomeContactForm','income_id':income_id,'contact_id':contact_id,'contact_name':contact_name,'contact_post':contact_post,'contact_con_kol':cn,'con_id':con_id,'sotc_cont':sotc_cont,'contact_value':contact_value},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#FormModalWindow").modal("hide");
 						loadIncomeContacts(income_id);
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -1028,7 +1083,7 @@ function saveIncomeContactForm(income_id,contact_id){
 	});
 }
 
-function saveIncomeConditions(income_id){
+function saveIncomeConditions(income_id) {
 	let cash_id=$("#cash_id option:selected").val();
     let country_cash_id=$("#country_cash_id option:selected").val();
     let price_lvl=$("#price_lvl option:selected").val();
@@ -1036,17 +1091,19 @@ function saveIncomeConditions(income_id){
     let credit_limit=$("#credit_limit").val();
     let credit_cash_id=$("#credit_cash_id option:selected").val();
     let credit_return=$("#credit_return").val();
-	if (income_id.length>0){
+	if (income_id.length>0) {
 		JsHttpRequest.query($rcapi,{ 'w':'saveIncomeConditions','income_id':income_id,'cash_id':cash_id,'country_cash_id':country_cash_id,'price_lvl':price_lvl,'payment_delay':payment_delay,'credit_limit':credit_limit,'credit_cash_id':credit_cash_id,'credit_return':credit_return},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			if (result["answer"]==1){ 
 				swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
-			} else { swal("Помилка!", result["error"], "error"); }
+			} else {
+				swal("Помилка!", result["error"], "error");
+			}
 		}}, true);
 	}
 }
 
-function showIncomeClientList(client_id){
+function showIncomeClientList(client_id) {
 	JsHttpRequest.query($rcapi,{ 'w': 'showIncomeClientList', 'client_id':client_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow").modal("show");
@@ -1058,7 +1115,7 @@ function showIncomeClientList(client_id){
 	}}, true);
 }
 
-function setIncomeClient(id,name){
+function setIncomeClient(id, name) {
 	$("#client_id").val(id);
 	$("#client_name").val(Base64.decode(name));
 	$("#FormModalWindow").modal("hide");
@@ -1106,7 +1163,9 @@ function unlinkIncomeClient(income_id){
 					$("#client_id").val("0");
 					$("#client_name").val("");
 					swal("Виконано!", "Внесені Вами зміни успішно збережені.", "success");
-				} else { toastr["error"](result["error"]); }
+				} else {
+					toastr["error"](result["error"]);
+				}
 			}}, true);	
 		} else {
 			swal("Відмінено", "Операцію анульовано.", "error");
@@ -1148,7 +1207,9 @@ function unlinkIncomeClientSeller(income_id){
 					$("#client_seller").val("0");
 					$("#client_seller_name").val("");
 					swal("Виконано!", "Внесені Вами зміни успішно збережені.", "success");
-				} else { toastr["error"](result["error"]); }
+				} else {
+					toastr["error"](result["error"]);
+				}
 			}}, true);	
 		} else {
 			swal("Відмінено", "Операцію анульовано.", "error");
@@ -1189,8 +1250,8 @@ function setArticleToDoc(art_id,article_nr_displ,brand_id,brand_name,costums_id,
 	var art_id=$("#artIdStr_"+pos).val();
 	var costums_id=$("#costumsIdStr_"+pos).val();
 	var article=$("#article_nr_displStr_"+pos).val();
-	if (costums_id!==""){
-		checkArticleZed(art_id,costums_id,article);
+	if (costums_id !== ""){
+		checkArticleZed(art_id, costums_id, article);
 	}
 }
 
@@ -1201,7 +1262,9 @@ function randString(id){
 	if($.inArray('A-Z', dataSet) >= 0){possible += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';}
 	if($.inArray('0-9', dataSet) >= 0){possible += '0123456789';}
 	if($.inArray('#', dataSet) >= 0){possible += '![]{}()%&*$#^<>~@|';}
-	for(var i=0; i < $(id).attr('data-size'); i++) {text += possible.charAt(Math.floor(Math.random() * possible.length));}
+	for(var i=0; i < $(id).attr('data-size'); i++) {
+		text += possible.charAt(Math.floor(Math.random() * possible.length));
+	}
 	$(id).val(""+text);
 	return text;
 }
@@ -1214,12 +1277,14 @@ function dropIncomeUser(income_id,user_id,user_name){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			if (income_id.length>0){
+			if (income_id.length>0) {
 				JsHttpRequest.query($rcapi,{ 'w':'dropIncomeUser', 'income_id':income_id, 'user_id':user_id},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"]==1){ 
 						swal("Видалено!", "", "success");
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -1229,7 +1294,7 @@ function dropIncomeUser(income_id,user_id,user_name){
 }
 
 function saveIncomeUserForm(income_id,user_id){
-	let user_name=$("#user_name").val();
+	let user_name = $("#user_name").val();
 	swal({
 		title: "Зберегти зміни Користувача \""+user_name+"\"?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -1247,7 +1312,9 @@ function saveIncomeUserForm(income_id,user_id){
 					if (result["answer"]==1){ 
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#FormModalWindow").modal("hide");
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -1288,7 +1355,9 @@ function saveIncomeComment(income_id){
 					loadIncomeCommets(income_id); 
 					$("#income_comment_field").val("");
 					loadIncomeCommetsLabel(income_id);
-				} else { toastr["error"](result["error"]); }
+				} else {
+					toastr["error"](result["error"]);
+				}
 			}}, true);
 		}
 	}
@@ -1300,8 +1369,12 @@ function dropIncomeComment(income_id,cmt_id){
 		if(confirm('Видалити запис?')){ 
 			JsHttpRequest.query($rcapi,{ 'w': 'dropIncomeComment', 'income_id':income_id, 'cmt_id':cmt_id}, 
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
-				if (result["answer"]==1){ loadIncomeCommets(income_id); toastr["info"]("Запис успішно видалено");loadIncomeCommetsLabel(income_id);}
-				else{ toastr["error"](result["error"]); }
+				if (result["answer"]==1){
+					loadIncomeCommets(income_id);
+					toastr["info"]("Запис успішно видалено");loadIncomeCommetsLabel(income_id);
+				} else {
+					toastr["error"](result["error"]);
+				}
 			}}, true);
 		}
 	}
@@ -1335,8 +1408,12 @@ function showIncomeCDNDropConfirmForm(income_id,file_id,file_name){
 		if(confirm('Видалити файл '+file_name+'?')){ 
 			JsHttpRequest.query($rcapi,{ 'w': 'incomeCDNDropFile', 'income_id':income_id, 'file_id':file_id}, 
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
-				if (result["answer"]==1){ loadIncomeCDN(income_id); toastr["info"]("Файл успішно видалено"); }
-				else{ toastr["error"](result["error"]); }
+				if (result["answer"]==1) {
+					loadIncomeCDN(income_id);
+					toastr["info"]("Файл успішно видалено");
+				} else {
+					toastr["error"](result["error"]);
+				}
 			}}, true);
 		}
 	}
@@ -1381,7 +1458,7 @@ function viewIncomeDetailsFile(income_id,file_type){
 // }
 
 function showCountryManual(){
-	let country_id=$("#country_id").val();
+	let country_id = $("#country_id").val();
 	JsHttpRequest.query($rcapi,{ 'w':'showCountryManual', 'country_id':country_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#CountryModalWindow").modal("show");
@@ -1435,28 +1512,26 @@ function showCostumsForm(costums_id){
 }
 
 function cardFinish(status_income) {
-	var income_id=$("#income_id").val();
-	var seller=$("#client_seller").val();
-	var provider=$("#client_name").val();
-	var price=parseFloat($("#cours_to_uah").val());
-	if (parseInt($("#income_type_id").val())>0) {
-		var price_usd=parseFloat($("#usd_to_uah").val());
-		var price_eur=parseFloat($("#eur_to_uah").val());
+	var income_id = $("#income_id").val();
+	var seller = $("#client_seller").val();
+	var provider = $("#client_name").val();
+	var price = parseFloat($("#cours_to_uah").val());
+	if (parseInt($("#income_type_id").val()) > 0) {
+		var price_usd = parseFloat($("#usd_to_uah").val());
+		var price_eur = parseFloat($("#eur_to_uah").val());
 	}	
-	var invoice_income=$("#invoice_income").val();
-	var date=$("#invoice_data").val();
+	var invoice_income = $("#invoice_income").val();
+	var date = $("#invoice_data").val();
 	
-	console.log(status_income+" = "+date+" = "+seller);
-	
-	var empty_row=0;
+	var empty_row = 0;
 	var rows = $("#income_str tbody tr").length;
-	if (rows>0) {
-		for (i=1;i<rows;i++) {
-			if ($('#article_nr_displStr_'+i).val()!=="") {empty_row++;}
+	if (rows > 0) {
+		for (i = 1; i < rows; i++) {
+			if ($('#article_nr_displStr_'+i).val() !== "") {
+				empty_row++;
+			}
 		}
 	}	
-	
-	var some_error="В базе уже есть такой приходной документ: "+status_income;
 	
 	swal({
 		title: "Провести накладну і зафіксувати?",
@@ -1465,30 +1540,40 @@ function cardFinish(status_income) {
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			if (income_id.length>0 && seller!=="" && provider!=="" && price!==0 && invoice_income!=="" && date!=="") {
-				if ((parseInt($("#income_type_id").val())>0 && price_usd!==0 && price_eur!==0)||(parseInt($("#income_type_id").val())===0)) {
-					if (status_income===""){
-						if(empty_row!=0) {
+			if (income_id.length > 0 && seller !== "" && provider !== "" && price !== 0 && invoice_income !== "" && date !== "") {
+				if ((parseInt($("#income_type_id").val()) > 0 && price_usd !== 0 && price_eur !== 0) || (parseInt($("#income_type_id").val()) === 0)) {
+					if (status_income === "") {
+						if (empty_row != 0) {
 							$("#make_income").addClass("disabled");
 							JsHttpRequest.query($rcapi,{ 'w':'makeIncomeCardFinish','income_id':income_id},
-							function (result, errors){ if (errors) {alert(errors);} if (result){  
-								if (result["answer"]==1){ 
+							function (result, errors){ if (errors) {alert(errors);} if (result){
+								if (result["answer"] == 1) {
 									swal("Збережено!", "Накладну проведено", "success");
-									showIncomeCard(income_id)
-								} else { swal("Помилка!", result["error"], "error");}
+									showIncomeCard(income_id);
+								} else {
+									swal("Помилка!", result["error"], "error");
+								}
 							}}, true);
-						} else { swal("Відмінено", "Додайте хоча б один індекс!", "error"); }
-					} else { swal("Відмінено", some_error, "error"); }
-				} else swal("Відмінено", "Не заповнені курси валют!", "error");
-			} else swal("Відмінено", "Не заповнені всі поля!", "error");
+						} else {
+							swal("Відмінено", "Додайте хоча б один індекс!", "error");
+						}
+					} else {
+						swal("Відмінено", "В базе уже есть такой приходной документ: " + status_income, "error");
+					}
+				} else {
+					swal("Відмінено", "Не заповнені курси валют!", "error");
+				}
+			} else {
+				swal("Відмінено", "Не заповнені всі поля!", "error");
+			}
 		} else {
 			swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
 		}
 	});
 }
 
-function makeIncomeCardFinish(){
-    let seller=$("#client_seller").val();
+function makeIncomeCardFinish() {
+    let seller = $("#client_seller").val();
 	// var income_id=$("#income_id").val();
 	// var provider=$("#client_name").val();
 	// var price=parseFloat($("#cours_to_uah").val());
@@ -1496,24 +1581,41 @@ function makeIncomeCardFinish(){
 	// 	var price_usd=parseFloat($("#usd_to_uah").val());
 	// 	var price_eur=parseFloat($("#eur_to_uah").val());
 	// }
-    let invoice_income=$("#invoice_income").val();
-    let date=$("#invoice_data").val();
-    let status=$("#income_price_status").val();
-	if (status==="1") alert("error"); else {
+    let invoice_income = $("#invoice_income").val();
+    let date = $("#invoice_data").val();
+    let status = $("#income_price_status").val();
+	if (status === "1") {
+		alert("error");
+	} else {
 		JsHttpRequest.query($rcapi,{ 'w':'checkInvoiceIncome', 'invoice_income':invoice_income, 'seller':seller, 'date':date},
 			function (result, errors){ if (errors) {alert(errors);} if (result){
-				if (parseInt($("#income_type_id").val())>0) {
+				if (parseInt($("#income_type_id").val()) > 0) {
 					recalculateIncomeStr();
-				} 
-				else {
+				} else {
 					recalculateIncomeStrLocal();
 				}
-				cardFinish(result["content"]);
+				if (result["uktzed_status"] == 1) {
+					swal({
+							title: "Продовжити проведення документу?",
+							text: "В документі не в усіх артикулах вказаний код УКТЗЕД!", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
+							confirmButtonText: "Продовжити", cancelButtonText: "Відмінити", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
+						},
+						function (isConfirm) {
+							if (isConfirm) {
+								cardFinish(result["content"]);
+							} else {
+								swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
+							}
+						});
+				} else {
+					cardFinish(result["content"]);
+				}
+
 		}}, true);
 	}
 }
 
-function showCsvUploadForm(income_id){
+function showCsvUploadForm(income_id) {
 	$("#fileIncomesCsvUploadForm").modal("show");
 	$("#csv_income_id").val(income_id);
 	var myDropzone3 = new Dropzone("#myDropzone3",{ dictDefaultMessage: "Натисніть для вибору файлів або перетягніть їх це поле!" });
@@ -1541,7 +1643,9 @@ function setIncomeBarcodes(income_id) {
 						$("#FormModalBody").html(result.content);
 						$("#FormModalLabel").html("Штрих-коди");
 					}}, true);
-			} else { swal("Відмінено", "Внесені Вами зміни анульовано.", "error"); }
+			} else {
+            	swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
+            }
 		});
 }
 
@@ -1561,13 +1665,14 @@ function saveIncomeArticlePriceRating(income_id) {
     let prc=[]; let prs=[];
     let price=0; let percent=0;
     let price_cash_id = $("#price_cash_id option:selected").val();
-
     for (var i=0;i<=kol_elm;i++){
-        price=$("#artRatingPrice_"+i).val(); if (price=="" || price=="NaN"){price=prev_price;} prc[i]=price;
+        price=$("#artRatingPrice_"+i).val();
+        if (price=="" || price=="NaN"){price=prev_price;}
+        prc[i]=price;
         percent=$("#artRatingPersent_"+i).val();
-        if (percent==""){percent=0;} prs[i]=percent;
+        if (percent==""){percent=0;}
+        prs[i]=percent;
     }
-
     swal({
             title: "Виставити усім індексам накладної націнку?",
             text: "Подальші зміни можна буде переглянути у розділі 'Номенклатура'.", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -1581,7 +1686,9 @@ function saveIncomeArticlePriceRating(income_id) {
                         swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
                         $("#FormModalWindow").modal("hide");
                     }}, true);
-            } else { swal("Відмінено", "Внесені Вами зміни анульовано.", "error"); }
+            } else {
+            	swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
+            }
         });
 }
 
@@ -1590,12 +1697,13 @@ function showPreArticlePriceRating(income_id) {
     let prs=[];
     let percent=0;
     let price_cash_id = $("#price_cash_id option:selected").val();
-
-    for (var i=0;i<=kol_elm;i++){
-        percent=$("#artRatingPersent_"+i).val();
-        if (percent==""){percent=0;} prs[i]=percent;
+    for (var i = 0; i <= kol_elm; i++) {
+        percent = $("#artRatingPersent_"+i).val();
+        if (percent == "") {
+        	percent = 0;
+        }
+        prs[i] = percent;
     }
-
     JsHttpRequest.query($rcapi,{ 'w':'showPreArticlePriceRating', 'income_id':income_id, 'price_cash_id':price_cash_id, 'prs':prs},
         function (result, errors){ if (errors) {alert(errors);} if (result){
             $("#table_body").html(result.content);
@@ -1607,4 +1715,11 @@ function recalculateMadeIncome(income_id) {
         function (result, errors){ if (errors) {alert(errors);} if (result){
             showIncomeCard(income_id);
         }}, true);
+}
+
+function backIncome(income_id) {
+	JsHttpRequest.query($rcapi,{ 'w':'backIncome', 'income_id':income_id},
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+			swal("Все виконано!", "Внесені Вами зміни успішно збережені.", "success");
+		}}, true);
 }

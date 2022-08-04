@@ -43,7 +43,7 @@ function showClientGeneralSaldoForm(client_id){
 	}}, true);
 }
 
-function filterClientGeneralSaldoForm(client_id){
+function filterClientGeneralSaldoForm(client_id) {
 	if (client_id.length>0){
         let from=$("#saldo_data_start").val();
         let to=$("#saldo_data_end").val();

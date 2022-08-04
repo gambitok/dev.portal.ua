@@ -68,11 +68,11 @@ class slave {
 				<iframe width=174 height=189 name='gToday:normal:agenda.js' id='gToday:normal:agenda.js' src='js/calendar/ipopeng.htm' scrolling='no' frameborder='0' style='visibility:visible; z-index:999; position:absolute; left:-500px; top:0px;'></iframe>";
 	}
 	
-	function addJuornalArtDocs($doc_type,$doc_id,$art_id,$amount){$db=DbSingleton::getDb();
-		//doc_type: 1-income, 2-move, 3-sale, 4-backclient, 5-backsuppl 6-write_off
+	function addJuornalArtDocs($doc_type, $doc_id, $art_id, $amount) { $db = DbSingleton::getDb();
+		//doc_type: 1-income, 2-move, 3-sale, 4-backclient, 5-backsuppl, 6-write_off
 	  	$db->query("INSERT INTO `J_ART_DOCS` (`art_id`,`amount`,`doc_type`,`doc_id`) VALUES ('$art_id','$amount','$doc_type',$doc_id);");
 		//if (($doc_type>=1 && $doc_type<=5) && $doc_id>0 && $art_id!=""){ }
-		return;
+		return true;
 	}
 	
 	function print_debug($inf){

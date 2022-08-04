@@ -2,7 +2,9 @@
 
 class access {
 	
-	function check_user_access($file){$db=DbSingleton::getDb(); session_start(); $media_user_id=$_SESSION["media_user_id"];
+	function check_user_access($file){$db=DbSingleton::getDb();
+	    session_start();
+	    $media_user_id=$_SESSION["media_user_id"];
         $access="0"; $acc_lvl="0";
         if ($media_user_id!=1){
             $r=$db->query("SELECT rs.lvl 
@@ -39,7 +41,8 @@ class access {
 	
 	function checkAccessTime($media_user_id) {$db=DbSingleton::getDb(); 
 		$result=false; $cur_time=date("h:i:s");					
-		$r=$db->query("SELECT * FROM `media_users_time` WHERE `id`='$media_user_id' LIMIT 1;"); $n=$db->num_rows($r);
+		$r=$db->query("SELECT * FROM `media_users_time` WHERE `id`='$media_user_id' LIMIT 1;");
+		$n=$db->num_rows($r);
 		if ($n>0) {
 			$access=$db->result($r,0,"access");
 			$access_time=$db->result($r,0,"access_time");
@@ -67,8 +70,7 @@ class access {
 	function getMediaUserRole() {$db=DbSingleton::getDb(); 
 		$media_user_id=$_SESSION["media_user_id"];
 		$r=$db->query("SELECT `role_id` FROM `media_users` WHERE `id`='$media_user_id' LIMIT 1;");
-		$role_id=$db->result($r,0,"role_id");
-		return $role_id;
+        return $db->result($r,0,"role_id");
 	}
 	
 }

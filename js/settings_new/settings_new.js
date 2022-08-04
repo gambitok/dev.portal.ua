@@ -418,10 +418,19 @@ function showReviewCard(id) {
 }
 
 function saveReview() {
-    let id = $("#review_id").val();
-    let title = $("#review_title").val();
-    let text = $(".note-editable").html().replace(/"/g,"'");
-
+    let id 			= $("#review_id").val();
+	let t_ru 		= $("#review_t_ru").val();
+	let t_ua 		= $("#review_t_ua").val();
+	let t_en 		= $("#review_t_en").val();
+	let d_ru 		= $("#review_d_ru").val();
+	let d_ua 		= $("#review_d_ua").val();
+	let d_en 		= $("#review_d_en").val();
+    let title 		= $("#review_title").val();
+    let title_ua 	= $("#review_title_ua").val();
+    let title_en 	= $("#review_title_en").val();
+    let text 		= $("#summernote").next().find($(".note-editable")).html().replace(/"/g,"'");
+    let text_ua 	= $("#summernote_ua").next().find($(".note-editable")).html().replace(/"/g,"'");
+    let text_en 	= $("#summernote_en").next().find($(".note-editable")).html().replace(/"/g,"'");
     let data = $("#review_data").val();
     let status = 0; if (document.getElementById("review_status").checked){status=1;}
 
@@ -432,13 +441,15 @@ function saveReview() {
         },
         function (isConfirm) {
             if (isConfirm) {
-                JsHttpRequest.query($rcapi,{'w':'saveReview', 'id':id, 'title':title, 'text':text, 'data':data, 'status':status},
+                JsHttpRequest.query($rcapi,{'w':'saveReview', 'id':id, 't_ru':t_ru, 't_ua':t_ua, 't_en':t_en, 'd_ru':d_ru, 'd_ua':d_ua, 'd_en':d_en, 'title':title, 'title_ua':title_ua, 'title_en':title_en, 'text':text, 'text_ua':text_ua, 'text_en':text_en, 'data':data, 'status':status},
                     function (result, errors){ if (errors) {alert(errors);} if (result){
                         if (result["answer"]==1){
                             swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
                             $("#ReviewCard").modal("hide");
                             loadReviewsList();
-                        } else { swal("Помилка!", result["error"], "error");}
+                        } else {
+                        	swal("Помилка!", result["error"], "error");
+                        }
                     }}, true);
             } else {
                 swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
@@ -579,3 +590,257 @@ function unlockRequestCard(id) {
     }
 }
 
+/*
+* SEO TEXT
+* */
+
+function showSeoTextCard(id) {
+	JsHttpRequest.query($rcapi,{ 'w': 'showSeoTextCard', 'id':id},
+		function (result, errors){ if (errors) {alert(errors);} if (result) {
+			$("#SeoTextCard").modal("show");
+			$("#SeoTextCardBody").html(result.content);
+		}}, true);
+}
+
+function saveSeoText(id) {
+	let router = $("#seo_router").val();
+	let link = $("#seo_link").val();
+	let text_ru = $("#seo_text_ru").next().find($(".note-editable")).html().replace(/"/g,"'");
+	let text_ua = $("#seo_text_ua").next().find($(".note-editable")).html().replace(/"/g,"'");
+	let text_en = $("#seo_text_en").next().find($(".note-editable")).html().replace(/"/g,"'");
+
+	swal({
+			title: "Зберегти зміни?",
+			text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
+			confirmButtonText: "Так, зберегти!", cancelButtonText: "Відмінити!", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
+		},
+		function (isConfirm) {
+			if (isConfirm) {
+				JsHttpRequest.query($rcapi,{'w':'saveSeoText', 'id':id, 'router':router, 'link':link, 'text_ru':text_ru, 'text_ua':text_ua, 'text_en':text_en},
+					function (result, errors){ if (errors) {alert(errors);} if (result){
+						if (result["answer"] == 1) {
+							swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
+							$("#SeoTextCard").modal("hide");
+						} else {
+							swal("Помилка!", result["error"], "error");
+						}
+					}}, true);
+			} else {
+				swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
+			}
+		});
+}
+
+function dropSeoText(id) {
+	swal({
+			title: "Видалити текст?",
+			text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
+			confirmButtonText: "Так", cancelButtonText: "Відмінити", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
+		},
+		function (isConfirm) {
+			if (isConfirm) {
+				JsHttpRequest.query($rcapi,{ 'w':'dropSeoText', 'id':id},
+					function (result, errors){ if (errors) {alert(errors);} if (result){
+						if (result["answer"] == 1) {
+							swal("Видалено!", "", "success");
+							$("#SeoTextCard").modal("hide");
+						} else {
+							swal("Помилка!", result["error"], "error");
+						}
+					}}, true);
+			} else {
+				swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
+			}
+		});
+}
+
+function showSeoTitleCard(id) {
+	JsHttpRequest.query($rcapi,{ 'w': 'showSeoTitleCard', 'id':id},
+		function (result, errors){ if (errors) {alert(errors);} if (result) {
+			$("#SeoTextCard").modal("show");
+			$("#SeoTextCardBody").html(result.content);
+		}}, true);
+}
+
+function saveSeoTitle(id) {
+	let router = $("#seo_router").val();
+	let link = $("#seo_link").val();
+	let text_ru = $("#seo_text_ru").next().find($(".note-editable")).html().replace(/"/g,"'");
+	let text_ua = $("#seo_text_ua").next().find($(".note-editable")).html().replace(/"/g,"'");
+	let text_en = $("#seo_text_en").next().find($(".note-editable")).html().replace(/"/g,"'");
+	let descr_ru = $("#seo_descr_ru").next().find($(".note-editable")).html().replace(/"/g,"'");
+	let descr_ua = $("#seo_descr_ua").next().find($(".note-editable")).html().replace(/"/g,"'");
+	let descr_en = $("#seo_descr_en").next().find($(".note-editable")).html().replace(/"/g,"'");
+
+	swal({
+			title: "Зберегти зміни?",
+			text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
+			confirmButtonText: "Так, зберегти!", cancelButtonText: "Відмінити!", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
+		},
+		function (isConfirm) {
+			if (isConfirm) {
+				JsHttpRequest.query($rcapi,{'w':'saveSeoTitle', 'id':id, 'router':router, 'link':link, 'text_ru':text_ru, 'text_ua':text_ua, 'text_en':text_en, 'descr_ru':descr_ru, 'descr_ua':descr_ua, 'descr_en':descr_en},
+					function (result, errors){ if (errors) {alert(errors);} if (result){
+						if (result["answer"] == 1) {
+							swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
+							$("#SeoTextCard").modal("hide");
+						} else {
+							swal("Помилка!", result["error"], "error");
+						}
+					}}, true);
+			} else {
+				swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
+			}
+		});
+}
+
+function dropSeoTitle(id) {
+	swal({
+			title: "Видалити текст?",
+			text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
+			confirmButtonText: "Так", cancelButtonText: "Відмінити", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
+		},
+		function (isConfirm) {
+			if (isConfirm) {
+				JsHttpRequest.query($rcapi,{ 'w':'dropSeoTitle', 'id':id},
+					function (result, errors){ if (errors) {alert(errors);} if (result){
+						if (result["answer"] == 1) {
+							swal("Видалено!", "", "success");
+							$("#SeoTextCard").modal("hide");
+						} else {
+							swal("Помилка!", result["error"], "error");
+						}
+					}}, true);
+			} else {
+				swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
+			}
+		});
+}
+
+/*
+* SEO FOOTER
+* */
+
+function showSeoFooterCard(id) {
+	JsHttpRequest.query($rcapi,{ 'w': 'showSeoFooterCard', 'id':id},
+		function (result, errors){ if (errors) {alert(errors);} if (result) {
+			$("#SeoTextCard").modal("show");
+			$("#SeoTextCardBody").html(result.content);
+		}}, true);
+}
+
+function saveSeoFooter(id) {
+	let router = $("#seo_router").val();
+	let link = $("#seo_link").val();
+	let text_ru = $("#seo_text_ru").next().find($(".note-editable")).html().replace(/"/g,"'");
+	let text_ua = $("#seo_text_ua").next().find($(".note-editable")).html().replace(/"/g,"'");
+	let text_en = $("#seo_text_en").next().find($(".note-editable")).html().replace(/"/g,"'");
+
+	swal({
+			title: "Зберегти зміни?",
+			text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
+			confirmButtonText: "Так, зберегти!", cancelButtonText: "Відмінити!", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
+		},
+		function (isConfirm) {
+			if (isConfirm) {
+				JsHttpRequest.query($rcapi,{'w':'saveSeoFooter', 'id':id, 'router':router, 'link':link, 'text_ru':text_ru, 'text_ua':text_ua, 'text_en':text_en},
+					function (result, errors){ if (errors) {alert(errors);} if (result){
+						if (result["answer"] == 1) {
+							swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
+							$("#SeoTextCard").modal("hide");
+						} else {
+							swal("Помилка!", result["error"], "error");
+						}
+					}}, true);
+			} else {
+				swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
+			}
+		});
+}
+
+function dropSeoFooter(id) {
+	swal({
+			title: "Видалити текст?",
+			text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
+			confirmButtonText: "Так", cancelButtonText: "Відмінити", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
+		},
+		function (isConfirm) {
+			if (isConfirm) {
+				JsHttpRequest.query($rcapi,{ 'w':'dropSeoFooter', 'id':id},
+					function (result, errors){ if (errors) {alert(errors);} if (result){
+						if (result["answer"] == 1) {
+							swal("Видалено!", "", "success");
+							$("#SeoTextCard").modal("hide");
+						} else {
+							swal("Помилка!", result["error"], "error");
+						}
+					}}, true);
+			} else {
+				swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
+			}
+		});
+}
+
+/*
+* SEO GENERATE
+* */
+
+function showSeoGenerateCard(id) {
+	JsHttpRequest.query($rcapi,{ 'w': 'showSeoGenerateCard', 'id':id},
+		function (result, errors){ if (errors) {alert(errors);} if (result) {
+			$("#SeoTextCard").modal("show");
+			$("#SeoTextCardBody").html(result.content);
+		}}, true);
+}
+
+function saveSeoGenerate(id) {
+	let router = $("#seo_router").val();
+	let link = $("#seo_link").val();
+	let text_ru = $("#seo_text_ru").next().find($(".note-editable")).html().replace(/"/g,"'");
+	let text_ua = $("#seo_text_ua").next().find($(".note-editable")).html().replace(/"/g,"'");
+	let text_en = $("#seo_text_en").next().find($(".note-editable")).html().replace(/"/g,"'");
+
+	swal({
+			title: "Зберегти зміни?",
+			text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
+			confirmButtonText: "Так, зберегти!", cancelButtonText: "Відмінити!", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
+		},
+		function (isConfirm) {
+			if (isConfirm) {
+				JsHttpRequest.query($rcapi,{'w':'saveSeoGenerate', 'id':id, 'router':router, 'link':link, 'text_ru':text_ru, 'text_ua':text_ua, 'text_en':text_en},
+					function (result, errors){ if (errors) {alert(errors);} if (result){
+						if (result["answer"] == 1) {
+							swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
+							$("#SeoTextCard").modal("hide");
+						} else {
+							swal("Помилка!", result["error"], "error");
+						}
+					}}, true);
+			} else {
+				swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
+			}
+		});
+}
+
+function dropSeoGenerate(id) {
+	swal({
+			title: "Видалити текст?",
+			text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
+			confirmButtonText: "Так", cancelButtonText: "Відмінити", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
+		},
+		function (isConfirm) {
+			if (isConfirm) {
+				JsHttpRequest.query($rcapi,{ 'w':'dropSeoGenerate', 'id':id},
+					function (result, errors){ if (errors) {alert(errors);} if (result){
+						if (result["answer"] == 1) {
+							swal("Видалено!", "", "success");
+							$("#SeoTextCard").modal("hide");
+						} else {
+							swal("Помилка!", result["error"], "error");
+						}
+					}}, true);
+			} else {
+				swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
+			}
+		});
+}

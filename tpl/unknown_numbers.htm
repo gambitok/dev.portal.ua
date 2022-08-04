@@ -23,15 +23,13 @@
 
                 <div class="ibox-title">
                     <div class="row">
-
 						<div class="col-md-2">
 							<label for="select_numbers">Виберіть виробника</label>
-							<select class="form-control" name="select_numbers" id="select_numbers">
+							<select class="form-control" name="select_numbers" id="select_numbers" onchange="changeSupplSelect();">
 								<option value="0">-Не вибрано-</option>
 								{numbers_select}
 							</select>
 						</div>
-
 						<div class="col-md-2">
 							<label class="block">Сформувати</label>
 							<div class="btn-group">
@@ -39,28 +37,27 @@
 								<button class="btn btn-info" onClick="showNumbersBrandList();" title='Завантажити бренди'><i class='fa fa-list'></i> Бренди</button>
 							</div>
 						</div>
-
 						<div class="col-md-2">
 							<label for="unknown_brand">Виберіть бренд постачальника</label>
 							<select title="Виберіть бренд постачальника" class="form-control" id="unknown_brand" onchange="showUnknownBrandIds();"></select>
 						</div>
-
 						<div class="col-md-2">
 							<label for="unknown_brand_id">Виберіть бренд з каталогу</label>
 							<select title="Виберіть бренд з каталогу" class="form-control" id="unknown_brand_id" onchange="showUnknownBrandPrefix();"></select>
 						</div>
-
 						<div class="col-md-1">
 							<label class="block">&nbsp;</label>
 							<button class="btn" onClick="showAllBrandIds();" title='Показати усі бренди'><i class='fa fa-list'></i> Всі бренди</button>
 						</div>
-
+						<div class="col-md-1">
+							<label class="block">&nbsp;</label>
+							<button class="btn btn-primary" onclick="autoSetNumbersList();">АВТОМАТ</button>
+						</div>
 	                </div>
 
 					<hr>
 
 					<div class="row">
-
 						<div class="col-md-2">
 							<label for="unknown_numbers_prefix">Введіть префікс</label>
 							<div class="input-group">
@@ -70,15 +67,14 @@
 								</span>
 							</div>
 						</div>
-
 						<div class="col-md-2">
 							<label for="unknown_numbers_limit">Виберіть ліміт</label>
 							<input placeholder="Ліміт" type="number" class="form-control" id="unknown_numbers_limit" value="">
 						</div>
-
-						<div class="col-md-2">
+						<div class="col-md-3">
 							<label class="block">&nbsp;</label>
 							<button class="btn btn-warning" onClick="showArticlesNumbersList();"><i class='fa fa-eye'></i> Показати артикули</button>
+							<button class="btn btn-primary" onClick="exportNumbersBrandList();" title='Вигрузка брендів'><i class='fa fa-download'></i> Вигрузка</button>
 						</div>
 					</div>
 
@@ -87,19 +83,16 @@
 					<div class="row">
 						<div class="col-md-2">
 							<label for="return_delay">Повернення</label>
-							<input placeholder="Повернення" type="number" class="form-control" id="return_delay" value="14"></div>
+							<input placeholder="Повернення" type="number" class="form-control" id="return_delay" value="0"></div>
 						<div class="col-md-2">
-							<label for="return_delay">Гарантійна інформація</label>
+							<label for="warranty_info">Гарантійна інформація</label>
 							<input placeholder="Гарантійна інформація" type="text" class="form-control" id="warranty_info" value="">
 						</div>
 						<div class="col-md-2">
 							<label class="block">&nbsp;</label>
 							<button class="btn btn-info" onClick="saveArticlesNumbersList();"><i class='fa fa-save'></i> Заповнити</button>
 						</div>
-					</div>
-
-					<br>
-
+					</div><br>
                 </div>
 
                 <div class="ibox-content">
@@ -127,7 +120,6 @@
 						</table>
                 	</div>
             	</div>
-
         	</div>
     	</div>
 	</div>

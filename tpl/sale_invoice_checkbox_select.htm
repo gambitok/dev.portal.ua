@@ -1,0 +1,26 @@
+<div>
+    <div>
+        {radio_email_range}
+        <label for="cb_check_email">EMAIL</label>
+        <input class="form-control" type="email" id="cb_check_email" value="">
+    </div>
+
+    <div class="hr-line-dashed"></div>
+
+    <div>
+        {radio_payment_range}
+    </div>
+
+    <div class="hr-line-dashed"></div>
+
+    <div>
+        <button class="btn btn-primary" onclick="addCbCheck();">Створити чек</button>
+    </div>
+</div>
+
+<script>
+    function setEmail(a)
+    {
+        $("#cb_check_email").val($(a).val());
+    }
+</script>

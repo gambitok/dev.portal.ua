@@ -6,6 +6,7 @@ class DbSingleton
 {
     private static $instanceDb;
     private static $instanceTokoDb;
+    private static $instanceTokoCacheDb;
 
     public static function getDb()
     {
@@ -25,5 +26,15 @@ class DbSingleton
         }
 
         return self::$instanceTokoDb;
+    }
+
+    public static function getTokoCacheDb()
+    {
+        if (self::$instanceTokoCacheDb === null) {
+            self::$instanceTokoCacheDb = new dbc();
+            self::$instanceTokoCacheDb->connect();
+        }
+
+        return self::$instanceTokoCacheDb;
     }
 }

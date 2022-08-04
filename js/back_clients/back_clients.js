@@ -1,10 +1,10 @@
-var errs=[];
-errs[0]="Помилка індексу";
+var errs = [];
+errs[0] = "Помилка індексу";
 
 $(document).ready(function() {
     shortcut.add("Insert", function() {
-		var back_id=$("#back_id").val();
-		if (back_id>0){
+		var back_id = $("#back_id").val();
+		if (back_id>0) {
 			addNewRow();
 		}
 	});
@@ -13,15 +13,16 @@ $(document).ready(function() {
 	//$(document).bind('keydown', 'insert', function(){ addNewRow(); });
 	//$(document).bind('keydown', 'p', function(){ ShowModalAll(); });
 	//$(document).bind('keydown', 'f2', function(){ document.getElementById("discountStr").focus()});
-	setTimeout(function(){updateBackClientsRange();},30*1000);
+	setTimeout(function(){updateBackClientsRange();},30 * 1000);
 });
 
-$(window).bind('beforeunload', function(e){
+$(window).bind('beforeunload', function(e) {
     if($("#back_id")){
 		closeBackClientsCard();
-		e=null;
+		e = null;
+	} else {
+    	e = null;
 	}
-    else e=null; 
 });
 
 function runScript(e) {
@@ -32,9 +33,9 @@ function runScript(e) {
     }
 }
 
-function filterBackClientsList(){
-    let date_start=$("#date_start").val();
-    let date_end=$("#date_end").val();
+function filterBackClientsList() {
+    let date_start = $("#date_start").val();
+    let date_end = $("#date_end").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'filterBackClientsList', 'date_start':date_start, 'date_end':date_end},
 	function (result, errors){ if (errors) {alert(errors);} if (result){
 		let dt = $("#datatable");
@@ -44,9 +45,9 @@ function filterBackClientsList(){
 	}}, true);
 } 
 
-function filterBuhBackClientsList(){
-    let date_start=$("#date_start").val();
-    let date_end=$("#date_end").val();
+function filterBuhBackClientsList() {
+    let date_start = $("#date_start").val();
+    let date_end = $("#date_end").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'filterBuhBackClientsList', 'date_start':date_start, 'date_end':date_end},
 	function (result, errors){ if (errors) {alert(errors);} if (result){
         let back_range = $("#buh_back_range");
@@ -59,38 +60,41 @@ function filterBuhBackClientsList(){
 	}}, true);
 } 
 
-function updateBackClientsRange(){
-	var prevRange=$("#back_clients_range").html();
+function updateBackClientsRange() {
+	var prevRange = $("#back_clients_range").html();
 	JsHttpRequest.query($rcapi,{ 'w': 'show_back_clients_search'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		if (prevRange.length!=result["content"].length){
+		if (prevRange.length != result["content"].length){
 			$("#back_clients_range").empty();
 			$("#back_clients_range").html(result.content);
 		}
-		setTimeout(function(){updateBackClientsRange();},30*1000);
+		setTimeout(function(){updateBackClientsRange();},30 * 1000);
 	}}, true);
 }
 
 function ShowModalAll() {
-	var pos=0;var id='';var max = 0;var list='';
+	var pos=0; var id=''; var max = 0; var list='';
 	$(".check_dp").each(function() {max = Math.max(this.id, max);});
 	for (pos=1; pos<=max; pos++) {
 		if ($("#" + pos).is(":checked")) {list=list+pos;}
 	}
-	if (list=="") swal("Помилка", "Спочатку виберіть хоч одне значення!", "error");
-	else {$("#FormModalWindowAll").modal("show");}
+	if (list == "") {
+		swal("Помилка", "Спочатку виберіть хоч одне значення!", "error");
+	} else {
+		$("#FormModalWindowAll").modal("show");
+	}
 }
 
-function show_back_clients_search(inf){
+function show_back_clients_search(inf) {
 	$("#back_clients_range").empty();
 	JsHttpRequest.query($rcapi,{ 'w': 'show_back_clients_search'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#back_clients_range").html(result.content);
-		if (inf==1){toastr["info"]("Виконано!");}
+		if (inf==1) {toastr["info"]("Виконано!");}
 	}}, true);
 }
 
-function newBackClientsCard(){
+function newBackClientsCard() {
 	$("#FormModalWindow3").modal("hide");
 	JsHttpRequest.query($rcapi,{ 'w': 'newBackClientsCard'}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){
@@ -100,9 +104,11 @@ function newBackClientsCard(){
 	}}, true);
 }
 
-function showBackClientsCard(back_id){
-	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
-	if (back_id>0){
+function showBackClientsCard(back_id) {
+	if (back_id <= 0 || back_id == "") {
+		toastr["error"](errs[0]);
+	}
+	if (back_id > 0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'showBackClientsCard', 'back_id':back_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){
 			$("#BackClientsCard").modal("show");
@@ -118,44 +124,44 @@ function showBackClientsCard(back_id){
 	}
 }
 
-function unlockBackClientsCard(back_id){
-	if (back_id){
+function unlockBackClientsCard(back_id) {
+	if (back_id) {
 		JsHttpRequest.query($rcapi,{ 'w': 'unlockBackClientsCard', 'back_id':back_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#BackClientsCard").modal("hide");
             $("#BackClientsCardBody").html("");
             $("#BackClientsCardLabel").html("");
 		}}, true);
-	}else{
+	} else {
 		$("#BackClientsCard").modal("hide");
         $("#BackClientsCardBody").html("");
         $("#BackClientsCardLabel").html("");
 	}
 }
 
-function closeBackClientsCard(){
-	if ($("#back_id")){
-		let back_id=$("#back_id").val();
+function closeBackClientsCard() {
+	if ($("#back_id")) {
+		let back_id = $("#back_id").val();
 		JsHttpRequest.query($rcapi,{ 'w': 'closeBackClientsCard', 'back_id':back_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#BackClientsCard").modal("hide");
             $("#BackClientsCardBody").html("");
             $("#BackClientsCardLabel").html("");
 		}}, true);
-	}else{
+	} else {
 		$("#BackClientsCard").modal("hide");
         $("#BackClientsCardBody").html("");
         $("#BackClientsCardLabel").html("");
 	}
 }
 
-function addNewRow(){
-	var client_id=$("#client_id").val();
-	var sale_invoice_id=$("#sale_invoice_id").val();
-	if (client_id==0 || client_id.length==0){ 
+function addNewRow() {
+	var client_id = $("#client_id").val();
+	var sale_invoice_id = $("#sale_invoice_id").val();
+	if (client_id==0 || client_id.length==0) {
 		swal("Помилка!", "Оберіть спочатку клієнта", "error");
 	} 
-	if (sale_invoice_id==0 || sale_invoice_id.length==0){ 
+	if (sale_invoice_id==0 || sale_invoice_id.length==0) {
 		swal("Помилка!", "Оберіть спочатку документ основи", "error");
 	} 
 	if (client_id.length>0 && sale_invoice_id.length>0) {
@@ -178,15 +184,15 @@ function addNewRow(){
 		$("#back_clients_str tbody").append("<tr>"+row+"</tr>");
 		showSaleInvoiceArticleSearchForm('i_0','0','0',''+$("#back_id").val(),''+$("#sale_invoice_id").val());
 		//$i','$si_str_id','$art_id','$brand_id','$article_nr_displ','$back_id','$si_id
-		setTimeout(function (){
+		setTimeout(function () {
 			//var dtable=$('#back_clients_str').DataTable(); dtable.destroy();
 			$("#back_clients_str").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[10, 20, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}, "dom": '<"top">frt<"bottom"lpi><"clear">'});},500);
 	}
 	return true;
 }
 
-function showBackClientsArticleAmountWindow(art_id,article_nr_displ,brand_name,amount,price,summ,sis_id,max_back){
-    let back_id=$("#back_id").val();
+function showBackClientsArticleAmountWindow(art_id,article_nr_displ,brand_name,amount,price,summ,sis_id,max_back) {
+    let back_id = $("#back_id").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'showBackClientsArticleAmountWindow', 'art_id':art_id, 'back_id':back_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow2").modal("show");
@@ -200,7 +206,7 @@ function showBackClientsArticleAmountWindow(art_id,article_nr_displ,brand_name,a
 	}}, true);
 }
 
-function saveBackClientsCard(){
+function saveBackClientsCard() {
 	/*var back_id=$("#back_id").val();
 	var data=$("#data_pay").val();
 	var cash_id=$("#cash_id option:selected").val();
@@ -241,9 +247,9 @@ function saveBackClientsCard(){
 	swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 }
 
-function showBackClientsDocumentList(back_id){
-    let jmoving_op_id=$("#jmoving_op_id option:selected").val();
-    let document_id=$("#document_id").val();
+function showBackClientsDocumentList(back_id) {
+    let jmoving_op_id = $("#jmoving_op_id option:selected").val();
+    let document_id = $("#document_id").val();
 	$("#FormModalWindow").modal("show");
 	JsHttpRequest.query($rcapi,{ 'w': 'showBackClientsDocumentList', 'back_id':back_id, 'jmoving_op_id':jmoving_op_id, 'document_id':document_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){
@@ -252,7 +258,7 @@ function showBackClientsDocumentList(back_id){
 	}}, true);
 }
 
-function findBackClientsDocumentsSearch(back_id,jmoving_op_id){
+function findBackClientsDocumentsSearch(back_id, jmoving_op_id) {
     let s_nom=$("#form_document_search").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'findBackClientsDocumentsSearch', 'back_id':back_id, 'jmoving_op_id':jmoving_op_id, 's_nom':s_nom}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){
@@ -260,7 +266,7 @@ function findBackClientsDocumentsSearch(back_id,jmoving_op_id){
 	}}, true);
 }
 
-function setDocumentToForm(document_id,document_name){
+function setDocumentToForm(document_id, document_name) {
 	$("#document_id").val(document_id);
 	$("#document_name").val(document_name);
 	$("#FormModalWindow").modal("hide");
@@ -268,7 +274,7 @@ function setDocumentToForm(document_id,document_name){
     $("#FormModalLabel").html("");
 }
 
-function loadBackClientsCDN(back_id){
+function loadBackClientsCDN(back_id) {
 	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
 	if (back_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'loadBackClientsCDN', 'back_id':back_id}, 
@@ -278,7 +284,7 @@ function loadBackClientsCDN(back_id){
 	}
 }
 
-function showBackClientsCDNUploadForm(back_id){
+function showBackClientsCDNUploadForm(back_id) {
 	$("#cdn_back_id").val(back_id);
 	var myDropzone2 = new Dropzone("#myDropzone2",{ dictDefaultMessage: "Натисніть для вибору файлів або перетягніть їх це поле!" });
 	myDropzone2.removeAllFiles(true);
@@ -290,22 +296,26 @@ function showBackClientsCDNUploadForm(back_id){
 	});
 }
 
-function showBackClientsCDNDropConfirmForm(back_id,file_id,file_name){
-	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
-	if (back_id>0){
-		if(confirm('Видалити файл '+file_name+'?')){ 
+function showBackClientsCDNDropConfirmForm(back_id, file_id, file_name) {
+	if (back_id <= 0 || back_id == "") {
+		toastr["error"](errs[0]);
+	}
+	if (back_id > 0) {
+		if (confirm('Видалити файл ' + file_name + '?')) {
 			JsHttpRequest.query($rcapi,{ 'w': 'dpCDNDropFile', 'back_id':back_id, 'file_id':file_id}, 
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
-				if (result["answer"]==1){ loadBackClientsCDN(back_id); toastr["info"]("Файл успішно видалено"); }
-				else { toastr["error"](result["error"]); }
+				if (result["answer"]==1) {
+					loadBackClientsCDN(back_id);
+					toastr["info"]("Файл успішно видалено");
+				} else { toastr["error"](result["error"]); }
 			}}, true);
 		}
 	}
 }
 
-function loadBackClientsCommetsLabel(back_id){
+function loadBackClientsCommetsLabel(back_id) {
 	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
-	if (back_id>0){
+	if (back_id>0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'loadBackClientsCommetsLabel', 'back_id':back_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
             $("#label_comments").html(result["label"]);
@@ -313,9 +323,9 @@ function loadBackClientsCommetsLabel(back_id){
 	}
 }
 
-function loadBackClientsCommets(back_id){
+function loadBackClientsCommets(back_id) {
 	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
-	if (back_id>0){
+	if (back_id>0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'loadBackClientsCommets', 'back_id':back_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
             $("#back_clients_commets_place").html(result["content"]);
@@ -323,7 +333,7 @@ function loadBackClientsCommets(back_id){
 	}
 }
 
-function saveBackClientsComment(back_id){
+function saveBackClientsComment(back_id) {
 	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
 	if (back_id>0){
         let comment=$("#back_clients_comment_field").val();
@@ -341,7 +351,7 @@ function saveBackClientsComment(back_id){
 	}
 }
 
-function dropBackClientsComment(back_id,cmt_id){
+function dropBackClientsComment(back_id, cmt_id) {
 	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
 	if (back_id>0){
 		if(confirm('Видалити запис?')){ 
@@ -354,7 +364,7 @@ function dropBackClientsComment(back_id,cmt_id){
 	}
 }
 
-function showBackClientsSaleInvoiceList(){
+function showBackClientsSaleInvoiceList() {
     let client_id=$("#client_id").val();
     let sale_invoice_id=$("#sale_invoice_id").val();
 	if (client_id==0){ toastr["error"]("Оберіть клієнта спочатку");}
@@ -369,12 +379,12 @@ function showBackClientsSaleInvoiceList(){
 	}
 }
 
-function setBackClientsSaleInvoice(id,name,cash_id,cash_name,seller_id){
+function setBackClientsSaleInvoice(id, name, cash_id, cash_name, seller_id) {
     let back_id=$("#back_id").val();
 	$("#sale_invoice_id").val(id);
 	$("#sale_invoice_name").val(name);
 	$("#cash_name").val(cash_name);
-	JsHttpRequest.query($rcapi,{ 'w': 'setBackClientsSaleInvoice', 'back_id':back_id, 'sale_invoice_id':id,'cash_id':cash_id,'seller_id':seller_id}, 
+	JsHttpRequest.query($rcapi,{ 'w': 'setBackClientsSaleInvoice', 'back_id':back_id, 'sale_invoice_id':id, 'cash_id':cash_id, 'seller_id':seller_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		if (result["answer"]==1){ 
 			$("#FormModalWindow").modal("hide");
@@ -384,7 +394,7 @@ function setBackClientsSaleInvoice(id,name,cash_id,cash_name,seller_id){
 	}}, true);
 }
 
-function showBackClientsClientList(client_id){
+function showBackClientsClientList(client_id) {
 	JsHttpRequest.query($rcapi,{ 'w': 'showBackClientsClientList', 'client_id':client_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow").modal("show");
@@ -394,7 +404,7 @@ function showBackClientsClientList(client_id){
 	}}, true);
 }
 
-function setBackClientsClient(id,tpoint_id,tpoint_name){
+function setBackClientsClient(id, tpoint_id, tpoint_name) {
     let back_id=$("#back_id").val();
 	$("#client_id").val(id);
 	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
@@ -417,7 +427,7 @@ function setBackClientsClient(id,tpoint_id,tpoint_name){
 	}
 }
 
-function setBackClientsTpointStorage(){
+function setBackClientsTpointStorage() {
     let back_id=$("#back_id").val();
     let tpoint_id=$("#tpoint_id").val();
     let storage_id=$("#storage_id option:selected").val();
@@ -427,7 +437,7 @@ function setBackClientsTpointStorage(){
 	}}, true);
 }
 
-function setBackClientsStorageCell(){
+function setBackClientsStorageCell() {
     let back_id=$("#back_id").val();
     let cell_id=$("#cell_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'setBackClientsStorageCell', 'back_id':back_id, 'cell_id':cell_id}, 
@@ -436,7 +446,7 @@ function setBackClientsStorageCell(){
 	}}, true);
 }
 
-function updateCellsList(){
+function updateCellsList() {
     let storage_id=$("#storage_id option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'showStorageCellsList', 'storage_id':storage_id}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -444,7 +454,7 @@ function updateCellsList(){
 	}}, true);
 }
 
-function unlinkBackClientsClient(back_id){
+function unlinkBackClientsClient(back_id) {
 	swal({
 		title: "Відвязати клієнта від накладної?",text: "Внесені Вами зміни вплинуть на роботу Контагента",
 		type: "warning",allowOutsideClick:true,	allowEscapeKey:true,showCancelButton: true,confirmButtonColor: "#1ab394",
@@ -454,7 +464,7 @@ function unlinkBackClientsClient(back_id){
 		if (isConfirm) {
 			JsHttpRequest.query($rcapi,{ 'w': 'unlinkBackClientsClient', 'back_id':back_id}, 
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
-				if (result["answer"]==1){ 
+				if (result["answer"]==1) {
 					$("#client_id").val("0");
 					$("#client_name").val("");
 					swal("Виконано!", "Внесені Вами зміни успішно збережені.", "success");
@@ -464,7 +474,7 @@ function unlinkBackClientsClient(back_id){
 	});
 }
 
-function clearBackClientsStr(back_id){
+function clearBackClientsStr(back_id) {
 	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
 	if (back_id>0){
 		swal({
@@ -488,7 +498,7 @@ function clearBackClientsStr(back_id){
 	}
 }
 
-function dropBackClientsStr(pos,back_id,back_str_id){
+function dropBackClientsStr(pos,back_id,back_str_id) {
 	if (back_id<=0 || back_id=="" || back_str_id<=0 || back_str_id==""){toastr["error"](errs[0]);}
 	if (back_id>0 && back_str_id>0){
 		swal({
@@ -516,7 +526,7 @@ function dropBackClientsStr(pos,back_id,back_str_id){
 	}
 }
 
-function createBackClientsTax(){
+function createBackClientsTax() {
     let back_id=$("#back_id").val();
 	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
 	if (back_id>0){
@@ -542,7 +552,7 @@ function createBackClientsTax(){
 	}
 }
 
-function acceptBackClients(){
+function acceptBackClients() {
     let back_id=$("#back_id").val();
     let tpoint_id=$("#tpoint_id option:selected").val();
     let storage_id=$("#storage_id option:selected").val();
@@ -566,7 +576,7 @@ function acceptBackClients(){
 	}
 }
 
-function showArticleSearchDocumentForm(i,art_id,brand_id,article_nr_displ,doc_type,back_id){
+function showArticleSearchDocumentForm(i,art_id,brand_id,article_nr_displ,doc_type,back_id) {
 	JsHttpRequest.query($rcapi,{ 'w': 'showArticleSearchDocumentForm', 'brand_id':brand_id, 'article_nr_displ':article_nr_displ, 'doc_type':doc_type, 'doc_id':back_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#CatalogueModalWindow").modal("show");
@@ -578,8 +588,8 @@ function showArticleSearchDocumentForm(i,art_id,brand_id,article_nr_displ,doc_ty
 	}}, true);
 }
 
-function showSaleInvoiceArticleSearchForm(i,si_str_id,art_id,back_id,si_id){
-    var back_id=$("#back_id").val();
+function showSaleInvoiceArticleSearchForm(i, si_str_id, art_id, back_id, si_id) {
+    var back_id = $("#back_id").val();
 	if (back_id>0 && back_id.length>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'showSaleInvoiceArticleSearchForm', 'si_id':si_id, 'si_str_id':si_str_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -592,7 +602,7 @@ function showSaleInvoiceArticleSearchForm(i,si_str_id,art_id,back_id,si_id){
 	}
 }
 
-function setArticleToSelectAmountBackClients(art_id,article_nr_displ,brand_id,brand_name,back_id){
+function setArticleToSelectAmountBackClients(art_id, article_nr_displ, brand_id, brand_name, back_id) {
 	JsHttpRequest.query($rcapi,{ 'w': 'setArticleToSelectAmountBackClients', 'art_id':art_id, 'back_id':back_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#FormModalWindow2").modal("show");
@@ -605,30 +615,30 @@ function setArticleToSelectAmountBackClients(art_id,article_nr_displ,brand_id,br
 	}}, true);
 }
 
-function closeAmountInputWindow(){
+function closeAmountInputWindow() {
     let back_id=$("#back_id").val();
-	if (back_id.length>0){
+	if (back_id.length>0) {
 		$("#FormModalWindow2").modal("hide");
 		$("#FormModalBody2").html("");
 		$("#FormModalLabel2").html("");
 	}
 }
 
-function closeAmountSupplInputWindow(){
+function closeAmountSupplInputWindow() {
 	$("#FormModalWindow3").modal("hide");
     $("#FormModalBody3").html("");
     $("#FormModalLabel3").html("");
 }
 
-function countSumm(pf1,pf2,rf){
-    let p1=parseFloat($("#"+pf1).val().replace(',', '.'));
-    let p2=parseFloat($("#"+pf2).val().replace(',', '.'));
-    let summ=parseFloat(p1*p2).toFixed(2);
-	$("#"+rf).val(summ);
+function countSumm(pf1, pf2, rf) {
+    let p1 = parseFloat($("#" + pf1).val().replace(',', '.'));
+    let p2 = parseFloat($("#" + pf2).val().replace(',', '.'));
+    let summ = parseFloat(p1 * p2).toFixed(2);
+	$("#" + rf).val(summ);
 	return true;
 }
 
-function calculateBackClientsSumm(){
+function calculateBackClientsSumm() {
 	var back_clients_summ=0;
 	var kol_row=$("#kol_row").val();
 	var sum_str=0;
@@ -640,7 +650,7 @@ function calculateBackClientsSumm(){
 	$("#back_clients_summ").val(back_clients_summ);
 }
 
-function setArticleToBackClients(){
+function setArticleToBackClients() {
 	var back_id=$("#back_id").val();
 	var si_id=$("#sale_invoice_id").val();
 	var sis_id=$("#sis_id").val();
@@ -697,7 +707,7 @@ function setArticleToBackClients(){
 	}
 }
 
-function catalogue_article_storage_rest_search(search_type){
+function catalogue_article_storage_rest_search(search_type) {
 	var art=$("#catalogue_art").val();
 	var brand_id=0;
 	if ($("#list2_art").val().length>0){
@@ -725,9 +735,9 @@ function catalogue_article_storage_rest_search(search_type){
 	}
 }
 
-function startBackClientsExecute(){
+function startBackClientsExecute() {
     let back_id=$("#back_id").val();
-	if (back_id.length>0){
+	if (back_id.length>0) {
 		swal({
 			title: "Передати в роботу замовлення?",text: "Подальше внесення змін буде заблоковано", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",confirmButtonText: "Так", cancelButtonText: "Відмінити", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
 		},
@@ -766,14 +776,14 @@ function startBackClientsExecute(){
 						}
 					} else { swal("Помилка!", result["error"], "error");}
 				}}, true);
-			} else {swal("Відмінено", "", "error");}
+			} else { swal("Відмінено", "", "error");}
 		});
 	}
 }
 
-function loadBackClientsJmoving(back_id){
+function loadBackClientsJmoving(back_id) {
 	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
-	if (back_id>0){
+	if (back_id>0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'loadBackClientsJmoving', 'back_id':back_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#back_clients_jmoving_place").html(result["content"]);
@@ -781,9 +791,9 @@ function loadBackClientsJmoving(back_id){
 	}
 }
 
-function loadBackClientsStorsel(back_id){
+function loadBackClientsStorsel(back_id) {
 	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
-	if (back_id>0){
+	if (back_id>0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'loadBackClientsStorsel', 'back_id':back_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#back_clients_storsel_place").html(result["content"]);
@@ -791,9 +801,9 @@ function loadBackClientsStorsel(back_id){
 	}
 }
 
-function viewBackClientsStorageSelect(back_id,select_id,select_status){
+function viewBackClientsStorageSelect(back_id, select_id, select_status) {
 	if (back_id<=0 || back_id=="" || select_id=="" || select_id==0){toastr["error"](errs[0]);}
-	if (back_id>0 && select_id>0){
+	if (back_id>0 && select_id>0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'viewBackClientsStorageSelect', 'back_id':back_id, 'select_id':select_id, 'select_status':select_status},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow2").modal("show");
@@ -804,9 +814,9 @@ function viewBackClientsStorageSelect(back_id,select_id,select_status){
 	}
 }
 
-function loadBackClientsSaleInvoice(back_id){
+function loadBackClientsSaleInvoice(back_id) {
 	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
-	if (back_id>0){
+	if (back_id>0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'loadBackClientsSaleInvoice', 'back_id':back_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
             $("#back_clients_sale_invoice_place").html(result["content"]);
@@ -814,9 +824,9 @@ function loadBackClientsSaleInvoice(back_id){
 	}
 }
 
-function showBackClientsStorselForSaleInvoice(back_id){
+function showBackClientsStorselForSaleInvoice(back_id) {
 	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
-	if (back_id>0){
+	if (back_id>0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'showBackClientsStorselForSaleInvoice', 'back_id':back_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow").modal("show");
@@ -826,26 +836,26 @@ function showBackClientsStorselForSaleInvoice(back_id){
 	}
 }
 
-function sendBackClientsStorselToSaleInvoice(back_id){
+function sendBackClientsStorselToSaleInvoice(back_id) {
 	var back_id=$("#back_id").val();
 	if (back_id.length>0){
 		var kol_storsel=$("#kol_storsel").val();
 		var ar_storsel=[]; var sel=0;
-		for (var i=1;i<=kol_storsel;i++){
+		for (var i=1; i<=kol_storsel; i++) {
 			if (document.getElementById("back_clients_strosel_"+i)){
 				if (document.getElementById("back_clients_strosel_"+i).checked){ar_storsel[i]=$("#back_clients_strosel_"+i).val();sel=1; }
 			}
 		}
-		if (sel==1){
+		if (sel == 1) {
 			JsHttpRequest.query($rcapi,{ 'w':'sendBackClientsStorselToSaleInvoice','back_id':back_id,'kol_storsel':kol_storsel,'ar_storsel':ar_storsel},
 			function (result, errors){ if (errors) {alert(errors);} if (result){  
-				if (result["answer"]==1){
+				if (result["answer"] == 1) {
 					$("#FormModalWindow").modal("hide");
 					$("#FormModalBody").html("");
 					$("#FormModalLabel").html("");
 					swal("Документ сформовано!", "Номер накладної: "+result["sale_invoice_nom"], "success");
 				}
-				if (result["answer"]==2){
+				if (result["answer"] == 2) {
 					swal({
 						title: "Уточнення!",text: result["error"], type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",confirmButtonText: "Відобразити", cancelButtonText: "Відмінити", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
 					},
@@ -861,20 +871,26 @@ function sendBackClientsStorselToSaleInvoice(back_id){
 									$("#back_clients_sale_invoice_data_pay_list").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": false,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
 								},500);
 							}}, true);
-						} else {swal("Відмінено", "", "error");}
+						} else {
+							swal("Відмінено", "", "error");
+						}
 					});
 				}
-				if (result["answer"]==0){ 
+				if (result["answer"] == 0) {
 					swal("Помилка!", result["error"], "error"); 
 				}
 			}}, true);
-		}else{swal("Помилка!", "Для формування накладної оберіть хоча б один відбір", "error"); }
+		} else {
+			swal("Помилка!", "Для формування накладної оберіть хоча б один відбір", "error");
+		}
 	}
 }
  
-function viewBackClientsSaleInvoice(back_id,invoice_id){
-	if (back_id<=0 || back_id=="" || invoice_id=="" || invoice_id==0){toastr["error"](errs[0]);}
-	if (back_id>0 && invoice_id>0){
+function viewBackClientsSaleInvoice(back_id, invoice_id) {
+	if (back_id <= 0 || back_id == "" || invoice_id == "" || invoice_id == 0) {
+		toastr["error"](errs[0]);
+	}
+	if (back_id > 0 && invoice_id > 0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'viewBackClientsSaleInvoice', 'back_id':back_id, 'invoice_id':invoice_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow2").modal("show");
@@ -885,29 +901,35 @@ function viewBackClientsSaleInvoice(back_id,invoice_id){
 	}
 }
 
-function openSaleInvoice(invoice_id){
-	if (invoice_id=="" || invoice_id==0){toastr["error"](errs[0]);}
-	if (invoice_id>0){
-		window.open("/SaleInvoice/view/"+invoice_id,"_blank");
+function openSaleInvoice(invoice_id) {
+	if (invoice_id == "" || invoice_id == 0){
+		toastr["error"](errs[0]);
+	}
+	if (invoice_id > 0) {
+		window.open("/SaleInvoice/view/" + invoice_id,"_blank");
 	}
 }
 
-function printBackClients(){
-    let back_id=$("#back_id").val();
-    let status_back=$("#status_back_id").val();
-	if (back_id=="" || back_id==0){toastr["error"](errs[0]);}
-	if (back_id>0){
-		if (status_back==103){
-			window.open("/BackClients/printBCn1/"+back_id,"_blank","printWindow");
-		}else{
+function printBackClients() {
+    let back_id = $("#back_id").val();
+    let status_back = $("#status_back_id").val();
+	if (back_id == "" || back_id == 0) {
+		toastr["error"](errs[0]);
+	}
+	if (back_id > 0) {
+		if (status_back == 103) {
+			window.open("/BackClients/printBCn1/" + back_id,"_blank","printWindow");
+		} else {
 			swal("Помилка!", "Повернення не прийнято", "error"); 
 		}
 	}
 }
 
-function loadBackClientsMoneyPay(back_id){
-	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
-	if (back_id>0){
+function loadBackClientsMoneyPay(back_id) {
+	if (back_id <= 0 || back_id == ""){
+		toastr["error"](errs[0]);
+	}
+	if (back_id > 0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'loadBackClientsMoneyPay', 'back_id':back_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
             $("#back_clients_money_pay_place").html(result["content"]);
@@ -915,9 +937,11 @@ function loadBackClientsMoneyPay(back_id){
 	}
 }
 
-function loadBackClientsPartition(back_id){
-	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
-	if (back_id>0){
+function loadBackClientsPartition(back_id) {
+	if (back_id <= 0 || back_id == "") {
+		toastr["error"](errs[0]);
+	}
+	if (back_id > 0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'loadBackClientsPartition', 'back_id':back_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
             $("#back_clients_partition_form").html(result["content"]);
@@ -925,17 +949,252 @@ function loadBackClientsPartition(back_id){
 	}
 }
 
-function exportBackClientsExcel(back_id){
+function exportBackClientsExcel(back_id) {
     swal({
             title: "Виберіть спосіб вигрузки",text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",confirmButtonText: "Крапка", cancelButtonText: "Кома", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
         },
         function (isConfirm) {
             if (isConfirm) {
                 swal.close();
-                window.open("/BackClients/exportExcelSlIv/"+back_id+"/point","_blank","printWindow");
+                window.open("/BackClients/exportExcelSlIv/" + back_id + "/point","_blank","printWindow");
             } else {
                 swal.close();
-                window.open("/BackClients/exportExcelSlIv/"+back_id+"/comma","_blank","printWindow");
+                window.open("/BackClients/exportExcelSlIv/" + back_id + "/comma","_blank","printWindow");
             }
         });
+}
+
+/*===== IMPORT =======================================================================================================*/
+
+/*
+* форма імпорта файлів
+* */
+function loadBackImport() {
+	$("#FormImport").modal("show");
+	$("#FormImportBody").html("<div class=\"loader\"></div>");
+	JsHttpRequest.query($rcapi,{ 'w': 'loadBackImport'},
+		function (result, errors){ if (errors) {alert(errors);} if (result) {
+			$("#FormImportBody").html(result.content);
+		}}, true);
+}
+
+/*
+* завантажити файл в дропзону
+* */
+function showCsvUploadForm() {
+	$("#fileBackCsvUploadForm").modal("show");
+	var myDropzone3 = new Dropzone("#myDropzone3",{ dictDefaultMessage: "Натисніть для вибору файлів або перетягніть їх це поле!" });
+	myDropzone3.removeAllFiles(true);
+	myDropzone3.on("queuecomplete", function() {
+		this.removeAllFiles();
+		$("#fileBackCsvUploadForm").modal("hide");
+		loadBackImport();
+	});
+}
+
+/*
+* попередній перегляд
+* */
+function saveCsvBackImport() {
+	let start_row = parseInt($("#csv_from_row").val());
+	let kol_cols = parseInt($("#kol_cols").val());
+	let cls_kol = 3;
+	if (start_row < 0 || start_row.length <= 0) {
+		swal("Помилка!", "Не вказано початковий ряд зчитування", "error");
+	}
+	if (start_row >= 0) {
+		var cols = []; var cl = 0; var cls_sel = 0;
+		for (var i = 1; i <= kol_cols; i++) {
+			cl = $("#clm-" + i + " option:selected").val();
+			if (cl > 0) {
+				cls_sel += 1;
+				cols[i] = cl;
+			}
+		}
+		if (cls_sel < cls_kol) {
+			swal("Помилка!", "Не вказані усі значення колонок", "error");
+		} else {
+			JsHttpRequest.query($rcapi,{ 'w':'saveCsvBackImport', 'start_row':start_row, 'kol_cols':kol_cols, 'cols':cols},
+				function (result, errors){ if (errors) {alert(errors);} if (result) {
+					if (result["answer"] == 1) {
+						// $("#FormModalWindow").modal("hide");
+						// swal("Імпорт даних завершено!", "Перевірте нові дані.", "success");
+						loadBackImport();
+					} else { swal("Помилка!", result["error"], "error");}
+				}}, true);
+		}
+	}
+}
+
+/*
+* назначити бренди
+* */
+function saveTablePreviewBack() {
+	let brands = $("#csv_brands option:selected").val();
+	JsHttpRequest.query($rcapi, { 'w': 'saveTablePreviewBack', 'brands':brands},
+		function (result, errors) { if (errors) {alert(errors);} if (result) {
+			loadBackImport();
+		}}, true);
+}
+
+/*
+* підставити бренди
+* */
+function loadTablePreviewBack() {
+	let brands = $("#csv_brands option:selected").val();
+	JsHttpRequest.query($rcapi,{ 'w': 'loadTablePreviewBack', 'brands':brands},
+		function (result, errors) { if (errors) {alert(errors);} if (result) {
+			$("#range_table_import").html(result.content);
+		}}, true);
+}
+
+/*
+* змінити порядок складів
+* */
+function showStorageFieldsViewForm() {
+	JsHttpRequest.query($rcapi,{ 'w':'showStorageFieldsViewForm'},
+		function (result, errors) { if (errors) {alert(errors);} if (result) {
+			$("#FormModalWindow").modal("show");
+			$("#FormModalBody").html(result["content"]);
+			$("#FormModalLabel").html("Порядок складів");
+			$(".table-sortable tbody").sortable({
+				handle: "span",
+				stop: function(event, ui) {},
+				update: function (event, ui) {
+					var data = $(this).sortable("serialize").toString();
+				}
+			});
+		}}, true);
+}
+
+/*
+* зберегти порядок складів
+* */
+function saveStorageFieldsViewForm() {
+	var data = $(".table-sortable tbody").sortable("toArray");
+	var kol_fields = $("#kol_fields").val();
+	var fl_id = []; var fl_ch = [];
+	for (var i = 1; i <= kol_fields; i++) {
+		var field_id = data[i - 1].split("_")[1];
+		fl_id[i] = field_id;
+		var ch = 0;
+		if (document.getElementById("use_" + field_id).checked) {
+			ch = 1;
+		}
+		fl_ch[i] = ch;
+	}
+	if (kol_fields > 0) {
+		JsHttpRequest.query($rcapi,{ 'w':'saveStorageFieldsViewForm', 'kol_fields':kol_fields, 'fl_id':fl_id, 'fl_ch':fl_ch },
+			function (result, errors) { if (errors) {alert(errors);} if (result) {
+				if (result["answer"] == 1) {
+					swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
+					$("#FormModalWindow").modal("hide");
+					let dp_id = $("#dp_id").val();
+					loadDpImport(dp_id);
+				} else { swal("Помилка!", result["error"], "error"); }
+			}}, true);
+	}
+}
+
+/*
+* очистити дані
+* */
+function clearBackImport() {
+	JsHttpRequest.query($rcapi,{ 'w':'clearBackImport'},
+		function (result, errors) { if (errors) {alert(errors);} if (result) {
+			if (result["answer"] == 1) {
+				loadBackImport();
+			} else { swal("Помилка!", result["error"], "error"); }
+		}}, true);
+}
+
+/*
+* check back invoice
+* */
+function checkBackArticles() {
+	let client_id = $("#clients_list option:selected").val();
+	let storage_id = $("#storages_list option:selected").val();
+	let cell_id = $("#cells_list option:selected").val();
+	if (client_id == "0" || storage_id == "0" || cell_id == "0") {
+		swal("Помилка!", "Виберіть всі поля!", "error");
+	} else {
+		$("#tableStrFile").html("<div class=\"loader\"></div>");
+		JsHttpRequest.query($rcapi,{ 'w':'checkBackArticles', 'client_id':client_id, 'storage_id':storage_id, 'cell_id':cell_id},
+			function (result, errors) { if (errors) {alert(errors);} if (result) {
+				$("#tableStrFile").html(result.content);
+			}}, true);
+	}
+}
+
+/*
+* зберегти дані
+* */
+function finishBackImport() {
+	let client_id_sel = $("#client_id_sel").val();
+	let storage_id_sel = $("#storage_id_sel").val();
+	let cell_id_sel = $("#cell_id_sel").val();
+	JsHttpRequest.query($rcapi,{ 'w':'finishBackImport', 'client_id_sel':client_id_sel, 'storage_id_sel':storage_id_sel, 'cell_id_sel':cell_id_sel},
+		function (result, errors) { if (errors) {alert(errors);} if (result) {
+			if (result["answer"] == 1) {
+				swal("Імпорт даних завершено!", "Перевірте нові дані. Створено " + result.invoice_count + " накладних", "success");
+				$("#FormImport").modal("hide");
+			} else { swal("Помилка!", result["error"], "error"); }
+		}}, true);
+}
+
+function getCellsList() {
+	let storage_id = $("#storages_list option:selected").val();
+	JsHttpRequest.query($rcapi,{ 'w':'getCellsList', 'storage_id':storage_id},
+		function (result, errors) { if (errors) {alert(errors);} if (result) {
+			$("#cells_list").html(result.content);
+		}}, true);
+}
+
+function exportBackImportArtilces(status) {
+	let client_id = $("#client_id_sel").val();
+	let storage_id = $("#storage_id_sel").val();
+	let cell_id = $("#cell_id_sel").val();
+	window.open("/BackClients/exportBackImportArticles/" + client_id + "/" + storage_id + "/" + cell_id + "/" + status, "_blank");
+}
+
+function showCbCheckForm() {
+	let invoice_id 	= $("#cb_check_invoice_id").val();
+	let type_id 	= $("#cb_check_doc_type_id").val();
+	JsHttpRequest.query($rcapi,{ 'w': 'showCbCheckForm', 'invoice_id':invoice_id, 'type_id':type_id},
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+			$("#CheckBoxWindow").modal("show");
+			$("#CheckBoxBody").html(result["content"]);
+		}}, true);
+}
+
+function addCbCheck() {
+	let invoice_id 	= $("#cb_check_invoice_id").val();
+	let type_id 	= $("#cb_check_doc_type_id").val();
+	let payment_id 	= $('input[name="cb_payment"]:checked').val();
+	let email 		= $("#cb_check_email").val();
+	JsHttpRequest.query($rcapi,{ 'w':'addCbCheck', 'invoice_id':invoice_id, 'type_id':type_id, 'payment_id':payment_id, 'email':email},
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+			if (result["answer"] == 1) {
+				swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
+				showBackClientsCard(invoice_id);
+			} else {
+				swal("Помилка!", result["error"], "error");
+			}
+		}}, true);
+}
+
+function showCbCheck() {
+	let invoice_id 	= $("#cb_check_invoice_id").val();
+	let type_id 	= $("#cb_check_doc_type_id").val();
+	JsHttpRequest.query($rcapi,{ 'w':'showCbCheck', 'invoice_id':invoice_id, 'type_id':type_id},
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+			if (result["answer"] == 1) {
+				window.open(
+					"https://check.checkbox.ua/" + result["check_id"],
+					'_blank'
+				);
+			} else {
+				swal("Помилка!", result["error"], "error");
+			}
+		}}, true);
 }

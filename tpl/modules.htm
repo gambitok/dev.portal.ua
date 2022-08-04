@@ -1,0 +1,190 @@
+<link href="/js/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
+<link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
+
+<link href="/js/plugins/bootstrap-markdown/bootstrap-markdown.min.css" rel="stylesheet">
+
+<style>
+    .ibox-title {
+        border: unset;
+    }
+    .nav-tabs > li.active > a {
+        background: white;
+    }
+</style>
+
+<h2 class="border-bottom white-bg dashboard-header">Модулі</h2>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item active">
+            <a class="nav-link active" id="module-tab" data-toggle="tab" href="#module" role="tab" aria-controls="module" aria-selected="true" aria-expanded="true">Модулі</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="module_page-tab" data-toggle="tab" href="#module_page" role="tab" aria-controls="module_page" aria-selected="false">Сторінки</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="module_file-tab" data-toggle="tab" href="#module_file" role="tab" aria-controls="module_file" aria-selected="false">Файли</a>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade active in" id="module" role="tabpanel" aria-labelledby="module-tab">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a class="btn btn-success" href="#newModule" onClick="showModuleCard(0);"><i class='fa fa-plus'></i> Новий модуль</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="table-responsive">
+                                <table id="datatable1" class="table table-striped table-hover table-bordered" width="100%">
+                                    <thead>
+                                    <tr align="center">
+                                        <th>Код</th>
+                                        <th>Назва</th>
+                                        <th>Посилання</th>
+                                        <th>Іконка</th>
+                                        <th>Файл</th>
+                                        <th>Порядок</th>
+                                        <th>Статус</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="module_range">
+                                    {module_range}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="tab-pane fade" id="module_page" role="tabpanel" aria-labelledby="module_page-tab">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a class="btn btn-success" href="#newModulePage" onClick="showModulePageCard(0);"><i class='fa fa-plus'></i> Нова сторінка</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="table-responsive">
+                                <table id="datatable2" class="table table-striped table-hover table-bordered" width="100%">
+                                    <thead>
+                                    <tr align="center">
+                                        <th>Код</th>
+                                        <th>Порядок</th>
+                                        <th>Модуль</th>
+                                        <th>Назва</th>
+                                        <th>Файл</th>
+                                        <th>Посилання</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="module_pages_range">
+                                    {module_pages_range}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="tab-pane fade" id="module_file" role="tabpanel" aria-labelledby="module_file-tab">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a class="btn btn-success" href="#newModuleFile" onClick="showModuleFileCard(0);"><i class='fa fa-plus'></i> Новий файл модуля</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="table-responsive">
+                                <table id="datatable3" class="table table-striped table-hover table-bordered" width="100%">
+                                    <thead>
+                                    <tr align="center">
+                                        <th>Код</th>
+                                        <th>Назва</th>
+                                        <th>Файл</th>
+                                        <th>Система</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="module_files_range">
+                                    {module_files_range}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div id="ModuleCard" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
+                <h3 class="myModalLabel text-left">Карта модуля <span id="ModuleCardLabel"></span></h3>
+            </div>
+            <div class="modal-body" id="ModuleCardBody">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display: none;" id="FormModalWindow" class="modal fade FormModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="FormModalLabel" class="text-left"></h3></div>
+            <div class="modal-body" id="FormModalBody"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/plugins/barcode-generator/jquery-barcode.js"></script>
+<!-- Bootstrap markdown -->
+<script src="/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>
+<script src="/js/plugins/bootstrap-markdown/markdown.js"></script>
+<script src="/vendors/jquery/generate-password.js"></script>
+<script src="/js/plugins/select2/js/select2.full.min.js"></script>
+<script src="/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/js/plugins/dropzone/dropzone.js"></script>
+<script src="/js/plugins/switchery/switchery.js"></script>
+<script src="/js/configs/configs.js"></script>
+
+<script language="javascript">
+    $(document).ready(function() {
+        $("#datatable1").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+        $("#datatable2").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+        $("#datatable3").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
+    });
+</script>
+
+<script type="text/javascript">
+    //Disabling autoDiscover
+    Dropzone.autoDiscover = false;
+</script>
+<!-- Sweet alert -->
+<script src="/js/plugins/sweetalert/sweetalert.min.js"></script>

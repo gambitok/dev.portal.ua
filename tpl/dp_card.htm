@@ -2,31 +2,101 @@
     .none {
         display: none!important;
     }
+    .form-delivery {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: left;
+        width: 100%;
+    }
+    .form-delivery-save {
+        display: block;
+        float: right;
+    }
+    .form-delivery__item {
+        width: calc(33.33% - 30px);
+        margin-right: 30px;
+        margin-bottom: 20px;
+        display: flex;
+    }
+    .form-delivery__item-label {
+        padding: 5px 5px 0 0;
+        font-weight: bold;
+        width: 30%;
+    }
+    .form-delivery__item-input {
+        width: 70%;
+    }
+    .grid-row .row {
+        margin-bottom: 15px;
+    }
+    textarea {
+        margin-bottom: 15px!important;
+    }
+    .control-label {
+        padding-top: 0!important;
+    }
+    .grid-btn {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .grid-btn>* {
+        /*flex: auto;*/
+        font-size: 1em;
+        margin: 1px;
+    }
 </style>
 
 <div class="tabs-container">
 
     <ul class="nav nav-tabs" id="dp_tabs">
-        <li class="active"><a data-toggle="tab" href="#dp_tab1" onClick="showDpCard('{dp_id}');"><i class="fa fa-bars"></i> <span class="hidden-sm-down">Структура</span></a></li>
-        <li><a data-toggle="tab" href="#dp_tab10" onClick="loadDpSiteOrder('{dp_id}');"><i class="fa fa-ticket"></i> Замовлення сайту<span id="label_dist">{site_order_label}</span></a></li>
-		<li><a data-toggle="tab" href="#dp_tab3" onClick="loadDpStorsel('{dp_id}');">
-            <i class="fa fa-slack"></i> <span class="hidden-sm-down">Локальний відбір
-			<span id="label_un_articles1" class="label label-tab label-info">{dpLocalListCount}</span></span>
-        </a></li>
-        <li><a data-toggle="tab" href="#dp_tab4" onClick="loadDpJmoving('{dp_id}');">
-            <i class="fa fa-cubes"></i> <span class="hidden-sm-down">Віддалене переміщення
-			<span id="label_un_articles2" class="label label-tab label-info">{dpRemoteListCount}</span></span>
-        </a></li>
-        <li><a data-toggle="tab" href="#dp_tab6" onClick="loadDpSaleInvoice('{dp_id}');"><i class="fa fa-list"></i> <span class="hidden-sm-down">Видаткові накладні</span></a></li>
-        <li><a data-toggle="tab" href="#dp_tab9" onClick="loadDpMoneyPay('{dp_id}');"><i class="fa fa-money"></i> <span class="hidden-sm-down">Оплати</span></a></li>
-        <li class="tab-count-info"><a data-toggle="tab" class="tab-count-info" href="#dp_tab7" onClick="loadDpCommets('{dp_id}');">
-            <i class="fa fa-edit"></i> Замітки <span id="label_comments">{labelCommentsCount}</span>
-        </a></li>
+        <li class="active">
+            <a data-toggle="tab" href="#dp_tab1" onClick="showDpCard('{dp_id}');">
+                <i class="fa fa-bars"></i> <span class="hidden-sm-down">Структура</span>
+            </a>
+        </li>
+        <li>
+            <a data-toggle="tab" href="#dp_tab10" onClick="loadDpSiteOrder('{dp_id}');">
+                <i class="fa fa-ticket"></i> Замовлення сайту<span id="label_dist">{site_order_label}</span>
+            </a>
+        </li>
+		<li>
+            <a data-toggle="tab" href="#dp_tab3" onClick="loadDpStorsel('{dp_id}');">
+                <i class="fa fa-slack"></i> <span class="hidden-sm-down">Локальний відбір
+			    <span id="label_un_articles1" class="label label-tab label-info">{dpLocalListCount}</span></span>
+            </a>
+        </li>
+        <li>
+            <a data-toggle="tab" href="#dp_tab4" onClick="loadDpJmoving('{dp_id}');">
+                <i class="fa fa-cubes"></i> <span class="hidden-sm-down">Віддалене переміщення
+			    <span id="label_un_articles2" class="label label-tab label-info">{dpRemoteListCount}</span></span>
+            </a>
+        </li>
+        <li>
+            <a data-toggle="tab" href="#dp_tab6" onClick="loadDpSaleInvoice('{dp_id}');">
+                <i class="fa fa-list"></i> <span class="hidden-sm-down">Видаткові накладні</span>
+            </a>
+        </li>
+        <li>
+            <a data-toggle="tab" href="#dp_tab9" onClick="loadDpMoneyPay('{dp_id}');">
+                <i class="fa fa-money"></i> <span class="hidden-sm-down">Оплати</span>
+            </a>
+        </li>
+        <li class="tab-count-info">
+            <a data-toggle="tab" class="tab-count-info" href="#dp_tab7" onClick="loadDpCommets('{dp_id}');">
+                <i class="fa fa-edit"></i> Замітки <span id="label_comments">{labelCommentsCount}</span>
+            </a>
+        </li>
         <!--<li><a data-toggle="tab" href="#dp_tab8" onClick="loadDpCDN('{dp_id}');"><i class="fa fa-cloud"></i> <span class="hidden-sm-down">CDN Файли</span></a></li>-->
-        <li><a data-toggle="tab" href="#dp_tab11" onClick="loadDpImport('{dp_id}');"><i class="fa fa-file"></i> <span class="hidden-sm-down">Імпорт артикулів</span></a></li>
-        <li><a data-toggle="tab" href="#dp_tab12" onClick="loadDpUnknownArticles('{dp_id}');">
-            <i class="fa fa-bug"></i> <span class="hidden-sm-down">Не визначені артикули <span id="label_unknown" class="label label-tab label-info">{labelUnknownsCount}</span></span>
-        </a></li>
+        <li>
+            <a data-toggle="tab" href="#dp_tab11" onClick="loadDpImport('{dp_id}');">
+                <i class="fa fa-file"></i> <span class="hidden-sm-down">Імпорт артикулів</span>
+            </a>
+        </li>
+        <li>
+            <a data-toggle="tab" href="#dp_tab12" onClick="loadDpUnknownArticles('{dp_id}');">
+                <i class="fa fa-bug"></i> <span class="hidden-sm-down">Не визначені артикули <span id="label_unknown" class="label label-tab label-info">{labelUnknownsCount}</span></span>
+            </a>
+        </li>
     </ul>
 
     <div class="tab-content">
@@ -39,201 +109,189 @@
 							<input type="hidden" id="dp_id" value="{dp_id}">
                             <input type="hidden" id="dp_type_id" value="{type_id}">
                             <input type="hidden" id="dp_document_prefix" value="{doc_prefix}">
+                            <input type="hidden" id="dp_data" value="{data}" placeholder="РРРР-ММ-ДД" title="РРРР-ММ-ДД">
+                            <input type="hidden" id="tpoint_id" name="tpoint_id" value="{tpoint_id}">
+                            <input type="hidden" id="client_id" name="client_id" value="{client_id}">
+                            <input type="hidden" id="check_cash_id" value="{cash_id}">
 
-                            <div class="form-group">
-                            	<label class="col-sm-1 control-label">Дата</label>
-                                <div class="col-sm-2"><input class="form-control" disabled type="text" id="dp_data" value="{data}" placeholder="РРРР-ММ-ДД"></div>
-                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">
-									Клієнт
-									<input id="client_id_input" type="number" {oper_disabled} style="width: 65px; margin-left: 15px;" min="1" value="{client_id}">
-									<button type="button" class="btn btn-xs btn-default" {oper_disabled} onClick="getDpTpointInfo();"><i class="fa fa-angle-double-right"></i></button>
-								</label>
-                                <div class="col-lg-3 col-md-2 col-sm-7">
-                                    <input type="hidden" id="client_id" name="client_id" value="{client_id}">
-                                    <div class="input-group">
-                                    	<input class="form-control" type="text" readonly {oper_disabled} id="client_name" value="{client_name}" placeholder="Отримувач товару">
-                                        <span class="input-group-btn"> <button type="button" class="btn btn-primary" {oper_disabled} id="clientSelBtn" onClick="showDpClientList('{client_id}');"><i class="fa fa-bars"></i></button> </span>
-                                        <span class="input-group-btn"> <button type="button" class="btn btn-default" {oper_disabled} id="clientDropBtn" onClick="unlinkDpClient('{dp_id}');"><i class="fa fa-times"></i></button> </span>
+                            <div class="row grid-row">
+
+                                <div class="col-lg-3 col-md-6 col-sm-6">
+
+                                    <div class="row">
+                                        <label class="col-lg-4 control-label">Вид документу</label>
+
+                                        <div class="col-lg-8">
+                                            <select title="Вид документу" class="form-control" disabled size="1" id="doc_type_id" style="width:100%;">
+                                                {doc_type_list}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <label class="col-lg-4 control-label">Торгова точка</label>
+
+                                        <div class="col-lg-8">
+                                            <div class="input-group">
+                                                <input class="form-control" type="text" readonly {oper_disabled} id="tpoint_name" name="tpoint_name" value="{tpoint_name}" placeholder="Торгова точка" title="Торгова точка">
+                                                <span class="input-group-btn"> <button type="button" {oper_disabled} class="btn btn-primary" id="tpointSelBtn" onClick="showDpTpointList('{dp_id}');"><i class="fa fa-bars"></i></button> </span>
+                                                <span class="input-group-btn"> <button type="button" {oper_disabled} class="btn btn-default" id="tpointDropBtn" onClick="unlinkDpTpoint('{dp_id}');"><i class="fa fa-times"></i></button> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="row" style="margin: 0;">
+                                                <label class="">Курс валют</label>
+                                                <label class=" label-primary" style="width: auto; float: right; padding: 0 15px;">
+                                                    1$ = {usd_to_uah} грн.; 1&euro; = {eur_to_uah} грн.
+                                                </label>
+                                            </div>
+                                            <div class="row" style="margin: 0;">
+                                                <label class="">Вага / Об'єм</label>
+                                                <label class=" label-primary" style="width: auto; float: right; padding: 0 15px;"><span id="dp_volume">{volume}</span>кг <span id="dp_weight">{weight}</span>м3</label>
+                                            </div>
+                                            <div class="row" style="margin: 0;">
+                                                <label class="">Баланс клієнта</label>
+                                                <label class=" label-{balans_style}" style="width: auto; float: right; padding: 0 15px;">{balans_client}</label>
+                                            </div>
+                                            <div class="row {balans_display}" style="margin: 0;">
+                                                <label class="">Баланс юридичної особи</label>
+                                                <label class=" label-{balans_conto_style}" style="width: auto; float: right; padding: 0 15px;">{balans_conto}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-lg-5 col-md-6 col-sm-6">
+
+                                    <div class="row">
+                                        <label class="col-lg-3 control-label" style="padding-right: 0;">
+                                            Клієнт
+                                            <input id="client_id_input" type="number" {oper_disabled} style="width: 65px; margin-left: 15px;" min="1" value="{client_id}">
+                                            <button type="button" class="btn btn-xs btn-default" {oper_disabled} onClick="getDpTpointInfo();"><i class="fa fa-angle-double-right"></i></button>
+                                        </label>
+
+                                        <div class="col-lg-9">
+                                            <div class="input-group">
+                                                <input class="form-control" type="text" readonly {oper_disabled} id="client_name" value="{client_name}" placeholder="Отримувач товару" title="Отримувач товару">
+                                                <span class="input-group-btn"> <button type="button" class="btn btn-primary" {oper_disabled} id="clientSelBtn" onClick="showDpClientList('{client_id}');"><i class="fa fa-bars"></i></button> </span>
+                                                <span class="input-group-btn"> <button type="button" class="btn btn-default" {oper_disabled} id="clientDropBtn" onClick="unlinkDpClient('{dp_id}');"><i class="fa fa-times"></i></button> </span>
+                                                <span class="input-group-btn"> <button type="button" class="btn btn-default" id="clientInfoBtn" onClick="showClientCard('{client_id}');"><i class="fa fa-info"></i></button> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <label class="col-lg-3 control-label">Юридична особа</label>
+
+                                        <div class="col-lg-9">
+                                            <select title="Юридична особа" class="form-control" id="client_conto_id" onchange='getClientContoCash(); getClientPaymentDelay(); getClientDocType();'>
+                                                <option value="0">--Оберіть клієна--</option>
+                                                {client_conto_list}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <label class="col-lg-3 control-label">Сума документу</label>
+
+                                        <div class="col-lg-9" style="display: flex;">
+                                            <input title="Сума" type="text" readonly class="form-control" id="dp_summ" value="{dp_summ}" style="display: inline; width: 80%;">
+                                            <select title="Валюта" class="form-control" disabled size="1" id="cash_id" style="display:inline; width:20%; height: 34px;" onChange="changeDpCash();">
+                                                {cash_list}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-lg-4 col-md-12 col-sm-12">
+
+                                    <div class="row">
+                                        <label class="col-lg-3 control-label" for="delivery_card">Доставка</label>
+
+                                        <div class="col-lg-2" style="padding: 0">
+                                            <div class="btn-group pull-right">
+                                                <button class="btn btn-sm btn-white" onclick="dropDeliveryCard();"><i class="fa fa-trash"></i> </button>
+                                                <button class="btn btn-sm btn-primary" onclick="showDeliveryCard();"><i class="fa fa-edit"></i> </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-7">
+                                            <textarea class="form-control" id="delivery_card" placeholder="Інформація про доставку відсутня" disabled title="{delivery_short_data}">{delivery_short_data}</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <label class="col-lg-3 control-label" for="dp_note_field">Примітка </label>
+
+                                        <div class="col-lg-2" style="padding: 0">
+                                            <div class="btn-group pull-right">
+                                                <button class="btn btn-sm btn-white" onClick="dropDpNote('{dp_id}');"><i class="fa fa-trash"></i></button>
+                                                <button class="btn btn-sm btn-primary" onClick="setDpNote('{dp_id}');"><i class="fa fa-save"></i></button>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-7 social_comment">
+                                            <textarea class="form-control" id="dp_note_field" placeholder="Залишити свою примітку">{dp_note}</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        {processed_label}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="grid-btn">
+                                        <button class="btn btn-warning" type="button" {oper_disabled} onClick="startDpExecute();"><i class="fa fa-share"></i> Передати в роботу</button>
+                                        <button class="btn btn-info" type="button" {oper_disabled2} onClick="showDpStorselForSaleInvoice('{dp_id}');"><i class="fa fa-book"></i> Сформувати видаткову накладну</button>
+                                        <button class="btn btn-secondary" type="button" {oper_disabled3} onClick="showDpStorselForWriteOff('{dp_id}');"><i class="fa fa-pencil"></i> Сформувати списання</button>
                                     </div>
                                 </div>
-                                <label class="col-sm-2 control-label">Вид документу</label>
-                                <div class="col-sm-2">
-                                    <select title="Вид документу" class="form-control" disabled size="1" id="doc_type_id" style="width:100%;">
-                                        {doc_type_list}
-                                    </select>
-                                </div>
-                            </div>
 
-                            <div class="form-group">
-                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Валюта</label>
-                                <input type="hidden" id="check_cash_id" value="{cash_id}">
-                                <div class="col-lg-2 col-md-2 col-sm-8">
-                                    <select title="Валюта" class="form-control" disabled size="1" id="cash_id" style="width:100%;" onChange="changeDpCash();">
-                                        {cash_list}
-                                    </select>
-                                </div>
-                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Юридична особа</label>
-                                <div class="col-lg-3 col-md-6 col-sm-8">
-                                    <select title="Юридична особа" class="form-control" id="client_conto_id" onchange='getClientContoCash(); getClientPaymentDelay(); getClientDocType();'>
-                                        <option value="0">--Оберіть клієна--</option>{client_conto_list}
-                                    </select>
-                                </div>
-                                <label class="col-sm-2 control-label">Тип доставки</label>
-                                <div class="col-sm-2">
-                                    <select title="Тип доставки" class="form-control" {oper_disabled} size="1" id="delivery_type_id" onChange="fixDeliveryCarrier()" style="width:100%;">
-                                        {delivery_type_list}
-                                    </select>
-                                </div>
-                            </div>
+                                <div class="col-lg-6 text-right">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-info" disabled><i class="fa fa-print"></i> Рахунок</button>
+                                        <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button"><span class="caret"></span></button>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li {oper_visible}><a onClick="printDpSaleInvoce('{dp_id}');">Друкувати рахунок</a></li>
+                                            <li {oper_visible4}><a onClick="printDpJournal('{dp_id}', 1);">Друкувати рахунок ДП</a></li>
+                                            <li {oper_visible4}><a onClick="printDpJournal('{dp_id}', 2);">Друкувати рахунок ДП без артикула</a></li>
+                                        </ul>
+                                    </div>
 
-                            <div class="form-group">
-                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Дата оплати</label>
-                                <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" {oper_disabled} id="data_pay" value="{data_pay}" placeholder="Дата оплати"></div>
-                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Торгова точка</label>
-                                <div class="col-lg-3 col-md-2 col-sm-7">
-                                    <input type="hidden" id="tpoint_id" name="tpoint_id" value="{tpoint_id}">
-                                    <div class="input-group">
-                                    	<input class="form-control" type="text" readonly {oper_disabled} id="tpoint_name" name="tpoint_name" value="{tpoint_name}" placeholder="Торгова точка">
-                                        <span class="input-group-btn"> <button type="button" {oper_disabled} class="btn btn-primary" id="tpointSelBtn" onClick="showDpTpointList('{dp_id}');"><i class="fa fa-bars"></i></button> </span>
-                                        <span class="input-group-btn"> <button type="button" {oper_disabled} class="btn btn-default" id="tpointDropBtn" onClick="unlinkDpTpoint('{dp_id}');"><i class="fa fa-times"></i></button> </span>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-warning" onClick="exportDpCard('{dp_id}');"><i class="fa fa-file-excel-o"></i> Експорт</button>
+                                        <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button"><span class="caret"></span></button>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li><a onClick="exportDpCard('{dp_id}');">Експорт в Excel (крапка)</a></li>
+                                            <li><a onClick="exportDpCard('{dp_id}', 2);">Експорт в Excel (кома)</a></li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Адреса доставки (склад)</label>
-                                <div class="col-lg-2 col-md-6 col-sm-8">
-                                    <input class="form-control" {oper_disabled} type="text" id="delivery_address" value="{delivery_address}" placeholder="Доставка">
-                                    <select title="Доставка" class="form-control disabled hidden" id="delivery_type_storage" onChange="setDeliveryAddress()" style="width:100%;">
-                                        {dp_storage_list}
-                                    </select>
-                                </div>
-                 			 </div>
 
-                            <div class="form-group">
-                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Вага / Об'єм</label>
-                                <label class="col-lg-2 col-md-2 col-sm-8 control-label"><label class="label-primary" style="padding: 0 15px;"><span id="dp_volume">{volume}</span>кг <span id="dp_weight">{weight}</span>м3</label></label>
-                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Сума документу</label>
-                                <div class="col-lg-3 col-md-6 col-sm-8"><input title="Сума" type="text" readonly class="form-control" id="dp_summ" value="{dp_summ}"></div>
-                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Перевізник</label>
-                                <div class="col-lg-2 col-md-6 col-sm-8">
-                                    <select title="Перевізник" class="form-control {carrier_dis}" id="carrier_id" style="width:100%;">
-                                        {carrier_list}
-                                    </select>
-                                </div>
                             </div>
-							
-							<div class="form-group">
-                                <label class="col-lg-1 col-md-2 col-sm-4 control-label">Курс валют</label>
-                                <label class="col-lg-2 col-md-2 col-sm-8 control-label"><label class="label-primary" style="padding: 0 15px;">1$ = {usd_to_uah} грн.; 1&euro; = {eur_to_uah} грн.</label></label>
-                                <label class="col-lg-2 col-md-2 col-sm-4 control-label">Баланс клієнта</label>
-                                <div class="col-lg-3 col-md-6 col-sm-8 control-label"><label class="label-{balans_style}" style="padding: 0 15px;">{balans_client}</label></div>
-                                <label class="col-lg-2 col-md-2 col-sm-4 control-label {balans_display}">Баланс юридичної особи</label>
-                                <div class="col-lg-3 col-md-6 col-sm-8 control-label"><label class="label-{balans_conto_style}" style="padding: 0 15px;">{balans_conto}</label></div>
-							</div>
 
                             <div class="hr-line-dashed"></div>
 
                             <div class="form-group">
-                                <div class="col-sm-12">
-                                    <h4 align="center">Нова інформація про доставку <button class="btn btn-warning center" onclick="$('#order_delivery_block').toggleClass('none')"><i class="fa fa-eye"></i> Показати</button></h4>
-                                    <input type="hidden" id="order_info_id" value="{order_info_id}">
-                                </div>
-                            </div>
-
-                            <div id="order_delivery_block">
-                                <div class="form-group">
-                                    <label class="col-lg-1 col-md-2 col-sm-4 control-label">Веб-користувач</label>
-                                    <div class="col-lg-2 col-md-2 col-sm-8">
-                                        <select title="Веб-користувач" class="form-control" id="order_user_id">
-                                            {order_user_list}
-                                        </select>
-                                    </div>
-                                    <label class="col-lg-2 col-md-2 col-sm-4 control-label">Отримувач (ФІО)</label>
-                                    <div class="col-lg-3 col-md-2 col-sm-7">
-                                        <input type="text" class="form-control" id="order_del_name" value="{order_del_name}" title="Отримувач">
-                                    </div>
-                                    <label class="col-lg-2 col-md-2 col-sm-4 control-label">Отримувач (телефон)</label>
-                                    <div class="col-lg-2 col-md-6 col-sm-8">
-                                        <input type="text" class="form-control" id="order_del_phone" value="{order_del_phone}" title="Отримувач">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-lg-1 col-md-2 col-sm-4 control-label">Місто</label>
-                                    <div class="col-lg-2 col-md-2 col-sm-8">
-                                        <select class="select2-block" id="user_city" data-attr="select" oninput="getCityVal();" onchange="setCityVal();" title="Місто">
-                                            {order_city_list}
-                                        </select>
-                                        <select id="user_city_np" data-attr="select" title="NovaPoshta" style="display: none!important;">
-                                            <option value="0">{not_chosen}</option>
-                                        </select>
-                                    </div>
-                                    <label class="col-lg-2 col-md-2 col-sm-4 control-label">Тип доставки</label>
-                                    <div class="col-lg-3 col-md-2 col-sm-7">
-                                        <select title="Тип доставки" class="form-control" id="order_delivery" onchange="setOrderInfoFields();">
-                                            {order_delivery_list}
-                                        </select>
-                                    </div>
-                                    <label class="col-lg-2 col-md-2 col-sm-4 control-label">Тип оплати</label>
-                                    <div class="col-lg-2 col-md-6 col-sm-8">
-                                        <select title="Тип оплати" class="form-control" id="order_payment">
-                                            {order_payment_list}
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-lg-1 col-md-2 col-sm-4 control-label">Вулиця</label>
-                                    <div class="col-lg-2 col-md-2 col-sm-8">
-                                        <input type="text" class="form-control" id="order_del_street" value="{order_del_street}" title="Вулиця">
-                                    </div>
-                                    <label class="col-lg-2 col-md-2 col-sm-4 control-label">Будинок</label>
-                                    <div class="col-lg-3 col-md-2 col-sm-7">
-                                        <input type="text" class="form-control" id="order_del_house" value="{order_del_house}" title="Будинок">
-                                    </div>
-                                    <label class="col-lg-2 col-md-2 col-sm-4 control-label">Підїзд</label>
-                                    <div class="col-lg-2 col-md-6 col-sm-8">
-                                        <input type="text" class="form-control" id="order_del_porch" value="{order_del_porch}" title="Підїзд">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-lg-1 col-md-2 col-sm-4 control-label">Відділеня</label>
-                                    <div class="col-lg-2 col-md-2 col-sm-8">
-                                        <input type="hidden" id="department_ref" value="{department_ref}">
-                                        <select title="Відділеня" class="form-control" id="order_del_department">
-                                            {order_del_department_list}
-                                        </select>
-                                    </div>
-                                    <label class="col-lg-2 col-md-2 col-sm-4 control-label">Тип експрес доставки</label>
-                                    <div class="col-lg-3 col-md-2 col-sm-7">
-                                        <select title="Тип експрес доставки" class="form-control" id="order_del_express">
-                                            {order_del_express_list}
-                                        </select>
-                                    </div>
-                                    <label class="col-lg-2 col-md-2 col-sm-4 control-label">Інформація експрес доставки</label>
-                                    <div class="col-lg-2 col-md-6 col-sm-8">
-                                        <input type="text" class="form-control" id="order_del_express_info" value="{order_del_express_info}" title="Інформація експрес доставки">
-                                    </div>
-                                </div>
-
-                                <br>
-
-                                <div class="form-group">
-                                    <div class="col-md-offset-9 col-md-3 text-right">
-                                        <button class="btn btn-primary" onclick="saveDpOrderInfo();"><i class="fa fa-save"></i> Зберегти дані</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
                             	<div id="incomeChildsList">
-                                    <div class="hr-line-dashed"></div>
                                     <div class="row">
                                         <div class="col-sm-offset-3 col-sm-6">
                                             <h4 align="center">Структура документу</h4>
                                         </div>
                                         <div class="col-sm-3">
                                             <span class="btn-group pull-right">
-                                                <!--<button type="button" class="btn btn-warning" {hide_calculate_button} onClick="recalculateDpStr();"><i class="fa fa-calculator"></i> Перерахунок цін</button>-->
                                                 <button type="button" class="btn btn-sm btn-default" {hide_new_row_button} onClick="clearDpStr('{dp_id}');"><i class="fa fa-times"></i> Очистити структуру</button>
                                                 <button type="button" class="btn btn-sm btn-primary" {hide_new_row_button} onClick="addNewRow();"><i class="fa fa-plus"></i> Додати новий ряд</button>
                                             </span>
@@ -258,7 +316,7 @@
                                                     <th>Відібрано</th>
                                                     <th title="Відхилення">Відх.</th>
                                                     <th>Ціна</th>
-                                                    <th>Додаткова знижка,%({ses_user_discount})</th>
+                                                    <th title="Додаткова знижка,%({ses_user_discount})">Дод. знижка,%({ses_user_discount})</th>
                                                     <th>Ціна зі знижкою</th>
                                                     <th>Сума</th>
                                                     <th>Тип резерву (склад)</th>
@@ -276,37 +334,11 @@
                                 </div>
                             </div>
 
-							<div class="form-group"><br>
-                                <div class="hr-line-dashed"></div>
-								<div class="social_comment col-lg-12 col-sm-12">
-                                    <div class="media-heading">
-                                        <label for="dp_note_field">Примітка документу</label>
-                                    </div>
-									<div class="media-body">
-										 <textarea class="form-control" id="dp_note_field" placeholder="Залишити свою примітку">{dp_note}</textarea><br>
-										 <div class="btn-group pull-right">
-                                             <button class="btn btn-sm btn-white" onClick="dropDpNote('{dp_id}');"><i class="fa fa-trash"></i> Видалити примітку</button>
-											<button class="btn btn-sm btn-primary" onClick="setDpNote('{dp_id}');"><i class="fa fa-sticky-note"></i> Зберегти примітку</button>
-										</div>
-									</div>
-								</div>
-								<span id="dp_note_place"></span>
-               				</div>
-
                             <div class="hr-line-dashed"></div>
 
                             <div class="form-group">
-                                <div class="col-sm-8 text-left">
-                                    <button class="btn btn-warning" type="button" {oper_disabled} onClick="startDpExecute();"><i class="fa fa-share"></i> Передати в роботу</button>
-                                    <button class="btn btn-info" type="button" {oper_disabled2} onClick="showDpStorselForSaleInvoice('{dp_id}');"><i class="fa fa-file"></i> Сформувати видаткову накладну</button>
-                                    <button class="btn btn-secondary" type="button" {oper_disabled3} onClick="showDpStorselForWriteOff('{dp_id}');"><i class="fa fa-file"></i> Сформувати списання</button>
-                                    <button class="btn btn-info" type="button" {oper_visible} onClick="printDpSaleInvoce('{dp_id}');"><i class="fa fa-print"></i> Друкувати рахунок</button>
-                                    <button class="btn btn-info" type="button" {oper_visible4} onClick="printDpJournal('{dp_id}');"><i class="fa fa-print"></i> Друкувати рахунок ДП</button>
-                                </div>
-                                <div class="col-sm-4 text-right">
+                                <div class="col-sm-4 col-sm-offset-8 text-right">
                                     <button class="btn btn-primary" type="button" {oper_disabled} onClick="saveDpCard();"><i class="fa fa-save"></i> Зберегти зміни</button>
-                                    <button class="btn btn-warning" type="button" onClick="exportDpCard('{dp_id}');"><i class="fa fa-file-excel-o"></i> Експорт в Excel (крапка)</button>
-                                    <button class="btn btn-warning" type="button" onClick="exportDpCard('{dp_id}', 2);"><i class="fa fa-file-excel-o"></i> Експорт в Excel (кома)</button>
                                     <button class="btn btn-white" type="button" data-dismiss="modal" onClick="closeDpCard();">Закрити</button>
                                 </div>
                             </div>
@@ -368,7 +400,7 @@
                             <img alt="{my_user_name}" title="{my_user_name}" src="/images/profile/{my_user_id}.jpg">
                         </a>
                         <div class="media-body">
-                             <textarea class="form-control" id="dp_comment_field" placeholder="Залишити свою замітку"></textarea><br>
+                            <label for="dp_comment_field"></label><textarea class="form-control" id="dp_comment_field" placeholder="Залишити свою замітку"></textarea><br>
                              <div class="btn-group pull-right">
                                 <button class="btn btn-sm btn-primary pull-right m-t-n-xs" onClick="saveDpComment('{dp_id}');"><i class="fa fa-comments"></i> Зберегти замітку</button>
                             </div>

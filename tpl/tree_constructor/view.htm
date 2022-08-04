@@ -1,0 +1,84 @@
+<style>
+    .btn-check {
+        height: 20px;
+        width: 20px;
+        display: inline-block;
+        margin: 0!important;
+        vertical-align: middle;
+    }
+
+    .nav-menu {
+        background: #f44336;
+    }
+    .nav-menu ul {
+        list-style: none;
+        display: flex;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+    }
+    .nav-menu ul li {
+        cursor: pointer;
+        padding: 10px;
+        text-align: center;
+        font-size: 12px;
+        height: 60px;
+    }
+    .nav-menu ul li:hover {
+        background: #c84336;
+        transition: all .3s ease;
+    }
+    .nav-menu ul li a {
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .nav-hide td {
+        padding: 0;
+        vertical-align: baseline;
+    }
+
+    .tree-item {
+        padding: 10px;
+    }
+    .tree-item-title {
+        color: #228b94;
+        font-size: 16px;
+        font-weight: 700;
+        display: block;
+        padding-bottom: 15px;
+    }
+    .tree-item-list__element a {
+        color: black;
+        font-size: 14px;
+        display: block;
+        padding-bottom: 10px;
+    }
+
+    .tree-block {
+        display: flex;
+        margin-top: 15px;
+    }
+    .tree-block__col {
+        padding: 0 15px;
+    }
+    .tree-block__col:not(:first-child):before {
+        content: '';
+        width: 1px;
+        display: block;
+        position: absolute;
+        background: silver;
+        height: 100%;
+    }
+</style>
+
+<div id="nav-menu" class="nav-menu">
+    <ul>
+        {view_range}
+    </ul>
+</div>
+
+<div id="nav-hide" class="nav-hide">
+    {view_hide_range}
+</div>

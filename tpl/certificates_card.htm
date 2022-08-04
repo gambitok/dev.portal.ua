@@ -1,0 +1,81 @@
+<div class="tabs-container">
+
+    <ul class="nav nav-tabs" id="certificate_tabs">
+        <li class="active"><a data-toggle="tab" href="#br_tab1"><i class="fa fa-bars"></i> <span class="hidden-sm-down not-visible">Загальна інформація</span></a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="br_tab1" class="tab-pane active">
+            <div class="panel-body">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+
+
+                            <input type="hidden" id="certificate_id" value="{certificate_id}">
+
+                            <div class="row">
+                                <label class="col-md-2 control-label" for="brand_list">Бренд</label>
+                                <div class="col-md-2">
+                                    <select name="brand_list" id="brand_list" class="form-control" title="Бренд">
+                                        <option value="0">-Не вибрано-</option>
+                                        {brand_list}
+                                    </select>
+                                </div>
+                                <label class="col-md-2 control-label" for="suppl_list">Постачальник</label>
+                                <div class="col-md-2">
+                                    <select name="suppl_list" id="suppl_list" class="form-control" title="Постачальник">
+                                        <option value="0">-Не вибрано-</option>
+                                        {suppl_list}
+                                    </select>
+                                </div>
+                                <label class="col-md-2 control-label" for="certificate_status">Статус</label>
+                                <div class="col-md-2">
+                                    <input type="checkbox" id="certificate_status" title="Статус" {status_checked}>
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="row">
+                                <label class="col-sm-2 control-label" for="date_from">Дата з</label>
+                                <div class="col-sm-2">
+                                    <input type="date" class="form-control" id="date_from" value="{date_from}" title="Дата з">
+                                </div>
+                                <label class="col-sm-2 control-label" for="date_to">Дата до</label>
+                                <div class="col-sm-2">
+                                    <input type="date" class="form-control" id="date_to" value="{date_to}" title="Дата до">
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="row">
+                                <label class="col-sm-2 control-label">Завантаження фото</label>
+                                <div class="col-sm-10">
+                                    <div class="col-sm-12">
+                                        <button {delete_status} class="btn btn-primary" data-toggle="modal" data-target="#fileCertificatePhotoUploadForm" onclick="showCertificateUploadForm({certificate_id});"><i class="fa fa-picture-o"></i> Завантажити фото</button>
+                                        <button {delete_status} class="btn btn-danger" onclick="dropCertificatePhoto({certificate_id});"><i class="fa fa-trash"></i> Видалити фото</button>
+                                    </div>
+                                    <div class="col-sm-12 text-center">
+                                        <img src="https://toko.ua/uploads/images/certificates/{photo_link}" alt="{photo_link}" width="300">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="row">
+                                <div class="col-sm-10 text-right col-sm-offset-2">
+                                    <button class="btn btn-primary" type="button" onClick="saveCertificateCard();">Зберегти зміни</button>
+                                    <button class="btn btn-danger" type="button" onClick="dropCertificateCard();" {delete_status}>Видалити</button>
+                                    <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+                                </div>
+                            </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

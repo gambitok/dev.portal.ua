@@ -1,0 +1,48 @@
+<div class="ibox">
+	<div class="ibox-header">
+        <div class="row">
+	        <div class="col-lg-12 col-md-12 col-sm-12">
+            	<p align="center">Оберіть один або декілька відборів</p>
+                <label for="status_write_off" class="control-label">Виберіть тип списання:</label>
+                <select class="form-control" name="status_write_off" id="status_write_off" style="width: 300px;">
+                    <option value="0">-Не вибрано-</option>
+                    {status_write_off_select}
+                </select>
+            </div>
+        </div>
+	</div>
+	<div class="ibox-content">
+    	<input type="hidden" id="kol_storsel" value="{kol_storsel}">
+        <table id="dp_storsel_str" class="table table-condensed table-striped table-hover table-bordered" width="100%">
+            <thead>
+                <tr>
+	                <th style="text-align:center"><input type="checkbox" id="all_strosel" value="1" onClick="check_all_storsel();" checked title=""></th>
+                    <th style="text-align:center">№ п/п</th>
+                    <th style="text-align:center">Номер відбору</th>
+                    <th style="text-align:center">Торгова точка</th>
+                    <th style="text-align:center">Склад</th>
+                    <th style="text-align:center">Тип</th>
+                    <th>Найменуваннь, шт</th>
+                    <th style="text-align:center">Кількість, шт.</th>
+                    <th style="text-align:center">Об'єм, м&sup3;</th>
+                    <th style="text-align:center">Вага нетто, кг</th>
+                    <th style="text-align:center">Вага брутто, кг</th>
+                    <th style="text-align:center">Переглянути</th>
+                    <th style="text-align:center">Статус</th>
+                </tr>
+            </thead>
+            <tbody id="sklad_storage_select_range">
+	            {storsel_list}
+            </tbody>
+        </table>
+        <div class="hr-line-dashed"></div>
+        <div class="form-group">
+            <div class="col-sm-6 text-left">
+                <button id="send_dp" class="btn btn-warning" type="button" {oper_disabled} onClick="sendDpStorselToWriteOff('{dp_id}');">Сформувати на основі обраних відборів</button>
+            </div>
+            <div class="col-sm-6 text-right">
+                <button class="btn btn-default" type="button" data-dismiss="modal">Закрити</button>
+            </div>
+        </div>
+	</div>
+</div>

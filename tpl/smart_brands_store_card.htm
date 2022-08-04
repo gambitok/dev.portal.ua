@@ -1,0 +1,49 @@
+<div id="br_tab1" class="tab-pane active">
+    <div class="panel-body">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <form method="get" class="form-horizontal">
+
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">Код точки</label>
+                        <div class="col-sm-2"><input class="form-control" type="text" name="store_id" id="store_id" value="{store_id}" readonly placeholder="Код точки"></div>
+                    </div>
+
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">Бренд точки</label>
+                        <div class="col-sm-2">
+                            <input class="form-control" type="text" name="brand_name" id="brand_name" value="{brand_name}" readonly placeholder="Бренд точки">
+                        </div>
+                        <label class="col-lg-1 col-md-2 col-sm-4 control-label">Адрес точки</label>
+                        <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="text" id="address" value="{address}" placeholder="Адрес точки"></div>
+                    </div>
+
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-1 col-md-2 col-sm-4 control-label">Позиція</label>
+                        <div class="col-lg-2 col-md-2 col-sm-8"><input class="form-control" type="number" id="store_pos" value="{store_pos}" placeholder="Позиція"></div>
+                        <label class="col-lg-1 col-md-2 col-sm-4 control-label">Видимість</label>
+                        <div class="col-lg-2 col-md-4 col-sm-8">
+                            <span class="buttons-inline pull-left">
+                                <input type="checkbox" class="js-switch" data-size="small" id="store_status" {store_status} title="Видимість">
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="form-group">
+                        <div class="col-sm-10 text-right col-sm-offset-2">
+                            <button class="btn btn-primary" type="button" onClick="saveStoreCard();"><i class="fa fa-save"></i> Зберегти зміни</button>
+                            <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

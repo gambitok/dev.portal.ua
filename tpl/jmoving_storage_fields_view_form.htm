@@ -1,0 +1,45 @@
+<style>
+    .table-sortable {
+        position: relative;
+    }
+    .table-sortable .sortable-placeholder {
+        height: 37px;
+    }
+    .table-sortable .sortable-placeholder:after {
+        position: absolute;
+        z-index: 10;
+        content: " ";
+        height: 37px;
+        background: #f9f9f9;
+        left: 0;
+        right: 0;
+    }
+</style>
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-group">
+            <table class="table table-sortable" id="table_fields">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>#</th>
+                        <th>Назва склада</th>
+                        <th>Видимість</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {fields_list}
+                </tbody>
+            </table>
+            <input type="hidden" id="kol_fields" value="{kol_fields}">
+        </div>
+        <div class="hr-line-dashed"></div>
+        <div class="form-group">
+            <div class="col-sm-10 text-right col-sm-offset-2">
+                <input type="hidden" id="table_key" value="{table_key}">
+                <button class="btn btn-primary" type="button" onClick="saveJmovingStorageFieldsViewForm();">Зберегти зміни</button>
+                <button class="btn btn-white" type="button" data-dismiss="modal">Закрити</button>
+            </div>
+        </div>
+    </div>
+</div>

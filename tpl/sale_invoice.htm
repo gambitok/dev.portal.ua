@@ -32,10 +32,6 @@
                             <button class="btn btn-primary" onClick="filterInvoiceList();"><i class='fa fa-sticky-note'></i> Фільтр по назві</button>
                         </div>
 	                </div>
-                    <!--<hr>-->
-                    <!--<div class="row">-->
-                        <!--<div class="col-md-12 text-right"><a class="btn btn-info collapsed" aria-expanded="false" data-toggle="collapse" data-parent="#accordion" href="#collapseSearch"><i class='fa fa-search'></i> Пошук у реєстрі</a></div>-->
-                    <!--</div>-->
                 </div>
 
                 <div class="ibox-content">
@@ -43,30 +39,30 @@
                 	 <div aria-expanded="false" id="collapseSearch" class="panel-collapse collapse">
                     	<h3 align="center">Пошук записів за параметрами</h3>
                         <form method="get" id="SaleInvoiceSearch" onSubmit="filterSIList(); return false;">
-                        <div class="row">
-                        	<div class="col-md-4">
-                        		<div class="row">
-                                    <div class="col-md-3 text-right"><strong>Найменування</strong></div>
-                                    <div class="col-md-9"><input class="form-control" name="filSaleInvoiceName" id="filSaleInvoiceName" placeholder="Повна або часткова назва" value="{filSaleInvoiceName}"></div>
-                                </div><br>
-                               </div>
-                            <div class="col-md-4">
-                        		<div class="row">
-                                    <div class="col-md-3 text-right"><strong>Дата</strong></div>
-                                    <div class="col-md-4"><input class="form-control" name="filDataFrom" id="filDataFrom" placeholder="рррр-мм-дд" value="{filDataFrom}"></div>
-                                    <div class="col-md-4"><input class="form-control" name="filDataTo" id="filDataTo" placeholder="рррр-мм-дд" value="{filDataTo}"></div>
-                                </div><br>
-								<div class="row">
-                                    <div class="col-md-3 text-right"><strong>Статус</strong></div>
-                                    <div class="col-md-9"><select title="Статус" class="form-control" size="1" id="filStatusMain"><option value="0">-- -- --</option>{status_main_list}</select></div>
-                                </div><br>
-                                <div class="row">
-	                                <div class="col-md-3"></div>
-                                    <div class="col-md-5"><button class="form-control btn btn-success"><i class='fa fa-search'></i> Пошук</button></div>
-                                    <div class="col-md-4"><a onClick="ClearSaleInvoiceSearch();" class="btn btn-info"><i class='fa fa-eraser'></i></a></div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-3 text-right"><strong>Найменування</strong></div>
+                                        <div class="col-md-9"><input class="form-control" name="filSaleInvoiceName" id="filSaleInvoiceName" placeholder="Повна або часткова назва" value="{filSaleInvoiceName}"></div>
+                                    </div><br>
+                                   </div>
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-3 text-right"><strong>Дата</strong></div>
+                                        <div class="col-md-4"><input class="form-control" name="filDataFrom" id="filDataFrom" placeholder="рррр-мм-дд" value="{filDataFrom}"></div>
+                                        <div class="col-md-4"><input class="form-control" name="filDataTo" id="filDataTo" placeholder="рррр-мм-дд" value="{filDataTo}"></div>
+                                    </div><br>
+                                    <div class="row">
+                                        <div class="col-md-3 text-right"><strong>Статус</strong></div>
+                                        <div class="col-md-9"><select title="Статус" class="form-control" size="1" id="filStatusMain"><option value="0">-- -- --</option>{status_main_list}</select></div>
+                                    </div><br>
+                                    <div class="row">
+                                        <div class="col-md-3"></div>
+                                        <div class="col-md-5"><button class="form-control btn btn-success"><i class='fa fa-search'></i> Пошук</button></div>
+                                        <div class="col-md-4"><a onClick="ClearSaleInvoiceSearch();" class="btn btn-info"><i class='fa fa-eraser'></i></a></div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         </form>
 					</div>
 
@@ -86,6 +82,7 @@
                                     <th style="text-align:center">Заборгованість</th>
                                     <th style="text-align:center">Дата оплати</th>
                                     <th style="text-align:center">Автор</th>
+                                    <th style="text-align:center">Доставка</th>
                                     <th style="text-align:center">Примітка ДП</th>
                                 </tr>
                             </thead>
@@ -127,6 +124,15 @@
                     <input type="hidden" name="cdn_dp_id" id="cdn_dp_id" value="">
                 </form>
             </div>
+        </div>
+    </div>
+</div>
+
+<div style="display: none;" id="CheckBoxWindow" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+			<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button><h3 id="CheckBoxLabel" class="text-left"></h3></div>
+            <div class="modal-body" id="CheckBoxBody"></div>
         </div>
     </div>
 </div>

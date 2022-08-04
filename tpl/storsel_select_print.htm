@@ -1,9 +1,9 @@
-<div style="font-size:12px; padding: 30px;">
+<div style="font-size: 12px; padding: 30px;">
     <p></p>
 
     <table width="100%" border="0"><tr>
         <td><small>Дата видруку: {curtime}</small></td>
-        <td align="right"><img src="http://portal.myparts.pro/images/logo/logo-tokogroup.png" height="30"></td>
+        <td align="right"><img src="https://portal.myparts.pro/images/logo/logo-tokogroup.png" height="30"></td>
     </tr></table>
 
     <h4 align="center">Складський відбір №{select_nom} від {data_create}</h4>
@@ -19,7 +19,7 @@
                 <td>Основа: {dp_name}{jmoving_name}</td>
             </tr>
         </table>
-        Примітка: <u>{dp_note}</u>
+        Примітка: <p>{dp_note}</p>
     </p><br>
 
     <table width="100%" border="0" style="font-size:10px;"><tr>
@@ -40,7 +40,6 @@
                 <th width="140" style="font-weight:bold; background-color:#333; padding:3px;color:#fff;border:1px solid #000; text-align:center;">Примітка</th>
             </tr>
         </thead>
-
         <tbody id="sklad_storage_view_range">
             {ArticlesList}
         </tbody>

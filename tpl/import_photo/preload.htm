@@ -1,0 +1,110 @@
+<div class="tabs-container">
+
+    <ul class="nav nav-tabs" id="import_tabs">
+        <li class="active">
+            <a data-toggle="tab" href="#import_tab1"><i class="fa fa-bars"></i> <span class="hidden-sm-down">Нові артикули</span></a>
+<!--            <span title="Кількість артикулів" id="label_import_count" class="label label-tab label-info">{records_list_count}</span>-->
+        </li>
+        <li>
+            <a data-toggle="tab" href="#import_tab2"><i class="fa fa-bars"></i> <span class="hidden-sm-down">Артикули з фото</span></a>
+<!--            <span title="Кількість артикулів" id="label_import_count2" class="label label-tab label-info">{records_list2_count}</span>-->
+        </li>
+        <li>
+            <a data-toggle="tab" href="#import_tab3"><i class="fa fa-bars"></i> <span class="hidden-sm-down">Невідомі артикули</span></a>
+<!--            <span title="Кількість артикулів" id="label_import_count2" class="label label-tab label-info">{records_list2_count}</span>-->
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="import_tab1" class="tab-pane active">
+            <input type="hidden" id="kol_cols" value="{kol_cols}">
+            <div class="hr-line-dashed"></div>
+
+            <div class="row">
+                <div class="col-sm-offset-8 col-sm-4">
+                    <div class="btn-group pull-right" role="group">
+                        <button class="btn btn-warning btn-sm" onClick="clearImportPhoto('{user_id}');"><i class="fa fa-trash"></i> Очистити дані</button>
+                        <button class="btn btn-primary btn-sm" onClick="finishImportPhoto('{user_id}');"><i class="fa fa-save"></i> Зберегти дані</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hr-line-dashed"></div>
+
+            <div class="table-responsive">
+                <table id="csv_table" class="table table-bordered table-hovered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>ART_ID</th>
+                            <th>Артикул</th>
+                            <th>Бренд</th>
+                            <th>Назва зображення</th>
+                            <th>Головне зображення</th>
+                            <th>Зображення</th>
+                        </tr>
+                    </thead>
+                    <tbody id="range_table_import">
+                        {records_list}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="import_tab2" class="tab-pane">
+            <div class="hr-line-dashed"></div>
+
+            <div class="row">
+                <div class="col-sm-offset-8 col-sm-4">
+                    <div class="btn-group pull-right" role="group">
+                        <button class="btn btn-warning btn-sm" onClick="clearImportPhoto('{user_id}');"><i class="fa fa-trash"></i> Очистити дані</button>
+                        <button class="btn btn-primary btn-sm" onClick="finishImportExistPhoto('{user_id}');"><i class="fa fa-save"></i> Зберегти дані</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hr-line-dashed"></div>
+
+            <div class="table-responsive">
+                <table id="csv_table2" class="table table-bordered table-hovered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>ART_ID</th>
+                            <th>Артикул</th>
+                            <th>Бренд</th>
+                            <th>Назва зображення</th>
+                            <th>Головне зображення</th>
+                            <th>Зображення</th>
+                            <th>Нове зображення</th>
+                        </tr>
+                    </thead>
+                    <tbody id="range_table_import2">
+                        {records_list2}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="import_tab3" class="tab-pane">
+
+            <div class="hr-line-dashed"></div>
+
+            <div class="table-responsive">
+                <table id="csv_table3" class="table table-bordered table-hovered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Артикул</th>
+                            <th>Бренд</th>
+                            <th>Назва зображення</th>
+                            <th>Головне зображення</th>
+                        </tr>
+                    </thead>
+                    <tbody id="range_table_import3">
+                        {records_list3}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

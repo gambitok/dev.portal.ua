@@ -1,3 +1,19 @@
+<style>
+    .none {
+        display: none!important;
+    }
+    .form-delivery {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: left;
+    }
+    .form-delivery li {
+        width: 20%;
+        margin: 15px 15px;
+    }
+</style>
+
 <div class="tabs-container">
 
     <ul class="nav nav-tabs" id="invoice_tabs">
@@ -41,12 +57,29 @@
 
                             <div class="row">
                                 <div class="col-sm-12">
+                                    <label class="control-label">Доставка користувача:</label>
+                                    {dp_address_user}
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <span class="buttons-inline pull-left">
+                                        <input type="hidden" id="cb_check_invoice_id" value="{invoice_id}">
+                                        <input type="hidden" id="cb_check_doc_type_id" value="1">
+                                        <button id="btn-add-cb" class="btn btn-sm btn-warning {cb_check_visible_add}" onclick="showCbCheckForm();">Створити чек</button>
+                                        <button class="btn btn-sm btn-info {cb_check_visible_show}" onclick="showCbCheck();">Друкувати чек</button>
+                                    </span>
+                                </div>
+                                <div class="col-sm-10">
                                     <span class="buttons-inline pull-right">
-                                        <button type="button" class="btn btn-sm btn-info" onClick="printSaleInvoce('{invoice_id}');"><i class="fa fa-print"></i> Друк накладної</button>
-                                        <button type="button" class="btn btn-sm btn-info" {visible_64} onClick="printSaleInvoce('{invoice_id}',1);"><i class="fa fa-print"></i> Друк накладної A4</button>
-                                        <button type="button" class="btn btn-sm btn-info" {visible_64} onClick="printSaleInvoce('{invoice_id}',2);"><i class="fa fa-print"></i> Друк накладної Альбом</button>
-										<button type="button" class="btn btn-sm btn-info" {oper_visible} onClick="printDpSaleInvoce('{invoice_id}');"><i class="fa fa-print"></i> Друк рахунку</button>
-										<button type="button" class="btn btn-sm btn-info" onClick="exportSaleInvoceExcel('{invoice_id}');"><i class="fa fa-file-excel-o"></i> Експорт</button>
+                                        <button type="button" class="btn btn-sm btn-info" {oper_visible_no_61} onClick="printSaleInvoce('{invoice_id}',2);"><i class="fa fa-print"></i> Друк накладної Альбом</button>
+                                        <button type="button" class="btn btn-sm btn-info" onClick="printSaleInvoce('{invoice_id}',1);"><i class="fa fa-print"></i> Друк накладної A4</button>
+                                        <button type="button" class="btn btn-sm btn-info" {oper_visible} onClick="printDpSaleInvoce('{invoice_id}');"><i class="fa fa-print"></i> Друк рахунку</button>
+										<button type="button" class="btn btn-sm btn-warning" onClick="printBarcode('{invoice_id}');"><i class="fa fa-print"></i> Друк бірки</button>
+										<button type="button" class="btn btn-sm btn-warning" onClick="exportSaleInvoceExcel('{invoice_id}');"><i class="fa fa-file-excel-o"></i> Експорт</button>
                                      </span>
                                  </div>
                             </div>

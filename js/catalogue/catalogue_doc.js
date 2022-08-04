@@ -484,41 +484,30 @@ function dropArticleComment(art_id,cmt_id){
 	}
 }
 
-function loadArticleCDN(art_id){
-	if (art_id<=0 || art_id==""){toastr["error"](errs[0]);}
-	if (art_id>0){
-		JsHttpRequest.query($rcapi,{ 'w': 'loadArticleCDN', 'art_id':art_id}, 
-		function (result, errors){ if (errors) {alert(errors);} if (result){  
-			document.getElementById("article_cdn_place").innerHTML=result["content"];
-		}}, true);
-	}
-}
+// function showArticlesCDNUploadForm(art_id){
+// 	$("#cdn_art_id").val(art_id);
+// 	Dropzone.autoDiscover = false;
+// 	var myDropzone2 = new Dropzone("#myDropzone2",{ dictDefaultMessage: "Натисніть для вибору файлів або перетягніть їх це поле!" });
+// 	myDropzone2.removeAllFiles(true);
+// 	myDropzone2.on("queuecomplete", function() {
+// 		toastr["info"]("Завантаження файлів завершено.");
+// 		this.removeAllFiles();
+// 		$('#fileArticlesCDNUploadForm').modal('hide');
+// 	});
+// }
 
-function showArticlesCDNUploadForm(art_id){
-	$("#cdn_art_id").val(art_id);
-	Dropzone.autoDiscover = false;
-	var myDropzone2 = new Dropzone("#myDropzone2",{ dictDefaultMessage: "Натисніть для вибору файлів або перетягніть їх це поле!" });
-	myDropzone2.removeAllFiles(true);
-	myDropzone2.on("queuecomplete", function() {
-		toastr["info"]("Завантаження файлів завершено.");
-		this.removeAllFiles();
-		$('#fileArticlesCDNUploadForm').modal('hide');
-		loadArticleCDN(art_id);
-	});
-}
-
-function showArticlesCDNDropConfirmForm(art_id,file_id,file_name){
-	if (art_id<=0 || art_id==""){toastr["error"](errs[0]);}
-	if (art_id>0){
-		if(confirm('Видалити файл '+file_name+'?')){ 
-			JsHttpRequest.query($rcapi,{ 'w': 'articlesCDNDropFile', 'art_id':art_id, 'file_id':file_id}, 
-			function (result, errors){ if (errors) {alert(errors);} if (result){  
-				if (result["answer"]==1){ loadArticleCDN(art_id); toastr["info"]("Файл успішно видалено"); }
-				else{ toastr["error"](result["error"]); }
-			}}, true);
-		}
-	}
-}
+// function showArticlesCDNDropConfirmForm(art_id,file_id,file_name){
+// 	if (art_id<=0 || art_id==""){toastr["error"](errs[0]);}
+// 	if (art_id>0){
+// 		if(confirm('Видалити файл '+file_name+'?')){
+// 			JsHttpRequest.query($rcapi,{ 'w': 'articlesCDNDropFile', 'art_id':art_id, 'file_id':file_id},
+// 			function (result, errors){ if (errors) {alert(errors);} if (result){
+// 				if (result["answer"]==1){ toastr["info"]("Файл успішно видалено"); }
+// 				else{ toastr["error"](result["error"]); }
+// 			}}, true);
+// 		}
+// 	}
+// }
 
 function showArtilceGallery(art_id,article_nr_displ){
 	if (art_id<=0 || art_id==""){toastr["error"](errs[0]);}

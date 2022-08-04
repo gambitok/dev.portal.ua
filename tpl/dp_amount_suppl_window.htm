@@ -1,26 +1,32 @@
 <form method="get" class="form-horizontal" onSubmit="setArticleSupplToDp('{art_id}'); return false;" enctype="multipart/form-data">
+
     <input type="hidden" id="article_nr_displStr" value="{article_nr_displ}">
     <input type="hidden" id="brand_idStr" value="{brand_id}">
+    <input type="hidden" id="brand_nameStr" value="{brand_name}">
     <input type="hidden" id="suppl_idStr" value="{suppl_id}">
     <input type="hidden" id="suppl_storage_idStr" value="{suppl_storage_id}">
+
     <div class="form-group">
         <label class="col-md-3 col-sm-12 control-label">Склад</label>
         <div class="col-md-6 col-sm-12">
             <input title="Склад" type="text" readonly class="form-control text-right" value='{suppl_storage_code}'>
         </div>
     </div>
+
     <div class="form-group">
         <label class="col-md-3 col-sm-12 control-label">Доставка</label>
         <div class="col-md-6 col-sm-12">
             <input title="Доставка" type="text" readonly class="form-control" value='{suppl_delivery_info}'>
         </div>
     </div>
+
     <div class="form-group">
         <label class="col-md-3 col-sm-12 control-label">Ціна</label>
         <div class="col-md-6 col-sm-12">
             <input title="Ціна" type="text" id="price_move" readonly class="form-control amount_move_numbers" value='{price}' min='1' max="">
         </div>
     </div>
+
     <div class="form-group">
         <label class="col-md-3 col-sm-12 control-label">Кількість для замовлення</label>
         <div class="col-md-6 col-sm-12">
@@ -28,17 +34,21 @@
             <input type="hidden" id="amount_storage_id" value="">
         </div>
     </div>
+
     <div class="form-group">
         <label class="col-md-3 col-sm-12 control-label">Сума</label>
         <div class="col-md-6 col-sm-12">
             <input title="Сума" type="text" id="summ_move" class="form-control amount_move_numbers" value='{summ}' min='1' max="">
         </div>
     </div>
+
     <div class="hr-line-dashed"></div>
+
     <div class="form-group">
         <div class="col-sm-12 text-right">
             <button class="btn btn-primary" type="button" onClick="setArticleSupplToDp('{art_id}');">Зберегти</button>
             <button class="btn btn-white" type="button" data-dismiss="modal" onClick="closeAmountSupplInputWindow();">Закрити</button>
         </div>
     </div>
+
 </form>

@@ -1,0 +1,38 @@
+<style>
+    #select_main_dp, #cross_dp {
+        margin: 15px 0;
+    }
+
+    .table-combine label {
+        margin: 0!important;
+    }
+
+    .table-combine td {
+        padding: 10px;
+    }
+</style>
+
+<input type="hidden" id="user_id" value="{user_id}">
+<div class="container">
+    <h2 class="label-important">Вибрати головну ДП</h2>
+    <div class="row">
+        <div class="col-sm-12">
+            <select name="select_main_dp" id="select_main_dp" class="form-control" title="select dp">
+                <option value="0">-Не вибрано-</option>
+                {select_main_dp}
+            </select>
+            <button id="combine_main_btn" class="btn btn-info" onclick="getCombineDpCrossList();">Вибрати</button>
+            <button id="combine_cancel_btn" class="btn btn-warning" disabled onclick="showCombineDpForm();">Змінити ДП</button>
+        </div>
+    </div>
+    <hr>
+    <h2 class="label-important">Вибрати крос ДП</h2>
+    <div class="row">
+        <div class="col-sm-12">
+            <div id="cross_dp">
+                {select_cross_dp}
+            </div>
+            <button id="combine_cross_btn" class="btn btn-primary" onclick="saveCombineDpCross();">Об'єднати вибрані</button>
+        </div>
+    </div>
+</div>

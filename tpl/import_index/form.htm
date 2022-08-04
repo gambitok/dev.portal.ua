@@ -1,0 +1,54 @@
+<link href="/js/plugins/jsTree/jstree_style.min.css" rel="stylesheet">
+<link href="/js/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="/js/plugins/dropzone/dropzone.css" rel="stylesheet">
+<link href="/css/plugins/switchery/switchery.css" rel="stylesheet">
+
+<h2 class="border-bottom white-bg dashboard-header">Імпорт артикулів</h2>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div id="import_index">
+                        {import_content}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display: none;" class="modal inmodal fade" id="fileCsvUploadForm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">Х</button>
+                <h4 class="modal-title" id="myModalLabel2">Завантаження файлів</h4>
+            </div>
+            <div class="modal-body" id="fileViewHolderDoc2">
+                <p>Для завантаження файлів натисніть на форму або перетягніть файли у поле форми</p>
+                <form action="/cdn_file_index_upload.php" class="dropzone" id="myDropzone3" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csv_user_id" id="csv_user_id" value="">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap markdown -->
+<script src="/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>
+<script src="/js/plugins/bootstrap-markdown/markdown.js"></script>
+<script src="/js/plugins/select2/js/select2.full.min.js"></script>
+<script src="/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/js/plugins/dropzone/dropzone.js"></script>
+<script src="/js/plugins/switchery/switchery.js"></script>
+<script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+<script src="/js/plugins/currency/currency.js"></script>
+<script src="/js/import_artprice/import_artprice.js"></script>
+<script type="text/javascript">
+    //Disabling autoDiscover
+    Dropzone.autoDiscover = false;
+</script>
+<!-- Sweet alert -->
+<script src="/js/plugins/sweetalert/sweetalert.min.js"></script>

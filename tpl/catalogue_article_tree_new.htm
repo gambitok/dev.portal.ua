@@ -1,0 +1,32 @@
+<style>
+    .dnone{
+        display: none;
+    }
+    .pointer {
+        cursor: pointer;
+    }
+    .pointer:hover {
+        text-decoration: underline;
+    }
+    .check-head {
+        color: lightcoral;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            {tree_range}
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".tree-head").on('click', function(){
+            $(this).next().toggleClass("dnone");
+            $(this).toggleClass("check-head");
+        });
+    });
+</script>
+
