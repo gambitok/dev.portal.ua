@@ -2691,7 +2691,7 @@ class catalogue {
                 $brand_id = $db->result($r, $i - 1, "BRAND_ID");
                 $brand_name = $db->result($r, $i - 1, "BRAND_NAME");
                 $name = $db->result($r, $i - 1, "NAME");
-                $list .= "<tr style=\"cursor:pointer;\" onClick='setAnalogSearchIndex(\"$art_id\",\"$article_nr_displ\",\"$brand_id\",\"$brand_name\");'>
+                $list .= "<tr style=\"cursor:pointer;\" onClick='setAnalogSearchIndex(\"$art_id\",\"$article_nr_displ\",\"$brand_id\");'>
                     <td>$art_id</td>
                     <td>$article_nr_displ</td>
                     <td>$brand_name</td>
@@ -4944,7 +4944,7 @@ class catalogue {
                 $brand_name = $db->result($r, $i - 1, "BRAND_NAME");
                 $name = $db->result($r, $i - 1, "NAME");
                 $list .= "
-                <tr style=\"cursor:pointer;\" onClick='setDonorSearchIndex(\"$art_id\",\"$article_nr_displ\",\"$brand_id\",\"$brand_name\");'>
+                <tr style=\"cursor:pointer;\" onClick='setDonorSearchIndex(\"$art_id\",\"$article_nr_displ\",\"$brand_id\");'>
                     <td>$art_id</td>
                     <td>$article_nr_displ</td>
                     <td>$brand_name</td>

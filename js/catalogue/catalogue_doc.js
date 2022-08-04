@@ -1085,7 +1085,7 @@ function findCatalogueAnalogIndexSearch(){
 	}
 }
 
-function setAnalogSearchIndex(art_id,article_nr_displ,brand_id,brand_name){
+function setAnalogSearchIndex(art_id, article_nr_displ, brand_id) {
 	$("#form_analog_art_id2").val(art_id);
 	$("#form_analog_display_nr").val(article_nr_displ);
 	$("#form_analog_brand_id").val(brand_id).trigger("change");
