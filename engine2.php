@@ -349,7 +349,7 @@ if ($_REQUEST["w"]=="saveBrandsGeneralInfo") { list($answer,$err)=$brands->saveB
 
 if ($_REQUEST["w"]=="loadBrandsDetails"){ $GLOBALS['_RESULT'] = array("content"=>$brands->loadBrandsDetails($_REQUEST["brands_id"]));}
 
-if ($_REQUEST["w"]=="saveBrandsDetails") { list($answer,$err)=$brands->saveBrandsDetails($_REQUEST["brands_id"], $_REQUEST["descr"], $_REQUEST["link"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+if ($_REQUEST["w"]=="saveBrandsDetails") { list($answer,$err)=$brands->saveBrandsDetails($_REQUEST["brands_id"], $_REQUEST["descr"], $_REQUEST["descr_ua"], $_REQUEST["descr_en"], $_REQUEST["link"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
 if ($_REQUEST["w"]=="loadBrandsPhoto"){ $GLOBALS['_RESULT'] = array("content"=>$brands->loadBrandsPhoto($_REQUEST["brands_id"]));}
 

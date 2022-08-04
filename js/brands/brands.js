@@ -21,7 +21,7 @@ function newBrandsCard() {
 }
 
 function showBrandsCard(brands_id) {
-	if (brands_id<=0 || brands_id=="") {
+	if (brands_id<=0 || brands_id==="") {
 		toastr["error"](errs[0]);
 	}
 	if (brands_id>0) {
@@ -47,14 +47,14 @@ function saveBrandsGeneralInfo(){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-			let brands_id=$("#brands_id").val();
-            let brands_name=$("#brands_name").val();
-            let brands_type=$("#brands_type option:selected").val();
-            let brands_kind=$("#brands_kind option:selected").val();
-            let brands_country=$("#brands_country option:selected").val();
-            // let brands_visible=$("#brands_visible").val();
+			let brands_id		= $("#brands_id").val();
+            let brands_name		= $("#brands_name").val();
+            let brands_type		= $("#brands_type option:selected").val();
+            let brands_kind		= $("#brands_kind option:selected").val();
+            let brands_country	= $("#brands_country option:selected").val();
 			if (document.getElementById("brands_visible").checked){brands_visible=1;} else {brands_visible=0;}
-			if (brands_id.length>0){
+
+			if (brands_id.length > 0) {
 				JsHttpRequest.query($rcapi,{'w':'saveBrandsGeneralInfo','brands_id':brands_id, 'brands_name':brands_name, 'brands_type':brands_type, 'brands_kind':brands_kind, 'brands_country':brands_country, 'brands_visible':brands_visible},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"] == 1) {
@@ -73,7 +73,7 @@ function saveBrandsGeneralInfo(){
 }
 
 function loadBrandsDetails(brands_id) {
-	if (brands_id <= 0 || brands_id == "") {
+	if (brands_id <= 0 || brands_id === "") {
 		toastr["error"](errs[0]);
 	}
 	if (brands_id > 0) {
@@ -93,11 +93,14 @@ function saveBrandsDetails(){
 	},
 	function (isConfirm) {
 		if (isConfirm) {
-            let brands_id = $("#brands_id").val();
-            let descr = $("#descr").val();
-            let link = $("#link").val();
+            let brands_id	= $("#brands_id").val();
+            let descr 		= $("#descr").val();
+            let descr_ua 	= $("#descr_ua").val();
+            let descr_en 	= $("#descr_en").val();
+            let link 		= $("#link").val();
+
 			if (brands_id.length > 0) {
-				JsHttpRequest.query($rcapi,{'w':'saveBrandsDetails', 'brands_id':brands_id, 'descr':descr, 'link':link},
+				JsHttpRequest.query($rcapi,{'w':'saveBrandsDetails', 'brands_id':brands_id, 'descr':descr, 'descr_ua':descr_ua, 'descr_en':descr_en, 'link':link},
 				function (result, errors){ if (errors) {alert(errors);} if (result){  
 					if (result["answer"] == 1) {
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
@@ -128,7 +131,7 @@ function ImportBrands() {
 
 function showIndexUploadForm() {
 	$("#fileBrandsIndexUploadForm").modal('show');
-	var myDropzoneBrands = new Dropzone("#myDropzone4",{ dictDefaultMessage: "Натисніть для вибору файлів або перетягніть їх це поле!" });
+	let myDropzoneBrands = new Dropzone("#myDropzone4",{ dictDefaultMessage: "Натисніть для вибору файлів або перетягніть їх це поле!" });
 	myDropzoneBrands.removeAllFiles(true);
 	myDropzoneBrands.on("queuecomplete", function() {
 		toastr["info"]("Завантаження файлів завершено.");
@@ -165,7 +168,7 @@ function deleteBrandsLogo(brands_id) {
 
 function showBrandsUploadLogoForm(brands_id) {
 	$("#photo_brands_id").val(brands_id);
-	var myDropzone3 = new Dropzone("#myDropzone3",{ dictDefaultMessage: "Натисніть для вибору файлів або перетягніть їх це поле!" });
+	let myDropzone3 = new Dropzone("#myDropzone3",{ dictDefaultMessage: "Натисніть для вибору файлів або перетягніть їх це поле!" });
 	myDropzone3.removeAllFiles(true);
 	myDropzone3.on("queuecomplete", function() {
 		toastr["info"]("Завантаження файлів завершено.");
@@ -176,7 +179,7 @@ function showBrandsUploadLogoForm(brands_id) {
 }
 
 function loadBrandsPhoto(brands_id) {
-	if (brands_id <= 0 || brands_id == "") {
+	if (brands_id <= 0 || brands_id === "") {
 		toastr["error"](errs[0]);
 	}
 	if (brands_id > 0) {
@@ -248,6 +251,7 @@ function saveCertificateCard() {
 	let date_from = $("#date_from").val();
 	let date_to = $("#date_to").val();
 	let status = $("#certificate_status").prop("checked");
+
 	if (certificate_id.length > 0) {
 		JsHttpRequest.query($rcapi,{'w':'saveCertificateCard', 'certificate_id':certificate_id, 'brand_id':brand_id, 'suppl_id':suppl_id, 'date_from':date_from, 'date_to':date_to, 'status':status},
 			function (result, errors){ if (errors) {alert(errors);} if (result){
@@ -264,6 +268,7 @@ function saveCertificateCard() {
 
 function dropCertificateCard() {
 	let certificate_id = $("#certificate_id").val();
+
 	if (certificate_id.length > 0) {
 		JsHttpRequest.query($rcapi,{'w':'dropCertificateCard', 'certificate_id':certificate_id},
 			function (result, errors){ if (errors) {alert(errors);} if (result){
@@ -279,12 +284,12 @@ function dropCertificateCard() {
 }
 
 function dropCertificatePhoto(certificate_id) {
-		JsHttpRequest.query($rcapi,{'w':'dropCertificatePhoto', 'certificate_id':certificate_id},
-			function (result, errors){ if (errors) {alert(errors);} if (result){
-				console.log('done');
-				showCertificateCard(certificate_id);
-				getCertificatesList();
-			}}, true);
+	JsHttpRequest.query($rcapi,{'w':'dropCertificatePhoto', 'certificate_id':certificate_id},
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+			console.log('done');
+			showCertificateCard(certificate_id);
+			getCertificatesList();
+		}}, true);
 }
 
 function showCertificateUploadForm(certificate_id) {
