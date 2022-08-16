@@ -2,9 +2,21 @@
 
 class tax_invoice {
 
-    function show_tax_invoice_list() { $db = DbSingleton::getDb();
-        $gmanual = new gmanual; $media_users = new media_users;
+    function show_tax_invoice_list($date_start = "", $date_end = "")
+    {
+        $db = DbSingleton::getDb();
+        $gmanual = new gmanual;
+        $media_users = new media_users;
         $list = "";
+
+        $limit = "";
+        if (!empty($date_start)) {
+            $limit .= " AND ti.data_create > '$date_start'";
+        }
+        if (!empty($date_end)) {
+            $limit .= " AND ti.data_create   < '$date_end'";
+        }
+
         $r = $db->query("SELECT ti.*, si.prefix as si_prefix, si.doc_nom as si_nom, t.name as tpoint_name, sl.name as seller_name, cl.name as client_name, ch.abr2 as cash_abr 
         FROM `J_TAX_INVOICE` ti
             LEFT OUTER JOIN `J_SALE_INVOICE` si on si.id=ti.sale_invoice_id
@@ -12,7 +24,7 @@ class tax_invoice {
             LEFT OUTER JOIN `T_POINT` t on t.id=ti.tpoint_id
             LEFT OUTER JOIN `A_CLIENTS` sl on sl.id=ti.seller_id
             LEFT OUTER JOIN `A_CLIENTS` cl on cl.id=ti.client_id
-        WHERE ti.status=1 ORDER BY ti.status_tax ASC, ti.data_create DESC, si.id DESC;");
+        WHERE ti.status=1 $limit ORDER BY ti.status_tax ASC, ti.data_create DESC, si.id DESC;");
         $n = $db->num_rows($r);
         for ($i = 1; $i <= $n; $i++) {
             $id=$db->result($r,$i-1,"id");
@@ -31,10 +43,12 @@ class tax_invoice {
             $status_tax_cap=$gmanual->get_gmanual_caption($status_tax);
             $function="showTaxInvoiceCard(\"$id\");";
             $prefix="НН";
+
             if ($tax_type_id == 161) {
                 $function = "showTaxInvoiceBackCard(\"$id\")";
                 $prefix = "КНН";
             }
+
             $list.="<tr id='strStsRow_$i' style='cursor:pointer' align='center' onClick='$function'>
                 <td>$i</td>
                 <td>$prefix-$doc_nom</td>
@@ -49,12 +63,14 @@ class tax_invoice {
                 <td align='center'>$status_tax_cap</td>
             </tr>";
         }
+
         return $list;
     }
 
     function getSellerSelectList($sel_id) { $db = DbSingleton::getDb();
         $list = "";
-        $r = $db->query("SELECT c.id, c.name FROM `A_CLIENTS` c 
+        $r = $db->query("SELECT c.id, c.name 
+        FROM `A_CLIENTS` c 
             JOIN `A_CLIENTS_CATEGORY` cc on cc.client_id=c.id 
         WHERE c.status='1' AND cc.category_id='3' AND c.org_type=2 ORDER BY c.id ASC;");
         $n = $db->num_rows($r);
@@ -96,8 +112,10 @@ class tax_invoice {
         if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
         $cash_id = 1;
         $cash_name = $this->getCashName($cash_id);
+
         $r = $db->query("SELECT * FROM `J_TAX_INVOICE` WHERE `status`=1 AND `id`='$tax_id' LIMIT 1;");
-        $n =$db->num_rows($r);
+        $n = $db->num_rows($r);
+
         if ($n == 0) {
             $summ=0;
             $doc_xml_nom="";
@@ -106,6 +124,7 @@ class tax_invoice {
             $data_create=date("Y-m-d");
             $doc_nom=0;
         }
+
         if ($n == 1) {
             $tax_type_id=$db->result($r,0,"tax_type_id");
             $doc_xml_nom=$db->result($r,0,"doc_xml_nom");
@@ -122,6 +141,7 @@ class tax_invoice {
             $user_id=$db->result($r,0,"user_id");
             $status_tax=$db->result($r,0,"status_tax");
         }
+
         $form=str_replace("{tax_id}",$tax_id,$form);
         $form=str_replace("{user_id}",$user_id,$form);
         $form=str_replace("{cash_name}",$cash_name,$form);
@@ -141,6 +161,7 @@ class tax_invoice {
         $form=str_replace("{tax_invoice_range}",$tax_str_list,$form);
         $form=str_replace("{kol_str_row}",$kol_str_row,$form);
         $form=str_replace("{disabled}","",$form);
+
         return array($form, $doc_nom);
     }
 
@@ -153,6 +174,7 @@ class tax_invoice {
             $art_id = $db->result($r, $i - 1, "art_id");
             $db->query("UPDATE `J_TAX_INVOICE_STR` SET `tax_str_nom`='$i' WHERE `tax_id`='$tax_id' AND `art_id`='$art_id' LIMIT 1;");
         }
+
         return true;
     }
 
@@ -196,6 +218,7 @@ class tax_invoice {
             list($tb_doc_nom,,,,,,, $tb_data_create)=$this->getTaxInvoceHeader($tax_to_back_id);
             $tax_to_back_document="НН-$tb_doc_nom $tb_data_create";
         }
+
         $form=str_replace("{tax_id}",$tax_id,$form);
         $form=str_replace("{user_id}",$user_id,$form);
         $form=str_replace("{cash_name}",$cash_name,$form);
@@ -218,6 +241,7 @@ class tax_invoice {
         $form=str_replace("{tax_invoice_range}",$tax_str_list,$form);
         $form=str_replace("{kol_str_row}",$kol_str_row,$form);
         $form=str_replace("{disabled}","",$form);
+
         return array($form, $doc_nom);
     }
 
@@ -237,6 +261,7 @@ class tax_invoice {
             $cash_name=$this->getCashName($cash_id);
             $summ=$db->result($r,0,"summ");
         }
+
         return array($doc_nom, $seller_id, $seller_name, $tax_type_id, $cash_id, $cash_name, $summ, $data_create);
     }
 
@@ -274,6 +299,7 @@ class tax_invoice {
                 <td><button class='btn btn-xs btn-default' onClick='dropTaxStr(\"i_0\",\"0\",\"0\");'><i class='fa fa-times'></i></button></td>
             </tr>" . $list;
         }
+
         return array($list, $kol);
     }
 
@@ -306,6 +332,7 @@ class tax_invoice {
                 <td><button class='btn btn-xs dtn-default' id='findStr_$i' $opr onClick='findTaxStr(\"$i\",\"$tax_id\",\"$str_id\",\"$tax_str_id\")'><i class='fa fa-search'></i></button></td>
             </tr>";
         }
+
         $kol = $n;
         if ($status_tax == 155) {
             $list = "<tr id='taxStrNewRow' class='hidden'>
@@ -323,6 +350,7 @@ class tax_invoice {
                 <td><button class='btn btn-xs dtn-default' id='findStr_0' onClick='findTaxStr(\"i_0\",\"$tax_id\",\"0\",\"0\")'><i class='fa fa-search'></i></button></td>
             </tr>" . $list;
         }
+
         return array($list, $kol);
     }
 
@@ -333,6 +361,7 @@ class tax_invoice {
         $answer=0; $err="Помилка збереження даних!";
         $tax_id=$slave->qq($tax_id);$data_create=$slave->qq($data_create);$data_send=$slave->qq($data_send);$cash_id=$slave->qq($cash_id);$tax_summ=$slave->qq($tax_summ);$tax_type_id=$slave->qq($tax_type_id);
         $tpoint_id=$slave->qq($tpoint_id);$client_id=$slave->qq($client_id);$seller_id=$slave->qq($seller_id);$status_tax=$slave->qq($status_tax);$doc_xml_nom=$slave->qq($doc_xml_nom);
+
         if ($tax_id==0 || $tax_id=="") {
             $r=$db->query("SELECT MAX(`id`) as mid FROM `J_TAX_INVOICE`;");
             $tax_id=$db->result($r,0,"mid")+1;
@@ -346,6 +375,7 @@ class tax_invoice {
             `data_send`='$data_send', `cash_id`='$cash_id', `summ`='$tax_summ', `status_tax`='$status_tax', `doc_xml_nom`='$doc_xml_nom', `user_id`='$user_id' WHERE `id`='$tax_id';");
             $answer=1; $err="";
         }
+
         return array($answer, $err, $tax_id);
     }
 
@@ -376,6 +406,7 @@ class tax_invoice {
             }
             $answer=1; $err="";
         }
+
         return array($answer, $err);
     }
 
@@ -399,6 +430,7 @@ class tax_invoice {
             `data_create`='$data_create', `data_send`='$data_send', `cash_id`='$cash_id', `summ`='$tax_summ', `status_tax`='$status_tax', `doc_xml_nom`='$doc_xml_nom', `user_id`='$user_id' WHERE `id`='$tax_id';");
             $answer=1; $err="";
         }
+
         return array($answer, $err, $tax_id);
     }
 
@@ -431,6 +463,7 @@ class tax_invoice {
             }
             $answer=1; $err="";
         }
+
         return array($answer, $err);
     }
 
@@ -712,6 +745,7 @@ class tax_invoice {
                 $answer=0; $err="Видалення заблоковано. Накладну передано в ДПІ.";
             }
         }
+
         return array($answer, $err, $tax_summ);
     }
 
@@ -749,6 +783,7 @@ class tax_invoice {
         if ($n==0){
             $list="<h3 class='text-center'>Файли відсутні</h3>";
         }
+
         return $list;
     }
 
@@ -784,6 +819,7 @@ class tax_invoice {
         $form="";$form_htm=RD."/tpl/tax_select_tree.htm";
         if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
         $list="";
+
         $r=$db->query("SELECT ti.*, si.prefix as si_prefix, si.doc_nom as si_nom, t.name as tpoint_name, sl.name as seller_name, cl.name as client_name, ch.abr2 as cash_abr 
         FROM `J_TAX_INVOICE` ti
             LEFT OUTER JOIN J_SALE_INVOICE si on si.id=ti.sale_invoice_id
@@ -820,6 +856,7 @@ class tax_invoice {
             </tr>";
         }
         $form=str_replace("{list}",$list,$form);
+
         return $form;
     }
 
@@ -831,6 +868,7 @@ class tax_invoice {
             $db->query("UPDATE `J_TAX_INVOICE` SET `client_id`='0' WHERE `id`='$tax_id';");
             $answer = 1; $err = "";
         }
+
         return array($answer, $err);
     }
 
@@ -841,6 +879,7 @@ class tax_invoice {
         $client_name = $seller_name = "";
         $r = $db->query("SELECT * FROM `J_TAX_INVOICE` WHERE `status`=1 AND `id`='$tax_id' LIMIT 1;");
         $n = $db->num_rows($r);
+
         if ($n == 1) {
             $client_id = $db->result($r,0,"client_id");
             $client_name = $client->getClientName($client_id);
@@ -848,6 +887,7 @@ class tax_invoice {
             $seller_name = $client->getClientName($seller_id);
             $answer = 1; $err = "";
         }
+
         return array($answer, $err, $client_id, $client_name, $seller_id, $seller_name);
     }
 
