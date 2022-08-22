@@ -1852,11 +1852,11 @@ class jmoving {
                 LEFT JOIN `T2_BARCODES` t2bc on t2bc.ART_ID=t2a.ART_ID 
                 LEFT JOIN `T2_GOODS_GROUP` t2gg on t2gg.ART_ID=t2a.ART_ID 
                 LEFT JOIN `GOODS_GROUP` gg on gg.ID=t2gg.GOODS_GROUP_ID 
-                LEFT JOIN `T2_ARTICLES_STRORAGE` t2asc on (t2asc.ART_ID=t2a.ART_ID and t2asc.STORAGE_ID='1') 
+                LEFT JOIN `T2_ARTICLES_STRORAGE` t2asc on (t2asc.ART_ID=t2a.ART_ID) 
                 LEFT JOIN `STORAGE` s on s.id=t2asc.STORAGE_ID 
             WHERE t2a.ARTICLE_NR_SEARCH='$art' or t2a.ARTICLE_NR_DISPL='$art' 
             GROUP BY t2a.ART_ID";
-            //
+            // and t2asc.STORAGE_ID='1'
             //HAVING (stock > 0 OR reserv > 0);
         }
 
