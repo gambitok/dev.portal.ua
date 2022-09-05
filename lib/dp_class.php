@@ -4505,233 +4505,235 @@ class dp
             $check = 1;
         }
 
-        if ($dp_id > 0 && $check == 0 && $kol_storsel > 0) {
-            list($client_saldo, $client_credit_limit, $sale_storsell_summ, $datapay_limit) = $this->checkClientCreditLimitBeforeSaleInvoice($dp_id, $kol_storsel, $ar_storsel);
+        if ($dp_id > 0 && $check == 0) {
+            if ($kol_storsel > 0) {
+                list($client_saldo, $client_credit_limit, $sale_storsell_summ, $datapay_limit) = $this->checkClientCreditLimitBeforeSaleInvoice($dp_id, $kol_storsel, $ar_storsel);
 
-            if ($sale_storsell_summ <= 0) {
-                $db->query("UPDATE `J_DP` SET `status_dp` = '81' WHERE `id` = $dp_id;");
-                $answer = 1; $err = "Всі товари у ДП відхилено. Накладну не створено. Документ передано у архів.";
-            }
+                if ($sale_storsell_summ <= 0) {
+                    $db->query("UPDATE `J_DP` SET `status_dp` = '81' WHERE `id` = $dp_id;");
+                    $answer = 1; $err = "Всі товари у ДП відхилено. Накладну не створено. Документ передано у архів.";
+                }
 
-            if ($datapay_limit > 0) {
-                $answer = 2; $err = "Поточне відвантаження НЕ можливе! У контрагента наявні просрочені документи. Відобразити список просрочених документів?";
-            }
+                if ($datapay_limit > 0) {
+                    $answer = 2; $err = "Поточне відвантаження НЕ можливе! У контрагента наявні просрочені документи. Відобразити список просрочених документів?";
+                }
 
-            if ($datapay_limit == 0 && $sale_storsell_summ > 0) {
+                if ($datapay_limit == 0 && $sale_storsell_summ > 0) {
 
-                if ($client_saldo == 0 || ($client_saldo > 0 && $sale_storsell_summ < $client_saldo + $client_credit_limit) || ($client_saldo < 0 && $sale_storsell_summ < $client_credit_limit - abs($client_saldo))) {
+                    if ($client_saldo == 0 || ($client_saldo > 0 && $sale_storsell_summ < $client_saldo + $client_credit_limit) || ($client_saldo < 0 && $sale_storsell_summ < $client_credit_limit - abs($client_saldo))) {
 
-                    $r = $db->query("SELECT `doc_type_id` FROM `J_DP` WHERE `id` = $dp_id LIMIT 1;");
-                    $doc_type_id_check = $db->result($r, 0, "doc_type_id");
+                        $r = $db->query("SELECT `doc_type_id` FROM `J_DP` WHERE `id` = $dp_id LIMIT 1;");
+                        $doc_type_id_check = $db->result($r, 0, "doc_type_id");
 
-                    if ($doc_type_id_check > 0) {
+                        if ($doc_type_id_check > 0) {
 
-                        $r = $db->query("SELECT MAX(`id`) as mid FROM `J_SALE_INVOICE`;");
-                        $invoice_id = 0 + $db->result($r, 0, "mid") + 1;
-                        $sale_invoice_nom = $invoice_id; // Временно
+                            $r = $db->query("SELECT MAX(`id`) as mid FROM `J_SALE_INVOICE`;");
+                            $invoice_id = 0 + $db->result($r, 0, "mid") + 1;
+                            $sale_invoice_nom = $invoice_id; // Временно
 
-                        $db->query("INSERT INTO `J_SALE_INVOICE` (`id`, `dp_id`) VALUES ('$invoice_id', '$dp_id');");
-                        $ai = 0;
-                        for ($i = 1; $i <= $kol_storsel; $i++) {
-                            if ($ar_storsel[$i] != "" && $ar_storsel[$i] > 0) {
-                                $ai += 1;
-                                $db->query("INSERT INTO `J_SALE_INVOICE_STORSEL` (`dp_id`, `invoice_id`, `select_id`) VALUES ('$dp_id', '$invoice_id', '".$ar_storsel[$i]."');");
+                            $db->query("INSERT INTO `J_SALE_INVOICE` (`id`, `dp_id`) VALUES ('$invoice_id', '$dp_id');");
+                            $ai = 0;
+                            for ($i = 1; $i <= $kol_storsel; $i++) {
+                                if ($ar_storsel[$i] != "" && $ar_storsel[$i] > 0) {
+                                    $ai += 1;
+                                    $db->query("INSERT INTO `J_SALE_INVOICE_STORSEL` (`dp_id`, `invoice_id`, `select_id`) VALUES ('$dp_id', '$invoice_id', '".$ar_storsel[$i]."');");
+                                }
                             }
-                        }
 
-                        $r = $db->query("SELECT * FROM `J_DP` WHERE `id` = $dp_id LIMIT 1;");
-                        $n = $db->num_rows($r);
-                        if ($n == 1) {
-                            $doc_type_id        = $db->result($r, 0, "doc_type_id");
-                            $tpoint_id          = $db->result($r, 0, "tpoint_id");
-                            $client_id          = $db->result($r, 0, "client_id");
-                            $client_conto_id    = $db->result($r, 0, "client_conto_id");
-                            $cash_id            = $db->result($r, 0, "cash_id");
-                            $usd_to_uah         = $db->result($r, 0, "usd_to_uah");
-                            $eur_to_uah         = $db->result($r, 0, "eur_to_uah");
-                            $summ               = $db->result($r, 0, "summ");
-                            if ($cash_id == 1) {
-                                $summ = $this->getClientPriceRounding($client_conto_id, $summ);
-                            }
-                            $vat_use            = $db->result($r, 0, "vat_use");
-                            $delivery_type_id   = $db->result($r, 0, "delivery_type_id");
-                            $carrier_id         = $db->result($r, 0, "carrier_id");
-                            $delivery_address   = $db->result($r, 0, "delivery_address");
-                            $status_dp          = $db->result($r, 0, "status_dp");
+                            $r = $db->query("SELECT * FROM `J_DP` WHERE `id` = $dp_id LIMIT 1;");
+                            $n = $db->num_rows($r);
+                            if ($n == 1) {
+                                $doc_type_id        = $db->result($r, 0, "doc_type_id");
+                                $tpoint_id          = $db->result($r, 0, "tpoint_id");
+                                $client_id          = $db->result($r, 0, "client_id");
+                                $client_conto_id    = $db->result($r, 0, "client_conto_id");
+                                $cash_id            = $db->result($r, 0, "cash_id");
+                                $usd_to_uah         = $db->result($r, 0, "usd_to_uah");
+                                $eur_to_uah         = $db->result($r, 0, "eur_to_uah");
+                                $summ               = $db->result($r, 0, "summ");
+                                if ($cash_id == 1) {
+                                    $summ = $this->getClientPriceRounding($client_conto_id, $summ);
+                                }
+                                $vat_use            = $db->result($r, 0, "vat_use");
+                                $delivery_type_id   = $db->result($r, 0, "delivery_type_id");
+                                $carrier_id         = $db->result($r, 0, "carrier_id");
+                                $delivery_address   = $db->result($r, 0, "delivery_address");
+                                $status_dp          = $db->result($r, 0, "status_dp");
 
-                            list($usd_to_uah_new, $eur_to_uah_new) = $this->getKoursData();
+                                list($usd_to_uah_new, $eur_to_uah_new) = $this->getKoursData();
 
-                            if ($status_dp == 79) {
-                                $usd_to_uah = $usd_to_uah_new;
-                                $eur_to_uah = $eur_to_uah_new;
-                            } else {
-                                if ($usd_to_uah == 0) {
+                                if ($status_dp == 79) {
                                     $usd_to_uah = $usd_to_uah_new;
-                                }
-                                if ($eur_to_uah == 0) {
                                     $eur_to_uah = $eur_to_uah_new;
-                                }
-                            }
-
-                            $seller_id = $this->getSellerId($tpoint_id, $doc_type_id);
-                            list($seller_prefix, $seller_doc_nom) = $this->getSellerPrefixDocNom($seller_id, $doc_type_id);
-                            list(,, $data_pay) = $this->getClientPaymentDelay($client_conto_id);
-                            $data_create = date("Y-m-d");
-
-                            $db->query("UPDATE `J_SALE_INVOICE` SET `prefix` = '$seller_prefix', `doc_nom` = '$seller_doc_nom', `tpoint_id` = '$tpoint_id', `seller_id` = '$seller_id', 
-                            `client_id` = '$client_id', `client_conto_id` = '$client_conto_id', `doc_type_id` = '$doc_type_id', `data_create` = '$data_create', `data_pay` = '$data_pay', 
-                            `cash_id` = '$cash_id', `usd_to_uah` = '$usd_to_uah', `eur_to_uah` = '$eur_to_uah', `vat_use` = '$vat_use', `delivery_type_id` = '$delivery_type_id', 
-                            `carrier_id` = '$carrier_id', `delivery_address` = '$delivery_address', `user_id` = '$user_id' 
-                            WHERE `id` = '$invoice_id' LIMIT 1;");
-
-                            $r3 = $db->query("SELECT * FROM `J_SALE_INVOICE_STORSEL`
-                            WHERE `invoice_id` = '$invoice_id' AND `dp_id` = $dp_id AND `status` = '1' 
-                            ORDER BY `id` ASC;");
-                            $n3 = $db->num_rows($r3);
-                            $select_str = "0";
-                            for ($i3 = 1; $i3 <= $n3; $i3++) {
-                                $select_str .= "," . $db->result($r3, $i3 - 1, "select_id");
-                            }
-
-                            $tax_id = 0;
-                            if ($doc_type_id == 61) {
-                                $rt = $db->query("SELECT MAX(`id`) as mid FROM `J_TAX_INVOICE`;");
-                                $tax_id = 0 + $db->result($rt, 0, "mid") + 1;
-                                $year = date("Y");
-                                $rt = $db->query("SELECT MAX(`doc_nom`) as mid FROM `J_TAX_INVOICE` WHERE `seller_id` = '$seller_id' AND `data_create` >= '$year-01-01';");
-                                $tax_nom = 0 + $db->result($rt, 0, "mid") + 1;
-                                $db->query("INSERT INTO `J_TAX_INVOICE` (`id`, `tax_type_id`, `doc_nom`, `data_create`, `sale_invoice_id`, `tpoint_id`, `seller_id`, `client_id`, `cash_id`, `summ`, `user_id`) 
-                                VALUES ('$tax_id', '160', '$tax_nom', CURDATE(), '$invoice_id', '$tpoint_id', '$seller_id', '$client_conto_id', '$cash_id', '$summ', '$user_id');");
-                            }
-
-                            $r2 = $db->query("SELECT jds.*, jss.amount_collect as amount_collect2, jss.storage_id_from as storage_id_from2, jss.cell_id_from as cell_id_from2,
-                            jss.parrent_doc_type_id, jss.parrent_doc_id
-                            FROM `J_SELECT_STR` jss 
-                                LEFT OUTER JOIN `J_SELECT` js ON (js.id = jss.select_id) 
-                                LEFT OUTER JOIN `J_DP` jd ON (jd.id = js.parrent_doc_id AND js.parrent_doc_type_id = 2)
-                                LEFT OUTER JOIN `J_DP_STR` jds ON (jds.dp_id = jd.id AND (jss.parrent_doc_id = jds.id OR jss.parrent_doc_id = 0)) 
-                            WHERE jss.select_id IN ($select_str) AND jds.art_id = jss.art_id AND jds.status_dps != 97
-                            GROUP BY jds.art_id, jds.suppl_id, jss.storage_id_from, jss.cell_id_from, jds.reserv_type_id;");
-                            $n2 = $db->num_rows($r2);
-                            $summ_all = 0;
-                            // GROUP BY jds.art_id, jss.storage_id_from, jss.cell_id_from
-                            // AND jds.cur_select_str_id=jss.id
-
-                            $db->query("UPDATE `J_SELECT` SET `status_select` = '127' WHERE `id` IN ($select_str);");
-
-                            for ($i2 = 1; $i2 <= $n2; $i2++) {
-                                $art_id2                = $db->result($r2, $i2 - 1, "art_id");
-                                $suppl_id2              = $db->result($r2, $i2 - 1, "suppl_id");
-                                $where_suppl            = ($suppl_id2 > 0) ? "AND `suppl_id`='$suppl_id2'" : "";
-                                $article_nr_displ2      = $db->result($r2, $i2 - 1, "article_nr_displ");
-                                $brand_id2              = $db->result($r2, $i2 - 1, "brand_id");
-                                $amount2                = $db->result($r2, $i2 - 1, "amount_collect2");
-                                $price2                 = $db->result($r2, $i2 - 1, "price");
-                                $price_end2             = $db->result($r2, $i2 - 1, "price_end");
-                                $discount2              = $db->result($r2, $i2 - 1, "discount");
-                                $storage_id_from2       = $db->result($r2, $i2 - 1, "storage_id_from2");
-                                $cell_id_from2          = $db->result($r2, $i2 - 1, "cell_id_from2");
-                                $reserv_type_id         = $db->result($r2, $i2 - 1, "reserv_type_id");
-                                $parrent_doc_type_id    = $db->result($r2, $i2 - 1, "parrent_doc_type_id");  // $parrent_doc_type_id = 1 - J_DP
-                                $parrent_doc_id         = $db->result($r2, $i2 - 1, "parrent_doc_id");            // $parrent_doc_type_id = 2 - J_MOVING
-
-                                $where_storage = "AND `storage_id_from`='$storage_id_from2'";
-                                if ($reserv_type_id == 68) {
-                                    $storage_id_from2 = $db->result($r2, $i2 - 1, "location_storage_id");
-                                    $where_storage = "AND `location_storage_id`='$storage_id_from2'";
-                                }
-
-                                // якщо віддалене переміщення - беремо склад LOCATION, інакше - беремо склад з Скл Відбору
-                                // помилка зі статусом при вибитті документа через dp_str_id - коли однакові індекси з різних складів
-
-                                $rt = $db->query("SELECT `id` FROM `J_DP_STR` WHERE `dp_id` = '$dp_id' AND `art_id` = $art_id2 $where_suppl $where_storage LIMIT 1;"); // по старому
-                                $dp_str_id = $db->result($rt, 0, "id");
-
-                                // якщо записано DP
-                                if ($parrent_doc_type_id > 0 && $parrent_doc_id > 0) {
-                                    $dp_str_id = $parrent_doc_id;
-                                }
-
-                                $db->query("UPDATE `J_DP_STR` SET `status_dps` = 97 WHERE `id` = $dp_str_id LIMIT 1;");
-
-                                if ($amount2 > 0) {
-                                    $cash_id_to         = $cash_id;
-                                    $cash_id_from       = $this->getArticlePriceRatingCash($art_id2);
-                                    $price2_cash        = $this->getPriceRatingKours($price2, $cash_id_from, $cash_id_to, $usd_to_uah, $eur_to_uah);
-                                    $price_end2_cash    = $this->getPriceRatingKours($price_end2, $cash_id_from, $cash_id_to, $usd_to_uah, $eur_to_uah);
-                                    $discount2_cash     = $discount2;
-                                    if ($cash_id == 1) {
-                                        $price2_cash        = $this->getClientPriceRounding($client_conto_id, $price2_cash);
-                                        $price_end2_cash    = $this->getClientPriceRounding($client_conto_id, $price_end2_cash);
+                                } else {
+                                    if ($usd_to_uah == 0) {
+                                        $usd_to_uah = $usd_to_uah_new;
                                     }
-                                    $summ2_cash         = round($amount2 * $price_end2_cash, 2);
+                                    if ($eur_to_uah == 0) {
+                                        $eur_to_uah = $eur_to_uah_new;
+                                    }
+                                }
 
-                                    $rsi = $db->query("SELECT MAX(`id`) as mid FROM `J_SALE_INVOICE_STR`;");
-                                    $invoice_str_id = 0 + $db->result($rsi, 0, "mid") + 1;
-                                    $db->query("INSERT INTO `J_SALE_INVOICE_STR` (`id`, `invoice_id`, `art_id`, `article_nr_displ`, `brand_id`, `amount`, `price`, `price_end`, `discount`, `summ`, `storage_id_from`, `cell_id_from`) 
-                                    VALUES ('$invoice_str_id', '$invoice_id', '$art_id2', '$article_nr_displ2', '$brand_id2', '$amount2', '$price2_cash', '$price_end2_cash', '$discount2_cash', '$summ2_cash', '$storage_id_from2', '$cell_id_from2');");
+                                $seller_id = $this->getSellerId($tpoint_id, $doc_type_id);
+                                list($seller_prefix, $seller_doc_nom) = $this->getSellerPrefixDocNom($seller_id, $doc_type_id);
+                                list(,, $data_pay) = $this->getClientPaymentDelay($client_conto_id);
+                                $data_create = date("Y-m-d");
 
-                                    if ($tax_id > 0) {
-                                        $zed = $cat->getArticleZED($art_id2);
-                                        $art_name = $cat->getArticleNameLang($art_id2);
-                                        $db->query("INSERT INTO `J_TAX_INVOICE_STR` (`tax_id`, `zed`, `art_id`, `goods_name`, `amount`, `price`, `summ`) 
-                                        VALUES ('$tax_id', '$zed', '$art_id2', '$art_name', '$amount2', '$price_end2_cash', '$summ2_cash');");
+                                $db->query("UPDATE `J_SALE_INVOICE` SET `prefix` = '$seller_prefix', `doc_nom` = '$seller_doc_nom', `tpoint_id` = '$tpoint_id', `seller_id` = '$seller_id', 
+                                `client_id` = '$client_id', `client_conto_id` = '$client_conto_id', `doc_type_id` = '$doc_type_id', `data_create` = '$data_create', `data_pay` = '$data_pay', 
+                                `cash_id` = '$cash_id', `usd_to_uah` = '$usd_to_uah', `eur_to_uah` = '$eur_to_uah', `vat_use` = '$vat_use', `delivery_type_id` = '$delivery_type_id', 
+                                `carrier_id` = '$carrier_id', `delivery_address` = '$delivery_address', `user_id` = '$user_id' 
+                                WHERE `id` = '$invoice_id' LIMIT 1;");
+
+                                $r3 = $db->query("SELECT * FROM `J_SALE_INVOICE_STORSEL`
+                                WHERE `invoice_id` = '$invoice_id' AND `dp_id` = $dp_id AND `status` = '1' 
+                                ORDER BY `id` ASC;");
+                                $n3 = $db->num_rows($r3);
+                                $select_str = "0";
+                                for ($i3 = 1; $i3 <= $n3; $i3++) {
+                                    $select_str .= "," . $db->result($r3, $i3 - 1, "select_id");
+                                }
+
+                                $tax_id = 0;
+                                if ($doc_type_id == 61) {
+                                    $rt = $db->query("SELECT MAX(`id`) as mid FROM `J_TAX_INVOICE`;");
+                                    $tax_id = 0 + $db->result($rt, 0, "mid") + 1;
+                                    $year = date("Y");
+                                    $rt = $db->query("SELECT MAX(`doc_nom`) as mid FROM `J_TAX_INVOICE` WHERE `seller_id` = '$seller_id' AND `data_create` >= '$year-01-01';");
+                                    $tax_nom = 0 + $db->result($rt, 0, "mid") + 1;
+                                    $db->query("INSERT INTO `J_TAX_INVOICE` (`id`, `tax_type_id`, `doc_nom`, `data_create`, `sale_invoice_id`, `tpoint_id`, `seller_id`, `client_id`, `cash_id`, `summ`, `user_id`) 
+                                    VALUES ('$tax_id', '160', '$tax_nom', CURDATE(), '$invoice_id', '$tpoint_id', '$seller_id', '$client_conto_id', '$cash_id', '$summ', '$user_id');");
+                                }
+
+                                $r2 = $db->query("SELECT jds.*, jss.amount_collect as amount_collect2, jss.storage_id_from as storage_id_from2, jss.cell_id_from as cell_id_from2,
+                                jss.parrent_doc_type_id, jss.parrent_doc_id
+                                FROM `J_SELECT_STR` jss 
+                                    LEFT OUTER JOIN `J_SELECT` js ON (js.id = jss.select_id) 
+                                    LEFT OUTER JOIN `J_DP` jd ON (jd.id = js.parrent_doc_id AND js.parrent_doc_type_id = 2)
+                                    LEFT OUTER JOIN `J_DP_STR` jds ON (jds.dp_id = jd.id AND (jss.parrent_doc_id = jds.id OR jss.parrent_doc_id = 0)) 
+                                WHERE jss.select_id IN ($select_str) AND jds.art_id = jss.art_id AND jds.status_dps != 97
+                                GROUP BY jds.art_id, jds.suppl_id, jss.storage_id_from, jss.cell_id_from, jds.reserv_type_id;");
+                                $n2 = $db->num_rows($r2);
+                                $summ_all = 0;
+                                // GROUP BY jds.art_id, jss.storage_id_from, jss.cell_id_from
+                                // AND jds.cur_select_str_id=jss.id
+
+                                $db->query("UPDATE `J_SELECT` SET `status_select` = '127' WHERE `id` IN ($select_str);");
+
+                                for ($i2 = 1; $i2 <= $n2; $i2++) {
+                                    $art_id2                = $db->result($r2, $i2 - 1, "art_id");
+                                    $suppl_id2              = $db->result($r2, $i2 - 1, "suppl_id");
+                                    $where_suppl            = ($suppl_id2 > 0) ? "AND `suppl_id`='$suppl_id2'" : "";
+                                    $article_nr_displ2      = $db->result($r2, $i2 - 1, "article_nr_displ");
+                                    $brand_id2              = $db->result($r2, $i2 - 1, "brand_id");
+                                    $amount2                = $db->result($r2, $i2 - 1, "amount_collect2");
+                                    $price2                 = $db->result($r2, $i2 - 1, "price");
+                                    $price_end2             = $db->result($r2, $i2 - 1, "price_end");
+                                    $discount2              = $db->result($r2, $i2 - 1, "discount");
+                                    $storage_id_from2       = $db->result($r2, $i2 - 1, "storage_id_from2");
+                                    $cell_id_from2          = $db->result($r2, $i2 - 1, "cell_id_from2");
+                                    $reserv_type_id         = $db->result($r2, $i2 - 1, "reserv_type_id");
+                                    $parrent_doc_type_id    = $db->result($r2, $i2 - 1, "parrent_doc_type_id");  // $parrent_doc_type_id = 1 - J_DP
+                                    $parrent_doc_id         = $db->result($r2, $i2 - 1, "parrent_doc_id");            // $parrent_doc_type_id = 2 - J_MOVING
+
+                                    $where_storage = "AND `storage_id_from`='$storage_id_from2'";
+                                    if ($reserv_type_id == 68) {
+                                        $storage_id_from2 = $db->result($r2, $i2 - 1, "location_storage_id");
+                                        $where_storage = "AND `location_storage_id`='$storage_id_from2'";
                                     }
 
-                                    $slave->addJuornalArtDocs(3, $invoice_id, $art_id2, $amount2);
+                                    // якщо віддалене переміщення - беремо склад LOCATION, інакше - беремо склад з Скл Відбору
+                                    // помилка зі статусом при вибитті документа через dp_str_id - коли однакові індекси з різних складів
 
-                                    $this->writeOffPartitions($invoice_id, $invoice_str_id, $art_id2, $article_nr_displ2, $brand_id2, $amount2, $price_end2);
+                                    $rt = $db->query("SELECT `id` FROM `J_DP_STR` WHERE `dp_id` = '$dp_id' AND `art_id` = $art_id2 $where_suppl $where_storage LIMIT 1;"); // по старому
+                                    $dp_str_id = $db->result($rt, 0, "id");
 
-                                    $rr = $dbt->query("SELECT `RESERV_AMOUNT` FROM `T2_ARTICLES_STRORAGE` WHERE `ART_ID` = $art_id2 AND `STORAGE_ID` = $storage_id_from2 LIMIT 1;");
-                                    $nr = $dbt->num_rows($rr);
-                                    if ($nr == 1) {
-                                        $rr_reserv = $dbt->result($rr, 0, "RESERV_AMOUNT");
-                                        $rr_reserv -= $amount2;
-                                        $dbt->query("UPDATE `T2_ARTICLES_STRORAGE` SET `RESERV_AMOUNT`='$rr_reserv' WHERE `ART_ID` = $art_id2 AND `STORAGE_ID` = $storage_id_from2;");
+                                    // якщо записано DP
+                                    if ($parrent_doc_type_id > 0 && $parrent_doc_id > 0) {
+                                        $dp_str_id = $parrent_doc_id;
                                     }
 
-                                    $rr = $dbt->query("SELECT `RESERV_AMOUNT` FROM `T2_ARTICLES_STRORAGE_CELLS` WHERE `ART_ID` = $art_id2 AND `STORAGE_ID` = $storage_id_from2 AND `STORAGE_CELLS_ID` = $cell_id_from2 LIMIT 1;");
-                                    $nr = $dbt->num_rows($rr);
-                                    if ($nr == 1) {
-                                        $rr_reserv = $dbt->result($rr, 0, "RESERV_AMOUNT");
-                                        $rr_reserv -= $amount2;
-                                        $dbt->query("UPDATE `T2_ARTICLES_STRORAGE_CELLS` SET `RESERV_AMOUNT` = '$rr_reserv' WHERE `ART_ID` = $art_id2 AND `STORAGE_ID` = $storage_id_from2 AND `STORAGE_CELLS_ID` = $cell_id_from2;");
+                                    $db->query("UPDATE `J_DP_STR` SET `status_dps` = 97 WHERE `id` = $dp_str_id LIMIT 1;");
+
+                                    if ($amount2 > 0) {
+                                        $cash_id_to         = $cash_id;
+                                        $cash_id_from       = $this->getArticlePriceRatingCash($art_id2);
+                                        $price2_cash        = $this->getPriceRatingKours($price2, $cash_id_from, $cash_id_to, $usd_to_uah, $eur_to_uah);
+                                        $price_end2_cash    = $this->getPriceRatingKours($price_end2, $cash_id_from, $cash_id_to, $usd_to_uah, $eur_to_uah);
+                                        $discount2_cash     = $discount2;
+                                        if ($cash_id == 1) {
+                                            $price2_cash        = $this->getClientPriceRounding($client_conto_id, $price2_cash);
+                                            $price_end2_cash    = $this->getClientPriceRounding($client_conto_id, $price_end2_cash);
+                                        }
+                                        $summ2_cash         = round($amount2 * $price_end2_cash, 2);
+
+                                        $rsi = $db->query("SELECT MAX(`id`) as mid FROM `J_SALE_INVOICE_STR`;");
+                                        $invoice_str_id = 0 + $db->result($rsi, 0, "mid") + 1;
+                                        $db->query("INSERT INTO `J_SALE_INVOICE_STR` (`id`, `invoice_id`, `art_id`, `article_nr_displ`, `brand_id`, `amount`, `price`, `price_end`, `discount`, `summ`, `storage_id_from`, `cell_id_from`) 
+                                        VALUES ('$invoice_str_id', '$invoice_id', '$art_id2', '$article_nr_displ2', '$brand_id2', '$amount2', '$price2_cash', '$price_end2_cash', '$discount2_cash', '$summ2_cash', '$storage_id_from2', '$cell_id_from2');");
+
+                                        if ($tax_id > 0) {
+                                            $zed = $cat->getArticleZED($art_id2);
+                                            $art_name = $cat->getArticleNameLang($art_id2);
+                                            $db->query("INSERT INTO `J_TAX_INVOICE_STR` (`tax_id`, `zed`, `art_id`, `goods_name`, `amount`, `price`, `summ`) 
+                                            VALUES ('$tax_id', '$zed', '$art_id2', '$art_name', '$amount2', '$price_end2_cash', '$summ2_cash');");
+                                        }
+
+                                        $slave->addJuornalArtDocs(3, $invoice_id, $art_id2, $amount2);
+
+                                        $this->writeOffPartitions($invoice_id, $invoice_str_id, $art_id2, $article_nr_displ2, $brand_id2, $amount2, $price_end2);
+
+                                        $rr = $dbt->query("SELECT `RESERV_AMOUNT` FROM `T2_ARTICLES_STRORAGE` WHERE `ART_ID` = $art_id2 AND `STORAGE_ID` = $storage_id_from2 LIMIT 1;");
+                                        $nr = $dbt->num_rows($rr);
+                                        if ($nr == 1) {
+                                            $rr_reserv = $dbt->result($rr, 0, "RESERV_AMOUNT");
+                                            $rr_reserv -= $amount2;
+                                            $dbt->query("UPDATE `T2_ARTICLES_STRORAGE` SET `RESERV_AMOUNT`='$rr_reserv' WHERE `ART_ID` = $art_id2 AND `STORAGE_ID` = $storage_id_from2;");
+                                        }
+
+                                        $rr = $dbt->query("SELECT `RESERV_AMOUNT` FROM `T2_ARTICLES_STRORAGE_CELLS` WHERE `ART_ID` = $art_id2 AND `STORAGE_ID` = $storage_id_from2 AND `STORAGE_CELLS_ID` = $cell_id_from2 LIMIT 1;");
+                                        $nr = $dbt->num_rows($rr);
+                                        if ($nr == 1) {
+                                            $rr_reserv = $dbt->result($rr, 0, "RESERV_AMOUNT");
+                                            $rr_reserv -= $amount2;
+                                            $dbt->query("UPDATE `T2_ARTICLES_STRORAGE_CELLS` SET `RESERV_AMOUNT` = '$rr_reserv' WHERE `ART_ID` = $art_id2 AND `STORAGE_ID` = $storage_id_from2 AND `STORAGE_CELLS_ID` = $cell_id_from2;");
+                                        }
+                                        $dbt->query("UPDATE `T2_ARTICLES_PRICE_STOCK` SET `GENERAL_STOCK` = (`GENERAL_STOCK` - '$amount2') WHERE `ART_ID` = $art_id2 LIMIT 1;");
+
+                                        $summ_all += $summ2_cash;
                                     }
-                                    $dbt->query("UPDATE `T2_ARTICLES_PRICE_STOCK` SET `GENERAL_STOCK` = (`GENERAL_STOCK` - '$amount2') WHERE `ART_ID` = $art_id2 LIMIT 1;");
-
-                                    $summ_all += $summ2_cash;
                                 }
-                            }
-                            if ($ai == $kol_storsel) {
-                                $ra = $db->query("SELECT COUNT(`id`) as kol FROM `J_DP_STR` WHERE `dp_id` = $dp_id AND `status_dps` != 97 AND `status_dps` != 170;");
-                                $ra_kol = $db->result($ra, 0, "kol");
-                                if ($ra_kol == 0) {
-                                    $db->query("UPDATE `J_DP` SET `status_dp` = 81 WHERE `id` = $dp_id LIMIT 1;");
+                                if ($ai == $kol_storsel) {
+                                    $ra = $db->query("SELECT COUNT(`id`) as kol FROM `J_DP_STR` WHERE `dp_id` = $dp_id AND `status_dps` != 97 AND `status_dps` != 170;");
+                                    $ra_kol = $db->result($ra, 0, "kol");
+                                    if ($ra_kol == 0) {
+                                        $db->query("UPDATE `J_DP` SET `status_dp` = 81 WHERE `id` = $dp_id LIMIT 1;");
+                                    }
+                                    //$db->query("update J_DP_STR set status_dps='97' where dp_id='$dp_id';");
                                 }
-                                //$db->query("update J_DP_STR set status_dps='97' where dp_id='$dp_id';");
+                                //if ($cash_id==1){$summ_all=round($summ_all*$usd_to_uah,2);}
+                                //if ($cash_id==3){$summ_all=round($summ_all*$usd_to_uah/$eur_to_uah,2);}
+                                $db->query("UPDATE `J_SALE_INVOICE` SET `summ` = '$summ_all', `summ_debit` = '$summ_all' WHERE `id` = $invoice_id LIMIT 1;");
+
+                                list($balans_before) = $this->getClientGeneralSaldo($client_conto_id);
+                                $balans_after = $balans_before - $summ_all;
+                                $db->query("INSERT INTO `B_CLIENT_BALANS_JOURNAL` (`client_id`, `cash_id`, `balans_before`, `deb_kre`, `summ`, `balans_after`, `doc_type_id`, `doc_id`) 
+                                VALUES ('$client_conto_id', '$cash_id', '$balans_before', '1', '$summ_all', '$balans_after', '1', '$invoice_id');");
+
+                                $this->updateClientBalans($client_conto_id, $cash_id, $summ_all);
+                                $answer = 1; $err = "";
+                                //add to cron client invoice
+                                $sale_invoice->addClientInvoiceCron($invoice_id);
                             }
-                            //if ($cash_id==1){$summ_all=round($summ_all*$usd_to_uah,2);}
-                            //if ($cash_id==3){$summ_all=round($summ_all*$usd_to_uah/$eur_to_uah,2);}
-                            $db->query("UPDATE `J_SALE_INVOICE` SET `summ` = '$summ_all', `summ_debit` = '$summ_all' WHERE `id` = $invoice_id LIMIT 1;");
-
-                            list($balans_before) = $this->getClientGeneralSaldo($client_conto_id);
-                            $balans_after = $balans_before - $summ_all;
-                            $db->query("INSERT INTO `B_CLIENT_BALANS_JOURNAL` (`client_id`, `cash_id`, `balans_before`, `deb_kre`, `summ`, `balans_after`, `doc_type_id`, `doc_id`) 
-                            VALUES ('$client_conto_id', '$cash_id', '$balans_before', '1', '$summ_all', '$balans_after', '1', '$invoice_id');");
-
-                            $this->updateClientBalans($client_conto_id, $cash_id, $summ_all);
-                            $answer = 1; $err = "";
-                            //add to cron client invoice
-                            $sale_invoice->addClientInvoiceCron($invoice_id);
+                        } else {
+                            $answer = 0; $err = "Виберіть тип документу спочатку";
                         }
                     } else {
-                        $answer = 0; $err = "Виберіть тип документу спочатку";
+                        list($client_cash_id,) = $this->getClientCashConditions($this->getDpClient($dp_id));
+                        $cash_name = $this->getCashAbr($client_cash_id);
+                        $cl_pp = $sale_storsell_summ + abs($client_saldo) - $client_credit_limit;
+                        $answer = 0; $err = "Ліміт кредиту: $client_credit_limit $cash_name; борг/баланс: " . abs($client_saldo) . " $cash_name. Відвантаження на сумму: $sale_storsell_summ $cash_name НЕ можливе, для поточного відвантаження внесіть в касу як мінімум $cl_pp $cash_name, або проведіть не оплачені документи";
                     }
-                } else {
-                    list($client_cash_id,) = $this->getClientCashConditions($this->getDpClient($dp_id));
-                    $cash_name = $this->getCashAbr($client_cash_id);
-                    $cl_pp = $sale_storsell_summ + abs($client_saldo) - $client_credit_limit;
-                    $answer = 0; $err = "Ліміт кредиту: $client_credit_limit $cash_name; борг/баланс: " . abs($client_saldo) . " $cash_name. Відвантаження на сумму: $sale_storsell_summ $cash_name НЕ можливе, для поточного відвантаження внесіть в касу як мінімум $cl_pp $cash_name, або проведіть не оплачені документи";
                 }
             }
         }
@@ -4771,7 +4773,7 @@ class dp
             }
             if ($amount_invoice > $rest) {
                 $new_rest = 0;
-                $amount_invoice -= $rest;
+                $amount_invoice = $amount_invoice - $rest;
                 $db->query("UPDATE `T2_ARTICLES_PARTITIONS` SET `rest`='$new_rest' WHERE `id`='$id' LIMIT 1;");
                 $db->query("INSERT INTO `J_WRITE_OFF_PARTITION_STR` (`partition_id`,`write_off_id`,`write_off_str_id`,`art_id`,`article_nr_displ`,`brand_id`,`partition_amount`,`invoice_amount`,`oper_price_partition`,`price_partition`,`price_buh_uah`,`price_man_uah`,`price_invoice`) 
                 VALUES ('$id','$write_off_id','$write_off_str_id','$art_id','$article_nr_displ','$brand_id','$rest','$rest','$oper_price','$price','$price_buh_uah','$price_man_uah','$price_invoice');");
@@ -4794,7 +4796,6 @@ class dp
             $price_buh_uah      = $db->result($r, $i - 1, "price_buh_uah");
             $price_man_uah      = $db->result($r, $i - 1, "price_man_uah");
             list($oper_price,)  = $cat->getArticleOperPriceGeneralStock($art_id);
-
             if ($amount_invoice <= $rest) {
                 $new_rest = $rest - $amount_invoice;
                 $db->query("UPDATE `T2_ARTICLES_PARTITIONS` SET `rest`='$new_rest' WHERE `id`='$id' LIMIT 1;");
@@ -4871,7 +4872,7 @@ class dp
 
     function viewDpSaleInvoice($dp_id, $invoice_id) { $db = DbSingleton::getDb();
         $gmanual = new gmanual;
-        $prefix = $doc_type_name = "";
+        $prefix = $doc_type_name = $status_invoice_cap = "";
         $doc_nom = 0; $volume = 0; $status_invoice = 0; $list = "";
         $form = ""; $form_htm = RD . "/tpl/dp_sale_invoice_view.htm";
         if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
@@ -4952,7 +4953,7 @@ class dp
         $mfo            = $db->result($r, 0, "mfo");
         $vat            = $db->result($r, 0, "vytjag");
         $phone          = $db->result($r, 0, "phone");
-        if ($phone === "") {
+        if ($phone == "") {
             $phone = "не вказано";
         }
         return array($seller_name, $seller_adr, $edrpou, $account, $bank, $mfo, $vat, $phone);
@@ -4999,7 +5000,7 @@ class dp
             $art_id         = $db->result($r, $i - 1, "art_id");
             $art_nr_ds      = $db->result($r, $i - 1, "article_nr_displ");
             $brand_id       = $db->result($r, $i - 1, "brand_id");
-            $amount         = (int)$db->result($r, $i - 1, "amount");
+            $amount         = intval($db->result($r, $i - 1, "amount"));
             $price_end      = $db->result($r, $i - 1, "price_end");
             $article_name   = $this->getArticleName($art_id);
             $brand_name     = $this->getBrandName($brand_id);
@@ -5066,7 +5067,7 @@ class dp
 
     function printDpSaleInvoice($dp_id) { $db = DbSingleton::getDb();
         $money = new toMoney; $slave = new slave; $sale_invoice = new sale_invoice;
-        $dp_id = (int)$dp_id;
+        $dp_id = intval($dp_id);
         $invoice_summ = 0; $list = "";
         $form = ""; $form_htm = RD . "/tpl/dp_sale_invoice_print_non_cash.htm";
         if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
@@ -5090,7 +5091,7 @@ class dp
         $client_address     = $db->result($r, 0, "client_address");
         $phone              = $db->result($r, 0, "phone");
         list($edrpou, $account, $bank, $mfo, $vat) = $sale_invoice->getSellerDetails($client_conto_id, $seller_id);
-        if ($phone === "") {
+        if ($phone == "") {
             $phone = "не вказано";
         }
 
@@ -5102,7 +5103,7 @@ class dp
             $art_nr_ds      = $db->result($r, $i - 1, "article_nr_displ");
             $brand_id       = $db->result($r, $i - 1, "brand_id");
             $brand_name     = $this->getBrandName($brand_id);
-            $amount         = (int)$db->result($r, $i - 1, "amount");
+            $amount         = intval($db->result($r, $i - 1, "amount"));
             $unit           = $this->getUnitArticle($art_id);
             $price_end      = $db->result($r, $i - 1, "price_end");
             $summ           = $price_end * $amount;
@@ -5705,7 +5706,7 @@ class dp
         $where_status = "";
         if (!$press) {
             $where_status = "AND o.status=1 AND o.dp_id=''";
-        } elseif ($data_start !== "" && $data_end !== "") {
+        } elseif ($data_start != "" && $data_end != "") {
             $where = "AND o.data>='$data_start 00:00:00' AND o.data<='$data_end 23:59:59'";
         } else {
             $where = " AND o.data>='$data_cur 00:00:00' AND o.data<='$data_cur 23:59:59'";
@@ -5745,7 +5746,6 @@ class dp
                 $delivery_type  = $db->result($r, $i - 1, "delivery_type_caption");
                 $price_summ     = $db->result($r, $i - 1, "price_summ");
                 $price_summ     = $this->getKoursFromUAH($price_summ, $cash_id);
-
                 $color = "";
                 if ($dp_id != "") {
                     $color = 'background:lightgreen;';
@@ -5841,7 +5841,7 @@ class dp
                 $suppl_name     = $this->getClientName($suppl_id);
                 $art_id         = $db->result($r1, $i - 1, "art_id");
                 $brand_id       = $db->result($r1, $i - 1, "brand_id");
-                $amount         = (int)$db->result($r1, $i - 1, "amount");
+                $amount         = intval($db->result($r1, $i - 1, "amount"));
                 $price          = $db->result($r1, $i - 1, "price");
                 $discount       = $db->result($r1, $i - 1, "discount");
                 $summ           = $db->result($r1, $i - 1, "summ");
@@ -5870,7 +5870,7 @@ class dp
     function getCityName($city_id)
     {
         $dbt = DbSingleton::getTokoDb();
-        $city_id = (int)$city_id;
+        $city_id = intval($city_id);
         $r = $dbt->query("SELECT `CITY_NAME` FROM `T2_CITY` WHERE `CITY_ID` = '$city_id' LIMIT 1;");
         return $dbt->result($r, 0, "CITY_NAME");
     }
@@ -5878,7 +5878,7 @@ class dp
     function getDeliveryName($delivery_id)
     {
         $db = DbSingleton::getTokoDb();
-        $delivery_id = (int)$delivery_id;
+        $delivery_id = intval($delivery_id);
         $r = $db->query("SELECT `DESCRIPTION` FROM `T2_DELIVERY` WHERE `ID`='$delivery_id' LIMIT 1;");
         return $db->result($r, 0, "DESCRIPTION");
     }
@@ -5886,7 +5886,7 @@ class dp
     function getPaymentName($payment_id)
     {
         $dbt = DbSingleton::getTokoDb();
-        $payment_id = (int)$payment_id;
+        $payment_id = intval($payment_id);
         $r = $dbt->query("SELECT `DESCRIPTION` FROM `T2_PAYMENT` WHERE `ID` = $payment_id LIMIT 1;");
         return $dbt->result($r, 0, "DESCRIPTION");
     }
@@ -5894,7 +5894,7 @@ class dp
     function getDeliveryChargeName($delivery_charge_id)
     {
         $db = DbSingleton::getDb();
-        $delivery_charge_id = (int)$delivery_charge_id;
+        $delivery_charge_id = intval($delivery_charge_id);
         $r = $db->query("SELECT `mcaption` FROM `manual` WHERE `id` = $delivery_charge_id LIMIT 1;");
         $n = $db->num_rows($r);
         return ($n > 0) ? $db->result($r, 0, "mcaption") : "Не вибрано";
@@ -5903,7 +5903,7 @@ class dp
     function getExpressInfoName($express)
     {
         $db = DbSingleton::getTokoDb();
-        $express = (int)$express;
+        $express = intval($express);
         $r = $db->query("SELECT `DESCRIPTION` FROM `T2_DELIVERY_EXPRESS` WHERE `ID` = $express LIMIT 1;");
         return $db->result($r, 0, "DESCRIPTION");
     }

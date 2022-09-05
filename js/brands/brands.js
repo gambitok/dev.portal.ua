@@ -268,7 +268,7 @@ function saveCertificateCard() {
 
 function dropCertificateCard() {
 	let certificate_id = $("#certificate_id").val();
-
+	
 	if (certificate_id.length > 0) {
 		JsHttpRequest.query($rcapi,{'w':'dropCertificateCard', 'certificate_id':certificate_id},
 			function (result, errors){ if (errors) {alert(errors);} if (result){

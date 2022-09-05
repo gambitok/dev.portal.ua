@@ -8,9 +8,9 @@ class SettingsNewClass
         $db = DbSingleton::getTokoDb();
         $list = "";
         $form = ""; $form_htm = RD . "/tpl/seo_footer/form.htm";
-        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
 
-        $r = $db->query("SELECT * FROM `T2_SEO_FOOTER` WHERE 1;");
+        $r = $db->query("SELECT * FROM `T2_SEO_FOOTER` WHERE 1");
         $n = $db->num_rows($r);
         for ($i = 1; $i <= $n; $i++) {
             $id         = $db->result($r, $i - 1, "ID");
@@ -20,13 +20,13 @@ class SettingsNewClass
             $text_ua    = $db->result($r, $i - 1, "TEXT_UA");
             $text_en    = $db->result($r, $i - 1, "TEXT_EN");
 
-            if ($text_ru !== "") {
+            if ($text_ru != "") {
                 $text_ru = "+";
             }
-            if ($text_ua !== "") {
+            if ($text_ua != "") {
                 $text_ua = "+";
             }
-            if ($text_en !== "") {
+            if ($text_en != "") {
                 $text_en = "+";
             }
 
@@ -49,11 +49,10 @@ class SettingsNewClass
     function showSeoFooterCard($id)
     {
         $db = DbSingleton::getTokoDb();
-
         if ($id == 0) {
             session_start();
             $router     = $link = $text_ru = $text_ua = $text_en = "";
-            $user_id    = (int)$_SESSION["media_user_id"];
+            $user_id    = intval($_SESSION["media_user_id"]);
             $date       = date("Y-m-d H:i:s");
         } else {
             $r = $db->query("SELECT * FROM `T2_SEO_FOOTER` WHERE `ID` = $id LIMIT 1;");
@@ -65,9 +64,8 @@ class SettingsNewClass
             $user_id    = $db->result($r, 0, "USER_ID");
             $date       = $db->result($r, 0, "DATA");
         }
-
         $form = ""; $form_htm = RD . "/tpl/seo_footer/card.htm";
-        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
         $form = str_replace("{seo_id}", $id, $form);
         $form = str_replace("{seo_router}", $router, $form);
         $form = str_replace("{seo_link}", $link, $form);
@@ -84,10 +82,10 @@ class SettingsNewClass
     {
         $db = DbSingleton::getTokoDb();
         session_start();
-        $user_id = (int)$_SESSION["media_user_id"];
-        $text_ru = ($text_ru === "<p><br></p>") ? "" : $text_ru;
-        $text_ua = ($text_ua === "<p><br></p>") ? "" : $text_ua;
-        $text_en = ($text_en === "<p><br></p>") ? "" : $text_en;
+        $user_id = intval($_SESSION["media_user_id"]);
+        $text_ru = ($text_ru == "<p><br></p>") ? "" : $text_ru;
+        $text_ua = ($text_ua == "<p><br></p>") ? "" : $text_ua;
+        $text_en = ($text_en == "<p><br></p>") ? "" : $text_en;
 
         if ($id > 0) {
             $db->query("UPDATE `T2_SEO_FOOTER` SET `ROUTER` = '$router', `LINK` = '$link', `TEXT_RU` = \"$text_ru\", `TEXT_UA` = \"$text_ua\", `TEXT_EN` = \"$text_en\", `USER_ID` = $user_id WHERE `ID` = $id LIMIT 1;");
@@ -99,7 +97,6 @@ class SettingsNewClass
             VALUES ($max_id, '$router', '$link', \"$text_ru\", \"$text_ua\", \"$text_en\", $user_id);");
             $answer = 1; $err = "Успішно додано";
         }
-
         return array($answer, $err);
     }
 
@@ -107,12 +104,10 @@ class SettingsNewClass
     {
         $db = DbSingleton::getTokoDb();
         $answer = 0; $err = "Помилка збереження даних!";
-
         if ($id > 0) {
             $db->query("DELETE FROM `T2_SEO_FOOTER` WHERE `id` = $id;");
             $answer = 1; $err = "";
         }
-
         return array($answer, $err);
     }
 
@@ -121,7 +116,7 @@ class SettingsNewClass
         $db = DbSingleton::getTokoDb();
         $list = ""; $list_title = $list_generate = "";
         $form = ""; $form_htm = RD . "/tpl/seo_client/form.htm";
-        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
 
         $r = $db->query("SELECT `ID`, `ROUTER`, `LINK`, `CONTENT_RU`, `CONTENT_UA`, `CONTENT_EN` FROM `T2_SEO_TEXT` WHERE 1;");
         $n = $db->num_rows($r);
@@ -133,13 +128,13 @@ class SettingsNewClass
             $text_ua    = $db->result($r, $i - 1, "CONTENT_UA");
             $text_en    = $db->result($r, $i - 1, "CONTENT_EN");
 
-            if ($text_ru !== "") {
+            if ($text_ru != "") {
                 $text_ru = "+";
             }
-            if ($text_ua !== "") {
+            if ($text_ua != "") {
                 $text_ua = "+";
             }
-            if ($text_en !== "") {
+            if ($text_en != "") {
                 $text_en = "+";
             }
 
@@ -166,12 +161,12 @@ class SettingsNewClass
             $descr_ru   = $db->result($r, $i - 1, "DESCR_RU");
             $descr_ua   = $db->result($r, $i - 1, "DESCR_UA");
             $descr_en   = $db->result($r, $i - 1, "DESCR_EN");
-            $title_ru   = ($title_ru !== "") ? "+" : $title_ru;
-            $title_ua   = ($title_ua !== "") ? "+" : $title_ua;
-            $title_en   = ($title_en !== "") ? "+" : $title_en;
-            $descr_ru   = ($descr_ru !== "") ? "+" : $descr_ru;
-            $descr_ua   = ($descr_ua !== "") ? "+" : $descr_ua;
-            $descr_en   = ($descr_en !== "") ? "+" : $descr_en;
+            $title_ru   = ($title_ru != "") ? "+" : $title_ru;
+            $title_ua   = ($title_ua != "") ? "+" : $title_ua;
+            $title_en   = ($title_en != "") ? "+" : $title_en;
+            $descr_ru   = ($descr_ru != "") ? "+" : $descr_ru;
+            $descr_ua   = ($descr_ua != "") ? "+" : $descr_ua;
+            $descr_en   = ($descr_en != "") ? "+" : $descr_en;
 
             $list_title .= "
             <tr onclick=\"showSeoTitleCard('$id');\">
@@ -196,9 +191,9 @@ class SettingsNewClass
             $title_ru   = $db->result($r, $i - 1, "TEXT_RU");
             $title_ua   = $db->result($r, $i - 1, "TEXT_UA");
             $title_en   = $db->result($r, $i - 1, "TEXT_EN");
-            $title_ru   = ($title_ru !== "") ? "+" : $title_ru;
-            $title_ua   = ($title_ua !== "") ? "+" : $title_ua;
-            $title_en   = ($title_en !== "") ? "+" : $title_en;
+            $title_ru   = ($title_ru != "") ? "+" : $title_ru;
+            $title_ua   = ($title_ua != "") ? "+" : $title_ua;
+            $title_en   = ($title_en != "") ? "+" : $title_en;
 
             $list_generate .= "
             <tr onclick=\"showSeoGenerateCard('$id');\">
@@ -214,18 +209,16 @@ class SettingsNewClass
         $form = str_replace("{seo_range}", $list, $form);
         $form = str_replace("{seo_title_range}", $list_title, $form);
         $form = str_replace("{seo_generate_range}", $list_generate, $form);
-
         return $form;
     }
 
     function showSeoTitleCard($id)
     {
         $db = DbSingleton::getTokoDb();
-
         if ($id == 0) {
             session_start();
             $router     = $link = $title_ru = $title_ua = $title_en = $descr_ru = $descr_ua = $descr_en = "";
-            $user_id    = (int)$_SESSION["media_user_id"];
+            $user_id    = intval($_SESSION["media_user_id"]);
             $date       = date("Y-m-d H:i:s");
         } else {
             $r = $db->query("SELECT * FROM `T2_SEO_TITLE` WHERE `ID` = $id LIMIT 1;");
@@ -242,7 +235,7 @@ class SettingsNewClass
         }
 
         $form = ""; $form_htm = RD . "/tpl/seo_client/card_title.htm";
-        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
         $form = str_replace("{seo_id}", $id, $form);
         $form = str_replace("{seo_router}", $router, $form);
         $form = str_replace("{seo_link}", $link, $form);
@@ -262,15 +255,15 @@ class SettingsNewClass
     {
         $db = DbSingleton::getTokoDb();
         session_start();
-        $user_id    = (int)$_SESSION["media_user_id"];
+        $user_id    = intval($_SESSION["media_user_id"]);
 
-        $text_ru    = ($text_ru === "<p><br></p>") ? "" : $text_ru;
-        $text_ua    = ($text_ua === "<p><br></p>") ? "" : $text_ua;
-        $text_en    = ($text_en === "<p><br></p>") ? "" : $text_en;
+        $text_ru    = ($text_ru == "<p><br></p>") ? "" : $text_ru;
+        $text_ua    = ($text_ua == "<p><br></p>") ? "" : $text_ua;
+        $text_en    = ($text_en == "<p><br></p>") ? "" : $text_en;
 
-        $descr_ru   = ($descr_ru === "<p><br></p>") ? "" : $descr_ru;
-        $descr_ua   = ($descr_ua === "<p><br></p>") ? "" : $descr_ua;
-        $descr_en   = ($descr_en === "<p><br></p>") ? "" : $descr_en;
+        $descr_ru   = ($descr_ru == "<p><br></p>") ? "" : $descr_ru;
+        $descr_ua   = ($descr_ua == "<p><br></p>") ? "" : $descr_ua;
+        $descr_en   = ($descr_en == "<p><br></p>") ? "" : $descr_en;
 
         $text_ru    = str_replace("&amp;", "&", $text_ru);
         $text_ua    = str_replace("&amp;", "&", $text_ua);
@@ -292,7 +285,6 @@ class SettingsNewClass
             VALUES ($max_id, '$router', '$link', \"$text_ru\", \"$text_ua\", \"$text_en\", \"$descr_ru\", \"$descr_ua\", \"$descr_en\", $user_id);");
             $answer = 1; $err = "Успішно додано";
         }
-
         return array($answer, $err);
     }
 
@@ -304,7 +296,6 @@ class SettingsNewClass
             $db->query("DELETE FROM `T2_SEO_TITLE` WHERE `id` = $id;");
             $answer = 1; $err = "";
         }
-
         return array($answer, $err);
     }
 
@@ -314,7 +305,7 @@ class SettingsNewClass
         if ($id == 0) {
             session_start();
             $router     = $link = $text_ru = $text_ua = $text_en = "";
-            $user_id    = (int)$_SESSION["media_user_id"];
+            $user_id    = intval($_SESSION["media_user_id"]);
             $date       = date("Y-m-d H:i:s");
         } else {
             $r = $db->query("SELECT * FROM `T2_SEO_TEXT` WHERE `ID` = $id LIMIT 1;");
@@ -328,7 +319,7 @@ class SettingsNewClass
         }
 
         $form = ""; $form_htm = RD . "/tpl/seo_client/card.htm";
-        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
         $form = str_replace("{seo_id}", $id, $form);
         $form = str_replace("{seo_router}", $router, $form);
         $form = str_replace("{seo_link}", $link, $form);
@@ -345,10 +336,10 @@ class SettingsNewClass
     {
         $db = DbSingleton::getTokoDb();
         session_start();
-        $user_id = (int)$_SESSION["media_user_id"];
-        $text_ru = ($text_ru === "<p><br></p>") ? "" : $text_ru;
-        $text_ua = ($text_ua === "<p><br></p>") ? "" : $text_ua;
-        $text_en = ($text_en === "<p><br></p>") ? "" : $text_en;
+        $user_id = intval($_SESSION["media_user_id"]);
+        $text_ru = ($text_ru == "<p><br></p>") ? "" : $text_ru;
+        $text_ua = ($text_ua == "<p><br></p>") ? "" : $text_ua;
+        $text_en = ($text_en == "<p><br></p>") ? "" : $text_en;
 
         if ($id > 0) {
             $db->query("INSERT INTO `T2_SEO_TEXT_ARCHIVE` (`ROUTER`, `LINK`, `CONTENT_RU`, `CONTENT_UA`, `CONTENT_EN`, `DATA`, `USER_ID`) 
@@ -362,7 +353,6 @@ class SettingsNewClass
             VALUES ($max_id, '$router', '$link', \"$text_ru\", \"$text_ua\", \"$text_en\", $user_id);");
             $answer = 1; $err = "Успішно додано";
         }
-
         return array($answer, $err);
     }
 
@@ -374,7 +364,6 @@ class SettingsNewClass
             $db->query("DELETE FROM `T2_SEO_TEXT` WHERE `id` = $id;");
             $answer = 1; $err = "";
         }
-
         return array($answer, $err);
     }
 
@@ -384,7 +373,7 @@ class SettingsNewClass
         if ($id == 0) {
             session_start();
             $router     = $link = $text_ru = $text_ua = $text_en = "";
-            $user_id    = (int)$_SESSION["media_user_id"];
+            $user_id    = intval($_SESSION["media_user_id"]);
             $date       = date("Y-m-d H:i:s");
         } else {
             $r = $db->query("SELECT * FROM `T2_SEO_GENERATE` WHERE `ID` = $id LIMIT 1;");
@@ -398,7 +387,7 @@ class SettingsNewClass
         }
 
         $form = ""; $form_htm = RD . "/tpl/seo_client/card_generate.htm";
-        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
         $form = str_replace("{seo_id}", $id, $form);
         $form = str_replace("{seo_router}", $router, $form);
         $form = str_replace("{seo_link}", $link, $form);
@@ -415,10 +404,10 @@ class SettingsNewClass
     {
         $db = DbSingleton::getTokoDb();
         session_start();
-        $user_id = (int)$_SESSION["media_user_id"];
-        $text_ru = ($text_ru === "<p><br></p>") ? "" : $text_ru;
-        $text_ua = ($text_ua === "<p><br></p>") ? "" : $text_ua;
-        $text_en = ($text_en === "<p><br></p>") ? "" : $text_en;
+        $user_id = intval($_SESSION["media_user_id"]);
+        $text_ru = ($text_ru == "<p><br></p>") ? "" : $text_ru;
+        $text_ua = ($text_ua == "<p><br></p>") ? "" : $text_ua;
+        $text_en = ($text_en == "<p><br></p>") ? "" : $text_en;
 
         if ($id > 0) {
             $db->query("UPDATE `T2_SEO_GENERATE` SET `ROUTER` = '$router', `LINK` = '$link', `TEXT_RU` = \"$text_ru\", `TEXT_UA` = \"$text_ua\", `TEXT_EN` = \"$text_en\", `USER_ID` = $user_id WHERE `ID` = $id LIMIT 1;");
@@ -430,7 +419,6 @@ class SettingsNewClass
             VALUES ($max_id, '$router', '$link', \"$text_ru\", \"$text_ua\", \"$text_en\", $user_id);");
             $answer = 1; $err = "Успішно додано";
         }
-
         return array($answer, $err);
     }
 
@@ -442,19 +430,19 @@ class SettingsNewClass
             $db->query("DELETE FROM `T2_SEO_GENERATE` WHERE `id` = $id;");
             $answer = 1; $err = "";
         }
-
         return array($answer, $err);
     }
 
     /*
      * Language
      * */
+
     function showLanguageList()
     {
         $db = DbSingleton::getTokoDb();
         $list = "";
         $form = ""; $form_htm = RD . "/tpl/new/language.htm";
-        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
         $r = $db->query("SELECT `id`, `variable` FROM `new_lang_wd` WHERE 1;");
         $n = $db->num_rows($r);
         for ($i = 1; $i <= $n; $i++) {
@@ -474,7 +462,6 @@ class SettingsNewClass
             </tr>";
         }
         $form = str_replace("{lang_range}", $list, $form);
-
         return $form;
     }
 
@@ -500,7 +487,6 @@ class SettingsNewClass
             $list .= "
             </tr>";
         }
-
         return $list;
     }
 
@@ -510,7 +496,6 @@ class SettingsNewClass
         $r = $db->query("SELECT MAX(`id`) as mid FROM `new_lang_wd`;");
         $max_id = 0 + $db->result($r, 0, "mid") + 1;
         $db->query("INSERT INTO `new_lang_wd` (`id`, `variable`) VALUES ('$max_id', '$lang_var');");
-
         return $max_id;
     }
 
@@ -519,24 +504,23 @@ class SettingsNewClass
         $db = DbSingleton::getTokoDb();
         $lang_arr = [];
         $form = ""; $form_htm = RD . "/tpl/new/language_card.htm";
-        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
-
+        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
         $r = $db->query("SELECT * FROM `new_lang_wd` WHERE `id` = $id;");
         $lang_var = $db->result($r, 0, "variable");
         for ($j = 1; $j <= 3; $j++) {
             $rs = $db->query("SELECT `caption` FROM `new_lang_wdv` WHERE `lang_id` = $j AND `wd` = $id;");
             $cap = $db->result($rs, 0, "caption");
-            $lang_arr[] = $cap;
+            array_push($lang_arr, $cap);
         }
-
-        [$lang_ru, $lang_ua, $lang_eng] = $lang_arr;
+        $lang_ru    = $lang_arr[0];
+        $lang_ua    = $lang_arr[1];
+        $lang_eng   = $lang_arr[2];
 
         $form = str_replace("{id}", $id, $form);
         $form = str_replace("{lang_var}", $lang_var, $form);
         $form = str_replace("{lang_ru}", $lang_ru, $form);
         $form = str_replace("{lang_ua}", $lang_ua, $form);
         $form = str_replace("{lang_eng}", $lang_eng, $form);
-
         return $form;
     }
 
@@ -544,7 +528,6 @@ class SettingsNewClass
     {
         $db = DbSingleton::getTokoDb();
         $answer = 0; $err = "Помилка збереження даних!";
-
         if ($lang_id > 0) {
             $r = $db->query("SELECT * FROM `new_lang_wdv` WHERE `lang_id` = 1 AND `wd` = $lang_id;");
             $n = $db->num_rows($r);
@@ -569,7 +552,6 @@ class SettingsNewClass
             }
             $answer = 1; $err = "";
         }
-
         return array($answer, $err);
     }
 
@@ -582,7 +564,6 @@ class SettingsNewClass
             $db->query("DELETE FROM `new_lang_wdv` WHERE `wd` = $lang_id;");
             $answer = 1; $err = "";
         }
-
         return array($answer, $err);
     }
 
@@ -594,7 +575,6 @@ class SettingsNewClass
     {
         $db = DbSingleton::getTokoDb();
 		$r = $db->query("SELECT `caption` FROM `new_lang` WHERE `id` = $lang_id;");
-
         return $db->result($r, 0, "caption");
 	}
 	
@@ -603,8 +583,7 @@ class SettingsNewClass
         $db = DbSingleton::getTokoDb();
         $list = "";
 		$form = ""; $form_htm = RD . "/tpl/new/contacts.htm";
-		if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
-
+		if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
 		$r = $db->query("SELECT * FROM `contacts_new` WHERE `status` = 1;");
 		$n = $db->num_rows($r);
         for ($i = 1; $i <= $n; $i++) {
@@ -624,9 +603,7 @@ class SettingsNewClass
 				<td>$lang_id</td>
 			</tr>";
 		}
-
-		$form = str_replace("{contacts_range}", $list, $form);
-
+		$form = str_replace("{contacts_range}",$list,$form);
 		return $form;
 	}
 		
@@ -634,11 +611,10 @@ class SettingsNewClass
     {
         $db = DbSingleton::getTokoDb();
         $list = "";
-
 		$r = $db->query("SELECT * FROM `contacts_new` WHERE `status` = 1;");
 		$n = $db->num_rows($r);
 		for ($i = 1; $i <= $n; $i++) {
-			$id         = $db->result($r, $i - 1, "id");
+			$id = $db->result($r, $i - 1, "id");
 			$title      = $db->result($r, $i - 1, "title");
 			$address    = $db->result($r, $i - 1, "address");
 			$schedule   = $db->result($r, $i - 1, "schedule");
@@ -652,7 +628,6 @@ class SettingsNewClass
 				<td>$phone</td>
 			</tr>";
 		}
-
 		return $list;
 	}
 	
@@ -662,7 +637,6 @@ class SettingsNewClass
 		$r = $db->query("SELECT MAX(`id`) as mid FROM `contacts_new`;");
 		$max_id = 0 + $db->result($r, 0, "mid") + 1;
 		$db->query("INSERT INTO `contacts_new` (`id`, `status`, `lang_id`) VALUES ('$max_id', 1, '$lang_var');");
-
 		return $max_id;
 	}
 	
@@ -670,8 +644,7 @@ class SettingsNewClass
     {
         $db = DbSingleton::getTokoDb();
         $form = ""; $form_htm = RD . "/tpl/new/contacts_card.htm";
-        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
-
+        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
 		$r = $db->query("SELECT `id`, `title`, `address`, `schedule`, `phone` FROM `contacts_new` WHERE `id` = '$contact_id';");
         $n = $db->num_rows($r);
 		if ($n > 0) {
@@ -687,7 +660,6 @@ class SettingsNewClass
 			$form = str_replace("{schedule}", $schedule, $form);
 			$form = str_replace("{phone}", $phone, $form);
 		}
-
 		return $form;
   	}
 	
@@ -699,7 +671,6 @@ class SettingsNewClass
 			$db->query("UPDATE `contacts_new` SET `title` = '$title', `address` = '$address', `schedule` = '$schedule', `phone` = '$phone' WHERE `id` = $contact_id;");
 			$answer = 1; $err = "";
 		}
-
 		return array($answer, $err);
 	}
 	
@@ -711,7 +682,6 @@ class SettingsNewClass
 			$db->query("DELETE FROM `contacts_new` WHERE `id` = $contact_id;");
 			$answer = 1; $err = "";
 		}
-
 		return array($answer, $err);
     }
 	
@@ -724,8 +694,7 @@ class SettingsNewClass
         $db = DbSingleton::getTokoDb();
         $list = "";
 		$form = ""; $form_htm = RD . "/tpl/new/locations.htm";
-		if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
-
+		if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
 		$r = $db->query("SELECT t2c.CITY_NAME, t2r.REGION_NAME, t2s.STATE_NAME 
 		FROM `T2_CITY` t2c
 			LEFT OUTER JOIN `T2_REGION` t2r ON (t2r.REGION_ID = t2c.REGION_ID)
@@ -743,9 +712,7 @@ class SettingsNewClass
 				<td>$city</td>
 			</tr>";
 		}
-
 		$form = str_replace("{location_range}", $list, $form);
-
 		return $form;
 	}
 
@@ -769,9 +736,10 @@ class SettingsNewClass
 			$name   = $db->result($r, $i - 1, "name");
 			$sel    = ($id == $sel_id) ? "selected" : "";
 
-			$list .= "<option value='$id' $sel>$name</option>";
+			$list .= "
+                <option value='$id' $sel>$name</option>
+            ";
 		}
-
 		return $list;
 	}
 	
@@ -781,7 +749,6 @@ class SettingsNewClass
 		$r = $db->query("SELECT `name`, `icon` FROM `new_icons` WHERE `id` = $id LIMIT 1;");
 		$name = $db->result($r, 0, "name");
 		$icon = $db->result($r, 0, "icon");
-
         return "<i class='fa $icon'> $name</i>";
 	}
 	
@@ -790,8 +757,7 @@ class SettingsNewClass
         $db = DbSingleton::getTokoDb();
         $list = "";
 		$form = ""; $form_htm = RD . "/tpl/new/contacts_bottom.htm";
-		if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
-
+		if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
 		$r = $db->query("SELECT `id`, `text`, `icon`, `link`, `status` FROM `contacts_bottom_new`;");
 		$n = $db->num_rows($r);
 		for ($i = 1; $i <= $n; $i++) {
@@ -812,7 +778,6 @@ class SettingsNewClass
 			</tr>";
 		}
 		$form = str_replace("{contacts_range}", $list, $form);
-
 		return $form;
 	}
 		
@@ -837,7 +802,6 @@ class SettingsNewClass
 				<td>$status</td>
 			</tr>";
 		}
-
 		return $list;
 	}
 	
@@ -847,7 +811,6 @@ class SettingsNewClass
 		$r = $db->query("SELECT MAX(`id`) as mid FROM `contacts_bottom_new`;");
 		$max_id = $db->result($r, 0, "mid") + 1;
 		$db->query("INSERT INTO `contacts_bottom_new` (`id`, `status`) VALUES ('$max_id', 1);");
-
 		return $max_id;
 	}
 	
@@ -855,8 +818,7 @@ class SettingsNewClass
     {
         $db = DbSingleton::getTokoDb();
         $form = ""; $form_htm = RD . "/tpl/new/contacts_bottom_card.htm";
-        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
-
+        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
 		$r = $db->query("SELECT * FROM `contacts_bottom_new` WHERE `id` = $contact_id;");
         $n = $db->num_rows($r);
 		if ($n > 0) {
@@ -872,7 +834,6 @@ class SettingsNewClass
 			$form = str_replace("{link}", $link, $form);
 			$form = str_replace("{status}", ($status > 0) ? "checked" : "", $form);
 		}
-
 		return $form;
   	}
 	
@@ -884,7 +845,6 @@ class SettingsNewClass
 			$db->query("UPDATE `contacts_bottom_new` SET `text` = '$text', `type_contact` = '$icon', `icon` = '$icon', `link` = '$link', `status` = '$status' WHERE `id` = $contact_id;");
 			$answer = 1; $err = "";
 		}
-
 		return array($answer, $err);
 	}
 	
@@ -896,7 +856,6 @@ class SettingsNewClass
 			$db->query("DELETE FROM `contacts_bottom_new` WHERE `id` = $contact_id;");
 			$answer = 1; $err = "";
 		}
-
 		return array($answer, $err);
     }
 	
@@ -908,7 +867,6 @@ class SettingsNewClass
     {
         $db = DbSingleton::getTokoDb();
 		$r = $db->query("SELECT `caption` FROM `lang` WHERE `id` = $lang_id LIMIT 1;");
-
         return $db->result($r, 0, "caption");
 	}
 	
@@ -918,8 +876,7 @@ class SettingsNewClass
         $list = "";
 	    $date = date("Y-m-d");
 		$form = ""; $form_htm = RD . "/tpl/new/news.htm";
-		if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
-
+		if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
 		$r = $db->query("SELECT * FROM `news` ORDER BY `data` DESC;");
 		$n = $db->num_rows($r);
 		for ($i = 1; $i <= $n; $i++) {
@@ -944,7 +901,6 @@ class SettingsNewClass
 			</tr>";
 		}
 		$form = str_replace("{news_range}", $list, $form);
-
 		return $form;
 	}
 		
@@ -953,7 +909,6 @@ class SettingsNewClass
         $db = DbSingleton::getTokoDb();
         $list = "";
 	    $date = date("Y-m-d");
-
 		$r = $db->query("SELECT * FROM `news` ORDER BY `data` DESC;");
 		$n = $db->num_rows($r);
 		for ($i = 1; $i <= $n; $i++) {
@@ -976,7 +931,6 @@ class SettingsNewClass
 				<td $color_status>$status</td>
 			</tr>";
 		}
-
 		return $list;
 	}
 	
@@ -987,7 +941,6 @@ class SettingsNewClass
 		$r = $db->query("SELECT MAX(`id`) as mid FROM `news`;");
 		$max_id = 0 + $db->result($r, 0, "mid") + 1;
 		$db->query("INSERT INTO `news` (`id`, `status`, `data`, `lang_id`) VALUES ('$max_id', 0, '$date', '$lang');");
-
 		return $max_id;
 	}
 	
@@ -995,10 +948,9 @@ class SettingsNewClass
     {
         $db = DbSingleton::getTokoDb();
         $form = ""; $form_htm = RD . "/tpl/new/news_card.htm";
-        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
 		$r = $db->query("SELECT * FROM `news` WHERE `id` = '$news_id';");
         $n = $db->num_rows($r);
-
 		if ($n > 0) {
 			$id         = $db->result($r, 0, "id");
 			$caption    = $db->result($r, 0, "caption");
@@ -1021,7 +973,6 @@ class SettingsNewClass
 			$file_id = $db->result($r2, 0, "id");
 			$form = str_replace("{file_id}", $file_id, $form);
 		}
-
 		return $form;
   	}
 	
@@ -1052,7 +1003,7 @@ class SettingsNewClass
         $db = DbSingleton::getTokoDb();
         $list = "";
         $form = ""; $form_htm = RD . "/tpl/new/news_photo_block.htm";
-        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
 		$r = $db->query("SELECT `id`, `caption` FROM `news_galery` WHERE `cat` = $news_id;");
         $n = $db->num_rows($r);
 		for ($i = 1; $i <= $n; $i++) {
@@ -1086,7 +1037,7 @@ class SettingsNewClass
     function showRequestsList()
     {
         $form = ""; $form_htm = RD . "/tpl/new/requests.htm";
-        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
         $form = str_replace("{requests_range}", $this->loadRequestsList(), $form);
         return $form;
     }
@@ -1116,7 +1067,6 @@ class SettingsNewClass
 				<td>$data_upd</td>
 			</tr>";
         }
-
         return $list;
     }
 
@@ -1137,7 +1087,7 @@ class SettingsNewClass
         $db = DbSingleton::getTokoDb();
         session_start(); $user_id = $_SESSION["media_user_id"];
         $form = ""; $form_htm = RD . "/tpl/new/requests_card.htm";
-        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
         $r = $db->query("SELECT * FROM `T2_QUESTIONS` WHERE `ID` = $request_id;");
         $n = $db->num_rows($r);
         if ($n == 0) {
@@ -1156,7 +1106,7 @@ class SettingsNewClass
 
         if ($user_id != $user_use && $user_use > 0) {
             $form_htm = RD . "/tpl/dp_use_deny.htm";
-            if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+            if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
             $form = str_replace("{user_name}",$this->getMediaUserName($user_use),$form);
             $admin_unlock = "";
             if ($user_id == 1 || $user_id == 2 || $user_id == 7) {
@@ -1173,7 +1123,6 @@ class SettingsNewClass
         $form = str_replace("{request_data_create}", $data_create, $form);
         $form = str_replace("{request_data_update}", $data_update, $form);
         $form = str_replace("{reqest_disabled}", ($status) ? "" : "disabled", $form);
-
         return $form;
     }
 
@@ -1187,7 +1136,6 @@ class SettingsNewClass
             $db->query("UPDATE `T2_QUESTIONS` SET `VIN` = '$vin', `PHONE` = '$phone', `TEXT` = '$text', `DATA_UPDATE` = '$data_update', `STATUS` = '0' WHERE `ID` = $request_id;");
             $answer = 1; $err = "";
         }
-
         return array($answer, $err);
     }
 
@@ -1199,7 +1147,6 @@ class SettingsNewClass
             $db->query("DELETE FROM `T2_QUESTIONS` WHERE `ID` = $request_id LIMIT 1;");
             $answer = 1; $err = "";
         }
-
         return array($answer, $err);
     }
 
@@ -1234,7 +1181,7 @@ class SettingsNewClass
     function showReviewsList()
     {
         $form = ""; $form_htm = RD . "/tpl/new/reviews.htm";
-        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
         $form = str_replace("{reviews_range}", $this->loadReviewsList(), $form);
         return $form;
     }
@@ -1257,13 +1204,13 @@ class SettingsNewClass
             $text_en    = $db->result($r, $i - 1, "TEXT_EN");
 
             $status_ru  = $status_ua = $status_en = "-";
-            if ($title_ru !== "" && $text_ru !== "") {
+            if ($title_ru != "" && $text_ru != "") {
                 $status_ru = "+";
             }
-            if ($title_ua !== "" && $text_ua !== "") {
+            if ($title_ua != "" && $text_ua != "") {
                 $status_ua = "+";
             }
-            if ($title_en !== "" && $text_en !== "") {
+            if ($title_en != "" && $text_en != "") {
                 $status_en = "+";
             }
 
@@ -1278,7 +1225,6 @@ class SettingsNewClass
 				<td>$status</td>
 			</tr>";
         }
-
         return $list;
     }
 
@@ -1286,7 +1232,7 @@ class SettingsNewClass
     {
         $db = DbSingleton::getTokoDb();
         $form = ""; $form_htm = RD . "/tpl/new/reviews_card.htm";
-        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
 
         $r = $db->query("SELECT * FROM `T2_REVIEWS` WHERE `ID` = $id;");
         $n = $db->num_rows($r);
@@ -1314,7 +1260,6 @@ class SettingsNewClass
             $img        = $db->result($r, 0, "IMG");
             $disabled   = "";
         }
-
         $form = str_replace("{review_id}", $id, $form);
         $form = str_replace("{review_t_ru}", $t_ru, $form);
         $form = str_replace("{review_t_ua}", $t_ua, $form);
@@ -1332,27 +1277,25 @@ class SettingsNewClass
         $form = str_replace("{review_status}", $status ? "checked" : "", $form);
         $form = str_replace("{review_image}", $img, $form);
         $form = str_replace("{review_remove_disabled}", $disabled, $form);
-
         return $form;
     }
 
     function saveReview($review_id, $t_ru, $t_ua, $t_en, $d_ru, $d_ua, $d_en, $title, $title_ua, $title_en, $text, $text_ua, $text_en, $data, $status)
     {
         $db = DbSingleton::getTokoDb();
-        if ($text === "<p><br></p>") {
+        if ($text == "<p><br></p>") {
             $text = "";
         }
-        if ($text_ua === "<p><br></p>") {
+        if ($text_ua == "<p><br></p>") {
             $text_ua = "";
         }
-        if ($text_en === "<p><br></p>") {
+        if ($text_en == "<p><br></p>") {
             $text_en = "";
         }
-
         if ($review_id == 0) {
             $r = $db->query("SELECT MAX(`ID`) as mid FROM `T2_REVIEWS`;");
             $max_id = 0 + $db->result($r, 0, "mid") + 1;
-            $db->query("INSERT INTO `T2_REVIEWS` (`ID`, `TITLE_RU`, `TITLE_UA`, `TITLE_EN`, `DATA`, `STATUS`) VALUES ($max_id, '$title', '$title_ua', '$title_en', '$data', '$status');");
+            $db->query("INSERT INTO `T2_REVIEWS` (`ID`, `TITLE_RU`, `TITLE_UA`, `TITLE_EN`, `DATA`, `STATUS`) VALUES ($max_id, \"$title\", \"$title_ua\", \"$title_en\", '$data', '$status');");
             $db->query('UPDATE `T2_REVIEWS` SET `TEXT_RU` = "' . $text.'" WHERE `ID` = "' . $max_id.'";');
             $db->query('UPDATE `T2_REVIEWS` SET `TEXT_UA` = "' . $text_ua.'" WHERE `ID` = "' . $max_id.'";');
             $db->query('UPDATE `T2_REVIEWS` SET `TEXT_EN` = "' . $text_en.'" WHERE `ID` = "' . $max_id.'";');
@@ -1364,7 +1307,7 @@ class SettingsNewClass
             $db->query('UPDATE `T2_REVIEWS` SET `D_EN` = "' . $d_en.'" WHERE `ID` = "' . $max_id.'";');
             $answer = 1; $err = "";
         } else {
-            $db->query("UPDATE `T2_REVIEWS` SET `TITLE_RU` = '$title', `TITLE_UA` = '$title_ua', `TITLE_EN` = '$title_en', `DATA` = '$data', `STATUS` = '$status' WHERE `ID` = $review_id;");
+            $db->query("UPDATE `T2_REVIEWS` SET `TITLE_RU` = \"$title\", `TITLE_UA` = \"$title_ua\", `TITLE_EN` = \"$title_en\", `DATA` = '$data', `STATUS` = '$status' WHERE `ID` = $review_id;");
             $db->query('UPDATE `T2_REVIEWS` SET `TEXT_RU` = "' . $text.'" WHERE `ID` = "' . $review_id.'";');
             $db->query('UPDATE `T2_REVIEWS` SET `TEXT_UA` = "' . $text_ua.'" WHERE `ID` = "' . $review_id.'";');
             $db->query('UPDATE `T2_REVIEWS` SET `TEXT_EN` = "' . $text_en.'" WHERE `ID` = "' . $review_id.'";');
@@ -1376,7 +1319,6 @@ class SettingsNewClass
             $db->query('UPDATE `T2_REVIEWS` SET `D_EN` = "' . $d_en.'" WHERE `ID` = "' . $review_id.'";');
             $answer = 1; $err = "";
         }
-
         return array($answer, $err);
     }
 
@@ -1388,7 +1330,6 @@ class SettingsNewClass
             $db->query("DELETE FROM `T2_REVIEWS` WHERE `ID` = $review_id LIMIT 1;");
             $answer = 1; $err = "";
         }
-
         return array($answer, $err);
     }
 
@@ -1400,7 +1341,7 @@ class SettingsNewClass
     {
         $db = DbSingleton::getTokoDb();
         $form = ""; $form_htm = RD . "/tpl/new/configs.htm";
-        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
         $list = "";
         $r = $db->query("SELECT `TEXT`, `STYLES`, `STATUS` FROM `T2_SITE_CONFIGS` WHERE `BLOCK` = 'site_warning_message' LIMIT 1;");
         $n = $db->num_rows($r);
@@ -1426,7 +1367,6 @@ class SettingsNewClass
             </table>";
         }
         $form = str_replace("{configs_list}", $list, $form);
-
         return $form;
     }
 
