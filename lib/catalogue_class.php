@@ -23,10 +23,12 @@ class catalogue {
         $article_nr_search = $this->clearArticle($artcile_nr_displ);
         $r = $db->query("SELECT `ART_ID` FROM `T2_ARTICLES` WHERE `ARTICLE_NR_SEARCH` = '$article_nr_search' AND `BRAND_ID` = $brand_id;");
         $n = (int)$db->num_rows($r);
+
         if ($n === 1) {
             $art_id = $db->result($r, 0, "ART_ID");
             $status = 1;
         }
+
         if ($n > 1) {
             $status = 2;
         }

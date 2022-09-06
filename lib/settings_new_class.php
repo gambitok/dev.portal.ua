@@ -3,12 +3,12 @@
 class SettingsNewClass
 {
 
-    function showSeoFooterForm()
+    public function showSeoFooterForm()
     {
         $db = DbSingleton::getTokoDb();
         $list = "";
         $form = ""; $form_htm = RD . "/tpl/seo_footer/form.htm";
-        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
 
         $r = $db->query("SELECT * FROM `T2_SEO_FOOTER` WHERE 1");
         $n = $db->num_rows($r);
@@ -20,13 +20,13 @@ class SettingsNewClass
             $text_ua    = $db->result($r, $i - 1, "TEXT_UA");
             $text_en    = $db->result($r, $i - 1, "TEXT_EN");
 
-            if ($text_ru != "") {
+            if ($text_ru !== "") {
                 $text_ru = "+";
             }
-            if ($text_ua != "") {
+            if ($text_ua !== "") {
                 $text_ua = "+";
             }
-            if ($text_en != "") {
+            if ($text_en !== "") {
                 $text_en = "+";
             }
 
@@ -46,13 +46,13 @@ class SettingsNewClass
         return $form;
     }
 
-    function showSeoFooterCard($id)
+    public function showSeoFooterCard($id)
     {
         $db = DbSingleton::getTokoDb();
-        if ($id == 0) {
+        if ((int)$id === 0) {
             session_start();
             $router     = $link = $text_ru = $text_ua = $text_en = "";
-            $user_id    = intval($_SESSION["media_user_id"]);
+            $user_id    = (int)$_SESSION["media_user_id"];
             $date       = date("Y-m-d H:i:s");
         } else {
             $r = $db->query("SELECT * FROM `T2_SEO_FOOTER` WHERE `ID` = $id LIMIT 1;");
@@ -64,8 +64,9 @@ class SettingsNewClass
             $user_id    = $db->result($r, 0, "USER_ID");
             $date       = $db->result($r, 0, "DATA");
         }
+
         $form = ""; $form_htm = RD . "/tpl/seo_footer/card.htm";
-        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
         $form = str_replace("{seo_id}", $id, $form);
         $form = str_replace("{seo_router}", $router, $form);
         $form = str_replace("{seo_link}", $link, $form);
@@ -78,14 +79,14 @@ class SettingsNewClass
         return $form;
     }
 
-    function saveSeoFooter($id, $router, $link, $text_ru, $text_ua, $text_en)
+    public function saveSeoFooter($id, $router, $link, $text_ru, $text_ua, $text_en)
     {
         $db = DbSingleton::getTokoDb();
         session_start();
-        $user_id = intval($_SESSION["media_user_id"]);
-        $text_ru = ($text_ru == "<p><br></p>") ? "" : $text_ru;
-        $text_ua = ($text_ua == "<p><br></p>") ? "" : $text_ua;
-        $text_en = ($text_en == "<p><br></p>") ? "" : $text_en;
+        $user_id = (int)$_SESSION["media_user_id"];
+        $text_ru = ($text_ru === "<p><br></p>") ? "" : $text_ru;
+        $text_ua = ($text_ua === "<p><br></p>") ? "" : $text_ua;
+        $text_en = ($text_en === "<p><br></p>") ? "" : $text_en;
 
         if ($id > 0) {
             $db->query("UPDATE `T2_SEO_FOOTER` SET `ROUTER` = '$router', `LINK` = '$link', `TEXT_RU` = \"$text_ru\", `TEXT_UA` = \"$text_ua\", `TEXT_EN` = \"$text_en\", `USER_ID` = $user_id WHERE `ID` = $id LIMIT 1;");
@@ -97,10 +98,11 @@ class SettingsNewClass
             VALUES ($max_id, '$router', '$link', \"$text_ru\", \"$text_ua\", \"$text_en\", $user_id);");
             $answer = 1; $err = "Успішно додано";
         }
+
         return array($answer, $err);
     }
 
-    function dropSeoFooter($id)
+    public function dropSeoFooter($id)
     {
         $db = DbSingleton::getTokoDb();
         $answer = 0; $err = "Помилка збереження даних!";
@@ -111,12 +113,12 @@ class SettingsNewClass
         return array($answer, $err);
     }
 
-    function showSeoTextForm()
+    public function showSeoTextForm()
     {
         $db = DbSingleton::getTokoDb();
         $list = ""; $list_title = $list_generate = "";
         $form = ""; $form_htm = RD . "/tpl/seo_client/form.htm";
-        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
 
         $r = $db->query("SELECT `ID`, `ROUTER`, `LINK`, `CONTENT_RU`, `CONTENT_UA`, `CONTENT_EN` FROM `T2_SEO_TEXT` WHERE 1;");
         $n = $db->num_rows($r);
@@ -128,13 +130,13 @@ class SettingsNewClass
             $text_ua    = $db->result($r, $i - 1, "CONTENT_UA");
             $text_en    = $db->result($r, $i - 1, "CONTENT_EN");
 
-            if ($text_ru != "") {
+            if ($text_ru !== "") {
                 $text_ru = "+";
             }
-            if ($text_ua != "") {
+            if ($text_ua !== "") {
                 $text_ua = "+";
             }
-            if ($text_en != "") {
+            if ($text_en !== "") {
                 $text_en = "+";
             }
 
@@ -161,12 +163,12 @@ class SettingsNewClass
             $descr_ru   = $db->result($r, $i - 1, "DESCR_RU");
             $descr_ua   = $db->result($r, $i - 1, "DESCR_UA");
             $descr_en   = $db->result($r, $i - 1, "DESCR_EN");
-            $title_ru   = ($title_ru != "") ? "+" : $title_ru;
-            $title_ua   = ($title_ua != "") ? "+" : $title_ua;
-            $title_en   = ($title_en != "") ? "+" : $title_en;
-            $descr_ru   = ($descr_ru != "") ? "+" : $descr_ru;
-            $descr_ua   = ($descr_ua != "") ? "+" : $descr_ua;
-            $descr_en   = ($descr_en != "") ? "+" : $descr_en;
+            $title_ru   = ($title_ru !== "") ? "+" : $title_ru;
+            $title_ua   = ($title_ua !== "") ? "+" : $title_ua;
+            $title_en   = ($title_en !== "") ? "+" : $title_en;
+            $descr_ru   = ($descr_ru !== "") ? "+" : $descr_ru;
+            $descr_ua   = ($descr_ua !== "") ? "+" : $descr_ua;
+            $descr_en   = ($descr_en !== "") ? "+" : $descr_en;
 
             $list_title .= "
             <tr onclick=\"showSeoTitleCard('$id');\">
@@ -191,9 +193,9 @@ class SettingsNewClass
             $title_ru   = $db->result($r, $i - 1, "TEXT_RU");
             $title_ua   = $db->result($r, $i - 1, "TEXT_UA");
             $title_en   = $db->result($r, $i - 1, "TEXT_EN");
-            $title_ru   = ($title_ru != "") ? "+" : $title_ru;
-            $title_ua   = ($title_ua != "") ? "+" : $title_ua;
-            $title_en   = ($title_en != "") ? "+" : $title_en;
+            $title_ru   = ($title_ru !== "") ? "+" : $title_ru;
+            $title_ua   = ($title_ua !== "") ? "+" : $title_ua;
+            $title_en   = ($title_en !== "") ? "+" : $title_en;
 
             $list_generate .= "
             <tr onclick=\"showSeoGenerateCard('$id');\">
@@ -209,16 +211,17 @@ class SettingsNewClass
         $form = str_replace("{seo_range}", $list, $form);
         $form = str_replace("{seo_title_range}", $list_title, $form);
         $form = str_replace("{seo_generate_range}", $list_generate, $form);
+
         return $form;
     }
 
-    function showSeoTitleCard($id)
+    public function showSeoTitleCard($id)
     {
         $db = DbSingleton::getTokoDb();
-        if ($id == 0) {
+        if ((int)$id === 0) {
             session_start();
             $router     = $link = $title_ru = $title_ua = $title_en = $descr_ru = $descr_ua = $descr_en = "";
-            $user_id    = intval($_SESSION["media_user_id"]);
+            $user_id    = (int)$_SESSION["media_user_id"];
             $date       = date("Y-m-d H:i:s");
         } else {
             $r = $db->query("SELECT * FROM `T2_SEO_TITLE` WHERE `ID` = $id LIMIT 1;");
@@ -235,7 +238,7 @@ class SettingsNewClass
         }
 
         $form = ""; $form_htm = RD . "/tpl/seo_client/card_title.htm";
-        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
         $form = str_replace("{seo_id}", $id, $form);
         $form = str_replace("{seo_router}", $router, $form);
         $form = str_replace("{seo_link}", $link, $form);
@@ -251,19 +254,19 @@ class SettingsNewClass
         return $form;
     }
 
-    function saveSeoTitle($id, $router, $link, $text_ru, $text_ua, $text_en, $descr_ru, $descr_ua, $descr_en)
+    public function saveSeoTitle($id, $router, $link, $text_ru, $text_ua, $text_en, $descr_ru, $descr_ua, $descr_en): array
     {
         $db = DbSingleton::getTokoDb();
         session_start();
-        $user_id    = intval($_SESSION["media_user_id"]);
+        $user_id    = (int)$_SESSION["media_user_id"];
 
-        $text_ru    = ($text_ru == "<p><br></p>") ? "" : $text_ru;
-        $text_ua    = ($text_ua == "<p><br></p>") ? "" : $text_ua;
-        $text_en    = ($text_en == "<p><br></p>") ? "" : $text_en;
+        $text_ru    = ($text_ru === "<p><br></p>") ? "" : $text_ru;
+        $text_ua    = ($text_ua === "<p><br></p>") ? "" : $text_ua;
+        $text_en    = ($text_en === "<p><br></p>") ? "" : $text_en;
 
-        $descr_ru   = ($descr_ru == "<p><br></p>") ? "" : $descr_ru;
-        $descr_ua   = ($descr_ua == "<p><br></p>") ? "" : $descr_ua;
-        $descr_en   = ($descr_en == "<p><br></p>") ? "" : $descr_en;
+        $descr_ru   = ($descr_ru === "<p><br></p>") ? "" : $descr_ru;
+        $descr_ua   = ($descr_ua === "<p><br></p>") ? "" : $descr_ua;
+        $descr_en   = ($descr_en === "<p><br></p>") ? "" : $descr_en;
 
         $text_ru    = str_replace("&amp;", "&", $text_ru);
         $text_ua    = str_replace("&amp;", "&", $text_ua);
@@ -288,7 +291,7 @@ class SettingsNewClass
         return array($answer, $err);
     }
 
-    function dropSeoTitle($id)
+    public function dropSeoTitle($id): array
     {
         $db = DbSingleton::getTokoDb();
         $answer = 0; $err = "Помилка збереження даних!";
@@ -299,13 +302,13 @@ class SettingsNewClass
         return array($answer, $err);
     }
 
-    function showSeoTextCard($id)
+    public function showSeoTextCard($id)
     {
         $db = DbSingleton::getTokoDb();
-        if ($id == 0) {
+        if ((int)$id === 0) {
             session_start();
             $router     = $link = $text_ru = $text_ua = $text_en = "";
-            $user_id    = intval($_SESSION["media_user_id"]);
+            $user_id    = (int)$_SESSION["media_user_id"];
             $date       = date("Y-m-d H:i:s");
         } else {
             $r = $db->query("SELECT * FROM `T2_SEO_TEXT` WHERE `ID` = $id LIMIT 1;");
@@ -319,7 +322,7 @@ class SettingsNewClass
         }
 
         $form = ""; $form_htm = RD . "/tpl/seo_client/card.htm";
-        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
         $form = str_replace("{seo_id}", $id, $form);
         $form = str_replace("{seo_router}", $router, $form);
         $form = str_replace("{seo_link}", $link, $form);
@@ -332,14 +335,14 @@ class SettingsNewClass
         return $form;
     }
 
-    function saveSeoText($id, $router, $link, $text_ru, $text_ua, $text_en)
+    public function saveSeoText($id, $router, $link, $text_ru, $text_ua, $text_en): array
     {
         $db = DbSingleton::getTokoDb();
         session_start();
-        $user_id = intval($_SESSION["media_user_id"]);
-        $text_ru = ($text_ru == "<p><br></p>") ? "" : $text_ru;
-        $text_ua = ($text_ua == "<p><br></p>") ? "" : $text_ua;
-        $text_en = ($text_en == "<p><br></p>") ? "" : $text_en;
+        $user_id = (int)$_SESSION["media_user_id"];
+        $text_ru = ($text_ru === "<p><br></p>") ? "" : $text_ru;
+        $text_ua = ($text_ua === "<p><br></p>") ? "" : $text_ua;
+        $text_en = ($text_en === "<p><br></p>") ? "" : $text_en;
 
         if ($id > 0) {
             $db->query("INSERT INTO `T2_SEO_TEXT_ARCHIVE` (`ROUTER`, `LINK`, `CONTENT_RU`, `CONTENT_UA`, `CONTENT_EN`, `DATA`, `USER_ID`) 
@@ -353,10 +356,11 @@ class SettingsNewClass
             VALUES ($max_id, '$router', '$link', \"$text_ru\", \"$text_ua\", \"$text_en\", $user_id);");
             $answer = 1; $err = "Успішно додано";
         }
+
         return array($answer, $err);
     }
 
-    function dropSeoText($id)
+    public function dropSeoText($id): array
     {
         $db = DbSingleton::getTokoDb();
         $answer = 0; $err = "Помилка збереження даних!";
@@ -367,13 +371,13 @@ class SettingsNewClass
         return array($answer, $err);
     }
 
-    function showSeoGenerateCard($id)
+    public function showSeoGenerateCard($id)
     {
         $db = DbSingleton::getTokoDb();
-        if ($id == 0) {
+        if ((int)$id === 0) {
             session_start();
             $router     = $link = $text_ru = $text_ua = $text_en = "";
-            $user_id    = intval($_SESSION["media_user_id"]);
+            $user_id    = (int)$_SESSION["media_user_id"];
             $date       = date("Y-m-d H:i:s");
         } else {
             $r = $db->query("SELECT * FROM `T2_SEO_GENERATE` WHERE `ID` = $id LIMIT 1;");
@@ -387,7 +391,7 @@ class SettingsNewClass
         }
 
         $form = ""; $form_htm = RD . "/tpl/seo_client/card_generate.htm";
-        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
         $form = str_replace("{seo_id}", $id, $form);
         $form = str_replace("{seo_router}", $router, $form);
         $form = str_replace("{seo_link}", $link, $form);
@@ -400,14 +404,14 @@ class SettingsNewClass
         return $form;
     }
 
-    function saveSeoGenerate($id, $router, $link, $text_ru, $text_ua, $text_en)
+    public function saveSeoGenerate($id, $router, $link, $text_ru, $text_ua, $text_en): array
     {
         $db = DbSingleton::getTokoDb();
         session_start();
-        $user_id = intval($_SESSION["media_user_id"]);
-        $text_ru = ($text_ru == "<p><br></p>") ? "" : $text_ru;
-        $text_ua = ($text_ua == "<p><br></p>") ? "" : $text_ua;
-        $text_en = ($text_en == "<p><br></p>") ? "" : $text_en;
+        $user_id = (int)$_SESSION["media_user_id"];
+        $text_ru = ($text_ru === "<p><br></p>") ? "" : $text_ru;
+        $text_ua = ($text_ua === "<p><br></p>") ? "" : $text_ua;
+        $text_en = ($text_en === "<p><br></p>") ? "" : $text_en;
 
         if ($id > 0) {
             $db->query("UPDATE `T2_SEO_GENERATE` SET `ROUTER` = '$router', `LINK` = '$link', `TEXT_RU` = \"$text_ru\", `TEXT_UA` = \"$text_ua\", `TEXT_EN` = \"$text_en\", `USER_ID` = $user_id WHERE `ID` = $id LIMIT 1;");
@@ -422,7 +426,7 @@ class SettingsNewClass
         return array($answer, $err);
     }
 
-    function dropSeoGenerate($id)
+    public function dropSeoGenerate($id): array
     {
         $db = DbSingleton::getTokoDb();
         $answer = 0; $err = "Помилка збереження даних!";
@@ -437,12 +441,13 @@ class SettingsNewClass
      * Language
      * */
 
-    function showLanguageList()
+    public function showLanguageList()
     {
         $db = DbSingleton::getTokoDb();
         $list = "";
         $form = ""; $form_htm = RD . "/tpl/new/language.htm";
-        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+
         $r = $db->query("SELECT `id`, `variable` FROM `new_lang_wd` WHERE 1;");
         $n = $db->num_rows($r);
         for ($i = 1; $i <= $n; $i++) {
@@ -461,14 +466,17 @@ class SettingsNewClass
             $list .= "
             </tr>";
         }
+
         $form = str_replace("{lang_range}", $list, $form);
+
         return $form;
     }
 
-    function loadLanguageList()
+    public function loadLanguageList(): string
     {
         $db = DbSingleton::getTokoDb();
         $list = "";
+
         $r = $db->query("SELECT `id`, `variable` FROM `new_lang_wd` WHERE 1;");
         $n = $db->num_rows($r);
         for ($i = 1; $i <= $n; $i++) {
@@ -487,10 +495,11 @@ class SettingsNewClass
             $list .= "
             </tr>";
         }
+
         return $list;
     }
 
-    function newLanguageCard($lang_var)
+    public function newLanguageCard($lang_var)
     {
         $db = DbSingleton::getTokoDb();
         $r = $db->query("SELECT MAX(`id`) as mid FROM `new_lang_wd`;");
@@ -499,18 +508,18 @@ class SettingsNewClass
         return $max_id;
     }
 
-    function showLanguageCard($id)
+    public function showLanguageCard($id)
     {
         $db = DbSingleton::getTokoDb();
         $lang_arr = [];
         $form = ""; $form_htm = RD . "/tpl/new/language_card.htm";
-        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
         $r = $db->query("SELECT * FROM `new_lang_wd` WHERE `id` = $id;");
         $lang_var = $db->result($r, 0, "variable");
         for ($j = 1; $j <= 3; $j++) {
             $rs = $db->query("SELECT `caption` FROM `new_lang_wdv` WHERE `lang_id` = $j AND `wd` = $id;");
             $cap = $db->result($rs, 0, "caption");
-            array_push($lang_arr, $cap);
+            $lang_arr[] = $cap;
         }
         $lang_ru    = $lang_arr[0];
         $lang_ua    = $lang_arr[1];
@@ -521,10 +530,11 @@ class SettingsNewClass
         $form = str_replace("{lang_ru}", $lang_ru, $form);
         $form = str_replace("{lang_ua}", $lang_ua, $form);
         $form = str_replace("{lang_eng}", $lang_eng, $form);
+
         return $form;
     }
 
-    function saveLanguage($lang_id, $lang_ru, $lang_ua, $lang_eng)
+    public function saveLanguage($lang_id, $lang_ru, $lang_ua, $lang_eng): array
     {
         $db = DbSingleton::getTokoDb();
         $answer = 0; $err = "Помилка збереження даних!";
@@ -552,10 +562,11 @@ class SettingsNewClass
             }
             $answer = 1; $err = "";
         }
+
         return array($answer, $err);
     }
 
-    function dropLanguage($lang_id)
+    public function dropLanguage($lang_id): array
     {
         $db = DbSingleton::getTokoDb();
         $answer = 0; $err = "Помилка збереження даних!";
@@ -571,19 +582,19 @@ class SettingsNewClass
 	 * Contacts
 	 * */
 	
-	function getLangCap($lang_id)
+	public function getLangCap($lang_id)
     {
         $db = DbSingleton::getTokoDb();
 		$r = $db->query("SELECT `caption` FROM `new_lang` WHERE `id` = $lang_id;");
         return $db->result($r, 0, "caption");
 	}
 	
-	function showContactsList()
+	public function showContactsList()
     {
         $db = DbSingleton::getTokoDb();
         $list = "";
 		$form = ""; $form_htm = RD . "/tpl/new/contacts.htm";
-		if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+		if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
 		$r = $db->query("SELECT * FROM `contacts_new` WHERE `status` = 1;");
 		$n = $db->num_rows($r);
         for ($i = 1; $i <= $n; $i++) {
@@ -603,14 +614,17 @@ class SettingsNewClass
 				<td>$lang_id</td>
 			</tr>";
 		}
-		$form = str_replace("{contacts_range}",$list,$form);
+
+		$form = str_replace("{contacts_range}", $list, $form);
+
 		return $form;
 	}
 		
-	function loadContactsList()
+	public function loadContactsList(): string
     {
         $db = DbSingleton::getTokoDb();
         $list = "";
+
 		$r = $db->query("SELECT * FROM `contacts_new` WHERE `status` = 1;");
 		$n = $db->num_rows($r);
 		for ($i = 1; $i <= $n; $i++) {
@@ -628,10 +642,11 @@ class SettingsNewClass
 				<td>$phone</td>
 			</tr>";
 		}
+
 		return $list;
 	}
 	
-	function newContactsCard($lang_var)
+	public function newContactsCard($lang_var)
     {
         $db = DbSingleton::getTokoDb();
 		$r = $db->query("SELECT MAX(`id`) as mid FROM `contacts_new`;");
@@ -640,11 +655,11 @@ class SettingsNewClass
 		return $max_id;
 	}
 	
-	function showContactsCard($contact_id)
+	public function showContactsCard($contact_id)
     {
         $db = DbSingleton::getTokoDb();
         $form = ""; $form_htm = RD . "/tpl/new/contacts_card.htm";
-        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
 		$r = $db->query("SELECT `id`, `title`, `address`, `schedule`, `phone` FROM `contacts_new` WHERE `id` = '$contact_id';");
         $n = $db->num_rows($r);
 		if ($n > 0) {
@@ -660,10 +675,11 @@ class SettingsNewClass
 			$form = str_replace("{schedule}", $schedule, $form);
 			$form = str_replace("{phone}", $phone, $form);
 		}
+
 		return $form;
   	}
 	
-	function saveContacts($contact_id, $title, $address, $schedule, $phone)
+	public function saveContacts($contact_id, $title, $address, $schedule, $phone): array
     {
         $db = DbSingleton::getTokoDb();
 	    $answer = 0; $err = "Помилка збереження даних!";
@@ -674,7 +690,7 @@ class SettingsNewClass
 		return array($answer, $err);
 	}
 	
-	function dropContacts($contact_id)
+	public function dropContacts($contact_id): array
     {
         $db = DbSingleton::getTokoDb();
 	    $answer = 0; $err = "Помилка збереження даних!";
@@ -689,12 +705,12 @@ class SettingsNewClass
      * Locations
      * */
 	
-	function showLocations()
+	public function showLocations()
     {
         $db = DbSingleton::getTokoDb();
         $list = "";
 		$form = ""; $form_htm = RD . "/tpl/new/locations.htm";
-		if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+		if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
 		$r = $db->query("SELECT t2c.CITY_NAME, t2r.REGION_NAME, t2s.STATE_NAME 
 		FROM `T2_CITY` t2c
 			LEFT OUTER JOIN `T2_REGION` t2r ON (t2r.REGION_ID = t2c.REGION_ID)
@@ -720,12 +736,12 @@ class SettingsNewClass
 	 * Contacts bottom
 	 * */
 	
-	function getStatusCaption($status)
+	public function getStatusCaption($status): string
     {
         return $status ? "Активний" : "Відключений";
 	}
 	
-	function showIcontSelectList($sel_id)
+	public function showIcontSelectList($sel_id): string
     {
         $db = DbSingleton::getTokoDb();
         $list = "";
@@ -743,7 +759,7 @@ class SettingsNewClass
 		return $list;
 	}
 	
-	function getIcon($id)
+	public function getIcon($id): string
     {
         $db = DbSingleton::getTokoDb();
 		$r = $db->query("SELECT `name`, `icon` FROM `new_icons` WHERE `id` = $id LIMIT 1;");
@@ -752,12 +768,12 @@ class SettingsNewClass
         return "<i class='fa $icon'> $name</i>";
 	}
 	
-	function showContactsBotList()
+	public function showContactsBotList()
     {
         $db = DbSingleton::getTokoDb();
         $list = "";
 		$form = ""; $form_htm = RD . "/tpl/new/contacts_bottom.htm";
-		if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+		if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
 		$r = $db->query("SELECT `id`, `text`, `icon`, `link`, `status` FROM `contacts_bottom_new`;");
 		$n = $db->num_rows($r);
 		for ($i = 1; $i <= $n; $i++) {
@@ -777,11 +793,13 @@ class SettingsNewClass
 				<td>$status</td>
 			</tr>";
 		}
+
 		$form = str_replace("{contacts_range}", $list, $form);
+
 		return $form;
 	}
 		
-	function loadContactsBotList()
+	public function loadContactsBotList(): string
     {
         $db = DbSingleton::getTokoDb();
         $list = "";
@@ -805,7 +823,7 @@ class SettingsNewClass
 		return $list;
 	}
 	
-	function newContactsBotCard()
+	public function newContactsBotCard()
     {
         $db = DbSingleton::getTokoDb();
 		$r = $db->query("SELECT MAX(`id`) as mid FROM `contacts_bottom_new`;");
@@ -814,11 +832,11 @@ class SettingsNewClass
 		return $max_id;
 	}
 	
-	function showContactsBotCard($contact_id)
+	public function showContactsBotCard($contact_id)
     {
         $db = DbSingleton::getTokoDb();
         $form = ""; $form_htm = RD . "/tpl/new/contacts_bottom_card.htm";
-        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
 		$r = $db->query("SELECT * FROM `contacts_bottom_new` WHERE `id` = $contact_id;");
         $n = $db->num_rows($r);
 		if ($n > 0) {
@@ -834,10 +852,11 @@ class SettingsNewClass
 			$form = str_replace("{link}", $link, $form);
 			$form = str_replace("{status}", ($status > 0) ? "checked" : "", $form);
 		}
+
 		return $form;
   	}
 	
-	function saveContactsBot($contact_id, $text, $icon, $link, $status)
+	public function saveContactsBot($contact_id, $text, $icon, $link, $status): array
     {
         $db = DbSingleton::getTokoDb();
 	    $answer = 0; $err = "Помилка збереження даних!";
@@ -848,7 +867,7 @@ class SettingsNewClass
 		return array($answer, $err);
 	}
 	
-	function dropContactsBot($contact_id)
+	public function dropContactsBot($contact_id): array
     {
         $db = DbSingleton::getTokoDb();
 	    $answer = 0; $err = "Помилка збереження даних!";
@@ -863,20 +882,20 @@ class SettingsNewClass
 	 * News
 	 * */
 	
-	function getLangCaption($lang_id)
+	public function getLangCaption($lang_id)
     {
         $db = DbSingleton::getTokoDb();
 		$r = $db->query("SELECT `caption` FROM `lang` WHERE `id` = $lang_id LIMIT 1;");
         return $db->result($r, 0, "caption");
 	}
 	
-	function showNewsList()
+	public function showNewsList()
     {
         $db = DbSingleton::getTokoDb();
         $list = "";
 	    $date = date("Y-m-d");
 		$form = ""; $form_htm = RD . "/tpl/new/news.htm";
-		if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+		if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
 		$r = $db->query("SELECT * FROM `news` ORDER BY `data` DESC;");
 		$n = $db->num_rows($r);
 		for ($i = 1; $i <= $n; $i++) {
@@ -900,11 +919,13 @@ class SettingsNewClass
 				<td $color_status>$status</td>
 			</tr>";
 		}
+
 		$form = str_replace("{news_range}", $list, $form);
+
 		return $form;
 	}
 		
-	function loadNewsList()
+	public function loadNewsList(): string
     {
         $db = DbSingleton::getTokoDb();
         $list = "";
@@ -931,10 +952,11 @@ class SettingsNewClass
 				<td $color_status>$status</td>
 			</tr>";
 		}
+
 		return $list;
 	}
 	
-	function newNewsCard($lang)
+	public function newNewsCard($lang)
     {
         $db = DbSingleton::getTokoDb();
 	    $date = date("Y-m-d");
@@ -944,11 +966,11 @@ class SettingsNewClass
 		return $max_id;
 	}
 	
-	function showNewsCard($news_id)
+	public function showNewsCard($news_id)
     {
         $db = DbSingleton::getTokoDb();
         $form = ""; $form_htm = RD . "/tpl/new/news_card.htm";
-        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
 		$r = $db->query("SELECT * FROM `news` WHERE `id` = '$news_id';");
         $n = $db->num_rows($r);
 		if ($n > 0) {
@@ -973,10 +995,11 @@ class SettingsNewClass
 			$file_id = $db->result($r2, 0, "id");
 			$form = str_replace("{file_id}", $file_id, $form);
 		}
+
 		return $form;
   	}
 	
-	function saveNews($news_id, $caption, $data, $short, $descr, $status)
+	public function saveNews($news_id, $caption, $data, $short, $descr, $status): array
     {
         $db = DbSingleton::getTokoDb();
 	    $answer = 0; $err = "Помилка збереження даних!";
@@ -987,7 +1010,7 @@ class SettingsNewClass
 		return array($answer, $err);
 	}
 	
-	function dropNews($news_id)
+	public function dropNews($news_id): array
     {
         $db = DbSingleton::getTokoDb();
 	    $answer = 0; $err = "Помилка збереження даних!";
@@ -998,12 +1021,13 @@ class SettingsNewClass
 		return array($answer, $err);
     }
 	
-	function loadNewsPhoto($news_id,$lang_id)
+	public function loadNewsPhoto($news_id,$lang_id): string
     {
         $db = DbSingleton::getTokoDb();
         $list = "";
         $form = ""; $form_htm = RD . "/tpl/new/news_photo_block.htm";
-        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+
 		$r = $db->query("SELECT `id`, `caption` FROM `news_galery` WHERE `cat` = $news_id;");
         $n = $db->num_rows($r);
 		for ($i = 1; $i <= $n; $i++) {
@@ -1016,10 +1040,11 @@ class SettingsNewClass
 		if ($n == 0) {
 		    $list = "<h3 class='text-center'>Зображення відсутнє</h3>";
 		}
+
 		return $list;
 	}
 	
-	function deleteNewsLogo($news_id)
+	public function deleteNewsLogo($news_id): array
     {
         $db = DbSingleton::getTokoDb();
 		$answer = 0; $err = "Помилка видалення даних!";
@@ -1034,15 +1059,15 @@ class SettingsNewClass
 	 * T_QUESTION
 	 * */
 
-    function showRequestsList()
+    public function showRequestsList()
     {
         $form = ""; $form_htm = RD . "/tpl/new/requests.htm";
-        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
         $form = str_replace("{requests_range}", $this->loadRequestsList(), $form);
         return $form;
     }
 
-    function loadRequestsList()
+    public function loadRequestsList(): string
     {
         $db = DbSingleton::getTokoDb();
         $list = "";
@@ -1067,10 +1092,11 @@ class SettingsNewClass
 				<td>$data_upd</td>
 			</tr>";
         }
+
         return $list;
     }
 
-    function getMediaUserName($user_id)
+    public function getMediaUserName($user_id)
     {
         $db = DbSingleton::getDb();
         $name = "";
@@ -1082,12 +1108,13 @@ class SettingsNewClass
         return $name;
     }
 
-    function showRequestCard($request_id)
+    public function showRequestCard($request_id)
     {
         $db = DbSingleton::getTokoDb();
         session_start(); $user_id = $_SESSION["media_user_id"];
         $form = ""; $form_htm = RD . "/tpl/new/requests_card.htm";
-        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+
         $r = $db->query("SELECT * FROM `T2_QUESTIONS` WHERE `ID` = $request_id;");
         $n = $db->num_rows($r);
         if ($n == 0) {
@@ -1106,7 +1133,7 @@ class SettingsNewClass
 
         if ($user_id != $user_use && $user_use > 0) {
             $form_htm = RD . "/tpl/dp_use_deny.htm";
-            if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+            if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
             $form = str_replace("{user_name}",$this->getMediaUserName($user_use),$form);
             $admin_unlock = "";
             if ($user_id == 1 || $user_id == 2 || $user_id == 7) {
@@ -1123,13 +1150,14 @@ class SettingsNewClass
         $form = str_replace("{request_data_create}", $data_create, $form);
         $form = str_replace("{request_data_update}", $data_update, $form);
         $form = str_replace("{reqest_disabled}", ($status) ? "" : "disabled", $form);
+
         return $form;
     }
 
-    function saveRequest($request_id, $vin, $phone, $text)
+    public function saveRequest($request_id, $vin, $phone, $text): array
     {
         $db = DbSingleton::getTokoDb();
-        if ($request_id == 0) {
+        if ((int)$request_id === 0) {
             $answer = 0; $err = "Помилка збереження даних!";
         } else {
             $data_update = date("Y-m-d H:i:s");
@@ -1139,7 +1167,7 @@ class SettingsNewClass
         return array($answer, $err);
     }
 
-    function dropRequest($request_id)
+    public function dropRequest($request_id): array
     {
         $db = DbSingleton::getTokoDb();
         $answer = 0; $err = "Помилка збереження даних!";
@@ -1150,7 +1178,7 @@ class SettingsNewClass
         return array($answer, $err);
     }
 
-    function closeRequestCard($request_id)
+    public function closeRequestCard($request_id): int
     {
         $db = DbSingleton::getTokoDb();
         session_start();
@@ -1161,13 +1189,13 @@ class SettingsNewClass
         return 1;
     }
 
-    function unlockRequestCard($request_id)
+    public function unlockRequestCard($request_id): int
     {
         $db = DbSingleton::getTokoDb();
         session_start();
-        $user_id = $_SESSION["media_user_id"];
+        $user_id = (int)$_SESSION["media_user_id"];
         $answer = 0;
-        if ($user_id == 1 || $user_id == 2 || $user_id == 7) {
+        if ($user_id === 1 || $user_id === 2 || $user_id === 7) {
             $db->query("UPDATE `T2_QUESTIONS` SET `USER_USE` = '0' WHERE `ID` = $request_id;");
             $answer = 1;
         }
@@ -1178,15 +1206,15 @@ class SettingsNewClass
      * T_REVIEWS
      * */
 
-    function showReviewsList()
+    public function showReviewsList()
     {
         $form = ""; $form_htm = RD . "/tpl/new/reviews.htm";
-        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
         $form = str_replace("{reviews_range}", $this->loadReviewsList(), $form);
         return $form;
     }
 
-    function loadReviewsList()
+    public function loadReviewsList(): string
     {
         $db = DbSingleton::getTokoDb();
         $list = "";
@@ -1204,13 +1232,13 @@ class SettingsNewClass
             $text_en    = $db->result($r, $i - 1, "TEXT_EN");
 
             $status_ru  = $status_ua = $status_en = "-";
-            if ($title_ru != "" && $text_ru != "") {
+            if ($title_ru !== "" && $text_ru !== "") {
                 $status_ru = "+";
             }
-            if ($title_ua != "" && $text_ua != "") {
+            if ($title_ua !== "" && $text_ua !== "") {
                 $status_ua = "+";
             }
-            if ($title_en != "" && $text_en != "") {
+            if ($title_en !== "" && $text_en !== "") {
                 $status_en = "+";
             }
 
@@ -1225,18 +1253,19 @@ class SettingsNewClass
 				<td>$status</td>
 			</tr>";
         }
+
         return $list;
     }
 
-    function showReviewCard($id)
+    public function showReviewCard($id)
     {
         $db = DbSingleton::getTokoDb();
         $form = ""; $form_htm = RD . "/tpl/new/reviews_card.htm";
-        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
 
         $r = $db->query("SELECT * FROM `T2_REVIEWS` WHERE `ID` = $id;");
-        $n = $db->num_rows($r);
-        if ($n == 0) {
+        $n = (int)$db->num_rows($r);
+        if ($n === 0) {
             $id         = 0;
             $status     = 0;
             $disabled   = "disabled";
@@ -1260,6 +1289,7 @@ class SettingsNewClass
             $img        = $db->result($r, 0, "IMG");
             $disabled   = "";
         }
+
         $form = str_replace("{review_id}", $id, $form);
         $form = str_replace("{review_t_ru}", $t_ru, $form);
         $form = str_replace("{review_t_ua}", $t_ua, $form);
@@ -1277,22 +1307,23 @@ class SettingsNewClass
         $form = str_replace("{review_status}", $status ? "checked" : "", $form);
         $form = str_replace("{review_image}", $img, $form);
         $form = str_replace("{review_remove_disabled}", $disabled, $form);
+
         return $form;
     }
 
-    function saveReview($review_id, $t_ru, $t_ua, $t_en, $d_ru, $d_ua, $d_en, $title, $title_ua, $title_en, $text, $text_ua, $text_en, $data, $status)
+    public function saveReview($review_id, $t_ru, $t_ua, $t_en, $d_ru, $d_ua, $d_en, $title, $title_ua, $title_en, $text, $text_ua, $text_en, $data, $status): array
     {
         $db = DbSingleton::getTokoDb();
-        if ($text == "<p><br></p>") {
+        if ($text === "<p><br></p>") {
             $text = "";
         }
-        if ($text_ua == "<p><br></p>") {
+        if ($text_ua === "<p><br></p>") {
             $text_ua = "";
         }
-        if ($text_en == "<p><br></p>") {
+        if ($text_en === "<p><br></p>") {
             $text_en = "";
         }
-        if ($review_id == 0) {
+        if ((int)$review_id === 0) {
             $r = $db->query("SELECT MAX(`ID`) as mid FROM `T2_REVIEWS`;");
             $max_id = 0 + $db->result($r, 0, "mid") + 1;
             $db->query("INSERT INTO `T2_REVIEWS` (`ID`, `TITLE_RU`, `TITLE_UA`, `TITLE_EN`, `DATA`, `STATUS`) VALUES ($max_id, \"$title\", \"$title_ua\", \"$title_en\", '$data', '$status');");
@@ -1322,7 +1353,7 @@ class SettingsNewClass
         return array($answer, $err);
     }
 
-    function dropReview($review_id)
+    public function dropReview($review_id): array
     {
         $db = DbSingleton::getTokoDb();
         $answer = 0; $err = "Помилка збереження даних!";
@@ -1337,11 +1368,11 @@ class SettingsNewClass
      * New Configs
      * */
 
-    function showConfigForm()
+    public function showConfigForm()
     {
         $db = DbSingleton::getTokoDb();
         $form = ""; $form_htm = RD . "/tpl/new/configs.htm";
-        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
         $list = "";
         $r = $db->query("SELECT `TEXT`, `STYLES`, `STATUS` FROM `T2_SITE_CONFIGS` WHERE `BLOCK` = 'site_warning_message' LIMIT 1;");
         $n = $db->num_rows($r);
@@ -1366,7 +1397,9 @@ class SettingsNewClass
                 </tr>
             </table>";
         }
+
         $form = str_replace("{configs_list}", $list, $form);
+
         return $form;
     }
 
