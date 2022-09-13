@@ -2542,7 +2542,7 @@ class dp
                     $amountRestNotTp = "$suppl_stock_show / ";
                 }
 
-                if ($suppl_id == 0 || $suppl_id > 0 && $price > 0) {
+                if ($suppl_id == 0 || ($suppl_id > 0 && $price > 0)) {
                     $function = "setArticleToSelectAmountDp(\"$art_id\",\"$article_nr_displ\",\"$brand_id\",\"$brand_name\",\"$dp_id\")";
                     if ($suppl_id > 0) {
                         $function = "showDpSupplAmountInputWindow(\"$art_id\",\"$article_nr_displ\",\"$brand_id\",\"$brand_name\",\"$dp_id\",\"$suppl_id\",\"$suppl_storage_id\",\"$price\")";
@@ -4153,10 +4153,9 @@ class dp
                 }
             }
 
-            $ai = 0; $select_str = "0";
+            $select_str = "0";
             for ($i = 1; $i <= $kol_storsel; $i++) {
                 if ($ar_storsel[$i] != "" && $ar_storsel[$i] > 0) {
-                    $ai += 1;
                     $select_str .= ",".$ar_storsel[$i];
                 }
             }
@@ -4255,6 +4254,7 @@ class dp
             $list = "<tr><td colspan=13 align='center'>Накладні відсутні</td></tr>";
         }
         $form = str_replace("{list}", $list, $form);
+
         return array($form, "Список протермінованих накладних: $client_name");
     }
 
@@ -4275,10 +4275,9 @@ class dp
                 if ($usd_to_uah == 0) { $usd_to_uah = $usd_to_uah_new; }
                 if ($eur_to_uah == 0) { $eur_to_uah = $eur_to_uah_new; }
             }
-            $ai = 0; $select_str = "0";
+            $select_str = "0";
             for ($i = 1; $i <= $kol_storsel; $i++) {
                 if ($ar_storsel[$i] != "" && $ar_storsel[$i] > 0) {
-                    $ai += 1;
                     $select_str .= "," . $ar_storsel[$i];
                 }
             }
@@ -4479,11 +4478,13 @@ class dp
         $write_off_prefix = 0;
         $rsel = $db->query("SELECT `prefix`, `doc_nom` FROM `J_WRITE_OFF` WHERE `id` = $write_off_nom LIMIT 1;");
         $nsel = $db->num_rows($rsel);
+
         if ($nsel > 0) {
             $prefix = $db->result($rsel, 0, "prefix");
             $doc_nom = $db->result($rsel, 0, "doc_nom");
             $write_off_prefix = "$prefix-$doc_nom";
         }
+
         return array($answer, $err, $write_off_nom, $write_off_prefix);
     }
 
@@ -4763,7 +4764,7 @@ class dp
             $price              = $db->result($r, $i - 1, "price");
             $price_buh_uah      = $db->result($r, $i - 1, "price_buh_uah");
             $price_man_uah      = $db->result($r, $i - 1, "price_man_uah");
-            list($oper_price)   = $cat->getArticleOperPriceGeneralStock($art_id);
+            [$oper_price] = $cat->getArticleOperPriceGeneralStock($art_id);
             if ($amount_invoice <= $rest) {
                 $new_rest = $rest - $amount_invoice;
                 $db->query("UPDATE `T2_ARTICLES_PARTITIONS` SET `rest`='$new_rest' WHERE `id`='$id' LIMIT 1;");
@@ -4773,7 +4774,7 @@ class dp
             }
             if ($amount_invoice > $rest) {
                 $new_rest = 0;
-                $amount_invoice = $amount_invoice - $rest;
+                $amount_invoice -= $rest;
                 $db->query("UPDATE `T2_ARTICLES_PARTITIONS` SET `rest`='$new_rest' WHERE `id`='$id' LIMIT 1;");
                 $db->query("INSERT INTO `J_WRITE_OFF_PARTITION_STR` (`partition_id`,`write_off_id`,`write_off_str_id`,`art_id`,`article_nr_displ`,`brand_id`,`partition_amount`,`invoice_amount`,`oper_price_partition`,`price_partition`,`price_buh_uah`,`price_man_uah`,`price_invoice`) 
                 VALUES ('$id','$write_off_id','$write_off_str_id','$art_id','$article_nr_displ','$brand_id','$rest','$rest','$oper_price','$price','$price_buh_uah','$price_man_uah','$price_invoice');");
@@ -4795,7 +4796,7 @@ class dp
             $price              = $db->result($r, $i - 1, "price");
             $price_buh_uah      = $db->result($r, $i - 1, "price_buh_uah");
             $price_man_uah      = $db->result($r, $i - 1, "price_man_uah");
-            list($oper_price,)  = $cat->getArticleOperPriceGeneralStock($art_id);
+            [$oper_price,] = $cat->getArticleOperPriceGeneralStock($art_id);
             if ($amount_invoice <= $rest) {
                 $new_rest = $rest - $amount_invoice;
                 $db->query("UPDATE `T2_ARTICLES_PARTITIONS` SET `rest`='$new_rest' WHERE `id`='$id' LIMIT 1;");
@@ -4805,7 +4806,7 @@ class dp
             }
             if ($amount_invoice > $rest) {
                 $new_rest = 0;
-                $amount_invoice = $amount_invoice - $rest;
+                $amount_invoice -= $rest;
                 $db->query("UPDATE `T2_ARTICLES_PARTITIONS` SET `rest`='$new_rest' WHERE `id`='$id' LIMIT 1;");
                 $db->query("INSERT INTO `J_SALE_INVOICE_PARTITION_STR` (`partition_id`,`invoice_id`,`invoice_str_id`,`art_id`,`article_nr_displ`,`brand_id`,`partition_amount`,`invoice_amount`,`oper_price_partition`,`price_partition`,`price_buh_uah`,`price_man_uah`,`price_invoice`) 
                 VALUES ('$id','$invoice_id','$invoice_str_id','$art_id','$article_nr_displ','$brand_id','$rest','$rest','$oper_price','$price','$price_buh_uah','$price_man_uah','$price_invoice');");
@@ -4851,9 +4852,11 @@ class dp
         $prefix = str_replace("{month}", date("m"), $prefix);
         $prefix = str_replace("{day}", date("d"), $prefix);
         $prefix = str_replace("{rnd010}", rand(0, 10), $prefix);
+
         $r = $db->query("SELECT IFNULL(MAX(`doc_nom`), 0) AS doc_nom FROM `J_SALE_INVOICE` 
         WHERE `seller_id`='$seller_id' AND `doc_type_id`='$doc_type_id' AND `status`='1' AND `data_create`>='$year_today-01-01';");
         $doc_nom = 0 + $db->result($r, 0, "doc_nom") + 1;
+
         return array($prefix, $doc_nom);
     }
 
@@ -4867,12 +4870,13 @@ class dp
         if ($n == 1) {
             $db->query("UPDATE `B_CLIENT_BALANS` SET `saldo` = saldo - '$summ', `cash_id` = '$cash_id', `last_update` = NOW() WHERE `client_id` = '$client_conto_id';");
         }
+
         return true;
     }
 
     function viewDpSaleInvoice($dp_id, $invoice_id) { $db = DbSingleton::getDb();
         $gmanual = new gmanual;
-        $prefix = $doc_type_name = $status_invoice_cap = "";
+        $prefix = $doc_type_name = "";
         $doc_nom = 0; $volume = 0; $status_invoice = 0; $list = "";
         $form = ""; $form_htm = RD . "/tpl/dp_sale_invoice_view.htm";
         if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
@@ -4940,7 +4944,9 @@ class dp
         return array($form, "№ $prefix-$doc_nom; вид:$doc_type_name; Статус: " . $gmanual->get_gmanual_caption($status_invoice));
     }
 
-    function getClientInfo($client_id) { $db = DbSingleton::getDb();
+    function getClientInfo($client_id)
+    {
+        $db = DbSingleton::getDb();
         $r = $db->query("SELECT sl.full_name as seller_name, sl.phone, sld.edrpou, sld.account, sld.bank, sld.mfo, sld.vytjag, sld.address_fakt as seller_address 
         FROM `A_CLIENTS` sl 
             LEFT OUTER JOIN `A_CLIENT_DETAILS` sld ON (sld.client_id = sl.id AND sld.main = 1)
@@ -4953,7 +4959,7 @@ class dp
         $mfo            = $db->result($r, 0, "mfo");
         $vat            = $db->result($r, 0, "vytjag");
         $phone          = $db->result($r, 0, "phone");
-        if ($phone == "") {
+        if ($phone === "") {
             $phone = "не вказано";
         }
         return array($seller_name, $seller_adr, $edrpou, $account, $bank, $mfo, $vat, $phone);
@@ -4962,18 +4968,20 @@ class dp
     /*
      * Друкувати рахунок ДП
      * */
-    function printDpJournal($dp_id, $type_id)
+    public function printDpJournal($dp_id, $type_id)
     {
-        if ($type_id == "" || $type_id == 0) {
+        $db = DbSingleton::getDb();
+
+        $type_id = (int)$type_id;
+        if (empty($type_id)) {
             $type_id = 1;
         }
-        $db = DbSingleton::getDb();
+
         $money = new toMoney;
         $slave = new slave;
         $invoice_summ = 0;
         $list = "";
-        $form = ""; $form_htm = RD . "/tpl/dp_journal_print.htm";
-        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+
         $r = $db->query("SELECT dp.*, cl.full_name as client_name, cld.address_fakt as client_address 
         FROM `J_DP` dp
             LEFT OUTER JOIN `A_CLIENTS` cl ON (cl.id = dp.client_conto_id)
@@ -4982,16 +4990,17 @@ class dp
         $client_id      = $db->result($r, 0, "client_id");
         $prefix         = $db->result($r, 0, "prefix");
         $doc_nom        = $db->result($r, 0, "doc_nom");
-        $doc_type_id    = $db->result($r, 0, "doc_type_id");
+        $doc_type_id    = (int)$db->result($r, 0, "doc_type_id");
         $tpoint_id      = $db->result($r, 0, "tpoint_id");
         $client_name    = $db->result($r, 0, "client_name");
         $client_address = $db->result($r, 0, "client_address");
-        $usd_to_uah     = $db->result($r, 0, "usd_to_uah");
+        $usd_to_uah     = (int)$db->result($r, 0, "usd_to_uah");
         $eur_to_uah     = $db->result($r, 0, "eur_to_uah");
         $seller_id      = $this->getSellerId($tpoint_id, $doc_type_id);
-        list($seller_name, $seller_address, $edrpou, $account, $bank, $mfo, $vat, $phone) = $this->getClientInfo($seller_id);
-        if ($usd_to_uah == 0) {
-            list($usd_to_uah, $eur_to_uah) = $this->getKoursData();
+        [$seller_name, $seller_address, $edrpou, $account, $bank, $mfo, $vat, $phone] = $this->getClientInfo($seller_id);
+
+        if ($usd_to_uah === 0) {
+            [$usd_to_uah, $eur_to_uah] = $this->getKoursData();
         }
 
         $r = $db->query("SELECT * FROM `J_DP_STR` WHERE `dp_id` = $dp_id;");
@@ -5000,19 +5009,19 @@ class dp
             $art_id         = $db->result($r, $i - 1, "art_id");
             $art_nr_ds      = $db->result($r, $i - 1, "article_nr_displ");
             $brand_id       = $db->result($r, $i - 1, "brand_id");
-            $amount         = intval($db->result($r, $i - 1, "amount"));
+            $amount         = (int)$db->result($r, $i - 1, "amount");
             $price_end      = $db->result($r, $i - 1, "price_end");
             $article_name   = $this->getArticleName($art_id);
             $brand_name     = $this->getBrandName($brand_id);
             $unit           = $this->getUnitArticle($art_id);
 
-            $cash_id_from = $this->getArticlePriceRatingCash($art_id);
-            if ($cash_id_from == 1) {
+            $cash_id_from = (int)$this->getArticlePriceRatingCash($art_id);
+            if ($cash_id_from === 1) {
                 $price_end = $this->getClientPriceRounding($client_id, $price_end);
-            } elseif ($cash_id_from == 2) {
+            } elseif ($cash_id_from === 2) {
                 $price_end *= $usd_to_uah;
                 $price_end = $this->getClientPriceRounding($client_id, $price_end);
-            } elseif ($cash_id_from == 3) {
+            } elseif ($cash_id_from === 3) {
                 $price_end *= $eur_to_uah;
                 $price_end = $this->getClientPriceRounding($client_id, $price_end);
             }
@@ -5021,8 +5030,8 @@ class dp
             $invoice_summ += $summ;
 
             $text = "$art_nr_ds ($brand_name)";
-            if ($type_id == 2) {
-                $text = "$brand_name";
+            if ($type_id === 2) {
+                $text = $brand_name;
             }
 
             $list .= "<tr>
@@ -5035,10 +5044,19 @@ class dp
                 <td align='right'>$summ</td>
             </tr>";
         }
+
         $vat_summ = $invoice_summ / 6;
         $art_text = "Індекс/Бренд";
-        if ($type_id == 2) {
+        if ($type_id === 2) {
             $art_text = "Бренд";
+        }
+
+        if ($doc_type_id === 61) {
+            $form = ""; $form_htm = RD . "/tpl/dp_journal_print.htm";
+            if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+        } else {
+            $form = ""; $form_htm = RD . "/tpl/dp_journal_print_2.htm";
+            if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
         }
 
         $form = str_replace("{curtime}",date("d.m.Y H:i:s"), $form);
@@ -5060,14 +5078,16 @@ class dp
         $form = str_replace("{client_address}", $client_address, $form);
         $form = str_replace("{seller_address}", $seller_address, $form);
         $form = str_replace("{phone_client}", $phone, $form);
+
         $mp = new media_print;
         $mp->print_document($form, "A4");
+
         return $form;
     }
 
     function printDpSaleInvoice($dp_id) { $db = DbSingleton::getDb();
         $money = new toMoney; $slave = new slave; $sale_invoice = new sale_invoice;
-        $dp_id = intval($dp_id);
+        $dp_id = (int)$dp_id;
         $invoice_summ = 0; $list = "";
         $form = ""; $form_htm = RD . "/tpl/dp_sale_invoice_print_non_cash.htm";
         if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
@@ -5103,7 +5123,7 @@ class dp
             $art_nr_ds      = $db->result($r, $i - 1, "article_nr_displ");
             $brand_id       = $db->result($r, $i - 1, "brand_id");
             $brand_name     = $this->getBrandName($brand_id);
-            $amount         = intval($db->result($r, $i - 1, "amount"));
+            $amount         = (int)$db->result($r, $i - 1, "amount");
             $unit           = $this->getUnitArticle($art_id);
             $price_end      = $db->result($r, $i - 1, "price_end");
             $summ           = $price_end * $amount;
@@ -5307,7 +5327,7 @@ class dp
             $dp_delivery_adr    = $db->result($r, 0, "delivery_address");
             $dp_id              = $db->result($r, 0, "dp_id");
             $delivery_address   = $this->getDpUserDelivery($dp_id);
-            if ($delivery_address == "") {
+            if ($delivery_address === "") {
                 $delivery_address = $dp_delivery_adr;
             }
 
@@ -5841,7 +5861,7 @@ class dp
                 $suppl_name     = $this->getClientName($suppl_id);
                 $art_id         = $db->result($r1, $i - 1, "art_id");
                 $brand_id       = $db->result($r1, $i - 1, "brand_id");
-                $amount         = intval($db->result($r1, $i - 1, "amount"));
+                $amount         = (int)$db->result($r1, $i - 1, "amount");
                 $price          = $db->result($r1, $i - 1, "price");
                 $discount       = $db->result($r1, $i - 1, "discount");
                 $summ           = $db->result($r1, $i - 1, "summ");
@@ -5870,7 +5890,7 @@ class dp
     function getCityName($city_id)
     {
         $dbt = DbSingleton::getTokoDb();
-        $city_id = intval($city_id);
+        $city_id = (int)$city_id;
         $r = $dbt->query("SELECT `CITY_NAME` FROM `T2_CITY` WHERE `CITY_ID` = '$city_id' LIMIT 1;");
         return $dbt->result($r, 0, "CITY_NAME");
     }
@@ -5878,7 +5898,7 @@ class dp
     function getDeliveryName($delivery_id)
     {
         $db = DbSingleton::getTokoDb();
-        $delivery_id = intval($delivery_id);
+        $delivery_id = (int)$delivery_id;
         $r = $db->query("SELECT `DESCRIPTION` FROM `T2_DELIVERY` WHERE `ID`='$delivery_id' LIMIT 1;");
         return $db->result($r, 0, "DESCRIPTION");
     }
@@ -5886,7 +5906,7 @@ class dp
     function getPaymentName($payment_id)
     {
         $dbt = DbSingleton::getTokoDb();
-        $payment_id = intval($payment_id);
+        $payment_id = (int)$payment_id;
         $r = $dbt->query("SELECT `DESCRIPTION` FROM `T2_PAYMENT` WHERE `ID` = $payment_id LIMIT 1;");
         return $dbt->result($r, 0, "DESCRIPTION");
     }
@@ -5894,7 +5914,7 @@ class dp
     function getDeliveryChargeName($delivery_charge_id)
     {
         $db = DbSingleton::getDb();
-        $delivery_charge_id = intval($delivery_charge_id);
+        $delivery_charge_id = (int)$delivery_charge_id;
         $r = $db->query("SELECT `mcaption` FROM `manual` WHERE `id` = $delivery_charge_id LIMIT 1;");
         $n = $db->num_rows($r);
         return ($n > 0) ? $db->result($r, 0, "mcaption") : "Не вибрано";
@@ -5903,7 +5923,7 @@ class dp
     function getExpressInfoName($express)
     {
         $db = DbSingleton::getTokoDb();
-        $express = intval($express);
+        $express = (int)$express;
         $r = $db->query("SELECT `DESCRIPTION` FROM `T2_DELIVERY_EXPRESS` WHERE `ID` = $express LIMIT 1;");
         return $db->result($r, 0, "DESCRIPTION");
     }
@@ -5955,11 +5975,11 @@ class dp
                 $del_name           = ($clientData["DEL_NAME"] != "") ? $clientData["DEL_NAME"] : $client->getUserNameById($clientData["USER_ID"]);
                 $del_phone          = ($clientData["DEL_PHONE"] != 0) ? $clientData["DEL_PHONE"] : $client->getUserNameById($clientData["USER_ID"], "phone");
                 $city_id            = $clientData["CITY_ID"]; $city_name = $this->getCityName($city_id);
-                $delivery_id        = intval($clientData["DELIVERY_ID"]); $delivery_name = $this->getDeliveryName($delivery_id);
-                $payment_id         = intval($clientData["PAYMENT_ID"]); $payment_name = $this->getPaymentName($payment_id);
-                $delivery_charge_id = intval($clientData["DELIVERY_CHARGE_ID"]); $delivery_charge_name = $this->getDeliveryChargeName($delivery_charge_id);
+                $delivery_id        = (int)$clientData["DELIVERY_ID"]; $delivery_name = $this->getDeliveryName($delivery_id);
+                $payment_id         = (int)$clientData["PAYMENT_ID"]; $payment_name = $this->getPaymentName($payment_id);
+                $delivery_charge_id = (int)$clientData["DELIVERY_CHARGE_ID"]; $delivery_charge_name = $this->getDeliveryChargeName($delivery_charge_id);
                 $department         = $clientData["DEL_DEPARTMENT_TEXT"];
-                $express            = intval($clientData["DEL_EXPRESS"]); $express_text = $this->getExpressInfoName($express);
+                $express            = (int)$clientData["DEL_EXPRESS"]; $express_text = $this->getExpressInfoName($express);
                 $express_info       = $clientData["DEL_EXPRESS_INFO"];
                 $express_payment    = $clientData["DEL_EXPRESS_PAYMENT"];
                 $street             = $clientData["DEL_STREET"];
@@ -6067,13 +6087,13 @@ class dp
             if (!empty($clientData)) {
                 $user_id        = $clientData["USER_ID"];
                 $city_id        = $clientData["CITY_ID"];
-                $payment_id     = intval($clientData["PAYMENT_ID"]);
-                $delivery_id    = intval($clientData["DELIVERY_ID"]);
+                $payment_id     = (int)$clientData["PAYMENT_ID"];
+                $delivery_id    = (int)$clientData["DELIVERY_ID"];
                 $street         = $clientData["DEL_STREET"];
                 $house          = $clientData["DEL_HOUSE"];
                 $porch          = $clientData["DEL_PORCH"];
                 $department     = $clientData["DEL_DEPARTMENT_TEXT"];
-                $express        = intval($clientData["DEL_EXPRESS"]);
+                $express        = (int)$clientData["DEL_EXPRESS"];
                 $express_info   = $clientData["DEL_EXPRESS_INFO"];
                 $delivery_info  = "";
 
@@ -6743,7 +6763,7 @@ class dp
         $form = str_replace("{storage_title}", $this->showStorageFieldsTitle(), $form);
         $table = $this->loadTablePreview($dp_id);
         $form = str_replace("{records_list}", $table, $form);
-        if ($table == "") {
+        if ($table === "") {
             $form = "";
         }
 
@@ -6757,7 +6777,7 @@ class dp
             $r = $db->query("SELECT `AMOUNT`, `STORAGE_ID` FROM `T2_ARTICLES_STRORAGE` WHERE `ART_ID` = $art_id;");
             $n = $db->num_rows($r);
             for ($i = 1; $i <= $n; $i++) {
-                $amount         = intval($db->result($r, $i - 1, "AMOUNT"));
+                $amount         = (int)$db->result($r, $i - 1, "AMOUNT");
                 $storage_name   = $this->getStorageName($db->result($r, $i - 1, "STORAGE_ID"));
                 if ($amount > 0) {
                     $list .= "<span style='font-weight: bold;'>$storage_name</span>($amount); ";
@@ -6778,7 +6798,7 @@ class dp
         }
         $storage_str = implode(",", $storage_str);
         $where_storages = "";
-        if ($storage_str != "") {
+        if ($storage_str !== "") {
             $where_storages = "AND `STORAGE_ID` IN ($storage_str)";
         }
 
@@ -6859,20 +6879,20 @@ class dp
             $n = $db->num_rows($r);
             for ($i = 1; $i <= $n; $i++) {
                 $art_nr_ds = $db->result($r, $i - 1, "article_nr_displ");
-                array_push($arts, "'" . $art_nr_ds . "'");
+                $arts[] = "'" . $art_nr_ds . "'";
             }
             $arts = array_unique($arts);
             $arts = implode(",", $arts);
 
-            if ($arts != "") {
+            if ($arts !== "") {
                 $new_arts = [];
                 $r = $dbt->query("SELECT `DISPLAY_NR`, `SEARCH_NUMBER` FROM `T2_CROSS` WHERE (`DISPLAY_NR` IN ($arts) OR `SEARCH_NUMBER` IN ($arts)) AND `BRAND_ID`='$brands';");
                 $n = $db->num_rows($r);
                 for ($i = 1; $i <= $n; $i++) {
                     $art_nr_ds = $db->result($r, $i - 1, "DISPLAY_NR");
                     $article_nr_search = $db->result($r, $i - 1, "SEARCH_NUMBER");
-                    array_push($new_arts, "'" . $art_nr_ds . "'");
-                    array_push($new_arts, "'" . $article_nr_search . "'");
+                    $new_arts[] = "'" . $art_nr_ds . "'";
+                    $new_arts[] = "'" . $article_nr_search . "'";
                 }
                 $new_arts = array_unique($new_arts);
                 $where_arts = "AND `article_nr_displ` IN (" . implode(",", $new_arts) . ")";
@@ -6890,7 +6910,7 @@ class dp
             $brand_id   = $db->result($r, $i - 1, "brand_id");
             $status     = $db->result($r, $i - 1, "status");
             $brand_name = $this->getBrandName($brand_id);
-            list($full_amount, $storage_info) = $this->getDpStockInfo($art_id);
+            [$full_amount, $storage_info] = $this->getDpStockInfo($art_id);
             if ($status) {
                 $style = 1;
             } else {
@@ -7391,7 +7411,7 @@ class dp
         $list = [];
         $slave = new slave;
         $cash_id = $this->getDpCashId($dp_id);
-        list($usd_to_uah, $euro_to_uah) = $this->getKoursData();
+        [$usd_to_uah, $euro_to_uah] = $this->getKoursData();
 
         $r = $db->query("SELECT j.*, m.mcaption as reserv_type_caption, s.name as storage_name, dps.mcaption as status_dps_name 
         FROM `J_DP_STR` j 
