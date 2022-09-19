@@ -3,18 +3,20 @@
 class auto_class
 {
 
-    function getPHPMonth($str) {
+    public function getPHPMonth($str): string
+    {
         $year = substr($str,0,4);
         $month = substr($str,4,2);
         return $year . "-" . $month;
     }
 
-    function showManufacturersList() { $db = DbSingleton::getTokoDb();
+    public function showManufacturersList() { $db = DbSingleton::getTokoDb();
         $form = "";
         $form_htm = RD . "/tpl/manufacturers.htm";
-        if (file_exists("$form_htm")) {
+        if (file_exists($form_htm)) {
             $form = file_get_contents($form_htm);
         }
+
         $r = $db->query("SELECT * FROM `T_manufacturers`;");
         $n = $db->num_rows($r);
         $list = "";
@@ -24,8 +26,8 @@ class auto_class
             $logo = $db->result($r,$i-1,"LOGO");
             $position = $db->result($r,$i-1,"POSITION");
             $active = $db->result($r,$i-1,"ACTIVE");
-            $img = "<div style='width: 100px; height: 100px;'><img src='https://toko.ua/uploads/images/manufacturers/$logo' width='100'></div>";
-            $list .= "<tr style='cursor:pointer' onclick='showManufacturersCard($id);'>
+            $img = "<div style='width: 100px; height: 100px;'><img src='https://toko.ua/uploads/images/manufacturers/$logo' width='100' alt=\"\"></div>";
+            $list .= "<tr style='cursor:pointer' onclick=\"showManufacturersCard('$id');\">
                 <td>$id</td>
                 <td>$brand</td>
                 <td align='center'>$img</td>
@@ -34,13 +36,15 @@ class auto_class
             </tr>";
         }
         $form = str_replace("{manufacturers_range}", $list, $form);
+
         return $form;
     }
 
-    function showManufacturersCard($mfa_id) { $db = DbSingleton::getTokoDb();
+    public function showManufacturersCard($mfa_id): array
+    { $db = DbSingleton::getTokoDb();
         $form ="";
         $form_htm=RD."/tpl/manufacturers_card.htm";
-        if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        if (file_exists($form_htm)){ $form = file_get_contents($form_htm);}
 
         $r=$db->query("SELECT * FROM `T_manufacturers` WHERE `MFA_ID`=$mfa_id LIMIT 1;");
         $brand=$db->result($r,0,"MFA_BRAND");
@@ -61,8 +65,8 @@ class auto_class
             $car_pict=$db->result($r,$i-1,"Car_pict");
             $img_status=$db->result($r,$i-1,"Active_pict");
             $active=$db->result($r,$i-1,"ACTIVE");
-            $img="<div style='width: 100px; height: 100px;'><img src='https://toko.ua/uploads/images/models/$car_pict' width='100'></div>";
-            $list.="<tr style='cursor: pointer' onclick='showModelsCard($mod_id);'>
+            $img="<div style='width: 100px; height: 100px;'><img src='https://toko.ua/uploads/images/models/$car_pict' width='100' alt=\"\"></div>";
+            $list.="<tr style='cursor: pointer' onclick=\"showModelsCard('$mod_id');\">
                 <td>$mod_id</td>
                 <td>$mod_mfa_id</td>
                 <td>$model</td>
@@ -75,16 +79,14 @@ class auto_class
             </tr>";
         }
 
-        $form=str_replace("{models_range}",$list,$form);
-        $form=str_replace("{mfa_id}",$mfa_id,$form);
-        $form=str_replace("{mfa_brand}",$brand,$form);
-        $form=str_replace("{mfa_logo}",$logo,$form);
-        $form=str_replace("{mfa_position}",$position,$form);
-        $form=str_replace("{mfa_active}",$active ? "checked" : "",$form);
+        $form= str_replace(array("{models_range}", "{mfa_id}", "{mfa_brand}", "{mfa_logo}", "{mfa_position}", "{mfa_active}"), array($list, $mfa_id, $brand, $logo, $position, $active ? "checked" : ""), $form);
+
         return array($form, $brand);
     }
 
-    function saveManufacturersCard($mfa_id, $brand, $logo, $position, $active) { $db = DbSingleton::getTokoDb();
+    public function saveManufacturersCard($mfa_id, $brand, $logo, $position, $active): array
+    {
+        $db = DbSingleton::getTokoDb();
         $answer = 0; $err = "Помилка збереження машини!";
         if ($mfa_id > 0) {
             $db->query("UPDATE `T_manufacturers` SET `MFA_BRAND`='$brand', `LOGO`='$logo', `POSITION`=$position, `ACTIVE`=$active WHERE `MFA_ID`=$mfa_id LIMIT 1;");
@@ -93,10 +95,12 @@ class auto_class
         return array($answer, $err);
     }
 
-    function showModelsCard($mod_id) { $db = DbSingleton::getTokoDb();
+    public function showModelsCard($mod_id): array
+    {
+        $db = DbSingleton::getTokoDb();
         $form = "";
         $form_htm = RD . "/tpl/models_card.htm";
-        if (file_exists("$form_htm")) {
+        if (file_exists($form_htm)) {
             $form = file_get_contents($form_htm);
         }
         $r = $db->query("SELECT * FROM `T_models` WHERE `MOD_ID`=$mod_id LIMIT 1;");
@@ -131,6 +135,7 @@ class auto_class
             $body_id=$db->result($r,$i-1,"BODY_ID");
             $eng_cod=$db->result($r,$i-1,"ENG_Cod");
             $typ_active=$db->result($r,$i-1,"ACTIVE");
+
             $list .= "<tr style=\"cursor: pointer;\" onclick=\"showTypesCard('$typ_id');\">
                 <td>$typ_id</td>
                 <td>$typ_mod</td>
@@ -159,10 +164,13 @@ class auto_class
         $form=str_replace("{mod_img}",$logo,$form);
         $form=str_replace("{mod_img_status}",$img_status ? "checked" : "",$form);
         $form=str_replace("{mod_active}",$active ? "checked" : "",$form);
+
         return array($form, $tex_text);
     }
 
-    function saveModelsCard($mod_id, $mod_mfa_id, $mod_model, $mod_tex_text, $mod_date_start, $mod_date_end, $mod_img, $mod_img_status, $mod_active) { $db = DbSingleton::getTokoDb();
+    public function saveModelsCard($mod_id, $mod_mfa_id, $mod_model, $mod_tex_text, $mod_date_start, $mod_date_end, $mod_img, $mod_img_status, $mod_active): array
+    {
+        $db = DbSingleton::getTokoDb();
         $answer=0; $err="Помилка збереження моделі машини!";
         if ($mod_id>0) {
             $mod_date_start=str_replace("-","",$mod_date_start);
@@ -173,9 +181,11 @@ class auto_class
         return array($answer, $err);
     }
 
-    function showTypesCard($typ_id) { $db = DbSingleton::getTokoDb();
+    public function showTypesCard($typ_id): array
+    {
+        $db = DbSingleton::getTokoDb();
         $form ="";$form_htm=RD."/tpl/types_card.htm";
-        if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+        if (file_exists($form_htm)){ $form = file_get_contents($form_htm);}
         $r=$db->query("SELECT * FROM `T_types` WHERE `TYP_ID`='$typ_id' LIMIT 1;");
         $typ_text=$db->result($r,0,"TYP_TEXT");
         $typ_mmt=$db->result($r,0,"TYP_MMT_TEXT");
@@ -190,6 +200,7 @@ class auto_class
         $body_id=$db->result($r,0,"BODY_ID");
         $eng_cod=$db->result($r,0,"ENG_Cod");
         $typ_active=$db->result($r,0,"ACTIVE");
+
         $form=str_replace("{typ_id}",$typ_id,$form);
         $form=str_replace("{typ_text}",$typ_text,$form);
         $form=str_replace("{typ_mmt}",$typ_mmt,$form);
@@ -204,10 +215,13 @@ class auto_class
         $form=str_replace("{body_id}",$body_id,$form);
         $form=str_replace("{eng_cod}",$eng_cod,$form);
         $form=str_replace("{typ_active}",$typ_active ? "checked" : "",$form);
+
         return array($form, $typ_mmt);
     }
 
-    function saveTypesCard($typ_id, $typ_text, $typ_mmt, $typ_mod, $typ_sort, $typ_pcon_start, $typ_pcon_end, $typ_kw_from, $typ_hp_from, $typ_ccm, $fuel_id, $body_id, $eng_cod, $typ_active) { $db = DbSingleton::getTokoDb();
+    public function saveTypesCard($typ_id, $typ_text, $typ_mmt, $typ_mod, $typ_sort, $typ_pcon_start, $typ_pcon_end, $typ_kw_from, $typ_hp_from, $typ_ccm, $fuel_id, $body_id, $eng_cod, $typ_active): array
+    {
+        $db = DbSingleton::getTokoDb();
         $answer=0; $err="Помилка збереження типу моделі машини!";
         if ($typ_id>0) {
             $typ_pcon_start=str_replace("-","",$typ_pcon_start);

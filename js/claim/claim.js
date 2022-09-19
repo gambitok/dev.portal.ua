@@ -35,24 +35,24 @@ function saveClaimCard(claim_id) {
         },
         function (isConfirm) {
             if (isConfirm) {
-            	let client_id=$("#claim_client").val();
-                let art_id=$("#claim_art").val();
-                let brand_id=$("#claim_brand").val();
+            	// let client_id=$("#claim_client").val();
+                // let art_id=$("#claim_art").val();
+                // let brand_id=$("#claim_brand").val();
                 let amount=$("#claim_amount").val();
                 let data=$("#claim_data").val();
                 let supplier=$("#claim_supplier option:selected").val();
                 let manufacturer=$("#claim_manufacturer option:selected").val();
                 let state=$("#claim_state option:selected").val();
-                let client_invoice=$("#claim_client_invoice").val();
-                let comment=$("#claim_comment").val();
-                let receipt_doc=$("#claim_receipt_doc").val();
-                let kilometers=$("#claim_kilometers").val();
+                // let client_invoice=$("#claim_client_invoice").val();
+                // let comment=$("#claim_comment").val();
+                // let receipt_doc=$("#claim_receipt_doc").val();
+                // let kilometers=$("#claim_kilometers").val();
                 let text_ru=$("#claim_text_ru").val();
                 let text_ua=$("#claim_text_ua").val();
                 let text_en=$("#claim_text_en").val();
 
                 if (claim_id.length>0){
-                    JsHttpRequest.query($rcapi,{'w':'saveClaimCard','claim_id':claim_id,'art_id':art_id,'brand_id':brand_id,'amount':amount,'data':data,'supplier':supplier,'manufacturer':manufacturer,'client_id':client_id,'client_invoice':client_invoice,'comment':comment,'receipt_doc':receipt_doc,'kilometers':kilometers,'state':state,'text_ru':text_ru,'text_ua':text_ua,'text_en':text_en},
+                    JsHttpRequest.query($rcapi,{'w':'saveClaimCard','claim_id':claim_id,'amount':amount,'data':data,'supplier':supplier,'manufacturer':manufacturer,'state':state,'text_ru':text_ru,'text_ua':text_ua,'text_en':text_en},
                     function (result, errors){ if (errors) {alert(errors);} if (result){
                             if (result["answer"]==1){
                                 $("#ClaimCard").modal('hide');

@@ -2,11 +2,16 @@
 
 class Claim {
 
-    function showClaimList() { $db=DbSingleton::getDb();$list="";$clients=new clients;$cat=new catalogue;
-        $r=$db->query("SELECT * FROM `clients_claim`;");$n=$db->num_rows($r);
+    public function showClaimList(): string
+    {
+        $db=DbSingleton::getDb();
+        $list="";$clients=new clients;$cat=new catalogue;
+        $r=$db->query("SELECT * FROM `clients_claim`;");
+        $n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
-            $art_id=$db->result($r,$i-1,"art_id");list($article_nr_displ,,,)=$cat->getArticleNrDisplBrand($art_id);
+            $art_id=$db->result($r,$i-1,"art_id");
+            [$article_nr_displ, , ,] = $cat->getArticleNrDisplBrand($art_id);
             $brand_id=$db->result($r,$i-1,"brand_id");$brand_name=$cat->getBrandName($brand_id);
             $count=$db->result($r,$i-1,"amount");
             $client_id=$db->result($r,$i-1,"client_id");$client=$clients->getClientNameById($client_id);
@@ -24,25 +29,40 @@ class Claim {
         return $list;
     }
 
-    function getManualName($id) {$db=DbSingleton::getDb();
+    public function getManualName($id)
+    {
+        $db=DbSingleton::getDb();
         $r=$db->query("SELECT `mcaption` FROM `manual` WHERE `id`='$id';");
         $caption=$db->result($r,0,"mcaption");
-        if ($caption=="") $caption="Не вибрано";
+        if ($caption==="") {
+            $caption = "Не вибрано";
+        }
         return $caption;
     }
 
-    function getClaimSelect($state) {$db=DbSingleton::getDb();$list="";
-        $r=$db->query("SELECT * FROM `manual` WHERE `key`='claim_state';");$n=$db->num_rows($r);
+    public function getClaimSelect($state): string
+    {
+        $db=DbSingleton::getDb();
+        $list="";
+        $r=$db->query("SELECT * FROM `manual` WHERE `key`='claim_state';");
+        $n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++) {
             $id = $db->result($r, $i - 1, "id");
             $mcaption = $db->result($r, $i - 1, "mcaption");
-            if ($state==$id) $sel="selected"; else $sel="";
+            if ((int)$state===(int)$id) {
+                $sel = "selected";
+            } else {
+                $sel = "";
+            }
             $list.="<option value='$id' $sel>$mcaption</option>";
         }
         return $list;
     }
 
-    function saveClaimCard($claim_id,$art_id,$brand_id,$amount,$data,$supplier,$manufacturer,$client_id,$client_invoice,$comment,$receipt_doc,$kilometers,$state,$text_ru,$text_ua,$text_en) { $db=DbSingleton::getDb(); $answer=0; $err="Помилка збереження даних";
+    public function saveClaimCard($claim_id, $amount, $data, $supplier, $manufacturer, $state, $text_ru, $text_ua, $text_en): array
+    {
+        $db=DbSingleton::getDb();
+        $answer=0; $err="Помилка збереження даних";
         if ($claim_id>0) {
             $db->query("UPDATE `clients_claim` SET 
             amount='$amount', `data`='$data', `supplier`='$supplier', `manufacturer`='$manufacturer', `state`='$state', `text_ru`='$text_ru', `text_ua`='$text_ua', `text_en`='$text_en' 
@@ -52,13 +72,19 @@ class Claim {
         return array($answer,$err);
     }
 
-    function showClaimCard($claim_id){ $db=DbSingleton::getDb(); $clients=new clients; $cat=new catalogue; $sale_invoice=new sale_invoice;
-        $form="";$form_htm=RD."/tpl/claim_card.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
-        $r=$db->query("SELECT * FROM `clients_claim` WHERE `id`='$claim_id';");$n=$db->num_rows($r);
+    public function showClaimCard($claim_id)
+    {
+        $db=DbSingleton::getDb(); $clients=new clients; $cat=new catalogue; $sale_invoice=new sale_invoice;
+        $form="";$form_htm=RD."/tpl/claim_card.htm";
+        if (file_exists($form_htm)){ $form = file_get_contents($form_htm);}
+
+        $r=$db->query("SELECT * FROM `clients_claim` WHERE `id`='$claim_id';");
+        $n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $client_id=$db->result($r,$i-1,"client_id");$client=$clients->getClientNameById($client_id);
-            $art_id=$db->result($r,$i-1,"art_id");list($article_nr_displ,,,)=$cat->getArticleNrDisplBrand($art_id);
+            $art_id=$db->result($r,$i-1,"art_id");
+            [$article_nr_displ, , ,] = $cat->getArticleNrDisplBrand($art_id);
             $brand_id=$db->result($r,$i-1,"brand_id");$brand_name=$cat->getBrandName($brand_id);
             $amount=$db->result($r,$i-1,"amount");
             $supplier=$db->result($r,$i-1,"supplier"); $supplier_list=$this->getSuppls($supplier);
@@ -74,6 +100,7 @@ class Claim {
             $text_ua=$db->result($r,$i-1,"text_ua");
             $text_en=$db->result($r,$i-1,"text_en");
             $data=$db->result($r,$i-1,"data");
+
             $form=str_replace("{claim_id}",$id,$form);
             $form=str_replace("{claim_art}",$article_nr_displ,$form);
             $form=str_replace("{claim_brand}",$brand_name,$form);
@@ -92,16 +119,22 @@ class Claim {
             $form=str_replace("{claim_data}",$data,$form);
             $form=str_replace("{show_invoice}",$show_invoice,$form);
         }
+
         return $form;
     }
 
-    function loadClaimAct($claim_id){ $db=DbSingleton::getDb();
-        $form="";$form_htm=RD."/tpl/claim_card_act.htm";if (file_exists("$form_htm")){ $form = file_get_contents($form_htm);}
+    public function loadClaimAct($claim_id)
+    {
+        $db=DbSingleton::getDb();
+        $form="";$form_htm=RD."/tpl/claim_card_act.htm";
+        if (file_exists($form_htm)){ $form = file_get_contents($form_htm);}
+
         $r=$db->query("SELECT cc.*, ac.full_name as client_name, ad.address_fakt as client_address, ac.phone as client_phone 
         FROM `clients_claim` cc
             LEFT OUTER JOIN A_CLIENTS ac on ac.id=cc.client_id
             LEFT OUTER JOIN  A_CLIENT_DETAILS ad on (ad.client_id=cc.client_id and ad.main=1)
-         WHERE cc.id='$claim_id';");$n=$db->num_rows($r);
+         WHERE cc.id='$claim_id';");
+        $n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++){
             $id=$db->result($r,$i-1,"id");
             $sto=$db->result($r,$i-1,"client_sto");
@@ -119,6 +152,7 @@ class Claim {
             $kilo2=$db->result($r,$i-1,"kilo_to");
             $text_ru=$db->result($r,$i-1,"text_ru");
             $state=$db->result($r,$i-1,"state");
+
             $form=str_replace("{claim_id}",$id,$form);
             $form=str_replace("{claim_sto}",$sto,$form);
             $form=str_replace("{claim_adress}",$address,$form);
@@ -136,30 +170,49 @@ class Claim {
             $form=str_replace("{claim_text_ru}",$text_ru,$form);
             $form=str_replace("{claim_state}",$this->getClaimSelect($state),$form);
         }
+
         return $form;
     }
 
-    function getManufacturers($man_id) {$db=DbSingleton::getTokoDb();$list="";
-        $r=$db->query("SELECT * FROM `T2_MANUF`;");$n=$db->num_rows($r);
+    public function getManufacturers($man_id): string
+    {
+        $db=DbSingleton::getTokoDb();
+        $list="";
+        $r=$db->query("SELECT * FROM `T2_MANUF`;");
+        $n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++) {
             $ID = $db->result($r, $i - 1, "ID");
             $NAME = $db->result($r, $i - 1, "NAME");
-            if ($ID==$man_id) $sel="selected"; else $sel="";
+            if ((int)$ID===(int)$man_id) {
+                $sel = "selected";
+            } else {
+                $sel = "";
+            }
             $list.="<option value='$ID' $sel>$NAME</option>";
         }
+
         return $list;
     }
 
-    function getSuppls($suppl_id) {$db=DbSingleton::getDb();$list="";
+    public function getSuppls($suppl_id): string
+    {
+        $db=DbSingleton::getDb();
+        $list="";
         $r=$db->query("SELECT ac.* from `A_CLIENTS` ac
             LEFT OUTER JOIN A_CLIENTS_CATEGORY cc on cc.client_id=ac.id
-        WHERE cc.category_id=2;");$n=$db->num_rows($r);
+        WHERE cc.category_id=2;");
+        $n=$db->num_rows($r);
         for ($i=1;$i<=$n;$i++) {
             $id = $db->result($r, $i - 1, "id");
             $name = $db->result($r, $i - 1, "name");
-            if ($id==$suppl_id) $sel="selected"; else $sel="";
+            if ((int)$id===(int)$suppl_id) {
+                $sel = "selected";
+            } else {
+                $sel = "";
+            }
             $list.="<option value='$id' $sel>$name</option>";
         }
+
         return $list;
 
     }

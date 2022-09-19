@@ -67,19 +67,12 @@ class SettingsNewClass
 
         $form = ""; $form_htm = RD . "/tpl/seo_footer/card.htm";
         if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
-        $form = str_replace("{seo_id}", $id, $form);
-        $form = str_replace("{seo_router}", $router, $form);
-        $form = str_replace("{seo_link}", $link, $form);
-        $form = str_replace("{seo_text_ru}", $text_ru, $form);
-        $form = str_replace("{seo_text_ua}", $text_ua, $form);
-        $form = str_replace("{seo_text_en}", $text_en, $form);
-        $form = str_replace("{seo_user}", $this->getMediaUserName($user_id), $form);
-        $form = str_replace("{seo_data}", $date, $form);
+        $form = str_replace(array("{seo_id}", "{seo_router}", "{seo_link}", "{seo_text_ru}", "{seo_text_ua}", "{seo_text_en}", "{seo_user}", "{seo_data}"), array($id, $router, $link, $text_ru, $text_ua, $text_en, $this->getMediaUserName($user_id), $date), $form);
 
         return $form;
     }
 
-    public function saveSeoFooter($id, $router, $link, $text_ru, $text_ua, $text_en)
+    public function saveSeoFooter($id, $router, $link, $text_ru, $text_ua, $text_en): array
     {
         $db = DbSingleton::getTokoDb();
         session_start();
@@ -102,7 +95,7 @@ class SettingsNewClass
         return array($answer, $err);
     }
 
-    public function dropSeoFooter($id)
+    public function dropSeoFooter($id): array
     {
         $db = DbSingleton::getTokoDb();
         $answer = 0; $err = "Помилка збереження даних!";
@@ -208,9 +201,7 @@ class SettingsNewClass
             </tr>";
         }
 
-        $form = str_replace("{seo_range}", $list, $form);
-        $form = str_replace("{seo_title_range}", $list_title, $form);
-        $form = str_replace("{seo_generate_range}", $list_generate, $form);
+        $form = str_replace(array("{seo_range}", "{seo_title_range}", "{seo_generate_range}"), array($list, $list_title, $list_generate), $form);
 
         return $form;
     }
@@ -239,17 +230,7 @@ class SettingsNewClass
 
         $form = ""; $form_htm = RD . "/tpl/seo_client/card_title.htm";
         if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
-        $form = str_replace("{seo_id}", $id, $form);
-        $form = str_replace("{seo_router}", $router, $form);
-        $form = str_replace("{seo_link}", $link, $form);
-        $form = str_replace("{seo_text_ru}", $title_ru, $form);
-        $form = str_replace("{seo_text_ua}", $title_ua, $form);
-        $form = str_replace("{seo_text_en}", $title_en, $form);
-        $form = str_replace("{seo_descr_ru}", $descr_ru, $form);
-        $form = str_replace("{seo_descr_ua}", $descr_ua, $form);
-        $form = str_replace("{seo_descr_en}", $descr_en, $form);
-        $form = str_replace("{seo_user}", $this->getMediaUserName($user_id), $form);
-        $form = str_replace("{seo_data}", $date, $form);
+        $form = str_replace(array("{seo_id}", "{seo_router}", "{seo_link}", "{seo_text_ru}", "{seo_text_ua}", "{seo_text_en}", "{seo_descr_ru}", "{seo_descr_ua}", "{seo_descr_en}", "{seo_user}", "{seo_data}"), array($id, $router, $link, $title_ru, $title_ua, $title_en, $descr_ru, $descr_ua, $descr_en, $this->getMediaUserName($user_id), $date), $form);
 
         return $form;
     }
@@ -323,14 +304,7 @@ class SettingsNewClass
 
         $form = ""; $form_htm = RD . "/tpl/seo_client/card.htm";
         if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
-        $form = str_replace("{seo_id}", $id, $form);
-        $form = str_replace("{seo_router}", $router, $form);
-        $form = str_replace("{seo_link}", $link, $form);
-        $form = str_replace("{seo_text_ru}", $text_ru, $form);
-        $form = str_replace("{seo_text_ua}", $text_ua, $form);
-        $form = str_replace("{seo_text_en}", $text_en, $form);
-        $form = str_replace("{seo_user}", $this->getMediaUserName($user_id), $form);
-        $form = str_replace("{seo_data}", $date, $form);
+        $form = str_replace(array("{seo_id}", "{seo_router}", "{seo_link}", "{seo_text_ru}", "{seo_text_ua}", "{seo_text_en}", "{seo_user}", "{seo_data}"), array($id, $router, $link, $text_ru, $text_ua, $text_en, $this->getMediaUserName($user_id), $date), $form);
 
         return $form;
     }
@@ -392,14 +366,7 @@ class SettingsNewClass
 
         $form = ""; $form_htm = RD . "/tpl/seo_client/card_generate.htm";
         if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
-        $form = str_replace("{seo_id}", $id, $form);
-        $form = str_replace("{seo_router}", $router, $form);
-        $form = str_replace("{seo_link}", $link, $form);
-        $form = str_replace("{seo_text_ru}", $text_ru, $form);
-        $form = str_replace("{seo_text_ua}", $text_ua, $form);
-        $form = str_replace("{seo_text_en}", $text_en, $form);
-        $form = str_replace("{seo_user}", $this->getMediaUserName($user_id), $form);
-        $form = str_replace("{seo_data}", $date, $form);
+        $form = str_replace(array("{seo_id}", "{seo_router}", "{seo_link}", "{seo_text_ru}", "{seo_text_ua}", "{seo_text_en}", "{seo_user}", "{seo_data}"), array($id, $router, $link, $text_ru, $text_ua, $text_en, $this->getMediaUserName($user_id), $date), $form);
 
         return $form;
     }
@@ -521,15 +488,9 @@ class SettingsNewClass
             $cap = $db->result($rs, 0, "caption");
             $lang_arr[] = $cap;
         }
-        $lang_ru    = $lang_arr[0];
-        $lang_ua    = $lang_arr[1];
-        $lang_eng   = $lang_arr[2];
+        [$lang_ru, $lang_ua, $lang_eng] = $lang_arr;
 
-        $form = str_replace("{id}", $id, $form);
-        $form = str_replace("{lang_var}", $lang_var, $form);
-        $form = str_replace("{lang_ru}", $lang_ru, $form);
-        $form = str_replace("{lang_ua}", $lang_ua, $form);
-        $form = str_replace("{lang_eng}", $lang_eng, $form);
+        $form = str_replace(array("{id}", "{lang_var}", "{lang_ru}", "{lang_ua}", "{lang_eng}"), array($id, $lang_var, $lang_ru, $lang_ua, $lang_eng), $form);
 
         return $form;
     }
@@ -669,11 +630,7 @@ class SettingsNewClass
 			$schedule   = $db->result($r, 0, "schedule");
 			$phone      = $db->result($r, 0, "phone");
 
-			$form = str_replace("{id}", $id, $form);
-			$form = str_replace("{title}", $title, $form);
-			$form = str_replace("{address}", $address, $form);
-			$form = str_replace("{schedule}", $schedule, $form);
-			$form = str_replace("{phone}", $phone, $form);
+            $form = str_replace(array("{id}", "{title}", "{address}", "{schedule}", "{phone}"), array($id, $title, $address, $schedule, $phone), $form);
 		}
 
 		return $form;
@@ -729,6 +686,7 @@ class SettingsNewClass
 			</tr>";
 		}
 		$form = str_replace("{location_range}", $list, $form);
+
 		return $form;
 	}
 
@@ -748,14 +706,15 @@ class SettingsNewClass
 		$r = $db->query("SELECT `id`, `name` FROM `new_icons` WHERE 1;");
 		$n = $db->num_rows($r);
 		for ($i = 1; $i <= $n; $i++) {
-			$id     = $db->result($r, $i - 1, "id");
+			$id     = (int)$db->result($r, $i - 1, "id");
 			$name   = $db->result($r, $i - 1, "name");
-			$sel    = ($id == $sel_id) ? "selected" : "";
+			$sel    = ($id === (int)$sel_id) ? "selected" : "";
 
 			$list .= "
                 <option value='$id' $sel>$name</option>
             ";
 		}
+
 		return $list;
 	}
 	
@@ -837,6 +796,7 @@ class SettingsNewClass
         $db = DbSingleton::getTokoDb();
         $form = ""; $form_htm = RD . "/tpl/new/contacts_bottom_card.htm";
         if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+
 		$r = $db->query("SELECT * FROM `contacts_bottom_new` WHERE `id` = $contact_id;");
         $n = $db->num_rows($r);
 		if ($n > 0) {
@@ -846,11 +806,7 @@ class SettingsNewClass
 			$link   = $db->result($r, 0, "link");
 			$status = $db->result($r, 0, "status");
 
-			$form = str_replace("{id}", $id, $form);
-			$form = str_replace("{text}", $text, $form);
-			$form = str_replace("{icon_select}", $this->showIcontSelectList($icon), $form);
-			$form = str_replace("{link}", $link, $form);
-			$form = str_replace("{status}", ($status > 0) ? "checked" : "", $form);
+            $form = str_replace(array("{id}", "{text}", "{icon_select}", "{link}", "{status}"), array($id, $text, $this->showIcontSelectList($icon), $link, ($status > 0) ? "checked" : ""), $form);
 		}
 
 		return $form;
@@ -963,6 +919,7 @@ class SettingsNewClass
 		$r = $db->query("SELECT MAX(`id`) as mid FROM `news`;");
 		$max_id = 0 + $db->result($r, 0, "mid") + 1;
 		$db->query("INSERT INTO `news` (`id`, `status`, `data`, `lang_id`) VALUES ('$max_id', 0, '$date', '$lang');");
+
 		return $max_id;
 	}
 	
@@ -982,14 +939,7 @@ class SettingsNewClass
 			$status     = $db->result($r, 0, "status");
 			$descr      = $db->result($r, 0, "desc");
 
-			$form = str_replace("{id}", $id, $form);
-			$form = str_replace("{caption}", $caption, $form);
-			$form = str_replace("{lang_id}", $lang_id, $form);
-			$form = str_replace("{lang_val}", $this->getLangCaption($lang_id), $form);
-			$form = str_replace("{short}", $short_desc, $form);
-			$form = str_replace("{data}", $data, $form);
-			$form = str_replace("{descr}", $descr, $form);
-			$form = str_replace("{status}", ($status > 0) ? "checked" : "", $form);
+            $form = str_replace(array("{id}", "{caption}", "{lang_id}", "{lang_val}", "{short}", "{data}", "{descr}", "{status}"), array($id, $caption, $lang_id, $this->getLangCaption($lang_id), $short_desc, $data, $descr, ($status > 0) ? "checked" : ""), $form);
 
 			$r2 = $db->query("SELECT `id` FROM `news_galery` WHERE `cat` = '$id' LIMIT 1;");
 			$file_id = $db->result($r2, 0, "id");
@@ -1029,15 +979,14 @@ class SettingsNewClass
         if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
 
 		$r = $db->query("SELECT `id`, `caption` FROM `news_galery` WHERE `cat` = $news_id;");
-        $n = $db->num_rows($r);
+        $n = (int)$db->num_rows($r);
 		for ($i = 1; $i <= $n; $i++) {
 			$file  = $db->result($r, $i - 1, "id");
 			$block = $form;
-			$block = str_replace("{logo_name}", $db->result($r, $i - 1, "caption"), $block);
-			$block = str_replace("{link}", "https://toko.ua/uploads/images/news/$lang_id/$news_id/$file.jpg", $block);
+            $block = str_replace(array("{logo_name}", "{link}"), array($db->result($r, $i - 1, "caption"), "https://toko.ua/uploads/images/news/$lang_id/$news_id/$file.jpg"), $block);
 			$list .= $block;
 		}
-		if ($n == 0) {
+		if ($n === 0) {
 		    $list = "<h3 class='text-center'>Зображення відсутнє</h3>";
 		}
 
@@ -1101,8 +1050,8 @@ class SettingsNewClass
         $db = DbSingleton::getDb();
         $name = "";
         $r = $db->query("SELECT `name` FROM `media_users` WHERE `id` = $user_id LIMIT 1;");
-        $n = $db->num_rows($r);
-        if ($n == 1) {
+        $n = (int)$db->num_rows($r);
+        if ($n === 1) {
             $name = $db->result($r, 0, "name");
         }
         return $name;
@@ -1111,13 +1060,14 @@ class SettingsNewClass
     public function showRequestCard($request_id)
     {
         $db = DbSingleton::getTokoDb();
-        session_start(); $user_id = $_SESSION["media_user_id"];
+        session_start();
+        $user_id = (int)$_SESSION["media_user_id"];
         $form = ""; $form_htm = RD . "/tpl/new/requests_card.htm";
         if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
 
         $r = $db->query("SELECT * FROM `T2_QUESTIONS` WHERE `ID` = $request_id;");
-        $n = $db->num_rows($r);
-        if ($n == 0) {
+        $n = (int)$db->num_rows($r);
+        if ($n === 0) {
             $id = $user_use = $status = 0;
             $vin = $phone = $text = $data_create = $data_update = "";
         } else {
@@ -1127,29 +1077,23 @@ class SettingsNewClass
             $text           = $db->result($r, 0, "TEXT");
             $data_create    = $db->result($r, 0, "DATA_CREATE");
             $data_update    = $db->result($r, 0, "DATA_UPDATE");
-            $user_use       = $db->result($r, 0, "USER_USE");
+            $user_use       = (int)$db->result($r, 0, "USER_USE");
             $status         = $db->result($r, 0, "STATUS");
         }
 
-        if ($user_id != $user_use && $user_use > 0) {
+        if ($user_id !== $user_use && $user_use > 0) {
             $form_htm = RD . "/tpl/dp_use_deny.htm";
             if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
             $form = str_replace("{user_name}",$this->getMediaUserName($user_use),$form);
             $admin_unlock = "";
-            if ($user_id == 1 || $user_id == 2 || $user_id == 7) {
+            if ($user_id === 1 || $user_id === 2 || $user_id === 7) {
                 $admin_unlock = "
                 <button class='btn btn-sm btn-warning' onClick='unlockRequestCard(\"$id\");'><i class='fa fa-unlock'></i> Розблокувати</button>";
             }
             $form = str_replace("{admin_unlock}", $admin_unlock, $form);
         }
 
-        $form = str_replace("{request_id}", $id, $form);
-        $form = str_replace("{request_vin}", $vin, $form);
-        $form = str_replace("{request_phone}", $phone, $form);
-        $form = str_replace("{request_text}", $text, $form);
-        $form = str_replace("{request_data_create}", $data_create, $form);
-        $form = str_replace("{request_data_update}", $data_update, $form);
-        $form = str_replace("{reqest_disabled}", ($status) ? "" : "disabled", $form);
+        $form = str_replace(array("{request_id}", "{request_vin}", "{request_phone}", "{request_text}", "{request_data_create}", "{request_data_update}", "{reqest_disabled}"), array($id, $vin, $phone, $text, $data_create, $data_update, ($status) ? "" : "disabled"), $form);
 
         return $form;
     }
@@ -1290,23 +1234,7 @@ class SettingsNewClass
             $disabled   = "";
         }
 
-        $form = str_replace("{review_id}", $id, $form);
-        $form = str_replace("{review_t_ru}", $t_ru, $form);
-        $form = str_replace("{review_t_ua}", $t_ua, $form);
-        $form = str_replace("{review_t_en}", $t_en, $form);
-        $form = str_replace("{review_d_ru}", $d_ru, $form);
-        $form = str_replace("{review_d_ua}", $d_ua, $form);
-        $form = str_replace("{review_d_en}", $d_en, $form);
-        $form = str_replace("{review_title}", $title, $form);
-        $form = str_replace("{review_title_ua}", $title_ua, $form);
-        $form = str_replace("{review_title_en}", $title_en, $form);
-        $form = str_replace("{review_text}", $text, $form);
-        $form = str_replace("{review_text_ua}", $text_ua, $form);
-        $form = str_replace("{review_text_en}", $text_en, $form);
-        $form = str_replace("{review_data}", $data, $form);
-        $form = str_replace("{review_status}", $status ? "checked" : "", $form);
-        $form = str_replace("{review_image}", $img, $form);
-        $form = str_replace("{review_remove_disabled}", $disabled, $form);
+        $form = str_replace(array("{review_id}", "{review_t_ru}", "{review_t_ua}", "{review_t_en}", "{review_d_ru}", "{review_d_ua}", "{review_d_en}", "{review_title}", "{review_title_ua}", "{review_title_en}", "{review_text}", "{review_text_ua}", "{review_text_en}", "{review_data}", "{review_status}", "{review_image}", "{review_remove_disabled}"), array($id, $t_ru, $t_ua, $t_en, $d_ru, $d_ua, $d_en, $title, $title_ua, $title_en, $text, $text_ua, $text_en, $data, $status ? "checked" : "", $img, $disabled), $form);
 
         return $form;
     }

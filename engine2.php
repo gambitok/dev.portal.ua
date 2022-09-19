@@ -688,7 +688,7 @@ if ($_REQUEST["w"]=="showClaimCard"){ $content=$claim->showClaimCard($_REQUEST["
 
 if ($_REQUEST["w"]=="loadClaimAct"){ $content=$claim->loadClaimAct($_REQUEST["claim_id"]); $GLOBALS['_RESULT'] = array("content"=>$content);}
 
-if ($_REQUEST["w"]=="saveClaimCard"){ list($answer,$err)=$claim->saveClaimCard($_REQUEST["claim_id"],$_REQUEST["art_id"],$_REQUEST["brand_id"],$_REQUEST["amount"],$_REQUEST["data"],$_REQUEST["supplier"],$_REQUEST["manufacturer"],$_REQUEST["client_id"],$_REQUEST["client_invoice"],$_REQUEST["comment"],$_REQUEST["receipt_doc"],$_REQUEST["kilometers"],$_REQUEST["state"],$_REQUEST["text_ru"],$_REQUEST["text_ua"],$_REQUEST["text_en"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+if ($_REQUEST["w"]=="saveClaimCard"){ list($answer,$err)=$claim->saveClaimCard($_REQUEST["claim_id"],$_REQUEST["amount"],$_REQUEST["data"],$_REQUEST["supplier"],$_REQUEST["manufacturer"],$_REQUEST["state"],$_REQUEST["text_ru"],$_REQUEST["text_ua"],$_REQUEST["text_en"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
 //---- WRITE OFF ----//
 
