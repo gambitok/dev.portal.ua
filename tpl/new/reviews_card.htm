@@ -1,16 +1,7 @@
 <script type="text/javascript">
+
     $(document).ready(function() {
-        $(".summernote").summernote({
-            height: 200,
-            callbacks: {
-                onImageUpload: function(files) {
-                    for(let i=0; i < files.length; i++) {
-                        $.upload(files[i]);
-                    }
-                }
-            }
-        });
-        $.upload = function (file) {
+        $.upload = function (file, obj) {
             let out = new FormData();
             out.append('file', file, file.name);
 
@@ -22,15 +13,61 @@
                 processData: false,
                 data: out,
                 success: function (img) {
-                    $('.summernote').summernote('insertImage', img);
+                    $(obj).summernote('insertImage', img);
                     console.log('inserted');
+                    console.log($(obj).attr('id'));
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.error(textStatus + " " + errorThrown);
                 }
             });
         }
+
+        $('.summernote').each(function(i, obj) { $(obj).summernote({
+            height: 200,
+            callbacks: {
+                onImageUpload: function(files) {
+                    for(let i=0; i < files.length; i++) {
+                        $.upload(files[i], obj);
+                    }
+                }
+            }
+        });
+        });
     });
+
+    // $(document).ready(function() {
+    //     $(".summernote").summernote({
+    //         height: 200,
+    //         callbacks: {
+    //             onImageUpload: function(files) {
+    //                 for(let i=0; i < files.length; i++) {
+    //                     $.upload(files[i]);
+    //                 }
+    //             }
+    //         }
+    //     });
+    //     $.upload = function (file) {
+    //         let out = new FormData();
+    //         out.append('file', file, file.name);
+    //
+    //         $.ajax({
+    //             method: 'POST',
+    //             url: 'https://portal.myparts.pro/upload_saved_images.php',
+    //             contentType: false,
+    //             cache: false,
+    //             processData: false,
+    //             data: out,
+    //             success: function (img) {
+    //                 $('.summernote').summernote('insertImage', img);
+    //                 console.log('inserted');
+    //             },
+    //             error: function (jqXHR, textStatus, errorThrown) {
+    //                 console.error(textStatus + " " + errorThrown);
+    //             }
+    //         });
+    //     }
+    // });
 </script>
 
 <style>
