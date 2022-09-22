@@ -845,22 +845,31 @@ class catalogue {
             }
 
             if (($n > 1 && !empty($brand_id)) || $one_result === 1) {
-                $ak = array();
-                $rk = array();
-                $art_id_arr = []; $ART_ID = 0;
+                $ak = [];
+                $rk = [];
+                $art_id_arr = [];
+                $art_id = 0;
 
                 if (!empty($true_art_id)) {
                     $art_id_arr[] = $true_art_id;
                 }
 
                 for ($i = 1; $i <= $n; $i++) {
-                    $ART_ID     = $db->result($r, $i - 1, "ART_ID");
+                    $art_id     = (int)$db->result($r, $i - 1, "ART_ID");
                     $KIND       = (int)$db->result($r, $i - 1, "KIND");
                     $RELATION   = (int)$db->result($r, $i - 1, "RELATION");
 
-                    $art_id_arr[] = $ART_ID;
-                    if (($ak[$ART_ID] === "") || $KIND === 0) {$ak[$ART_ID] = $KIND;}
-                    if (($rk[$ART_ID] === "") || $RELATION === 0) {$rk[$ART_ID] = $RELATION;}
+                    $art_id_arr[] = $art_id;
+//                    if (($ak[$ART_ID] === "") || $KIND === 0) {$ak[$ART_ID] = $KIND;}
+//                    if (($rk[$ART_ID] === "") || $RELATION === 0) {$rk[$ART_ID] = $RELATION;}
+
+                    if (empty($ak[$art_id]) || empty($KIND)) {
+                        $ak[$art_id] = $KIND;
+                    }
+
+                    if (empty($ak[$art_id]) || empty($RELATION)) {
+                        $ak[$art_id] = $RELATION;
+                    }
                 }
 
                 $art_id_arr = array_unique($art_id_arr);
@@ -868,7 +877,7 @@ class catalogue {
                 $art_id_str = str_replace("'", "", $art_id_str);
 
                 if (empty($true_art_id)) {
-                    $true_art_id = $ART_ID;
+                    $true_art_id = $art_id;
                 }
 
                 $order_by = "";
@@ -952,7 +961,10 @@ class catalogue {
 
         $r = $db->query($query);
         $n = (int)$db->num_rows($r);
-        $list = ""; $header_list = ""; $range_list = "";
+
+        $list = "";
+        $header_list = "";
+        $range_list = "";
 
         if ($query_2 !== "" || $list2 === "") {
             // сработал внешний фильр или основной поиск с выбором бренда
@@ -965,7 +977,7 @@ class catalogue {
             $lst = array();
 
             for ($i = 1; $i <= $n; $i++) {
-                $art_id             = $db->result($r, $i - 1, "ART_ID");
+                $art_id             = (int)$db->result($r, $i - 1, "ART_ID");
                 $kind_id            = $ak[$art_id];
                 $relation           = $rk[$art_id];
                 $article_nr_displ   = $db->result($r, $i - 1, "ARTICLE_NR_DISPL");
@@ -1016,30 +1028,34 @@ class catalogue {
                 $kind       = $lst[$i]["kind"];
                 $relation   = $lst[$i]["relation"];
 
-                if ($kind == 0 && $relation == 0) { $lst_kr[1] .= $lst[$i]["data"]; }
-                if ($kind == 1 && $relation == 0) { $lst_kr[2] .= $lst[$i]["data"]; }
-                if (($kind == 3 || $kind == 4) && $relation == 0) { $lst_kr[2] .= $lst[$i]["data"]; }
-                if (($kind == 3 || $kind == 4) && $relation == 1) { $lst_kr[3] .= $lst[$i]["data"]; }
-                if (($kind == 3 || $kind == 4) && $relation == 2) { $lst_kr[4] .= $lst[$i]["data"]; }
-                if ($kind === "" || $relation === "") { $lst_kr[5] .= $lst[$i]["data"]; }
+                if ($kind === 0 && $relation === 0) { $lst_kr[1] .= $lst[$i]["data"]; }
+                if ($kind === 1 && $relation === 0) { $lst_kr[2] .= $lst[$i]["data"]; }
+                if (($kind === 3 || $kind === 4) && $relation === 0) { $lst_kr[2] .= $lst[$i]["data"]; }
+                if (($kind === 3 || $kind === 4) && $relation === 1) { $lst_kr[3] .= $lst[$i]["data"]; }
+                if (($kind === 3 || $kind === 4) && $relation === 2) { $lst_kr[4] .= $lst[$i]["data"]; }
+                if ($kind === 0 || $relation === 0) { $lst_kr[5] .= $lst[$i]["data"]; }
             }
 
             if ($lst_kr[1] !== "") {
                 $lst_kr[1] = str_replace("{kind_name}", "<i style=\"width: 100%;height: 60px;\" title=\"запитаний артикул\" class=\"fa fa-key\"></i>", $lst_kr[1]);
                 $list .= $lst_kr[1];
             }
+
             if ($lst_kr[2] !== "") {
                 $lst_kr[2] = str_replace("{kind_name}", "<i style=\"width: 100%;height: 60px;\" title=\"аналог\" class=\"fa fa-link\"></i>", $lst_kr[2]);
                 $list .= $lst_kr[2];
             }
+
             if ($lst_kr[3] !== "") {
                 $lst_kr[3] = str_replace("{kind_name}", "<i style=\"width: 100%;height: 60px;\" title=\"артикул присутні в \" class=\"fa fa-level-down\"></i>", $lst_kr[3]);
                 $list .= $lst_kr[3];
             }
+
             if ($lst_kr[4] !== "") {
                 $lst_kr[4] = str_replace("{kind_name}", "<i style=\"width: 100%;height: 60px;\" title=\"артикул включає в себе\" class=\"fa fa-level-up\"></i>", $lst_kr[4]);
                 $list .= $lst_kr[4];
             }
+
             if ($lst_kr[5] !== "") {
                 $lst_kr[5] = str_replace("{kind_name}", "<i style=\"width: 100%;height: 60px;\" title=\"інше\" class=\"fa fa-ellipsis-h\"></i>", $lst_kr[5]);
                 $list .= $lst_kr[5];
