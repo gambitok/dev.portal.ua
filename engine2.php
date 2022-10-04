@@ -274,7 +274,7 @@ if ($_REQUEST["w"]=="loadReviewsList"){ $GLOBALS['_RESULT'] = array("content"=>$
 
 if ($_REQUEST["w"]=="showReviewCard"){ $GLOBALS['_RESULT'] = array("content"=>$settings_new->showReviewCard($_REQUEST["id"]));}
 
-if ($_REQUEST["w"]=="saveReview"){ list($answer,$err)=$settings_new->saveReview($_REQUEST["id"],$_REQUEST["t_ru"],$_REQUEST["t_ua"],$_REQUEST["t_en"],$_REQUEST["d_ru"],$_REQUEST["d_ua"],$_REQUEST["d_en"],$_REQUEST["title"],$_REQUEST["title_ua"],$_REQUEST["title_en"],$_REQUEST["text"],$_REQUEST["text_ua"],$_REQUEST["text_en"],$_REQUEST["data"],$_REQUEST["status"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+if ($_REQUEST["w"]=="saveReview"){ list($answer,$err)=$settings_new->saveReview($_REQUEST["id"],$_REQUEST["t_ru"],$_REQUEST["t_ua"],$_REQUEST["t_en"],$_REQUEST["d_ru"],$_REQUEST["d_ua"],$_REQUEST["d_en"],$_REQUEST["title"],$_REQUEST["title_ua"],$_REQUEST["title_en"],$_REQUEST["text"],$_REQUEST["text_ua"],$_REQUEST["text_en"],$_REQUEST["data"],$_REQUEST["status"],$_REQUEST["groups"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
 if ($_REQUEST["w"]=="dropReview"){ list($answer,$err)=$settings_new->dropReview($_REQUEST["id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 

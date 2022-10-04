@@ -269,6 +269,7 @@ class SettingsNewClass
             VALUES ($max_id, '$router', '$link', \"$text_ru\", \"$text_ua\", \"$text_en\", \"$descr_ru\", \"$descr_ua\", \"$descr_en\", $user_id);");
             $answer = 1; $err = "Успішно додано";
         }
+
         return array($answer, $err);
     }
 
@@ -280,6 +281,7 @@ class SettingsNewClass
             $db->query("DELETE FROM `T2_SEO_TITLE` WHERE `id` = $id;");
             $answer = 1; $err = "";
         }
+
         return array($answer, $err);
     }
 
@@ -342,6 +344,7 @@ class SettingsNewClass
             $db->query("DELETE FROM `T2_SEO_TEXT` WHERE `id` = $id;");
             $answer = 1; $err = "";
         }
+
         return array($answer, $err);
     }
 
@@ -390,6 +393,7 @@ class SettingsNewClass
             VALUES ($max_id, '$router', '$link', \"$text_ru\", \"$text_ua\", \"$text_en\", $user_id);");
             $answer = 1; $err = "Успішно додано";
         }
+
         return array($answer, $err);
     }
 
@@ -449,10 +453,12 @@ class SettingsNewClass
         for ($i = 1; $i <= $n; $i++) {
             $id = $db->result($r, $i - 1, "id");
             $vr = $db->result($r, $i - 1, "variable");
+
             $list .= "
             <tr style='cursor:pointer' onClick='showLanguageCard(\"$id\")'>
                 <td>$i</td>
                 <td>$vr</td>";
+
             for ($j = 1; $j <= 3; $j++) {
                 $rs = $db->query("SELECT `caption` FROM `new_lang_wdv` WHERE `lang_id` = $j AND `wd` = $id;");
                 $cap = $db->result($rs, 0, "caption");
@@ -1214,7 +1220,7 @@ class SettingsNewClass
             $status     = 0;
             $disabled   = "disabled";
             $title      = $title_ua = $title_en = $text = $text_ua = $text_en = $data = $img = "";
-            $t_ru = $t_ua = $t_en = $d_ru = $d_ua = $d_en = "";
+            $t_ru       = $t_ua = $t_en = $d_ru = $d_ua = $d_en = "";
         } else {
             $t_ru       = $db->result($r, 0, "T_RU");
             $t_ua       = $db->result($r, 0, "T_UA");
@@ -1234,14 +1240,56 @@ class SettingsNewClass
             $disabled   = "";
         }
 
-        $form = str_replace(array("{review_id}", "{review_t_ru}", "{review_t_ua}", "{review_t_en}", "{review_d_ru}", "{review_d_ua}", "{review_d_en}", "{review_title}", "{review_title_ua}", "{review_title_en}", "{review_text}", "{review_text_ua}", "{review_text_en}", "{review_data}", "{review_status}", "{review_image}", "{review_remove_disabled}"), array($id, $t_ru, $t_ua, $t_en, $d_ru, $d_ua, $d_en, $title, $title_ua, $title_en, $text, $text_ua, $text_en, $data, $status ? "checked" : "", $img, $disabled), $form);
+        $form = str_replace(
+            array("{review_id}", "{review_t_ru}", "{review_t_ua}", "{review_t_en}", "{review_d_ru}", "{review_d_ua}", "{review_d_en}", "{review_title}", "{review_title_ua}", "{review_title_en}", "{review_text}", "{review_text_ua}", "{review_text_en}", "{review_data}", "{review_status}", "{review_image}", "{review_remove_disabled}", "{groups_list}"),
+            array($id, $t_ru, $t_ua, $t_en, $d_ru, $d_ua, $d_en, $title, $title_ua, $title_en, $text, $text_ua, $text_en, $data, $status ? "checked" : "", $img, $disabled, $this->getGroupsList($this->getGroupReviewList($id)))
+        , $form);
 
         return $form;
     }
-
-    public function saveReview($review_id, $t_ru, $t_ua, $t_en, $d_ru, $d_ua, $d_en, $title, $title_ua, $title_en, $text, $text_ua, $text_en, $data, $status): array
+    
+    public function getGroupReviewList($review_id): array
     {
         $db = DbSingleton::getTokoDb();
+
+        $r = $db->query("SELECT `GROUP_ID` FROM `T2_GROUP_REVIEW` WHERE `REVIEW_ID` = $review_id;");
+        $n = $db->num_rows($r);
+        $group_ids = [];
+        for ($i = 1; $i <= $n; $i++) {
+            $group_id = $db->result($r, $i - 1, "GROUP_ID");
+            $group_ids[] = $group_id;
+        }
+
+        return $group_ids;
+    }
+
+    public function getGroupsList($group_ids = []): string
+    {
+        $db = DbSingleton::getTokoDb();
+        $list = "";
+
+        $r = $db->query("SELECT `GROUP_ID`, `TEX_RU` FROM `T2_TREE_GROUP_EXIST` WHERE `STATUS` = 1;");
+        $n = $db->num_rows($r);
+        for ($i = 1; $i <= $n; $i++) {
+            $group_id = $db->result($r, $i - 1, "GROUP_ID");
+            $group_name = $db->result($r, $i - 1, "TEX_RU");
+
+            $sel = "";
+            if (in_array($group_id, $group_ids, true)) {
+                $sel = "selected='selected'";
+            }
+
+            $list .= "
+            <option value='$group_id' $sel>$group_name</option>";
+        }
+
+        return $list;
+    }
+
+    public function saveReview($review_id, $t_ru, $t_ua, $t_en, $d_ru, $d_ua, $d_en, $title, $title_ua, $title_en, $text, $text_ua, $text_en, $data, $status, $groups): array
+    {
+        $db = DbSingleton::getTokoDb();
+
         if ($text === "<p><br></p>") {
             $text = "";
         }
@@ -1251,6 +1299,7 @@ class SettingsNewClass
         if ($text_en === "<p><br></p>") {
             $text_en = "";
         }
+
         if ((int)$review_id === 0) {
             $r = $db->query("SELECT MAX(`ID`) as mid FROM `T2_REVIEWS`;");
             $max_id = 0 + $db->result($r, 0, "mid") + 1;
@@ -1278,6 +1327,13 @@ class SettingsNewClass
             $db->query('UPDATE `T2_REVIEWS` SET `D_EN` = "' . $d_en.'" WHERE `ID` = "' . $review_id.'";');
             $answer = 1; $err = "";
         }
+
+        if (!empty($groups)) {
+            foreach ($groups as $group_id) {
+                $db->query("INSERT INTO `T2_GROUP_REVIEW` (`GROUP_ID`, `REVIEW_ID`) VALUES ('$group_id', '$review_id');");
+            }
+        }
+
         return array($answer, $err);
     }
 

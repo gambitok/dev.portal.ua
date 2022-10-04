@@ -1,3 +1,12 @@
+
+var group_ids = [];
+
+$(document).ready(function() {
+	$("select#groups option").each(function() {
+		group_ids.push($(this).val());
+	});
+});
+
 //=Language====================================================================
 
 function loadLanguageList() {
@@ -414,6 +423,7 @@ function showReviewCard(id) {
         function (result, errors){ if (errors) {alert(errors);} if (result) {
             $("#ReviewCard").modal("show");
             $("#ReviewCardBody").html(result.content);
+			$("#groups").chosen();
         }}, true);
 }
 
@@ -431,8 +441,9 @@ function saveReview() {
     let text 		= $("#summernote").next().find($(".note-editable")).html().replace(/"/g,"'");
     let text_ua 	= $("#summernote_ua").next().find($(".note-editable")).html().replace(/"/g,"'");
     let text_en 	= $("#summernote_en").next().find($(".note-editable")).html().replace(/"/g,"'");
-    let data = $("#review_data").val();
+    let data 		= $("#review_data").val();
     let status = 0; if (document.getElementById("review_status").checked){status=1;}
+	let groups 		= $("#groups").chosen().val();
 
     swal({
             title: "Зберегти зміни?",
@@ -441,7 +452,7 @@ function saveReview() {
         },
         function (isConfirm) {
             if (isConfirm) {
-                JsHttpRequest.query($rcapi,{'w':'saveReview', 'id':id, 't_ru':t_ru, 't_ua':t_ua, 't_en':t_en, 'd_ru':d_ru, 'd_ua':d_ua, 'd_en':d_en, 'title':title, 'title_ua':title_ua, 'title_en':title_en, 'text':text, 'text_ua':text_ua, 'text_en':text_en, 'data':data, 'status':status},
+                JsHttpRequest.query($rcapi,{'w':'saveReview', 'id':id, 't_ru':t_ru, 't_ua':t_ua, 't_en':t_en, 'd_ru':d_ru, 'd_ua':d_ua, 'd_en':d_en, 'title':title, 'title_ua':title_ua, 'title_en':title_en, 'text':text, 'text_ua':text_ua, 'text_en':text_en, 'data':data, 'status':status, 'groups':groups},
                     function (result, errors){ if (errors) {alert(errors);} if (result){
                         if (result["answer"]==1){
                             swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
