@@ -674,6 +674,7 @@ class SettingsNewClass
         $list = "";
 		$form = ""; $form_htm = RD . "/tpl/new/locations.htm";
 		if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+		
 		$r = $db->query("SELECT t2c.CITY_NAME, t2r.REGION_NAME, t2s.STATE_NAME 
 		FROM `T2_CITY` t2c
 			LEFT OUTER JOIN `T2_REGION` t2r ON (t2r.REGION_ID = t2c.REGION_ID)
@@ -709,6 +710,7 @@ class SettingsNewClass
     {
         $db = DbSingleton::getTokoDb();
         $list = "";
+
 		$r = $db->query("SELECT `id`, `name` FROM `new_icons` WHERE 1;");
 		$n = $db->num_rows($r);
 		for ($i = 1; $i <= $n; $i++) {
@@ -730,6 +732,7 @@ class SettingsNewClass
 		$r = $db->query("SELECT `name`, `icon` FROM `new_icons` WHERE `id` = $id LIMIT 1;");
 		$name = $db->result($r, 0, "name");
 		$icon = $db->result($r, 0, "icon");
+
         return "<i class='fa $icon'> $name</i>";
 	}
 	
@@ -739,6 +742,7 @@ class SettingsNewClass
         $list = "";
 		$form = ""; $form_htm = RD . "/tpl/new/contacts_bottom.htm";
 		if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+
 		$r = $db->query("SELECT `id`, `text`, `icon`, `link`, `status` FROM `contacts_bottom_new`;");
 		$n = $db->num_rows($r);
 		for ($i = 1; $i <= $n; $i++) {
@@ -768,6 +772,7 @@ class SettingsNewClass
     {
         $db = DbSingleton::getTokoDb();
         $list = "";
+
 	    $r = $db->query("SELECT * FROM `contacts_bottom_new` WHERE 1;");
 		$n = $db->num_rows($r);
 		for ($i = 1; $i <= $n; $i++) {
@@ -785,6 +790,7 @@ class SettingsNewClass
 				<td>$status</td>
 			</tr>";
 		}
+
 		return $list;
 	}
 	
@@ -794,6 +800,7 @@ class SettingsNewClass
 		$r = $db->query("SELECT MAX(`id`) as mid FROM `contacts_bottom_new`;");
 		$max_id = $db->result($r, 0, "mid") + 1;
 		$db->query("INSERT INTO `contacts_bottom_new` (`id`, `status`) VALUES ('$max_id', 1);");
+
 		return $max_id;
 	}
 	
@@ -812,7 +819,9 @@ class SettingsNewClass
 			$link   = $db->result($r, 0, "link");
 			$status = $db->result($r, 0, "status");
 
-            $form = str_replace(array("{id}", "{text}", "{icon_select}", "{link}", "{status}"), array($id, $text, $this->showIcontSelectList($icon), $link, ($status > 0) ? "checked" : ""), $form);
+            $form = str_replace(
+                array("{id}", "{text}", "{icon_select}", "{link}", "{status}"),
+                array($id, $text, $this->showIcontSelectList($icon), $link, ($status > 0) ? "checked" : ""), $form);
 		}
 
 		return $form;
@@ -858,6 +867,7 @@ class SettingsNewClass
 	    $date = date("Y-m-d");
 		$form = ""; $form_htm = RD . "/tpl/new/news.htm";
 		if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+
 		$r = $db->query("SELECT * FROM `news` ORDER BY `data` DESC;");
 		$n = $db->num_rows($r);
 		for ($i = 1; $i <= $n; $i++) {
@@ -892,6 +902,7 @@ class SettingsNewClass
         $db = DbSingleton::getTokoDb();
         $list = "";
 	    $date = date("Y-m-d");
+
 		$r = $db->query("SELECT * FROM `news` ORDER BY `data` DESC;");
 		$n = $db->num_rows($r);
 		for ($i = 1; $i <= $n; $i++) {
@@ -989,7 +1000,9 @@ class SettingsNewClass
 		for ($i = 1; $i <= $n; $i++) {
 			$file  = $db->result($r, $i - 1, "id");
 			$block = $form;
-            $block = str_replace(array("{logo_name}", "{link}"), array($db->result($r, $i - 1, "caption"), "https://toko.ua/uploads/images/news/$lang_id/$news_id/$file.jpg"), $block);
+            $block = str_replace(
+                array("{logo_name}", "{link}"),
+                array($db->result($r, $i - 1, "caption"), "https://toko.ua/uploads/images/news/$lang_id/$news_id/$file.jpg"), $block);
 			$list .= $block;
 		}
 		if ($n === 0) {
@@ -1207,6 +1220,83 @@ class SettingsNewClass
         return $list;
     }
 
+    /*
+     * ========================
+     * */
+
+    public function showReviewCardInfo($id, $lang_id)
+    {
+        $id = (int)$id;
+        $lang_id = (int)$lang_id;
+
+        $db = DbSingleton::getTokoDb();
+        $form = ""; $form_htm = RD . "/tpl/new/reviews_lang_card.htm";
+        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+
+        $r = $db->query("SELECT * FROM `T2_REVIEWS` WHERE `ID` = $id;");
+        $n = (int)$db->num_rows($r);
+
+        if ($lang_id === 2) {
+            $prefix = "UA";
+        } elseif ($lang_id === 3) {
+            $prefix = "EN";
+        } else {
+            $prefix = "RU";
+        }
+
+        if ($n === 0) {
+            $t = $d = $text = "";
+        } else {
+            $t          = $db->result($r, 0, "T_$prefix");
+            $d          = $db->result($r, 0, "D_$prefix");
+            $text       = $db->result($r, 0, "TEXT_$prefix");
+        }
+
+        $form = str_replace(
+            array("{lang_id}", "{title_lang}", "{review_t}", "{review_d}", "{review_text}"),
+            array($lang_id, "ÌÎÂÀ - $prefix", $t, $d, $text)
+            , $form);
+
+        return $form;
+    }
+
+    public function saveReviewCardInfo($review_id, $lang_id, $t, $d, $title, $text): array
+    {
+        $db = DbSingleton::getTokoDb();
+        $review_id = (int)$review_id;
+        $lang_id = (int)$lang_id;
+
+        if ($lang_id === 2) {
+            $prefix = "UA";
+        } elseif ($lang_id === 3) {
+            $prefix = "EN";
+        } else {
+            $prefix = "RU";
+        }
+
+        if ($text === "<p><br></p>") {
+            $text = "";
+        }
+
+        if ($review_id === 0) {
+            $r = $db->query("SELECT MAX(`ID`) as mid FROM `T2_REVIEWS`;");
+            $max_id = 0 + $db->result($r, 0, "mid") + 1;
+            $db->query("INSERT INTO `T2_REVIEWS` (`ID`, `TITLE_$prefix`) VALUES ($max_id, \"$title\");");
+            $db->query('UPDATE `T2_REVIEWS` SET `TEXT_$prefix` = "' . $text.'" WHERE `ID` = "' . $max_id.'";');
+            $db->query('UPDATE `T2_REVIEWS` SET `T_$prefix` = "' . $t.'" WHERE `ID` = "' . $max_id.'";');
+            $db->query('UPDATE `T2_REVIEWS` SET `D_$prefix` = "' . $d.'" WHERE `ID` = "' . $max_id.'";');
+            $answer = 1; $err = "";
+        } else {
+            $db->query("UPDATE `T2_REVIEWS` SET `TITLE_$prefix` = \"$title\" WHERE `ID` = $review_id;");
+            $db->query('UPDATE `T2_REVIEWS` SET `TEXT_' . $prefix . '` = "' . $text.'" WHERE `ID` = "' . $review_id.'";');
+            $db->query('UPDATE `T2_REVIEWS` SET `T_' . $prefix . '` = "' . $t.'" WHERE `ID` = "' . $review_id.'";');
+            $db->query('UPDATE `T2_REVIEWS` SET `D_' . $prefix . '` = "' . $d.'" WHERE `ID` = "' . $review_id.'";');
+            $answer = 1; $err = "";
+        }
+
+        return array($answer, $err);
+    }
+
     public function showReviewCard($id)
     {
         $db = DbSingleton::getTokoDb();
@@ -1219,30 +1309,21 @@ class SettingsNewClass
             $id         = 0;
             $status     = 0;
             $disabled   = "disabled";
-            $title      = $title_ua = $title_en = $text = $text_ua = $text_en = $data = $img = "";
-            $t_ru       = $t_ua = $t_en = $d_ru = $d_ua = $d_en = "";
+            $title      = $title_ua = $title_en = $data = $data_create = $img = "";
         } else {
-            $t_ru       = $db->result($r, 0, "T_RU");
-            $t_ua       = $db->result($r, 0, "T_UA");
-            $t_en       = $db->result($r, 0, "T_EN");
-            $d_ru       = $db->result($r, 0, "D_RU");
-            $d_ua       = $db->result($r, 0, "D_UA");
-            $d_en       = $db->result($r, 0, "D_EN");
             $title      = $db->result($r, 0, "TITLE_RU");
             $title_ua   = $db->result($r, 0, "TITLE_UA");
             $title_en   = $db->result($r, 0, "TITLE_EN");
-            $text       = $db->result($r, 0, "TEXT_RU");
-            $text_ua    = $db->result($r, 0, "TEXT_UA");
-            $text_en    = $db->result($r, 0, "TEXT_EN");
             $data       = $db->result($r, 0, "DATA");
+            $data_create= $db->result($r, 0, "DATA_CREATE");
             $status     = $db->result($r, 0, "STATUS");
             $img        = $db->result($r, 0, "IMG");
             $disabled   = "";
         }
 
         $form = str_replace(
-            array("{review_id}", "{review_t_ru}", "{review_t_ua}", "{review_t_en}", "{review_d_ru}", "{review_d_ua}", "{review_d_en}", "{review_title}", "{review_title_ua}", "{review_title_en}", "{review_text}", "{review_text_ua}", "{review_text_en}", "{review_data}", "{review_status}", "{review_image}", "{review_remove_disabled}", "{groups_list}"),
-            array($id, $t_ru, $t_ua, $t_en, $d_ru, $d_ua, $d_en, $title, $title_ua, $title_en, $text, $text_ua, $text_en, $data, $status ? "checked" : "", $img, $disabled, $this->getGroupsList($this->getGroupReviewList($id)))
+            array("{review_id}", "{review_title}", "{review_title_ua}", "{review_title_en}", "{review_data}", "{review_data_create}", "{review_status}", "{review_image}", "{review_remove_disabled}", "{groups_list}"),
+            array($id, $title, $title_ua, $title_en, $data, $data_create, $status ? "checked" : "", $img, $disabled, $this->getGroupsList($this->getGroupReviewList($id)))
         , $form);
 
         return $form;
@@ -1256,8 +1337,7 @@ class SettingsNewClass
         $n = $db->num_rows($r);
         $group_ids = [];
         for ($i = 1; $i <= $n; $i++) {
-            $group_id = $db->result($r, $i - 1, "GROUP_ID");
-            $group_ids[] = $group_id;
+            $group_ids[] = $db->result($r, $i - 1, "GROUP_ID");
         }
 
         return $group_ids;
@@ -1271,7 +1351,7 @@ class SettingsNewClass
         $r = $db->query("SELECT `GROUP_ID`, `TEX_RU` FROM `T2_TREE_GROUP_EXIST` WHERE `STATUS` = 1;");
         $n = $db->num_rows($r);
         for ($i = 1; $i <= $n; $i++) {
-            $group_id = $db->result($r, $i - 1, "GROUP_ID");
+            $group_id   = $db->result($r, $i - 1, "GROUP_ID");
             $group_name = $db->result($r, $i - 1, "TEX_RU");
 
             $sel = "";
@@ -1286,45 +1366,17 @@ class SettingsNewClass
         return $list;
     }
 
-    public function saveReview($review_id, $t_ru, $t_ua, $t_en, $d_ru, $d_ua, $d_en, $title, $title_ua, $title_en, $text, $text_ua, $text_en, $data, $status, $groups): array
+    public function saveReview($review_id, $title, $title_ua, $title_en, $data, $data_create, $status, $groups): array
     {
         $db = DbSingleton::getTokoDb();
-
-        if ($text === "<p><br></p>") {
-            $text = "";
-        }
-        if ($text_ua === "<p><br></p>") {
-            $text_ua = "";
-        }
-        if ($text_en === "<p><br></p>") {
-            $text_en = "";
-        }
 
         if ((int)$review_id === 0) {
             $r = $db->query("SELECT MAX(`ID`) as mid FROM `T2_REVIEWS`;");
             $max_id = 0 + $db->result($r, 0, "mid") + 1;
-            $db->query("INSERT INTO `T2_REVIEWS` (`ID`, `TITLE_RU`, `TITLE_UA`, `TITLE_EN`, `DATA`, `STATUS`) VALUES ($max_id, \"$title\", \"$title_ua\", \"$title_en\", '$data', '$status');");
-            $db->query('UPDATE `T2_REVIEWS` SET `TEXT_RU` = "' . $text.'" WHERE `ID` = "' . $max_id.'";');
-            $db->query('UPDATE `T2_REVIEWS` SET `TEXT_UA` = "' . $text_ua.'" WHERE `ID` = "' . $max_id.'";');
-            $db->query('UPDATE `T2_REVIEWS` SET `TEXT_EN` = "' . $text_en.'" WHERE `ID` = "' . $max_id.'";');
-            $db->query('UPDATE `T2_REVIEWS` SET `T_RU` = "' . $t_ru.'" WHERE `ID` = "' . $max_id.'";');
-            $db->query('UPDATE `T2_REVIEWS` SET `T_UA` = "' . $t_ua.'" WHERE `ID` = "' . $max_id.'";');
-            $db->query('UPDATE `T2_REVIEWS` SET `T_EN` = "' . $t_en.'" WHERE `ID` = "' . $max_id.'";');
-            $db->query('UPDATE `T2_REVIEWS` SET `D_RU` = "' . $d_ru.'" WHERE `ID` = "' . $max_id.'";');
-            $db->query('UPDATE `T2_REVIEWS` SET `D_UA` = "' . $d_ua.'" WHERE `ID` = "' . $max_id.'";');
-            $db->query('UPDATE `T2_REVIEWS` SET `D_EN` = "' . $d_en.'" WHERE `ID` = "' . $max_id.'";');
+            $db->query("INSERT INTO `T2_REVIEWS` (`ID`, `TITLE_RU`, `TITLE_UA`, `TITLE_EN`, `DATA`, `DATA_CREATE`, `STATUS`) VALUES ($max_id, \"$title\", \"$title_ua\", \"$title_en\", '$data', '$data_create', '$status');");
             $answer = 1; $err = "";
         } else {
-            $db->query("UPDATE `T2_REVIEWS` SET `TITLE_RU` = \"$title\", `TITLE_UA` = \"$title_ua\", `TITLE_EN` = \"$title_en\", `DATA` = '$data', `STATUS` = '$status' WHERE `ID` = $review_id;");
-            $db->query('UPDATE `T2_REVIEWS` SET `TEXT_RU` = "' . $text.'" WHERE `ID` = "' . $review_id.'";');
-            $db->query('UPDATE `T2_REVIEWS` SET `TEXT_UA` = "' . $text_ua.'" WHERE `ID` = "' . $review_id.'";');
-            $db->query('UPDATE `T2_REVIEWS` SET `TEXT_EN` = "' . $text_en.'" WHERE `ID` = "' . $review_id.'";');
-            $db->query('UPDATE `T2_REVIEWS` SET `T_RU` = "' . $t_ru.'" WHERE `ID` = "' . $review_id.'";');
-            $db->query('UPDATE `T2_REVIEWS` SET `T_UA` = "' . $t_ua.'" WHERE `ID` = "' . $review_id.'";');
-            $db->query('UPDATE `T2_REVIEWS` SET `T_EN` = "' . $t_en.'" WHERE `ID` = "' . $review_id.'";');
-            $db->query('UPDATE `T2_REVIEWS` SET `D_RU` = "' . $d_ru.'" WHERE `ID` = "' . $review_id.'";');
-            $db->query('UPDATE `T2_REVIEWS` SET `D_UA` = "' . $d_ua.'" WHERE `ID` = "' . $review_id.'";');
-            $db->query('UPDATE `T2_REVIEWS` SET `D_EN` = "' . $d_en.'" WHERE `ID` = "' . $review_id.'";');
+            $db->query("UPDATE `T2_REVIEWS` SET `TITLE_RU` = \"$title\", `TITLE_UA` = \"$title_ua\", `TITLE_EN` = \"$title_en\", `DATA` = '$data', `DATA_CREATE` = '$data_create', `STATUS` = '$status' WHERE `ID` = $review_id;");
             $answer = 1; $err = "";
         }
 

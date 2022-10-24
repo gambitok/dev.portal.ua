@@ -284,11 +284,9 @@ class group_tree
             }
             $list .= "</ul>";
         }
-
         if ($n === 0) {
             $list = "Пусто";
         }
-
         return $list;
     }
 

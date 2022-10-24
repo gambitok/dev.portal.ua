@@ -845,8 +845,8 @@ class catalogue {
             }
 
             if (($n > 1 && !empty($brand_id)) || $one_result === 1) {
-                $ak = [];
-                $rk = [];
+                $ak = array();
+                $rk = array();
                 $art_id_arr = [];
                 $art_id = 0;
 

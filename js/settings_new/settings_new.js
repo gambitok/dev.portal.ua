@@ -419,30 +419,95 @@ function loadReviewsList() {
 }
 
 function showReviewCard(id) {
+	if (id) {
+		$("#photo_review_id").val(id);
+	}
     JsHttpRequest.query($rcapi,{ 'w': 'showReviewCard', 'id':id},
         function (result, errors){ if (errors) {alert(errors);} if (result) {
             $("#ReviewCard").modal("show");
             $("#ReviewCardBody").html(result.content);
+            $("#ReviewCardLabel").html(id);
 			$("#groups").chosen();
         }}, true);
 }
 
+function showReviewCardInfo(id, lang_id) {
+	JsHttpRequest.query($rcapi,{ 'w': 'showReviewCardInfo', 'id':id, 'lang_id':lang_id},
+		function (result, errors){ if (errors) {alert(errors);} if (result) {
+			$("#ReviewLangCard").modal("show");
+			$("#ReviewLangCardBody").html(result.content);
+
+			$("#summernote").summernote({
+				height: 200,
+				callbacks: {
+					onImageUpload: function(files) {
+						for(let i=0; i < files.length; i++) {
+							$.upload(files[i]);
+						}
+					}
+				}
+			});
+			$.upload = function (file) {
+				let out = new FormData();
+				out.append('file', file, file.name);
+
+				$.ajax({
+					method: 'POST',
+					url: 'https://portal.myparts.pro/upload_saved_images.php',
+					contentType: false,
+					cache: false,
+					processData: false,
+					data: out,
+					success: function (img) {
+						$('#summernote').summernote('insertImage', img);
+						console.log('inserted');
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+						console.error(textStatus + " " + errorThrown);
+					}
+				});
+			}
+
+		}}, true);
+}
+
+function saveReviewCardInfo(lang_id) {
+	let id 			= $("#review_id").val();
+	let t 			= $("#review_t").val();
+	let d 			= $("#review_d").val();
+	let title 		= $("#review_title").val();
+	let text 		= $("#summernote").next().find($(".note-editable")).html().replace(/"/g,"'");
+
+	swal({
+			title: "Зберегти зміни?",
+			text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
+			confirmButtonText: "Так, зберегти!", cancelButtonText: "Відмінити!", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
+		},
+		function (isConfirm) {
+			if (isConfirm) {
+				JsHttpRequest.query($rcapi,{'w':'saveReviewCardInfo', 'id':id, 'lang_id':lang_id, 't':t, 'd':d, 'title':title, 'text':text},
+					function (result, errors){ if (errors) {alert(errors);} if (result){
+						if (result["answer"]==1){
+							swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
+							$("#ReviewLangCard").modal("hide");
+						} else {
+							swal("Помилка!", result["error"], "error");
+						}
+					}}, true);
+			} else {
+				swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
+			}
+		});
+}
+
 function saveReview() {
     let id 			= $("#review_id").val();
-	let t_ru 		= $("#review_t_ru").val();
-	let t_ua 		= $("#review_t_ua").val();
-	let t_en 		= $("#review_t_en").val();
-	let d_ru 		= $("#review_d_ru").val();
-	let d_ua 		= $("#review_d_ua").val();
-	let d_en 		= $("#review_d_en").val();
     let title 		= $("#review_title").val();
     let title_ua 	= $("#review_title_ua").val();
     let title_en 	= $("#review_title_en").val();
-    let text 		= $("#summernote").next().find($(".note-editable")).html().replace(/"/g,"'");
-    let text_ua 	= $("#summernote_ua").next().find($(".note-editable")).html().replace(/"/g,"'");
-    let text_en 	= $("#summernote_en").next().find($(".note-editable")).html().replace(/"/g,"'");
     let data 		= $("#review_data").val();
-    let status = 0; if (document.getElementById("review_status").checked){status=1;}
+    let data_create = $("#review_data_create").val();
+    let status 		= 0; if (document.getElementById("review_status").checked){status=1;}
 	let groups 		= $("#groups").chosen().val();
 
     swal({
@@ -452,10 +517,13 @@ function saveReview() {
         },
         function (isConfirm) {
             if (isConfirm) {
-                JsHttpRequest.query($rcapi,{'w':'saveReview', 'id':id, 't_ru':t_ru, 't_ua':t_ua, 't_en':t_en, 'd_ru':d_ru, 'd_ua':d_ua, 'd_en':d_en, 'title':title, 'title_ua':title_ua, 'title_en':title_en, 'text':text, 'text_ua':text_ua, 'text_en':text_en, 'data':data, 'status':status, 'groups':groups},
+                JsHttpRequest.query($rcapi,{'w':'saveReview', 'id':id, 'title':title, 'title_ua':title_ua, 'title_en':title_en, 'data':data, 'data_create':data_create, 'status':status, 'groups':groups},
                     function (result, errors){ if (errors) {alert(errors);} if (result){
                         if (result["answer"]==1){
                             swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
+							if (id) {
+								$("#photo_review_id").val(id);
+							}
                             $("#ReviewCard").modal("hide");
                             loadReviewsList();
                         } else {
@@ -494,14 +562,69 @@ function dropReview() {
 }
 
 function showReviewsUploadForm(review_id) {
-    $("#photo_review_id").val(review_id);
     let drop = new Dropzone("#dropReview",{ dictDefaultMessage: "Натисніть для вибору файлів або перетягніть їх це поле!" });
     drop.removeAllFiles(true);
     drop.on("queuecomplete", function() {
         toastr["info"]("Завантаження файлів завершено.");
         this.removeAllFiles();
         $("#fileReviewsPhotoUploadForm").modal("hide");
+        showReviewCard(review_id);
     });
+}
+
+function OpenReviewsUploadForm(review_id) {
+	Dropzone.autoDiscover = false;
+
+	$('#dropReview').dropzone({
+		addRemoveLinks: true,
+
+		init: function (){
+			let myDropzone = this;
+
+			$.ajax({
+				url: 'upload_saved_logo.php',
+				type: 'post',
+				data: {request: 2},
+				dataType: 'json',
+
+				success: function(response){
+
+					console.log('success!!');
+					$.each(response, function(key,value){
+						let mockFile = {name: value.name, size: value.size};
+
+						myDropzone.emit('addedfile', mockFile);
+						myDropzone.emit('thumbnail', mockFile, value.path);
+						myDropzone.emit('complete', mockFile);
+
+					})
+				}
+			});
+		},
+
+		removedfile: function (file) {
+			$.ajax({
+				url:'delete_saved_logo',
+				type:'post',
+				data : {"file_name" : file.name},
+
+				success : function () {
+					console.log('removed ' + file.name);
+				}
+			});
+			var _ref;
+			return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+		}
+	});
+
+
+    // drop.removeAllFiles(true);
+    // drop.on("queuecomplete", function() {
+    //     toastr["info"]("Завантаження файлів завершено.");
+    //     this.removeAllFiles();
+    //     $("#fileReviewsPhotoUploadForm").modal("hide");
+    //     showReviewCard(review_id);
+    // });
 }
 
 /*==== Request ====*/

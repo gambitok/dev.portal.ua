@@ -61,8 +61,7 @@ class Claim {
 
     public function saveClaimCard($claim_id, $amount, $data, $supplier, $manufacturer, $state, $text_ru, $text_ua, $text_en): array
     {
-        $db=DbSingleton::getDb();
-        $answer=0; $err="Помилка збереження даних";
+        $db=DbSingleton::getDb(); $answer=0; $err="Помилка збереження даних";
         if ($claim_id>0) {
             $db->query("UPDATE `clients_claim` SET 
             amount='$amount', `data`='$data', `supplier`='$supplier', `manufacturer`='$manufacturer', `state`='$state', `text_ru`='$text_ru', `text_ua`='$text_ua', `text_en`='$text_en' 

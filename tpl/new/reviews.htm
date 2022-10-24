@@ -12,6 +12,11 @@
 <script src="/js/plugins/wysiwyg-editor-summernote/dist/summernote.js"></script>
 
 <style>
+    .dz-preview .dz-image img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover;
+    }
     .chosen-container {
         width: 100%!important;
         display: block!important;
@@ -79,9 +84,22 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
-                <h3 id="myModalLabel text-left">Карта статті <span id="ReviewCardLabel"></span></h3>
+                <h3 class="myModalLabel text-left">Карта статті <span id="ReviewCardLabel"></span></h3>
             </div>
             <div class="modal-body" id="ReviewCardBody">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ReviewLangCard" class="modal inmodal fade" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">х</button>
+                <h3 class="myModalLabel text-left">Карта статті <span id="ReviewLangCardLabel"></span></h3>
+            </div>
+            <div class="modal-body" id="ReviewLangCardBody">
             </div>
         </div>
     </div>
@@ -123,10 +141,6 @@
     });
 </script>
 
-<script type="text/javascript">
-    //Disabling autoDiscover
-    Dropzone.autoDiscover = false;
-</script>
 <script src="/js/plugins/jsTree/jstree.min.js"></script>
 <style>.jstree-open > .jstree-anchor > .fa-folder:before {content: "\f07c";}.jstree-default .jstree-icon.none {width: 0;}</style>
 <!-- Sweet alert -->

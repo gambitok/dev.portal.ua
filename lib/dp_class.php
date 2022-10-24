@@ -3794,6 +3794,11 @@ class dp
                 $print_id = $id;
             }
 
+            $onclick = "printStorselView(\"$print_id\");";
+            if ($doc_type_id == 64) {
+                $onclick = "printStorselView(\"$select_id\");";
+            }
+
             $list .= "
             <tr style='cursor: pointer' onClick='$function'>
                 <td>$type_name</td>
@@ -3802,7 +3807,7 @@ class dp
                 <td>$storage_name $cell_value</td>
                 <td>$user_name</td>
                 <td align='center'>
-                    <button class='btn btn-xs btn-primary' onClick='printStorselView(\"$print_id\");'><i class='fa fa-print'></i></button>
+                    <button class='btn btn-xs btn-primary' onClick='$onclick'><i class='fa fa-print'></i></button>
                 </td>
                 <td>$status_jmoving</td>
             </tr>";

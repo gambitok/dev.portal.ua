@@ -307,7 +307,9 @@ class storsel {
 
                 $form = str_replace("{dp_id}",$parrent_doc_id,$form);
                 $form = str_replace("{dp_note}",($parrent_doc_type_id == 1) ? $jmoving->getJmovingNote($parrent_doc_id) : $dp->getDpNote($parrent_doc_id),$form);
-                $form = str_replace("{dp_address}",$dp->getDpNote($parrent_doc_id),$form);
+
+                $form = str_replace("{dp_address}",($parrent_doc_type_id == 1) ? $jmoving->getJmovingNote($parrent_doc_id) : $dp->getDpNote($parrent_doc_id),$form);
+
                 $form = str_replace("{dp_address_user}",$dp->getDpUserDeliveryData($parrent_doc_id),$form);
 
                 $form = str_replace("{user_create}",$dp->getMediaUserName($user_create),$form);
