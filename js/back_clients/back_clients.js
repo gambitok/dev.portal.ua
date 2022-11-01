@@ -61,12 +61,15 @@ function filterBuhBackClientsList() {
 } 
 
 function updateBackClientsRange() {
-	var prevRange = $("#back_clients_range").html();
-	JsHttpRequest.query($rcapi,{ 'w': 'show_back_clients_search'}, 
-	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		if (prevRange.length != result["content"].length){
-			$("#back_clients_range").empty();
-			$("#back_clients_range").html(result.content);
+	let prevRange = $("#back_clients_range").html();
+	let prevLength = 0;
+	if (prevRange) {
+		prevLength = prevRange.length;
+	}
+	JsHttpRequest.query($rcapi,{ 'w': 'show_back_clients_search'},
+	function (result, errors){ if (errors) {alert(errors);} if (result){
+		if (prevLength !== result["content"].length){
+			$("#back_clients_range").empty().html(result.content);
 		}
 		setTimeout(function(){updateBackClientsRange();},30 * 1000);
 	}}, true);
@@ -324,7 +327,7 @@ function loadBackClientsCommetsLabel(back_id) {
 }
 
 function loadBackClientsCommets(back_id) {
-	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
+	if (back_id<=0 || back_id===""){toastr["error"](errs[0]);}
 	if (back_id>0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'loadBackClientsCommets', 'back_id':back_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -334,7 +337,7 @@ function loadBackClientsCommets(back_id) {
 }
 
 function saveBackClientsComment(back_id) {
-	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
+	if (back_id<=0 || back_id===""){toastr["error"](errs[0]);}
 	if (back_id>0){
         let comment=$("#back_clients_comment_field").val();
 		if (comment.length<=0){toastr["error"]("Напишіть коментар спочатку");}
@@ -352,7 +355,7 @@ function saveBackClientsComment(back_id) {
 }
 
 function dropBackClientsComment(back_id, cmt_id) {
-	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
+	if (back_id<=0 || back_id===""){toastr["error"](errs[0]);}
 	if (back_id>0){
 		if(confirm('Видалити запис?')){ 
 			JsHttpRequest.query($rcapi,{ 'w': 'dropBackClientsComment', 'back_id':back_id, 'cmt_id':cmt_id}, 
@@ -407,7 +410,7 @@ function showBackClientsClientList(client_id) {
 function setBackClientsClient(id, tpoint_id, tpoint_name) {
     let back_id=$("#back_id").val();
 	$("#client_id").val(id);
-	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
+	if (back_id<=0 || back_id===""){toastr["error"](errs[0]);}
 	if (back_id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'setBackClientsClient', 'back_id':back_id, 'client_id':id,'tpoint_id':tpoint_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -470,12 +473,14 @@ function unlinkBackClientsClient(back_id) {
 					swal("Виконано!", "Внесені Вами зміни успішно збережені.", "success");
 				} else { toastr["error"](result["error"]); }
 			}}, true);	
-		} else { swal("Відмінено", "Операцію анульовано.", "error"); }
+		} else {
+			swal("Відмінено", "Операцію анульовано.", "error");
+		}
 	});
 }
 
 function clearBackClientsStr(back_id) {
-	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
+	if (back_id<=0 || back_id===""){toastr["error"](errs[0]);}
 	if (back_id>0){
 		swal({
 			title: "Очистити структуру повернення?",
@@ -499,7 +504,7 @@ function clearBackClientsStr(back_id) {
 }
 
 function dropBackClientsStr(pos,back_id,back_str_id) {
-	if (back_id<=0 || back_id=="" || back_str_id<=0 || back_str_id==""){toastr["error"](errs[0]);}
+	if (back_id<=0 || back_id==="" || back_str_id<=0 || back_str_id===""){toastr["error"](errs[0]);}
 	if (back_id>0 && back_str_id>0){
 		swal({
 			title: "Видалити артикул з повернення?",
@@ -527,7 +532,7 @@ function dropBackClientsStr(pos,back_id,back_str_id) {
 }
 
 function createBackClientsTax() {
-    let back_id=$("#back_id").val();
+    let back_id = $("#back_id").val();
 	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
 	if (back_id>0){
 		swal({
@@ -553,10 +558,10 @@ function createBackClientsTax() {
 }
 
 function acceptBackClients() {
-    let back_id=$("#back_id").val();
-    let tpoint_id=$("#tpoint_id option:selected").val();
-    let storage_id=$("#storage_id option:selected").val();
-    let cell_id=$("#cell_id option:selected").val();
+    let back_id = $("#back_id").val();
+    let tpoint_id = $("#tpoint_id option:selected").val();
+    let storage_id = $("#storage_id option:selected").val();
+    let cell_id = $("#cell_id option:selected").val();
 	if (tpoint_id=="0" || storage_id=="0" || cell_id=="0") { 
 		swal("Помилка!", "Виберіть всі дані", "error"); 
 	} else {
@@ -576,7 +581,7 @@ function acceptBackClients() {
 	}
 }
 
-function showArticleSearchDocumentForm(i,art_id,brand_id,article_nr_displ,doc_type,back_id) {
+function showArticleSearchDocumentForm(i, art_id, brand_id, article_nr_displ, doc_type, back_id) {
 	JsHttpRequest.query($rcapi,{ 'w': 'showArticleSearchDocumentForm', 'brand_id':brand_id, 'article_nr_displ':article_nr_displ, 'doc_type':doc_type, 'doc_id':back_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		$("#CatalogueModalWindow").modal("show");
@@ -589,8 +594,8 @@ function showArticleSearchDocumentForm(i,art_id,brand_id,article_nr_displ,doc_ty
 }
 
 function showSaleInvoiceArticleSearchForm(i, si_str_id, art_id, back_id, si_id) {
-    var back_id = $("#back_id").val();
-	if (back_id>0 && back_id.length>0){
+    let str_back_id = $("#back_id").val();
+	if (str_back_id > 0 && str_back_id.length > 0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'showSaleInvoiceArticleSearchForm', 'si_id':si_id, 'si_str_id':si_str_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			$("#FormModalWindow").modal("show");
@@ -639,14 +644,12 @@ function countSumm(pf1, pf2, rf) {
 }
 
 function calculateBackClientsSumm() {
-	var back_clients_summ=0;
-	var kol_row=$("#kol_row").val();
-	var sum_str=0;
-	for (var i=1;i<=kol_row;i++){
-		summ_str=parseFloat($("#summStr_"+i).val());
-		back_clients_summ=back_clients_summ+summ_str;
+	var back_clients_summ = 0;
+	let kol_row = $("#kol_row").val();
+	for (let i = 1; i <= kol_row; i++) {
+		back_clients_summ = back_clients_summ + parseFloat($("#summStr_" + i).val());
 	}
-	back_clients_summ=parseFloat(back_clients_summ).toFixed(2);
+	back_clients_summ = parseFloat(back_clients_summ).toFixed(2);
 	$("#back_clients_summ").val(back_clients_summ);
 }
 
@@ -657,7 +660,8 @@ function setArticleToBackClients() {
 	if (back_id.length>0 && si_id>0 && sis_id>0){
 		var art_id=$("#art_idS2").val();
 		var article_nr_displ=$('#article_nr_displS2').val();
-		var amount_back=parseFloat($("#amount_back").val());var amountStr=amount_back;
+		var amount_back=parseFloat($("#amount_back").val());
+		var amountStr=amount_back;
 		var max_amount=$("#max_amount").val();
 		if (amountStr>0 && art_id.length>0){
 			if (amount_back>max_amount){swal("Помилка!", "Кількість має бути не більша за "+max_amount, "error"); }
@@ -736,8 +740,8 @@ function catalogue_article_storage_rest_search(search_type) {
 }
 
 function startBackClientsExecute() {
-    let back_id=$("#back_id").val();
-	if (back_id.length>0) {
+    let back_id = $("#back_id").val();
+	if (back_id.length > 0) {
 		swal({
 			title: "Передати в роботу замовлення?",text: "Подальше внесення змін буде заблоковано", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",confirmButtonText: "Так", cancelButtonText: "Відмінити", closeOnConfirm: false, closeOnCancel: false, showLoaderOnConfirm: true
 		},
@@ -782,7 +786,7 @@ function startBackClientsExecute() {
 }
 
 function loadBackClientsJmoving(back_id) {
-	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
+	if (back_id<=0 || back_id===""){toastr["error"](errs[0]);}
 	if (back_id>0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'loadBackClientsJmoving', 'back_id':back_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -792,7 +796,7 @@ function loadBackClientsJmoving(back_id) {
 }
 
 function loadBackClientsStorsel(back_id) {
-	if (back_id<=0 || back_id==""){toastr["error"](errs[0]);}
+	if (back_id<=0 || back_id===""){toastr["error"](errs[0]);}
 	if (back_id>0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'loadBackClientsStorsel', 'back_id':back_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -802,7 +806,7 @@ function loadBackClientsStorsel(back_id) {
 }
 
 function viewBackClientsStorageSelect(back_id, select_id, select_status) {
-	if (back_id<=0 || back_id=="" || select_id=="" || select_id==0){toastr["error"](errs[0]);}
+	if (back_id<=0 || back_id==="" || select_id==="" || select_id==0){toastr["error"](errs[0]);}
 	if (back_id>0 && select_id>0) {
 		JsHttpRequest.query($rcapi,{ 'w': 'viewBackClientsStorageSelect', 'back_id':back_id, 'select_id':select_id, 'select_status':select_status},
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -1112,9 +1116,9 @@ function clearBackImport() {
 * check back invoice
 * */
 function checkBackArticles() {
-	let client_id = $("#clients_list option:selected").val();
-	let storage_id = $("#storages_list option:selected").val();
-	let cell_id = $("#cells_list option:selected").val();
+	let client_id 	= $("#clients_list option:selected").val();
+	let storage_id 	= $("#storages_list option:selected").val();
+	let cell_id 	= $("#cells_list option:selected").val();
 	if (client_id == "0" || storage_id == "0" || cell_id == "0") {
 		swal("Помилка!", "Виберіть всі поля!", "error");
 	} else {
@@ -1130,9 +1134,9 @@ function checkBackArticles() {
 * зберегти дані
 * */
 function finishBackImport() {
-	let client_id_sel = $("#client_id_sel").val();
-	let storage_id_sel = $("#storage_id_sel").val();
-	let cell_id_sel = $("#cell_id_sel").val();
+	let client_id_sel 	= $("#client_id_sel").val();
+	let storage_id_sel 	= $("#storage_id_sel").val();
+	let cell_id_sel 	= $("#cell_id_sel").val();
 	JsHttpRequest.query($rcapi,{ 'w':'finishBackImport', 'client_id_sel':client_id_sel, 'storage_id_sel':storage_id_sel, 'cell_id_sel':cell_id_sel},
 		function (result, errors) { if (errors) {alert(errors);} if (result) {
 			if (result["answer"] == 1) {
@@ -1151,9 +1155,9 @@ function getCellsList() {
 }
 
 function exportBackImportArtilces(status) {
-	let client_id = $("#client_id_sel").val();
-	let storage_id = $("#storage_id_sel").val();
-	let cell_id = $("#cell_id_sel").val();
+	let client_id 	= $("#client_id_sel").val();
+	let storage_id 	= $("#storage_id_sel").val();
+	let cell_id		= $("#cell_id_sel").val();
 	window.open("/BackClients/exportBackImportArticles/" + client_id + "/" + storage_id + "/" + cell_id + "/" + status, "_blank");
 }
 

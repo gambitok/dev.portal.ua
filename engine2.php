@@ -280,6 +280,9 @@ if ($_REQUEST["w"]=="saveReviewCardInfo"){ list($answer,$err)=$settings_new->sav
 
 if ($_REQUEST["w"]=="dropReview"){ list($answer,$err)=$settings_new->dropReview($_REQUEST["id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
+
+if ($_REQUEST["w"]=="choseReviewCardImage"){ list($answer,$err)=$settings_new->choseReviewCardImage($_REQUEST["review_id"], $_REQUEST["file_name"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+
 // REQUESTS
 
 if ($_REQUEST["w"]=="loadRequestsList"){ $GLOBALS['_RESULT'] = array("content"=>$settings_new->loadRequestsList());}

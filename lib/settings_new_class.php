@@ -1389,6 +1389,23 @@ class SettingsNewClass
         return array($answer, $err);
     }
 
+    public function choseReviewCardImage($review_id, $file_name): array
+    {
+        $db = DbSingleton::getTokoDb();
+
+        $answer = 0; $err = "Error";
+
+        if ($review_id > 0) {
+
+            $db->query("UPDATE `T2_REVIEWS` SET `IMG` = '$file_name' WHERE `ID` = $review_id LIMIT 1;");
+
+            $answer = 1; $err = "";
+        }
+
+        return array($answer, $err);
+
+    }
+
     public function dropReview($review_id): array
     {
         $db = DbSingleton::getTokoDb();

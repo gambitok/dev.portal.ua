@@ -122,6 +122,30 @@
     </div>
 </div>
 
+<div style="display: none; z-index: 99999999999;" class="modal inmodal fade" id="fileReviewsPhotoUploadForm2" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">Х</button>
+                <h4 class="modal-title" id="myModalLabel2">Завантаження фото</h4>
+            </div>
+            <div class="modal-body" id="fileViewHolderFoto2">
+<!--                <p>Для завантаження фото натисніть на форму або перетягніть файли у поле форми</p>-->
+<!--                <form action="/upload_dropzone.php" class="dropzone" id="dropzoneFrom" enctype="multipart/form-data">-->
+<!--                    <input type="hidden" name="photo_review_id" id="photo_review_id" value="">-->
+<!--                </form>-->
+                <br />
+                <div align="center">
+                    <button type="button" class="btn btn-info" id="submit-all">Upload</button>
+                </div>
+                <br />
+                <br />
+                <div id="preview"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript" src="/js/plugins/barcode-generator/jquery-barcode.js"></script>
 <!-- Bootstrap markdown -->
 <script src="/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>
@@ -136,6 +160,7 @@
 <script src="/js/settings_new/settings_new.js"></script>
 
 <script language="javascript">
+    Dropzone.autoDiscover = false;
     $(document).ready(function() {
         $("#datatable").DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Russian.json"}});
     });

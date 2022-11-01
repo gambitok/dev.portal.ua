@@ -12,7 +12,7 @@ $(document).ready(function() {
 function loadLanguageList() {
 	JsHttpRequest.query($rcapi,{ 'w': 'loadLanguageList' }, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){
-		let dt=$("#datatable");
+		let dt = $("#datatable");
 		dt.DataTable().destroy();
 		$("#lang_range").html(result.content);
 		dt.DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
@@ -20,8 +20,9 @@ function loadLanguageList() {
 }
 
 function newLanguageCard(){
-	let lang_var=$("#lang_var").val();
-	if (lang_var==="" || lang_var===undefined) {
+	let lang_var = $("#lang_var").val();
+
+	if (lang_var === "" || lang_var === undefined) {
 		toastr["error"]("Введіть значення змінної!");
 		$("#lang_var").select();
 	} else {
@@ -46,10 +47,10 @@ function showLanguageCard(id){
 }
 
 function saveLanguage() {
-    let lang_ru = $("#lang_ru").val();
-    let lang_ua = $("#lang_ua").val();
-    let lang_eng = $("#lang_eng").val();
-    let lang_id = $("#lang_id").val();
+    let lang_ru 	= $("#lang_ru").val();
+    let lang_ua 	= $("#lang_ua").val();
+    let lang_eng 	= $("#lang_eng").val();
+    let lang_id 	= $("#lang_id").val();
 	swal({
 		title: "Зберегти зміни?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -88,7 +89,9 @@ function dropLanguage(id) {
 						swal("Видалено!", "", "success");
 						$("#LanguageCard").modal("hide");
 						loadLanguageList();
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -102,7 +105,7 @@ function dropLanguage(id) {
 function loadContactsList() {
 	JsHttpRequest.query($rcapi,{ 'w': 'loadContactsList' }, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
-		let dt=$("#datatable");
+		let dt = $("#datatable");
 		dt.DataTable().destroy();
 		$("#contacts_range").html(result.content);
 		dt.DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
@@ -110,7 +113,7 @@ function loadContactsList() {
 }
 
 function newContactsCard(){
-	let lang =$("#lang_select option:selected").val();
+	let lang = $("#lang_select option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'newContactsCard', 'lang':lang},
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		showContactsCard(result["id"]);
@@ -131,11 +134,11 @@ function showContactsCard(id){
 }
 
 function saveContacts() {
-    let id = $("#contact_id").val();
-    let title = $("#contact_title").val();
-    let address = $("#contact_address").val();
-    let schedule = $("#contact_schedule").val();
-    let phone = $("#contact_phone").val();
+    let id 			= $("#contact_id").val();
+    let title 		= $("#contact_title").val();
+    let address 	= $("#contact_address").val();
+    let schedule 	= $("#contact_schedule").val();
+    let phone 		= $("#contact_phone").val();
 	swal({
 		title: "Зберегти зміни?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -150,7 +153,9 @@ function saveContacts() {
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#ContactsCard").modal("hide");
 						loadContactsList();
-					} else {swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -174,7 +179,9 @@ function dropContacts(id) {
 						swal("Видалено!", "", "success");
 						$("#ContactsCard").modal("hide");
 						loadContactsList();
-					} else {swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -188,21 +195,21 @@ function dropContacts(id) {
 function loadContactsBotList() {
 	JsHttpRequest.query($rcapi,{ 'w': 'loadContactsBotList' }, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
-        let dt=$("#datatable");
+        let dt = $("#datatable");
         dt.DataTable().destroy();
         $("#contacts_range").html(result.content);
         dt.DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
     }}, true);
 }
 
-function newContactsBotCard(){
+function newContactsBotCard() {
 	JsHttpRequest.query($rcapi,{ 'w': 'newContactsBotCard' },
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		showContactsBotCard(result["id"]);
 	}}, true);
 }
 
-function showContactsBotCard(id){
+function showContactsBotCard(id) {
 	if (id<=0 || id===""){toastr["error"](errs[0]);}
 	if (id>0){
 		JsHttpRequest.query($rcapi,{ 'w': 'showContactsBotCard', 'id':id}, 
@@ -211,16 +218,18 @@ function showContactsBotCard(id){
 			$("#ContactsCardBody").html(result["content"]);
 			$("#ContactsCardLabel").html($("#contact_id").val());
 			$("#contacts_tabs").tab();
-			var elem = document.querySelector('#contact_status');if (elem){ var dflt = new Switchery(elem, { color: '#1AB394' });}
+			let elem = document.querySelector('#contact_status');
+			if (elem){ new Switchery(elem, { color: '#1AB394' });}
 		}}, true);
 	}
 }
 
 function saveContactsBot() {
-    let id = $("#contact_id").val();
-    let text = $("#contact_text").val();
-    let icon =$("#icon_select option:selected").val();
-    let link = $("#contact_link").val();
+    let id 		= $("#contact_id").val();
+    let text 	= $("#contact_text").val();
+    let icon 	= $("#icon_select option:selected").val();
+    let link 	= $("#contact_link").val();
+
 	swal({
 		title: "Зберегти зміни?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -236,7 +245,9 @@ function saveContactsBot() {
 						swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
 						$("#ContactsCard").modal("hide");
 						loadContactsBotList();
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -260,7 +271,9 @@ function dropContactsBot(id) {
 						swal("Видалено!", "", "success");
 						$("#ContactsCard").modal("hide");
 						loadContactsBotList();
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -271,27 +284,27 @@ function dropContactsBot(id) {
 
 //=news====================================================================
 
-function loadNewsPhoto(news_id,lang_id){
+function loadNewsPhoto(news_id, lang_id) {
 	JsHttpRequest.query($rcapi,{ 'w': 'loadNewsPhoto', 'news_id':news_id, 'lang_id':lang_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){
-        let dt=$("#datatable");
+        let dt = $("#datatable");
         dt.DataTable().destroy();
         $("#news_photo_place").html(result.content);
         dt.DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
     }}, true);
 }
 
-function showNewsUploadLogoForm(news_id,lang_id,file_id){
+function showNewsUploadLogoForm(news_id, lang_id, file_id) {
 	$("#photo_news_id").val(news_id);
 	$("#photo_lang_id").val(lang_id);
 	$("#photo_file_id").val(file_id);
-	var myDropzone3 = new Dropzone("#myDropzone3",{ dictDefaultMessage: "Натисніть для вибору файлів або перетягніть їх це поле!" });
+	let myDropzone3 = new Dropzone("#myDropzone3",{ dictDefaultMessage: "Натисніть для вибору файлів або перетягніть їх це поле!" });
 	myDropzone3.removeAllFiles(true);
 	myDropzone3.on("queuecomplete", function() {
 		toastr["info"]("Завантаження файлів завершено.");
 		this.removeAllFiles();
 		$("#fileNewsPhotoUploadForm").modal("hide");
-		loadNewsPhoto(news_id,lang_id);
+		loadNewsPhoto(news_id, lang_id);
 	});
 }
 
@@ -309,7 +322,9 @@ function deleteNewsLogo(news_id){
 					if (result["answer"]==1){ 
 						swal("Видалено!", "Внесені Вами зміни успішно збережені.", "success");
 						loadNewsPhoto(news_id);
-					} else { swal("Помилка!", result["error"], "error");}
+					} else {
+						swal("Помилка!", result["error"], "error");
+					}
 				}}, true);
 			}
 		} else {
@@ -321,7 +336,7 @@ function deleteNewsLogo(news_id){
 function loadNewsList() {
 	JsHttpRequest.query($rcapi,{ 'w': 'loadNewsList' }, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
-        let dt=$("#datatable");
+        let dt = $("#datatable");
         dt.DataTable().destroy();
         $("#news_range").html(result.content);
         dt.DataTable({keys: true,"aaSorting": [],"processing": true,"scrollX": true,fixedColumns: {leftColumns: 2},"searching": true,fixedHeader: true,"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]], "language": {"url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Ukrainian.json"}});
@@ -329,7 +344,7 @@ function loadNewsList() {
 }
 
 function newNewsCard(){
-	let lang =$("#lang_select option:selected").val();
+	let lang = $("#lang_select option:selected").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'newNewsCard', 'lang':lang}, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
 		showNewsCard(result["id"]);
@@ -345,7 +360,8 @@ function showNewsCard(id){
 			document.getElementById("NewsCardBody").innerHTML=result["content"];
 			document.getElementById("NewsCardLabel").innerHTML="«" + $("#news_caption").val() + "» (" + $("#news_id").val() + ")";
 			$("#news_tabs").tab();
-			var elem = document.querySelector('#news_status');if (elem){ var dflt = new Switchery(elem, { color: '#1AB394' });}	
+			let elem = document.querySelector('#news_status');
+			if (elem){ new Switchery(elem, { color: '#1AB394' });}
 			initSample();
 			loadNewsPhoto(id,$("#lang_id").val());
 		}}, true);
@@ -353,11 +369,12 @@ function showNewsCard(id){
 }
 
 function saveNews() {
-    let id = $("#news_id").val();
+    let id 		= $("#news_id").val();
     let caption = $("#news_caption").val();
-    let data = $("#news_data").val();
-    let short = $("#news_short").val();
-    let descr = CKEDITOR.instances.editor.getData();
+    let data 	= $("#news_data").val();
+    let short 	= $("#news_short").val();
+    let descr 	= CKEDITOR.instances.editor.getData();
+
 	swal({
 		title: "Зберегти зміни?",
 		text: "", type: "warning", allowOutsideClick:true, allowEscapeKey:true, showCancelButton: true, confirmButtonColor: "#1ab394",
@@ -572,60 +589,141 @@ function showReviewsUploadForm(review_id) {
     });
 }
 
-function OpenReviewsUploadForm(review_id) {
-	Dropzone.autoDiscover = false;
+/**
+ *
+ * 767867867867
+ */
 
-	$('#dropReview').dropzone({
-		addRemoveLinks: true,
-
-		init: function (){
-			let myDropzone = this;
-
-			$.ajax({
-				url: 'upload_saved_logo.php',
-				type: 'post',
-				data: {request: 2},
-				dataType: 'json',
-
-				success: function(response){
-
-					console.log('success!!');
-					$.each(response, function(key,value){
-						let mockFile = {name: value.name, size: value.size};
-
-						myDropzone.emit('addedfile', mockFile);
-						myDropzone.emit('thumbnail', mockFile, value.path);
-						myDropzone.emit('complete', mockFile);
-
-					})
-				}
-			});
-		},
-
-		removedfile: function (file) {
-			$.ajax({
-				url:'delete_saved_logo',
-				type:'post',
-				data : {"file_name" : file.name},
-
-				success : function () {
-					console.log('removed ' + file.name);
-				}
-			});
-			var _ref;
-			return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+function list_image() {
+	$.ajax({
+		url:"upload_dropzone.php",
+		success:function(data){
+			$('#preview').html(data);
 		}
 	});
-
-
-    // drop.removeAllFiles(true);
-    // drop.on("queuecomplete", function() {
-    //     toastr["info"]("Завантаження файлів завершено.");
-    //     this.removeAllFiles();
-    //     $("#fileReviewsPhotoUploadForm").modal("hide");
-    //     showReviewCard(review_id);
-    // });
 }
+
+function removeReviewCard(a) {
+	let name = $(a).attr('id');
+	console.log('removed' + name);
+	$.ajax({
+		url: "upload_dropzone.php",
+		method: "POST",
+		data: {name:name},
+		success: function(data) {
+			list_image();
+		}
+	})
+}
+
+function choseReviewCardImage(a) {
+	let review_id = $("#review_id").val();
+	let file_name = $(a).attr('id');
+	JsHttpRequest.query($rcapi,{ 'w':'choseReviewCardImage', 'review_id':review_id, 'file_name':file_name},
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+			if (result["answer"]==1){
+				$("#fileReviewsPhotoUploadForm2").modal('hide');
+				showReviewCard(review_id);
+			} else {
+				swal("Помилка!", result["error"], "error");
+			}
+		}}, true);
+}
+
+function OpenReviewsUploadForm() {
+
+	// Dropzone.options.dropzoneFrom = {
+	// 	autoProcessQueue: false,
+	// 	acceptedFiles:".png,.jpg,.gif,.bmp,.jpeg,.webp",
+	// 	init: function(){
+	// 		var submitButton = document.querySelector('#submit-all');
+	// 		myDropzone = this;
+	// 		submitButton.addEventListener("click", function(){
+	// 			myDropzone.processQueue();
+	// 		});
+	// 		this.on("complete", function(){
+	// 			if(this.getQueuedFiles().length == 0 && this.getUploadingFiles().length == 0)
+	// 			{
+	// 				var _this = this;
+	// 				_this.removeAllFiles();
+	// 			}
+	// 			list_image();
+	// 		});
+	// 	},
+	// };
+
+	list_image();
+}
+
+// function OpenReviewsUploadForm(review_id) {
+	// Dropzone.autoDiscover = false;
+
+	// $('#dropReview').dropzone({
+	// 	addRemoveLinks: true,
+	// 	addSelection: true,
+	//
+	// 	init: function () {
+	// 		let myDropzone = this;
+	//
+	// 		$.ajax({
+	// 			url: 'dropzone/init.php',
+	// 			type: 'post',
+	// 			data: {request: 2},
+	// 			dataType: 'json',
+	//
+	// 			success: function(response) {
+	//
+	// 				$.each(response, function(key, value) {
+	// 					let mockFile = {name: value.name, size: value.size};
+	//
+	// 					myDropzone.emit('addedfile', mockFile);
+	// 					myDropzone.emit('thumbnail', mockFile, value.path);
+	// 					myDropzone.emit('complete', mockFile);
+	//
+	// 				})
+	// 			}
+	// 		});
+	// 	},
+
+		// uploadedfile: function(file) {
+		// 	console.log(file.name);
+		// },
+		//
+		// uploaded: function(file) {
+		// 	console.log(file.name);
+		// },
+		//
+		// uploadedFiles: function(file) {
+		// 	console.log(file.name);
+		// },
+
+		// addedfile: function(file) {
+		// 	$.ajax({
+		// 		url:'dropzone/add.php',
+		// 		type:'post',
+		// 		data : {"file_name" : file.name},
+		//
+		// 		success : function () {
+		// 			console.log('added ' + file.name);
+		// 		}
+		// 	});
+		// },
+
+		// removedfile: function(file) {
+		// 	$.ajax({
+		// 		url:'dropzone/remove.php',
+		// 		type:'post',
+		// 		data : {"file_name" : file.name},
+		//
+		// 		success : function () {
+		// 			console.log('removed ' + file.name);
+		// 		}
+		// 	});
+		// 	let _ref;
+		// 	return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+		// }
+	// });
+// }
 
 /*==== Request ====*/
 
@@ -648,10 +746,10 @@ function showRequestCard(id) {
 }
 
 function saveRequest() {
-    let id = $("#request_id").val();
-    let vin = $("#request_vin").val();
-    let phone = $("#request_phone").val();
-    let text = $("#request_text").val();
+    let id 		= $("#request_id").val();
+    let vin 	= $("#request_vin").val();
+    let phone 	= $("#request_phone").val();
+    let text 	= $("#request_text").val();
 
     swal({
             title: "Зберегти зміни?",
@@ -666,7 +764,9 @@ function saveRequest() {
                             swal("Збережено!", "Внесені Вами зміни успішно збережені.", "success");
                             $("#RequestCard").modal("hide");
                             loadRequestsList();
-                        } else { swal("Помилка!", result["error"], "error");}
+                        } else {
+                        	swal("Помилка!", result["error"], "error");
+                        }
                     }}, true);
             } else {
                 swal("Відмінено", "Внесені Вами зміни анульовано.", "error");
@@ -690,7 +790,9 @@ function dropRequest() {
                                 swal("Видалено!", "", "success");
                                 $("#RequestCard").modal("hide");
                                 loadRequestsList();
-                            } else { swal("Помилка!", result["error"], "error");}
+                            } else {
+                            	swal("Помилка!", result["error"], "error");
+                            }
                         }}, true);
                 }
             } else {
@@ -737,8 +839,8 @@ function showSeoTextCard(id) {
 }
 
 function saveSeoText(id) {
-	let router = $("#seo_router").val();
-	let link = $("#seo_link").val();
+	let router 	= $("#seo_router").val();
+	let link 	= $("#seo_link").val();
 	let text_ru = $("#seo_text_ru").next().find($(".note-editable")).html().replace(/"/g,"'");
 	let text_ua = $("#seo_text_ua").next().find($(".note-editable")).html().replace(/"/g,"'");
 	let text_en = $("#seo_text_en").next().find($(".note-editable")).html().replace(/"/g,"'");
@@ -797,14 +899,14 @@ function showSeoTitleCard(id) {
 }
 
 function saveSeoTitle(id) {
-	let router = $("#seo_router").val();
-	let link = $("#seo_link").val();
-	let text_ru = $("#seo_text_ru").next().find($(".note-editable")).html().replace(/"/g,"'");
-	let text_ua = $("#seo_text_ua").next().find($(".note-editable")).html().replace(/"/g,"'");
-	let text_en = $("#seo_text_en").next().find($(".note-editable")).html().replace(/"/g,"'");
-	let descr_ru = $("#seo_descr_ru").next().find($(".note-editable")).html().replace(/"/g,"'");
-	let descr_ua = $("#seo_descr_ua").next().find($(".note-editable")).html().replace(/"/g,"'");
-	let descr_en = $("#seo_descr_en").next().find($(".note-editable")).html().replace(/"/g,"'");
+	let router 		= $("#seo_router").val();
+	let link 		= $("#seo_link").val();
+	let text_ru 	= $("#seo_text_ru").next().find($(".note-editable")).html().replace(/"/g,"'");
+	let text_ua 	= $("#seo_text_ua").next().find($(".note-editable")).html().replace(/"/g,"'");
+	let text_en 	= $("#seo_text_en").next().find($(".note-editable")).html().replace(/"/g,"'");
+	let descr_ru 	= $("#seo_descr_ru").next().find($(".note-editable")).html().replace(/"/g,"'");
+	let descr_ua 	= $("#seo_descr_ua").next().find($(".note-editable")).html().replace(/"/g,"'");
+	let descr_en 	= $("#seo_descr_en").next().find($(".note-editable")).html().replace(/"/g,"'");
 
 	swal({
 			title: "Зберегти зміни?",
@@ -864,8 +966,8 @@ function showSeoFooterCard(id) {
 }
 
 function saveSeoFooter(id) {
-	let router = $("#seo_router").val();
-	let link = $("#seo_link").val();
+	let router 	= $("#seo_router").val();
+	let link 	= $("#seo_link").val();
 	let text_ru = $("#seo_text_ru").next().find($(".note-editable")).html().replace(/"/g,"'");
 	let text_ua = $("#seo_text_ua").next().find($(".note-editable")).html().replace(/"/g,"'");
 	let text_en = $("#seo_text_en").next().find($(".note-editable")).html().replace(/"/g,"'");
@@ -928,8 +1030,8 @@ function showSeoGenerateCard(id) {
 }
 
 function saveSeoGenerate(id) {
-	let router = $("#seo_router").val();
-	let link = $("#seo_link").val();
+	let router 	= $("#seo_router").val();
+	let link 	= $("#seo_link").val();
 	let text_ru = $("#seo_text_ru").next().find($(".note-editable")).html().replace(/"/g,"'");
 	let text_ua = $("#seo_text_ua").next().find($(".note-editable")).html().replace(/"/g,"'");
 	let text_en = $("#seo_text_en").next().find($(".note-editable")).html().replace(/"/g,"'");
