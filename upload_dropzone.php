@@ -26,9 +26,12 @@ if(false !== $files) {
         if('.' !=  $file && '..' != $file) {
             $output .= '
                <div class="col-md-2">
-                <img src="' . $folder_name . $file . '" class="img-thumbnail" width="175" height="175" style="height:175px;" />
-                <button type="button" class="btn btn-link remove_image" onclick="removeReviewCard(this);" id="' . $file . '">Remove</button>
-                <button type="button" class="btn btn-link remove_image" onclick="choseReviewCardImage(this);" id="' . $file . '">Choose</button>
+                <img src="' . $folder_name . $file . '" class="img-thumbnail img-center text-center" width="175" height="175" style="height: 175px; margin-top: 30px;" />
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-danger" onclick="removeReviewCard(this);" id="' . $file . '">Remove</button>
+                    <button type="button" class="btn btn-sm btn-warning" onclick="choseReviewCardImage(this);" id="' . $file . '">Choose</button>
+                    <button type="button" class="btn btn-sm btn-info" data-src="' . $folder_name . $file . '" onclick="copyReviewImagePath(this);" id="' . $file . '">Copy</button>
+                </div>
                </div>
             ';
         }

@@ -630,6 +630,12 @@ function choseReviewCardImage(a) {
 		}}, true);
 }
 
+function copyReviewImagePath(element) {
+	let text = "https://portal.myparts.pro/" +  $(element).attr('data-src');
+	navigator.clipboard.writeText(text);
+	toastr["info"]("Скопійовано до буферу!");
+}
+
 function OpenReviewsUploadForm() {
 
 	// Dropzone.options.dropzoneFrom = {

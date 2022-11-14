@@ -9,10 +9,10 @@ header('Content-Type: text/html; charset=utf-8');
 
 require(RDD . "/checkbox-in-ua-php-sdk/vendor/autoload.php");
 
-        $server = 'https://api.checkbox.in.ua/api/v1';
-        $login  = 'vera_tychina';
-        $pass   = 'Qwerty456852z';
-        $lkey   = '6c387c0dd48603b314054ace';
+$server = 'https://api.checkbox.in.ua/api/v1';
+$login  = 'bogdanchornenkiy';
+$pass   = 'Qwerty456852z';
+$lkey   = '7b723999628816eb0df24b8e';
 
 $config = new \igorbunov\Checkbox\Config([
     \igorbunov\Checkbox\Config::API_URL     => $server,
@@ -23,50 +23,54 @@ $config = new \igorbunov\Checkbox\Config([
 
 $api = new \igorbunov\Checkbox\CheckboxJsonApi($config);
 
-$api->signInCashier();
+try {
+    $api->signInCashier();
+} catch (\igorbunov\Checkbox\Errors\EmptyResponse $e) {
+    var_dump("sign in error");
+}
 
 if ($api->getCashierShift() === null) {
     $api->createShift();
 }
 
-$cashier_name = iconv("windows-1251", "UTF-8", "Касир");
-$department = iconv("windows-1251", "UTF-8", "Отдел");
-$name1 = iconv("windows-1251", "UTF-8", "Биовак");
-$name2 = iconv("windows-1251", "UTF-8", "Биовак 2");
+//$cashier_name = iconv("windows-1251", "UTF-8", "Касир");
+//$department = iconv("windows-1251", "UTF-8", "Отдел");
+//$name1 = iconv("windows-1251", "UTF-8", "Биовак");
+//$name2 = iconv("windows-1251", "UTF-8", "Биовак 2");
 
-$receipt = new \igorbunov\Checkbox\Models\Receipts\SellReceipt(
-    $cashier_name, // кассир
-    $department, // отдел
-    new \igorbunov\Checkbox\Models\Receipts\Goods\Goods(
-        [
-            new \igorbunov\Checkbox\Models\Receipts\Goods\GoodItemModel( // товар 1
-                new \igorbunov\Checkbox\Models\Receipts\Goods\GoodModel(
-                    'vm-123', // good_id
-                    50 * 100, // 50 грн
-                    $name1 // название товара
-                ),
-                1 * 1000 // кол-во товара  1 шт
-            ),
-            new \igorbunov\Checkbox\Models\Receipts\Goods\GoodItemModel( // товар 2
-                new \igorbunov\Checkbox\Models\Receipts\Goods\GoodModel(
-                    'vm-124', // good_id
-                    20 * 100, // 20 грн
-                    $name2 // название товара
-                ),
-                2 * 1000 // кол-во товара 2 шт
-            )
-        ]
-    ),
-    'admin@gmail.com', // кому отправлять чек по почте
-    new \igorbunov\Checkbox\Models\Receipts\Payments\Payments([
-        new \igorbunov\Checkbox\Models\Receipts\Payments\CardPaymentPayload( // безналичная оплата
-            40 * 100 // 40 грн
-        ),
-        new \igorbunov\Checkbox\Models\Receipts\Payments\CashPaymentPayload( // наличная оплата
-            50 * 100 // 50 грн
-        )
-    ])
-);
+//$receipt = new \igorbunov\Checkbox\Models\Receipts\SellReceipt(
+//    $cashier_name, // кассир
+//    $department, // отдел
+//    new \igorbunov\Checkbox\Models\Receipts\Goods\Goods(
+//        [
+//            new \igorbunov\Checkbox\Models\Receipts\Goods\GoodItemModel( // товар 1
+//                new \igorbunov\Checkbox\Models\Receipts\Goods\GoodModel(
+//                    'vm-123', // good_id
+//                    50 * 100, // 50 грн
+//                    $name1 // название товара
+//                ),
+//                1 * 1000 // кол-во товара  1 шт
+//            ),
+//            new \igorbunov\Checkbox\Models\Receipts\Goods\GoodItemModel( // товар 2
+//                new \igorbunov\Checkbox\Models\Receipts\Goods\GoodModel(
+//                    'vm-124', // good_id
+//                    20 * 100, // 20 грн
+//                    $name2 // название товара
+//                ),
+//                2 * 1000 // кол-во товара 2 шт
+//            )
+//        ]
+//    ),
+//    'admin@gmail.com', // кому отправлять чек по почте
+//    new \igorbunov\Checkbox\Models\Receipts\Payments\Payments([
+//        new \igorbunov\Checkbox\Models\Receipts\Payments\CardPaymentPayload( // безналичная оплата
+//            40 * 100 // 40 грн
+//        ),
+//        new \igorbunov\Checkbox\Models\Receipts\Payments\CashPaymentPayload( // наличная оплата
+//            50 * 100 // 50 грн
+//        )
+//    ])
+//);
 
 //$api->createSellReceipt($receipt); // выполняем оплату
 

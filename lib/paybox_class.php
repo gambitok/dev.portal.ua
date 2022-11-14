@@ -818,10 +818,18 @@ class paybox {
 
             $api = new \igorbunov\Checkbox\CheckboxJsonApi($config);
 
-            $api->signInCashier();
+            try {
+                $api->signInCashier();
+            } catch (\igorbunov\Checkbox\Errors\EmptyResponse $e) {
+                $answer = 0; $err = "Помилка авторизації";
+            }
 
-            if (empty($api->getCashierShift())) {
-                $api->createShift();
+            if ($api->getCashierShift() === null) {
+                try {
+                    $api->createShift();
+                } catch (Exception $e) {
+                    $answer = 0; $err = "Помилка створення зміни";
+                }
             }
 
             $shifts = json_decode(json_encode($api->getShifts(
@@ -981,7 +989,7 @@ class paybox {
     }
 
     // 1 or 2
-    public function createXReport($prro_id)
+    public function createXReport($prro_id): array
     {
         $answer = 0; $err = "";
         $dataPrro = $this->getUserPrroMain($prro_id);
@@ -991,7 +999,7 @@ class paybox {
         $pass   = $dataPrro["pass"];
         $lkey   = $dataPrro["lkey"];
 
-        if ($prro_id > 0 && $server != "") {
+        if ($prro_id > 0 && $server !== "") {
 
             $config = new \igorbunov\Checkbox\Config([
                 \igorbunov\Checkbox\Config::API_URL     => $server,
@@ -1002,10 +1010,18 @@ class paybox {
 
             $api = new \igorbunov\Checkbox\CheckboxJsonApi($config);
 
-            $api->signInCashier();
+            try {
+                $api->signInCashier();
+            } catch (\igorbunov\Checkbox\Errors\EmptyResponse $e) {
+                $answer = 0; $err = "Помилка авторизації";
+            }
 
-            if (empty($api->getCashierShift())) {
-                $api->createShift();
+            if ($api->getCashierShift() === null) {
+                try {
+                    $api->createShift();
+                } catch (Exception $e) {
+                    $answer = 0; $err = "Помилка створення зміни";
+                }
             }
 
             try {
@@ -1018,7 +1034,9 @@ class paybox {
 
                 $answer = 1; $err = $text;
             } catch (\igorbunov\Checkbox\Errors\NoActiveShift $err) {
-                $answer = 0; $err = "Помилка";
+                $answer = 0; $err = "Помилка NoActiveShift";
+            } catch (Exception $e) {
+                $answer = 0; $err = "Помилка $e";
             }
 
         }
@@ -1048,10 +1066,18 @@ class paybox {
 
             $api = new \igorbunov\Checkbox\CheckboxJsonApi($config);
 
-            $api->signInCashier();
+            try {
+                $api->signInCashier();
+            } catch (\igorbunov\Checkbox\Errors\EmptyResponse $e) {
+                $answer = 0; $err = "Помилка авторизації";
+            }
 
-            if (empty($api->getCashierShift())) {
-                $api->createShift();
+            if ($api->getCashierShift() === null) {
+                try {
+                    $api->createShift();
+                } catch (Exception $e) {
+                    $answer = 0; $err = "Помилка створення зміни";
+                }
             }
 
             try {
