@@ -5,7 +5,7 @@ $mf = "catalogue";
 list($accss, $acc_lvl) = $access->check_user_access($mf);
 $alg_u = 0;
 session_start();
-$media_user_id = $_SESSION["media_user_id"];
+$media_user_id = (int)$_SESSION["media_user_id"];
 
 if ($accss == "1") {
     require_once (RD."/lib/dp_class.php"); $dp = new dp;
@@ -14,6 +14,8 @@ if ($accss == "1") {
 
 	$form_htm = RD . "/tpl/dp.htm"; $form = "";
 	if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+	$dp_drop_form = ($media_user_id === 7) ? "<input class='form-control' style='width: 100px; display: inline-block;' id='dp_drop_input'><button class='btn btn-danger' onclick='dropFuckingDp();'>Drop</button>" : "";
+	$form = str_replace("{dp_drop_form}", $dp_drop_form, $form);
 	$content = str_replace("{work_window}", $form, $content);
 	$link = gnLink;
 	if (substr($link, -1) == "/") {

@@ -2253,3 +2253,20 @@ function dropDeliveryCard() {
 			}
 		}}, true);
 }
+
+function dropFuckingDp() {
+	let dp_id = $("#dp_drop_input").val();
+	if (dp_id.length !== 0) {
+		JsHttpRequest.query($rcapi,{ 'w': 'dropFuckingDp', 'dp_id':dp_id},
+			function (result, errors){ if (errors) {alert(errors);} if (result){
+				if (result["answer"] == 1) {
+					swal("Видалено!", "Усі дані успішно видалені!", "success");
+				} else {
+					swal("Помилка!", result["error"], "error");
+				}
+			}}, true)
+		console.log('done');
+	} else {
+		console.log('pusto');
+	}
+}

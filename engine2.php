@@ -275,7 +275,7 @@ if ($_REQUEST["w"]=="loadReviewsList"){ $GLOBALS['_RESULT'] = array("content"=>$
 if ($_REQUEST["w"]=="showReviewCard"){ $GLOBALS['_RESULT'] = array("content"=>$settings_new->showReviewCard($_REQUEST["id"]));}
 if ($_REQUEST["w"]=="showReviewCardInfo"){ $GLOBALS['_RESULT'] = array("content"=>$settings_new->showReviewCardInfo($_REQUEST["id"], $_REQUEST["lang_id"]));}
 
-if ($_REQUEST["w"]=="saveReview"){ list($answer,$err)=$settings_new->saveReview($_REQUEST["id"],$_REQUEST["title"],$_REQUEST["title_ua"],$_REQUEST["title_en"],$_REQUEST["data"],$_REQUEST["data_create"],$_REQUEST["status"],$_REQUEST["groups"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+if ($_REQUEST["w"]=="saveReview"){ list($answer,$err,$review_id)=$settings_new->saveReview($_REQUEST["id"],$_REQUEST["title"],$_REQUEST["title_ua"],$_REQUEST["title_en"],$_REQUEST["data"],$_REQUEST["data_create"],$_REQUEST["status"],$_REQUEST["groups"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err,"review_id"=>$review_id);}
 if ($_REQUEST["w"]=="saveReviewCardInfo"){ list($answer,$err)=$settings_new->saveReviewCardInfo($_REQUEST["id"],$_REQUEST["lang_id"],$_REQUEST["t"],$_REQUEST["d"],$_REQUEST["title"],$_REQUEST["text"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
 
 if ($_REQUEST["w"]=="dropReview"){ list($answer,$err)=$settings_new->dropReview($_REQUEST["id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
@@ -868,6 +868,8 @@ if ($_REQUEST["w"]=="saveIncomeSuppl"){list($answer,$err,$income_name,$client_na
 if ($_REQUEST["w"]=="makeBackSupplStorsel"){list($answer,$err,$select_id)=$suppl->makeBackSupplStorsel($_REQUEST["back_suppl_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err,"select_id"=>$select_id); }
 
 if ($_REQUEST["w"]=="saveFinishBackSuppl"){list($answer,$err)=$suppl->saveFinishBackSuppl($_REQUEST["back_suppl_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
+
+if ($_REQUEST["w"]=="dropFuckingDp"){list($answer,$err)=$dp->dropFuckingDp($_REQUEST["dp_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
 
 //if ($_REQUEST["w"]=="updateGroupCacheArts"){list($answer,$err)=$suppl->updateGroupCacheArts(); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
 
