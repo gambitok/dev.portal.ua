@@ -541,8 +541,12 @@ function saveReview() {
 							if (id) {
 								$("#photo_review_id").val(id);
 							}
-                            $("#ReviewCard").modal("hide");
-                            loadReviewsList();
+							if (id === '0') {
+								showReviewCard(result["review_id"]);
+							} else {
+								$("#ReviewCard").modal("hide");
+							}
+							loadReviewsList();
                         } else {
                         	swal("Помилка!", result["error"], "error");
                         }

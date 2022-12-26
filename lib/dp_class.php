@@ -6377,7 +6377,7 @@ class dp
     function getNovaPoshtaWarehousesSelect($ref, $department_ref)
     {
         $list = "<option value=\"0\">-Не вибрано-</option>";
-        $np = new NovaPoshtaApi2('e52c020f392e0da179684b87cdbbbf05');
+        $np = new NovaPoshtaApi2('c11f032abf542a39f2324d58004e12c1');
         $arr = $np->getWarehouses($ref)['data'];
         foreach ($arr as $val) {
             $name = iconv("UTF-8", "windows-1251", $val["Description"]);

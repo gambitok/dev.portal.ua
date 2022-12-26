@@ -449,7 +449,7 @@ class sale_invoice {
         $r = $db->query("SELECT `ID` FROM `PRRO_MAIN` WHERE `CLIENT_ID` = $client_id LIMIT 1;");
         $n = $db->num_rows($r);
 
-        $r2 = $db->query("SELECT `ID` FROM `PRRO_CASHIERS` WHERE `USER_ID` = $user_id LIMIT 1;");
+        $r2 = $db->query("SELECT `ID` FROM `PRRO_CASHIERS` WHERE `USER_ID` = $user_id AND `STATUS` = 1 LIMIT 1;");
         $n2 = $db->num_rows($r2);
 
         if ($n > 0 && $n2 > 0) {
@@ -735,7 +735,11 @@ class sale_invoice {
                 }
 
                 if ($api->getCashierShift() === null) {
-                    $api->createShift();
+                    try {
+                        $api->createShift();
+                    } catch (Exception $e) {
+                        $answer = 0; $err = "Помилка створення зміни";
+                    }
                 }
 
                 $r = $db->query("SELECT `CB_FNAME` FROM `PRRO_CASHIERS` WHERE `USER_ID` = $user_id AND `STATUS` = 1 LIMIT 1;");
