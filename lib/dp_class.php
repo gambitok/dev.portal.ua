@@ -247,7 +247,7 @@ class dp
         return $list;
     }
 
-    function newDpCard()
+    public function newDpCard()
     {
         $db = DbSingleton::getDb();
         session_start();
@@ -259,24 +259,24 @@ class dp
         return $dp_id;
     }
 
-    function newDpFromDp($from_dp_id, $tpoint_id, $dp_note = "")
+    public function newDpFromDp($from_dp_id, $tpoint_id, $dp_note = "")
     {
         $db = DbSingleton::getDb();
         $dp_id = 0;
         $r = $db->query("SELECT * FROM `J_DP` WHERE `id` = $from_dp_id LIMIT 1;");
         $n = $db->num_rows($r);
         if ($n == 1) {
-            $doc_type_id = $db->result($r, 0, "doc_type_id");
-            $client_id = $db->result($r, 0, "client_id");
-            $client_conto_id = $db->result($r, 0, "client_conto_id");
-            $data_pay = $db->result($r, 0, "data_pay");
-            $cash_id = $db->result($r, 0, "cash_id");
-            $usd_to_uah = $db->result($r, 0, "usd_to_uah");
-            $eur_to_uah = $db->result($r, 0, "eur_to_uah");
-            $vat_use = $db->result($r, 0, "vat_use");
-            $delivery_type_id = $db->result($r, 0, "delivery_type_id");
-            $carrier_id = $db->result($r, 0, "carrier_id");
-            $dp_user_id = $db->result($r, 0, "user_id");
+            $doc_type_id        = $db->result($r, 0, "doc_type_id");
+            $client_id          = $db->result($r, 0, "client_id");
+            $client_conto_id    = $db->result($r, 0, "client_conto_id");
+            $data_pay           = $db->result($r, 0, "data_pay");
+            $cash_id            = $db->result($r, 0, "cash_id");
+            $usd_to_uah         = $db->result($r, 0, "usd_to_uah");
+            $eur_to_uah         = $db->result($r, 0, "eur_to_uah");
+            $vat_use            = $db->result($r, 0, "vat_use");
+            $delivery_type_id   = $db->result($r, 0, "delivery_type_id");
+            $carrier_id         = $db->result($r, 0, "carrier_id");
+            $dp_user_id         = $db->result($r, 0, "user_id");
 
             $r = $db->query("SELECT MAX(`id`) as mid FROM `J_DP`;");
             $dp_id = 0 + $db->result($r, 0, "mid") + 1;
@@ -321,14 +321,14 @@ class dp
         return ($k > 0) ? "lightgreen" : "lightyellow";
     }
 
-    function getDpAccessStatus($media_user_id)
+    public function getDpAccessStatus($media_user_id)
     {
         $db = DbSingleton::getDb();
         $r = $db->query("SELECT `access_dp` FROM `media_users` WHERE `id` = $media_user_id LIMIT 1;");
         return $db->result($r, 0, "access_dp");
     }
 
-    function getDpPauseAccessStatus($media_user_id)
+    public function getDpPauseAccessStatus($media_user_id)
     {
         $db = DbSingleton::getDb();
         $r = $db->query("SELECT `access_dp_pause` FROM `media_users` WHERE `id` = $media_user_id LIMIT 1;");
@@ -343,7 +343,7 @@ class dp
         return $access_dp_pause;
     }
 
-    function show_dp_list()
+    public function show_dp_list()
     {
         $db = DbSingleton::getDb();
         $gmanual = new gmanual;
@@ -374,36 +374,36 @@ class dp
         ORDER BY j.id DESC $limit;");
         $n = $db->num_rows($r);
         for ($i = 1; $i <= $n; $i++) {
-            $id = $db->result($r, $i - 1, "id");
-            $order_info_id = $db->result($r, $i - 1, "order_info_id");
-            $del_info = $this->getOrderDeliveryInfo($order_info_id);
-            $doc_type_name = $db->result($r, $i - 1, "doc_type_name");
-            $dp_note = $this->getDpNote($id);
-            $doc_nom = $db->result($r, $i - 1, "doc_nom");
-            $tpoint_name = $db->result($r, $i - 1, "tpoint_name");
-            $client_id = $db->result($r, $i - 1, "client_conto_id");
-            $client_name = $db->result($r, $i - 1, "client_name");
-            $cash_name = $db->result($r, $i - 1, "cash_name");
-            $summ = $db->result($r, $i - 1, "summ");
-            $data = $db->result($r, $i - 1, "data");
-            $user_name = $this->getMediaUserName($db->result($r, $i - 1, "user_id"));
-            $status_dp = $db->result($r, $i - 1, "status_dp");
-            $status_processed = $db->result($r, $i - 1, "status_processed");
-            $status_dp_name = ($status_dp !== 80 && $status_dp !== "80") ? $gmanual->get_gmanual_caption($status_dp) : $this->getDpStrStatus($id);
-            $dp_note_cap = ($dp_note === "") ? "<i class='fa fa-minus'></i>" : "<i class='fa fa-plus' title='$dp_note'></i>";
+            $id             = $db->result($r, $i - 1, "id");
+            $order_info_id  = $db->result($r, $i - 1, "order_info_id");
+            $del_info       = $this->getOrderDeliveryInfo($order_info_id);
+            $doc_type_name  = $db->result($r, $i - 1, "doc_type_name");
+            $dp_note        = $this->getDpNote($id);
+            $doc_nom        = $db->result($r, $i - 1, "doc_nom");
+            $tpoint_name    = $db->result($r, $i - 1, "tpoint_name");
+            $client_id      = $db->result($r, $i - 1, "client_conto_id");
+            $client_name    = $db->result($r, $i - 1, "client_name");
+            $cash_name      = $db->result($r, $i - 1, "cash_name");
+            $summ           = $db->result($r, $i - 1, "summ");
+            $data           = $db->result($r, $i - 1, "data");
+            $user_name      = $this->getMediaUserName($db->result($r, $i - 1, "user_id"));
+            $status_dp      = (int)$db->result($r, $i - 1, "status_dp");
+            $status_proc    = (int)$db->result($r, $i - 1, "status_processed");
+            $status_dp_name = ($status_dp !== 80) ? $gmanual->get_gmanual_caption($status_dp) : $this->getDpStrStatus($id);
+            $dp_note_cap    = ($dp_note === "") ? "<i class='fa fa-minus'></i>" : "<i class='fa fa-plus' title='$dp_note'></i>";
 
             if ($this->getDpAccessStatus($media_user_id)) {
                 $dp_note_cap = $dp_note;
             }
 
             $clr = "";
-            if ($status_dp == 79) {
+            if ($status_dp === 79) {
                 $clr = "pink";
-                if ($status_processed == 1) {
+                if ($status_proc === 1) {
                     $clr = "white";
                 }
             }
-            if ($status_dp == 80) {
+            if ($status_dp === 80) {
                 $clr = $this->getStatusDP($id);
             }
 
@@ -530,7 +530,7 @@ class dp
     /*
      * Тип клієнта (зображення)
      * */
-    function getClientTypeImage($client_id)
+    public function getClientTypeImage($client_id)
     {
         $db = DbSingleton::getDb();
         $client = new clients;
@@ -574,7 +574,7 @@ class dp
         return $image;
     }
 
-    function getKoursData()
+    public function getKoursData()
     {
         $db = DbSingleton::getDb();
         $slave = new slave;
@@ -783,7 +783,7 @@ class dp
         return array($form, $prefix . "-" . $doc_nom, $this->labelUnknownsCount($dp_id));
     }
 
-    function getClientWebUsers($client_id)
+    public function getClientWebUsers($client_id)
     {
         $users = [];
         $db = DbSingleton::getDb();
@@ -796,7 +796,7 @@ class dp
         return $users;
     }
 
-    function getDeliveryUserSaved($client_id, $dp_id)
+    public function getDeliveryUserSaved($client_id, $dp_id)
     {
         $client = new clients();
         $list = "";
@@ -848,7 +848,7 @@ class dp
         return $this->replaceLang($list);
     }
 
-    function dropClientOrderInfo($order_info_id, $dp_id)
+    public function dropClientOrderInfo($order_info_id, $dp_id)
     {
         $answer = 0; $err = "Помилка видалення!";
         if ($order_info_id > 0) {
@@ -861,7 +861,7 @@ class dp
         return array($answer, $err);
     }
 
-    public function setClientOrderInfo($order_info_id, $dp_id)
+    public function setClientOrderInfo($order_info_id, $dp_id): array
     {
         $client = new clients();
         $db = DbSingleton::getDb();
@@ -913,7 +913,7 @@ class dp
     /*
      * get delivery info captions
      * */
-    public function getDeliveryInfoCaption($delivery_id, $street, $house, $porch, $department_text, $express, $express_info, $express_payment)
+    public function getDeliveryInfoCaption($delivery_id, $street, $house, $porch, $department_text, $express, $express_info, $express_payment): string
     {
         $info = "";
         switch ($delivery_id) {
@@ -1021,16 +1021,20 @@ class dp
         return $db->result($r, 0, "TEXT");
     }
 
-    function labelUnknownsCount($dp_id) { $db = DbSingleton::getDb();
+    public function labelUnknownsCount($dp_id)
+    {
+        $db = DbSingleton::getDb();
         $r = $db->query("SELECT COUNT(`id`) as count_ids FROM `J_DP_STR_UNKNOWN` WHERE `dp_id` = $dp_id;");
         $amount = $db->result($r, 0, "count_ids") + 0;
-        if ($amount == 0) {
+        if ($amount === 0) {
             $amount = "";
         }
         return $amount;
     }
 
-    function getDpStorageList() { $db = DbSingleton::getDb();
+    public function getDpStorageList()
+    {
+        $db = DbSingleton::getDb();
         $list = "";
         $r = $db->query("SELECT `name` FROM `STORAGE`;");
         $n = $db->num_rows($r);
@@ -1041,7 +1045,9 @@ class dp
         return $list;
     }
 
-    function unlockDpCard($dp_id) { $db = DbSingleton::getDb();
+    function unlockDpCard($dp_id)
+    {
+        $db = DbSingleton::getDb();
         session_start();
         $user_id = $_SESSION["media_user_id"];
         $answer = 0;
@@ -1052,21 +1058,26 @@ class dp
         return $answer;
     }
 
-    function closeDpCard($dp_id) {
+    function closeDpCard($dp_id)
+    {
         session_start();
         $user_id = $_SESSION["media_user_id"];
         $this->unsetDpCardUserAccess($dp_id, $user_id);
         return 1;
     }
 
-    function setDpCardUserAccess($dp_id, $user_id) { $db = DbSingleton::getDb();
+    function setDpCardUserAccess($dp_id, $user_id)
+    {
+        $db = DbSingleton::getDb();
         if ($dp_id > 0 && $user_id > 0) {
             $db->query("UPDATE `J_DP` SET `user_use` = '$user_id' WHERE `id` = $dp_id;");
         }
         return true;
     }
 
-    function unsetDpCardUserAccess($dp_id, $user_id) { $db = DbSingleton::getDb();
+    function unsetDpCardUserAccess($dp_id, $user_id)
+    {
+        $db = DbSingleton::getDb();
         if ($dp_id > 0 && $user_id > 0) {
             $db->query("UPDATE `J_DP` SET `user_use` = '0' WHERE `id` = $dp_id;");
         }
@@ -1079,20 +1090,24 @@ class dp
         $dp_id = $slave->qq($dp_id);
         $r = $db->query("SELECT `oper_status` FROM `J_DP` WHERE `id` = $dp_id LIMIT 1;");
         $n = $db->num_rows($r);
+
         if ($n == 1) {
             $oper_status = $db->result($r, 0, "oper_status");
+
             if ($oper_status == 30) {
                 $r1 = $db->query("SELECT `id`, `status_dps`, `art_id`, `amount`, `storage_id_from` FROM `J_DP_STR` WHERE `dp_id` = $dp_id;");
                 $n1 = $db->num_rows($r1);
                 for ($i1 = 1; $i1 <= $n1; $i1++) {
                     $dp_str_id      = $db->result($r1, $i1 - 1, "id");
                     $status_dps_str = $db->result($r1, $i1 - 1, "status_dps");
+
                     if ($status_dps_str == 93) {
                         $art_id             = $db->result($r1, $i1 - 1, "art_id");
                         $amount             = $db->result($r1, $i1 - 1, "amount");
                         $storage_id_from    = $db->result($r1, $i1 - 1, "storage_id_from");
                         $rs = $dbt->query("SELECT `AMOUNT`, `RESERV_AMOUNT` FROM `T2_ARTICLES_STRORAGE` WHERE `ART_ID` = $art_id AND `STORAGE_ID` = $storage_id_from LIMIT 1;");
                         $ns = $dbt->num_rows($rs);
+
                         if ($ns == 1) {
                             $reserv_amount_s    = $dbt->result($rs, 0, "RESERV_AMOUNT");
                             $amount_s           = $dbt->result($rs, 0, "AMOUNT");
@@ -1116,7 +1131,9 @@ class dp
         return array($answer, $err);
     }
 
-    function setDpClient($dp_id, $client_id) { $db = DbSingleton::getDb();
+    public function setDpClient($dp_id, $client_id)
+    {
+        $db = DbSingleton::getDb();
         $slave = new slave;
         $dp_id = $slave->qq($dp_id);
         $client_id = $slave->qq($client_id);
@@ -1128,7 +1145,9 @@ class dp
         return array($answer, $err);
     }
 
-    function showDpClientList($sel_id) { $db = DbSingleton::getDb();
+    public function showDpClientList($sel_id)
+    {
+        $db = DbSingleton::getDb();
         $list = "";
         $form = ""; $form_htm = RD . "/tpl/clients_parrent_tree.htm";
         if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
@@ -1181,7 +1200,9 @@ class dp
         return $form;
     }
 
-    function getDpTpointInfo($client_id) { $db = DbSingleton::getDb();
+    function getDpTpointInfo($client_id)
+    {
+        $db = DbSingleton::getDb();
         $r = $db->query("SELECT c.*, acc.tpoint_id, tp.name as tpoint_name 
         FROM `A_CLIENTS` c 
             LEFT OUTER JOIN `A_CLIENTS_CONDITIONS` acc ON (acc.client_id = c.id)
@@ -7326,10 +7347,12 @@ class dp
                                 break;
                             }
                         }
+
                         fclose($handle);
                         if (file_exists(RD."/cdn/dp_files/csv/$dp_id/$file_name")) {
                             unlink(RD."/cdn/dp_files/csv/$dp_id/$file_name");
                         }
+
                         $db->query("DELETE FROM `J_DP_CSV` WHERE `dp_id` = $dp_id;");
                         $answer = 1; $err = "";
                     }
@@ -7399,7 +7422,9 @@ class dp
     /*
      * UNKNOWN ARTICLES
     */
-    function loadDpUnknownArticles($dp_id) { $db = DbSingleton::getDb();
+    function loadDpUnknownArticles($dp_id)
+    {
+        $db = DbSingleton::getDb();
         $form = ""; $form_htm = RD . "/tpl/dp_unknown_articles_list.htm";
         if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
 
@@ -7410,7 +7435,7 @@ class dp
             if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
         }
         if ($n == 1) {
-            list($list, $kol_rows) = $this->showDpUnknownStrList($dp_id);
+            [$list, $kol_rows] = $this->showDpUnknownStrList($dp_id);
             $form = str_replace("{UnknownArticlesList}", $list, $form);
             $form = str_replace("{kol_rows}", $kol_rows, $form);
             $form = str_replace("{dp_id}", $dp_id, $form);
@@ -7419,7 +7444,9 @@ class dp
         return $form;
     }
 
-    function showDpUnknownStrList($dp_id) { $db = DbSingleton::getDb();
+    public function showDpUnknownStrList($dp_id)
+    {
+        $db = DbSingleton::getDb();
         $empty_kol = 0; $list = "";
 
         $r = $db->query("SELECT `art_id`, `article_nr_displ`, `brand_id`, `amount`, `bug_amount`, `caption` FROM `J_DP_STR_UNKNOWN` 
@@ -7434,6 +7461,7 @@ class dp
             $bug_amount = $db->result($r, $i - 1, "bug_amount");
             $caption    = $db->result($r, $i - 1, "caption");
             $empty_kol++;
+
             $list .= "<tr id='strUnRow_$i'>
                 <td><button class='btn btn-xs btn-warning'><i class='fa fa-refresh'></i></button></td>
                 <td>$i</td>
@@ -7448,7 +7476,9 @@ class dp
         return array($list, $empty_kol);
     }
 
-    function clearDpUnknown($dp_id) { $db = DbSingleton::getDb();
+    public function clearDpUnknown($dp_id)
+    {
+        $db = DbSingleton::getDb();
         $slave = new slave;
         $answer = 0; $err = "Помилка збереження даних!";
         $dp_id = $slave->qq($dp_id);
@@ -7464,10 +7494,12 @@ class dp
     /*
      * EXPORT DP CARD
      * */
-    function exportDpCard($dp_id, $type_id) { $db = DbSingleton::getDb();
+    public function exportDpCard($dp_id, $type_id): array
+    {
+        $db = DbSingleton::getDb();
         $list = [];
         $slave = new slave;
-        $cash_id = $this->getDpCashId($dp_id);
+        $cash_id = (int)$this->getDpCashId($dp_id);
         [$usd_to_uah, $euro_to_uah] = $this->getKoursData();
 
         $r = $db->query("SELECT j.*, m.mcaption as reserv_type_caption, s.name as storage_name, dps.mcaption as status_dps_name 
@@ -7488,30 +7520,31 @@ class dp
             $brand_name     = $this->getBrandName($brand_id);
             $amount_dp      = $amount;
             $amount_collect = $db->result($r, $i - 1, "amount_collect");
-            $amount_bug_db  = $db->result($r, $i - 1, "amount_bug");
+            $amount_bug_db  = (int)$db->result($r, $i - 1, "amount_bug");
 
-            if ($amount_collect > 0 || $amount_bug_db != 0) {
+            if ($amount_collect > 0 || $amount_bug_db !== 0) {
                 $amount_dp  = $amount_collect;
             }
             $price          = $slave->to_money($db->result($r, $i - 1, "price"));
             $price_end      = $slave->to_money($db->result($r, $i - 1, "price_end"));
             $summ           = $slave->to_money($db->result($r, $i - 1, "summ"));
 
-            if ($cash_id == 1) {
+            if ($cash_id === 1) {
                 $price      = round($price * $usd_to_uah, 2);
                 $price_end  = round($price_end * $usd_to_uah, 2);
                 $summ       = round($amount_dp * $price_end, 2);
             }
-            if ($cash_id == 3) {
+            if ($cash_id === 3) {
                 $price      = round($price * $usd_to_uah / $euro_to_uah, 2);
                 $price_end  = round($price_end * $usd_to_uah / $euro_to_uah, 2);
                 $summ       = round($amount_dp * $price_end, 2);
             }
-            if ($type_id == 2) {
+            if ((int)$type_id === 2) {
                 $price      = str_replace(".", ",", "$price");
                 $price_end  = str_replace(".", ",", "$price_end");
                 $summ       = str_replace(".", ",", "$summ");
             }
+
             $list[$i] = array($art_nr_ds, $brand_name, $text, $amount, $price, $price_end, $summ);
         }
 
@@ -7521,23 +7554,26 @@ class dp
     /*
      * DP Combine
      * */
-    function showCombineDpForm()
+    public function showCombineDpForm()
     {
         $db = DbSingleton::getDb();
         session_start();
+
         $ses_tpoint_id = $_SESSION["media_tpoint_id"];
-        $media_user_id = $_SESSION["media_user_id"];
-        $media_role_id = $_SESSION["media_role_id"];
+        $media_user_id = (int)$_SESSION["media_user_id"];
+        $media_role_id = (int)$_SESSION["media_role_id"];
+
         $form = ""; $form_htm = RD."/tpl/dp/combine.htm";
         if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+
         $list = "";
         $where = " AND (`tpoint_id` = '$ses_tpoint_id' OR `user_id` = '$media_user_id') AND ((`status_dp` != 0 AND `summ` > 0) OR (`status_dp` = 81)) ";
         $limit = "LIMIT 0,500";
-        if ($media_user_id == 1) {
+        if ($media_user_id === 1) {
             $where = " AND `status_dp` != 0";
             $limit = "";
         }
-        if ($media_role_id == 1) {
+        if ($media_role_id === 1) {
             $where = " AND ((`status_dp` != 0 AND `summ` > 0) OR (`status_dp` = 81)) ";
             $limit = "";
         }
@@ -7548,11 +7584,11 @@ class dp
             $dp_id      = $db->result($r, $i - 1, "id");
             $prefix     = $db->result($r, $i - 1, "prefix");
             $doc_nom    = $db->result($r, $i - 1, "doc_nom");
-            $user_use   = $db->result($r, $i - 1, "user_use");
+            $user_use   = (int)$db->result($r, $i - 1, "user_use");
             $doc_name   = "$prefix - $doc_nom";
             $disabled   = "";
 
-            if ($user_use != 0 && $user_use != $media_user_id) {
+            if ($user_use > 0 && $user_use !== $media_user_id) {
                 $disabled = "disabled";
                 $user_name = $this->getMediaUserName($user_use);
                 $doc_name .= " ($user_name)";
@@ -7566,15 +7602,16 @@ class dp
         return $form;
     }
 
-    public function getCombineDpCrossList($main_dp_id)
+    public function getCombineDpCrossList($main_dp_id): string
     {
         $db = DbSingleton::getDb();
         session_start();
         $gmanual = new gmanual;
-        $ses_tpoint_id = $_SESSION["media_tpoint_id"];
-        $media_user_id = $_SESSION["media_user_id"];
-        $media_role_id = $_SESSION["media_role_id"];
-        $list = "Схожих не знайдено!";
+
+        $ses_tpoint_id  = $_SESSION["media_tpoint_id"];
+        $media_user_id  = (int)$_SESSION["media_user_id"];
+        $media_role_id  = (int)$_SESSION["media_role_id"];
+        $list           = "Схожих не знайдено!";
 
         if ($main_dp_id > 0) {
             $r = $db->query("SELECT `client_id`, `client_conto_id`, `tpoint_id`, `doc_type_id` FROM `J_DP` WHERE `id` = $main_dp_id LIMIT 1;");
@@ -7586,18 +7623,17 @@ class dp
             $where = " AND (`tpoint_id` = '$ses_tpoint_id' OR `user_id` = '$media_user_id') AND ((`status_dp` != 0 AND `summ` > 0) OR (`status_dp` = 81)) ";
             $limit = "LIMIT 0,500";
 
-            if ($media_user_id == 1) {
+            if ($media_user_id === 1) {
                 $where = " AND `status_dp` != 0";
                 $limit = "";
             }
 
-            if ($media_role_id == 1) {
+            if ($media_role_id === 1) {
                 $where = " AND ((`status_dp` != 0 AND `summ` > 0) OR (`status_dp` = 81)) ";
                 $limit = "";
             }
 
-            $rs = $db->query("SELECT `id`, `prefix`, `doc_nom`, `user_use`, `order_info_id`, `status_dp`
-            FROM `J_DP` 
+            $rs = $db->query("SELECT `id`, `prefix`, `doc_nom`, `user_use`, `order_info_id`, `status_dp` FROM `J_DP` 
             WHERE `id` != $main_dp_id AND `status_dp` = 79 AND `client_id` = $client_id AND `client_conto_id` = $client_conto_id AND `tpoint_id` = $tpoint_id AND `doc_type_id` = $doc_type_id
             $where $limit;");
             $ns = $db->num_rows($rs);
@@ -7610,10 +7646,10 @@ class dp
                     $prefix     = $db->result($rs, $i - 1, "prefix");
                     $doc_nom    = $db->result($rs, $i - 1, "doc_nom");
                     $user_use   = $db->result($rs, $i - 1, "user_use");
-                    $order_info_id   = $db->result($rs, $i - 1, "order_info_id");
-                    $status_dp   = $db->result($rs, $i - 1, "status_dp");
+                    $info_id    = $db->result($rs, $i - 1, "order_info_id");
+                    $status_dp  = $db->result($rs, $i - 1, "status_dp");
 
-                    $order_info_text = $this->getOrderDeliveryInfo($order_info_id);
+                    $info_text  = $this->getOrderDeliveryInfo($info_id);
                     $doc_name   = "$prefix - $doc_nom";
                     $disabled   = "";
 
@@ -7641,7 +7677,7 @@ class dp
                             $dp_note
                         </td>
                         <td>
-                            $order_info_text
+                            $info_text
                         </td>
                     </tr>";
                 }
@@ -7728,6 +7764,40 @@ class dp
             $db->query("UPDATE `J_DP` SET `order_info_id` = 0 WHERE `id` = $dp_id LIMIT 1;");
             $answer = 1; $err = "";
         }
+
+        return array($answer, $err);
+    }
+
+    public function getDpRemoveList()
+    {
+        $db = DbSingleton::getDb();
+
+        $form = "";
+        $form_htm = RD . "/tpl/dp/dp_remove_list.htm";
+        if (file_exists($form_htm)) {
+            $form = file_get_contents($form_htm);
+        }
+
+        $list = "";
+        $r = $db->query("SELECT `id` FROM `J_DP` WHERE `status_dp` IN (79, 80);");
+        $n = $db->num_rows($r);
+        for ($i = 1; $i <= $n; $i++) {
+            $dp_id = $db->result($r, $i - 1, "id");
+            $list .= "<option id='$dp_id'>$dp_id</option>";
+        }
+
+        $form = str_replace("{dp_remove_list_option}", $list, $form);
+
+        return $form;
+    }
+
+    public function dropDpStatus($dp_ids = []): array
+    {
+        $db = DbSingleton::getDb();
+
+        $answer = 1; $err = "";
+
+        $db->query("UPDATE `J_DP` SET `status_dp` = 81 WHERE `id` IN ($dp_ids)");
 
         return array($answer, $err);
     }

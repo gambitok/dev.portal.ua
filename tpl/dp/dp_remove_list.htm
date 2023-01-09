@@ -1,0 +1,16 @@
+
+<h3>To drop:</h3>
+<select title="Передпродаж" id="dp_list" name="dp_list[]" data-placeholder="Вибрати передпродаж" class="chosen-select" multiple tabindex="4" style="width: 250px;">
+    {dp_remove_list_option}
+</select>
+<button class="btn btn-danger" onclick="dropDpList();">Видалити</button>
+
+<script>
+    let dp_list = [];
+
+    $(document).ready(function() {
+        $("select#dp_list option").each(function() {
+            dp_list.push($(this).val());
+        });
+    });
+</script>

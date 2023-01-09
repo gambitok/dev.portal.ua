@@ -2253,3 +2253,9 @@ function dropDeliveryCard() {
 			}
 		}}, true);
 }
+
+function dropDpList()
+{
+	let dp_list = Array.prototype.filter.call( document.getElementById("dp_list").options, el => el.selected).map(el => el.text).join(",");
+	console.log(dp_list);
+}
