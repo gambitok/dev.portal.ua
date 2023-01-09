@@ -490,9 +490,8 @@ function catalogue_article_storage_rest_search_local(search_type) {
 		$("#srchInG").removeClass("has-error");
 		$("#waveSpinnerCat_place").html(waveSpinner);
 		$("#catalogue_range").empty();
-		let jmoving_id = $("#jmoving_id").val();
-        let storage_id = $("#storage_id_to").val();
-        console.log(storage_id);
+		let jmoving_id=$("#jmoving_id").val();
+        let storage_id=$("#storage_id_to").val();
 		JsHttpRequest.query($rcapi,{ 'w': 'catalogue_article_storage_rest_search_local', 'art':art, 'brand_id':brand_id, 'search_type':search_type, 'jmoving_id':jmoving_id, 'storage_id':storage_id}, 
 		function (result, errors){ if (errors) {alert(errors);} if (result){  
 			if (result["brand_list"]!="" && result["brand_list"]!=null && search_type==0){

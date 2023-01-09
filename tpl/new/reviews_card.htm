@@ -108,9 +108,9 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="groups" class="col-lg-2 col-md-2 col-sm-4 control-label">Група товарів</label>
+                                <label for="groups" class="col-lg-2 col-md-2 col-sm-4">Група товарів</label>
                                 <div class="col-sm-8">
-                                    <select title="Групи" id="groups" name="groups[]" data-placeholder="Вибрати групи" class="chosen-select" multiple tabindex="4" style="width: 250px;" {review_remove_disabled}>
+                                    <select title="Групи" id="groups" name="groups[]" data-placeholder="Вибрати групи" class="chosen-select" multiple tabindex="4" style="width: 250px;">
                                         {groups_list}
                                     </select>
                                 </div>
@@ -121,18 +121,15 @@
                             <div class="form-group">
                                 <div class="col-sm-3">
                                     <input class="form-control" type="text" name="review_title" id="review_title" value="{review_title}" placeholder="Заголовок" title="Заголовок">
-                                    <br>
-                                    <button onclick="showReviewCardInfo({review_id}, 1);" {review_remove_disabled} class="btn btn-info">Додати опис RU</button>
+                                    <button onclick="showReviewCardInfo({review_id}, 1);">Додати опис RU</button>
                                 </div>
                                 <div class="col-sm-3">
                                     <input class="form-control" type="text" name="review_title" id="review_title_ua" value="{review_title_ua}" placeholder="Заголовок" title="Заголовок">
-                                    <br>
-                                    <button onclick="showReviewCardInfo({review_id}, 2);" {review_remove_disabled} class="btn btn-info">Додати опис UA</button>
+                                    <button onclick="showReviewCardInfo({review_id}, 2);">Додати опис UA</button>
                                 </div>
                                 <div class="col-sm-3">
                                     <input class="form-control" type="text" name="review_title" id="review_title_en" value="{review_title_en}" placeholder="Заголовок" title="Заголовок">
-                                    <br>
-                                    <button onclick="showReviewCardInfo({review_id}, 3);" {review_remove_disabled} class="btn btn-info">Додати опис EN</button>
+                                    <button onclick="showReviewCardInfo({review_id}, 3);">Додати опис EN</button>
                                 </div>
                             </div>
 

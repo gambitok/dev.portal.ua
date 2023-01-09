@@ -891,7 +891,7 @@ class paybox {
         return $prro_status;
     }
 
-    public function getCbRegisterList(): string
+    public function getCbRegisterList()
     {
         $medias_user_id = $_SESSION["media_user_id"];
         $db = DbSingleton::getDb();

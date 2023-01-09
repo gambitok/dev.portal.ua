@@ -1309,9 +1309,7 @@ class SettingsNewClass
             $id         = 0;
             $status     = 0;
             $disabled   = "disabled";
-            $title      = $title_ua = $title_en = $data_create = $img = "";
-            $data       = date("Y-m-d");
-            $group_list = [];
+            $title      = $title_ua = $title_en = $data = $data_create = $img = "";
         } else {
             $title      = $db->result($r, 0, "TITLE_RU");
             $title_ua   = $db->result($r, 0, "TITLE_UA");
@@ -1321,12 +1319,11 @@ class SettingsNewClass
             $status     = $db->result($r, 0, "STATUS");
             $img        = $db->result($r, 0, "IMG");
             $disabled   = "";
-            $group_list = $this->getGroupsList($this->getGroupReviewList($id));
         }
 
         $form = str_replace(
             array("{review_id}", "{review_title}", "{review_title_ua}", "{review_title_en}", "{review_data}", "{review_data_create}", "{review_status}", "{review_image}", "{review_remove_disabled}", "{groups_list}"),
-            array($id, $title, $title_ua, $title_en, $data, $data_create, $status ? "checked" : "", $img, $disabled, $group_list)
+            array($id, $title, $title_ua, $title_en, $data, $data_create, $status ? "checked" : "", $img, $disabled, $this->getGroupsList($this->getGroupReviewList($id)))
         , $form);
 
         return $form;
@@ -1376,13 +1373,12 @@ class SettingsNewClass
         if ((int)$review_id === 0) {
             $r = $db->query("SELECT MAX(`ID`) as mid FROM `T2_REVIEWS`;");
             $max_id = 0 + $db->result($r, 0, "mid") + 1;
-            $review_id = $max_id;
             $db->query("INSERT INTO `T2_REVIEWS` (`ID`, `TITLE_RU`, `TITLE_UA`, `TITLE_EN`, `DATA`, `DATA_CREATE`, `STATUS`) VALUES ($max_id, \"$title\", \"$title_ua\", \"$title_en\", '$data', '$data_create', '$status');");
+            $answer = 1; $err = "";
         } else {
             $db->query("UPDATE `T2_REVIEWS` SET `TITLE_RU` = \"$title\", `TITLE_UA` = \"$title_ua\", `TITLE_EN` = \"$title_en\", `DATA` = '$data', `DATA_CREATE` = '$data_create', `STATUS` = '$status' WHERE `ID` = $review_id;");
+            $answer = 1; $err = "";
         }
-        $answer = 1;
-        $err = "";
 
         if (!empty($groups)) {
             foreach ($groups as $group_id) {
@@ -1390,7 +1386,7 @@ class SettingsNewClass
             }
         }
 
-        return array($answer, $err, $review_id);
+        return array($answer, $err);
     }
 
     public function choseReviewCardImage($review_id, $file_name): array
