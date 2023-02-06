@@ -1456,4 +1456,26 @@ class SettingsNewClass
         return $form;
     }
 
+    public function showHandleCron()
+    {
+        $db = DbSingleton::getTokoDb();
+
+        $form = ""; $form_htm = RD . "/tpl/new/cron.htm";
+        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+
+        $list = "<ul class='list-group'>";
+        $r = $db->query("SELECT `NAME`, `FILE_NAME` FROM `T2_CRON` WHERE `STATUS` = 1;");
+        $n = $db->num_rows($r);
+        for ($i = 1; $i <= $n; $i++) {
+            $name = $db->result($r, $i - 1, "NAME");
+            $file = $db->result($r, $i - 1, "FILE_NAME");
+            $list .= "<li class='list-group-item'><a href='https://portal.myparts.pro/cron/$file.php'>$name</a></li>";
+        }
+        $list .= "</ul>";
+
+        $form = str_replace("{cron_list}", $list, $form);
+
+        return $form;
+    }
+
 }
