@@ -869,7 +869,7 @@ if ($_REQUEST["w"]=="makeBackSupplStorsel"){list($answer,$err,$select_id)=$suppl
 
 if ($_REQUEST["w"]=="saveFinishBackSuppl"){list($answer,$err)=$suppl->saveFinishBackSuppl($_REQUEST["back_suppl_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
 
-if ($_REQUEST["w"]=="dropFuckingDp"){list($answer,$err)=$dp->dropFuckingDp($_REQUEST["dp_id"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
+if ($_REQUEST["w"]=="dropDpStatus"){list($answer,$err)=$dp->dropDpStatus($_REQUEST["dp_ids"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
 
 //if ($_REQUEST["w"]=="updateGroupCacheArts"){list($answer,$err)=$suppl->updateGroupCacheArts(); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err); }
 

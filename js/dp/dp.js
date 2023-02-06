@@ -2170,7 +2170,8 @@ function setOrderInfoFields() {
 	setOrderInfoPamymentFields();
 }
 
-function showCombineDpForm() {
+function showCombineDpForm()
+{
 	$("#FormModalWindow").modal("show");
 	JsHttpRequest.query($rcapi,{ 'w': 'showCombineDpForm'},
 		function (result, errors){ if (errors) {alert(errors);} if (result){
@@ -2179,7 +2180,8 @@ function showCombineDpForm() {
 		}}, true);
 }
 
-function getCombineDpCrossList() {
+function getCombineDpCrossList()
+{
 	let main_dp_id = $("#select_main_dp option:selected").val();
 	if (main_dp_id > 0) {
 		$("#cross_dp").html(waveSpinner);
@@ -2195,7 +2197,8 @@ function getCombineDpCrossList() {
 	}
 }
 
-function saveCombineDpCross() {
+function saveCombineDpCross()
+{
 	let main_dp_id = $("#select_main_dp option:selected").val();
 	let cross_dp_ids = [];
 	$('[name="dp_cross_list"]').each(function(){
@@ -2215,7 +2218,8 @@ function saveCombineDpCross() {
 		}}, true);
 }
 
-function showDeliveryCard() {
+function showDeliveryCard()
+{
 	let dp_id = $("#dp_id").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'showDeliveryCard', 'dp_id':dp_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){
@@ -2226,7 +2230,8 @@ function showDeliveryCard() {
 		}}, true);
 }
 
-function saveDeliveryCard() {
+function saveDeliveryCard()
+{
 	let dp_id = $("#dp_id").val();
 	JsHttpRequest.query($rcapi,{ 'w': 'saveDeliveryCard', 'dp_id':dp_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){
@@ -2240,8 +2245,10 @@ function saveDeliveryCard() {
 		}}, true);
 }
 
-function dropDeliveryCard() {
+function dropDeliveryCard()
+{
 	let dp_id = $("#dp_id").val();
+
 	JsHttpRequest.query($rcapi,{ 'w': 'dropDeliveryCard', 'dp_id':dp_id},
 		function (result, errors){ if (errors) {alert(errors);} if (result){
 			if (result["answer"] == 1) {
@@ -2256,6 +2263,16 @@ function dropDeliveryCard() {
 
 function dropDpList()
 {
-	let dp_list = Array.prototype.filter.call( document.getElementById("dp_list").options, el => el.selected).map(el => el.text).join(",");
-	console.log(dp_list);
+	let dp_ids = Array.prototype.filter.call( document.getElementById("dp_list").options, el => el.selected).map(el => el.text).join(",");
+
+	JsHttpRequest.query($rcapi,{ 'w': 'dropDpStatus', 'dp_ids':dp_ids},
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+			if (result["answer"] == 1) {
+				swal("Видалено!", "Усі дані успішно видалені!", "success");
+				updateDpRange();
+				$("select#dp_list").val('').trigger('chosen:updated');
+			} else {
+				swal("Помилка!", result["error"], "error");
+			}
+		}}, true);
 }

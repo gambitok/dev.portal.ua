@@ -8100,9 +8100,12 @@ class dp
     {
         $db = DbSingleton::getDb();
 
-        $answer = 1; $err = "";
+        $answer = 0; $err = "Виберіть дпшки";
 
-        $db->query("UPDATE `J_DP` SET `status_dp` = 81 WHERE `id` IN ($dp_ids)");
+        if (!empty($dp_ids)) {
+            $db->query("UPDATE `J_DP` SET `status_dp` = 81 WHERE `id` IN ($dp_ids);");
+            $answer = 1; $err = "";
+        }
 
         return array($answer, $err);
     }
