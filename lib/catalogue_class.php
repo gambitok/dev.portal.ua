@@ -1254,6 +1254,30 @@ class catalogue {
         return $name;
     }
 
+    public function getArtNameRu($art_id)
+    {
+        $db = DbSingleton::getTokoDb();
+        $name = "";
+        $r = $db->query("SELECT `NAME` FROM `T2_NAMES` WHERE `ART_ID` = $art_id AND `LANG_ID` = 16 LIMIT 1;");
+        $n = (int)$db->num_rows($r);
+        if ($n === 1) {
+            $name = $db->result($r, 0, "NAME");
+        }
+        return $name;
+    }
+
+    public function getArtInfoRu($art_id)
+    {
+        $db = DbSingleton::getTokoDb();
+        $name = "";
+        $r = $db->query("SELECT `INFO` FROM `T2_NAMES` WHERE `ART_ID` = $art_id AND `LANG_ID` = 16 LIMIT 1;");
+        $n = (int)$db->num_rows($r);
+        if ($n === 1) {
+            $name = $db->result($r, 0, "INFO");
+        }
+        return $name;
+    }
+
     public function getUniqueNumber($art_id)
     {
         $db = DbSingleton::getTokoDb();
@@ -1304,16 +1328,18 @@ class catalogue {
             $art_id             = $db->result($r, 0, "ART_ID");
             $article_nr_displ   = $db->result($r, 0, "ARTICLE_NR_DISPL");
             $brand_id           = $db->result($r, 0, "BRAND_ID");
-            $article_name2      = $db->result($r, 0, "NAME2");
-            $article_info       = $db->result($r, 0, "INFO");
+            //$article_name2      = $db->result($r, 0, "NAME2");
+            //$article_info       = $db->result($r, 0, "INFO");
             $barcode            = $db->result($r, 0, "BARCODE");
             $inner_cross        = $db->result($r, 0, "INNER_CROSS");
             $goods_group_id     = $db->result($r, 0, "GOODS_GROUP_ID");
             $goods_group_name   = $db->result($r, 0, "GOODS_GROUP_NAME");
             $oper_price         = $db->result($r, 0, "OPER_PRICE");
             $general_stock      = $db->result($r, 0, "GENERAL_STOCK");
+            $article_name2      = $this->getArtNameRu($art_id);
             $unnumber           = $this->getUniqueNumber($art_id);
             $article_name_ukr   = $this->getArtNameUkr($art_id);
+            $article_info       = $this->getArtInfoRu($art_id);
 
             $form = str_replace("{art_id}", $art_id, $form);
             $form = str_replace("{article_nr_displ}", $article_nr_displ, $form);
