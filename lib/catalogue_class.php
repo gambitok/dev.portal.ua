@@ -1725,13 +1725,28 @@ class catalogue {
         return array($form, "Фотогалерея артикула: $disp_nomber");
     }
 
+    public function setActiveArticleFoto($photo_id, $active): array
+    {
+        $db = DbSingleton::getTokoDb();
+        $answer = 0; $err = "Помилка";
+
+        if ($photo_id > 0) {
+            $db->query("UPDATE `T2_PHOTOS` SET `ACTIVE` = $active WHERE `ID` = $photo_id LIMIT 1;");
+            $answer = 1; $err = "";
+        }
+
+        return array($answer, $err);
+    }
+
     public function loadArticleFoto($art_id): string
     {
         $db = DbSingleton::getTokoDb();
         $form = ""; $form_htm = RD . "/tpl/catalogue_foto_block.htm";
         if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
         $list = "";
-        $r = $db->query("SELECT `ID`, `USER_ID`, `PHOTO_NAME`, `DATA`, `MAIN` FROM `T2_PHOTOS` WHERE `ART_ID` = $art_id AND `ACTIVE` = 1 ORDER BY `PHOTO_NAME` ASC;");
+        $r = $db->query("SELECT `ID`, `USER_ID`, `PHOTO_NAME`, `DATA`, `MAIN`, `ACTIVE` FROM `T2_PHOTOS` 
+        WHERE `ART_ID` = $art_id 
+        ORDER BY `PHOTO_NAME` ASC;");
         $n = (int)$db->num_rows($r);
         for ($i = 1; $i <= $n; $i++) {
             $file_id    = $db->result($r, $i - 1, "ID");
@@ -1741,15 +1756,22 @@ class catalogue {
             $data       = $db->result($r, $i - 1, "DATA");
             $user_name  = $this->getMediaUserName($user_id);
             $main       = (int)$db->result($r, $i - 1, "MAIN");
+            $active     = (int)$db->result($r, $i - 1, "ACTIVE");
+            $active     = ($active === 1) ? "checked" : "";
             $link       = "https://toko.ua/uploads/images/catalogue/$file_name";
+
+            $main_block = "<span>Активність - </span><input type=\"checkbox\" $active onchange=\"setActiveArticleFoto('$file_id', this)\"><br>";
+
             $main_v     = "<a class=\"btn btn-xs btn-white\" onClick=\"setArticlesFotoMain('$art_id','$file_id')\"><i class=\"fa fa-check\"></i> Основне фото</a>";
 
             if ($main === 1) {
                 $main_v = " <span class=\"btn btn-xs label-primary\"><i class=\"fa fa-check\"></i> Основне фото</span>";
             }
 
+            $main_block .= $main_v;
+
             $block = $form;
-            $block = str_replace(array("{file_id}", "{foto_name}", "{file_name}", "{user_name}", "{data}", "{art_id}", "{link}", "{main}"), array($file_id, $file_name, $file_name, $user_name, $data, $art_id, $link, $main_v), $block);
+            $block = str_replace(array("{file_id}", "{foto_name}", "{file_name}", "{user_name}", "{data}", "{art_id}", "{link}", "{main}"), array($file_id, $file_name, $file_name, $user_name, $data, $art_id, $link, $main_block), $block);
             $list .= $block;
         }
 

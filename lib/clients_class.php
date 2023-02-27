@@ -1195,40 +1195,49 @@ class clients {
         return array($answer, $err);
     }
 
-    function loadArticleFoto($client_id) { $db = DbSingleton::getDb();
-        $list="";
-        $form=""; $form_htm=RD."/tpl/clients_foto_block.htm";
-        if (file_exists("$form_htm")) { $form = file_get_contents($form_htm); }
+    public function loadArticleFoto($art_id)
+    {
+        $db = DbSingleton::getDb();
+
+        $list = "";
+        $form = ""; $form_htm = RD . "/tpl/clients_foto_block.htm";
+        if (file_exists($form_htm)) { $form = file_get_contents($form_htm); }
+
         $r = $db->query("SELECT t2af.*, u.name as user_name 
         FROM `T2_PHOTOS` t2af
-            LEFT OUTER JOIN `media_users` u on u.id=t2af.USER_ID 
-        WHERE t2af.ART_ID='$client_id' ORDER BY t2af.PHOTO_NAME ASC;");
+            LEFT OUTER JOIN `media_users` u ON (u.id = t2af.USER_ID) 
+        WHERE t2af.ART_ID = '$art_id' 
+        ORDER BY t2af.PHOTO_NAME ASC;");
         $n = $db->num_rows($r);
         for ($i = 1; $i <= $n; $i++) {
-            $file_id=$db->result($r, $i - 1, "ID");
-            $file_name=$db->result($r, $i - 1, "PHOTO_NAME");
-            $data=$db->result($r, $i - 1, "DATA");
-            $user_name=$db->result($r, $i - 1, "user_name");
-            $main=$db->result($r, $i - 1, "MAIN");
-            $main_v="<a class=\"btn btn-xs btn-white\" onClick=\"setArticlesFotoMain('$client_id','$file_id')\"><i class=\"fa fa-check\"></i> Основне фото</a>";
-            if ($main==1) {
-                $main_v=" <span class=\"btn btn-xs label-primary\"><i class=\"fa fa-check\"></i> Основне фото</span>";
+            $file_id    = $db->result($r, $i - 1, "ID");
+            $file_name  = $db->result($r, $i - 1, "PHOTO_NAME");
+            $data       = $db->result($r, $i - 1, "DATA");
+            $user_name  = $db->result($r, $i - 1, "user_name");
+            $main       = $db->result($r, $i - 1, "MAIN");
+            $main_v     = "<a class=\"btn btn-xs btn-white\" onClick=\"setArticlesFotoMain('$client_id','$file_id')\"><i class=\"fa fa-check\"></i> Основне фото</a>";
+
+            if ($main == 1) {
+                $main_v = " <span class=\"btn btn-xs label-primary\"><i class=\"fa fa-check\"></i> Основне фото</span>";
             }
-            $link="https://portal.myparts.pro/cdn/artfoto/$file_name";
-            $block=$form;
-            $block=str_replace("{file_id}",$file_id,$block);
-            $block=str_replace("{foto_name}",$file_name,$block);
-            $block=str_replace("{file_name}",$file_name,$block);
-            $block=str_replace("{user_name}",$user_name,$block);
-            $block=str_replace("{data}",$data,$block);
-            $block=str_replace("{client_id}",$client_id,$block);
-            $block=str_replace("{link}",$link,$block);
-            $block=str_replace("{main}",$main_v,$block);
-            $list.=$block;
+
+            $link = "https://portal.myparts.pro/cdn/artfoto/$file_name";
+            $block = $form;
+            $block = str_replace("{file_id}", $file_id, $block);
+            $block = str_replace("{foto_name}",$file_name,$block);
+            $block = str_replace("{file_name}",$file_name,$block);
+            $block = str_replace("{user_name}",$user_name,$block);
+            $block = str_replace("{data}",$data,$block);
+            $block = str_replace("{client_id}",$client_id,$block);
+            $block = str_replace("{link}",$link,$block);
+            $block = str_replace("{main}",$main_v,$block);
+            $list .= $block;
         }
-        if ($n==0) {
-            $list="<h3 class=\"text-center\">Фото відсутні</h3>";
+
+        if ($n == 0) {
+            $list = "<h3 class=\"text-center\">Фото відсутні</h3>";
         }
+
         return $list;
     }
 

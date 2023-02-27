@@ -500,6 +500,8 @@ if ($_REQUEST["w"]=="getCatalogueParamsList"){ $GLOBALS['_RESULT'] = array("cont
 
 if ($_REQUEST["w"]=="getCatalogueValuesList"){ $GLOBALS['_RESULT'] = array("content"=>$catalogue->getValuesList($_REQUEST["template_id"],$_REQUEST["param_id"]));}
 
+if ($_REQUEST["w"]=="setActiveArticleFoto"){ list($answer,$err)=$catalogue->setActiveArticleFoto($_REQUEST["photo_id"],$_REQUEST["active"]); $GLOBALS['_RESULT'] = array("answer"=>$answer,"error"=>$err);}
+
 //TEMPLATE
 if ($_REQUEST["w"]=="showCatalogueTemplateForm"){ $GLOBALS['_RESULT'] = array("content"=>$catalogue->showCatalogueTemplateForm($_REQUEST["template_id"]));}
 

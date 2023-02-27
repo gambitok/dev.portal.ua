@@ -2253,6 +2253,19 @@ function getCatalogueParamsList() {
         }}, true);
 }
 
+function setActiveArticleFoto(photo_id, a) {
+	let active = $(a).prop("checked") ? 1 : 0;
+
+	JsHttpRequest.query($rcapi,{ 'w':'setActiveArticleFoto', 'photo_id':photo_id, 'active':active},
+		function (result, errors){ if (errors) {alert(errors);} if (result){
+			if (result["answer"] == 1) {
+				toastr["success"]("«бережено!");
+			} else {
+				toastr["error"](result["error"]);
+			}
+		}}, true);
+}
+
 function getCatalogueValuesList() {
     let template_id = $("#param_template_id option:selected").val();
     let param_id = $("#param_param_id option:selected").val();
