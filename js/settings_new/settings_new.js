@@ -461,9 +461,15 @@ function showReviewCardInfo(id, lang_id) {
 						for(let i=0; i < files.length; i++) {
 							$.upload(files[i]);
 						}
+					},
+					onMediaDelete : function(files) {
+						for(let i=0; i < files.length; i++) {
+							$.delete(files[i]);
+						}
 					}
 				}
 			});
+
 			$.upload = function (file) {
 				let out = new FormData();
 				out.append('file', file, file.name);
@@ -478,6 +484,28 @@ function showReviewCardInfo(id, lang_id) {
 					success: function (img) {
 						$('#summernote').summernote('insertImage', img);
 						console.log('inserted');
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+						console.error(textStatus + " " + errorThrown);
+					}
+				});
+			}
+
+			$.delete = function (file) {
+				let out = new FormData();
+				out.delete(file.src);
+
+				$.ajax({
+					method: 'POST',
+					url: 'https://portal.myparts.pro/delete_saved_image.php',
+					contentType: false,
+					cache: false,
+					processData: false,
+					data: out,
+					success: function (img) {
+						$('#summernote').summernote('deleteImage', img);
+						console.log('deleted');
+						console.log(img);
 					},
 					error: function (jqXHR, textStatus, errorThrown) {
 						console.error(textStatus + " " + errorThrown);
