@@ -7,8 +7,6 @@ $(document).ready(function() {
 	});
 });
 
-//=Language====================================================================
-
 function loadLanguageList() {
 	JsHttpRequest.query($rcapi,{ 'w': 'loadLanguageList' }, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){
@@ -100,8 +98,6 @@ function dropLanguage(id) {
 	});
 }
 
-//=Contacts====================================================================
-
 function loadContactsList() {
 	JsHttpRequest.query($rcapi,{ 'w': 'loadContactsList' }, 
 	function (result, errors){ if (errors) {alert(errors);} if (result){  
@@ -189,8 +185,6 @@ function dropContacts(id) {
 		}
 	});
 }
-
-//=Contacts====================================================================
 
 function loadContactsBotList() {
 	JsHttpRequest.query($rcapi,{ 'w': 'loadContactsBotList' }, 
@@ -282,8 +276,6 @@ function dropContactsBot(id) {
 	});
 }
 
-//=news====================================================================
-
 function loadNewsPhoto(news_id, lang_id) {
 	JsHttpRequest.query($rcapi,{ 'w': 'loadNewsPhoto', 'news_id':news_id, 'lang_id':lang_id},
 	function (result, errors){ if (errors) {alert(errors);} if (result){
@@ -363,7 +355,7 @@ function showNewsCard(id){
 			let elem = document.querySelector('#news_status');
 			if (elem){ new Switchery(elem, { color: '#1AB394' });}
 			initSample();
-			loadNewsPhoto(id,$("#lang_id").val());
+			loadNewsPhoto(id, $("#lang_id").val());
 		}}, true);
 	}
 }
@@ -422,8 +414,6 @@ function dropNews(id) {
 		}
 	});
 }
-
-/*==== REVIEW ====*/
 
 function loadReviewsList() {
     JsHttpRequest.query($rcapi,{ 'w': 'loadReviewsList' },
@@ -505,7 +495,6 @@ function showReviewCardInfo(id, lang_id) {
 					success: function (img) {
 						$('#summernote').summernote('deleteImage', img);
 						console.log('deleted');
-						console.log(img);
 					},
 					error: function (jqXHR, textStatus, errorThrown) {
 						console.error(textStatus + " " + errorThrown);
@@ -617,11 +606,6 @@ function showReviewsUploadForm(review_id) {
     });
 }
 
-/**
- *
- * 767867867867
- */
-
 function list_image() {
 	$.ajax({
 		url:"upload_dropzone.php",
@@ -638,7 +622,7 @@ function removeReviewCard(a) {
 		url: "upload_dropzone.php",
 		method: "POST",
 		data: {name:name},
-		success: function(data) {
+		success: function() {
 			list_image();
 		}
 	})
@@ -665,101 +649,8 @@ function copyReviewImagePath(element) {
 }
 
 function OpenReviewsUploadForm() {
-
-	// Dropzone.options.dropzoneFrom = {
-	// 	autoProcessQueue: false,
-	// 	acceptedFiles:".png,.jpg,.gif,.bmp,.jpeg,.webp",
-	// 	init: function(){
-	// 		var submitButton = document.querySelector('#submit-all');
-	// 		myDropzone = this;
-	// 		submitButton.addEventListener("click", function(){
-	// 			myDropzone.processQueue();
-	// 		});
-	// 		this.on("complete", function(){
-	// 			if(this.getQueuedFiles().length == 0 && this.getUploadingFiles().length == 0)
-	// 			{
-	// 				var _this = this;
-	// 				_this.removeAllFiles();
-	// 			}
-	// 			list_image();
-	// 		});
-	// 	},
-	// };
-
 	list_image();
 }
-
-// function OpenReviewsUploadForm(review_id) {
-	// Dropzone.autoDiscover = false;
-
-	// $('#dropReview').dropzone({
-	// 	addRemoveLinks: true,
-	// 	addSelection: true,
-	//
-	// 	init: function () {
-	// 		let myDropzone = this;
-	//
-	// 		$.ajax({
-	// 			url: 'dropzone/init.php',
-	// 			type: 'post',
-	// 			data: {request: 2},
-	// 			dataType: 'json',
-	//
-	// 			success: function(response) {
-	//
-	// 				$.each(response, function(key, value) {
-	// 					let mockFile = {name: value.name, size: value.size};
-	//
-	// 					myDropzone.emit('addedfile', mockFile);
-	// 					myDropzone.emit('thumbnail', mockFile, value.path);
-	// 					myDropzone.emit('complete', mockFile);
-	//
-	// 				})
-	// 			}
-	// 		});
-	// 	},
-
-		// uploadedfile: function(file) {
-		// 	console.log(file.name);
-		// },
-		//
-		// uploaded: function(file) {
-		// 	console.log(file.name);
-		// },
-		//
-		// uploadedFiles: function(file) {
-		// 	console.log(file.name);
-		// },
-
-		// addedfile: function(file) {
-		// 	$.ajax({
-		// 		url:'dropzone/add.php',
-		// 		type:'post',
-		// 		data : {"file_name" : file.name},
-		//
-		// 		success : function () {
-		// 			console.log('added ' + file.name);
-		// 		}
-		// 	});
-		// },
-
-		// removedfile: function(file) {
-		// 	$.ajax({
-		// 		url:'dropzone/remove.php',
-		// 		type:'post',
-		// 		data : {"file_name" : file.name},
-		//
-		// 		success : function () {
-		// 			console.log('removed ' + file.name);
-		// 		}
-		// 	});
-		// 	let _ref;
-		// 	return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
-		// }
-	// });
-// }
-
-/*==== Request ====*/
 
 function loadRequestsList() {
     JsHttpRequest.query($rcapi,{ 'w': 'loadRequestsList' },
@@ -859,10 +750,6 @@ function unlockRequestCard(id) {
         $("#RequestCard").modal("hide");
     }
 }
-
-/*
-* SEO TEXT
-* */
 
 function showSeoTextCard(id) {
 	JsHttpRequest.query($rcapi,{ 'w': 'showSeoTextCard', 'id':id},
@@ -987,10 +874,6 @@ function dropSeoTitle(id) {
 		});
 }
 
-/*
-* SEO FOOTER
-* */
-
 function showSeoFooterCard(id) {
 	JsHttpRequest.query($rcapi,{ 'w': 'showSeoFooterCard', 'id':id},
 		function (result, errors){ if (errors) {alert(errors);} if (result) {
@@ -1050,10 +933,6 @@ function dropSeoFooter(id) {
 			}
 		});
 }
-
-/*
-* SEO GENERATE
-* */
 
 function showSeoGenerateCard(id) {
 	JsHttpRequest.query($rcapi,{ 'w': 'showSeoGenerateCard', 'id':id},

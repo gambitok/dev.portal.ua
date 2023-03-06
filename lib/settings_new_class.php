@@ -1399,6 +1399,8 @@ class SettingsNewClass
 
             $db->query("UPDATE `T2_REVIEWS` SET `IMG` = '$file_name' WHERE `ID` = $review_id LIMIT 1;");
 
+            $db->query("INSERT INTO `test_table` (`name`, `descr`) VALUES ('$file_name', 'updated');");
+
             $answer = 1; $err = "";
         }
 

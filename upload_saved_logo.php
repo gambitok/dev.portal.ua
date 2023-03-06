@@ -15,7 +15,7 @@ $review_id = (int)$_REQUEST["photo_review_id"];
 
 if ($_FILES['file']['name']) {
     if (!$_FILES['file']['error']) {
-        $name           = md5(rand(100, 200));
+        $name           = date('m-d-Y_his') . md5(rand(100, 200));
         $ext            = explode('.', $_FILES['file']['name']);
         $filename       = $name . '.' . $ext[1];
         $destination    = 'uploads/images/saved/' . $filename; // change this directory
@@ -23,6 +23,8 @@ if ($_FILES['file']['name']) {
 
         move_uploaded_file($location, $destination);
         echo 'https://portal.myparts.pro/uploads/images/saved/' . $filename; // change this URL
+
+        $db->query("INSERT INTO `test_table` (`name`, `descr`) VALUES ('$filename', '$location');");
 
 //        $db->query("UPDATE `T2_REVIEWS` SET `IMG` = '$filename' WHERE `ID` = $review_id LIMIT 1;");
     } else {

@@ -2,7 +2,7 @@
 
 if ($_FILES['file']['name']) {
     if (!$_FILES['file']['error']) {
-        $name = md5(rand(100, 200));
+        $name = date('m-d-Y_his') . md5(rand(100, 200));
         $ext = explode('.', $_FILES['file']['name']);
         $filename = $name . '.' . $ext[1];
         $destination = 'uploads/images/saved_info/' . $filename; //change this directory

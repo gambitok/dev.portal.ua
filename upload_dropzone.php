@@ -23,10 +23,10 @@ $name = $_POST["name"];
 
 if(false !== $files) {
     foreach($files as $file) {
-        if('.' !=  $file && '..' != $file) {
+        if('.' !==  $file && '..' !== $file) {
             $output .= '
                <div class="col-md-2">
-                <img src="' . $folder_name . $file . '" class="img-thumbnail img-center text-center" width="175" height="175" style="height: 175px; margin-top: 30px;" />
+                <img src="' . $folder_name . $file . '" class="img-thumbnail img-center text-center" width="175" height="175" style="height: 175px; margin-top: 30px;"  alt=""/>
                 <div class="btn-group">
                     <button type="button" class="btn btn-sm btn-danger" onclick="removeReviewCard(this);" id="' . $file . '">Remove</button>
                     <button type="button" class="btn btn-sm btn-warning" onclick="choseReviewCardImage(this);" id="' . $file . '">Choose</button>
